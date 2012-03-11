@@ -1,0 +1,2 @@
+# $Id: configure.in.in 433982 2005-07-12 13:21:43Z ctennis $
+AM_CONDITIONAL(compile_GNOKIIXXPORT, test -n "$LIB_GNOKII")

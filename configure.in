@@ -1,0 +1,2225 @@
+dnl =======================================================
+dnl FILE: ./admin/configure.in.min
+dnl =======================================================
+
+dnl    This file is part of the KDE libraries/packages
+dnl    Copyright (C) 2001 Stephan Kulow (coolo@kde.org)
+ 
+dnl    This file is free software; you can redistribute it and/or
+dnl    modify it under the terms of the GNU Library General Public
+dnl    License as published by the Free Software Foundation; either
+dnl    version 2 of the License, or (at your option) any later version.
+ 
+dnl    This library is distributed in the hope that it will be useful,
+dnl    but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl    Library General Public License for more details.
+ 
+dnl    You should have received a copy of the GNU Library General Public License
+dnl    along with this library; see the file COPYING.LIB.  If not, write to
+dnl    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+dnl    Boston, MA 02110-1301, USA.
+
+# Original Author was Kalle@kde.org
+# I lifted it in some mater. (Stephan Kulow)
+# I used much code from Janos Farkas
+
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(acinclude.m4) dnl a source file from your sub dir
+
+dnl This is so we can use kde-common
+AC_CONFIG_AUX_DIR(admin)
+
+dnl This ksh/zsh feature conflicts with `cd blah ; pwd`
+unset CDPATH
+
+dnl Checking host/target/build systems, for make, install etc.
+AC_CANONICAL_SYSTEM 
+dnl Perform program name transformation
+AC_ARG_PROGRAM
+
+dnl Automake doc recommends to do this only here. (Janos)
+AM_INIT_AUTOMAKE(kdepim, "3.5.10") dnl searches for some needed programs
+
+KDE_SET_PREFIX
+
+dnl generate the config header
+AM_CONFIG_HEADER(config.h) dnl at the distribution this done
+
+dnl Checks for programs.
+AC_CHECK_COMPILERS
+AC_ENABLE_SHARED(yes)
+AC_ENABLE_STATIC(no)
+KDE_PROG_LIBTOOL
+
+dnl for NLS support. Call them in this order!
+dnl WITH_NLS is for the po files
+AM_KDE_WITH_NLS
+
+KDE_USE_QT(3.3)
+AC_PATH_KDE
+dnl =======================================================
+dnl FILE: configure.in.in
+dnl =======================================================
+
+#MIN_CONFIG(3.3)
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/sysctl.h sys/param.h sys/time.h sys/types.h unistd.h values.h sys/limits.h err.h sys/cdefs.h)
+
+AC_CHECK_SETENV
+AC_CHECK_UNSETENV
+
+KDE_NEED_FLEX
+
+if test "$x_includes" != "NONE"; then
+  AC_DEFINE(HAVE_X11_HEADERS,1,Define if you have X11 header files)
+fi
+
+KDE_INIT_DOXYGEN([KDE PIM API Reference], [Version $VERSION])
+
+KDE_CHECK_THREADING
+
+dnl For apps that NEED threads
+if test -z "$LIBPTHREAD" && test -z "$USE_THREADS"; then
+  DO_NOT_COMPILE="$DO_NOT_COMPILE knode"
+fi
+
+CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
+
+# check for libbluetooth (Bluetooth library) because gnokii may require it
+AC_DEFUN([KDE_CHECK_BLUETOOTH],
+[
+  AC_CHECK_HEADERS(bluetooth/bluetooth.h)
+  LIB_BLUETOOTH=
+  AC_CHECK_LIB(bluetooth, hci_open_dev,
+       [ LIB_BLUETOOTH="-lbluetooth" ],
+       [],
+       [] )
+  AC_SUBST(LIB_BLUETOOTH)
+])
+
+
+# check for libgnokii (Nokia mobile phone library)
+AC_DEFUN([KDE_CHECK_GNOKII],
+[
+  KDE_CHECK_HEADERS(gnokii.h)
+  AC_REQUIRE([AC_HAVE_XPM])
+  AC_CHECK_LIB(gnokii, gn_cfg_read,
+       [ LIB_GNOKII="-lgnokii $LIB_BLUETOOTH" ],
+       [
+    	AC_CHECK_LIB(gnokii, gn_cfg_get,
+       	[ LIB_GNOKII="-lgnokii -lintl $LIB_BLUETOOTH" ],
+       	[], $all_libraries -lintl -lXpm -lX11 $LIB_BLUETOOTH )
+       ],
+       $all_libraries -lXpm -lX11 $LIB_BLUETOOTH )
+  AC_SUBST(LIB_GNOKII)
+])
+
+AC_ARG_WITH(gnokii,
+  [AC_HELP_STRING(--with-gnokii,
+    [enable support for mobile phones through gnokii @<:@default=check@:>@])],
+  [], with_gnokii=check)
+
+LIB_GNOKII=
+if test "x$with_gnokii" != xno; then
+  # for kaddressbook/xxport/ and kmobile/devices/gnokii/
+  KDE_CHECK_BLUETOOTH
+  KDE_CHECK_GNOKII
+
+  if test "x$with_gnokii" != xcheck && test -z "$LIB_GNOKII"; then
+    AC_MSG_ERROR([--with-gnokii was given, but test for gnokii failed])
+  fi
+fi
+
+dnl Checks for header files.
+AC_CHECK_HEADERS(sys/cdefs.h) dnl for libkholidays/lunarphase.cpp
+AC_CHECK_HEADERS(sys/ioctl.h) dnl for kandy/src/modem.cpp
+AC_CHECK_HEADERS(sys/file.h sys/stat.h sys/time.h byteswap.h) dnl for at least kmail
+
+dnl the below is copied from kdenetwork's configure as too many apps moved
+dnl and noone can say which tests are needed and which are obsolete for kdepim ;(
+
+AC_CHECK_HEADERS(fcntl.h unistd.h sysent.h strings.h paths.h)
+
+dnl unused AC_CHECK_HEADER([resolv.h],,,[#include <netinet/in.h>])
+
+KDE_CHECK_LARGEFILE
+
+AC_CHECK_USLEEP
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(socket fabsl strdup vsnprintf tzset)
+AC_CHECK_GETDOMAINNAME
+AC_CHECK_GETHOSTNAME
+AC_C_BIGENDIAN
+
+AC_CHECK_RES_INIT
+
+dnl needed by libkmime
+AC_CACHE_CHECK(for timezone variable, ac_cv_var_timezone,
+	AC_TRY_COMPILE([
+		#include <time.h>
+	], [
+		timezone = 1;
+	], ac_cv_var_timezone=yes, ac_cv_var_timezone=no))
+if test $ac_cv_var_timezone = yes; then
+	AC_DEFINE(HAVE_TIMEZONE, 1, [define if you have a timezone variable])
+fi
+
+dnl needed by libkmime
+AC_CACHE_CHECK(for tm_gmtoff in struct tm, ac_cv_struct_tm_gmtoff,	
+	AC_TRY_COMPILE([
+		#include <time.h>
+	], [
+		struct tm tm;
+		tm.tm_gmtoff = 1;
+	], ac_cv_struct_tm_gmtoff=yes, ac_cv_struct_tm_gmtoff=no))
+if test $ac_cv_struct_tm_gmtoff = yes; then
+	AC_DEFINE(HAVE_TM_GMTOFF, 1, [Define if you have a tm_gmtoff member in struct tm])
+fi
+
+AC_LANG_PUSH(C++)
+AC_CACHE_CHECK(for stl coping with namespace std, ac_cv_var_stlnamespace,
+        AC_TRY_COMPILE([
+                #include <iterator>
+		struct s : public std::iterator<std::forward_iterator_tag, int> {};
+        ], [
+        ], ac_cv_var_stlnamespace=yes, ac_cv_var_stlnamespace=no))
+if test $ac_cv_var_stlnamespace = yes; then
+        AC_DEFINE(HAVE_STLNAMESPACE, 1, [Define if your version of stl is defined in namespace std])
+	AC_DEFINE(STD_NAMESPACE_PREFIX, [std::], [Namespace prefix the stl is defined in])
+else
+	AC_DEFINE(STD_NAMESPACE_PREFIX, [], [Namespace prefix the stl is defined in])
+fi
+
+AC_LANG_POP
+dnl =======================================================
+dnl FILE: ./certmanager/configure.in.in
+dnl =======================================================
+
+AC_DEFINE_UNQUOTED(MAX_CMD_LENGTH, $lt_cv_sys_max_cmd_len, [Maximum length of command line arguments])
+dnl =======================================================
+dnl FILE: ./certmanager/lib/backends/chiasmus/configure.in.in
+dnl =======================================================
+
+dnl
+dnl Check for C99 designated initializers:
+dnl
+AC_LANG_SAVE
+AC_LANG_C
+AC_MSG_CHECKING([for C99 designated initializers])
+AC_TRY_COMPILE([
+        union { int one; const char * two } foo = { .two = "Hello" };
+], [], [
+        AC_DEFINE(HAVE_C99_INITIALIZERS, 1, [Define to 1 if your C compiler support C99 designated initializers])
+        AC_MSG_RESULT([yes])
+], [
+        AC_MSG_RESULT([no])
+])
+
+AC_LANG_RESTORE
+dnl =======================================================
+dnl FILE: ./dcopidlng/configure.in.in
+dnl =======================================================
+
+dnl we need to use our own copy, since kmailicalIface needs post 3.3 fixes in it
+dnl TODO: remove once we rely on kdelibs 3.4
+DCOPIDLNG='$(top_srcdir)/dcopidlng/dcopidlng'
+AC_SUBST(DCOPIDLNG)
+
+dnl =======================================================
+dnl FILE: ./indexlib/configure.in.in
+dnl =======================================================
+
+dnl The line below isn't really a comment, so don't remove
+dnl AC_OUTPUT(indexlib/indexlib-config)
+
+AC_ARG_WITH(boost-includedir,
+	AC_HELP_STRING([--with-boost-includedir],
+		[Specify the path to boost's headers]),
+	boost_includedir="$withval")
+
+AC_LANG_PUSH(C++)
+if test "x$boost_includedir" != "x"; then
+	CXXFLAGS="-I$boost_includedir $CXXFLAGS"
+fi
+
+KDE_CHECK_HEADER(boost/format.hpp, have_boost=yes,have_boost=no)
+
+AC_LANG_POP
+
+if test "x$have_boost" = "xyes"; then
+	CXXFLAGS="-DHAVE_BOOST $CXXFLAGS"
+fi
+
+								dnl =======================================================
+dnl FILE: ./indexlib/tests/configure.in.in
+dnl =======================================================
+
+AC_ARG_ENABLE(indexlib-unittests,
+	[  --enable-indexlib-unittests Enables indexlib's unittests (used for debugging only, needs boost::unit_test)],
+	[case "${enableval}" in
+	  yes) indexlib_unittests=true ;;
+	  no) indexlib_unittests=false;;
+	  *) AC_MSG_ERROR(bad value ${enableval} for --enable-indexlib-unittests) ;;
+	esac],[indexlib_unittests=false])
+	AM_CONDITIONAL(enable_indexlib_unittests, test x$indexlib_unittests = xtrue)
+dnl =======================================================
+dnl FILE: ./kaddressbook/xxport/configure.in.in
+dnl =======================================================
+
+# $Id: configure.in.in 433982 2005-07-12 13:21:43Z ctennis $
+AM_CONDITIONAL(compile_GNOKIIXXPORT, test -n "$LIB_GNOKII")
+dnl =======================================================
+dnl FILE: ./kalarm/configure.in.in
+dnl =======================================================
+
+KDE_FIND_PATH(kmix, KMIX, [$kde_default_bindirs])
+KDE_FIND_PATH(kttsd, KTTSD, [$kde_default_bindirs])
+dnl =======================================================
+dnl FILE: ./kandy/configure.in.in
+dnl =======================================================
+
+# check for lockdev, optionally used to lock serial device
+AH_TEMPLATE(HAVE_LOCKDEV)
+AC_CHECK_HEADERS(lockdev.h, HAVE_LOCKDEV_H=1, HAVE_LOCKDEV_H=)
+AC_SUBST(HAVE_LOCKDEV_H)
+# we check for dev_unlock since kmobile checks dev_lock, caches it
+# and the variables are fucked up then... *sigh*
+if test -n "$HAVE_LOCKDEV_H"; then
+	AC_CHECK_LIB(lockdev, dev_unlock,
+	[KANDY_LIBLOCKDEV="-llockdev $KANDY_LIBLOCKDEV"
+AC_DEFINE(HAVE_LOCKDEV)], , $KANDY_LIBLOCKDEV)
+fi
+AC_SUBST(KANDY_LIBLOCKDEV)
+dnl =======================================================
+dnl FILE: ./karm/configure.in.in
+dnl =======================================================
+
+ac_ldflags_safe="$LDFLAGS"
+ac_libs_safe="$LIBS" 
+LIBS="-lXext -lX11 $X_LDFLAGS" 
+
+LIBXSS=""
+AC_CHECK_LIB(Xss, XScreenSaverAllocInfo, [LIBXSS="-lXext -lXss"]) 
+if test "x$LIBXSS" != "x"; then
+     AC_DEFINE(HAVE_LIBXSS,1,[Define if you have libXss installed])
+fi
+
+LIBS="$ac_libs_safe" 
+LDFLAGS="$ac_ldflags_safe" 
+AC_SUBST(LIBXSS)
+dnl =======================================================
+dnl FILE: ./kioslaves/configure.in.in
+dnl =======================================================
+
+KDE_CHECK_SSL
+
+AC_ARG_WITH(sasl,
+  [AC_HELP_STRING(--with-sasl,
+    [enable support for authentication through cyrus-sasl @<:@default=check@:>@])],
+  [], with_sasl=check)
+
+sasl2_header="no"
+SASL2_LIBS=""
+if test "x$with_sasl" != xno; then
+  KDE_CHECK_HEADERS(sasl/sasl.h, sasl2_header="yes")
+  if test "$sasl2_header" = "yes" ; then
+    KDE_CHECK_LIB(sasl2, sasl_client_init, SASL2_LIBS="-lsasl2")
+  fi
+
+  if test "x$SASL2_LIBS" != "x" ; then
+    AC_DEFINE_UNQUOTED(HAVE_LIBSASL2, 1, [Define if you have cyrus-sasl2 libraries])
+  fi
+
+  if test "x$with_sasl" != xcheck && test -z "$SASL2_LIBS"; then
+    AC_MSG_ERROR([--with-sasl was given, but test for cyrus-sasl failed])
+  fi
+fi
+
+AC_SUBST(SASL2_LIBS)
+
+AM_CONDITIONAL(compile_kio_sieve, test -n "$SASL2_LIBS")
+dnl =======================================================
+dnl FILE: ./kioslaves/imap4/configure.in.in
+dnl =======================================================
+
+KDE_CHECK_SSL
+dnl =======================================================
+dnl FILE: ./kioslaves/sieve/configure.in.in
+dnl =======================================================
+
+AC_MSG_CHECKING(if we need to talk to broken timsieved's)
+AC_ARG_ENABLE(broken-timsieved-workaround,
+[AC_HELP_STRING([--enable-broken-timsieved-workaround],
+                [versions <= 1.1.0 of the timsieved (part of the Cyrus
+		IMAP suite) do not interpret the HAVESPACE command of
+		the sieve protocol. This option makes the sieve
+		KIO::Slave simply omit that command.])],
+[case "${enableval}" in
+      yes) AC_MSG_RESULT(yes)
+	   need_broken_timsieved_support="yes" ;;
+      no) AC_MSG_RESULT(no) ;;
+      *) AC_MSG_ERROR([bad value ${enableval} for --enable-broken-timsieved-workaround]) ;;
+esac],[AC_MSG_RESULT(no)])
+
+if test "$need_broken_timsieved_support" = "yes"; then
+   AC_SUBST(HAVE_BROKEN_TIMSIEVED)
+   AC_DEFINE(HAVE_BROKEN_TIMSIEVED,1,[Define if the sieve KIO::Slave must be able to talk to timsieved <= 1.1.0])
+fi
+dnl =======================================================
+dnl FILE: ./kitchensync/configure.in.in
+dnl =======================================================
+
+dnl configure.in.in for OpenSync based KitchenSync
+dnl
+dnl Copyright (C) 2005 Holger Hans Peter Freyther
+dnl
+dnl Based on KPilot's configure.in
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl
+dnl This file is released under the terms of the GNU General Public
+dnl Licence (GPL) Version 2.
+
+
+
+dnl we need PKG_CONFIG for doing these tests
+AC_DEFUN([KITCHENSYNC_CHECK_OPENSYNC],[
+dnl AC_REQUIRE([PKG_CHECK_MODULES])
+
+dnl Say what we're doing
+AC_MSG_CHECKING(for opensync (for KitchenSync))
+AC_ARG_WITH(opensync,
+[  --with-opensync=PATH set prefix for opensync files],
+)dnl
+
+dnl change pkg_config_path if we have a OpenSync prefix
+dnl and also set it to our prefix
+if test -d "$with_opensync"; then
+    export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/lib/pkgconfig:$with_opensync/lib/pkgconfig
+fi
+export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:$prefix/lib/pkgconfig:/usr/local/lib/pkgconfig
+
+
+HAVE_OPENSYNC=0
+HAVE_OPENSYNC_ENGINE=0
+PKG_CHECK_MODULES(OPENSYNC, opensync-1.0 >= 0.19, HAVE_OPENSYNC=1,HAVE_OPENSYNC=0)
+PKG_CHECK_MODULES(OPENSYNCENGINE, osengine-1.0 >= 0.19, HAVE_OPENSYNC_ENGINE=1, HAVE_OPENSYNC_ENGINE=0)
+PKG_CHECK_MODULES(LIBXML,   libxml-2.0, , HAVE_OPENSYNC=0)
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.6, , HAVE_OPENSYNC=0)
+
+if test -z "PKG_CONFIG"; then
+    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+fi
+
+if test "$PKG_CONFIG" != "no"; then
+    OPENSYNC_CONFIGDIR=`$PKG_CONFIG  --variable=configdir  "opensync-1.0"`
+    OPENSYNC_PLUGINDIR=`$PKG_CONFIG  --variable=plugindir  "opensync-1.0"`
+    OPENSYNC_FORMATSDIR=`$PKG_CONFIG --variable=formatsdir "opensync-1.0"`
+    OPENSYNC_HEADERDIR=`$PKG_CONFIG  --variable=headerdir  "opensync-1.0"`
+fi
+
+AC_SUBST(OPENSYNC_CONFIGDIR)
+AC_SUBST(OPENSYNC_PLUGINDIR)
+AC_SUBST(OPENSYNC_FORMATSDIR)
+AC_SUBST(OPENSYNC_HEADERDIR)
+
+dnl Check if we can compile KitchenSync
+AM_CONDITIONAL(compile_kitchensync, test "$HAVE_OPENSYNC" = 1 -a "$HAVE_OPENSYNC_ENGINE" = 1)
+
+if test "$HAVE_OPENSYNC" = 1 -a "$HAVE_OPENSYNC_ENGINE" = 1 ; then
+    AC_MSG_RESULT([found])
+else
+    AC_MSG_RESULT([not found])
+    DO_NOT_COMPILE="$DO_NOT_COMPILE kitchensync"
+fi
+
+])
+
+
+dnl Check For OpenSync support
+KITCHENSYNC_CHECK_OPENSYNC
+dnl =======================================================
+dnl FILE: ./kmail/configure.in.in
+dnl =======================================================
+
+AC_DEFUN([KMAIL_CHECK_INDEXLIB],
+[
+AC_REQUIRE([KDE_CHECK_LIB64])
+
+AC_MSG_CHECKING(for indexlib)
+
+missing_indexlib=ignore
+AC_ARG_ENABLE(indexlib,
+	AC_HELP_STRING([--enable-indexlib],[Enable EXPERIMENTAL full-text indexing in KMail.
+ Use are your own risk!]),
+	AC_DEFINE(HAVE_INDEXLIB,1,[Define if you want EXPERIMENTAL full-text indexing in KMail])
+	missing_indexlib=no
+	)
+
+
+AM_CONDITIONAL(add_indexlib, test no = "$missing_indexlib")
+
+
+
+])
+
+dnl The following test is taken from kdelibs/kio/kio
+dnl ------------------------------------------------------------------------
+dnl Try to find if we have Linux Inode based Dir Notification
+dnl ------------------------------------------------------------------------
+
+AC_ARG_ENABLE(inotify,
+AC_HELP_STRING([--disable-inotify],[enable use of Linux inode notifications]),
+[ kde_enable_inotify=$enableval ], [kde_enable_inotify=yes])dnl
+
+AC_CHECK_GNU_EXTENSIONS
+
+if test "x$kde_enable_inotify" = "xyes"; then
+  AC_MSG_CHECKING([for Linux Inotify Notification])
+  AC_CACHE_VAL(kde_cv_have_inotify,
+  [
+  kde_cv_have_inotify=no
+  AC_LANG_SAVE
+  AC_LANG_C
+
+  AC_TRY_COMPILE(
+  [
+#include <asm/unistd.h>
+#define _S390_BITOPS_H
+#include <linux/inotify.h>
+  ],
+  [
+#ifndef IN_ALL_EVENTS
+#error no inotify notification
+#endif
+#ifndef __NR_inotify_init
+#error no __NR_inotify_init
+#endif
+
+  ],kde_cv_have_inotify=yes,kde_cv_have_inotify=no)
+
+  AC_LANG_RESTORE
+  ])
+
+  if test "$kde_cv_have_inotify" = "yes" ; then
+    AC_DEFINE_UNQUOTED(HAVE_INOTIFY, 1, [Define if your system has Linux Inode Notification])
+    AC_MSG_RESULT(yes)
+  else
+    AC_MSG_RESULT(no)
+  fi
+fi
+
+KMAIL_CHECK_INDEXLIB
+dnl =======================================================
+dnl FILE: ./kmobile/configure.in.in
+dnl =======================================================
+
+DO_NOT_COMPILE="$DO_NOT_COMPILE kmobile"
+
+AC_CHECK_HEADERS(baudboy.h,,,
+[
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#define inline __inline__
+])
+AC_CHECK_HEADERS(lockdev.h)
+AC_CHECK_LIB(lockdev, dev_lock, [ LIB_LOCKDEV="-llockdev" ])
+dnl We don't need liblockdev if we have baudboy working
+if [[ -n "$HAVE_BAUDBOY_H" ]]; then
+  LIB_LOCKDEV=""
+fi
+AC_SUBST(LIB_LOCKDEV)
+dnl =======================================================
+dnl FILE: ./kmobile/devices/gnokii/configure.in.in
+dnl =======================================================
+
+# $Id: configure.in.in 433982 2005-07-12 13:21:43Z ctennis $
+AM_CONDITIONAL(include_gnokii_device, test -n "$LIB_GNOKII")
+dnl =======================================================
+dnl FILE: ./korganizer/configure.in.in
+dnl =======================================================
+
+KDE_FIND_PATH(perl, PERL, [],
+	[
+	  AC_MSG_WARN([Couldn't find perl 5 or later. ical2vcal will not work.])		],
+	[-e 'require 5.000;']
+)
+
+AC_SUBST(PERL)
+
+KDE_CHECK_STL
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h sys/select.h \
+	malloc.h sys/param.h libgen.h)
+AC_HEADER_TIME
+
+AC_LANG_C
+AC_C_LONG_DOUBLE
+AC_TYPE_GETGROUPS
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(socket strdup vsnprintf basename setenv unsetenv)
+AC_CHECK_GETDOMAINNAME
+AC_CHECK_GETHOSTNAME
+AC_CHECK_USLEEP
+
+dnl AC_OUTPUT(korganizer/ical2vcal)
+
+AC_PROG_YACC
+dnl =======================================================
+dnl FILE: ./kpilot/configure.in.in
+dnl =======================================================
+
+dnl Configure.in.in for KPilot.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+dnl
+dnl Check to see if pisock header and library are available
+dnl
+
+dnl
+dnl Questions and comments can be sent to groot@kde.org
+dnl
+
+dnl Check for the headers first. The first test is the somewhat-
+dnl sophisticated one AC uses, and incorporates all the extra-includes
+dnl and whatnot stuff.
+dnl
+dnl We need to explicitly use the --with-extra-includes passed in,
+dnl since AC_CHECK_HEADER does not do so.
+dnl
+
+
+AC_DEFUN([KPILOT_CHECK_PISOCK],
+[
+AC_REQUIRE([KDE_CHECK_LIB64])
+
+AC_MSG_CHECKING(for pilot-link (for KPilot))
+AC_ARG_WITH(pilot_link,
+[  --with-pilot-link=PATH  set prefix for pilot-link files @<:@default=check@:>@],
+[
+  case "$withval" in
+  yes)
+    with_pilot_link=CHECK
+    ;;
+  esac ],
+[ with_pilot_link=CHECK ]
+)dnl
+
+case "$with_pilot_link" in
+CHECK)
+	AC_MSG_RESULT([autodetect])
+	;;
+*)
+	if test -d "$with_pilot_link" ; then
+		AC_MSG_RESULT([$with_pilot_link])
+	else
+		AC_MSG_RESULT([autodetect])
+		with_pilot_link=CHECK
+		AC_MSG_WARN([The path provided for pilot-link, $with_pilot_link, does not exist.])
+	fi
+	;;
+esac
+
+
+
+AC_LANG_PUSH(C++)
+
+kpilot_save_cflags="$CPPFLAGS"
+kpilot_save_ldflags="$LDFLAGS"
+
+
+CPPFLAGS="$CPPFLAGS $all_includes"
+LDFLAGS="$LDFLAGS $all_libraries"
+
+HAVE_PISOCK=0
+HAVE_BAD_PISOCK=NO
+
+PISOCK_LIB=""
+PISOCK_LDFLAGS=""
+PISOCK_INCLUDE=""
+pisock_path=""
+
+dnl Try looking normally
+dnl
+dnl
+if test "x$with_pilot_link" = "xCHECK" ; then
+AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1], )
+fi
+
+dnl If nothing found, try some other places that might have
+dnl pilot-link installed. These can be extended for particular
+dnl distro's; /vol/kde is where I install stuff on Suns and BSD.
+dnl
+dnl
+if  test "$HAVE_PISOCK" = "0" ; then
+	pisock_path=""
+	AC_MSG_CHECKING([for pi-file.h alternate])
+	if test "x$with_pilot_link" = "xCHECK" ; then
+		for i in /usr/local/pilot/include /usr/local/include /vol/kde/support/include /usr/include /usr/include/libpisock ; do
+			test -f $i/pi-file.h && HAVE_PISOCK=1
+			test -f $i/pi-file.h && PISOCK_INCLUDE="-I$i"
+			test -f $i/pi-file.h && pisock_path="$i"
+		done
+	else
+		test -f "$with_pilot_link/include/pi-file.h" && HAVE_PISOCK=1
+		test -f "$with_pilot_link/include/pi-file.h" && PISOCK_INCLUDE="-I$with_pilot_link/include"
+		test -f "$with_pilot_link/include/pi-file.h" && pisock_path="$with_pilot_link/include"
+	fi
+
+	if test "$pisock_path" ; then
+		AC_MSG_RESULT([found $pisock_path])
+	else
+		AC_MSG_RESULT([still not found])
+		HAVE_PISOCK="0"
+	fi
+
+fi
+
+dnl Next, check the version of pilot-link to make sure it's sufficiently new.
+dnl
+dnl
+if test -z "$pisock_path" ; then
+	AC_CHECK_HEADER(pi-version.h,[HAVE_PISOCK=1], )
+else
+	test -d "$pisock_path" || HAVE_PISOCK="0"
+	test -f "$pisock_path/pi-version.h" || HAVE_PISOCK="0"
+fi
+
+dnl Now we know where the includes are, we need to
+dnl check the version more closely.
+dnl
+dnl
+CPPFLAGS="$CPPFLAGS $PISOCK_INCLUDE"
+if test "$HAVE_PISOCK" = "1" ; then
+	AC_MSG_CHECKING([pilot-link version])
+	AC_TRY_RUN([
+	#include <pi-version.h>
+	int main()
+	{ if (PILOT_LINK_VERSION==0) {
+            if ((PILOT_LINK_MAJOR==12) && (PILOT_LINK_MINOR>=0)) return (0);
+	  }
+	  return (1);
+	}
+	]
+	,
+	[AC_MSG_RESULT([pilot-link version >= 0.12.0 found])],
+	[AC_MSG_RESULT([Your version of pilot-link won't work with KPilot])]
+	HAVE_PISOCK="0"
+	,
+	[AC_MSG_RESULT([Cross-compiling KPilot is doomed])
+	HAVE_PISOCK="0"
+	])
+fi
+
+if test "x$with_pilot_link" = "xCHECK" ; then
+
+# Fairly random collection of possible extra libraries needed
+# to link pilot-link against.
+if test "$HAVE_PISOCK" = "1" ; then
+	HAVE_PISOCK=0
+
+	AC_CHECK_LIB(pisock,
+		pi_accept,
+		[PISOCK_LIB="-lpisock"
+		HAVE_PISOCK=1
+		],
+		[
+		unset ac_cv_lib_pisock_pi_accept
+		AC_CHECK_LIB(pisock,
+			pi_accept,
+			[PISOCK_LIB="-lpisock -lsocket"
+			HAVE_PISOCK=1
+			],
+			[
+			unset ac_cv_lib_pisock_pi_accept
+			AC_CHECK_LIB(pisock,
+				pi_accept,
+				[PISOCK_LIB="-lpisock -lsocket -lxnet"
+				HAVE_PISOCK=1
+				],
+				[
+					AC_CHECK_LIB(pisock,
+					pi_accept,
+					[PISOCK_LIB="-lpisock -lnsl -lsocket"
+					HAVE_PISOCK=1
+					],
+					[HAVE_PISOCK=0
+					])
+				],
+				[-lsocket -lxnet]
+				)
+			],
+			[-lsocket]
+			)
+		]
+		)
+fi
+fi
+
+# No libpisock found yet, but the headers have been found
+if test -z "$PISOCK_LIB" ; then
+if test "$HAVE_PISOCK" = "1" ; then
+
+HAVE_PISOCK=0
+
+if test "x$with_pilot_link" = "xCHECK" ; then
+dnl Run through the loop *anyway*, even if we've already found
+dnl the library. The inner if makes sure that we only check until
+dnl we've found the library once.
+dnl
+dnl
+for i in /usr/local/pilot/lib /usr/local/lib /vol/kde/support/lib ; do
+	if test "$HAVE_PISOCK" = "0" ; then
+		CPPFLAGS="$kpilot_save_cflags  $all_includes $PISOCK_INCLUDE"
+		LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$i -R$i"
+
+		unset ac_cv_lib_pisock_pi_accept
+		AC_CHECK_LIB(pisock,pi_accept,
+			[PISOCK_LDFLAGS="-L$i -R$i"
+			PISOCK_LIB="-lpisock"
+			HAVE_PISOCK=1],[],[])
+	fi
+done
+else
+	CPPFLAGS="$kpilot_save_cflags  $all_includes $PISOCK_INCLUDE"
+	LDFLAGS="$kpilot_save_ldflags  $all_libraries -L$with_pilot_link/lib -R$with_pilot_link/lib"
+
+	unset ac_cv_lib_pisock_pi_accept
+	AC_CHECK_LIB(pisock,pi_accept,
+		[PISOCK_LDFLAGS="-L$with_pilot_link/lib -R$with_pilot_link/lib"
+		PISOCK_LIB="-lpisock"
+		HAVE_PISOCK=1],[],[])
+fi
+fi
+fi
+
+
+if test "$HAVE_PISOCK" = "0" ; then
+	PISOCK_LIB=""
+	PISOCK_LDFLAGS=""
+	PISOCK_INCLUDE=""
+	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+fi
+
+AC_SUBST(PISOCK_LIB)
+AC_SUBST(PISOCK_LDFLAGS)
+AC_SUBST(PISOCK_INCLUDE)
+AM_CONDITIONAL(compile_kpilot, test "$HAVE_PISOCK" = 1)
+
+
+CPPFLAGS="$kpilot_save_cflags"
+LDFLAGS="$kpilot_save_ldflags"
+unset kpilot_save_cflags
+unset kpilot_save_ldflags
+
+AC_LANG_POP(C++)
+
+dnl Remainder is for standalone use
+AC_HEADER_TIME
+AC_CHECK_GETDOMAINNAME
+
+])
+KPILOT_CHECK_PISOCK
+
+dnl =======================================================
+dnl FILE: ./kpilot/conduits/configure.in.in
+dnl =======================================================
+
+dnl Configure.in.in for KPilot conduits.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl Copyright (C) 2002 Reinhold Kainhofer
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+
+
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the MAL conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+dnl
+dnl
+dnl Check to see if MAL header and library are available
+dnl
+
+dnl
+dnl Questions and comments can be sent to kde-pim@kde.org
+dnl
+dnl This was copied and adapted from kabc's ldap configure.in.in
+
+
+AC_DEFUN([KPILOT_CHECK_MAL],
+[
+AC_REQUIRE([KDE_CHECK_LIB64])
+AC_REQUIRE([KPILOT_CHECK_PISOCK])
+
+AC_MSG_CHECKING(for libmal (for KPilots MAL conduit))
+AC_ARG_WITH(mal,
+[  --with-mal=PATH         set path for libmal files @<:@default=check@:>@],
+[ case "$withval" in
+  yes)
+    with_mal=CHECK
+    ;;
+  esac ],
+[ with_mal=CHECK ]
+)dnl
+
+if test "x$with_mal" = "xCHECK" ; then
+  with_mal=NOTFOUND
+  search_incs_tmp="$kde_includes /usr/include /usr/local/include"
+	dnl build the list of include dirs, both with and without libmal appended
+	search_incs="";
+	for idir in $search_incs_tmp; do
+		search_incs="$search_incs $idir $idir/libmal"
+	done
+  AC_FIND_FILE(libmal.h, $search_incs, mal_incdir)
+  if test -r $mal_incdir/libmal.h ; then
+    test "x$mal_incdir" != "x/usr/include" && MAL_INCLUDE="-I$mal_incdir"
+    with_mal=FOUND
+  fi
+  if test $with_mal = FOUND ; then
+    with_mal=NOTFOUND
+    for ext in la so sl a ; do
+      AC_FIND_FILE(libmal.$ext, $kde_libraries $libdir /usr/lib$kdelibsuff /usr/local/lib$kdelibsuff $libdir/libmal /usr/lib/libmal /usr/local/lib/libmal,
+        mal_libdir)
+      if test -r $mal_libdir/libmal.$ext ; then
+        if test "x$mal_libdir" != "x/usr/lib$kdelibsuff" ; then
+          MAL_LIB="-L$mal_libdir "
+          test "$USE_RPATH" = yes && MAL_RPATH="-R $mal_libdir"
+        fi
+        MAL_LIB="${MAL_LIB}-lmal"
+        with_mal=FOUND
+        break
+      fi
+    done
+  fi
+fi
+
+case "$with_mal" in
+no) AC_MSG_RESULT(no) ;;
+NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
+*)
+  if test "x$with_mal" = "xFOUND" ; then
+    msg="incs=$mal_incdir libs=$mal_libdir"
+  else
+    msg="$with_mal"
+    MAL_ROOT="$with_mal"
+    if test "x$MAL_ROOT" != "x/usr" ; then
+      MAL_INCLUDE="-I${MAL_ROOT}/include"
+      MAL_LIB="-L${MAL_ROOT}/lib$kdelibsuff "
+      if test "$USE_RPATH" = "yes" ; then
+        MAL_RPATH="-R ${MAL_ROOT}/lib$kdelibsuff"
+      fi
+    fi
+    MAL_LIB="${MAL_LIBS}-lmal"
+  fi
+
+  kde_save_LIBS="$LIBS"
+  kde_save_CFLAGS="$CFLAGS"
+  kde_save_CPPFLAGS="$CPPFLAGS"
+  kde_save_LDFLAGS="$LDFLAGS"
+  LIBS="$LIBS $PISOCK_LIB $MAL_LIB"
+  CFLAGS="$CFLAGS $MAL_INCLUDE"
+  CPPFLAGS="$CPPFLAGS $all_includes $PISOCK_INCLUDE $MAL_INCLUDE"
+  LDFLAGS="$LDFLAGS $PISOCK_LDFLAGS $all_libraries"
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  AC_TRY_LINK(dnl
+  [
+  #include <libmal.h>
+  ],
+  [
+  PalmSyncInfo *psi;
+  ],
+  , with_mal=no
+  )
+  if test "$with_mal" = "no" ; then
+    MAL_LIB="$MAL_LIB -ldl"
+    LIBS="$LIBS $PISOCK_LIB $MAL_LIB"
+    with_mal=yes
+    AC_TRY_LINK(dnl
+    [
+    #include <libmal.h>
+    ],
+    [
+    PalmSyncInfo *psi;
+    ],
+    , with_mal=no
+    )
+  fi
+  if test "$with_mal" = "no" ; then
+    MAL_INCLUDE=
+    MAL_LIB=
+    MAL_RPATH=
+    AC_MSG_RESULT(no (but first try gave $msg))
+  else
+    AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
+		dnl check which version we have (pre 0.40 or >=0.40):
+    AC_TRY_LINK(dnl
+    [#include <libmal.h>],
+    [
+    PalmSyncInfo *psi;
+		psi->httpProxy;
+    ],
+    , mal_version20=yes
+    )
+    if test "$mal_version20" = "yes" ; then
+			AC_DEFINE(LIBMAL20, 1, [Define if we have the old libmal version (<0.40)])
+		fi
+    HAVE_LIBMAL=1
+    AC_MSG_RESULT($msg)
+  fi
+  AC_LANG_RESTORE
+  CFLAGS=$kde_save_CFLAGS
+  CPPFLAGS=$kde_save_CPPFLAGS
+  LIBS=$kde_save_LIBS
+  LDFLAGS=$kde_save_LDFLAGS
+  ;;
+esac
+
+AC_SUBST(MAL_INCLUDE)
+AC_SUBST(MAL_LIB)
+AC_SUBST(MAL_RPATH)
+
+AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
+
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the addressbook conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_KABC],[HAVE_KABC=0
+KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
+	AC_MSG_WARN([KPILOT: Older kaddressbook version detected. No address book
+	conduit will be compiled.]))
+AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for the notepad conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_NOTEPAD],[HAVE_NOTEPAD=0
+kpilot_save_cflags="$CPPFLAGS"
+kpilot_save_ldflags="$LDFLAGS"
+
+test -z "$PISOCK_INCLUDE" || CPPFLAGS="$CPPFLAGS $PISOCK_INCLUDE"
+KDE_CHECK_HEADER(pi-notepad.h,HAVE_NOTEPAD=1,
+	AC_MSG_WARN([KPILOT: No notepad.h for pilot-link. Your pilot-link is too old.]))
+
+CPPFLAGS="$kpilot_save_cflags"
+LDFLAGS="$kpilot_save_ldflags"
+unset kpilot_save_cflags
+unset kpilot_save_ldflags
+
+AM_CONDITIONAL(include_notepad, test "$HAVE_NOTEPAD" = 1)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for embedded language conduits
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_PERL],[HAVE_PERL=0
+AC_MSG_CHECKING([for Perl embedding])
+if perl -MExtUtils::Embed -e ccopts > /dev/null 2> /dev/null ; then
+	PERL_CFLAGS=`perl -MExtUtils::Embed -e ccopts 2> /dev/null`
+	PERL_LDFLAGS=`perl -MExtUtils::Embed -e ldopts 2> /dev/null`
+	HAVE_PERL=1
+	AC_MSG_RESULT(yes)
+else
+	PERL_CFLAGS=""
+	PERL_LDFLAGS=""
+	AC_MSG_RESULT(no)
+fi
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(PERL_LDFLAGS)
+AM_CONDITIONAL(include_perl, test "$HAVE_PERL" = 1)
+])
+
+AC_DEFUN([KPILOT_CHECK_PYTHON],[HAVE_PYTHON=0
+AC_MSG_CHECKING([for Python embedding])
+AM_CONDITIONAL(include_python, test "$HAVE_PYTHON" = 1)
+AC_MSG_RESULT(N/A)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                   actually call the checks
+dnl
+dnl ----------------------------------------------------------------------------
+
+KPILOT_CHECK_MAL
+KPILOT_CHECK_KABC
+KPILOT_CHECK_PERL
+KPILOT_CHECK_PYTHON
+KPILOT_CHECK_NOTEPAD
+
+dnl =======================================================
+dnl FILE: ./ktnef/configure.in.in
+dnl =======================================================
+
+AC_CHECK_SIZEOF(unsigned long long)
+AC_CHECK_SIZEOF(unsigned long)
+AC_CHECK_SIZEOF(uint64_t)
+dnl =======================================================
+dnl FILE: ./libkcal/libical/configure.in.in
+dnl =======================================================
+
+dnl Checks for programs.
+AC_PROG_YACC
+AM_PROG_LEX
+
+AC_CHECK_PROGS(PERL, perl5 perl)  
+
+AC_DEFINE(ICAL_SAFESAVES,1, [safe saves])
+AC_DEFINE(ICAL_UNIX_NEWLINE,1, [unix newline])
+
+AC_CHECK_HEADERS(time.h sys/types.h assert.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_STRUCT_TM
+AM_PROG_LEX
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(strdup)
+
+dnl =======================================================
+dnl FILE: ./libkdenetwork/gpgmepp/configure.in.in
+dnl =======================================================
+
+dnl BEGIN inline of gpgme.m4 from gpgme 0.4.4
+dnl  remaned from AM_PATH_GPGME to KDEPIM_PATH_GPGME and inlined here
+dnl  to not require aclocal fiddling...
+
+dnl Autoconf macros for libgpgme
+dnl Id: gpgme.m4,v 1.6 2003/09/03 01:15:56 marcus Exp 
+
+AC_DEFUN([_KDEPIM_PATH_GPGME_CONFIG],
+[ AC_ARG_WITH(gpgme-prefix,
+            AC_HELP_STRING([--with-gpgme-prefix=PFX],
+                           [prefix where GPGME is installed (optional)]),
+     gpgme_config_prefix="$withval", gpgme_config_prefix="")
+  if test "x$gpgme_config_prefix" != x ; then
+     gpgme_config_path="$gpgme_config_prefix/bin"
+  else
+     gpgme_config_path="$PATH:/usr/local/bin"
+  fi
+  AC_PATH_PROG(GPGME_CONFIG, gpgme-config, no, $gpgme_config_path)
+
+  if test "x$GPGME_CONFIG" != "xno" ; then
+      gpgme_version=`$GPGME_CONFIG --version`
+      gpgme_version_major=`echo $gpgme_version | \
+               sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\).*/\1/'`
+      gpgme_version_minor=`echo $gpgme_version | \
+               sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\).*/\2/'`
+      gpgme_version_micro=`echo $gpgme_version | \
+               sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\).*/\3/'`
+  fi
+])
+
+dnl AM_PATH_GPGME([MINIMUM-VERSION,
+dnl               [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND ]]])
+dnl Test for libgpgme and define GPGME_CFLAGS and GPGME_LIBS.
+dnl
+AC_DEFUN([KDEPIM_PATH_GPGME],
+[ AC_REQUIRE([_KDEPIM_PATH_GPGME_CONFIG])dnl
+  min_gpgme_version=ifelse([$1], ,0.4.2,$1)
+  AC_MSG_CHECKING(for GPGME - version >= $min_gpgme_version)
+  ok=no
+  if test "$GPGME_CONFIG" != "no" ; then
+    req_major=`echo $min_gpgme_version | \
+               sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\)/\1/'`
+    req_minor=`echo $min_gpgme_version | \
+               sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\)/\2/'`
+    req_micro=`echo $min_gpgme_version | \
+               sed 's/\([[0-9]]*\)\.\([[0-9]]*\)\.\([[0-9]]*\)/\3/'`
+    if test "$gpgme_version_major" -gt "$req_major"; then
+        ok=yes
+    else 
+        if test "$gpgme_version_major" -eq "$req_major"; then
+            if test "$gpgme_version_minor" -gt "$req_minor"; then
+               ok=yes
+            else
+               if test "$gpgme_version_minor" -eq "$req_minor"; then
+                   if test "$gpgme_version_micro" -ge "$req_micro"; then
+                     ok=yes
+                   fi
+               fi
+            fi
+        fi
+    fi
+  fi
+  if test $ok = yes; then
+    GPGME_CFLAGS=`$GPGME_CONFIG --cflags`
+    GPGME_LIBS=`$GPGME_CONFIG --libs`
+    if test "x$GPGME_LIBS" != x ; then
+      if test "x`echo $GPGME_LIBS | grep lgpg-error`" = x ; then
+        GPGME_LIBS="$GPGME_LIBS -lgpg-error"
+      fi
+    fi
+    AC_MSG_RESULT([yes])
+    ifelse([$2], , :, [$2])
+  else
+    GPGME_CFLAGS=""
+    GPGME_LIBS=""
+    AC_MSG_RESULT([no, will use local libgpgme-copy])
+    ifelse([$3], , :, [$3])
+  fi
+  AC_SUBST(GPGME_CFLAGS)
+  AC_SUBST(GPGME_LIBS)
+])
+
+dnl
+dnl snip AM_PATH_GPGME_{PTH,PTHREAD}
+dnl
+
+dnl END inline of gpgme.m4
+
+# The minimum required gpgme version is 0.4.5.
+# It was the first useable one for C++ (class keyword) and KDE (largefile support).
+# If you change this minimum version here, update also configure.in.bot
+
+kdepim_needs_gpgme_copy=""
+KDEPIM_PATH_GPGME(0.4.5,[
+	AC_LANG_SAVE
+	AC_LANG_C
+	kdepim_gpgmepp_save_cflags="$CFLAGS"
+	kdepim_gpgmepp_save_libs="$LIBS"
+	CFLAGS="$GPGME_CFLAGS"
+	LIBS="$GPGME_LIBS"
+
+	AC_MSG_CHECKING([if gpgme has GPGME_KEYLIST_MODE_VALIDATE])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+		gpgme_keylist_mode_t mode = GPGME_KEYLIST_MODE_VALIDATE;
+	], [
+		AC_DEFINE(HAVE_GPGME_KEYLIST_MODE_VALIDATE, 1, [Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
+	AC_MSG_CHECKING([if gpgme has gpgme_cancel])
+	AC_TRY_LINK([#include <gpgme.h>], [
+		gpgme_ctx_t ctx = 0;
+		gpgme_error_t e = gpgme_cancel( ctx );
+	], [
+		AC_DEFINE(HAVE_GPGME_CANCEL, 1, [Define to 1 if your gpgme supports gpgme_cancel()])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
+	AC_MSG_CHECKING([if gpgme has gpgme_key_t->keylist_mode])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+		gpgme_key_t key = 0;
+		key->keylist_mode = 0;
+	], [
+		AC_DEFINE(HAVE_GPGME_KEY_T_KEYLIST_MODE, 1, [Define to 1 if your gpgme's gpgme_key_t has the keylist_mode member])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
+	AC_MSG_CHECKING([if gpgme has gpgme_decrypt_result_t->wrong_key_usage])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+		gpgme_decrypt_result_t res;
+		unsigned int wku = res->wrong_key_usage;
+	], [
+		AC_DEFINE(HAVE_GPGME_WRONG_KEY_USAGE, 1, [Define to 1 if your gpgme's gpgme_decrypt_result_t has the wrong_key_usage member])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
+	AC_MSG_CHECKING([if gpgme has GPGME_INCLUDE_CERTS_DEFAULT])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+                int i = GPGME_INCLUDE_CERTS_DEFAULT;
+	], [
+		AC_DEFINE(HAVE_GPGME_INCLUDE_CERTS_DEFAULT, 1, [Define to 1 if your gpgme has the GPGME_INCLUDE_CERTS_DEFAULT macro])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
+	AC_MSG_CHECKING([if gpgme has gpgme_op_getauditlog])
+	AC_TRY_LINK([#include <gpgme.h>], [
+                gpgme_ctx_t ctx = 0;
+                gpgme_data_t data = 0;
+                unsigned int flags = 0;
+                gpgme_error_t e = gpgme_op_getauditlog( ctx, data, flags );
+	], [
+		AC_DEFINE(HAVE_GPGME_OP_GETAUDITLOG, 1, [Define to 1 if your gpgme supports gpgme_op_getauditlog])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
+	CFLAGS="$kdepim_gpgmepp_save_cflags"
+	LIBS="$kdepim_gpgmepp_save_libs"
+	AC_LANG_RESTORE
+	
+],[
+	kdepim_needs_gpgme_copy="true"
+	GPGME_CFLAGS='-I$(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme -I$(top_srcdir)/libkdenetwork/libgpg-error-copy -I$(top_builddir)/libkdenetwork/libgpg-error-copy'
+	GPGME_LIBS='$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la'
+	GPGME_LIBS_DEP='$(GPGME_LIBS)'
+	# All of this is in gpgme-copy
+	AC_DEFINE(HAVE_GPGME_KEYLIST_MODE_VALIDATE, 1, [Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE])
+	AC_DEFINE(HAVE_GPGME_KEY_T_KEYLIST_MODE, 1, [Define to 1 if your gpgme's gpgme_key_t has the keylist_mode member])
+	AC_DEFINE(HAVE_GPGME_CANCEL, 1, [Define to 1 if your gpgme supports gpgme_cancel()])
+])
+
+AC_SUBST(GPGME_LIBS_DEP)
+
+AM_CONDITIONAL(needs_gpgme_copy, test -n "$kdepim_needs_gpgme_copy")
+
+dnl Always true - either from the local copy or from the system lib.
+dnl Still used in gpgmepp/gpgmefw.h for some reason.
+AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Always set since we use gpgme-copy if gpgme isn't available])
+
+dnl Used by Makefile.am
+AC_PROG_AWK
+
+dnl =======================================================
+dnl FILE: ./libkdenetwork/libgpgme-copy/configure.in.in
+dnl =======================================================
+
+# configure.in for GPGME
+# Copyright (C) 2000 Werner Koch (dd9jn)
+# Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+# 
+# This file is part of GPGME.
+# 
+# GPGME is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# GPGME is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ 
+# (Process this file with autoconf to produce a configure script.)
+
+#AC_PREREQ(2.57)
+#min_automake_version="1.7.6"
+
+# Version number: Remember to change it immediately *after* a release.
+#AC_INIT(gpgme, 0.4.4, [bug-gpgme@gnupg.org])
+# LT Version numbers, remember to change them just *before* a release.
+#   (Code changed:			REVISION++)
+#   (Interfaces added/removed/changed:	CURRENT++, REVISION=0)
+#   (Interfaces added:			AGE++)
+#   (Interfaces removed:		AGE=0)
+#
+#LIBGPGME_LT_CURRENT=12
+#LIBGPGME_LT_AGE=1
+#LIBGPGME_LT_REVISION=1
+NEED_GPG_VERSION=1.2.2
+NEED_GPGSM_VERSION=1.9.3
+##############################################
+#AC_PREREQ(2.52)
+#AC_REVISION($Revision: 640120 $)
+
+#PACKAGE=$PACKAGE_NAME
+#VERSION=$PACKAGE_VERSION
+
+#AC_CONFIG_SRCDIR(gpgme/gpgme.h)
+#AM_CONFIG_HEADER(config.h)
+#dnl PACKAGE set before
+#AM_MAINTAINER_MODE
+#AC_CANONICAL_HOST
+
+AH_VERBATIM([_GNU_SOURCE],
+[/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif])
+
+dnl AH_VERBATIM([_REENTRANT],
+dnl [/* To allow the use of GPGME in multithreaded programs we have to use
+dnl   special features from the library.
+dnl   IMPORTANT: gpgme is not yet fully reentrant and you should use it
+dnl   only from one thread.  */
+dnl #ifndef _REENTRANT
+dnl # define _REENTRANT 1
+dnl #endif])
+
+
+dnl AC_PROG_CC
+
+
+dnl AC_SUBST(LIBGPGME_LT_CURRENT)
+dnl AC_SUBST(LIBGPGME_LT_AGE)
+dnl AC_SUBST(LIBGPGME_LT_REVISION)
+AC_DEFINE_UNQUOTED(NEED_GPG_VERSION, "$NEED_GPG_VERSION",
+				     [Min. needed GnuPG version.])
+AC_DEFINE_UNQUOTED(NEED_GPGSM_VERSION, "$NEED_GPGSM_VERSION",
+				       [Min. needed GPGSM version.])
+
+dnl AC_SUBST(PACKAGE)
+dnl AC_SUBST(VERSION)
+dnl AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE", [Name of this package])
+dnl AC_DEFINE_UNQUOTED(VERSION, "$VERSION", [Version of this package])
+
+# Don't default to build static libs.
+dnl AC_DISABLE_STATIC
+dnl AC_PROG_LIBTOOL
+
+dnl # For now we hardcode the use of version scripts.  It would be better
+dnl # to write a test for this or even implement this within libtool.
+dnl have_ld_version_script=no
+dnl case "${host}" in
+dnl     *-*-linux*)
+dnl 	have_ld_version_script=yes
+dnl         ;;
+dnl     *-*-gnu*)
+dnl 	have_ld_version_script=yes
+dnl         ;;
+dnl esac
+dnl AM_CONDITIONAL(HAVE_LD_VERSION_SCRIPT, test "$have_ld_version_script" = "yes")
+
+GPG_DEFAULT=no
+GPGSM_DEFAULT=no
+component_system=None
+case "${host}" in
+    *-*-mingw32* | i?86-emx-os2 | i?86-*-os2*emx | i?86-*-msdosdjgpp* )
+        # special stuff for Windoze NT
+        # OS/2 with the EMX environment
+        # DOS with the DJGPP environment
+        AC_DEFINE(HAVE_DRIVE_LETTERS, ,
+		  [Defined if we run on some of the PCDOS like systems (DOS,
+		   Windoze, OS/2) with special properties like no file modes.])
+        AC_DEFINE(HAVE_DOSISH_SYSTEM, ,
+		  [Defined if the filesystem uses driver letters.])
+	have_dosish_system=yes
+        GPG_DEFAULT='c:\\gnupg\\gpg.exe'
+	# XXX Assuan is not supported in this configuration.
+	#GPGSM_DEFAULT='c:\\gnupg\\gpgsm.exe'
+        #component_system='COM+'
+        ;;
+    *)
+dnl 	AC_CHECK_PTH(1.2.0,,,no,have_pth=yes)
+dnl 	if test "$have_pth" = yes; then
+dnl 	  AC_DEFINE(HAVE_PTH, ,[Define if we have Pth.])
+dnl 	  CFLAGS="$CFLAGS $PTH_CFLAGS"
+dnl 	fi
+dnl 	AC_CHECK_LIB(pthread,pthread_create,have_pthread=yes)
+dnl 	if test "$have_pthread" = yes; then
+dnl 	  AC_DEFINE(HAVE_PTHREAD, ,[Define if we have pthread.])
+dnl 	fi
+
+	# XXX: Probably use exec-prefix here?
+#	GPG_DEFAULT='/usr/bin/gpg'
+#	GPGSM_DEFAULT='/usr/bin/gpgsm'
+	;;
+esac
+
+if test "$have_dosish_system" = yes; then
+   AC_DEFINE(HAVE_DOSISH_SYSTEM,1,
+             [Defined if we run on some of the PCDOS like systems·
+              (DOS, Windoze. OS/2) with special properties like
+              no file modes])
+fi
+AM_CONDITIONAL(HAVE_DOSISH_SYSTEM, test "$have_dosish_system" = "yes")
+dnl AM_CONDITIONAL(HAVE_PTH, test "$have_pth" = "yes")
+dnl AM_CONDITIONAL(HAVE_PTHREAD, test "$have_pthread" = "yes")
+dnl dnl 
+
+# Checks for header files.
+AC_CHECK_HEADERS(sys/select.h)
+
+
+# Type checks.
+AC_CHECK_SIZEOF(unsigned int)
+
+
+# Checks for compiler features.
+dnl if test "$GCC" = yes; then
+dnl    GPGME_OWN_CFLAGS="-Wall -Wcast-align -Wshadow -Wstrict-prototypes"
+dnl else
+dnl    GPGME_OWN_CFLAGS=""
+dnl fi
+dnl AC_SUBST(GPGME_OWN_CFLAGS)
+
+
+# Checks for library functions.
+AC_CHECK_FUNCS(stpcpy)
+
+AC_CHECK_FUNCS(vasprintf)
+if test "$ac_cv_func_vasprintf" != yes; then
+  GNUPG_CHECK_VA_COPY
+fi
+
+# Try to find a thread-safe version of getenv().
+have_thread_safe_getenv=no
+
+dnl Definition of jm_GLIBC21 inlined:
+    AC_CACHE_CHECK(whether we are using the GNU C Library 2.1 or newer,
+      ac_cv_gnu_library_2_1,
+      [AC_EGREP_CPP([Lucky GNU user],
+        [
+#include <features.h>
+#ifdef __GNU_LIBRARY__
+ #if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 1) || (__GLIBC__ > 2)
+  Lucky GNU user
+ #endif
+#endif
+        ],
+        ac_cv_gnu_library_2_1=yes,
+        ac_cv_gnu_library_2_1=no)
+      ]
+    )
+    AC_SUBST(GLIBC21)
+    GLIBC21="$ac_cv_gnu_library_2_1"
+
+dnl
+
+if test $GLIBC21 = yes; then
+  have_thread_safe_getenv=yes
+fi
+if test $have_thread_safe_getenv = yes; then
+  AC_DEFINE(HAVE_THREAD_SAFE_GETENV, [1], [Define if getenv() is thread-safe])
+fi
+have_getenv_r=no
+AC_CHECK_FUNCS(getenv_r, have_getenv_r=yes)
+if test $have_getenv_r = no && test $have_thread_safe_getenv = no; then
+  AC_MSG_WARN([
+***
+*** getenv() is not thread-safe and getenv_r() does not exist
+***])
+fi
+
+# For converting time strings to seconds since Epoch, we need the timegm
+# function.
+AC_CHECK_FUNCS(timegm)
+if test "$ac_cv_func_timegm" != yes; then
+  AC_MSG_WARN([
+***
+*** timegm() not available - a non-thread-safe kludge will be used
+*** and the TZ variable might be changed at runtime.
+***])
+fi
+
+# Add a few constants to help porting to W32
+AH_VERBATIM([SEPCONSTANTS],
+[
+/* Separators as used in file names and $PATH. Please note that the
+   string version must not contain more than one character because
+   the using code assumes strlen()==1 */
+#ifdef HAVE_DOSISH_SYSTEM
+#define DIRSEP_C '\\\\'
+#define EXTSEP_C '.'
+#define DIRSEP_S "\\\\"
+#define EXTSEP_S "."
+#define PATHSEP_C ';'
+#define PATHSEP_S ";"
+#else
+#define DIRSEP_C '/'
+#define EXTSEP_C '.'
+#define DIRSEP_S "/"
+#define EXTSEP_S "."
+#define PATHSEP_C ':'
+#define PATHSEP_S ":"
+#endif
+])
+
+AH_BOTTOM([
+/* Definition of GCC specific attributes.  */
+#if __GNUC__ > 2 
+# define GPGME_GCC_A_PURE  __attribute__ ((__pure__))
+#else
+# define GPGME_GCC_A_PURE
+#endif
+])
+
+dnl # Checking for libgpg-error.
+dnl AM_PATH_GPG_ERROR(0.5,, AC_MSG_ERROR([libgpg-error was not found]))
+dnl AC_DEFINE(GPG_ERR_SOURCE_DEFAULT, GPG_ERR_SOURCE_GPGME,
+dnl           [The default error source for GPGME.])
+
+
+
+# Checks for system services
+NO_OVERRIDE=no
+AC_ARG_WITH(gpg,
+	    AC_HELP_STRING([--with-gpg=PATH], [use GnuPG binary at PATH]),
+	    GPG=$withval, NO_OVERRIDE=yes)
+if test "$NO_OVERRIDE" = "yes" || test "$GPG" = "yes"; then
+  GPG=
+  NO_OVERRIDE=yes
+  if test "$cross_compiling" != "yes"; then
+    AC_PATH_PROG(GPG, gpg)
+  fi
+  if test -z "$GPG"; then
+    GPG="$GPG_DEFAULT"
+  fi
+fi
+if test "$GPG" = no; then
+  if test "$NO_OVERRIDE" = "yes"; then
+    if test "$cross_compiling" != "yes"; then
+      AC_MSG_WARN([
+***
+*** Could not find GnuPG, install GnuPG or use --with-gpg=PATH to enable it
+***])
+    else
+      AC_MSG_ERROR([
+***
+*** Can not determine path to GnuPG when cross-compiling, use --with-gpg=PATH
+***])
+    fi
+  fi
+else
+  AC_DEFINE_UNQUOTED(GPG_PATH, "$GPG", [Path to the GnuPG binary.])
+  AC_SUBST(GPG)
+fi
+AM_CONDITIONAL(RUN_GPG_TESTS,
+  [test "$cross_compiling" != "yes" && test -n "$GPG" && test -r "$GPG"])
+AC_SUBST(GPG_PATH)
+
+NO_OVERRIDE=no
+AC_ARG_WITH(gpgsm,
+	    AC_HELP_STRING([--with-gpgsm=PATH], [use GpgSM binary at PATH]),
+	    GPGSM=$withval, NO_OVERRIDE=yes)
+if test "$NO_OVERRIDE" = "yes" || test "$GPGSM" = "yes"; then
+  GPGSM=
+  NO_OVERRIDE=yes
+  if test "$cross_compiling" != "yes"; then
+    AC_PATH_PROG(GPGSM, gpgsm)
+  fi
+  if test -z "$GPGSM"; then
+    GPGSM="$GPGSM_DEFAULT"
+  fi
+fi
+if test "$GPGSM" = no; then
+  if test "$NO_OVERRIDE" = "yes"; then
+    if test "$cross_compiling" != "yes"; then
+      AC_MSG_WARN([
+***
+*** Could not find GpgSM, install GpgSM or use --with-gpgsm=PATH to enable it
+***])
+    else
+      AC_MSG_ERROR([
+***
+*** Can not determine path to GpgSM when cross-compiling, use --with-gpgsm=PATH
+***])
+    fi
+  fi
+else
+  AC_DEFINE_UNQUOTED(GPGSM_PATH, "$GPGSM", [Path to the GPGSM binary.])
+  AC_SUBST(GPGSM)
+fi
+AM_CONDITIONAL(HAVE_GPGSM, [test -n "$GPGSM" && test -r "$GPGSM"])
+dnl AM_CONDITIONAL(RUN_GPGSM_TESTS,
+dnl  [test "$cross_compiling" != "yes" && test -n "$GPGSM" && test -r "$GPGSM"])
+
+dnl # FIXME: Only build if supported.
+dnl AM_CONDITIONAL(BUILD_ASSUAN, test "$GPGSM" != "no")
+
+AC_CHECK_FUNCS(funopen)
+
+if test "$GPGSM" != "no"; then
+  if test $ac_cv_func_funopen != yes; then
+    # No funopen but we can implement that in terms of fopencookie.
+   AC_CHECK_FUNCS(fopencookie, funopen, AC_MSG_ERROR([[No implementation of fopencookie or funopen available.]]))
+  fi
+
+  dnl it's a #define !!!
+  dnl AC_CHECK_FUNCS(isascii)
+
+  AC_CHECK_FUNCS(putc_unlocked)
+  AC_CHECK_FUNCS(memrchr)
+fi
+
+# More assuan checks.
+AC_CHECK_HEADERS([sys/uio.h])
+
+echo "
+	GPGME v${VERSION} has been configured as follows:
+
+        GnuPG version: min. $NEED_GPG_VERSION
+	GnuPG path:    $GPG
+
+        GpgSM version: min. $NEED_GPGSM_VERSION
+	GpgSM path:    $GPGSM
+"
+dnl =======================================================
+dnl FILE: ./libkdepim/configure.in.in
+dnl =======================================================
+
+AC_MSG_CHECKING([whether to use new-style distribution lists])
+AC_ARG_ENABLE(newdistrlists,
+AC_HELP_STRING([--disable-newdistrlists],
+                [Disables the new distribution lists (which are saved as addressee in the address book as normal contacts, useful for Kolab)]),
+                [ enable_new_distrlists=$enableval], [enable_new_distrlists=yes])dnl
+if test "$enable_new_distrlists" = "yes" ; then
+  AC_DEFINE_UNQUOTED(KDEPIM_NEW_DISTRLISTS, 1, [Define if you want to use the new distribution lists])
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+
+AM_CONDITIONAL(compile_newdistrlists, test "x$enable_new_distrlists" = "xyes")
+
+dnl =======================================================
+dnl FILE: ./libkmime/configure.in.in
+dnl =======================================================
+
+AC_CACHE_CHECK(for timezone variable, ac_cv_var_timezone,
+        AC_TRY_COMPILE([
+                #include <time.h>
+        ], [
+                timezone = 1;
+        ], ac_cv_var_timezone=yes, ac_cv_var_timezone=no))
+if test $ac_cv_var_timezone = yes; then
+        AC_DEFINE(HAVE_TIMEZONE, 1, [define if you have a timezone variable])
+fi
+AC_CACHE_CHECK(for tm_gmtoff in struct tm, ac_cv_struct_tm_gmtoff,
+        AC_TRY_COMPILE([
+                #include <time.h>
+        ], [
+                struct tm tm;
+                tm.tm_gmtoff = 1;
+        ], ac_cv_struct_tm_gmtoff=yes, ac_cv_struct_tm_gmtoff=no))
+if test $ac_cv_struct_tm_gmtoff = yes; then
+        AC_DEFINE(HAVE_TM_GMTOFF, 1, [Define if you have a tm_gmtoff member in struct tm])
+fi
+
+
+AC_CHECK_FUNCS(memrchr)
+AC_CHECK_FUNCS(putc_unlocked)
+dnl =======================================================
+dnl FILE: ./libkpimexchange/configure.in.in
+dnl =======================================================
+
+dnl build with exchange support
+
+AC_MSG_CHECKING([if kdelibs has recent webdav])
+AC_LANG_SAVE
+kde_safe_cppflags=$CPPFLAGS
+CPPFLAGS="$CPPFLAGS $all_includes"
+AC_LANG_CPLUSPLUS
+AC_TRY_COMPILE(
+[#include <kio/http.h>],
+[
+  int method = (int) KIO::DAV_SUBSCRIBE;
+],
+[
+  ac_has_recent_webdav="yes"
+  AC_MSG_RESULT([yes])
+],
+[
+  ac_has_recent_webdav="no"
+  AC_MSG_RESULT([no])
+])
+CPPFLAGS=$kde_safe_cppflags
+AC_LANG_RESTORE
+
+ac_use_exchange="no"
+AC_ARG_ENABLE(exchange,
+        [  --disable-exchange      disable Microsoft Exchange 2000 support for korganizer [default=enable]], ac_use_exchange=$enableval, ac_use_exchange=yes)
+AM_CONDITIONAL(include_exchange_SUBDIR, test "x$ac_use_exchange" = "xyes" && test "x$ac_has_recent_webdav" = "xyes")
+
+if test "x$ac_use_exchange" != "xyes" || test "x$ac_has_recent_webdav" != "xyes"; then
+        DO_NOT_COMPILE="$DO_NOT_COMPILE libkpimexchange"
+	AC_MSG_WARN([Exchange 2000 support disabled])
+else
+	AC_DEFINE(KDEPIM_ENABLE_EXCHANGE, 1, [Define if you want Microsoft Exchange 2000 support])
+fi
+
+KDE_CREATE_SUBDIRSLIST
+AM_CONDITIONAL(doc_SUBDIR_included, test "x$doc_SUBDIR_included" = xyes)
+AM_CONDITIONAL(indexlib_SUBDIR_included, test "x$indexlib_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kabc_SUBDIR_included, test "x$kabc_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kdgantt_SUBDIR_included, test "x$kdgantt_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kgantt_SUBDIR_included, test "x$kgantt_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kmailcvt_SUBDIR_included, test "x$kmailcvt_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kmobile_SUBDIR_included, test "x$kmobile_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kode_SUBDIR_included, test "x$kode_SUBDIR_included" = xyes)
+AM_CONDITIONAL(ktnef_SUBDIR_included, test "x$ktnef_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkdenetwork_SUBDIR_included, test "x$libkdenetwork_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkholidays_SUBDIR_included, test "x$libkholidays_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkmime_SUBDIR_included, test "x$libkmime_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkpgp_SUBDIR_included, test "x$libkpgp_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libksieve_SUBDIR_included, test "x$libksieve_SUBDIR_included" = xyes)
+AM_CONDITIONAL(mimelib_SUBDIR_included, test "x$mimelib_SUBDIR_included" = xyes)
+AM_CONDITIONAL(networkstatus_SUBDIR_included, test "x$networkstatus_SUBDIR_included" = xyes)
+AM_CONDITIONAL(pixmaps_SUBDIR_included, test "x$pixmaps_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libemailfunctions_SUBDIR_included, test "x$libemailfunctions_SUBDIR_included" = xyes)
+AM_CONDITIONAL(certmanager_SUBDIR_included, test "x$certmanager_SUBDIR_included" = xyes)
+AM_CONDITIONAL(korn_SUBDIR_included, test "x$korn_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkcal_SUBDIR_included, test "x$libkcal_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kfile_plugins_SUBDIR_included, test "x$kfile_plugins_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkdepim_SUBDIR_included, test "x$libkdepim_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kpilot_SUBDIR_included, test "x$kpilot_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkpimidentities_SUBDIR_included, test "x$libkpimidentities_SUBDIR_included" = xyes)
+AM_CONDITIONAL(libkpimexchange_SUBDIR_included, test "x$libkpimexchange_SUBDIR_included" = xyes)
+AM_CONDITIONAL(konsolekalendar_SUBDIR_included, test "x$konsolekalendar_SUBDIR_included" = xyes)
+AM_CONDITIONAL(knotes_SUBDIR_included, test "x$knotes_SUBDIR_included" = xyes)
+AM_CONDITIONAL(knode_SUBDIR_included, test "x$knode_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kitchensync_SUBDIR_included, test "x$kitchensync_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kioslaves_SUBDIR_included, test "x$kioslaves_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kandy_SUBDIR_included, test "x$kandy_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kalarm_SUBDIR_included, test "x$kalarm_SUBDIR_included" = xyes)
+AM_CONDITIONAL(akregator_SUBDIR_included, test "x$akregator_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kmail_SUBDIR_included, test "x$kmail_SUBDIR_included" = xyes)
+AM_CONDITIONAL(korganizer_SUBDIR_included, test "x$korganizer_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kaddressbook_SUBDIR_included, test "x$kaddressbook_SUBDIR_included" = xyes)
+AM_CONDITIONAL(plugins_SUBDIR_included, test "x$plugins_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kresources_SUBDIR_included, test "x$kresources_SUBDIR_included" = xyes)
+AM_CONDITIONAL(wizards_SUBDIR_included, test "x$wizards_SUBDIR_included" = xyes)
+AM_CONDITIONAL(karm_SUBDIR_included, test "x$karm_SUBDIR_included" = xyes)
+AM_CONDITIONAL(kontact_SUBDIR_included, test "x$kontact_SUBDIR_included" = xyes)
+AC_CONFIG_FILES([ Makefile ])
+AC_CONFIG_FILES([ akregator/Makefile ])
+AC_CONFIG_FILES([ akregator/src/Makefile ])
+AC_CONFIG_FILES([ akregator/src/about/Makefile ])
+AC_CONFIG_FILES([ akregator/src/librss/Makefile ])
+AC_CONFIG_FILES([ akregator/src/mk4storage/Makefile ])
+AC_CONFIG_FILES([ akregator/src/mk4storage/metakit/Makefile ])
+AC_CONFIG_FILES([ akregator/src/mk4storage/metakit/src/Makefile ])
+AC_CONFIG_FILES([ akregator/src/pics/Makefile ])
+AC_CONFIG_FILES([ certmanager/Makefile ])
+AC_CONFIG_FILES([ certmanager/conf/Makefile ])
+AC_CONFIG_FILES([ certmanager/kwatchgnupg/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/backends/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/backends/chiasmus/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/backends/kpgp/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/backends/qgpgme/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/kleo/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/pics/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/tests/Makefile ])
+AC_CONFIG_FILES([ certmanager/lib/ui/Makefile ])
+AC_CONFIG_FILES([ doc/Makefile ])
+AC_CONFIG_FILES([ doc/akregator/Makefile ])
+AC_CONFIG_FILES([ doc/kaddressbook/Makefile ])
+AC_CONFIG_FILES([ doc/kalarm/Makefile ])
+AC_CONFIG_FILES([ doc/kandy/Makefile ])
+AC_CONFIG_FILES([ doc/karm/Makefile ])
+AC_CONFIG_FILES([ doc/kleopatra/Makefile ])
+AC_CONFIG_FILES([ doc/kmail/Makefile ])
+AC_CONFIG_FILES([ doc/knode/Makefile ])
+AC_CONFIG_FILES([ doc/knotes/Makefile ])
+AC_CONFIG_FILES([ doc/konsolekalendar/Makefile ])
+AC_CONFIG_FILES([ doc/kontact/Makefile ])
+AC_CONFIG_FILES([ doc/korganizer/Makefile ])
+AC_CONFIG_FILES([ doc/korn/Makefile ])
+AC_CONFIG_FILES([ doc/kpilot/Makefile ])
+AC_CONFIG_FILES([ doc/ktnef/Makefile ])
+AC_CONFIG_FILES([ doc/kwatchgnupg/Makefile ])
+AC_CONFIG_FILES([ indexlib/Makefile ])
+AC_CONFIG_FILES([ indexlib/tests/Makefile ])
+AC_CONFIG_FILES([ kabc/Makefile ])
+AC_CONFIG_FILES([ kabc/frontend/Makefile ])
+AC_CONFIG_FILES([ kabc/kabc2mutt/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/common/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/csv-templates/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/editors/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/editors/icons/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/editors/protocols/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/features/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/interfaces/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/kcmconfigs/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/pics/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/printing/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/thumbnailcreator/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/views/Makefile ])
+AC_CONFIG_FILES([ kaddressbook/xxport/Makefile ])
+AC_CONFIG_FILES([ kalarm/Makefile ])
+AC_CONFIG_FILES([ kalarm/kalarmd/Makefile ])
+AC_CONFIG_FILES([ kalarm/lib/Makefile ])
+AC_CONFIG_FILES([ kalarm/pixmaps/Makefile ])
+AC_CONFIG_FILES([ kandy/Makefile ])
+AC_CONFIG_FILES([ kandy/profiles/Makefile ])
+AC_CONFIG_FILES([ kandy/src/Makefile ])
+AC_CONFIG_FILES([ karm/Makefile ])
+AC_CONFIG_FILES([ karm/pics/Makefile ])
+AC_CONFIG_FILES([ karm/support/Makefile ])
+AC_CONFIG_FILES([ karm/test/Makefile ])
+AC_CONFIG_FILES([ kdgantt/Makefile ])
+AC_CONFIG_FILES([ kfile-plugins/Makefile ])
+AC_CONFIG_FILES([ kfile-plugins/ics/Makefile ])
+AC_CONFIG_FILES([ kfile-plugins/palm-databases/Makefile ])
+AC_CONFIG_FILES([ kfile-plugins/rfc822/Makefile ])
+AC_CONFIG_FILES([ kfile-plugins/vcf/Makefile ])
+AC_CONFIG_FILES([ kgantt/Makefile ])
+AC_CONFIG_FILES([ kgantt/kgantt/Makefile ])
+AC_CONFIG_FILES([ kgantt/pixmaps/Makefile ])
+AC_CONFIG_FILES([ kioslaves/Makefile ])
+AC_CONFIG_FILES([ kioslaves/imap4/Makefile ])
+AC_CONFIG_FILES([ kioslaves/mbox/Makefile ])
+AC_CONFIG_FILES([ kioslaves/opengroupware/Makefile ])
+AC_CONFIG_FILES([ kioslaves/sieve/Makefile ])
+AC_CONFIG_FILES([ kitchensync/Makefile ])
+AC_CONFIG_FILES([ kitchensync/libqopensync/Makefile ])
+AC_CONFIG_FILES([ kitchensync/opensyncdbus/Makefile ])
+AC_CONFIG_FILES([ kitchensync/src/Makefile ])
+AC_CONFIG_FILES([ kitchensync/src/about/Makefile ])
+AC_CONFIG_FILES([ kitchensync/src/pics/Makefile ])
+AC_CONFIG_FILES([ kmail/Makefile ])
+AC_CONFIG_FILES([ kmail/about/Makefile ])
+AC_CONFIG_FILES([ kmail/avscripts/Makefile ])
+AC_CONFIG_FILES([ kmail/interfaces/Makefile ])
+AC_CONFIG_FILES([ kmail/pics/Makefile ])
+AC_CONFIG_FILES([ kmail/pics/icons/Makefile ])
+AC_CONFIG_FILES([ kmail/profiles/Makefile ])
+AC_CONFIG_FILES([ kmail/tests/Makefile ])
+AC_CONFIG_FILES([ kmailcvt/Makefile ])
+AC_CONFIG_FILES([ kmailcvt/pics/Makefile ])
+AC_CONFIG_FILES([ kmobile/Makefile ])
+AC_CONFIG_FILES([ kmobile/devices/Makefile ])
+AC_CONFIG_FILES([ kmobile/devices/digicam/Makefile ])
+AC_CONFIG_FILES([ kmobile/devices/gammu/Makefile ])
+AC_CONFIG_FILES([ kmobile/devices/gnokii/Makefile ])
+AC_CONFIG_FILES([ kmobile/devices/pics/Makefile ])
+AC_CONFIG_FILES([ kmobile/devices/skeleton/Makefile ])
+AC_CONFIG_FILES([ kmobile/kioslave/Makefile ])
+AC_CONFIG_FILES([ kmobile/kioslave/mimetypes/Makefile ])
+AC_CONFIG_FILES([ knode/Makefile ])
+AC_CONFIG_FILES([ knode/filters/Makefile ])
+AC_CONFIG_FILES([ knode/pics/Makefile ])
+AC_CONFIG_FILES([ knotes/Makefile ])
+AC_CONFIG_FILES([ knotes/icons/Makefile ])
+AC_CONFIG_FILES([ knotes/pics/Makefile ])
+AC_CONFIG_FILES([ kode/Makefile ])
+AC_CONFIG_FILES([ kode/kwsdl/Makefile ])
+AC_CONFIG_FILES([ kode/kwsdl/kung/Makefile ])
+AC_CONFIG_FILES([ kode/kwsdl/schema/Makefile ])
+AC_CONFIG_FILES([ kode/kwsdl/tests/Makefile ])
+AC_CONFIG_FILES([ kode/kwsdl/tests/google/Makefile ])
+AC_CONFIG_FILES([ kode/kwsdl/wscl/Makefile ])
+AC_CONFIG_FILES([ kode/kxml_compiler/Makefile ])
+AC_CONFIG_FILES([ konsolekalendar/Makefile ])
+AC_CONFIG_FILES([ konsolekalendar/pixmaps/Makefile ])
+AC_CONFIG_FILES([ kontact/Makefile ])
+AC_CONFIG_FILES([ kontact/interfaces/Makefile ])
+AC_CONFIG_FILES([ kontact/pics/Makefile ])
+AC_CONFIG_FILES([ kontact/pics/icons/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/akregator/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/kaddressbook/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/karm/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/kitchensync/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/kmail/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/knode/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/knotes/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/korganizer/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/kpilot/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/newsticker/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/specialdates/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/summary/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/test/Makefile ])
+AC_CONFIG_FILES([ kontact/plugins/weather/Makefile ])
+AC_CONFIG_FILES([ kontact/profiles/Makefile ])
+AC_CONFIG_FILES([ kontact/profiles/KontactDefaults/Makefile ])
+AC_CONFIG_FILES([ kontact/profiles/OutlookDefaults/Makefile ])
+AC_CONFIG_FILES([ kontact/src/Makefile ])
+AC_CONFIG_FILES([ kontact/src/about/Makefile ])
+AC_CONFIG_FILES([ korganizer/Makefile ])
+AC_CONFIG_FILES([ korganizer/interfaces/Makefile ])
+AC_CONFIG_FILES([ korganizer/interfaces/calendar/Makefile ])
+AC_CONFIG_FILES([ korganizer/interfaces/korganizer/Makefile ])
+AC_CONFIG_FILES([ korganizer/korgac/Makefile ])
+AC_CONFIG_FILES([ korganizer/korgac/pixmaps/Makefile ])
+AC_CONFIG_FILES([ korganizer/pixmaps/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/datenums/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/exchange/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/hebrew/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/printing/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/printing/journal/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/printing/list/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/printing/whatsnext/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/printing/year/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/projectview/Makefile ])
+AC_CONFIG_FILES([ korganizer/plugins/timespanview/Makefile ])
+AC_CONFIG_FILES([ korganizer/printing/Makefile ])
+AC_CONFIG_FILES([ korganizer/sounds/Makefile ])
+AC_CONFIG_FILES([ korn/Makefile ])
+AC_CONFIG_FILES([ korn/kconf_update/Makefile ])
+AC_CONFIG_FILES([ kpilot/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/abbrowserconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/docconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/docconduit/Icons/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/knotes/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/malconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/memofileconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/notepadconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/null/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/popmail/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/recordconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/sysinfoconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/timeconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/conduits/vcalconduit/Makefile ])
+AC_CONFIG_FILES([ kpilot/kpilot/Makefile ])
+AC_CONFIG_FILES([ kpilot/kpilot/Icons/Makefile ])
+AC_CONFIG_FILES([ kpilot/lib/Makefile ])
+AC_CONFIG_FILES([ kresources/Makefile ])
+AC_CONFIG_FILES([ kresources/birthdays/Makefile ])
+AC_CONFIG_FILES([ kresources/blogging/Makefile ])
+AC_CONFIG_FILES([ kresources/egroupware/Makefile ])
+AC_CONFIG_FILES([ kresources/exchange/Makefile ])
+AC_CONFIG_FILES([ kresources/featureplan/Makefile ])
+AC_CONFIG_FILES([ kresources/groupdav/Makefile ])
+AC_CONFIG_FILES([ kresources/groupware/Makefile ])
+AC_CONFIG_FILES([ kresources/groupwise/Makefile ])
+AC_CONFIG_FILES([ kresources/groupwise/kioslave/Makefile ])
+AC_CONFIG_FILES([ kresources/groupwise/soap/Makefile ])
+AC_CONFIG_FILES([ kresources/kolab/Makefile ])
+AC_CONFIG_FILES([ kresources/kolab/kabc/Makefile ])
+AC_CONFIG_FILES([ kresources/kolab/kcal/Makefile ])
+AC_CONFIG_FILES([ kresources/kolab/knotes/Makefile ])
+AC_CONFIG_FILES([ kresources/kolab/shared/Makefile ])
+AC_CONFIG_FILES([ kresources/lib/Makefile ])
+AC_CONFIG_FILES([ kresources/newexchange/Makefile ])
+AC_CONFIG_FILES([ kresources/remote/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/kabc/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/kcal/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/kioslave/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/knotes/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/scalixadmin/Makefile ])
+AC_CONFIG_FILES([ kresources/scalix/shared/Makefile ])
+AC_CONFIG_FILES([ kresources/slox/Makefile ])
+AC_CONFIG_FILES([ kresources/tvanytime/Makefile ])
+AC_CONFIG_FILES([ ktnef/Makefile ])
+AC_CONFIG_FILES([ ktnef/gui/Makefile ])
+AC_CONFIG_FILES([ ktnef/gui/pics/Makefile ])
+AC_CONFIG_FILES([ ktnef/ktnef/Makefile ])
+AC_CONFIG_FILES([ ktnef/lib/Makefile ])
+AC_CONFIG_FILES([ ktnef/tests/Makefile ])
+AC_CONFIG_FILES([ libemailfunctions/Makefile ])
+AC_CONFIG_FILES([ libemailfunctions/tests/Makefile ])
+AC_CONFIG_FILES([ libkcal/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/design-data/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/doc/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/examples/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/scripts/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/src/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/src/libical/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/src/libicalss/Makefile ])
+AC_CONFIG_FILES([ libkcal/libical/zoneinfo/Makefile ])
+AC_CONFIG_FILES([ libkcal/tests/Makefile ])
+AC_CONFIG_FILES([ libkcal/versit/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/gpgmepp/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/gpgmepp/interfaces/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/libgpg-error-copy/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/libgpgme-copy/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/libgpgme-copy/assuan/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/libgpgme-copy/gpgme/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/qgpgme/Makefile ])
+AC_CONFIG_FILES([ libkdenetwork/qgpgme/tests/Makefile ])
+AC_CONFIG_FILES([ libkdepim/Makefile ])
+AC_CONFIG_FILES([ libkdepim/about/Makefile ])
+AC_CONFIG_FILES([ libkdepim/cfgc/Makefile ])
+AC_CONFIG_FILES([ libkdepim/icons/Makefile ])
+AC_CONFIG_FILES([ libkdepim/interfaces/Makefile ])
+AC_CONFIG_FILES([ libkdepim/komposer/Makefile ])
+AC_CONFIG_FILES([ libkdepim/komposer/core/Makefile ])
+AC_CONFIG_FILES([ libkdepim/komposer/core/tests/Makefile ])
+AC_CONFIG_FILES([ libkdepim/komposer/plugins/Makefile ])
+AC_CONFIG_FILES([ libkdepim/komposer/plugins/default/Makefile ])
+AC_CONFIG_FILES([ libkdepim/komposer/test/Makefile ])
+AC_CONFIG_FILES([ libkdepim/kpartsdesignerplugin/Makefile ])
+AC_CONFIG_FILES([ libkdepim/pics/Makefile ])
+AC_CONFIG_FILES([ libkdepim/tests/Makefile ])
+AC_CONFIG_FILES([ libkholidays/Makefile ])
+AC_CONFIG_FILES([ libkholidays/holidays/Makefile ])
+AC_CONFIG_FILES([ libkmime/Makefile ])
+AC_CONFIG_FILES([ libkmime/tests/Makefile ])
+AC_CONFIG_FILES([ libkpgp/Makefile ])
+AC_CONFIG_FILES([ libkpgp/pics/Makefile ])
+AC_CONFIG_FILES([ libkpimexchange/Makefile ])
+AC_CONFIG_FILES([ libkpimexchange/core/Makefile ])
+AC_CONFIG_FILES([ libkpimidentities/Makefile ])
+AC_CONFIG_FILES([ libksieve/Makefile ])
+AC_CONFIG_FILES([ libksieve/ksieve/Makefile ])
+AC_CONFIG_FILES([ libksieve/parser/Makefile ])
+AC_CONFIG_FILES([ libksieve/shared/Makefile ])
+AC_CONFIG_FILES([ libksieve/tests/Makefile ])
+AC_CONFIG_FILES([ mimelib/Makefile ])
+AC_CONFIG_FILES([ mimelib/mimelib/Makefile ])
+AC_CONFIG_FILES([ networkstatus/Makefile ])
+AC_CONFIG_FILES([ pixmaps/Makefile ])
+AC_CONFIG_FILES([ plugins/Makefile ])
+AC_CONFIG_FILES([ plugins/kmail/Makefile ])
+AC_CONFIG_FILES([ plugins/kmail/bodypartformatter/Makefile ])
+AC_CONFIG_FILES([ wizards/Makefile ])
+AC_CONFIG_FILES([ indexlib/indexlib-config ])
+AC_CONFIG_FILES([ korganizer/ical2vcal ])
+
+all_includes="-I\$(top_srcdir)/libkdepim $all_includes"
+
+AC_OUTPUT
+if test "x$with_gnokii" = xcheck && test -z "$LIB_GNOKII"; then
+  echo ""
+  echo "libgnokii (http://www.gnokii.org) is missing. The KDE Addressbook mobile phone import/export filter will not be available."
+  echo ""
+  all_tests=bad
+fi
+
+if test -z "$KMIX"; then
+  echo ""
+  echo "================================================================="
+  echo "kmix (from the kdemultimedia package) is missing."
+  echo "KAlarm will not be able to set the absolute sound volume when"
+  echo "playing audio files until you install kmix."
+  echo "================================================================="
+fi
+if test -z "$KTTSD"; then
+  echo ""
+  echo "================================================================="
+  echo "kttsd (from the kdeaccessibility package) is missing."
+  echo "KAlarm will not be able to speak alarm messages until you install"
+  echo "kttsd together with appropriate speech synthesis application(s)."
+  echo "================================================================="
+fi
+if test "x$with_sasl" = xcheck && test -z "$SASL2_LIBS"; then
+  echo ""
+  echo "cyrus-sasl 2 library is missing. The sieve ioslave will not be built, and imap4 will lack of a lot of authentication methods."
+  echo ""
+  all_tests=bad
+fi
+if test "$HAVE_OPENSYNC" = 0 -o "$HAVE_OPENSYNC_ENGINE" = 0; then
+	echo ""
+	echo "You're missing a compatible version of libopensync."
+        echo "Version 0.19 or greater is needed."
+	echo "kitchensync will not be built."
+	echo ""
+	all_tests=bad
+fi
+case "$missing_indexlib" in
+yes)
+	echo "You are missing indexlib, which is required to"
+	echo "enable full-text indexing in KMail. You can use"
+	echo "--with-indexlib to enable indexlib."
+	;;
+no)
+	echo "You have indexlib enabled. Good luck!"
+	;;
+ignore)
+	echo "If you would like to build-in KMail's experimental full-text"
+	echo "indexing please re-run configure with the --enable-indexlib option."
+	;;
+esac
+if test "$HAVE_PISOCK" = "0" ; then
+	echo ""
+	echo "You're missing a compatible version of pilot-link for KPilot."
+	echo "KPilot will not be built."
+	echo ""
+	all_tests=bad
+else
+	if test "x$HAVE_BAD_PISOCK" = "xYES" ; then
+		echo ""
+		echo "You have a version of pilot-link < 0.12.0."
+		echo "This version is old and is known to cause problems"
+		echo "with KPilot.  Please compile KPilot with "
+		echo "pilot-link version 0.12.0 or greater."
+		echo "KPilot will not be built."
+		echo ""
+		all_tests=bad
+	fi
+fi
+dnl Configure.in.bot for KPilot conduits.
+dnl
+dnl Copyright (C) 2000,2001 Adriaan de Groot
+dnl Copyright (C) 2002 Reinhold Kainhofer
+dnl
+dnl This file is released under the terms of the Gnu General Public
+dnl Licence (GPL) Version 2.
+
+if test "$with_mal" = NOTFOUND -o "$with_mal" = no ; then
+    echo ""
+    echo "KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled."
+    echo "KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/"
+    echo ""
+fi
+if test -z "$GPGME_LIBS" || test -n "$kdepim_needs_gpgme_copy" ; then
+   echo
+   echo "You are missing gpgme 0.4.5 or higher."
+   echo "Gpgme will be built statically from libkdenetwork/libgpgme-copy."
+   echo "If you are a packager, we most strongly recommend to build against"
+   echo "the system's shared gpgme."
+   echo "Consider downloading gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme"
+   echo "or use the --with-gpgme-prefix=/path/where/gpgme/is/installed option."
+   echo
+fi
+# Check if KDE_SET_PREFIX was called, and --prefix was passed to configure
+if test -n "$kde_libs_prefix" -a -n "$given_prefix"; then
+  # And if so, warn when they don't match
+  if test "$kde_libs_prefix" != "$given_prefix"; then
+    # And if kde doesn't know about the prefix yet
+    echo ":"`kde-config --path exe`":" | grep ":$given_prefix/bin/:" 2>&1 >/dev/null
+    if test $? -ne 0; then
+      echo ""
+      echo "Warning: you chose to install this package in $given_prefix,"
+      echo "but KDE was found in $kde_libs_prefix."
+      echo "For this to work, you will need to tell KDE about the new prefix, by ensuring"
+      echo "that KDEDIRS contains it, e.g. export KDEDIRS=$given_prefix:$kde_libs_prefix"
+      echo "Then restart KDE."
+      echo ""
+    fi
+  fi
+fi
+
+if test x$GXX = "xyes" -a x$kde_have_gcc_visibility = "xyes" -a x$kde_cv_val_qt_gcc_visibility_patched = "xno"; then
+  echo ""
+  echo "Your GCC supports symbol visibility, but the patch for Qt supporting visibility"
+  echo "was not included. Therefore, GCC symbol visibility support remains disabled."
+  echo ""
+  echo "For better performance, consider including the Qt visibility supporting patch"
+  echo "located at:"
+  echo ""
+  echo "http://bugs.kde.org/show_bug.cgi?id=109386"
+  echo ""
+  echo "and recompile all of Qt and KDE. Note, this is entirely optional and"
+  echo "everything will continue to work just fine without it."
+  echo ""
+fi
+
+if test "$all_tests" = "bad"; then
+  if test ! "$cache_file" = "/dev/null"; then
+    echo ""
+    echo "Please remove the file $cache_file after changing your setup"
+    echo "so that configure will find the changes next time."
+    echo ""
+  fi
+else
+  echo ""
+  echo "Good - your configure finished. Start make now"
+  echo ""
+fi

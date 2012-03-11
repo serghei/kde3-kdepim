@@ -1,0 +1,1 @@
+SUBDIRS = kabc2mutt

@@ -1,0 +1,14 @@
+AC_MSG_CHECKING([whether to use new-style distribution lists])
+AC_ARG_ENABLE(newdistrlists,
+AC_HELP_STRING([--disable-newdistrlists],
+                [Disables the new distribution lists (which are saved as addressee in the address book as normal contacts, useful for Kolab)]),
+                [ enable_new_distrlists=$enableval], [enable_new_distrlists=yes])dnl
+if test "$enable_new_distrlists" = "yes" ; then
+  AC_DEFINE_UNQUOTED(KDEPIM_NEW_DISTRLISTS, 1, [Define if you want to use the new distribution lists])
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+
+AM_CONDITIONAL(compile_newdistrlists, test "x$enable_new_distrlists" = "xyes")
+

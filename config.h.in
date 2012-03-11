@@ -1,0 +1,654 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Define to the type of elements in the array set by `getgroups'. Usually
+   this is either `int' or `gid_t'. */
+#undef GETGROUPS_T
+
+/* Path to the GPGSM binary. */
+#undef GPGSM_PATH
+
+/* Path to the GnuPG binary. */
+#undef GPG_PATH
+
+/* Define to 1 if you have the <assert.h> header file. */
+#undef HAVE_ASSERT_H
+
+/* Define to 1 if you have the `basename' function. */
+#undef HAVE_BASENAME
+
+/* Define to 1 if you have the <baudboy.h> header file. */
+#undef HAVE_BAUDBOY_H
+
+/* Define to 1 if you have the <bluetooth/bluetooth.h> header file. */
+#undef HAVE_BLUETOOTH_BLUETOOTH_H
+
+/* Define if the sieve KIO::Slave must be able to talk to timsieved <= 1.1.0
+   */
+#undef HAVE_BROKEN_TIMSIEVED
+
+/* Define to 1 if you have the <byteswap.h> header file. */
+#undef HAVE_BYTESWAP_H
+
+/* Define to 1 if your C compiler support C99 designated initializers */
+#undef HAVE_C99_INITIALIZERS
+
+/* Define to 1 if you have the <Carbon/Carbon.h> header file. */
+#undef HAVE_CARBON_CARBON_H
+
+/* Define if you have the CoreAudio API */
+#undef HAVE_COREAUDIO
+
+/* Define to 1 if you have the <crt_externs.h> header file. */
+#undef HAVE_CRT_EXTERNS_H
+
+/* Defines if your system has the crypt function */
+#undef HAVE_CRYPT
+
+/* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_DIRENT_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Defined if we run on some of the PCDOS like systems· (DOS, Windoze. OS/2)
+   with special properties like no file modes */
+#undef HAVE_DOSISH_SYSTEM
+
+/* Defined if we run on some of the PCDOS like systems (DOS, Windoze, OS/2)
+   with special properties like no file modes. */
+#undef HAVE_DRIVE_LETTERS
+
+/* Define to 1 if you have the <err.h> header file. */
+#undef HAVE_ERR_H
+
+/* Define to 1 if you have the `fabsl' function. */
+#undef HAVE_FABSL
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the `fopencookie' function. */
+#undef HAVE_FOPENCOOKIE
+
+/* Define to 1 if you have the `funopen' function. */
+#undef HAVE_FUNOPEN
+
+/* Define if you have getdomainname */
+#undef HAVE_GETDOMAINNAME
+
+/* Define if you have the getdomainname prototype */
+#undef HAVE_GETDOMAINNAME_PROTO
+
+/* Define to 1 if you have the `getenv_r' function. */
+#undef HAVE_GETENV_R
+
+/* Define if you have gethostname */
+#undef HAVE_GETHOSTNAME
+
+/* Define if you have the gethostname prototype */
+#undef HAVE_GETHOSTNAME_PROTO
+
+/* Define to 1 if you have the <gnokii.h> header file. */
+#undef HAVE_GNOKII_H
+
+/* Always set since we use gpgme-copy if gpgme isn't available */
+#undef HAVE_GPGME_0_4_BRANCH
+
+/* Define to 1 if your gpgme supports gpgme_cancel() */
+#undef HAVE_GPGME_CANCEL
+
+/* Define to 1 if your gpgme has the GPGME_INCLUDE_CERTS_DEFAULT macro */
+#undef HAVE_GPGME_INCLUDE_CERTS_DEFAULT
+
+/* Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE */
+#undef HAVE_GPGME_KEYLIST_MODE_VALIDATE
+
+/* Define to 1 if your gpgme's gpgme_key_t has the keylist_mode member */
+#undef HAVE_GPGME_KEY_T_KEYLIST_MODE
+
+/* Define to 1 if your gpgme supports gpgme_op_getauditlog */
+#undef HAVE_GPGME_OP_GETAUDITLOG
+
+/* Define to 1 if your gpgme's gpgme_decrypt_result_t has the wrong_key_usage
+   member */
+#undef HAVE_GPGME_WRONG_KEY_USAGE
+
+/* Define if you want EXPERIMENTAL full-text indexing in KMail */
+#undef HAVE_INDEXLIB
+
+/* Define if your system has Linux Inode Notification */
+#undef HAVE_INOTIFY
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <libgen.h> header file. */
+#undef HAVE_LIBGEN_H
+
+/* Define if you have libjpeg */
+#undef HAVE_LIBJPEG
+
+/* Define if you have MAL libraries */
+#undef HAVE_LIBMAL
+
+/* Define if you have libpng */
+#undef HAVE_LIBPNG
+
+/* Define if you have a working libpthread (will enable threaded code) */
+#undef HAVE_LIBPTHREAD
+
+/* Define if you have cyrus-sasl2 libraries */
+#undef HAVE_LIBSASL2
+
+/* Define if you have libXss installed */
+#undef HAVE_LIBXSS
+
+/* Define if you have libz */
+#undef HAVE_LIBZ
+
+/* */
+#undef HAVE_LOCKDEV
+
+/* Define to 1 if you have the <lockdev.h> header file. */
+#undef HAVE_LOCKDEV_H
+
+/* Define to 1 if the type `long double' works and has more range or precision
+   than `double'. */
+#undef HAVE_LONG_DOUBLE
+
+/* Define to 1 if the type `long double' works and has more range or precision
+   than `double'. */
+#undef HAVE_LONG_DOUBLE_WIDER
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#undef HAVE_MALLOC_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `memrchr' function. */
+#undef HAVE_MEMRCHR
+
+/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
+#undef HAVE_NDIR_H
+
+/* Define if your system needs _NSGetEnviron to set up the environment */
+#undef HAVE_NSGETENVIRON
+
+/* Define if you have OpenSSL < 0.9.6 */
+#undef HAVE_OLD_SSL_API
+
+/* Define to 1 if you have the <paths.h> header file. */
+#undef HAVE_PATHS_H
+
+/* Define to 1 if you have the `putc_unlocked' function. */
+#undef HAVE_PUTC_UNLOCKED
+
+/* Define if you have res_init */
+#undef HAVE_RES_INIT
+
+/* Define if you have the res_init prototype */
+#undef HAVE_RES_INIT_PROTO
+
+/* Define to 1 if you have the <sasl/sasl.h> header file. */
+#undef HAVE_SASL_SASL_H
+
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
+
+/* Define if you have the setenv prototype */
+#undef HAVE_SETENV_PROTO
+
+/* Define if you have a STL implementation by SGI */
+#undef HAVE_SGI_STL
+
+/* Define to 1 if you have the `snprintf' function. */
+#undef HAVE_SNPRINTF
+
+/* Define to 1 if you have the `socket' function. */
+#undef HAVE_SOCKET
+
+/* If we are going to use OpenSSL */
+#undef HAVE_SSL
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define if your version of stl is defined in namespace std */
+#undef HAVE_STLNAMESPACE
+
+/* Define to 1 if you have the `stpcpy' function. */
+#undef HAVE_STPCPY
+
+/* Define to 1 if you have the `strdup' function. */
+#undef HAVE_STRDUP
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define if you have strlcat */
+#undef HAVE_STRLCAT
+
+/* Define if you have the strlcat prototype */
+#undef HAVE_STRLCAT_PROTO
+
+/* Define if you have strlcpy */
+#undef HAVE_STRLCPY
+
+/* Define if you have the strlcpy prototype */
+#undef HAVE_STRLCPY_PROTO
+
+/* Define to 1 if you have the <sysent.h> header file. */
+#undef HAVE_SYSENT_H
+
+/* Define to 1 if you have the <sys/bitypes.h> header file. */
+#undef HAVE_SYS_BITYPES_H
+
+/* Define to 1 if you have the <sys/cdefs.h> header file. */
+#undef HAVE_SYS_CDEFS_H
+
+/* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_DIR_H
+
+/* Define to 1 if you have the <sys/file.h> header file. */
+#undef HAVE_SYS_FILE_H
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define to 1 if you have the <sys/limits.h> header file. */
+#undef HAVE_SYS_LIMITS_H
+
+/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_NDIR_H
+
+/* Define to 1 if you have the <sys/param.h> header file. */
+#undef HAVE_SYS_PARAM_H
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/sysctl.h> header file. */
+#undef HAVE_SYS_SYSCTL_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/uio.h> header file. */
+#undef HAVE_SYS_UIO_H
+
+/* Define if getenv() is thread-safe */
+#undef HAVE_THREAD_SAFE_GETENV
+
+/* Define to 1 if you have the `timegm' function. */
+#undef HAVE_TIMEGM
+
+/* define if you have a timezone variable */
+#undef HAVE_TIMEZONE
+
+/* Define to 1 if you have the <time.h> header file. */
+#undef HAVE_TIME_H
+
+/* Define if you have a tm_gmtoff member in struct tm */
+#undef HAVE_TM_GMTOFF
+
+/* Define to 1 if you have the `tzset' function. */
+#undef HAVE_TZSET
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `unsetenv' function. */
+#undef HAVE_UNSETENV
+
+/* Define if you have the unsetenv prototype */
+#undef HAVE_UNSETENV_PROTO
+
+/* Define if you have usleep */
+#undef HAVE_USLEEP
+
+/* Define if you have the usleep prototype */
+#undef HAVE_USLEEP_PROTO
+
+/* Define to 1 if you have the <values.h> header file. */
+#undef HAVE_VALUES_H
+
+/* Define to 1 if you have the `vasprintf' function. */
+#undef HAVE_VASPRINTF
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#undef HAVE_VSNPRINTF
+
+/* Define if you have X11 header files */
+#undef HAVE_X11_HEADERS
+
+/* Define if you have XPM support */
+#undef HAVE_XPM
+
+/* safe saves */
+#undef ICAL_SAFESAVES
+
+/* unix newline */
+#undef ICAL_UNIX_NEWLINE
+
+/* Suffix for lib directories */
+#undef KDELIBSUFF
+
+/* Define if you want Microsoft Exchange 2000 support */
+#undef KDEPIM_ENABLE_EXCHANGE
+
+/* Define if you want to use the new distribution lists */
+#undef KDEPIM_NEW_DISTRLISTS
+
+/* Define if we have the old libmal version (<0.40) */
+#undef LIBMAL20
+
+/* Maximum length of command line arguments */
+#undef MAX_CMD_LENGTH
+
+/* Min. needed GPGSM version. */
+#undef NEED_GPGSM_VERSION
+
+/* Min. needed GnuPG version. */
+#undef NEED_GPG_VERSION
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+
+/* Separators as used in file names and $PATH. Please note that the
+   string version must not contain more than one character because
+   the using code assumes strlen()==1 */
+#ifdef HAVE_DOSISH_SYSTEM
+#define DIRSEP_C '\\\\'
+#define EXTSEP_C '.'
+#define DIRSEP_S "\\\\"
+#define EXTSEP_S "."
+#define PATHSEP_C ';'
+#define PATHSEP_S ";"
+#else
+#define DIRSEP_C '/'
+#define EXTSEP_C '.'
+#define DIRSEP_S "/"
+#define EXTSEP_S "."
+#define PATHSEP_C ':'
+#define PATHSEP_S ":"
+#endif
+
+
+/* The size of `char *', as computed by sizeof. */
+#undef SIZEOF_CHAR_P
+
+/* The size of `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* The size of `size_t', as computed by sizeof. */
+#undef SIZEOF_SIZE_T
+
+/* The size of `uint64_t', as computed by sizeof. */
+#undef SIZEOF_UINT64_T
+
+/* The size of `unsigned int', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_INT
+
+/* The size of `unsigned long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* The size of `unsigned long long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG_LONG
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Namespace prefix the stl is defined in */
+#undef STD_NAMESPACE_PREFIX
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Define to 1 if your <sys/time.h> declares `struct tm'. */
+#undef TM_IN_SYS_TIME
+
+/* Version number of package */
+#undef VERSION
+
+/* Defined if compiling without arts */
+#undef WITHOUT_ARTS
+
+/* Define to 1 if your processor stores words with the most significant byte
+   first (like Motorola and SPARC, unlike Intel and VAX). */
+#undef WORDS_BIGENDIAN
+
+/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
+   `char[]'. */
+#undef YYTEXT_POINTER
+
+/*
+ * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system
+ * headers and I'm too lazy to write a configure test as long as only
+ * unixware is related
+ */
+#ifdef _UNIXWARE
+#define HAVE_BOOLEAN
+#endif
+
+
+
+/*
+ * AIX defines FD_SET in terms of bzero, but fails to include <strings.h>
+ * that defines bzero.
+ */
+
+#if defined(_AIX)
+#include <strings.h>
+#endif
+
+
+
+#if defined(HAVE_NSGETENVIRON) && defined(HAVE_CRT_EXTERNS_H)
+# include <sys/time.h>
+# include <crt_externs.h>
+# define environ (*_NSGetEnviron())
+#endif
+
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
+
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
+
+
+#if !defined(HAVE_GETDOMAINNAME_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <sys/types.h>
+		int getdomainname (char *, size_t);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_GETHOSTNAME_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int gethostname (char *, unsigned int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_RES_INIT_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int res_init(void);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_SETENV_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int setenv (const char *, const char *, int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_STRLCAT_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+unsigned long strlcat(char*, const char*, unsigned long);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_STRLCPY_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+unsigned long strlcpy(char*, const char*, unsigned long);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_UNSETENV_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+void unsetenv (const char *);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_USLEEP_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int usleep (unsigned int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
+
+
+/*
+ * On HP-UX, the declaration of vsnprintf() is needed every time !
+ */
+
+#if !defined(HAVE_VSNPRINTF) || defined(hpux)
+#if __STDC__
+#include <stdarg.h>
+#include <stdlib.h>
+#else
+#include <varargs.h>
+#endif
+#ifdef __cplusplus
+extern "C"
+#endif
+int vsnprintf(char *str, size_t n, char const *fmt, va_list ap);
+#ifdef __cplusplus
+extern "C"
+#endif
+int snprintf(char *str, size_t n, char const *fmt, ...);
+#endif
+
+
+
+#if defined(__SVR4) && !defined(__svr4__)
+#define __svr4__ 1
+#endif
+
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef gid_t
+
+/* type to use in place of socklen_t if not defined */
+#undef kde_socklen_t
+
+/* type to use in place of socklen_t if not defined (deprecated, use
+   kde_socklen_t) */
+#undef ksize_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef uid_t
+
+
+/* Definition of GCC specific attributes.  */
+#if __GNUC__ > 2 
+# define GPGME_GCC_A_PURE  __attribute__ ((__pure__))
+#else
+# define GPGME_GCC_A_PURE
+#endif
+

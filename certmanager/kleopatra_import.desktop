@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Kleopatra
+Name[is]=Kleópatra
+Name[mk]=Клеопатра
+Name[ne]=क्लेओपत्र
+Name[ta]=க்ளியோபட்ரா
+Type=Application
+Exec=kleopatra --import-certificate %u
+#Icon=kleopatra
+NoDisplay=true
+MimeType=application/pkcs7-mime;application/x-x509-ca-cert;application/x-pkcs12;
+
+X-KDE-StartupNotify=true

@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Kontact
+Name[be]=Кантакт
+Name[hi]=कॉन्टेक्ट
+Name[mk]=Контакт
+Name[ne]=सम्पर्क गर्नुहोस्
+Name[sv]=Kontakt
+Name[ta]=தொடர்பு கொள்
+Name[zh_TW]=Kontact 個人資訊管理
+Exec=kontact --iconify
+Type=Application
+Icon=kontact
+NoDisplay=true
+X-DCOP-ServiceType=Unique
+X-DCOP-ServiceName=kontact
+ServiceTypes=DCOP/ResourceBackend/IMAP,DCOP/Mailer
+X-KDE-StartupNotify=false
+Categories=Qt;KDE;Office
