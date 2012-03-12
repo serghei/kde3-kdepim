@@ -31,9 +31,9 @@
 #include <kmdcodec.h>
 
 extern "C" {
-  #include <ical.h>
-  #include <icalparser.h>
-  #include <icalrestriction.h>
+  #include <libical/ical.h>
+  #include <libical/icalparser.h>
+  #include <libical/icalrestriction.h>
 }
 
 #include "calendar.h"
@@ -630,7 +630,7 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
   if (att->isUri())
       attach = icalattach_new_from_url( att->uri().utf8().data());
   else
-      attach = icalattach_new_from_data ( (unsigned char *)att->data(), 0, 0);
+      attach = icalattach_new_from_data ( att->data(), 0, 0);
   icalproperty *p = icalproperty_new_attach(attach);
 
   if ( !att->mimeType().isEmpty() ) {

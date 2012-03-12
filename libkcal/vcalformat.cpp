@@ -37,8 +37,8 @@
 #include "vcc.h"
 #include "vobject.h"
 extern "C" {
-#include "icaltime.h"
-#include "icaltimezone.h"
+#include <libical/icaltime.h>
+#include <libical/icaltimezone.h>
 }
 #include "vcaldrag.h"
 #include "calendar.h"

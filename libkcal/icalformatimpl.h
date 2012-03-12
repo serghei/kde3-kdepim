@@ -30,7 +30,7 @@
 
 
 extern "C" {
-  #include <ical.h>
+  #include <libical/ical.h>
 }
 
 namespace KCal {
