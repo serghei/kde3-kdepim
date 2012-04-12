@@ -45,6 +45,7 @@
 #include <string>
 #include <cstring>
 #include <assert.h>
+#include <cstddef>
 
 template <typename> class memory_iterator;
 template <typename> class memvector;
