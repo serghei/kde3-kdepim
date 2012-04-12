@@ -21,11 +21,9 @@ include_directories(
 
 ##### resourcescalixshared (static) #############
 
-set( KDE3_DCOPIDL_EXECUTABLE ${KDE3_DCOPIDLNG_EXECUTABLE} )
-
 kde_add_library( resourcescalixshared STATIC_PIC AUTOMOC
   SOURCES
     resourcescalixbase.cpp kmailconnection.cpp scalixbase.cpp
-    subresource.cpp kmailconnection.skel
-    ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.stub
+    subresource.cpp kmailconnection.skel_ng
+    ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.stub_ng
 )

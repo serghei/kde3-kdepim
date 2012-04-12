@@ -33,12 +33,10 @@ install( FILES knotes_part.rc DESTINATION ${DATA_INSTALL_DIR}/knotes )
 
 ##### libkontact_knotesplugin (module) ##########
 
-set( KDE3_DCOPIDL_EXECUTABLE ${KDE3_DCOPIDLNG_EXECUTABLE} )
-
 kde_add_kpart( libkontact_knotesplugin AUTOMOC
   SOURCES
     knotes_plugin.cpp knotes_part.cpp summarywidget.cpp knotetip.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/KNotesIface.skel
+    ${CMAKE_SOURCE_DIR}/knotes/KNotesIface.skel_ng
   LINK kpinterfaces-shared knotes-shared
   DESTINATION ${PLUGIN_INSTALL_DIR}
 )

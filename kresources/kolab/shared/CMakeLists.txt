@@ -21,10 +21,8 @@ include_directories(
 
 ##### resourcekolabshared (static) ##############
 
-set( KDE3_DCOPIDL_EXECUTABLE ${KDE3_DCOPIDLNG_EXECUTABLE} )
-
 kde_add_library( resourcekolabshared STATIC_PIC AUTOMOC
   SOURCES
     resourcekolabbase.cpp kmailconnection.cpp kolabbase.cpp subresource.cpp
-    kmailconnection.skel ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.stub
+    kmailconnection.skel ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.stub_ng
 )
