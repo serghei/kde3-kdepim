@@ -45,6 +45,6 @@ kde_add_library( gpgme++ SHARED
     verificationresult.cpp signingresult.cpp
     encryptionresult.cpp engineinfo.cpp
   VERSION 0.4.0
-  LINK ${QT_LIBRARY} ${GPGME_LIBRARIES}
+  LINK ${QT_LIBRARY} ${GPGME_LIBRARIES} ${GPG_ERROR_LIBRARY}
   DESTINATION ${LIB_INSTALL_DIR}
 )

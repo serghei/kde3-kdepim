@@ -108,6 +108,8 @@ if( BUILD_LIBKDENETWORK OR BUILD_CERTMANAGER OR BUILD_KMAIL OR BUILD_KADDRESSBOO
     string( REGEX REPLACE "(^| )-l" ";" GPGME_LIBRARIES "${GPGME_LIBRARIES}" )
   endif( )
 
+  find_library( GPG_ERROR_LIBRARY NAMES "gpg-error" )
+
   # assuming that all newer system have gpgme >= 0.4
   set( HAVE_GPGME_0_4_BRANCH 1 CACHE INTERNAL "" )
 
