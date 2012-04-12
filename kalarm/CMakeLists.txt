@@ -36,7 +36,7 @@ include_directories(
 )
 
 if( WITH_ARTS )
-  set( ARTS_LIBRARIES artskde-shared mcop )
+  set( ARTS_LIBRARIES artskde-shared mcop-shared )
 endif( )
 
 
