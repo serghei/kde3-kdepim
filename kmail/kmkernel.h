@@ -28,6 +28,8 @@ namespace KWallet {
   class Wallet;
 }
 
+class KMNetworkMonitor;
+
 /** The KMail namespace contains classes used for KMail.
 * This is to keep them out of the way from all the other
 * un-namespaced classes in libs and the rest of PIM.
@@ -412,6 +414,7 @@ public slots:
 protected slots:
   void slotDataReq(KIO::Job*,QByteArray&);
   void slotResult(KIO::Job*);
+  void slotNetworkStateChanged(bool);
 
 signals:
   void configChanged();
@@ -494,6 +497,8 @@ private:
   KPIM::ThreadWeaver::WeaverThreadLogger *the_weaverLogger;
 
   KWallet::Wallet *mWallet;
+
+  KMNetworkMonitor *networkMonitor;
 
   // variables used by dcopAddMessage()
   QStringList mAddMessageMsgIds;

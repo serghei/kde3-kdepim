@@ -177,7 +177,7 @@ set( ${target}_SRCS
   localsubscriptiondialog.cpp editorwatcher.cpp favoritefolderview.cpp
   foldertreebase.cpp snippetdlgbase.ui snippetwidget.cpp snippetconfig.cpp
   snippetdlg.cpp snippetitem.cpp snippetsettings.cpp snippetsettingsbase.ui
-  messageactions.cpp korghelper.cpp
+  messageactions.cpp korghelper.cpp kmnetworkmonitor.cpp
   ${CMAKE_SOURCE_DIR}/korganizer/kcalendariface.stub
   kmailIface.skel_ng kmailicalIface.skel_ng
   ${CMAKE_SOURCE_DIR}/korganizer/korganizeriface.stub )
@@ -186,7 +186,7 @@ kde_add_library( ${target} SHARED AUTOMOC
   SOURCES ${${target}_SRCS}
   LINK
     emailfunctions-static kmime-shared kpgp-shared kdepim-shared kpimidentities-shared
-    mimelib-shared ksieve-shared khtml-shared ${INDEX_LIBRARY}
+    mimelib-shared ksieve-shared khtml-shared kdedbus-shared ${INDEX_LIBRARY}
   DESTINATION ${LIB_INSTALL_DIR}
 )
 

@@ -70,6 +70,7 @@ using KMail::FolderIface;
 #include <kwallet.h>
 using KWallet::Wallet;
 #include "actionscheduler.h"
+#include "kmnetworkmonitor.h"
 
 #include <qutf7codec.h>
 #include <qvbox.h>
@@ -166,6 +167,9 @@ KMKernel::KMKernel (QObject *parent, const char *name) :
 
   connectDCOPSignal( 0, 0, "kmailSelectFolder(QString)",
                      "selectFolder(QString)", false );
+
+  networkMonitor = new KMNetworkMonitor(this, "KMNetworkMonitor");
+  connect(networkMonitor, SIGNAL(stateChanged(bool)), SLOT(slotNetworkStateChanged(bool)));
 }
 
 KMKernel::~KMKernel ()
@@ -1944,6 +1948,14 @@ void KMKernel::slotResult(KIO::Job *job)
     else job->showErrorDialog();
   }
   mPutJobs.remove(it);
+}
+
+void KMKernel::slotNetworkStateChanged(bool state)
+{
+  if(state)
+    resumeNetworkJobs();
+  else
+    stopNetworkJobs();
 }
 
 void KMKernel::slotRequestConfigSync() {
