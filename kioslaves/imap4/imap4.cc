@@ -167,9 +167,7 @@ IMAP4Protocol::IMAP4Protocol (const QCString & pool, const QCString & app, bool 
 {
   outputBufferIndex = 0;
   mySSL = isSSL;
-  readBuffer[0] = 0x00;
   relayEnabled = false;
-  readBufferLen = 0;
   cacheOutput = false;
   decodeContent = false;
   mTimeOfLastNoop = QDateTime();
@@ -702,66 +700,60 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, ulong len, ulong relay)
 
 bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
 {
-  if (myHost.isEmpty()) return FALSE;
+  // FIXME (Serghei): i'm not sure about role of "relay"
 
-  while (true) {
-    ssize_t copyLen = 0;
-    if (readBufferLen > 0)
-    {
-      while (copyLen < readBufferLen && readBuffer[copyLen] != '\n') copyLen++;
-      if (copyLen < readBufferLen) copyLen++;
-      if (relay > 0)
-      {
-        QByteArray relayData;
+  if(myHost.isEmpty())
+    return false;
 
-        if (copyLen < (ssize_t) relay)
-          relay = copyLen;
-        relayData.setRawData (readBuffer, relay);
-        parseRelay (relayData);
-        relayData.resetRawData (readBuffer, relay);
-//        kdDebug(7116) << "relayed : " << relay << "d" << endl;
-      }
-      // append to buffer
-      {
-        QBuffer stream (buffer);
+  // default error
+  int errorStatus = ERR_CONNECTION_BROKEN;
 
-        stream.open (IO_WriteOnly);
-        stream.at (buffer.size ());
-        stream.writeBlock (readBuffer, copyLen);
-        stream.close ();
-//        kdDebug(7116) << "appended " << copyLen << "d got now " << buffer.size() << endl;
-      }
+  // open buffer stream
+  QBuffer stream(buffer);
+  stream.open(IO_WriteOnly);
+  stream.at(buffer.size());
 
-      readBufferLen -= copyLen;
-      if (readBufferLen)
-        memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
-      if (buffer[buffer.size() - 1] == '\n') return TRUE;
-    }
+  for (;;)
+  {
     if (!isConnectionValid())
     {
       kdDebug(7116) << "parseReadLine - connection broken" << endl;
-      error (ERR_CONNECTION_BROKEN, myHost);
-      setState(ISTATE_CONNECT);
-      closeConnection();
-      return FALSE;
+      break;
     }
-    if (!waitForResponse( responseTimeout() ))
+
+    if (!waitForResponse(responseTimeout()))
     {
-      error(ERR_SERVER_TIMEOUT, myHost);
-      setState(ISTATE_CONNECT);
-      closeConnection();
-      return FALSE;
+      kdDebug(7116) << "parseReadLine - connection timeout" << endl;
+      errorStatus = ERR_SERVER_TIMEOUT;
+      break;
     }
-    readBufferLen = read(readBuffer, IMAP_BUFFER - 1);
-    if (readBufferLen == 0)
+
+    char buf[4096];
+    int len = readLine(buf, sizeof(buf));
+
+    if (0 >= len)
     {
-      kdDebug(7116) << "parseReadLine: readBufferLen == 0 - connection broken" << endl;
-      error (ERR_CONNECTION_BROKEN, myHost);
-      setState(ISTATE_CONNECT);
-      closeConnection();
-      return FALSE;
+      kdDebug(7116) << "parseReadLine - read line error" << endl;
+      break;
+    }
+
+    stream.writeBlock(buf, len);
+
+    // len is always bigger than zero,
+    // is safe to substract it by 1
+    if ('\n' == buf[len - 1])
+    {
+      stream.close();
+      return true;
     }
   }
+
+  // error
+  stream.close();
+  error(errorStatus, myHost);
+  setState(ISTATE_CONNECT);
+  closeConnection();
+  return false;
 }
 
 void
@@ -2008,7 +2000,6 @@ void IMAP4Protocol::closeConnection()
   sentQueue.clear();
   lastHandled = 0;
   currentBox = QString::null;
-  readBufferLen = 0;
 }
 
 bool IMAP4Protocol::makeLogin ()
@@ -2640,16 +2631,12 @@ void IMAP4Protocol::flushOutput(QString contentEncoding)
 
 ssize_t IMAP4Protocol::myRead(void *data, ssize_t len)
 {
-  if (readBufferLen)
-  {
-    ssize_t copyLen = (len < readBufferLen) ? len : readBufferLen;
-    memcpy(data, readBuffer, copyLen);
-    readBufferLen -= copyLen;
-    if (readBufferLen) memcpy(readBuffer, &readBuffer[copyLen], readBufferLen);
-    return copyLen;
-  }
-  if (!isConnectionValid()) return 0;
-  waitForResponse( responseTimeout() );
+  if (!isConnectionValid())
+    return 0;
+
+  if (!waitForResponse(responseTimeout()))
+    return 0;
+
   return read(data, len);
 }
 

@@ -196,9 +196,6 @@ private:
   Q_ULONG outputBufferIndex;
   KIO::filesize_t mProcessedSize;
 
-  char readBuffer[IMAP_BUFFER];
-  ssize_t readBufferLen;
-  int readSize;
   QDateTime mTimeOfLastNoop;
 };
 
