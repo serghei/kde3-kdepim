@@ -26,7 +26,7 @@
 #include <qdatetime.h>
 
 extern "C" {
-  #include <ical.h>
+  #include <libical/ical.h>
 }
 
 
