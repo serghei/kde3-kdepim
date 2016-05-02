@@ -42,7 +42,7 @@ class SpecialdatesPlugin : public Kontact::Plugin
     virtual Kontact::Summary *createSummaryWidget( QWidget *parentWidget );
 
   protected:
-    virtual KParts::ReadOnlyPart *createPart() { return false; }
+	virtual KParts::ReadOnlyPart *createPart() { return nullptr; }
 
   private:
     KAboutData *mAboutData;

@@ -460,7 +460,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   item->distribution->sendoptions->statusTracking = soap_new_ngwt__StatusTracking( soap(),
     -1 );
 
-  item->distribution->sendoptions->statusTracking->autoDelete = false;
+  item->distribution->sendoptions->statusTracking->autoDelete = nullptr;
   item->distribution->sendoptions->statusTracking->__item = All_;
 
   item->distribution->recipients = soap_new_ngwt__RecipientList( soap(), -1 );

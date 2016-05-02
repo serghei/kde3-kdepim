@@ -63,15 +63,15 @@ void ExchangeConverterCalendar::setTimeZone( const QString &id )
 }
 
 #define propertyDAV( prop ) \
-    WebdavHandler::addElement( doc, root, "d:"prop )
+	WebdavHandler::addElement( doc, root, "d:" prop )
 #define propertyNS( ns, prop ) \
     WebdavHandler::addElementNS( doc, root, ns, prop )
 #define propertyCalendar( prop ) \
-    WebdavHandler::addElement( doc, root, "c:"prop )
+	WebdavHandler::addElement( doc, root, "c:" prop )
 #define propertyHTTPMail( prop ) \
-    WebdavHandler::addElement( doc, root, "m:"prop )
+	WebdavHandler::addElement( doc, root, "m:" prop )
 #define propertyMailHeader( prop ) \
-    WebdavHandler::addElement( doc, root, "h:"prop )
+	WebdavHandler::addElement( doc, root, "h:" prop )
 #define property( prop ) \
     WebdavHandler::addElement( doc, root, prop )
 
@@ -128,9 +128,9 @@ void ExchangeConverterCalendar::createRequestAppointment( QDomDocument &doc, QDo
 }
 
 #define propertyTask1( prop ) \
-    WebdavHandler::addElement( doc, props, "t1:"prop )
+	WebdavHandler::addElement( doc, props, "t1:" prop )
 #define propertyTask2( prop ) \
-    WebdavHandler::addElement( doc, props, "t2:"prop )
+	WebdavHandler::addElement( doc, props, "t2:" prop )
 
 void ExchangeConverterCalendar::createRequestTask( QDomDocument &doc, QDomElement &props )
 {
@@ -564,15 +564,15 @@ Incidence::List ExchangeConverterCalendar::parseWebDAV( const QDomDocument& davd
 
 
 #define domDavProperty( name, value ) \
-  WebdavHandler::addElement( mDoc, mElement, "d:"name, value )
+  WebdavHandler::addElement( mDoc, mElement, "d:" name, value )
 #define domProperty( NS, name, value ) \
   WebdavHandler::addElementNS( mDoc, mElement, NS, name, value )
 #define domCalendarProperty( name, value ) \
-  WebdavHandler::addElement( mDoc, mElement, "c:"name, value )
+  WebdavHandler::addElement( mDoc, mElement, "c:" name, value )
 #define domHTTPMailProperty( name, value ) \
-  WebdavHandler::addElement( mDoc, mElement, "m:"name, value )
+  WebdavHandler::addElement( mDoc, mElement, "m:" name, value )
 #define domMailHeaderProperty( name, value ) \
-  WebdavHandler::addElement( mDoc, mElement, "h:"name, value )
+  WebdavHandler::addElement( mDoc, mElement, "h:" name, value )
 
 
 
