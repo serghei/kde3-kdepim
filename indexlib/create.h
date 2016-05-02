@@ -34,6 +34,7 @@
 
 #include "index.h"
 #include <memory>
+#include <kdemacros.h>
 
 
 namespace indexlib {
@@ -57,19 +58,19 @@ namespace indexlib {
 	 * This will return something like "new quotes(basename)" but by using this, you do not need to include quotes.h
 	 * which needs boost headers also.
 	 */
-	std::auto_ptr<index> create( const char* basename, index_type::type flags = index_type::quotes );
+    std::auto_ptr<index> KDE_EXPORT create( const char* basename, index_type::type flags = index_type::quotes );
 	namespace open_flags {
 		enum type { none = 0,
 			create_ifile = index_type::ifile,
 			create_quotes = index_type::quotes,
 			fail_if_nonexistant };
 	}
-	std::auto_ptr<index> open( const char* basename, unsigned flags = open_flags::fail_if_nonexistant );
+    std::auto_ptr<index> KDE_EXPORT open( const char* basename, unsigned flags = open_flags::fail_if_nonexistant );
 
 	/**
 	 * Removes the index.
 	 */
-	void remove( const char* basename );
+    void KDE_EXPORT remove( const char* basename );
 	/**
 	 * Returns true if an index with that name exists, false otherwise
 	 */

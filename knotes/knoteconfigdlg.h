@@ -27,7 +27,7 @@ class QString;
 class KNoteConfig;
 
 
-class KNoteConfigDlg : public KConfigDialog
+class KDE_EXPORT KNoteConfigDlg : public KConfigDialog
 {
     Q_OBJECT
 public:

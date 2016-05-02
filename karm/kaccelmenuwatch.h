@@ -32,7 +32,7 @@ class QPopupMenu;
  * @author Sirtaj Singh Kang (taj@kde.org)
  */
 
-class KAccelMenuWatch : public QObject
+class KDE_EXPORT KAccelMenuWatch : public QObject
 {
   Q_OBJECT
 

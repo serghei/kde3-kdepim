@@ -54,14 +54,14 @@ public:
 
 
 // I don't like QPtrList much, but it has compareItems, which QValueList doesn't
-class CompletionItemList : public QPtrList<CompletionItem>
+class KDE_EXPORT CompletionItemList : public QPtrList<CompletionItem>
 {
 public:
   CompletionItemList() {}
   virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 );
 };
 
-class CompletionOrderEditor : public KDialogBase {
+class KDE_EXPORT CompletionOrderEditor : public KDialogBase {
   Q_OBJECT
 
 public:

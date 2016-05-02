@@ -35,12 +35,13 @@
 #include <qcolor.h>
 #include <qfont.h>
 #include <qpaintdevicemetrics.h>
+#include <kdemacros.h>
 
 class QString;
 
 namespace KPIM {
 
-class CSSHelper {
+class KDE_EXPORT CSSHelper {
   public:
     /** Construct a CSSHelper object and set its font and color settings to
         default values.

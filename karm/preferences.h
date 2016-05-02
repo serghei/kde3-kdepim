@@ -13,7 +13,7 @@ class KURLRequester;
  * Provide an interface to the configuration options for the program.
  */
 
-class Preferences :public KDialogBase
+class KDE_EXPORT Preferences :public KDialogBase
 {
   Q_OBJECT
 

@@ -16,6 +16,8 @@
 #ifndef WEAVERLOGGER_H
 #define WEAVERLOGGER_H
 
+#include <kdemacros.h>
+
 #include "weaverextensions.h"
 
 namespace KPIM {
@@ -23,7 +25,7 @@ namespace ThreadWeaver {
 
     /** A WeaverThreadLogger may be attached to a Weaver to gain debug
        information about thread execution.  */
-    class WeaverThreadLogger : public WeaverExtension
+    class KDE_EXPORT WeaverThreadLogger : public WeaverExtension
     {
         Q_OBJECT
     public:

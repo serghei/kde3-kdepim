@@ -28,7 +28,7 @@ class KListView;
 class SloxFolder;
 class SloxFolderManager;
 
-class SloxFolderDialog : public KDialogBase
+class KDE_EXPORT SloxFolderDialog : public KDialogBase
 {
   Q_OBJECT
   public:

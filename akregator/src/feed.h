@@ -59,7 +59,7 @@ namespace Akregator
     /**
         represents a feed
      */
-    class Feed : public TreeNode
+    class KDE_EXPORT Feed : public TreeNode
     {
         friend class Article;
         

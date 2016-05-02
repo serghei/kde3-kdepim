@@ -34,6 +34,7 @@
 
 #include <qtimer.h>
 #include <qdatetime.h>
+#include <kdemacros.h>
 
 class KNotesResourceManager;
 
@@ -42,7 +43,7 @@ namespace KCal {
 }
 
 
-class KNotesAlarm : public QObject
+class KDE_EXPORT KNotesAlarm : public QObject
 {
     Q_OBJECT
 public:

@@ -51,7 +51,7 @@ class QString;
 
 namespace Kleo {
 
-    class MessageBox {
+    class KDE_EXPORT MessageBox {
     public:
         static void information( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
         static void information( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, int options=KMessageBox::Notify );

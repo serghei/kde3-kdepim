@@ -33,7 +33,7 @@ using namespace KCal;
 
 namespace KOrg {
 
-class IncidenceChangerBase : public QObject
+class KDE_EXPORT IncidenceChangerBase : public QObject
 {
 Q_OBJECT
 public:

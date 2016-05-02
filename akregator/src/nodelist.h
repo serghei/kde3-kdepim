@@ -26,6 +26,7 @@
 #define AKREGATOR_NODELIST_H
 
 #include <qobject.h>
+#include <kdemacros.h>
 
 class QDomDocument;
 class QDomNode;
@@ -45,7 +46,7 @@ namespace Akregator {
 class Folder;
 class TreeNode;
 
-class NodeList : public QObject
+class KDE_EXPORT NodeList : public QObject
 {
 
 Q_OBJECT

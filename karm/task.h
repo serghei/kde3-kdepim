@@ -40,7 +40,7 @@ class QPixmap;
  * It can also contain subtasks - these are managed using the
  * QListViewItem class.
  */
-class Task : public QObject, public QListViewItem
+class KDE_EXPORT Task : public QObject, public QListViewItem
 {
   Q_OBJECT
 

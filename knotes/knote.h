@@ -48,7 +48,7 @@ namespace KCal {
 }
 
 
-class KNote : public QFrame, virtual public KXMLGUIClient
+class KDE_EXPORT KNote : public QFrame, virtual public KXMLGUIClient
 {
     Q_OBJECT
 public:

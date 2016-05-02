@@ -65,7 +65,7 @@ class KCal::Todo;
  * @author Mark Bucciarelli <mark@hubcapconsulting.com>
  */
 
-class KarmStorage
+class KDE_EXPORT KarmStorage
 {
   public:
     /*

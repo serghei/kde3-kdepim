@@ -155,7 +155,7 @@ class LIBKCAL_EXPORT Attendee : public Person
     Private *d;
 };
 
-bool operator==( const Attendee& a1, const Attendee& a2 );
+bool LIBKCAL_EXPORT operator==( const Attendee& a1, const Attendee& a2 );
 
 }
 

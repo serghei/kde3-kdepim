@@ -26,6 +26,7 @@
 #define AKREGATOR_TAGSET_H
 
 #include <qobject.h>
+#include <kdemacros.h>
 
 class QDomDocument;
 template <class K,class T> class QMap;
@@ -44,7 +45,7 @@ class Tag;
     @author Frank Osterfeld
 */
 
-class TagSet : public QObject
+class KDE_EXPORT TagSet : public QObject
 {
     friend class Tag;
     Q_OBJECT

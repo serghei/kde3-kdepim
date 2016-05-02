@@ -47,7 +47,7 @@ namespace KCal {
 }
 
 
-class KNotesResourceManager : public QObject, public KRES::ManagerObserver<ResourceNotes>
+class KDE_EXPORT KNotesResourceManager : public QObject, public KRES::ManagerObserver<ResourceNotes>
 {
     Q_OBJECT
 public:

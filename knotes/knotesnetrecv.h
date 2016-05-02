@@ -33,6 +33,7 @@
 #define KNOTESNETRECV_H
 
 #include <qobject.h>
+#include <kdemacros.h>
 
 class QTimer;
 
@@ -41,7 +42,7 @@ namespace KNetwork {
 }
 
 
-class KNotesNetworkReceiver : public QObject
+class KDE_EXPORT KNotesNetworkReceiver : public QObject
 {
     Q_OBJECT
 public:

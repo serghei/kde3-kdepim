@@ -25,6 +25,8 @@
 #ifndef AKREGATOR_TAGNODELIST_H
 #define AKREGATOR_TAGNODELIST_H
 
+#include <kdemacros.h>
+
 #include "tagfolder.h"
 
 class QDomDocument;
@@ -41,7 +43,7 @@ namespace Akregator {
    class TagSet;
    
    
-   class TagNodeList : public NodeList
+   class KDE_EXPORT TagNodeList : public NodeList
    {
        Q_OBJECT
        public:

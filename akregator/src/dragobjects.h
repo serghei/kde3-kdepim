@@ -45,7 +45,7 @@ struct ArticleDragItem
     QString guid;
 };
 
-class ArticleDrag : public KURLDrag
+class KDE_EXPORT ArticleDrag : public KURLDrag
 {
 
 public:

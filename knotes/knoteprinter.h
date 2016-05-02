@@ -4,6 +4,7 @@
 #include <qfont.h>
 #include <qpalette.h>
 #include <qstring.h>
+#include <kdemacros.h>
 
 class QMimeSourceFactory;
 class QStyleSheet;
@@ -14,7 +15,7 @@ namespace KCal {
     class Journal;
 }
 
-class KNotePrinter {
+class KDE_EXPORT KNotePrinter {
 public:
 
     KNotePrinter();

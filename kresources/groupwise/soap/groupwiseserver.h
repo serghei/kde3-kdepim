@@ -91,7 +91,7 @@ class DeltaInfo
 };
 }
 
-class GroupwiseServer : public QObject
+class KDE_EXPORT GroupwiseServer : public QObject
 {
   Q_OBJECT
 

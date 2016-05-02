@@ -40,7 +40,7 @@ namespace KPIM {
  *
  * @author David Faure <faure@kde.org>
  */
-class DistributionList : public KABC::Addressee
+class KDE_EXPORT DistributionList : public KABC::Addressee
 {
   public:
     /**

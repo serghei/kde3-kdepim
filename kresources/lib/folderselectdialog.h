@@ -37,7 +37,7 @@
 
 namespace KPIM {
 
-class FolderSelectDialog : public KDialogBase
+class KDE_EXPORT FolderSelectDialog : public KDialogBase
 {
 private:
   FolderSelectDialog( const QString& caption, const QString& label,

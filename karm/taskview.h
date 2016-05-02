@@ -39,7 +39,7 @@ using namespace KCal;
  * Container and interface for the tasks.
  */
 
-class TaskView : public KListView
+class KDE_EXPORT TaskView : public KListView
 {
   Q_OBJECT
 

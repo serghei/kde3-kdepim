@@ -32,6 +32,7 @@
  */
 
 #include <string>
+#include <kdemacros.h>
 
 namespace indexlib { namespace detail {
 
@@ -40,7 +41,7 @@ namespace indexlib { namespace detail {
  *
  * Given a filename, it can be used to ensure that only one such file is in use at the time.
  */
-class lockfile {
+class KDE_EXPORT lockfile {
 	public:
 		/** Creates the object, doesn't actually do anything */
 		explicit lockfile( std::string name );

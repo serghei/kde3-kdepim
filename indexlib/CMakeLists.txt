@@ -18,6 +18,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include compat.h ${USE_EXCEPTIONS}" )
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_BINARY_DIR}
+  ${KDE_INCLUDE_DIR}
 )
 
 

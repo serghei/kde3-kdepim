@@ -31,6 +31,7 @@
 #include <qstring.h>
 #include <qvaluelist.h>
 #include <qvariant.h>
+#include <kdemacros.h>
 
 class KConfig;
 
@@ -47,7 +48,7 @@ class Criterion;
 /** an article filter, basically a matcher and an action. 
  *  @author Frank Osterfeld
  */
-class ArticleFilter
+class KDE_EXPORT ArticleFilter
 {
     public:
 
@@ -86,7 +87,7 @@ class ArticleFilter
     
 };
 
-class ArticleFilterList : public QValueList<ArticleFilter>
+class KDE_EXPORT ArticleFilterList : public QValueList<ArticleFilter>
 {
 public:
     
@@ -209,7 +210,7 @@ class AssignTagAction : public AbstractAction
 /** a powerful matcher supporting multiple criterions, which can be combined      via logical OR or AND
  *  @author Frerich Raabe
  */
-class ArticleMatcher : public AbstractMatcher
+class KDE_EXPORT ArticleMatcher : public AbstractMatcher
 {
     public:
 
@@ -254,7 +255,7 @@ class ArticleMatcher : public AbstractMatcher
 /** Criterion for ArticleMatcher
  *  @author Frerich Raabe
  */
-class Criterion
+class KDE_EXPORT Criterion
 {
     public:
 

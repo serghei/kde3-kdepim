@@ -29,6 +29,7 @@
 #include <dcopobject.h>
 
 #include <qobject.h>
+#include <kdemacros.h>
 
 class QPixmap;
 class QString;
@@ -42,7 +43,7 @@ namespace Akregator
     class Feed;
     class TreeNode;
     
-    class FeedIconManager:public QObject, public DCOPObject
+    class KDE_EXPORT FeedIconManager:public QObject, public DCOPObject
     {
         Q_OBJECT
         K_DCOP

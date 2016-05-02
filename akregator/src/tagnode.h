@@ -25,6 +25,7 @@
 #ifndef AKREGATOR_TAGNODE_H
 #define AKREGATOR_TAGNODE_H
 
+#include <kdemacros.h>
 #include <treenode.h>
 
 class QDomDocument;
@@ -42,7 +43,7 @@ class FetchQueue;
 class Tag;
 class TreeNodeVisitor;
 
-class TagNode : public TreeNode
+class KDE_EXPORT TagNode : public TreeNode
 {
 Q_OBJECT
 

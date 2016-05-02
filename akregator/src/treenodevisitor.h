@@ -24,6 +24,8 @@
 #ifndef AKREGATOR_TREENODEVISITOR_H
 #define AKREGATOR_TREENODEVISITOR_H
 
+#include <kdemacros.h>
+
 namespace Akregator 
 {
 
@@ -33,7 +35,7 @@ class Feed;
 class TagNode;
 class TagFolder;
 
-class TreeNodeVisitor
+class KDE_EXPORT TreeNodeVisitor
 {
     public:
         virtual bool visit(TreeNode* node);

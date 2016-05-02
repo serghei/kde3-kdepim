@@ -26,6 +26,8 @@
 #ifndef AKREGATOR_ARTICLE_H
 #define AKREGATOR_ARTICLE_H
 
+#include <kdemacros.h>
+
 class QDateTime;
 class QDomDocument;
 class QDomElement;
@@ -54,7 +56,7 @@ namespace Akregator
     }
     class Feed;
     /** A proxy class for RSS::Article with some additional methods to assist sorting. */
-    class Article
+    class KDE_EXPORT Article
     {
         public:
             enum Status { Unread=0, Read, New };

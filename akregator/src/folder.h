@@ -26,6 +26,8 @@
 #ifndef AKREGATOR_FOLDER_H
 #define AKREGATOR_FOLDER_H
 
+#include <kdemacros.h>
+
 #include "treenode.h"
 
 class QDomDocument;
@@ -41,7 +43,7 @@ namespace Akregator
         
     /** Represents a folder (containing feeds and/or other folders)
      */
-    class Folder : public TreeNode
+    class KDE_EXPORT Folder : public TreeNode
     {
         Q_OBJECT
         public:

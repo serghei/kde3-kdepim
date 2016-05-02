@@ -23,6 +23,7 @@
 
 #include <qstring.h>
 #include <qdir.h>
+#include <kdemacros.h>
 
 namespace KCal {
     class CalendarLocal;
@@ -33,7 +34,7 @@ namespace KCal {
 /**
  * This converts and removes old note storage and config files.
  */
-class KNotesLegacy
+class KDE_EXPORT KNotesLegacy
 {
 public:
     static void cleanUp();

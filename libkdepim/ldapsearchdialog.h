@@ -35,7 +35,7 @@ class QPushButton;
 
 namespace KPIM {
 
-class LDAPSearchDialog : public KDialogBase
+class KDE_EXPORT LDAPSearchDialog : public KDialogBase
 { 
   Q_OBJECT
 

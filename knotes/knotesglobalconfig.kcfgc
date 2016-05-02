@@ -2,5 +2,6 @@ File=knotesglobalconfig.kcfg
 ClassName=KNotesGlobalConfig
 Mutators=true
 Singleton=true
+Visibility=KDE_EXPORT
 IncludeFiles=knoteconfig.h
 Inherits=KNoteConfig

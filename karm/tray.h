@@ -21,7 +21,7 @@ class MainWindow;
 // experiment
 // class KPopupMenu;
 
-class KarmTray : public KSystemTray
+class KDE_EXPORT KarmTray : public KSystemTray
 {
   Q_OBJECT
 

@@ -24,7 +24,7 @@
 #include <dcopobject.h>
 
 /** Define DCOP interface to karm.  Methods implemented in MainWindow */
-class KarmDCOPIface : virtual public DCOPObject
+class KDE_EXPORT KarmDCOPIface : virtual public DCOPObject
 {
   K_DCOP
   k_dcop:

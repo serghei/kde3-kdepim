@@ -17,6 +17,7 @@
 #define WEAVEREXTENSIONS_H
 
 #include <qobject.h>
+#include <kdemacros.h>
 
 namespace KPIM {
 namespace ThreadWeaver {
@@ -30,7 +31,7 @@ namespace ThreadWeaver {
         thread. It can be used to monitor the state of a program, but also,
         for example, to provide visualization of the Weaver's work load in GUI
         programs.  Derive from it to actually create an extension. */
-    class WeaverExtension : public QObject
+    class KDE_EXPORT WeaverExtension : public QObject
         {
             Q_OBJECT
         public:

@@ -26,7 +26,7 @@ class KLibrary;
 namespace Akregator {
 
 class Plugin;
-class PluginManager
+class KDE_EXPORT PluginManager
 {
     public:
         /** Bump this number whenever the plugin framework gets incompatible with older versions */

@@ -35,7 +35,7 @@ class KFontAction;
 class KFontSizeAction;
 
 
-class KNoteEdit : public KTextEdit
+class KDE_EXPORT KNoteEdit : public KTextEdit
 {
     Q_OBJECT
 public:
