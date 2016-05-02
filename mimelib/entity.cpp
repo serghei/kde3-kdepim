@@ -138,9 +138,9 @@ const char* const DwEntity::sClassName = "DwEntity";
 DwEntity::DwEntity()
 {
     mHeaders = DwHeaders::NewHeaders("", this);
-    ASSERT(mHeaders != 0);
+    assert(mHeaders != 0);
     mBody = DwBody::NewBody("", this);
-    ASSERT(mBody != 0);
+    assert(mBody != 0);
     mClassId = kCidEntity;
     mClassName = sClassName;
     mBodySize = -1;
@@ -151,10 +151,10 @@ DwEntity::DwEntity(const DwEntity& aEntity)
   : DwMessageComponent(aEntity)
 {
     mHeaders = (DwHeaders*) aEntity.mHeaders->Clone();
-    ASSERT(mHeaders != 0);
+    assert(mHeaders != 0);
     mHeaders->SetParent(this);
     mBody = (DwBody*) aEntity.mBody->Clone();
-    ASSERT(mBody != 0);
+    assert(mBody != 0);
     mBody->SetParent(this);
     mClassId = kCidEntity;
     mClassName = sClassName;
@@ -166,9 +166,9 @@ DwEntity::DwEntity(const DwString& aStr, DwMessageComponent* aParent)
   : DwMessageComponent(aStr, aParent)
 {
     mHeaders = DwHeaders::NewHeaders("", this);
-    ASSERT(mHeaders != 0);
+    assert(mHeaders != 0);
     mBody = DwBody::NewBody("", this);
-    ASSERT(mBody != 0);
+    assert(mBody != 0);
     mClassId = kCidEntity;
     mClassName = sClassName;
     mBodySize = -1;
@@ -190,11 +190,11 @@ const DwEntity& DwEntity::operator = (const DwEntity& aEntity)
     // assignment operator for DwHeaders and DwBody in the following.
     delete mHeaders;
     mHeaders = (DwHeaders*) aEntity.mHeaders->Clone();
-    ASSERT(mHeaders != 0);
+    assert(mHeaders != 0);
     mHeaders->SetParent(this);
     delete mBody;
     mBody = (DwBody*) aEntity.mBody->Clone();
-    ASSERT(mBody != 0);
+    assert(mBody != 0);
     mBody->SetParent(this);
     if (mParent) {
         mParent->SetModified();
@@ -240,7 +240,7 @@ void DwEntity::Assemble()
 
 DwHeaders& DwEntity::Headers() const
 {
-    ASSERT(mHeaders != 0);
+    assert(mHeaders != 0);
     return *mHeaders;
 }
 

@@ -45,7 +45,5 @@
 
 #include <assert.h>
 
-#define ASSERT assert
-
 #endif
 
