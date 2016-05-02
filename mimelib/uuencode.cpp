@@ -53,7 +53,7 @@ DwUuencode::~DwUuencode()
 void DwUuencode::SetFileName(const char* aName)
 {
     size_t n = sizeof(mFileName);
-    strlcpy(mFileName, aName, n);
+    strncpy(mFileName, aName, n);
     mFileName[n-1] = 0; // Superfluous
 }
 

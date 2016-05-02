@@ -41,7 +41,6 @@ kde_add_library( mimelib SHARED
     dwstring.cpp text.cpp token.cpp uuencode.cpp
     binhex.cpp
   VERSION 1.0.1
-  LINK ${KDE_LIBRARY_DIR}/libkdefakes_pic.a
   DESTINATION ${LIB_INSTALL_DIR}
 )
 
