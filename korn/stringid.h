@@ -28,19 +28,24 @@
 #include<qstring.h>
 #include"mailid.h"
 
-class KornStringId : public KornMailId
-{
+class KornStringId : public KornMailId {
 private:
-	QString _id;
+    QString _id;
 public:
-	KornStringId( const QString & id );
-	KornStringId( const KornStringId & src );
-	~KornStringId() {}
+    KornStringId(const QString &id);
+    KornStringId(const KornStringId &src);
+    ~KornStringId() {}
 
-	QString getId() const { return _id; }
-	virtual QString toString() const { return _id; }
+    QString getId() const
+    {
+        return _id;
+    }
+    virtual QString toString() const
+    {
+        return _id;
+    }
 
-	virtual KornMailId *clone() const;
+    virtual KornMailId *clone() const;
 };
 
 #endif //MK_STRINGID_H

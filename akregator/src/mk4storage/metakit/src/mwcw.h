@@ -18,7 +18,7 @@
 
 #if __option(bool)
 #define q4_BOOL 1
-  // undo previous defaults, because q4_BOOL is not set early enough
+// undo previous defaults, because q4_BOOL is not set early enough
 #undef false
 #undef true
 #undef bool

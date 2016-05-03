@@ -26,31 +26,31 @@
 
 #include <kurl.h>
 
-/** In a document doc with node node, add an element with name ns and tagname tag. Return the new element 
+/** In a document doc with node node, add an element with name ns and tagname tag. Return the new element
  */
-QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, const QString& tag );
+QDomElement addElement(QDomDocument &doc, QDomNode &node, const QString &ns, const QString &tag);
 
 /**
  In a document doc with node node, add an element with namespace ns and tagname tag. Add a textnode in
  the element with text contents text. Return the new element.
  */
-QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, const QString& tag, const QString& text );
+QDomElement addElement(QDomDocument &doc, QDomNode &node, const QString &ns, const QString &tag, const QString &text);
 
 /**
  * Return the representation of utc time in the time zone indicated by timeZoneId
  */
-QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId );
+QDateTime utcAsZone(const QDateTime &utc, const QString &timeZoneId);
 
 /**
- * Return the UTC representation of local time in the time zone indicated by timeZoneId 
+ * Return the UTC representation of local time in the time zone indicated by timeZoneId
  */
-QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId );
+QDateTime zoneAsUtc(const QDateTime &zone, const QString &timeZoneId);
 
 /**
  * Convert http:// url to webdav:// and https:// to webdavs://
  */
-KURL toDAV( const KURL& url );
-KURL* toDAV( const KURL* url );
+KURL toDAV(const KURL &url);
+KURL *toDAV(const KURL *url);
 
 #endif
 

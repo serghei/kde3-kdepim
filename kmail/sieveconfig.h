@@ -26,102 +26,114 @@ class KConfigBase;
 
 namespace KMail {
 
-  class SieveConfig {
-  public:
-    SieveConfig( bool managesieveSupported=false, bool reuseConfig=true,
-		 unsigned int port=2000, const KURL & alternateURL=KURL(),
-                 const QString& vacationFileName = QString::null )
-      : mManagesieveSupported( managesieveSupported ),
-	mReuseConfig( reuseConfig ),
-	mPort( port ),
-	mAlternateURL( alternateURL ),
-        mVacationFileName( vacationFileName ) {}
+class SieveConfig {
+public:
+    SieveConfig(bool managesieveSupported = false, bool reuseConfig = true,
+                unsigned int port = 2000, const KURL &alternateURL = KURL(),
+                const QString &vacationFileName = QString::null)
+        : mManagesieveSupported(managesieveSupported),
+          mReuseConfig(reuseConfig),
+          mPort(port),
+          mAlternateURL(alternateURL),
+          mVacationFileName(vacationFileName) {}
 
-    SieveConfig( const SieveConfig & other )
-      : mManagesieveSupported( other.managesieveSupported() ),
-	mReuseConfig( other.reuseConfig() ),
-	mPort( other.port() ),
-	mAlternateURL( other.alternateURL() ),
-	mVacationFileName( other.vacationFileName() ) {}
+    SieveConfig(const SieveConfig &other)
+        : mManagesieveSupported(other.managesieveSupported()),
+          mReuseConfig(other.reuseConfig()),
+          mPort(other.port()),
+          mAlternateURL(other.alternateURL()),
+          mVacationFileName(other.vacationFileName()) {}
 
-    bool managesieveSupported() const {
-      return mManagesieveSupported;
+    bool managesieveSupported() const
+    {
+        return mManagesieveSupported;
     }
-    void setManagesieveSupported( bool enable ) {
-      mManagesieveSupported = enable;
-    }
-
-    bool reuseConfig() const {
-      return mReuseConfig;
-    }
-    void setReuseConfig( bool reuse ) {
-      mReuseConfig = reuse;
+    void setManagesieveSupported(bool enable)
+    {
+        mManagesieveSupported = enable;
     }
 
-    unsigned short port() const {
-      return mPort;
+    bool reuseConfig() const
+    {
+        return mReuseConfig;
     }
-    void setPort( unsigned short port ) {
-      mPort = port;
-    }
-
-    KURL alternateURL() const {
-      return mAlternateURL;
-    }
-    void setAlternateURL( const KURL & url ) {
-      mAlternateURL = url;
+    void setReuseConfig(bool reuse)
+    {
+        mReuseConfig = reuse;
     }
 
-    QString vacationFileName() const { return mVacationFileName; }
+    unsigned short port() const
+    {
+        return mPort;
+    }
+    void setPort(unsigned short port)
+    {
+        mPort = port;
+    }
 
-    void readConfig( const KConfigBase & config );
-    void writeConfig( KConfigBase & config ) const;
+    KURL alternateURL() const
+    {
+        return mAlternateURL;
+    }
+    void setAlternateURL(const KURL &url)
+    {
+        mAlternateURL = url;
+    }
 
-  protected:
+    QString vacationFileName() const
+    {
+        return mVacationFileName;
+    }
+
+    void readConfig(const KConfigBase &config);
+    void writeConfig(KConfigBase &config) const;
+
+protected:
     bool mManagesieveSupported;
     bool mReuseConfig;
     unsigned short mPort;
     KURL mAlternateURL;
     QString mVacationFileName;
-  };
+};
 
-  class SieveConfigEditor : public QWidget {
+class SieveConfigEditor : public QWidget {
     Q_OBJECT
-  public:
-    SieveConfigEditor( QWidget * parent=0, const char * name=0 );
+public:
+    SieveConfigEditor(QWidget *parent = 0, const char *name = 0);
 
     bool managesieveSupported() const;
-    virtual void setManagesieveSupported( bool enable );
+    virtual void setManagesieveSupported(bool enable);
 
     bool reuseConfig() const;
-    virtual void setReuseConfig( bool reuse );
+    virtual void setReuseConfig(bool reuse);
 
     unsigned short port() const;
-    virtual void setPort( unsigned short port );
+    virtual void setPort(unsigned short port);
 
     KURL alternateURL() const;
-    virtual void setAlternateURL( const KURL & url );
+    virtual void setAlternateURL(const KURL &url);
 
     QString vacationFileName() const;
-    virtual void setVacationFileName( const QString & url );
+    virtual void setVacationFileName(const QString &url);
 
-    SieveConfig config() const {
-      return SieveConfig( managesieveSupported(), reuseConfig(),
-			  port(), alternateURL(), vacationFileName() );
+    SieveConfig config() const
+    {
+        return SieveConfig(managesieveSupported(), reuseConfig(),
+                           port(), alternateURL(), vacationFileName());
     }
 
-    virtual void setConfig( const SieveConfig & config );
+    virtual void setConfig(const SieveConfig &config);
 
-  protected slots:
+protected slots:
     void slotEnableWidgets();
 
-  protected:
-    QCheckBox * mManagesieveCheck;
-    QCheckBox * mSameConfigCheck;
-    KIntSpinBox * mPortSpin;
-    QLineEdit * mAlternateURLEdit;
+protected:
+    QCheckBox *mManagesieveCheck;
+    QCheckBox *mSameConfigCheck;
+    KIntSpinBox *mPortSpin;
+    QLineEdit *mAlternateURLEdit;
     QString mVacationFileName;
-  };
+};
 
 } // namespace KMail
 

@@ -74,8 +74,8 @@ class DW_EXPORT DwFieldBody : public DwMessageComponent {
 public:
 
     DwFieldBody();
-    DwFieldBody(const DwFieldBody& aFieldBody);
-    DwFieldBody(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwFieldBody(const DwFieldBody &aFieldBody);
+    DwFieldBody(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwFieldBody} object's string representation to the empty
     //. string and sets its parent to {\tt NULL}.
@@ -93,7 +93,7 @@ public:
 
     virtual ~DwFieldBody();
 
-    const DwFieldBody& operator = (const DwFieldBody& aFieldBody);
+    const DwFieldBody &operator = (const DwFieldBody &aFieldBody);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aFieldBody}.  The parent node of the {\tt DwFieldBody} object
     //. is not changed.
@@ -120,11 +120,11 @@ protected:
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -142,7 +142,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

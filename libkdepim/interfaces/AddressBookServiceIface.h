@@ -31,27 +31,27 @@
 
 namespace KPIM {
 
-#define AddressBookServiceIface KDE_EXPORT AddressBookServiceIface 
-  class AddressBookServiceIface : virtual public DCOPObject
+#define AddressBookServiceIface KDE_EXPORT AddressBookServiceIface
+class AddressBookServiceIface : virtual public DCOPObject
 #undef AddressBookServiceIface
-  {
+{
     K_DCOP
 
-    k_dcop:
-      /**
-        This method will add a vcard to the address book.
+k_dcop:
+    /**
+      This method will add a vcard to the address book.
 
-        @param vCard The vCard in string representation.
-       */
-      virtual void importVCardFromData( const QString& vCard ) = 0;
+      @param vCard The vCard in string representation.
+     */
+    virtual void importVCardFromData(const QString &vCard) = 0;
 
-      /**
-        This method will add a vcard to the address book.
+    /**
+      This method will add a vcard to the address book.
 
-        @param url The url where the vcard is located.
-       */
-      virtual void importVCard( const KURL& url ) = 0;
-  };
+      @param url The url where the vcard is located.
+     */
+    virtual void importVCard(const KURL &url) = 0;
+};
 
 }
 

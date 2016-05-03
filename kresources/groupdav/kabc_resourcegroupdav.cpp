@@ -27,21 +27,21 @@
 
 using namespace KABC;
 
-ResourceGroupDav::ResourceGroupDav( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceGroupDav::ResourceGroupDav(const KConfig *config)
+    : ResourceGroupwareBase(config)
 {
-  init();
-  if ( config ) readConfig( config );
+    init();
+    if(config) readConfig(config);
 }
 
 void ResourceGroupDav::init()
 {
-  setType( "ResourceGroupDav" );
-  setPrefs( createPrefs() );
-  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::AddressBook ) );
-  setAdaptor( new GroupDavAddressBookAdaptor() );
-  
-  ResourceGroupwareBase::init();
+    setType("ResourceGroupDav");
+    setPrefs(createPrefs());
+    setFolderLister(new KPIM::FolderLister(KPIM::FolderLister::AddressBook));
+    setAdaptor(new GroupDavAddressBookAdaptor());
+
+    ResourceGroupwareBase::init();
 }
 
 #include "kabc_resourcegroupdav.moc"

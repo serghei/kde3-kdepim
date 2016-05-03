@@ -35,64 +35,60 @@ class QSpinBox;
 class KComboBox;
 class KLineEdit;
 
-class BluetoothWidget : public QWidget
-{
-  Q_OBJECT
+class BluetoothWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    BluetoothWidget( QWidget *parent );
+public:
+    BluetoothWidget(QWidget *parent);
 
     void hideChannel();
     void showChannel();
 
-    void setAddress( const QString address );
-    void setChannel( const QString  channel );
+    void setAddress(const QString address);
+    void setChannel(const QString  channel);
     QString address() const;
     QString channel() const;
 
-  private:
+private:
     KLineEdit *mAddress;
     KLineEdit *mChannel;
     QLabel *mChannelLabel;
 };
 
-class IRWidget : public QWidget
-{
-  Q_OBJECT
+class IRWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    IRWidget( QWidget *parent );
+public:
+    IRWidget(QWidget *parent);
 
-    void load( const QDomElement& );
-    void save( QDomDocument&, QDomElement& );
+    void load(const QDomElement &);
+    void save(QDomDocument &, QDomElement &);
 
-  private:
+private:
     KLineEdit *mDevice;
     KLineEdit *mSerialNumber;
 };
 
-class CableWidget : public QWidget
-{
-  public:
-    CableWidget( QWidget *parent );
+class CableWidget : public QWidget {
+public:
+    CableWidget(QWidget *parent);
 
-    void load( const QDomElement& );
-    void save( QDomDocument&, QDomElement& );
+    void load(const QDomElement &);
+    void save(QDomDocument &, QDomElement &);
 
-  private:
+private:
     KComboBox *mManufacturer;
     KComboBox *mDevice;
 };
 
-class UsbWidget : public QWidget
-{
-  public:
-    UsbWidget( QWidget *parent );
+class UsbWidget : public QWidget {
+public:
+    UsbWidget(QWidget *parent);
 
     int interface() const;
-    void setInterface( int interface );
+    void setInterface(int interface);
 
-  private:
+private:
     QSpinBox *mInterface;
 };
 

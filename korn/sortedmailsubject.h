@@ -27,14 +27,13 @@
  * This way, it is possible to sort this list on date.
  */
 
-class SortedMailSubject : public QPtrList< KornMailSubject >
-{
+class SortedMailSubject : public QPtrList< KornMailSubject > {
 public:
-	SortedMailSubject() : QPtrList< KornMailSubject >() {}
-	SortedMailSubject( const SortedMailSubject& sms ) : QPtrList< KornMailSubject >( sms ) {}
-	~SortedMailSubject() {}
-	
-	virtual int compareItems ( QPtrCollection::Item item1, QPtrCollection::Item item2 );
+    SortedMailSubject() : QPtrList< KornMailSubject >() {}
+    SortedMailSubject(const SortedMailSubject &sms) : QPtrList< KornMailSubject >(sms) {}
+    ~SortedMailSubject() {}
+
+    virtual int compareItems(QPtrCollection::Item item1, QPtrCollection::Item item2);
 };
 
 #endif //MK_SORTEDMAILSUBJECT_H

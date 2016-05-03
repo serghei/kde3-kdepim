@@ -55,22 +55,25 @@
 #include <qapplication.h>
 #include <kdebug.h>
 
-Kleo::Job::Job( QObject * parent, const char * name )
-  : QObject( parent, name )
+Kleo::Job::Job(QObject *parent, const char *name)
+    : QObject(parent, name)
 {
-  if ( qApp )
-    connect( qApp, SIGNAL(aboutToQuit()), SLOT(slotCancel()) );
+    if(qApp)
+        connect(qApp, SIGNAL(aboutToQuit()), SLOT(slotCancel()));
 }
 
-Kleo::Job::~Job() {
+Kleo::Job::~Job()
+{
 
 }
 
-void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
-  kdDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!" << endl;
+void Kleo::Job::showErrorDialog(QWidget *, const QString &) const
+{
+    kdDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!" << endl;
 }
 
-QString Kleo::Job::auditLogAsHtml() const {
+QString Kleo::Job::auditLogAsHtml() const
+{
     kdDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
     return QString();
 }

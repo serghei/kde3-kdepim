@@ -32,39 +32,40 @@ class KMMsgBase;
 namespace KMail {
 
 /** A class for storing Undo information. */
-class UndoInfo
-{
+class UndoInfo {
 public:
-  int               id;
-  QValueList<ulong> serNums;
-  KMFolder         *srcFolder;
-  KMFolder         *destFolder;
+    int               id;
+    QValueList<ulong> serNums;
+    KMFolder         *srcFolder;
+    KMFolder         *destFolder;
 };
 
-class UndoStack : public QObject
-{
-  Q_OBJECT
+class UndoStack : public QObject {
+    Q_OBJECT
 
 public:
-  UndoStack(int size);
+    UndoStack(int size);
 
-  void clear();
-  int  size() const { return mStack.count(); }
-  int  newUndoAction( KMFolder* srcFolder, KMFolder* destFolder );
-  void addMsgToAction( int undoId, ulong serNum );
-  void undo();
+    void clear();
+    int  size() const
+    {
+        return mStack.count();
+    }
+    int  newUndoAction(KMFolder *srcFolder, KMFolder *destFolder);
+    void addMsgToAction(int undoId, ulong serNum);
+    void undo();
 
-  void pushSingleAction(ulong serNum, KMFolder *folder, KMFolder* destFolder);
-  void msgDestroyed( KMMsgBase *msg);
-  void folderDestroyed( KMFolder *folder);
+    void pushSingleAction(ulong serNum, KMFolder *folder, KMFolder *destFolder);
+    void msgDestroyed(KMMsgBase *msg);
+    void folderDestroyed(KMFolder *folder);
 protected:
-  QPtrList<UndoInfo> mStack;
-  int mSize;
-  int mLastId;
-  UndoInfo *mCachedInfo;
+    QPtrList<UndoInfo> mStack;
+    int mSize;
+    int mLastId;
+    UndoInfo *mCachedInfo;
 
 signals:
-   void undoStackChanged();
+    void undoStackChanged();
 };
 
 }

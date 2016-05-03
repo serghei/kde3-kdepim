@@ -37,13 +37,13 @@
 
 namespace KMail {
 
-  class KDE_EXPORT AboutData : public KAboutData {
-  public:
+class KDE_EXPORT AboutData : public KAboutData {
+public:
     AboutData();
     ~AboutData();
-  };
+};
 
 } // namespace KMail
 
 #endif // __KMAIL_ABOUTDATA_H__
-     
+

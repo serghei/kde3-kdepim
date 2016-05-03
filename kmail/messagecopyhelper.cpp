@@ -26,90 +26,98 @@
 using namespace KMail;
 using namespace KPIM;
 
-MessageCopyHelper::MessageCopyHelper( const QValueList< Q_UINT32 > & msgs,
-                                      KMFolder * dest, bool move, QObject * parent ) :
-    QObject( parent )
+MessageCopyHelper::MessageCopyHelper(const QValueList< Q_UINT32 > &msgs,
+                                     KMFolder *dest, bool move, QObject *parent) :
+    QObject(parent)
 {
-  if ( msgs.isEmpty() || !dest )
-    return;
+    if(msgs.isEmpty() || !dest)
+        return;
 
-  KMFolder *f = 0;
-  int index;
-  QPtrList<KMMsgBase> list;
+    KMFolder *f = 0;
+    int index;
+    QPtrList<KMMsgBase> list;
 
-  for ( QValueList<Q_UINT32>::ConstIterator it = msgs.constBegin(); it != msgs.constEnd(); ++it ) {
-    KMMsgDict::instance()->getLocation( *it, &f, &index );
-    if ( !f ) // not found
-      continue;
-    if ( f == dest )
-      continue; // already there
-    if ( !mOpenFolders.contains( f ) ) {// not yet opened
-      f->open( "messagecopyhelper" );
-      mOpenFolders.insert( f, 0 );
+    for(QValueList<Q_UINT32>::ConstIterator it = msgs.constBegin(); it != msgs.constEnd(); ++it)
+    {
+        KMMsgDict::instance()->getLocation(*it, &f, &index);
+        if(!f)    // not found
+            continue;
+        if(f == dest)
+            continue; // already there
+        if(!mOpenFolders.contains(f))       // not yet opened
+        {
+            f->open("messagecopyhelper");
+            mOpenFolders.insert(f, 0);
+        }
+        KMMsgBase *msgBase = f->getMsgBase(index);
+        if(msgBase)
+            list.append(msgBase);
     }
-    KMMsgBase *msgBase = f->getMsgBase( index );
-    if ( msgBase )
-      list.append( msgBase );
-  }
 
-  if ( list.isEmpty() )
-    return; // nothing to do
+    if(list.isEmpty())
+        return; // nothing to do
 
-  KMCommand *command;
-  if ( move ) {
-    command = new KMMoveCommand( dest, list );
-  } else {
-    command = new KMCopyCommand( dest, list );
-  }
+    KMCommand *command;
+    if(move)
+    {
+        command = new KMMoveCommand(dest, list);
+    }
+    else
+    {
+        command = new KMCopyCommand(dest, list);
+    }
 
-  connect( command, SIGNAL(completed(KMCommand*)), SLOT(copyCompleted(KMCommand*)) );
-  command->start();
+    connect(command, SIGNAL(completed(KMCommand *)), SLOT(copyCompleted(KMCommand *)));
+    command->start();
 }
 
-void MessageCopyHelper::copyCompleted(KMCommand * cmd)
+void MessageCopyHelper::copyCompleted(KMCommand *cmd)
 {
-  Q_UNUSED( cmd );
+    Q_UNUSED(cmd);
 
-  // close all folders we opened
-  for ( QMap<QGuardedPtr<KMFolder>, int>::ConstIterator it = mOpenFolders.constBegin();
-        it != mOpenFolders.constEnd(); ++it ) {
-    it.key()->close( "messagecopyhelper" );
-  }
-  mOpenFolders.clear();
-  deleteLater();
+    // close all folders we opened
+    for(QMap<QGuardedPtr<KMFolder>, int>::ConstIterator it = mOpenFolders.constBegin();
+            it != mOpenFolders.constEnd(); ++it)
+    {
+        it.key()->close("messagecopyhelper");
+    }
+    mOpenFolders.clear();
+    deleteLater();
 }
 
-QValueList< Q_UINT32 > MessageCopyHelper::serNumListFromMailList(const KPIM::MailList & list)
+QValueList< Q_UINT32 > MessageCopyHelper::serNumListFromMailList(const KPIM::MailList &list)
 {
-  QValueList<Q_UINT32> rv;
-  for ( MailList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it )
-    rv.append( (*it).serialNumber() );
-  return rv;
+    QValueList<Q_UINT32> rv;
+    for(MailList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
+        rv.append((*it).serialNumber());
+    return rv;
 }
 
 QValueList< Q_UINT32 > MessageCopyHelper::serNumListFromMsgList(QPtrList< KMMsgBase > list)
 {
-  QValueList<Q_UINT32> rv;
-  KMMsgBase* msg = list.first();
-  while( msg ) {
-    rv.append( msg->getMsgSerNum() );
-    msg = list.next();
-  }
-  return rv;
+    QValueList<Q_UINT32> rv;
+    KMMsgBase *msg = list.first();
+    while(msg)
+    {
+        rv.append(msg->getMsgSerNum());
+        msg = list.next();
+    }
+    return rv;
 }
 
-bool MessageCopyHelper::inReadOnlyFolder(const QValueList< Q_UINT32 > & sernums)
+bool MessageCopyHelper::inReadOnlyFolder(const QValueList< Q_UINT32 > &sernums)
 {
-  KMFolder *f = 0;
-  int index;
-  for ( QValueList<Q_UINT32>::ConstIterator it = sernums.begin(); it != sernums.end(); ++it ) {
-    KMMsgDict::instance()->getLocation( *it, &f, &index );
-    if ( !f ) // not found
-      continue;
-    if ( f->isReadOnly() )
-      return true;
-  }
-  return false;
+    KMFolder *f = 0;
+    int index;
+    for(QValueList<Q_UINT32>::ConstIterator it = sernums.begin(); it != sernums.end(); ++it)
+    {
+        KMMsgDict::instance()->getLocation(*it, &f, &index);
+        if(!f)    // not found
+            continue;
+        if(f->isReadOnly())
+            return true;
+    }
+    return false;
 }
 
 #include "messagecopyhelper.moc"

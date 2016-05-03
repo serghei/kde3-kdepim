@@ -4,22 +4,21 @@
 #include <qobject.h>
 
 namespace Komposer {
-  class Plugin;
-  class PluginManager;
+class Plugin;
+class PluginManager;
 }
 using Komposer::Plugin;
 
-class TestManager : public QObject
-{
-  Q_OBJECT
+class TestManager : public QObject {
+    Q_OBJECT
 public:
-  TestManager( QObject *parent );
+    TestManager(QObject *parent);
 
 public slots:
-  void slotPluginLoaded( Plugin *plugin );
-  void slotAllPluginsLoaded();
+    void slotPluginLoaded(Plugin *plugin);
+    void slotAllPluginsLoaded();
 private:
-  Komposer::PluginManager *m_manager;
+    Komposer::PluginManager *m_manager;
 };
 
 #endif

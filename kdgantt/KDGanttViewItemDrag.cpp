@@ -54,28 +54,30 @@
   \param source the source widget
   \param name the internal object name
 */
-KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *source,  const char * name  ) : QStoredDrag("x-application/x-KDGanttViewItemDrag", source,  name )
+KDGanttViewItemDrag::KDGanttViewItemDrag(KDGanttViewItem *item , QWidget *source,
+        const char *name) : QStoredDrag("x-application/x-KDGanttViewItemDrag", source,  name)
 {
     myItem = item;
 
     QPixmap pix;
-    if (item->pixmap() )
+    if(item->pixmap())
         pix = *(item->pixmap()) ;
-    else {
+    else
+    {
         KDGanttViewItem::Shape start,  middle, end;
-        item->shapes( start, middle, end );
+        item->shapes(start, middle, end);
         QColor st, mi, en;
-        item->colors( st, mi, en );
-        pix =item->myGanttView->getPixmap( start, st, item->myGanttView->lvBackgroundColor(), 11 );
+        item->colors(st, mi, en);
+        pix = item->myGanttView->getPixmap(start, st, item->myGanttView->lvBackgroundColor(), 11);
     }
-    setPixmap( pix , QPoint( -10,-10 ));
-    QDomDocument doc( "GanttView" );
+    setPixmap(pix , QPoint(-10, -10));
+    QDomDocument doc("GanttView");
     QString docstart = "<GanttView/>";
-    doc.setContent( docstart );
-    QDomElement itemsElement = doc.createElement( "Items" );
-    doc.documentElement().appendChild( itemsElement );
-    item->createNode( doc, itemsElement );
-    QDataStream s( array, IO_WriteOnly );
+    doc.setContent(docstart);
+    QDomElement itemsElement = doc.createElement("Items");
+    doc.documentElement().appendChild(itemsElement);
+    item->createNode(doc, itemsElement);
+    QDataStream s(array, IO_WriteOnly);
     s << doc.toString();
 }
 
@@ -86,10 +88,11 @@ KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *sourc
   \param c the format of the data
   \return the encoded data of the drag object
 */
-QByteArray KDGanttViewItemDrag::encodedData( const char * c) const
+QByteArray KDGanttViewItemDrag::encodedData(const char *c) const
 {
-    QString s ( c );
-    if ( s == "x-application/x-KDGanttViewItemDrag" ) {
+    QString s(c);
+    if(s == "x-application/x-KDGanttViewItemDrag")
+    {
         return array;
     }
     return QByteArray();
@@ -100,7 +103,7 @@ QByteArray KDGanttViewItemDrag::encodedData( const char * c) const
 
   \return the dragged item
 */
-KDGanttViewItem* KDGanttViewItemDrag::getItem()
+KDGanttViewItem *KDGanttViewItemDrag::getItem()
 {
     return myItem;
 }
@@ -112,9 +115,9 @@ KDGanttViewItem* KDGanttViewItemDrag::getItem()
   \param e the mime source that has been dragged
   \return true if KDGanttViewItemDrag can decode the data in \a e.
 */
-bool KDGanttViewItemDrag::canDecode (  const QMimeSource * e )
+bool KDGanttViewItemDrag::canDecode(const QMimeSource *e)
 {
-    if ( QString( e->format() ) == "x-application/x-KDGanttViewItemDrag" )
+    if(QString(e->format()) == "x-application/x-KDGanttViewItemDrag")
         return true;
 
     return false;
@@ -129,11 +132,11 @@ bool KDGanttViewItemDrag::canDecode (  const QMimeSource * e )
   \param string the resulting XML string
   \return true if the operation succeeded
 */
-bool KDGanttViewItemDrag::decode (  const QMimeSource * e , QString &  string)
+bool KDGanttViewItemDrag::decode(const QMimeSource *e , QString   &string)
 {
     QByteArray arr;
-    arr = e->encodedData( "x-application/x-KDGanttViewItemDrag");
-    QDataStream s( arr, IO_ReadOnly );
+    arr = e->encodedData("x-application/x-KDGanttViewItemDrag");
+    QDataStream s(arr, IO_ReadOnly);
     s >> string;
     return true;
 }

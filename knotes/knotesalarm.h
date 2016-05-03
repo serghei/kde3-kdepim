@@ -39,15 +39,14 @@
 class KNotesResourceManager;
 
 namespace KCal {
-    class Incidence;
+class Incidence;
 }
 
 
-class KDE_EXPORT KNotesAlarm : public QObject
-{
+class KDE_EXPORT KNotesAlarm : public QObject {
     Q_OBJECT
 public:
-    KNotesAlarm( KNotesResourceManager *manager, QObject *parent = 0, const char *name = 0 );
+    KNotesAlarm(KNotesResourceManager *manager, QObject *parent = 0, const char *name = 0);
 
 private slots:
     void checkAlarms();

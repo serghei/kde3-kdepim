@@ -39,20 +39,19 @@
 
 class KDGanttViewItem;
 
-class KDGanttViewItemDrag :public QStoredDrag
-{
+class KDGanttViewItemDrag : public QStoredDrag {
 public:
-  KDGanttViewItemDrag(KDGanttViewItem* item, QWidget *source,  const char * name  ) ;
+    KDGanttViewItemDrag(KDGanttViewItem *item, QWidget *source,  const char *name) ;
 
-  QByteArray encodedData( const char * c) const;
-  KDGanttViewItem* getItem();
-  static bool canDecode ( const QMimeSource * e );
-  static bool decode ( const QMimeSource * e, QString & );
+    QByteArray encodedData(const char *c) const;
+    KDGanttViewItem *getItem();
+    static bool canDecode(const QMimeSource *e);
+    static bool decode(const QMimeSource *e, QString &);
 protected:
-  
+
 private:
-  QByteArray array;
-  KDGanttViewItem* myItem;
+    QByteArray array;
+    KDGanttViewItem *myItem;
 };
 
 

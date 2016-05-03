@@ -27,9 +27,9 @@
 
 using namespace KAB;
 
-ExtensionWidget::ExtensionWidget( Core *core, QWidget *parent,
-                                  const char *name )
-  : QWidget( parent, name ), mCore( core )
+ExtensionWidget::ExtensionWidget(Core *core, QWidget *parent,
+                                 const char *name)
+    : QWidget(parent, name), mCore(core)
 {
 }
 
@@ -39,30 +39,30 @@ ExtensionWidget::~ExtensionWidget()
 
 KAB::Core *ExtensionWidget::core() const
 {
-  return mCore;
+    return mCore;
 }
 
 bool ExtensionWidget::contactsSelected() const
 {
-  return mCore->selectedUIDs().count() != 0;
+    return mCore->selectedUIDs().count() != 0;
 }
 
 KABC::Addressee::List ExtensionWidget::selectedContacts()
 {
-  KABC::Addressee::List list;
+    KABC::Addressee::List list;
 
-  const QStringList uids = mCore->selectedUIDs();
-  QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt = uids.end();
-  for ( it = uids.begin(); it != endIt; ++it )
-    list.append( mCore->addressBook()->findByUid( *it ) );
+    const QStringList uids = mCore->selectedUIDs();
+    QStringList::ConstIterator it;
+    const QStringList::ConstIterator endIt = uids.end();
+    for(it = uids.begin(); it != endIt; ++it)
+        list.append(mCore->addressBook()->findByUid(*it));
 
-  return list;
+    return list;
 }
 
 void ExtensionWidget::contactsSelectionChanged()
 {
-  // do nothing
+    // do nothing
 }
 
 #include "extensionwidget.moc"

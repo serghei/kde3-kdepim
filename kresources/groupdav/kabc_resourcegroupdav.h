@@ -27,15 +27,14 @@
 
 namespace KABC {
 
-class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
-{
-  Q_OBJECT
+class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase {
+    Q_OBJECT
 
-  public:
-    ResourceGroupDav( const KConfig * );
-//     ResourceGroupDav( const KURL &url,
-//             const QString &user, const QString &password );
-  protected:
+public:
+    ResourceGroupDav(const KConfig *);
+    //     ResourceGroupDav( const KURL &url,
+    //             const QString &user, const QString &password );
+protected:
     void init();
 };
 

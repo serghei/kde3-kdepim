@@ -40,133 +40,133 @@
 
 
 ActionQueue::ActionQueue(KPilotLink *d) :
-	SyncAction(d,"ActionQueue")
-	// The string lists have default constructors
+    SyncAction(d, "ActionQueue")
+    // The string lists have default constructors
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 ActionQueue::~ActionQueue()
 {
-	FUNCTIONSETUP;
-	clear();
+    FUNCTIONSETUP;
+    clear();
 }
 
 void ActionQueue::clear()
 {
-	SyncAction *del = 0L;
-	while ( (del = nextAction()) )
-	{
-		delete del;
-	}
+    SyncAction *del = 0L;
+    while((del = nextAction()))
+    {
+        delete del;
+    }
 
-	Q_ASSERT(isEmpty());
+    Q_ASSERT(isEmpty());
 }
 
 void ActionQueue::queueInit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	addAction(new WelcomeAction(fHandle));
+    addAction(new WelcomeAction(fHandle));
 }
 
 void ActionQueue::queueConduits(const QStringList &l,
-	const SyncAction::SyncMode &m)
+                                const SyncAction::SyncMode &m)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	// Add conduits here ...
-	//
-	//
-	for (QStringList::ConstIterator it = l.begin();
-		it != l.end();
-		++it)
-	{
-		if ((*it).startsWith(CSL1("internal_")))
-		{
+    // Add conduits here ...
+    //
+    //
+    for(QStringList::ConstIterator it = l.begin();
+            it != l.end();
+            ++it)
+    {
+        if((*it).startsWith(CSL1("internal_")))
+        {
 #ifdef DEBUG
-			DEBUGKPILOT << fname <<
-				": Ignoring conduit " << *it << endl;
+            DEBUGKPILOT << fname <<
+                        ": Ignoring conduit " << *it << endl;
 #endif
-			continue;
-		}
+            continue;
+        }
 
 #ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Creating proxy with mode=" << m.name() << endl;
+        DEBUGKPILOT << fname
+                    << ": Creating proxy with mode=" << m.name() << endl;
 #endif
-		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
-		addAction(cp);
-	}
+        ConduitProxy *cp = new ConduitProxy(fHandle, *it, m);
+        addAction(cp);
+    }
 }
 
 void ActionQueue::queueCleanup()
 {
-	addAction(new CleanupAction(fHandle));
+    addAction(new CleanupAction(fHandle));
 }
 
 bool ActionQueue::exec()
 {
-	actionCompleted(0L);
-	return true;
+    actionCompleted(0L);
+    return true;
 }
 
 void ActionQueue::actionCompleted(SyncAction *b)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (b)
-	{
+    if(b)
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Completed action "
-			<< b->name()
-			<< endl;
+        DEBUGKPILOT << fname
+                    << ": Completed action "
+                    << b->name()
+                    << endl;
 #endif
-		delete b;
-	}
+        delete b;
+    }
 
-	if (isEmpty())
-	{
-		delayDone();
-		return;
-	}
-	if ( deviceLink() && (!deviceLink()->tickle()) )
-	{
-		emit logError(i18n("The connection to the handheld "
-			"was lost. Synchronization cannot continue."));
-		clear();
-		delayDone();
-		return;
-	}
+    if(isEmpty())
+    {
+        delayDone();
+        return;
+    }
+    if(deviceLink() && (!deviceLink()->tickle()))
+    {
+        emit logError(i18n("The connection to the handheld "
+                           "was lost. Synchronization cannot continue."));
+        clear();
+        delayDone();
+        return;
+    }
 
-	SyncAction *a = nextAction();
+    SyncAction *a = nextAction();
 
-	if (!a)
-	{
-		WARNINGKPILOT << "NULL action on stack."
-			<< endl;
-		return;
-	}
+    if(!a)
+    {
+        WARNINGKPILOT << "NULL action on stack."
+                      << endl;
+        return;
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Will run action "
-		<< a->name()
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Will run action "
+                << a->name()
+                << endl;
 #endif
 
-	QObject::connect(a, SIGNAL(logMessage(const QString &)),
-		this, SIGNAL(logMessage(const QString &)));
-	QObject::connect(a, SIGNAL(logError(const QString &)),
-		this, SIGNAL(logMessage(const QString &)));
-	QObject::connect(a, SIGNAL(logProgress(const QString &, int)),
-		this, SIGNAL(logProgress(const QString &, int)));
-	QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
-		this, SLOT(actionCompleted(SyncAction *)));
+    QObject::connect(a, SIGNAL(logMessage(const QString &)),
+                     this, SIGNAL(logMessage(const QString &)));
+    QObject::connect(a, SIGNAL(logError(const QString &)),
+                     this, SIGNAL(logMessage(const QString &)));
+    QObject::connect(a, SIGNAL(logProgress(const QString &, int)),
+                     this, SIGNAL(logProgress(const QString &, int)));
+    QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
+                     this, SLOT(actionCompleted(SyncAction *)));
 
-	// Run the action picked from the queue when we get back
-	// to the event loop.
-	QTimer::singleShot(0,a,SLOT(execConduit()));
+    // Run the action picked from the queue when we get back
+    // to the event loop.
+    QTimer::singleShot(0, a, SLOT(execConduit()));
 }
 

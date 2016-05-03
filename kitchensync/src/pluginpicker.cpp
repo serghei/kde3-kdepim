@@ -34,103 +34,104 @@
 #include <qlabel.h>
 #include <qlayout.h>
 
-PluginItem::PluginItem( KWidgetList *list, const QSync::Plugin &plugin )
-  : KWidgetListItem( list ), mPlugin( plugin )
+PluginItem::PluginItem(KWidgetList *list, const QSync::Plugin &plugin)
+    : KWidgetListItem(list), mPlugin(plugin)
 {
-  QString iconName = MemberInfo::pluginIconName( mPlugin.name() );
-  QGridLayout *layout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+    QString iconName = MemberInfo::pluginIconName(mPlugin.name());
+    QGridLayout *layout = new QGridLayout(this, 2, 2, KDialog::marginHint(), KDialog::spacingHint());
 
-  QLabel *icon = new QLabel( this );
-  icon->setPixmap( KGlobal::iconLoader()->loadIcon( iconName, KIcon::Desktop ) );
-  icon->setFixedSize( icon->sizeHint() );
+    QLabel *icon = new QLabel(this);
+    icon->setPixmap(KGlobal::iconLoader()->loadIcon(iconName, KIcon::Desktop));
+    icon->setFixedSize(icon->sizeHint());
 
-  QLabel *name = new QLabel( plugin.longName(), this );
-  QLabel *description = new QLabel( plugin.description(), this );
+    QLabel *name = new QLabel(plugin.longName(), this);
+    QLabel *description = new QLabel(plugin.description(), this);
 
-  QFont font = name->font();
-  font.setBold( true );
-  name->setFont( font );
+    QFont font = name->font();
+    font.setBold(true);
+    name->setFont(font);
 
-  layout->addWidget( icon, 0, 0 );
-  layout->addWidget( name, 0, 1 );
-  layout->addWidget( description, 1, 1 );
+    layout->addWidget(icon, 0, 0);
+    layout->addWidget(name, 0, 1);
+    layout->addWidget(description, 1, 1);
 }
 
 
-PluginPicker::PluginPicker( QWidget *parent )
-  : QWidget( parent )
+PluginPicker::PluginPicker(QWidget *parent)
+    : QWidget(parent)
 {
-  QBoxLayout *layout = new QVBoxLayout( this );
+    QBoxLayout *layout = new QVBoxLayout(this);
 
-  mPluginList = new KWidgetList( this );
-  layout->addWidget( mPluginList );
+    mPluginList = new KWidgetList(this);
+    layout->addWidget(mPluginList);
 
-  connect( mPluginList, SIGNAL( doubleClicked( KWidgetListItem* ) ),
-           SIGNAL( selected() ) );
+    connect(mPluginList, SIGNAL(doubleClicked(KWidgetListItem *)),
+            SIGNAL(selected()));
 
-  updatePluginList();
+    updatePluginList();
 
-  mPluginList->setFocus();
+    mPluginList->setFocus();
 }
 
 void PluginPicker::updatePluginList()
 {
-  mPluginList->clear();
+    mPluginList->clear();
 
-  QSync::Environment *env = SyncProcessManager::self()->environment();
+    QSync::Environment *env = SyncProcessManager::self()->environment();
 
-  QSync::Environment::PluginIterator it( env->pluginBegin() );
-  for( ; it != env->pluginEnd(); ++it ) {
-    QSync::Plugin plugin = *it;
-    mPluginList->appendItem( new PluginItem( mPluginList, plugin ) );
-  }
+    QSync::Environment::PluginIterator it(env->pluginBegin());
+    for(; it != env->pluginEnd(); ++it)
+    {
+        QSync::Plugin plugin = *it;
+        mPluginList->appendItem(new PluginItem(mPluginList, plugin));
+    }
 }
 
 QSync::Plugin PluginPicker::selectedPlugin() const
 {
-  PluginItem *item = static_cast<PluginItem *>( mPluginList->selectedItem() );
-  if ( item ) return item->plugin();
-  else return QSync::Plugin();
+    PluginItem *item = static_cast<PluginItem *>(mPluginList->selectedItem());
+    if(item) return item->plugin();
+    else return QSync::Plugin();
 }
 
 
-PluginPickerDialog::PluginPickerDialog( QWidget *parent )
-  : KDialogBase( parent, 0, true, i18n("Select Member Type"), Ok | Cancel )
+PluginPickerDialog::PluginPickerDialog(QWidget *parent)
+    : KDialogBase(parent, 0, true, i18n("Select Member Type"), Ok | Cancel)
 {
-  QFrame *topFrame = makeMainWidget();
+    QFrame *topFrame = makeMainWidget();
 
-  QBoxLayout *topLayout = new QVBoxLayout( topFrame );
+    QBoxLayout *topLayout = new QVBoxLayout(topFrame);
 
-  mPicker = new PluginPicker( topFrame );
-  topLayout->addWidget( mPicker );
+    mPicker = new PluginPicker(topFrame);
+    topLayout->addWidget(mPicker);
 
-  connect( mPicker, SIGNAL( selected() ), SLOT( slotOk() ) );
+    connect(mPicker, SIGNAL(selected()), SLOT(slotOk()));
 
-  setInitialSize( QSize( 460, 380 ) );
+    setInitialSize(QSize(460, 380));
 }
 
 QSync::Plugin PluginPickerDialog::selectedPlugin() const
 {
-  return mPicker->selectedPlugin();
+    return mPicker->selectedPlugin();
 }
 
-QSync::Plugin PluginPickerDialog::getPlugin( QWidget *parent )
+QSync::Plugin PluginPickerDialog::getPlugin(QWidget *parent)
 {
-  PluginPickerDialog dlg( parent );
-  if ( dlg.exec() )
-    return dlg.selectedPlugin();
-  else
-    return QSync::Plugin();
+    PluginPickerDialog dlg(parent);
+    if(dlg.exec())
+        return dlg.selectedPlugin();
+    else
+        return QSync::Plugin();
 }
 
 void PluginPickerDialog::slotOk()
 {
-  accept();
+    accept();
 }
 
 void PluginPickerDialog::slotCancel()
 {
-  reject();
+    reject();
 }
 
 #include "pluginpicker.moc"

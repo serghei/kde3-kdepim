@@ -23,8 +23,8 @@
 
 #include "outputdialog.h"
 
-OutputDialog::OutputDialog( QWidget *page, QWidget *parent )
-  : KDialogBase( Swallow, "", Ok, Ok, parent, "", true, true )
+OutputDialog::OutputDialog(QWidget *page, QWidget *parent)
+    : KDialogBase(Swallow, "", Ok, Ok, parent, "", true, true)
 {
-  setMainWidget( page );
+    setMainWidget(page);
 }

@@ -47,41 +47,41 @@
 #include "fileInstaller.moc"
 
 FileInstaller::FileInstaller() :
-	enabled(true)
+    enabled(true)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fDirName = KGlobal::dirs()->saveLocation("data",
-		CSL1("kpilot/pending_install/"));
-	fPendingCopies = 0;
+    fDirName = KGlobal::dirs()->saveLocation("data",
+               CSL1("kpilot/pending_install/"));
+    fPendingCopies = 0;
 
 }
 
 /* virtual */ FileInstaller::~FileInstaller()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 
 void FileInstaller::clearPending()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	unsigned int i;
+    unsigned int i;
 
-	QDir installDir(fDirName);
+    QDir installDir(fDirName);
 
-	// Start from 2 to skip . and ..
-	//
-	for (i = 2; i < installDir.count(); i++)
-	{
-		QFile::remove(fDirName + installDir[i]);
-	}
+    // Start from 2 to skip . and ..
+    //
+    for(i = 2; i < installDir.count(); i++)
+    {
+        QFile::remove(fDirName + installDir[i]);
+    }
 
-	if (i > 2)
-	{
-		emit filesChanged();
-	}
+    if(i > 2)
+    {
+        emit filesChanged();
+    }
 }
 
 void FileInstaller::deleteFile(const QString &file)
@@ -97,88 +97,89 @@ void FileInstaller::deleteFiles(const QStringList &files)
 
     for(QStringList::ConstIterator it = files.begin(); it != files.end(); ++it)
         QFile::remove(fDirName + *it);
-    
+
     emit filesChanged();
 }
 
-/* virtual */ bool FileInstaller::runCopy(const QString & s, QWidget* w )
+/* virtual */ bool FileInstaller::runCopy(const QString &s, QWidget *w)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if(!(s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false))) {
-		KMessageBox::detailedSorry(w, i18n("Cannot install %1").arg(s),
-			i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
-		return false;
-	}
+    if(!(s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false)))
+    {
+        KMessageBox::detailedSorry(w, i18n("Cannot install %1").arg(s),
+                                   i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
+        return false;
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Copying " << s << endl;
+    DEBUGKPILOT << fname << ": Copying " << s << endl;
 #endif
 
-	KURL srcName;
-	srcName.setPath(s);
-	KURL destDir(fDirName + CSL1("/") + srcName.fileName());
+    KURL srcName;
+    srcName.setPath(s);
+    KURL destDir(fDirName + CSL1("/") + srcName.fileName());
 
 #if KDE_IS_VERSION(3,1,9)
-	return KIO::NetAccess::copy(srcName, destDir, w);
+    return KIO::NetAccess::copy(srcName, destDir, w);
 #else
-	return KIO::NetAccess::copy(srcName,destDir);
+    return KIO::NetAccess::copy(srcName, destDir);
 #endif
 }
 
 
-void FileInstaller::addFiles(const QStringList & fileList, QWidget* w)
+void FileInstaller::addFiles(const QStringList &fileList, QWidget *w)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (!enabled) return;
+    if(!enabled) return;
 
-	unsigned int succ = 0;
+    unsigned int succ = 0;
 
-	for(QStringList::ConstIterator it = fileList.begin();
-	    it != fileList.end(); ++it)
-	{
-		if (runCopy( *it, w ))
-			succ++;
-	}
+    for(QStringList::ConstIterator it = fileList.begin();
+            it != fileList.end(); ++it)
+    {
+        if(runCopy(*it, w))
+            succ++;
+    }
 
-	if (succ)
-	{
-		emit filesChanged();
-	}
+    if(succ)
+    {
+        emit filesChanged();
+    }
 }
 
-void FileInstaller::addFile( const QString & file, QWidget* w )
+void FileInstaller::addFile(const QString &file, QWidget *w)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (!enabled) return;
+    if(!enabled) return;
 
-	if (runCopy(file, w))
-	{
-		emit(filesChanged());
-	}
+    if(runCopy(file, w))
+    {
+        emit(filesChanged());
+    }
 }
 
 /* slot */ void FileInstaller::copyCompleted()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 const QStringList FileInstaller::fileNames() const
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QDir installDir(fDirName);
+    QDir installDir(fDirName);
 
-	return installDir.entryList(QDir::Files |
-		QDir::NoSymLinks | QDir::Readable);
+    return installDir.entryList(QDir::Files |
+                                QDir::NoSymLinks | QDir::Readable);
 }
 
 /* slot */ void FileInstaller::setEnabled(bool b)
 {
-	FUNCTIONSETUP;
-	enabled=b;
+    FUNCTIONSETUP;
+    enabled = b;
 }
 
 

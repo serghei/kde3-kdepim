@@ -29,50 +29,49 @@
 #include <kurl.h>
 #include <kdepimmacros.h>
 
-class KDE_EXPORT WebdavHandler
-{
-  public:
+class KDE_EXPORT WebdavHandler {
+public:
     WebdavHandler();
 
-    static KURL toDAV( const KURL& url );
+    static KURL toDAV(const KURL &url);
 
 
-    static QDomElement addElementNS( QDomDocument &doc, QDomNode &node,
-                                     const QString &ns, const QString &tag,
-                                     const QString &value = QString::null );
-    static QDomElement addElement( QDomDocument &, QDomNode &,
-                         const QString &tag, const QString &value = QString::null );
-    static QDomElement addDavElement( QDomDocument &, QDomNode &,
-                         const QString &tag, const QString &value = QString::null );
+    static QDomElement addElementNS(QDomDocument &doc, QDomNode &node,
+                                    const QString &ns, const QString &tag,
+                                    const QString &value = QString::null);
+    static QDomElement addElement(QDomDocument &, QDomNode &,
+                                  const QString &tag, const QString &value = QString::null);
+    static QDomElement addDavElement(QDomDocument &, QDomNode &,
+                                     const QString &tag, const QString &value = QString::null);
 
-    static bool extractBool( const QDomElement &node, 
-                         const QString &entry, bool &value );
-    static bool extractLong( const QDomElement &node, 
-                         const QString &entry, long &value );
-    static bool extractFloat( const QDomElement &node, 
-                         const QString &entry, float &value );
-    static bool extractDateTime( const QDomElement &node, 
-                         const QString &entry, QDateTime &value );
-    static bool extractString( const QDomElement &node, 
-                         const QString &entry, QString &value );
-    static bool extractStringList( const QDomElement &node, 
-                         const QString &entry, QStringList &value );
-    
+    static bool extractBool(const QDomElement &node,
+                            const QString &entry, bool &value);
+    static bool extractLong(const QDomElement &node,
+                            const QString &entry, long &value);
+    static bool extractFloat(const QDomElement &node,
+                             const QString &entry, float &value);
+    static bool extractDateTime(const QDomElement &node,
+                                const QString &entry, QDateTime &value);
+    static bool extractString(const QDomElement &node,
+                              const QString &entry, QString &value);
+    static bool extractStringList(const QDomElement &node,
+                                  const QString &entry, QStringList &value);
+
     /**
      * Returns the value of the "etag" header if it can be found in the headers.
      */
-    static const QString getEtagFromHeaders( const QString& );
+    static const QString getEtagFromHeaders(const QString &);
 
 
     /**
      * Return the representation of utc time in the time zone indicated by timeZoneId
      */
-    static QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId );
+    static QDateTime utcAsZone(const QDateTime &utc, const QString &timeZoneId);
 
     /**
-     * Return the UTC representation of local time in the time zone indicated by timeZoneId 
+     * Return the UTC representation of local time in the time zone indicated by timeZoneId
      */
-    static QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId );
+    static QDateTime zoneAsUtc(const QDateTime &zone, const QString &timeZoneId);
 };
 
 #endif

@@ -36,21 +36,20 @@ namespace KABC {
 
 class ResourceGroupwareBase;
 
-class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceGroupwareBaseConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceGroupwareBaseConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  protected slots:
+protected slots:
     void updateFolders();
 
-  private:
+private:
     KURLRequester *mURL;
     KLineEdit *mUser;
     KLineEdit *mPassword;

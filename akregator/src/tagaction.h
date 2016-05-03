@@ -35,32 +35,31 @@ namespace Akregator {
 class Tag;
 
 /** a KToggleAction for assigning and removing tags. Displays the tag name and emits the tag when activated */
-class TagAction : public KToggleAction
-{
+class TagAction : public KToggleAction {
     Q_OBJECT
 
-    public:
+public:
 
-        TagAction(const Tag& tag, const QObject *receiver, const char *slot, QObject *parent=0);
-        virtual ~TagAction();
-        
-        //virtual int plug(QWidget *widget, int index=-1);
-        //virtual void unplug(QWidget* widget);
+    TagAction(const Tag &tag, const QObject *receiver, const char *slot, QObject *parent = 0);
+    virtual ~TagAction();
 
-        virtual Tag tag() const;
+    //virtual int plug(QWidget *widget, int index=-1);
+    //virtual void unplug(QWidget* widget);
 
-    signals:
+    virtual Tag tag() const;
 
-        void toggled(const Tag&, bool);
+signals:
 
-    protected slots: 
+    void toggled(const Tag &, bool);
 
-        virtual void slotToggled(bool enabled);
+protected slots:
 
-    private:
+    virtual void slotToggled(bool enabled);
 
-        class TagActionPrivate;
-        TagActionPrivate* d;
+private:
+
+    class TagActionPrivate;
+    TagActionPrivate *d;
 };
 
 } // namespace Akregator

@@ -27,22 +27,22 @@ Service::Service()
 {
 }
 
-Service::Service( const QString &name )
-  : mName( name )
+Service::Service(const QString &name)
+    : mName(name)
 {
 }
 
-void Service::addPort( const Port &port )
+void Service::addPort(const Port &port)
 {
-  mPorts.insert( port.mName, port );
+    mPorts.insert(port.mName, port);
 }
 
-Service::Port Service::port( const QString &name ) const
+Service::Port Service::port(const QString &name) const
 {
-  return mPorts[ name ];
+    return mPorts[ name ];
 }
 
 Service::Port::List Service::ports() const
 {
-  return mPorts.values();
+    return mPorts.values();
 }

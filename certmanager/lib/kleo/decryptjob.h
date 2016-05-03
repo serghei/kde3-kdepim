@@ -38,46 +38,46 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Key;
-  class DecryptionResult;
+class Error;
+class Key;
+class DecryptionResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous decrypters
+/**
+   @short An abstract base class for asynchronous decrypters
 
-     To use a DecryptJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the decryption with a
-     call to start(). This call might fail, in which case the
-     DecryptJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
+   To use a DecryptJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the decryption with a
+   call to start(). This call might fail, in which case the
+   DecryptJob instance will have scheduled it's own destruction with
+   a call to QObject::deleteLater().
 
-     After result() is emitted, the DecryptJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class DecryptJob : public Job {
+   After result() is emitted, the DecryptJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class DecryptJob : public Job {
     Q_OBJECT
-  protected:
-    DecryptJob( QObject * parent, const char * name );
-  public:
+protected:
+    DecryptJob(QObject *parent, const char *name);
+public:
     ~DecryptJob();
 
     /**
        Starts the decryption operation. \a cipherText is the data to
        decrypt.
     */
-    virtual GpgME::Error start( const QByteArray & cipherText ) = 0;
+    virtual GpgME::Error start(const QByteArray &cipherText) = 0;
 
-    virtual GpgME::DecryptionResult exec( const QByteArray & cipherText,
-					  QByteArray & plainText ) = 0;
+    virtual GpgME::DecryptionResult exec(const QByteArray &cipherText,
+                                         QByteArray &plainText) = 0;
 
-  signals:
-    void result( const GpgME::DecryptionResult & result, const QByteArray & plainText );
-  };
+signals:
+    void result(const GpgME::DecryptionResult &result, const QByteArray &plainText);
+};
 
 }
 

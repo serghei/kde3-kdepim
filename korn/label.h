@@ -25,19 +25,22 @@
 /**
  * A simple overriding of the QLabel class to get a mouseButtonPressed() signal
  */
-class Label : public QLabel
-{ Q_OBJECT
+class Label : public QLabel {
+    Q_OBJECT
 public:
-	Label( QWidget * parent = 0, const char * name = 0 ) : QLabel( parent, name ) {}
-	virtual ~Label() {}
-	
+    Label(QWidget *parent = 0, const char *name = 0) : QLabel(parent, name) {}
+    virtual ~Label() {}
+
 protected:
-	virtual void mousePressEvent( QMouseEvent *e ) { emit mouseButtonPressed( e->button() ); }
+    virtual void mousePressEvent(QMouseEvent *e)
+    {
+        emit mouseButtonPressed(e->button());
+    }
 signals:
-	/**
-	 * Emitted when a button is pressed.
-	 */
-	void mouseButtonPressed( Qt::ButtonState );
+    /**
+     * Emitted when a button is pressed.
+     */
+    void mouseButtonPressed(Qt::ButtonState);
 };
 
 #endif //MK_LABEL_H

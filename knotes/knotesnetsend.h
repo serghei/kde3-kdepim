@@ -40,18 +40,17 @@
 
 using namespace KNetwork;
 
-class KNotesNetworkSender : public KNetwork::KBufferedSocket
-{
+class KNotesNetworkSender : public KNetwork::KBufferedSocket {
     Q_OBJECT
 public:
-    KNotesNetworkSender( const QString& host, int port );
+    KNotesNetworkSender(const QString &host, int port);
 
-    void setSenderId( const QString& sender );
-    void setNote( const QString& title, const QString& text );
+    void setSenderId(const QString &sender);
+    void setNote(const QString &title, const QString &text);
 
 protected slots:
-    void slotConnected( const KResolverEntry& );
-    void slotError( int );
+    void slotConnected(const KResolverEntry &);
+    void slotError(int);
     void slotClosed();
 
     void slotReadyWrite();

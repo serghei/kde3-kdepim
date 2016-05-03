@@ -59,12 +59,11 @@ class IncidenceChangerBase;
 
 using namespace KOrg;
 
-class KOGroupware : public QObject
-{
+class KOGroupware : public QObject {
     Q_OBJECT
-  public:
-    static KOGroupware* create( CalendarView*, KCal::CalendarResources* );
-    static KOGroupware* instance();
+public:
+    static KOGroupware *create(CalendarView *, KCal::CalendarResources *);
+    static KOGroupware *instance();
 
     FreeBusyManager *freeBusyManager();
 
@@ -72,35 +71,35 @@ class KOGroupware : public QObject
          Returns false if the user cancels the dialog, and true if the
          user presses Yes og or No.
     */
-    bool sendICalMessage( QWidget* parent, KCal::Scheduler::Method method,
-                          Incidence* incidence, bool isDeleting = false,
-                          bool statusChanged = false );
+    bool sendICalMessage(QWidget *parent, KCal::Scheduler::Method method,
+                         Incidence *incidence, bool isDeleting = false,
+                         bool statusChanged = false);
 
     /**
       Send counter proposal message.
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    void sendCounterProposal( KCal::Calendar* calendar, KCal::Event* oldEvent, KCal::Event *newEvent ) const;
+    void sendCounterProposal(KCal::Calendar *calendar, KCal::Event *oldEvent, KCal::Event *newEvent) const;
 
     // THIS IS THE ACTUAL KM/KO API
     enum EventState { Accepted, ConditionallyAccepted, Declined, Request };
 
     // convert the TNEF attachment to a vCard or iCalendar part
-    QString msTNEFToVPart( const QByteArray& tnef );
+    QString msTNEFToVPart(const QByteArray &tnef);
 
-  private slots:
+private slots:
     /** Handle iCals given by KMail. */
-    void incomingDirChanged( const QString& path );
+    void incomingDirChanged(const QString &path);
 
     /** Updates some slot connections when the view incidence changer changes */
-    void slotViewNewIncidenceChanger( IncidenceChangerBase* changer );
+    void slotViewNewIncidenceChanger(IncidenceChangerBase *changer);
 
     void initialCheckForChanges();
-  protected:
-    KOGroupware( CalendarView*, KCal::CalendarResources* );
+protected:
+    KOGroupware(CalendarView *, KCal::CalendarResources *);
 
-  private:
+private:
     static KOGroupware *mInstance;
     KCal::ICalFormat mFormat;
     CalendarView *mView;

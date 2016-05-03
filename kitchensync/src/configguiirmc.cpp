@@ -42,150 +42,165 @@
 
 #include "configguiirmc.h"
 
-ConfigGuiIRMC::ConfigGuiIRMC( const QSync::Member &member, QWidget *parent )
-  : ConfigGui( member, parent )
+ConfigGuiIRMC::ConfigGuiIRMC(const QSync::Member &member, QWidget *parent)
+    : ConfigGui(member, parent)
 {
-  initGUI();
+    initGUI();
 
-  mConnectionType->insertItem( i18n( "Bluetooth" ) );
-  mConnectionType->insertItem( i18n( "InfraRed (IR)" ) );
-  mConnectionType->insertItem( i18n( "Cable" ) );
+    mConnectionType->insertItem(i18n("Bluetooth"));
+    mConnectionType->insertItem(i18n("InfraRed (IR)"));
+    mConnectionType->insertItem(i18n("Cable"));
 
-  connect( mConnectionType, SIGNAL( activated( int ) ),
-           this, SLOT( connectionTypeChanged( int ) ) );
+    connect(mConnectionType, SIGNAL(activated(int)),
+            this, SLOT(connectionTypeChanged(int)));
 
-  connectionTypeChanged( 0 );
+    connectionTypeChanged(0);
 }
 
-void ConfigGuiIRMC::load( const QString &xml )
+void ConfigGuiIRMC::load(const QString &xml)
 {
-  QDomDocument doc;
-  doc.setContent( xml );
-  QDomElement docElement = doc.documentElement();
-  QDomNode node;
-  for ( node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() ) {
-    QDomElement element = node.toElement();
-    if ( element.tagName() == "connectmedium" ) {
-      if ( element.text() == "bluetooth" ) {
-        mConnectionType->setCurrentItem( 0 );
-        connectionTypeChanged( 0 );
-      } else if ( element.text() == "ir" ) {
-        mConnectionType->setCurrentItem( 1 );
-        connectionTypeChanged( 1 );
-      } else if ( element.text() == "cable" ) {
-        mConnectionType->setCurrentItem( 2 );
-        connectionTypeChanged( 2 );
-      }
-    } else if (element.tagName() == "btunit" ) {
-      mBluetoothWidget->setAddress( element.text() );
-    } else if (element.tagName() == "btchannel" ) {
-      mBluetoothWidget->setChannel( element.text() );
-    } else if (element.tagName() == "donttellsync" ) {
-      mDontTellSync->setChecked( element.text() == "true" );
+    QDomDocument doc;
+    doc.setContent(xml);
+    QDomElement docElement = doc.documentElement();
+    QDomNode node;
+    for(node = docElement.firstChild(); !node.isNull(); node = node.nextSibling())
+    {
+        QDomElement element = node.toElement();
+        if(element.tagName() == "connectmedium")
+        {
+            if(element.text() == "bluetooth")
+            {
+                mConnectionType->setCurrentItem(0);
+                connectionTypeChanged(0);
+            }
+            else if(element.text() == "ir")
+            {
+                mConnectionType->setCurrentItem(1);
+                connectionTypeChanged(1);
+            }
+            else if(element.text() == "cable")
+            {
+                mConnectionType->setCurrentItem(2);
+                connectionTypeChanged(2);
+            }
+        }
+        else if(element.tagName() == "btunit")
+        {
+            mBluetoothWidget->setAddress(element.text());
+        }
+        else if(element.tagName() == "btchannel")
+        {
+            mBluetoothWidget->setChannel(element.text());
+        }
+        else if(element.tagName() == "donttellsync")
+        {
+            mDontTellSync->setChecked(element.text() == "true");
+        }
+
+
     }
 
-
-  }
-
-  mIRWidget->load( docElement );
-  mCableWidget->load( docElement );
+    mIRWidget->load(docElement);
+    mCableWidget->load(docElement);
 }
 
 QString ConfigGuiIRMC::save() const
 {
-  QDomDocument doc;
-  QDomElement config = doc.createElement( "config" );
-  doc.appendChild( config );
+    QDomDocument doc;
+    QDomElement config = doc.createElement("config");
+    doc.appendChild(config);
 
-  QDomElement element = doc.createElement( "connectmedium" );
-  if ( mConnectionType->currentItem() == 0 )
-    element.appendChild( doc.createTextNode( "bluetooth" ) );
-  if ( mConnectionType->currentItem() == 1 )
-    element.appendChild( doc.createTextNode( "ir" ) );
-  if ( mConnectionType->currentItem() == 2 )
-    element.appendChild( doc.createTextNode( "cable" ) );
+    QDomElement element = doc.createElement("connectmedium");
+    if(mConnectionType->currentItem() == 0)
+        element.appendChild(doc.createTextNode("bluetooth"));
+    if(mConnectionType->currentItem() == 1)
+        element.appendChild(doc.createTextNode("ir"));
+    if(mConnectionType->currentItem() == 2)
+        element.appendChild(doc.createTextNode("cable"));
 
-  config.appendChild( element );
+    config.appendChild(element);
 
-  if ( mConnectionType->currentItem() == 0 ) {
-    QDomElement btunit = doc.createElement( "btunit" );
-    if ( !mBluetoothWidget->address().isEmpty() )
-      btunit.appendChild( doc.createTextNode( mBluetoothWidget->address() ) );
+    if(mConnectionType->currentItem() == 0)
+    {
+        QDomElement btunit = doc.createElement("btunit");
+        if(!mBluetoothWidget->address().isEmpty())
+            btunit.appendChild(doc.createTextNode(mBluetoothWidget->address()));
 
-    QDomElement btchannel = doc.createElement( "btchannel" );
-    if ( !mBluetoothWidget->channel().isEmpty() )
-      btchannel.appendChild( doc.createTextNode( mBluetoothWidget->channel() ) );
+        QDomElement btchannel = doc.createElement("btchannel");
+        if(!mBluetoothWidget->channel().isEmpty())
+            btchannel.appendChild(doc.createTextNode(mBluetoothWidget->channel()));
 
-    config.appendChild( btunit );
-    config.appendChild( btchannel );
-  }
+        config.appendChild(btunit);
+        config.appendChild(btchannel);
+    }
 
-  if ( mDontTellSync->isChecked() ) {
-    QDomElement dontellsync = doc.createElement( "donttellsync" );
-    dontellsync.appendChild( doc.createTextNode( "true" ) );
-    config.appendChild( dontellsync );
-  }
+    if(mDontTellSync->isChecked())
+    {
+        QDomElement dontellsync = doc.createElement("donttellsync");
+        dontellsync.appendChild(doc.createTextNode("true"));
+        config.appendChild(dontellsync);
+    }
 
-  mIRWidget->save( doc, config );
-  mCableWidget->save( doc, config );
+    mIRWidget->save(doc, config);
+    mCableWidget->save(doc, config);
 
-  return doc.toString();
+    return doc.toString();
 }
 
-void ConfigGuiIRMC::connectionTypeChanged( int type )
+void ConfigGuiIRMC::connectionTypeChanged(int type)
 {
-  mBluetoothWidget->hide();
-  mIRWidget->hide();
-  mCableWidget->hide();
+    mBluetoothWidget->hide();
+    mIRWidget->hide();
+    mCableWidget->hide();
 
-  if ( type == 0 )
-    mBluetoothWidget->show();
-  else if ( type == 1 )
-    mIRWidget->show();
-  else
-    mCableWidget->show();
+    if(type == 0)
+        mBluetoothWidget->show();
+    else if(type == 1)
+        mIRWidget->show();
+    else
+        mCableWidget->show();
 }
 
 void ConfigGuiIRMC::initGUI()
 {
-  QTabWidget *tabWidget = new QTabWidget( this );
-  topLayout()->addWidget( tabWidget );
+    QTabWidget *tabWidget = new QTabWidget(this);
+    topLayout()->addWidget(tabWidget);
 
-  QVBox *connectionWidget = new QVBox( tabWidget );
-  connectionWidget->setMargin( KDialog::marginHint() );
-  connectionWidget->setSpacing( 5 );
+    QVBox *connectionWidget = new QVBox(tabWidget);
+    connectionWidget->setMargin(KDialog::marginHint());
+    connectionWidget->setSpacing(5);
 
-  tabWidget->addTab( connectionWidget, i18n( "Connection" ) );
+    tabWidget->addTab(connectionWidget, i18n("Connection"));
 
-  mConnectionType = new KComboBox( connectionWidget );
-  QToolTip::add( mConnectionType, i18n( "Select your connection type." ) );
+    mConnectionType = new KComboBox(connectionWidget);
+    QToolTip::add(mConnectionType, i18n("Select your connection type."));
 
-  mBluetoothWidget = new BluetoothWidget( connectionWidget );
-  mBluetoothWidget->hide();
+    mBluetoothWidget = new BluetoothWidget(connectionWidget);
+    mBluetoothWidget->hide();
 
-  mIRWidget = new IRWidget( connectionWidget );
-  mIRWidget->hide();
+    mIRWidget = new IRWidget(connectionWidget);
+    mIRWidget->hide();
 
-  mCableWidget = new CableWidget( connectionWidget );
-  mCableWidget->hide();
+    mCableWidget = new CableWidget(connectionWidget);
+    mCableWidget->hide();
 
-  connectionWidget->setStretchFactor( mBluetoothWidget, 1 );
-  connectionWidget->setStretchFactor( mIRWidget, 1 );
-  connectionWidget->setStretchFactor( mCableWidget, 1 );
+    connectionWidget->setStretchFactor(mBluetoothWidget, 1);
+    connectionWidget->setStretchFactor(mIRWidget, 1);
+    connectionWidget->setStretchFactor(mCableWidget, 1);
 
-  QVBox *optionsWidget = new QVBox( tabWidget );
-  optionsWidget->setMargin( KDialog::marginHint() );
-  optionsWidget->setSpacing( 5 );
+    QVBox *optionsWidget = new QVBox(tabWidget);
+    optionsWidget->setMargin(KDialog::marginHint());
+    optionsWidget->setSpacing(5);
 
-  tabWidget->addTab( optionsWidget, i18n( "Options" ) );
+    tabWidget->addTab(optionsWidget, i18n("Options"));
 
-  QHBox *optionBox = new QHBox( optionsWidget );
-  optionBox->setSpacing( KDialog::spacingHint() );
+    QHBox *optionBox = new QHBox(optionsWidget);
+    optionBox->setSpacing(KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Don't send OBEX UUID (IRMC-SYNC)" ), optionBox );
-  mDontTellSync = new QCheckBox( optionBox );
-  QToolTip::add( mDontTellSync, i18n( "Don't send OBEX UUID while connecting. Needed for older IrMC based mobile phones." ) );
-  label->setBuddy( mDontTellSync );
+    QLabel *label = new QLabel(i18n("Don't send OBEX UUID (IRMC-SYNC)"), optionBox);
+    mDontTellSync = new QCheckBox(optionBox);
+    QToolTip::add(mDontTellSync, i18n("Don't send OBEX UUID while connecting. Needed for older IrMC based mobile phones."));
+    label->setBuddy(mDontTellSync);
 
 }
 

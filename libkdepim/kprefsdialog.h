@@ -55,10 +55,9 @@ class KURLRequester;
   KPrefsDialog. The control element consists of a set of widgets for handling
   a certain type of configuration information.
 */
-class KDE_EXPORT KPrefsWid : public QObject
-{
+class KDE_EXPORT KPrefsWid : public QObject {
     Q_OBJECT
-  public:
+public:
     /**
       This function is called to read value of the setting from the
       stored configuration and display it in the widget.
@@ -75,7 +74,7 @@ class KDE_EXPORT KPrefsWid : public QObject
     */
     virtual QValueList<QWidget *> widgets() const;
 
-  signals:
+signals:
     /**
       Emitted when widget value has changed.
     */
@@ -88,16 +87,15 @@ class KDE_EXPORT KPrefsWid : public QObject
   This class provides a control element for configuring bool values. It is meant
   to be used by KPrefsDialog. The user is responsible for the layout management.
 */
-class KDE_EXPORT KPrefsWidBool : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidBool : public KPrefsWid {
+public:
     /**
       Create a bool value control element consisting of a QCheckbox.
 
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidBool( KConfigSkeleton::ItemBool *item, QWidget *parent );
+    KPrefsWidBool(KConfigSkeleton::ItemBool *item, QWidget *parent);
 
     /**
       Return the QCheckbox used by this control element.
@@ -109,7 +107,7 @@ class KDE_EXPORT KPrefsWidBool : public KPrefsWid
 
     QValueList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemBool *mItem;
 
     QCheckBox *mCheck;
@@ -122,9 +120,8 @@ class KDE_EXPORT KPrefsWidBool : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidInt : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidInt : public KPrefsWid {
+public:
     /**
       Create a integer value control element consisting of a label and a
       spinbox.
@@ -132,7 +129,7 @@ class KDE_EXPORT KPrefsWidInt : public KPrefsWid
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidInt( KConfigSkeleton::ItemInt *item, QWidget *parent );
+    KPrefsWidInt(KConfigSkeleton::ItemInt *item, QWidget *parent);
 
     /**
       Return QLabel used by this control element.
@@ -149,7 +146,7 @@ class KDE_EXPORT KPrefsWidInt : public KPrefsWid
 
     QValueList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemInt *mItem;
 
     QLabel *mLabel;
@@ -163,16 +160,15 @@ class KDE_EXPORT KPrefsWidInt : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidTime : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidTime : public KPrefsWid {
+public:
     /**
       Create a time value control element consisting of a label and a spinbox.
 
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *parent );
+    KPrefsWidTime(KConfigSkeleton::ItemDateTime *item, QWidget *parent);
 
     /**
       Return QLabel used by this widget.
@@ -186,7 +182,7 @@ class KDE_EXPORT KPrefsWidTime : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
@@ -200,9 +196,8 @@ class KDE_EXPORT KPrefsWidTime : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidDuration : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidDuration : public KPrefsWid {
+public:
     /**
       Create a duration value control element consisting of a label and a
       spinbox.
@@ -210,7 +205,7 @@ class KDE_EXPORT KPrefsWidDuration : public KPrefsWid
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidDuration( KConfigSkeleton::ItemDateTime *item, QWidget *parent );
+    KPrefsWidDuration(KConfigSkeleton::ItemDateTime *item, QWidget *parent);
 
     /**
       Return QLabel used by this widget.
@@ -224,7 +219,7 @@ class KDE_EXPORT KPrefsWidDuration : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
@@ -238,16 +233,15 @@ class KDE_EXPORT KPrefsWidDuration : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidDate : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidDate : public KPrefsWid {
+public:
     /**
       Create a time value control element consisting of a label and a date box.
 
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidDate( KConfigSkeleton::ItemDateTime *item, QWidget *parent );
+    KPrefsWidDate(KConfigSkeleton::ItemDateTime *item, QWidget *parent);
 
     /**
       Return QLabel used by this widget.
@@ -261,7 +255,7 @@ class KDE_EXPORT KPrefsWidDate : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
@@ -275,10 +269,9 @@ class KDE_EXPORT KPrefsWidDate : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidColor : public KPrefsWid
-{
+class KDE_EXPORT KPrefsWidColor : public KPrefsWid {
     Q_OBJECT
-  public:
+public:
     /**
       Create a color value control element consisting of a test field and a
       button for opening a color dialog.
@@ -286,7 +279,7 @@ class KDE_EXPORT KPrefsWidColor : public KPrefsWid
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidColor( KConfigSkeleton::ItemColor *item, QWidget *parent );
+    KPrefsWidColor(KConfigSkeleton::ItemColor *item, QWidget *parent);
     /**
       Destruct color setting widget.
     */
@@ -304,7 +297,7 @@ class KDE_EXPORT KPrefsWidColor : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemColor *mItem;
 
     QLabel *mLabel;
@@ -317,10 +310,9 @@ class KDE_EXPORT KPrefsWidColor : public KPrefsWid
   This class provides a control element for configuring font values. It is meant
   to be used by KPrefsDialog. The user is responsible for the layout management.
 */
-class KDE_EXPORT KPrefsWidFont : public KPrefsWid
-{
+class KDE_EXPORT KPrefsWidFont : public KPrefsWid {
     Q_OBJECT
-  public:
+public:
     /**
       Create a font value control element consisting of a test field and a
       button for opening a font dialog.
@@ -329,8 +321,8 @@ class KDE_EXPORT KPrefsWidFont : public KPrefsWid
       @param parent  Parent widget.
       @param sampleText Sample text for previewing the selected font.
     */
-    KPrefsWidFont( KConfigSkeleton::ItemFont *item,
-                   QWidget *parent, const QString &sampleText );
+    KPrefsWidFont(KConfigSkeleton::ItemFont *item,
+                  QWidget *parent, const QString &sampleText);
     /**
       Destruct font setting widget.
     */
@@ -352,10 +344,10 @@ class KDE_EXPORT KPrefsWidFont : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  protected slots:
+protected slots:
     void selectFont();
 
-  private:
+private:
     KConfigSkeleton::ItemFont *mItem;
 
     QLabel *mLabel;
@@ -374,9 +366,8 @@ class KDE_EXPORT KPrefsWidFont : public KPrefsWid
   the radio button. The position of the button is defined by the sequence of
   @ref addRadio() calls, starting with 0.
 */
-class KDE_EXPORT KPrefsWidRadios : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidRadios : public KPrefsWid {
+public:
     /**
       Create a control element for selection of an option. It consists of a box
       with several radio buttons.
@@ -384,7 +375,7 @@ class KDE_EXPORT KPrefsWidRadios : public KPrefsWid
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidRadios( KConfigSkeleton::ItemEnum *item, QWidget *parent );
+    KPrefsWidRadios(KConfigSkeleton::ItemEnum *item, QWidget *parent);
     virtual ~KPrefsWidRadios();
 
     /**
@@ -393,8 +384,8 @@ class KDE_EXPORT KPrefsWidRadios : public KPrefsWid
       @param text Text of the button.
       @param whatsThis What's This help for the button.
     */
-    void addRadio( const QString &text,
-                   const QString &whatsThis = QString::null );
+    void addRadio(const QString &text,
+                  const QString &whatsThis = QString::null);
 
     /**
       Return the box widget used by this widget.
@@ -406,7 +397,7 @@ class KDE_EXPORT KPrefsWidRadios : public KPrefsWid
 
     QValueList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemEnum *mItem;
 
     QButtonGroup *mBox;
@@ -419,12 +410,11 @@ class KDE_EXPORT KPrefsWidRadios : public KPrefsWid
   This class provides a control element for configuring selections. It is meant
   to be used by KPrefsDialog. The user is responsible for the layout management.
 
-  The setting is interpreted as an int value, corresponding to the index in 
+  The setting is interpreted as an int value, corresponding to the index in
   the combo box.
 */
-class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidCombo : public KPrefsWid {
+public:
     /**
       Create a control element for selection of an option. It consists of a
       combo box.
@@ -432,7 +422,7 @@ class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidCombo( KConfigSkeleton::ItemEnum *item, QWidget *parent );
+    KPrefsWidCombo(KConfigSkeleton::ItemEnum *item, QWidget *parent);
     virtual ~KPrefsWidCombo();
 
     void readConfig();
@@ -441,7 +431,7 @@ class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
     QComboBox *comboBox();
     QValueList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemEnum *mItem;
     QComboBox *mCombo;
 };
@@ -455,9 +445,8 @@ class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidString : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidString : public KPrefsWid {
+public:
     /**
       Create a string value control element consisting of a test label and a
       line edit.
@@ -466,8 +455,8 @@ class KDE_EXPORT KPrefsWidString : public KPrefsWid
       @param parent  Parent widget.
       @param echomode  Describes how a line edit should display its contents.
     */
-    KPrefsWidString( KConfigSkeleton::ItemString *item, QWidget *parent,
-                     QLineEdit::EchoMode echomode=QLineEdit::Normal );
+    KPrefsWidString(KConfigSkeleton::ItemString *item, QWidget *parent,
+                    QLineEdit::EchoMode echomode = QLineEdit::Normal);
     /**
       Destructor.
     */
@@ -487,7 +476,7 @@ class KDE_EXPORT KPrefsWidString : public KPrefsWid
 
     QValueList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemString *mItem;
 
     QLabel *mLabel;
@@ -502,9 +491,8 @@ class KDE_EXPORT KPrefsWidString : public KPrefsWid
   meant to be used by KPrefsDialog. The user is responsible for the layout
   management.
 */
-class KDE_EXPORT KPrefsWidPath : public KPrefsWid
-{
-  public:
+class KDE_EXPORT KPrefsWidPath : public KPrefsWid {
+public:
     /**
       Create a string value control element consisting of a test label and a
       line edit.
@@ -514,8 +502,8 @@ class KDE_EXPORT KPrefsWidPath : public KPrefsWid
       @param filter URLRequester filter
       @param mode  Describes how a line edit should display its contents.
     */
-    KPrefsWidPath( KConfigSkeleton::ItemPath *item, QWidget *parent,
-                   const QString &filter = QString::null, uint mode = KFile::File );
+    KPrefsWidPath(KConfigSkeleton::ItemPath *item, QWidget *parent,
+                  const QString &filter = QString::null, uint mode = KFile::File);
     /**
       Destructor.
     */
@@ -535,7 +523,7 @@ class KDE_EXPORT KPrefsWidPath : public KPrefsWid
 
     QValueList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemPath *mItem;
 
     QLabel *mLabel;
@@ -551,26 +539,28 @@ class KDE_EXPORT KPrefsWidPath : public KPrefsWid
   transparent way. The user has to add the widgets by the corresponding addWid
   functions and KPrefsWidManager handles the rest automatically.
 */
-class KDE_EXPORT KPrefsWidManager
-{
-  public:
+class KDE_EXPORT KPrefsWidManager {
+public:
     /**
       Create a KPrefsWidManager object for a KPrefs object.
 
       @param prefs  KPrefs object used to access te configuration.
     */
-    KPrefsWidManager( KConfigSkeleton *prefs );
+    KPrefsWidManager(KConfigSkeleton *prefs);
     /**
       Destructor.
     */
     virtual ~KPrefsWidManager();
 
-    KConfigSkeleton *prefs() const { return mPrefs; }
+    KConfigSkeleton *prefs() const
+    {
+        return mPrefs;
+    }
 
     /**
       Register a custom KPrefsWid object.
     */
-    virtual void addWid( KPrefsWid * );
+    virtual void addWid(KPrefsWid *);
 
     /**
       Register a @ref KPrefsWidBool object.
@@ -578,8 +568,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidBool *addWidBool( KConfigSkeleton::ItemBool *item,
-                               QWidget *parent );
+    KPrefsWidBool *addWidBool(KConfigSkeleton::ItemBool *item,
+                              QWidget *parent);
 
     /**
       Register a @ref KPrefsWidInt object.
@@ -587,8 +577,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidInt *addWidInt( KConfigSkeleton::ItemInt *item,
-                             QWidget *parent );
+    KPrefsWidInt *addWidInt(KConfigSkeleton::ItemInt *item,
+                            QWidget *parent);
 
     /**
       Register a @ref KPrefsWidDate object.
@@ -596,8 +586,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidDate *addWidDate( KConfigSkeleton::ItemDateTime *item,
-                               QWidget *parent );
+    KPrefsWidDate *addWidDate(KConfigSkeleton::ItemDateTime *item,
+                              QWidget *parent);
 
     /**
       Register a @ref KPrefsWidTime object.
@@ -605,8 +595,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidTime *addWidTime( KConfigSkeleton::ItemDateTime *item,
-                               QWidget *parent );
+    KPrefsWidTime *addWidTime(KConfigSkeleton::ItemDateTime *item,
+                              QWidget *parent);
 
     /**
       Register a @ref KPrefsWidDuration object.
@@ -614,8 +604,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidDuration *addWidDuration( KConfigSkeleton::ItemDateTime *item,
-                                       QWidget *parent );
+    KPrefsWidDuration *addWidDuration(KConfigSkeleton::ItemDateTime *item,
+                                      QWidget *parent);
 
     /**
       Register a @ref KPrefsWidColor object.
@@ -623,8 +613,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidColor *addWidColor( KConfigSkeleton::ItemColor *item,
-                                 QWidget *parent );
+    KPrefsWidColor *addWidColor(KConfigSkeleton::ItemColor *item,
+                                QWidget *parent);
 
     /**
       Register a @ref KPrefsWidRadios object. The choices represented by the
@@ -633,8 +623,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidRadios *addWidRadios( KConfigSkeleton::ItemEnum *item,
-                                   QWidget *parent );
+    KPrefsWidRadios *addWidRadios(KConfigSkeleton::ItemEnum *item,
+                                  QWidget *parent);
 
     /**
       Register a @ref KPrefsWidCombo object. The choices represented by the
@@ -643,8 +633,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidCombo *addWidCombo( KConfigSkeleton::ItemEnum *item,
-                                   QWidget *parent );
+    KPrefsWidCombo *addWidCombo(KConfigSkeleton::ItemEnum *item,
+                                QWidget *parent);
 
     /**
       Register a @ref KPrefsWidString object.
@@ -652,8 +642,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidString *addWidString( KConfigSkeleton::ItemString *item,
-                                   QWidget *parent );
+    KPrefsWidString *addWidString(KConfigSkeleton::ItemString *item,
+                                  QWidget *parent);
 
     /**
       Register a path @ref KPrefsWidPath object.
@@ -663,9 +653,9 @@ class KDE_EXPORT KPrefsWidManager
       @param filter URLRequester filter
       @param mode URLRequester mode
     */
-    KPrefsWidPath *addWidPath ( KConfigSkeleton::ItemPath *item, QWidget *parent,
-                                const QString &filter = QString::null,
-                                uint mode = KFile::File );
+    KPrefsWidPath *addWidPath(KConfigSkeleton::ItemPath *item, QWidget *parent,
+                              const QString &filter = QString::null,
+                              uint mode = KFile::File);
 
     /**
       Register a password @ref KPrefsWidString object, with echomode set to QLineEdit::Password.
@@ -673,8 +663,8 @@ class KDE_EXPORT KPrefsWidManager
       @param item    The KConfigSkeletonItem representing the preferences entry.
       @param parent  Parent widget.
     */
-    KPrefsWidString *addWidPassword ( KConfigSkeleton::ItemString *item,
-                                      QWidget *parent );
+    KPrefsWidString *addWidPassword(KConfigSkeleton::ItemString *item,
+                                    QWidget *parent);
 
     /**
       Register a @ref KPrefsWidFont object.
@@ -684,8 +674,8 @@ class KDE_EXPORT KPrefsWidManager
       @param parent     Parent widget.
       @param sampleText Sample text for previewing the selected font.
     */
-    KPrefsWidFont *addWidFont( KConfigSkeleton::ItemFont *item,
-                               QWidget *parent, const QString &sampleText );
+    KPrefsWidFont *addWidFont(KConfigSkeleton::ItemFont *item,
+                              QWidget *parent, const QString &sampleText);
 
     /** Set all widgets to default values. */
     void setWidDefaults();
@@ -696,7 +686,7 @@ class KDE_EXPORT KPrefsWidManager
     /** Write preferences to config file. */
     void writeWidConfig();
 
-  private:
+private:
     KConfigSkeleton *mPrefs;
 
     QPtrList<KPrefsWid> mPrefsWids;
@@ -715,10 +705,9 @@ class KDE_EXPORT KPrefsWidManager
   default values is handled automatically. Custom widgets have to be handled in
   the functions @ref usrReadConfig() and @ref usrWriteConfig().
 */
-class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager
-{
+class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager {
     Q_OBJECT
-  public:
+public:
     /**
       Create a KPrefsDialog for a KPrefs object.
 
@@ -727,8 +716,8 @@ class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager
       @param name   Widget name.
       @param modal  true, if dialog has to be modal, false for non-modal.
     */
-    KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent = 0, char *name = 0,
-                  bool modal = false );
+    KPrefsDialog(KConfigSkeleton *prefs, QWidget *parent = 0, char *name = 0,
+                 bool modal = false);
     /**
       Destructor.
     */
@@ -736,7 +725,7 @@ class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager
 
     void autoCreate();
 
-  public slots:
+public slots:
     /** Set all widgets to default values. */
     void setDefaults();
 
@@ -746,11 +735,11 @@ class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager
     /** Write preferences to config file. */
     void writeConfig();
 
-  signals:
+signals:
     /** Emitted when the a changed configuration has been stored. */
     void configChanged();
 
-  protected slots:
+protected slots:
     /** Apply changes to preferences */
     void slotApply();
 
@@ -760,7 +749,7 @@ class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager
     /** Set preferences to default values */
     void slotDefault();
 
-  protected:
+protected:
     /** Implement this to read custom configuration widgets. */
     virtual void usrReadConfig() {}
     /** Implement this to write custom configuration widgets. */
@@ -768,22 +757,21 @@ class KDE_EXPORT KPrefsDialog : public KDialogBase, public KPrefsWidManager
 };
 
 
-class KDE_EXPORT KPrefsModule : public KCModule, public KPrefsWidManager
-{
+class KDE_EXPORT KPrefsModule : public KCModule, public KPrefsWidManager {
     Q_OBJECT
-  public:
-    KPrefsModule( KConfigSkeleton *, QWidget *parent = 0, const char *name = 0 );
+public:
+    KPrefsModule(KConfigSkeleton *, QWidget *parent = 0, const char *name = 0);
 
-    virtual void addWid( KPrefsWid * );
+    virtual void addWid(KPrefsWid *);
 
     void load();
     void save();
     void defaults();
 
-  protected slots:
+protected slots:
     void slotWidChanged();
 
-  protected:
+protected:
     /** Implement this to read custom configuration widgets. */
     virtual void usrReadConfig() {}
     /** Implement this to write custom configuration widgets. */

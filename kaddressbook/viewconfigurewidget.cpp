@@ -37,80 +37,80 @@
 
 #include "viewconfigurewidget.h"
 
-ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
-                                          const char *name )
-  : KAB::ConfigureWidget( ab, parent, name )
+ViewConfigureWidget::ViewConfigureWidget(KABC::AddressBook *ab, QWidget *parent,
+        const char *name)
+    : KAB::ConfigureWidget(ab, parent, name)
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this );
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
 
-  mMainWidget = new KJanusWidget( this, "JanusWidget", KJanusWidget::IconList );
-  topLayout->addWidget( mMainWidget );
+    mMainWidget = new KJanusWidget(this, "JanusWidget", KJanusWidget::IconList);
+    topLayout->addWidget(mMainWidget);
 
-  // Add the first page, the attributes
-  QVBox *page = addPage( i18n( "Fields" ), QString::null,
-                         KGlobal::iconLoader()->loadIcon( "view_detailed",
-                         KIcon::Panel ) );
+    // Add the first page, the attributes
+    QVBox *page = addPage(i18n("Fields"), QString::null,
+                          KGlobal::iconLoader()->loadIcon("view_detailed",
+                                  KIcon::Panel));
 
-  // Add the select fields page
-  mFieldsPage = new ViewConfigureFieldsPage( addressBook(), page );
+    // Add the select fields page
+    mFieldsPage = new ViewConfigureFieldsPage(addressBook(), page);
 
-  // Add the second page, the filter selection
-  page = addPage( i18n( "Default Filter" ), QString::null,
-                  KGlobal::iconLoader()->loadIcon( "filter",
-                  KIcon::Panel ) );
+    // Add the second page, the filter selection
+    page = addPage(i18n("Default Filter"), QString::null,
+                   KGlobal::iconLoader()->loadIcon("filter",
+                           KIcon::Panel));
 
-  mFilterPage = new ViewConfigureFilterPage( page );
+    mFilterPage = new ViewConfigureFilterPage(page);
 }
 
 ViewConfigureWidget::~ViewConfigureWidget()
 {
 }
 
-void ViewConfigureWidget::restoreSettings( KConfig *config )
+void ViewConfigureWidget::restoreSettings(KConfig *config)
 {
-  mFieldsPage->restoreSettings( config );
-  mFilterPage->restoreSettings( config );
+    mFieldsPage->restoreSettings(config);
+    mFilterPage->restoreSettings(config);
 }
 
-void ViewConfigureWidget::saveSettings( KConfig *config )
+void ViewConfigureWidget::saveSettings(KConfig *config)
 {
-  mFieldsPage->saveSettings( config );
-  mFilterPage->saveSettings( config );
+    mFieldsPage->saveSettings(config);
+    mFilterPage->saveSettings(config);
 }
 
-QVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
-                                   const QPixmap &pixmap )
+QVBox *ViewConfigureWidget::addPage(const QString &item, const QString &header,
+                                    const QPixmap &pixmap)
 {
-  return mMainWidget->addVBoxPage( item, header, pixmap );
+    return mMainWidget->addVBoxPage(item, header, pixmap);
 }
 
-ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
-                                          QWidget *parent, const char *name )
-  : KDialogBase( Swallow, i18n( "Modify View: " ) + viewName, Help | Ok | Cancel,
-                 Ok, parent, name, true, true ), mConfigWidget( wdg )
+ViewConfigureDialog::ViewConfigureDialog(ViewConfigureWidget *wdg, const QString &viewName,
+        QWidget *parent, const char *name)
+    : KDialogBase(Swallow, i18n("Modify View: ") + viewName, Help | Ok | Cancel,
+                  Ok, parent, name, true, true), mConfigWidget(wdg)
 {
-  setMainWidget( mConfigWidget );
+    setMainWidget(mConfigWidget);
 
-  resize( 600, 300 );
+    resize(600, 300);
 }
 
 ViewConfigureDialog::~ViewConfigureDialog()
 {
 }
 
-void ViewConfigureDialog::restoreSettings( KConfig *config )
+void ViewConfigureDialog::restoreSettings(KConfig *config)
 {
-  mConfigWidget->restoreSettings( config );
+    mConfigWidget->restoreSettings(config);
 }
 
-void ViewConfigureDialog::saveSettings( KConfig *config )
+void ViewConfigureDialog::saveSettings(KConfig *config)
 {
-  mConfigWidget->saveSettings( config );
+    mConfigWidget->saveSettings(config);
 }
 
 void ViewConfigureDialog::slotHelp()
 {
-  kapp->invokeHelp( "using-views" );
+    kapp->invokeHelp("using-views");
 }
 
 #include "viewconfigurewidget.moc"

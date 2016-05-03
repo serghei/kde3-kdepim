@@ -34,41 +34,40 @@
 namespace Akregator {
 namespace Backend {
 
-class StorageFactoryRegistry::StorageFactoryRegistryPrivate
-{
-    public:
-        QMap<QString, StorageFactory*> map;
+class StorageFactoryRegistry::StorageFactoryRegistryPrivate {
+public:
+    QMap<QString, StorageFactory *> map;
 };
 
-StorageFactoryRegistry* StorageFactoryRegistry::m_instance = 0;
+StorageFactoryRegistry *StorageFactoryRegistry::m_instance = 0;
 static KStaticDeleter<StorageFactoryRegistry> storagefactoryregistrysd;
 
-StorageFactoryRegistry* StorageFactoryRegistry::self()
+StorageFactoryRegistry *StorageFactoryRegistry::self()
 {
-    if (!m_instance)
+    if(!m_instance)
         m_instance = storagefactoryregistrysd.setObject(m_instance, new StorageFactoryRegistry);
     return m_instance;
 }
-	
-bool StorageFactoryRegistry::registerFactory(StorageFactory* factory, const QString& typestr)
+
+bool StorageFactoryRegistry::registerFactory(StorageFactory *factory, const QString &typestr)
 {
-    if (containsFactory(typestr))
+    if(containsFactory(typestr))
         return false;
     d->map[typestr] = factory;
-    return true; 
+    return true;
 }
 
-void StorageFactoryRegistry::unregisterFactory(const QString& typestr)
+void StorageFactoryRegistry::unregisterFactory(const QString &typestr)
 {
     d->map.remove(typestr);
 }
 
-StorageFactory* StorageFactoryRegistry::getFactory(const QString& typestr)
+StorageFactory *StorageFactoryRegistry::getFactory(const QString &typestr)
 {
     return d->map[typestr];
 }
 
-bool StorageFactoryRegistry::containsFactory(const QString& typestr) const
+bool StorageFactoryRegistry::containsFactory(const QString &typestr) const
 {
     return d->map.contains(typestr);
 }
@@ -84,7 +83,7 @@ StorageFactoryRegistry::StorageFactoryRegistry() : d(new StorageFactoryRegistryP
 
 StorageFactoryRegistry::~StorageFactoryRegistry()
 {
-    delete d; 
+    delete d;
     d = 0;
 }
 

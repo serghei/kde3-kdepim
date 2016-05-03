@@ -29,47 +29,47 @@
 using namespace KOrg;
 
 AboutData::AboutData()
-  : KAboutData( "korganizer", I18N_NOOP("KOrganizer"), korgVersion,
-                I18N_NOOP("A Personal Organizer for KDE"),
-                KAboutData::License_GPL,
-                "(c) 1997-1999 Preston Brown\n"
-                "(c) 2000-2004 Cornelius Schumacher\n"
-                "(c) 2004-2005 Reinhold Kainhofer", 0,
-                "http://korganizer.kde.org" )
+    : KAboutData("korganizer", I18N_NOOP("KOrganizer"), korgVersion,
+                 I18N_NOOP("A Personal Organizer for KDE"),
+                 KAboutData::License_GPL,
+                 "(c) 1997-1999 Preston Brown\n"
+                 "(c) 2000-2004 Cornelius Schumacher\n"
+                 "(c) 2004-2005 Reinhold Kainhofer", 0,
+                 "http://korganizer.kde.org")
 {
-  addAuthor("Reinhold Kainhofer",I18N_NOOP("Current Maintainer"),
-            "reinhold@kainhofer.com");
-  addAuthor("Cornelius Schumacher",I18N_NOOP("Co-Maintainer"),
-            "schumacher@kde.org");
-  addAuthor("Preston Brown",I18N_NOOP("Original Author"),
-            "pbrown@kde.org");
-  addCredit("Richard Apodaca");
-  addCredit("Jan-Pascal van Best");
-  addCredit("Laszlo Boloni");
-  addCredit("Barry Benowitz");
-  addCredit("Christopher Beard");
-  addCredit("Ian Dawes");
-  addCredit("Thomas Eitzenberger");
-  addCredit("Neil Hart");
-  addCredit("Declan Houlihan");
-  addCredit("Hans-Jürgen Husel");
-  addCredit("Tim Jansen");
-  addCredit("Christian Kirsch");
-  addCredit("Tobias König");
-  addCredit("Martin Koller");
-  addCredit("Uwe Koloska");
-  addCredit("Glen Parker");
-  addCredit("Dan Pilone");
-  addCredit("Roman Rohr");
-  addCredit("Don Sanders");
-  addCredit("Bram Schoenmakers");
-  addCredit("Günter Schwann");
-  addCredit("Herwin Jan Steehouwer");
-  addCredit("Mario Teijeiro");
-  addCredit("Nick Thompson");
-  addCredit("Bo Thorsen");
-  addCredit("Allen Winter");
-  addCredit("Larry Wright");
-  addCredit("Thomas Zander");
-  addCredit("Fester Zigterman");
+    addAuthor("Reinhold Kainhofer", I18N_NOOP("Current Maintainer"),
+              "reinhold@kainhofer.com");
+    addAuthor("Cornelius Schumacher", I18N_NOOP("Co-Maintainer"),
+              "schumacher@kde.org");
+    addAuthor("Preston Brown", I18N_NOOP("Original Author"),
+              "pbrown@kde.org");
+    addCredit("Richard Apodaca");
+    addCredit("Jan-Pascal van Best");
+    addCredit("Laszlo Boloni");
+    addCredit("Barry Benowitz");
+    addCredit("Christopher Beard");
+    addCredit("Ian Dawes");
+    addCredit("Thomas Eitzenberger");
+    addCredit("Neil Hart");
+    addCredit("Declan Houlihan");
+    addCredit("Hans-Jürgen Husel");
+    addCredit("Tim Jansen");
+    addCredit("Christian Kirsch");
+    addCredit("Tobias König");
+    addCredit("Martin Koller");
+    addCredit("Uwe Koloska");
+    addCredit("Glen Parker");
+    addCredit("Dan Pilone");
+    addCredit("Roman Rohr");
+    addCredit("Don Sanders");
+    addCredit("Bram Schoenmakers");
+    addCredit("Günter Schwann");
+    addCredit("Herwin Jan Steehouwer");
+    addCredit("Mario Teijeiro");
+    addCredit("Nick Thompson");
+    addCredit("Bo Thorsen");
+    addCredit("Allen Winter");
+    addCredit("Larry Wright");
+    addCredit("Thomas Zander");
+    addCredit("Fester Zigterman");
 }

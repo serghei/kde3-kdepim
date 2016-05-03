@@ -30,10 +30,9 @@
 */
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_null();
+    void *init_conduit_null();
 
 }
 

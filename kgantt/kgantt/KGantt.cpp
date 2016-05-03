@@ -11,57 +11,59 @@
 
 #include <qcolor.h>
 #include <qstylefactory.h>
-#include <qscrollview.h> 
+#include <qscrollview.h>
 
 
-KGantt::KGantt(KGanttItem* toplevelitem,
-	       QWidget* parent, const char * name, WFlags f)
-  : QWidget(parent,name,f)
-{ 
+KGantt::KGantt(KGanttItem *toplevelitem,
+               QWidget *parent, const char *name, WFlags f)
+    : QWidget(parent, name, f)
+{
 #ifdef _DEBUG_
-  printf("KGantt::KGantt()\n");
+    printf("KGantt::KGantt()\n");
 #endif
 
-  if(toplevelitem == 0) {
-    _toplevelitem = new KGanttItem(0, "toplevelitem",
-			   QDateTime::currentDateTime(),
-			   QDateTime::currentDateTime() );
-    _toplevelitem->setMode(KGanttItem::Rubberband);
-    _deleteItem = true;
-  }
-  else {
-    _toplevelitem = toplevelitem;
-    _deleteItem = false;
-  }
+    if(toplevelitem == 0)
+    {
+        _toplevelitem = new KGanttItem(0, "toplevelitem",
+                                       QDateTime::currentDateTime(),
+                                       QDateTime::currentDateTime());
+        _toplevelitem->setMode(KGanttItem::Rubberband);
+        _deleteItem = true;
+    }
+    else
+    {
+        _toplevelitem = toplevelitem;
+        _deleteItem = false;
+    }
 
-  setBackgroundColor(QColor(white));
+    setBackgroundColor(QColor(white));
 
-  _splitter = new QSplitter(this);
-/*
-//  QStyle *cdestyle=QStyleFactory::create("CDE");
-//  if(cdestyle)
-//	  _splitter->setStyle(cdestyle);
-*/
-  QPalette pal1(_splitter->palette());
-/*  QPalette pal(_splitter->palette());
-  QColorGroup cg(pal.active());
-  cg.setColor( QColorGroup::Foreground, blue );
-  cg.setColor( QColorGroup::Background, white );
-  pal.setActive( cg );
+    _splitter = new QSplitter(this);
+    /*
+    //  QStyle *cdestyle=QStyleFactory::create("CDE");
+    //  if(cdestyle)
+    //	  _splitter->setStyle(cdestyle);
+    */
+    QPalette pal1(_splitter->palette());
+    /*  QPalette pal(_splitter->palette());
+      QColorGroup cg(pal.active());
+      cg.setColor( QColorGroup::Foreground, blue );
+      cg.setColor( QColorGroup::Background, white );
+      pal.setActive( cg );
 
-  _splitter->setPalette(pal);*/
-  
-  _ganttlist = new xQGanttListView(_toplevelitem, _splitter); 
-  _ganttlist->setMinimumWidth(1);
-  _ganttlist->setPalette(pal1);
+      _splitter->setPalette(pal);*/
 
-  _ganttbar = new xQGanttBarView(_toplevelitem, _splitter);
-  _ganttbar->setPalette(pal1);
+    _ganttlist = new xQGanttListView(_toplevelitem, _splitter);
+    _ganttlist->setMinimumWidth(1);
+    _ganttlist->setPalette(pal1);
 
-  connect(_ganttbar, SIGNAL(contentsMoving(int,int)),
-	  _ganttlist, SLOT(contentsMoved(int,int)));
+    _ganttbar = new xQGanttBarView(_toplevelitem, _splitter);
+    _ganttbar->setPalette(pal1);
 
-  _ganttlist->setBarView(_ganttbar);
+    connect(_ganttbar, SIGNAL(contentsMoving(int, int)),
+            _ganttlist, SLOT(contentsMoved(int, int)));
+
+    _ganttlist->setBarView(_ganttbar);
 
 }
 
@@ -70,26 +72,26 @@ KGantt::KGantt(KGanttItem* toplevelitem,
 KGantt::~KGantt()
 ///////////////////
 {
-  if(_deleteItem)
-    delete _toplevelitem;
+    if(_deleteItem)
+        delete _toplevelitem;
 }
 
 
 
 
-void 
+void
 KGantt::dumpItems()
 /////////////////////////
 {
-  QTextOStream cout(stdout);
+    QTextOStream cout(stdout);
 
-  cout << "\n<Gantt>\n";
-  cout << " start : " << _toplevelitem->getStart().toString() << endl;
-  cout << " end :   " << _toplevelitem->getEnd().toString() << endl;
+    cout << "\n<Gantt>\n";
+    cout << " start : " << _toplevelitem->getStart().toString() << endl;
+    cout << " end :   " << _toplevelitem->getEnd().toString() << endl;
 
-  _toplevelitem->dump(cout, "  ");
+    _toplevelitem->dump(cout, "  ");
 
-  cout << "</Gantt>\n\n";
+    cout << "</Gantt>\n\n";
 
 }
 

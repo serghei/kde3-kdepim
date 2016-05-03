@@ -35,50 +35,51 @@
 class QMimeSource;
 class QDropEvent;
 
-class KMailUniqueAppHandler : public Kontact::UniqueAppHandler
-{
+class KMailUniqueAppHandler : public Kontact::UniqueAppHandler {
 public:
-    KMailUniqueAppHandler( Kontact::Plugin* plugin ) : Kontact::UniqueAppHandler( plugin ) {}
+    KMailUniqueAppHandler(Kontact::Plugin *plugin) : Kontact::UniqueAppHandler(plugin) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
 };
 
-class KMailPlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KMailPlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KMailPlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    KMailPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~KMailPlugin();
 
     virtual bool isRunningStandalone();
-    virtual bool createDCOPInterface( const QString& serviceType );
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parent );
+    virtual bool createDCOPInterface(const QString &serviceType);
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parent);
     virtual QString tipFile() const;
-    int weight() const { return 200; }
+    int weight() const
+    {
+        return 200;
+    }
 
     virtual QStringList invisibleToolbarActions() const;
     virtual bool queryClose() const;
 
     //override
-    void loadProfile( const QString& profileDirectory );
+    void loadProfile(const QString &profileDirectory);
 
     //override
-    void saveToProfile( const QString& profileDirectory );
+    void saveToProfile(const QString &profileDirectory);
 
-  protected:
-    virtual KParts::ReadOnlyPart* createPart();
-    void openComposer( const KURL& = KURL() );
-    void openComposer( const QString& to );
-    bool canDecodeDrag( QMimeSource * );
-    void processDropEvent( QDropEvent * );
+protected:
+    virtual KParts::ReadOnlyPart *createPart();
+    void openComposer(const KURL & = KURL());
+    void openComposer(const QString &to);
+    bool canDecodeDrag(QMimeSource *);
+    void processDropEvent(QDropEvent *);
 
 
-  protected slots:
+protected slots:
     void slotNewMail();
     void slotSyncFolders();
 
-  private:
+private:
     KMailIface_stub *mStub;
     Kontact::UniqueAppWatcher *mUniqueAppWatcher;
 };

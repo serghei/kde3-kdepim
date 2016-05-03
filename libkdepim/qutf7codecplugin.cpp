@@ -35,28 +35,36 @@ class QTextCodec;
 
 class QUtf7CodecPlugin : public QTextCodecPlugin {
 public:
-  QUtf7CodecPlugin() {}
+    QUtf7CodecPlugin() {}
 
-  QStringList names() const { return QStringList() << "UTF-7" << "X-QT-UTF-7-STRICT"; }
-  QValueList<int> mibEnums() const { return QValueList<int>() << 1012 << -1012; }
-  QTextCodec * createForMib( int );
-  QTextCodec * createForName( const QString & );
+    QStringList names() const
+    {
+        return QStringList() << "UTF-7" << "X-QT-UTF-7-STRICT";
+    }
+    QValueList<int> mibEnums() const
+    {
+        return QValueList<int>() << 1012 << -1012;
+    }
+    QTextCodec *createForMib(int);
+    QTextCodec *createForName(const QString &);
 };
 
-QTextCodec * QUtf7CodecPlugin::createForMib( int mib ) {
-  if ( mib == 1012 )
-    return new QUtf7Codec();
-  else if ( mib == -1012 )
-    return new QStrictUtf7Codec();
-  return 0;
+QTextCodec *QUtf7CodecPlugin::createForMib(int mib)
+{
+    if(mib == 1012)
+        return new QUtf7Codec();
+    else if(mib == -1012)
+        return new QStrictUtf7Codec();
+    return 0;
 }
 
-QTextCodec * QUtf7CodecPlugin::createForName( const QString & name ) {
-  if ( name == "UTF-7" )
-    return new QUtf7Codec();
-  else if ( name == "X-QT-UTF-7-STRICT" )
-    return new QStrictUtf7Codec();
-  return 0;
+QTextCodec *QUtf7CodecPlugin::createForName(const QString &name)
+{
+    if(name == "UTF-7")
+        return new QUtf7Codec();
+    else if(name == "X-QT-UTF-7-STRICT")
+        return new QStrictUtf7Codec();
+    return 0;
 }
 
-KDE_Q_EXPORT_PLUGIN( QUtf7CodecPlugin );
+KDE_Q_EXPORT_PLUGIN(QUtf7CodecPlugin);

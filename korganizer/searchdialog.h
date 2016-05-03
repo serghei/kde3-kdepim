@@ -43,28 +43,30 @@ class KOListView;
 
 using namespace KCal;
 
-class SearchDialog : public KDialogBase
-{
+class SearchDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    SearchDialog(Calendar *calendar,QWidget *parent=0);
+public:
+    SearchDialog(Calendar *calendar, QWidget *parent = 0);
     virtual ~SearchDialog();
 
     void updateView();
 
-  public slots:
-    void changeIncidenceDisplay(Incidence *, int) { updateView(); }
+public slots:
+    void changeIncidenceDisplay(Incidence *, int)
+    {
+        updateView();
+    }
 
-  protected slots:
+protected slots:
     void doSearch();
-    void searchTextChanged( const QString &_text );
+    void searchTextChanged(const QString &_text);
 
-  signals:
+signals:
     void showIncidenceSignal(Incidence *);
     void editIncidenceSignal(Incidence *);
     void deleteIncidenceSignal(Incidence *);
 
-  private:
+private:
     void search(const QRegExp &);
 
     Calendar *mCalendar;

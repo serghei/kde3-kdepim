@@ -57,127 +57,125 @@
 #include "knotes/knoteedit.h"
 
 
-class KNotesIconViewItem : public KIconViewItem
-{
-  public:
-    KNotesIconViewItem( KIconView *parent, KCal::Journal *journal )
-      : KIconViewItem( parent ),
-        mJournal( journal )
+class KNotesIconViewItem : public KIconViewItem {
+public:
+    KNotesIconViewItem(KIconView *parent, KCal::Journal *journal)
+        : KIconViewItem(parent),
+          mJournal(journal)
     {
-      setRenameEnabled( true );
+        setRenameEnabled(true);
 
-      KIconEffect effect;
-      QColor color( journal->customProperty( "KNotes", "BgColor" ) );
-      QPixmap icon = KGlobal::iconLoader()->loadIcon( "knotes", KIcon::Desktop );
-      icon = effect.apply( icon, KIconEffect::Colorize, 1, color, false );
-      setPixmap( icon );
-      setText( journal->summary() );
+        KIconEffect effect;
+        QColor color(journal->customProperty("KNotes", "BgColor"));
+        QPixmap icon = KGlobal::iconLoader()->loadIcon("knotes", KIcon::Desktop);
+        icon = effect.apply(icon, KIconEffect::Colorize, 1, color, false);
+        setPixmap(icon);
+        setText(journal->summary());
     }
 
     KCal::Journal *journal()
     {
-      return mJournal;
+        return mJournal;
     }
 
-    virtual void setText( const QString& text )
+    virtual void setText(const QString &text)
     {
-      KIconViewItem::setText( text );
-      mJournal->setSummary( text );
+        KIconViewItem::setText(text);
+        mJournal->setSummary(text);
     }
 
-  private:
+private:
     KCal::Journal *mJournal;
 };
 
 
-class KNotesIconView : public KIconView
-{
-  protected:
-    QDragObject* dragObject()
+class KNotesIconView : public KIconView {
+protected:
+    QDragObject *dragObject()
     {
-      QValueList<KNotesIconViewItem*> selectedItems;
-      for ( QIconViewItem *it = firstItem(); it; it = it->nextItem() ) {
-        if ( it->isSelected() )
-          selectedItems.append( static_cast<KNotesIconViewItem *>( it ) );
-      }
-      if ( selectedItems.count() != 1 )
-        return KIconView::dragObject();
+        QValueList<KNotesIconViewItem *> selectedItems;
+        for(QIconViewItem *it = firstItem(); it; it = it->nextItem())
+        {
+            if(it->isSelected())
+                selectedItems.append(static_cast<KNotesIconViewItem *>(it));
+        }
+        if(selectedItems.count() != 1)
+            return KIconView::dragObject();
 
-      KCal::CalendarLocal cal( KPimPrefs::timezone() );
-      KCal::Incidence *i = selectedItems.first()->journal()->clone();
-      cal.addIncidence( i );
-      KCal::ICalDrag *icd = new KCal::ICalDrag( &cal, this );
-      return icd;
+        KCal::CalendarLocal cal(KPimPrefs::timezone());
+        KCal::Incidence *i = selectedItems.first()->journal()->clone();
+        cal.addIncidence(i);
+        KCal::ICalDrag *icd = new KCal::ICalDrag(&cal, this);
+        return icd;
     }
 };
 
 
-class KNoteEditDlg : public KDialogBase, virtual public KXMLGUIClient
-{
-  Q_OBJECT
+class KNoteEditDlg : public KDialogBase, virtual public KXMLGUIClient {
+    Q_OBJECT
 
-  public:
-    KNoteEditDlg( QWidget *parent = 0, const char *name = 0 )
-      : KDialogBase( Plain, i18n( "Edit Note" ), Ok | Cancel, Ok,
-                     parent, name, true, true )
+public:
+    KNoteEditDlg(QWidget *parent = 0, const char *name = 0)
+        : KDialogBase(Plain, i18n("Edit Note"), Ok | Cancel, Ok,
+                      parent, name, true, true)
     {
-      // this dialog is modal to prevent one from editing the same note twice in two
-      // different windows
+        // this dialog is modal to prevent one from editing the same note twice in two
+        // different windows
 
-      setInstance( new KInstance( "knotes" ) ); // TODO: hm, memleak??
-      setXMLFile( "knotesui.rc" );
-      actionCollection()->setWidget( this );
+        setInstance(new KInstance("knotes"));     // TODO: hm, memleak??
+        setXMLFile("knotesui.rc");
+        actionCollection()->setWidget(this);
 
-      QWidget *page = plainPage();
-      QVBoxLayout *layout = new QVBoxLayout( page );
+        QWidget *page = plainPage();
+        QVBoxLayout *layout = new QVBoxLayout(page);
 
-      QHBoxLayout *hbl = new QHBoxLayout( layout, marginHint() );
-      QLabel *label = new QLabel( page);
-      label->setText( i18n( "Name:" ) );
-      hbl->addWidget( label,0 );
-      mTitleEdit= new KLineEdit( page, "name" );
-      hbl->addWidget( mTitleEdit, 1,Qt::AlignVCenter  );
+        QHBoxLayout *hbl = new QHBoxLayout(layout, marginHint());
+        QLabel *label = new QLabel(page);
+        label->setText(i18n("Name:"));
+        hbl->addWidget(label, 0);
+        mTitleEdit = new KLineEdit(page, "name");
+        hbl->addWidget(mTitleEdit, 1, Qt::AlignVCenter);
 
-      mNoteEdit = new KNoteEdit( actionCollection(), page );
-      mNoteEdit->setTextFormat( RichText );
-      mNoteEdit->setFocus();
+        mNoteEdit = new KNoteEdit(actionCollection(), page);
+        mNoteEdit->setTextFormat(RichText);
+        mNoteEdit->setFocus();
 
-      KXMLGUIBuilder builder( page );
-      KXMLGUIFactory factory( &builder, this );
-      factory.addClient( this );
+        KXMLGUIBuilder builder(page);
+        KXMLGUIFactory factory(&builder, this);
+        factory.addClient(this);
 
-      mTool = static_cast<KToolBar *>(factory.container( "note_tool", this ));
+        mTool = static_cast<KToolBar *>(factory.container("note_tool", this));
 
-      layout->addWidget( mTool );
-      layout->addWidget( mNoteEdit );
+        layout->addWidget(mTool);
+        layout->addWidget(mNoteEdit);
     }
 
     QString text() const
     {
-      return mNoteEdit->text();
+        return mNoteEdit->text();
     }
 
-    void setText( const QString& text )
+    void setText(const QString &text)
     {
-      mNoteEdit->setText( text );
+        mNoteEdit->setText(text);
     }
 
     QString title() const
     {
-      return mTitleEdit->text();
+        return mTitleEdit->text();
     }
 
-    void setTitle( const QString& text )
+    void setTitle(const QString &text)
     {
-      mTitleEdit->setText( text );
+        mTitleEdit->setText(text);
     }
 
-    void setRichText( bool rt )
+    void setRichText(bool rt)
     {
-      mNoteEdit->setTextFormat( rt ? RichText : PlainText );
+        mNoteEdit->setTextFormat(rt ? RichText : PlainText);
     }
 
-  private:
+private:
     KLineEdit  *mTitleEdit;
     KNoteEdit  *mNoteEdit;
     KToolBar   *mTool;

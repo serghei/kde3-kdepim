@@ -35,24 +35,23 @@ class QPixmap;
 class QRadioButton;
 class KComboBox;
 
-class StylePage : public QWidget
-{
-  Q_OBJECT
+class StylePage : public QWidget {
+    Q_OBJECT
 
-  public:
-    StylePage( KABC::AddressBook *ab, QWidget* parent = 0, const char* name = 0 );
+public:
+    StylePage(KABC::AddressBook *ab, QWidget *parent = 0, const char *name = 0);
     ~StylePage();
 
     /**
      * Set a preview image. If @ref pixmap is 'null' a text will
      * be displayed instead.
      */
-    void setPreview( const QPixmap &pixmap );
+    void setPreview(const QPixmap &pixmap);
 
     /**
      * Add a style name.
      */
-    void addStyleName( const QString &name );
+    void addStyleName(const QString &name);
 
     /**
      * Clear the style name list.
@@ -62,31 +61,31 @@ class StylePage : public QWidget
     /**
      * Set the sort criterion field.
      */
-    void setSortField( KABC::Field *field );
+    void setSortField(KABC::Field *field);
 
     /**
      * Returns the sort criterion field.
      */
-     KABC::Field* sortField();
+    KABC::Field *sortField();
 
     /**
      * Set the sort type.
      */
-    void setSortAscending( bool value = true );
+    void setSortAscending(bool value = true);
 
     /**
      * Returns whether the sort type is ascending.
      */
     bool sortAscending();
 
-  signals:
+signals:
     /**
      * This signal is emmited when the user selects a new style in the
      * style combo box.
      */
-    void styleChanged( int index );
+    void styleChanged(int index);
 
-  private:
+private:
     void initGUI();
     void initFieldCombo();
 

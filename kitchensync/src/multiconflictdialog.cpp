@@ -30,61 +30,66 @@
 
 #include "multiconflictdialog.h"
 
-class ChangeItem : public KWidgetListItem
-{
-  public:
-    ChangeItem( KWidgetList *parent, const QSync::SyncChange &change )
-      : KWidgetListItem( parent ),
-        mChange( change )
+class ChangeItem : public KWidgetListItem {
+public:
+    ChangeItem(KWidgetList *parent, const QSync::SyncChange &change)
+        : KWidgetListItem(parent),
+          mChange(change)
     {
-      QGridLayout *layout = new QGridLayout( this, 2, 1, KDialog::marginHint(), KDialog::spacingHint() );
+        QGridLayout *layout = new QGridLayout(this, 2, 1, KDialog::marginHint(), KDialog::spacingHint());
 
-      MemberInfo mi( change.member() );
-      layout->addWidget( new QLabel( mi.name(), this ), 0, 0 );
+        MemberInfo mi(change.member());
+        layout->addWidget(new QLabel(mi.name(), this), 0, 0);
 
-      QString type;
-      switch ( change.changeType() ) {
-        case QSync::SyncChange::UnknownChange:
-          type = i18n( "Unknown" );
-          break;
-        case QSync::SyncChange::AddedChange:
-          type = i18n( "Added" );
-          break;
-        case QSync::SyncChange::DeletedChange:
-          type = i18n( "Deleted" );
-          break;
-        case QSync::SyncChange::ModifiedChange:
-          type = i18n( "Modified" );
-          break;
-        case QSync::SyncChange::UnmodifiedChange:
-        default:
-          type = i18n( "Unmodified" );
-          break;
-      }
+        QString type;
+        switch(change.changeType())
+        {
+            case QSync::SyncChange::UnknownChange:
+                type = i18n("Unknown");
+                break;
+            case QSync::SyncChange::AddedChange:
+                type = i18n("Added");
+                break;
+            case QSync::SyncChange::DeletedChange:
+                type = i18n("Deleted");
+                break;
+            case QSync::SyncChange::ModifiedChange:
+                type = i18n("Modified");
+                break;
+            case QSync::SyncChange::UnmodifiedChange:
+            default:
+                type = i18n("Unmodified");
+                break;
+        }
 
-      layout->addWidget( new QLabel( type, this ), 1, 0 );
+        layout->addWidget(new QLabel(type, this), 1, 0);
     }
 
-    QSync::SyncChange change() const { return mChange; }
+    QSync::SyncChange change() const
+    {
+        return mChange;
+    }
 
-  private:
+private:
     QSync::SyncChange mChange;
 };
 
-MultiConflictDialog::MultiConflictDialog( QSync::SyncMapping &mapping, QWidget *parent )
-  : ConflictDialog( mapping, parent )
+MultiConflictDialog::MultiConflictDialog(QSync::SyncMapping &mapping, QWidget *parent)
+    : ConflictDialog(mapping, parent)
 {
-  initGUI();
+    initGUI();
 
-  for ( int i = 0; i < mMapping.changesCount(); ++i ) {
-    QSync::SyncChange change = mMapping.changeAt( i );
-    if ( change.isValid() ) {
-      ChangeItem *item = new ChangeItem( mWidgetList, change );
-      mWidgetList->appendItem( item );
+    for(int i = 0; i < mMapping.changesCount(); ++i)
+    {
+        QSync::SyncChange change = mMapping.changeAt(i);
+        if(change.isValid())
+        {
+            ChangeItem *item = new ChangeItem(mWidgetList, change);
+            mWidgetList->appendItem(item);
+        }
     }
-  }
 
-  mWidgetList->setFocus();
+    mWidgetList->setFocus();
 }
 
 MultiConflictDialog::~MultiConflictDialog()
@@ -93,49 +98,49 @@ MultiConflictDialog::~MultiConflictDialog()
 
 void MultiConflictDialog::useSelectedChange()
 {
-  ChangeItem *item = static_cast<ChangeItem*>( mWidgetList->selectedItem() );
-  if ( !item )
-    return;
+    ChangeItem *item = static_cast<ChangeItem *>(mWidgetList->selectedItem());
+    if(!item)
+        return;
 
-  mMapping.solve( item->change() );
+    mMapping.solve(item->change());
 
-  accept();
+    accept();
 }
 
 void MultiConflictDialog::duplicateChange()
 {
-  mMapping.duplicate();
+    mMapping.duplicate();
 
-  accept();
+    accept();
 }
 
 void MultiConflictDialog::ignoreChange()
 {
-  mMapping.ignore();
+    mMapping.ignore();
 
-  accept();
+    accept();
 }
 
 void MultiConflictDialog::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 3, KDialog::marginHint(), KDialog::spacingHint() );
+    QGridLayout *layout = new QGridLayout(this, 3, 3, KDialog::marginHint(), KDialog::spacingHint());
 
-  layout->addMultiCellWidget( new QLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 0, 2 );
+    layout->addMultiCellWidget(new QLabel(i18n("A conflict has appeared, please solve it manually."), this), 0, 0, 0, 2);
 
-  mWidgetList = new KWidgetList( this );
-  layout->addMultiCellWidget( mWidgetList, 1, 1, 0, 2 );
+    mWidgetList = new KWidgetList(this);
+    layout->addMultiCellWidget(mWidgetList, 1, 1, 0, 2);
 
-  QPushButton *button = new QPushButton( i18n( "Use Selected Item" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( useSelectedChange() ) );
-  layout->addWidget( button, 2, 0 );
+    QPushButton *button = new QPushButton(i18n("Use Selected Item"), this);
+    connect(button, SIGNAL(clicked()), SLOT(useSelectedChange()));
+    layout->addWidget(button, 2, 0);
 
-  button = new QPushButton( i18n( "Duplicate Items" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( duplicateChange() ) );
-  layout->addWidget( button, 2, 1 );
+    button = new QPushButton(i18n("Duplicate Items"), this);
+    connect(button, SIGNAL(clicked()), SLOT(duplicateChange()));
+    layout->addWidget(button, 2, 1);
 
-  button = new QPushButton( i18n( "Ignore Conflict" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( ignoreChange() ) );
-  layout->addWidget( button, 2, 2 );
+    button = new QPushButton(i18n("Ignore Conflict"), this);
+    connect(button, SIGNAL(clicked()), SLOT(ignoreChange()));
+    layout->addWidget(button, 2, 2);
 }
 
 #include "multiconflictdialog.moc"

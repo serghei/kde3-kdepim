@@ -26,42 +26,42 @@
 
 using namespace QSync;
 
-Engine::Engine( const Group &group )
+Engine::Engine(const Group &group)
 {
-  OSyncError *error = 0;
-  mEngine = osengine_new( group.mGroup, &error );
+    OSyncError *error = 0;
+    mEngine = osengine_new(group.mGroup, &error);
 }
 
 Engine::~Engine()
 {
-  osengine_free( mEngine );
-  mEngine = 0;
+    osengine_free(mEngine);
+    mEngine = 0;
 }
 
 Result Engine::initialize()
 {
-  OSyncError *error = 0;
-  if ( !osengine_init( mEngine, &error ) )
-    return Result( &error );
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osengine_init(mEngine, &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
 void Engine::finalize()
 {
-  osengine_finalize( mEngine );
+    osengine_finalize(mEngine);
 }
 
 Result Engine::synchronize()
 {
-  OSyncError *error = 0;
-  if ( !osengine_synchronize( mEngine, &error ) )
-    return Result( &error );
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osengine_synchronize(mEngine, &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
 void Engine::abort()
 {
-  osengine_abort( mEngine );
+    osengine_abort(mEngine);
 }

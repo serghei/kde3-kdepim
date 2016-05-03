@@ -35,26 +35,29 @@ class QDomDocument;
   QListView item representing a modem command.
 */
 class CommandSet {
-  public:
+public:
     CommandSet();
     ~CommandSet();
-    
+
     void addCommand(ATCommand *);
     void deleteCommand(ATCommand *);
-    
+
     bool loadFile(const QString &);
     bool saveFile(const QString &);
-    
+
     void clear();
-    
-    QPtrList<ATCommand> *commandList() { return &mList; }
-    
-  protected:
-    void loadCommand(ATCommand *,QDomElement *c);
-    void saveCommand(ATCommand *,QDomDocument *doc,QDomElement *parent);
-    void saveParameter(ATParameter *p, QDomDocument *doc,QDomElement *parent);
-  
-  private:
+
+    QPtrList<ATCommand> *commandList()
+    {
+        return &mList;
+    }
+
+protected:
+    void loadCommand(ATCommand *, QDomElement *c);
+    void saveCommand(ATCommand *, QDomDocument *doc, QDomElement *parent);
+    void saveParameter(ATParameter *p, QDomDocument *doc, QDomElement *parent);
+
+private:
     QPtrList<ATCommand> mList;
 };
 

@@ -38,50 +38,48 @@ class DCOPClient;
 class KURL;
 
 
-namespace Akregator
-{
-    class Feed;
-    class TreeNode;
-    
-    class KDE_EXPORT FeedIconManager:public QObject, public DCOPObject
-    {
-        Q_OBJECT
-        K_DCOP
-        
-        public:
+namespace Akregator {
+class Feed;
+class TreeNode;
 
-            FeedIconManager(QObject * = 0L, const char * = 0L);
-            ~FeedIconManager();
-            
-            static FeedIconManager *self();
+class KDE_EXPORT FeedIconManager: public QObject, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
-            void fetchIcon(Feed* feed);
-            
-            QString iconLocation(const KURL &) const;
-            
-        k_dcop:
-            void slotIconChanged(bool, const QString&, const QString&);
+public:
 
-        signals:
-            void signalIconChanged(const QString &, const QPixmap &);
+    FeedIconManager(QObject * = 0L, const char * = 0L);
+    ~FeedIconManager();
 
-        public slots:
-            void slotFeedDestroyed(TreeNode* node);
+    static FeedIconManager *self();
 
-      protected:
+    void fetchIcon(Feed *feed);
 
-            /** returns the url used to access the icon, e.g.
-                http://dot.kde.org/ for "dot.kde.org/1113317400/" */
-            QString getIconURL(const KURL& url);
+    QString iconLocation(const KURL &) const;
 
-            void loadIcon(const QString &);
-      
-      private:
-            static FeedIconManager *m_instance;
+k_dcop:
+    void slotIconChanged(bool, const QString &, const QString &);
 
-            class FeedIconManagerPrivate;
-            FeedIconManagerPrivate* d;
-    };
+signals:
+    void signalIconChanged(const QString &, const QPixmap &);
+
+public slots:
+    void slotFeedDestroyed(TreeNode *node);
+
+protected:
+
+    /** returns the url used to access the icon, e.g.
+        http://dot.kde.org/ for "dot.kde.org/1113317400/" */
+    QString getIconURL(const KURL &url);
+
+    void loadIcon(const QString &);
+
+private:
+    static FeedIconManager *m_instance;
+
+    class FeedIconManagerPrivate;
+    FeedIconManagerPrivate *d;
+};
 }
 
 #endif

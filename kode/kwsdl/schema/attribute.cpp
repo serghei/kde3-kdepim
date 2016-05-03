@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -25,56 +25,56 @@
 using namespace Schema;
 
 
-Attribute::Attribute( const QString &name, int type, bool qualified,
-                      const QString &defaultValue, const QString &fixedValue,
-                      bool use )
-  : mName( name ), mType( type ), mQualified( qualified ),
-    mDefaultValue( defaultValue ), mFixedValue( fixedValue ),
-    mUse( use )
+Attribute::Attribute(const QString &name, int type, bool qualified,
+                     const QString &defaultValue, const QString &fixedValue,
+                     bool use)
+    : mName(name), mType(type), mQualified(qualified),
+      mDefaultValue(defaultValue), mFixedValue(fixedValue),
+      mUse(use)
 {
 }
 
 Attribute::Attribute()
-  : mType( 0 ), mQualified( false ), mUse( false )
+    : mType(0), mQualified(false), mUse(false)
 {
 }
 
 QString Attribute::name() const
 {
-  return mName;
+    return mName;
 }
 
 int Attribute::type() const
 {
-  return mType;
+    return mType;
 }
 
-void Attribute::setTypeName( const QString &typeName )
+void Attribute::setTypeName(const QString &typeName)
 {
-  mTypeName = typeName;
+    mTypeName = typeName;
 }
 
 QString Attribute::typeName() const
 {
-  return mTypeName;
+    return mTypeName;
 }
 
 QString Attribute::defaultValue() const
 {
-  return mDefaultValue;
+    return mDefaultValue;
 }
 
 QString Attribute::fixedValue() const
 {
-  return mFixedValue;
+    return mFixedValue;
 }
 
 bool Attribute::isQualified() const
 {
-  return mQualified;
+    return mQualified;
 }
 
 bool Attribute::isUsed() const
 {
-  return mUse;
+    return mUse;
 }

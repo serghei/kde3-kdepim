@@ -28,19 +28,18 @@
 
 class KSimpleConfig;
 
-class DocPrefs
-{
-  public:
-    DocPrefs( const QString &type="general" );
+class DocPrefs {
+public:
+    DocPrefs(const QString &type = "general");
     ~DocPrefs();
-    
-    void setDoc( const QString &identifier );
+
+    void setDoc(const QString &identifier);
     QString doc() const;
 
-    bool readBoolEntry( const QString &identifier ) const;    
-    void writeEntry( const QString &identifier, bool value );    
+    bool readBoolEntry(const QString &identifier) const;
+    void writeEntry(const QString &identifier, bool value);
 
-  private:
+private:
     static KSimpleConfig *mConfig;
 
     QString mDocId;

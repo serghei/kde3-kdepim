@@ -54,36 +54,35 @@
 
 namespace Akregator {
 
-class TabWidget::TabWidgetPrivate
-{
-    public:
+class TabWidget::TabWidgetPrivate {
+public:
     QPtrDict<Frame> frames;
     uint CurrentMaxLength;
-    QWidget* currentItem;
-    QToolButton* tabsClose;
+    QWidget *currentItem;
+    QToolButton *tabsClose;
 };
 
-TabWidget::TabWidget(QWidget * parent, const char *name)
-        :KTabWidget(parent, name), d(new TabWidgetPrivate)
+TabWidget::TabWidget(QWidget *parent, const char *name)
+    : KTabWidget(parent, name), d(new TabWidgetPrivate)
 {
     d->CurrentMaxLength = 30;
     d->currentItem = 0;
-    setMinimumSize(250,150);
+    setMinimumSize(250, 150);
     setTabReorderingEnabled(false);
-    connect( this, SIGNAL( currentChanged(QWidget *) ), this,
-            SLOT( slotTabChanged(QWidget *) ) );
-    connect(this, SIGNAL(closeRequest(QWidget*)), this, SLOT(slotCloseRequest(QWidget*)));
+    connect(this, SIGNAL(currentChanged(QWidget *)), this,
+            SLOT(slotTabChanged(QWidget *)));
+    connect(this, SIGNAL(closeRequest(QWidget *)), this, SLOT(slotCloseRequest(QWidget *)));
     setHoverCloseButton(Settings::closeButtonOnTabs());
 
     d->tabsClose = new QToolButton(this);
     d->tabsClose->setAccel(QKeySequence("Ctrl+W"));
-    connect( d->tabsClose, SIGNAL( clicked() ), this,
-            SLOT( slotRemoveCurrentFrame() ) );
+    connect(d->tabsClose, SIGNAL(clicked()), this,
+            SLOT(slotRemoveCurrentFrame()));
 
-    d->tabsClose->setIconSet( SmallIconSet( "tab_remove" ) );
+    d->tabsClose->setIconSet(SmallIconSet("tab_remove"));
     d->tabsClose->adjustSize();
     QToolTip::add(d->tabsClose, i18n("Close the current tab"));
-    setCornerWidget( d->tabsClose, TopRight );
+    setCornerWidget(d->tabsClose, TopRight);
 }
 
 TabWidget::~TabWidget()
@@ -94,37 +93,37 @@ TabWidget::~TabWidget()
 
 void TabWidget::slotSettingsChanged()
 {
-    if (hoverCloseButton() != Settings::closeButtonOnTabs())
+    if(hoverCloseButton() != Settings::closeButtonOnTabs())
         setHoverCloseButton(Settings::closeButtonOnTabs());
 }
 
 void TabWidget::slotNextTab()
 {
-    setCurrentPage((currentPageIndex()+1) % count());
+    setCurrentPage((currentPageIndex() + 1) % count());
 }
 
 void TabWidget::slotPreviousTab()
 {
-    if (currentPageIndex() == 0)
-        setCurrentPage(count()-1);
+    if(currentPageIndex() == 0)
+        setCurrentPage(count() - 1);
     else
-        setCurrentPage(currentPageIndex()-1);
+        setCurrentPage(currentPageIndex() - 1);
 }
 
 void TabWidget::addFrame(Frame *f)
 {
-    if (!f || !f->widget()) 
+    if(!f || !f->widget())
         return;
     d->frames.insert(f->widget(), f);
     addTab(f->widget(), f->title());
-    connect(f, SIGNAL(titleChanged(Frame*, const QString& )), this, SLOT(slotSetTitle(Frame*, const QString& )));
+    connect(f, SIGNAL(titleChanged(Frame *, const QString &)), this, SLOT(slotSetTitle(Frame *, const QString &)));
     slotSetTitle(f, f->title());
 }
 
 Frame *TabWidget::currentFrame()
 {
-    QWidget* w = currentPage();
-    
+    QWidget *w = currentPage();
+
     return w ? d->frames[w] : 0;
 }
 
@@ -132,7 +131,7 @@ QPtrList<Frame> TabWidget::frames() const
 {
     QPtrList<Frame> result;
     QPtrDictIterator<Frame> it(d->frames);
-    while (it.current())
+    while(it.current())
     {
         result.append(it.current());
         ++it;
@@ -159,85 +158,87 @@ void TabWidget::removeFrame(Frame *f)
     d->frames.remove(f->widget());
     removePage(f->widget());
     delete f;
-    setTitle( currentFrame()->title(), currentPage() );
+    setTitle(currentFrame()->title(), currentPage());
 }
 
 // copied wholesale from KonqFrameTabs
-uint TabWidget::tabBarWidthForMaxChars( uint maxLength )
+uint TabWidget::tabBarWidthForMaxChars(uint maxLength)
 {
     int hframe, overlap;
-    hframe = tabBar()->style().pixelMetric( QStyle::PM_TabBarTabHSpace, this );
-    overlap = tabBar()->style().pixelMetric( QStyle::PM_TabBarTabOverlap, this );
+    hframe = tabBar()->style().pixelMetric(QStyle::PM_TabBarTabHSpace, this);
+    overlap = tabBar()->style().pixelMetric(QStyle::PM_TabBarTabOverlap, this);
 
     QFontMetrics fm = tabBar()->fontMetrics();
     int x = 0;
-    for( int i=0; i < count(); ++i ) {
-        Frame *f=d->frames[page(i)];
-        QString newTitle=f->title();
-        if ( newTitle.length() > maxLength )
-            newTitle = newTitle.left( maxLength-3 ) + "...";
+    for(int i = 0; i < count(); ++i)
+    {
+        Frame *f = d->frames[page(i)];
+        QString newTitle = f->title();
+        if(newTitle.length() > maxLength)
+            newTitle = newTitle.left(maxLength - 3) + "...";
 
-        QTab* tab = tabBar()->tabAt( i );
-        int lw = fm.width( newTitle );
+        QTab *tab = tabBar()->tabAt(i);
+        int lw = fm.width(newTitle);
         int iw = 0;
-        if ( tab->iconSet() )
-            iw = tab->iconSet()->pixmap( QIconSet::Small, QIconSet::Normal ).width() + 4;
+        if(tab->iconSet())
+            iw = tab->iconSet()->pixmap(QIconSet::Small, QIconSet::Normal).width() + 4;
 
-        x += ( tabBar()->style().sizeFromContents( QStyle::CT_TabBarTab, this,                             QSize( QMAX( lw + hframe + iw, QApplication::globalStrut().width() ), 0 ), QStyleOption( tab ) ) ).width();
+        x += (tabBar()->style().sizeFromContents(QStyle::CT_TabBarTab, this,                             QSize(QMAX(lw + hframe + iw,
+                QApplication::globalStrut().width()), 0), QStyleOption(tab))).width();
     }
     return x;
 }
 
-void TabWidget::slotSetTitle(Frame* frame, const QString& title)
+void TabWidget::slotSetTitle(Frame *frame, const QString &title)
 {
     setTitle(title, frame->widget());
 }
 
-void TabWidget::setTitle( const QString &title , QWidget* sender)
+void TabWidget::setTitle(const QString &title , QWidget *sender)
 {
-    removeTabToolTip( sender );
-   
-    uint lcw=0, rcw=0;
+    removeTabToolTip(sender);
+
+    uint lcw = 0, rcw = 0;
     int tabBarHeight = tabBar()->sizeHint().height();
-    if ( cornerWidget( TopLeft ) && cornerWidget( TopLeft )->isVisible() )
-        lcw = QMAX( cornerWidget( TopLeft )->width(), tabBarHeight );
-    if ( cornerWidget( TopRight ) && cornerWidget( TopRight )->isVisible() )
-        rcw = QMAX( cornerWidget( TopRight )->width(), tabBarHeight );
+    if(cornerWidget(TopLeft) && cornerWidget(TopLeft)->isVisible())
+        lcw = QMAX(cornerWidget(TopLeft)->width(), tabBarHeight);
+    if(cornerWidget(TopRight) && cornerWidget(TopRight)->isVisible())
+        rcw = QMAX(cornerWidget(TopRight)->width(), tabBarHeight);
     uint maxTabBarWidth = width() - lcw - rcw;
 
-    uint newMaxLength=30;
-    for ( ; newMaxLength > 3; newMaxLength-- ) 
-{
-        if ( tabBarWidthForMaxChars( newMaxLength ) < maxTabBarWidth )
+    uint newMaxLength = 30;
+    for(; newMaxLength > 3; newMaxLength--)
+    {
+        if(tabBarWidthForMaxChars(newMaxLength) < maxTabBarWidth)
             break;
     }
     QString newTitle = title;
-    if ( newTitle.length() > newMaxLength )
+    if(newTitle.length() > newMaxLength)
     {
-        setTabToolTip( sender, newTitle );
-        newTitle = newTitle.left( newMaxLength-3 ) + "...";
+        setTabToolTip(sender, newTitle);
+        newTitle = newTitle.left(newMaxLength - 3) + "...";
     }
 
-    newTitle.replace( '&', "&&" );
-    if ( tabLabel( sender ) != newTitle )
-        changeTab( sender, newTitle );
+    newTitle.replace('&', "&&");
+    if(tabLabel(sender) != newTitle)
+        changeTab(sender, newTitle);
 
-    if( newMaxLength != d->CurrentMaxLength )
+    if(newMaxLength != d->CurrentMaxLength)
     {
-        for( int i = 0; i < count(); ++i)
+        for(int i = 0; i < count(); ++i)
         {
-            Frame *f=d->frames[page(i)];
-            newTitle=f->title();
-            removeTabToolTip( page( i ) );
-            if ( newTitle.length() > newMaxLength )
+            Frame *f = d->frames[page(i)];
+            newTitle = f->title();
+            removeTabToolTip(page(i));
+            if(newTitle.length() > newMaxLength)
             {
-                setTabToolTip( page( i ), newTitle );
-                newTitle = newTitle.left( newMaxLength-3 ) + "...";
+                setTabToolTip(page(i), newTitle);
+                newTitle = newTitle.left(newMaxLength - 3) + "...";
             }
 
-            newTitle.replace( '&', "&&" );
-            if ( newTitle != tabLabel( page( i ) ) )
-                    changeTab( page( i ), newTitle );
+            newTitle.replace('&', "&&");
+            if(newTitle != tabLabel(page(i)))
+                changeTab(page(i), newTitle);
         }
         d->CurrentMaxLength = newMaxLength;
     }
@@ -245,26 +246,26 @@ void TabWidget::setTitle( const QString &title , QWidget* sender)
 
 void TabWidget::contextMenu(int i, const QPoint &p)
 {
-    QWidget* w = ActionManager::getInstance()->container("tab_popup");
+    QWidget *w = ActionManager::getInstance()->container("tab_popup");
     d->currentItem = page(i);
     //kdDebug() << indexOf(d->currentItem) << endl;
-    if (w && indexOf(d->currentItem) != 0)
+    if(w && indexOf(d->currentItem) != 0)
         static_cast<QPopupMenu *>(w)->exec(p);
     d->currentItem = 0;
 }
 
 void TabWidget::slotDetachTab()
 {
-    if (!d->currentItem || indexOf(d->currentItem) == -1) 
+    if(!d->currentItem || indexOf(d->currentItem) == -1)
         d->currentItem = currentPage();
 
-    if (indexOf(d->currentItem) == 0) 
+    if(indexOf(d->currentItem) == 0)
         return;
 
     KURL url;
-    KHTMLView* view = dynamic_cast<KHTMLView*>(d->currentItem);
-    
-    if (!view)
+    KHTMLView *view = dynamic_cast<KHTMLView *>(d->currentItem);
+
+    if(!view)
         return;
 
     url = view->part()->url();
@@ -275,30 +276,30 @@ void TabWidget::slotDetachTab()
 
 void TabWidget::slotCopyLinkAddress()
 {
-    if(!d->currentItem || indexOf(d->currentItem) == -1) 
+    if(!d->currentItem || indexOf(d->currentItem) == -1)
         d->currentItem = currentPage();
-    if(indexOf(d->currentItem) == 0) 
+    if(indexOf(d->currentItem) == 0)
         return;
 
     KURL url;
-    KHTMLView* view = dynamic_cast<KHTMLView*>(d->currentItem);
-    
-    if (!view)
+    KHTMLView *view = dynamic_cast<KHTMLView *>(d->currentItem);
+
+    if(!view)
         return;
 
     url = view->part()->url();
-    
+
     kapp->clipboard()->setText(url.prettyURL(), QClipboard::Selection);
     kapp->clipboard()->setText(url.prettyURL(), QClipboard::Clipboard);
 }
 
 void TabWidget::slotCloseTab()
 {
-    if (!d->currentItem || indexOf(d->currentItem) == -1) 
+    if(!d->currentItem || indexOf(d->currentItem) == -1)
         d->currentItem = currentPage();
-    if (indexOf(d->currentItem) == 0) 
+    if(indexOf(d->currentItem) == 0)
         return;
-    if (d->frames.find(d->currentItem) != NULL)
+    if(d->frames.find(d->currentItem) != NULL)
         removeFrame(d->frames.find(d->currentItem));
     delete d->currentItem;
     d->currentItem = 0;
@@ -306,24 +307,24 @@ void TabWidget::slotCloseTab()
 
 void TabWidget::initiateDrag(int tab)
 {
-    if (tab == 0) // don't initiate drag for the main tab
+    if(tab == 0)  // don't initiate drag for the main tab
         return;
-        
-    Frame* frame = d->frames[page(tab)];
-  
-    if (frame != 0)
+
+    Frame *frame = d->frames[page(tab)];
+
+    if(frame != 0)
     {
         KURL::List lst;
-        lst.append( frame->part()->url() );
-        KURLDrag* drag = new KURLDrag( lst, this );
-        drag->setPixmap( KMimeType::pixmapForURL( lst.first(), 0, KIcon::Small ) );
+        lst.append(frame->part()->url());
+        KURLDrag *drag = new KURLDrag(lst, this);
+        drag->setPixmap(KMimeType::pixmapForURL(lst.first(), 0, KIcon::Small));
         drag->dragCopy();
     }
 }
 
-void TabWidget::slotCloseRequest(QWidget* widget)
+void TabWidget::slotCloseRequest(QWidget *widget)
 {
-    if (d->frames.find(widget) != NULL)
+    if(d->frames.find(widget) != NULL)
         removeFrame(d->frames.find(widget));
 }
 } // namespace Akregator

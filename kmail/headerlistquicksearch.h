@@ -42,21 +42,20 @@ class KActionCollection;
 
 namespace KMail {
 
-class HeaderListQuickSearch : public KListViewSearchLine
-{
-Q_OBJECT
+class HeaderListQuickSearch : public KListViewSearchLine {
+    Q_OBJECT
 public:
-    HeaderListQuickSearch( QWidget *parent,
-                                             KListView *listView,
-                                             KActionCollection *actionCollection,
-                                             const char *name = 0 );
+    HeaderListQuickSearch(QWidget *parent,
+                          KListView *listView,
+                          KActionCollection *actionCollection,
+                          const char *name = 0);
     virtual ~HeaderListQuickSearch();
 
     /**
      * Used to disable the main window's accelerators when the search widget's
      * combo has focus
      */
-    bool eventFilter( QObject *watched, QEvent *event );
+    bool eventFilter(QObject *watched, QEvent *event);
 
     /**
      * Returns the currently entered search text.
@@ -69,7 +68,7 @@ public:
     int currentStatus() const;
 
 public slots:
-   void reset();
+    void reset();
 
 signals:
     void requestFullSearch();
@@ -82,11 +81,11 @@ protected:
     virtual bool itemMatches(const QListViewItem *item, const QString &s) const;
 
 private slots:
-  /**
-   * cache the status in mStatus so as to avoid having to do the comparatively
-   * expensive string comparison for each item in itemMatches
-   */
-  void slotStatusChanged( int index );
+    /**
+     * cache the status in mStatus so as to avoid having to do the comparatively
+     * expensive string comparison for each item in itemMatches
+     */
+    void slotStatusChanged(int index);
 
 private:
     /** Helper method for the filling of the status combo. */

@@ -51,14 +51,14 @@ class Calendar;
 
 class MarcusBains : public QFrame {
     Q_OBJECT
-  public:
-    MarcusBains( KOAgenda *agenda = 0, const char *name = 0 );
+public:
+    MarcusBains(KOAgenda *agenda = 0, const char *name = 0);
     virtual ~MarcusBains();
 
-  public slots:
-    void updateLocation( bool recalculate = false );
+public slots:
+    void updateLocation(bool recalculate = false);
 
-  private:
+private:
     int todayColumn();
     QTimer *minutes;
     QLabel *mTimeBox;
@@ -68,14 +68,13 @@ class MarcusBains : public QFrame {
 };
 
 
-class KOAgenda : public QScrollView
-{
+class KOAgenda : public QScrollView {
     Q_OBJECT
-  public:
-    KOAgenda ( int columns, int rows, int columnSize, QWidget *parent=0,
-               const char *name = 0, WFlags f = 0 );
-    KOAgenda ( int columns, QWidget *parent = 0,
-               const char *name = 0, WFlags f = 0 );
+public:
+    KOAgenda(int columns, int rows, int columnSize, QWidget *parent = 0,
+             const char *name = 0, WFlags f = 0);
+    KOAgenda(int columns, QWidget *parent = 0,
+             const char *name = 0, WFlags f = 0);
     virtual ~KOAgenda();
 
     Incidence *selectedIncidence() const;
@@ -86,13 +85,13 @@ class KOAgenda : public QScrollView
      * reappears, it can be reselected. */
     const QString lastSelectedUid() const;
 
-    virtual bool eventFilter ( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
 
-    QPoint contentsToGrid ( const QPoint &pos ) const;
-    QPoint gridToContents ( const QPoint &gpos ) const;
+    QPoint contentsToGrid(const QPoint &pos) const;
+    QPoint gridToContents(const QPoint &gpos) const;
 
-    int timeToY ( const QTime &time );
-    QTime gyToTime ( int y );
+    int timeToY(const QTime &time);
+    QTime gyToTime(int y);
 
     QMemArray<int> minContentsY();
     QMemArray<int> maxContentsY();
@@ -100,30 +99,42 @@ class KOAgenda : public QScrollView
     int visibleContentsYMin();
     int visibleContentsYMax();
 
-    void setStartTime( const QTime &startHour );
+    void setStartTime(const QTime &startHour);
 
-    KOAgendaItem *insertItem ( Incidence *incidence, const QDate &qd, int X, int YTop,
-                               int YBottom );
-    KOAgendaItem *insertAllDayItem ( Incidence *event, const QDate &qd, int XBegin,
-                                     int XEnd );
-    void insertMultiItem ( Event *event, const QDate &qd, int XBegin, int XEnd,
-                           int YTop, int YBottom );
+    KOAgendaItem *insertItem(Incidence *incidence, const QDate &qd, int X, int YTop,
+                             int YBottom);
+    KOAgendaItem *insertAllDayItem(Incidence *event, const QDate &qd, int XBegin,
+                                   int XEnd);
+    void insertMultiItem(Event *event, const QDate &qd, int XBegin, int XEnd,
+                         int YTop, int YBottom);
 
     /** remove an event and all its multi-items from the agenda.
      *  This function removes the items from the view, but doesn't delete them immediately.
      *  Instead, they are queued in mItemsToDelete and later deleted by
      *  the slot deleteItemsToDelete() (called by QTimer::singleShot ) */
-    void removeIncidence( Incidence *incidence );
+    void removeIncidence(Incidence *incidence);
 
-    void changeColumns( int columns );
+    void changeColumns(int columns);
 
-    int columns() { return mColumns; }
-    int rows() { return mRows; }
+    int columns()
+    {
+        return mColumns;
+    }
+    int rows()
+    {
+        return mRows;
+    }
 
-    double gridSpacingX() const { return mGridSpacingX; }
-    double gridSpacingY() const { return mGridSpacingY; }
+    double gridSpacingX() const
+    {
+        return mGridSpacingX;
+    }
+    double gridSpacingY() const
+    {
+        return mGridSpacingY;
+    }
 
-//    virtual QSizePolicy sizePolicy() const;
+    //    virtual QSizePolicy sizePolicy() const;
 
     void clear();
 
@@ -134,23 +145,29 @@ class KOAgenda : public QScrollView
 
     void checkScrollBoundaries();
 
-    void setHolidayMask( QMemArray<bool> * );
+    void setHolidayMask(QMemArray<bool> *);
 
-    void setDateList( const DateList &selectedDates );
+    void setDateList(const DateList &selectedDates);
     DateList dateList() const;
 
-    void setTypeAheadReceiver( QObject * );
+    void setTypeAheadReceiver(QObject *);
     QObject *typeAheadReceiver() const;
     void finishTypeAhead();
 
-    void setCalendar( Calendar*cal ) { mCalendar = cal; }
-    void setIncidenceChanger( IncidenceChangerBase *changer ) { mChanger = changer; }
+    void setCalendar(Calendar *cal)
+    {
+        mCalendar = cal;
+    }
+    void setIncidenceChanger(IncidenceChangerBase *changer)
+    {
+        mChanger = changer;
+    }
 
-  public slots:
+public slots:
     void scrollUp();
     void scrollDown();
 
-    void checkScrollBoundaries( int );
+    void checkScrollBoundaries(int);
 
     /** Deselect selected items. This function does not emit any signals. */
     void deselectItem();
@@ -162,65 +179,66 @@ class KOAgenda : public QScrollView
       deselected. This function emits the itemSelected(bool) signal to inform
       about selection/deselection of events.
     */
-    void selectItem( KOAgendaItem * );
+    void selectItem(KOAgendaItem *);
     /**
       Select the item associated with a given uid. Linear search, use carefully.
     */
-    void selectItemByUID( const QString& uid );
-    bool removeAgendaItem( KOAgendaItem *item );
-    void showAgendaItem( KOAgendaItem *item );
+    void selectItemByUID(const QString &uid);
+    bool removeAgendaItem(KOAgendaItem *item);
+    void showAgendaItem(KOAgendaItem *item);
 
-  signals:
+signals:
     void newEventSignal();
-    void newTimeSpanSignal( const QPoint &, const QPoint & );
+    void newTimeSpanSignal(const QPoint &, const QPoint &);
     void newStartSelectSignal();
 
-    void showIncidenceSignal( Incidence * );
-    void editIncidenceSignal( Incidence * );
-    void deleteIncidenceSignal( Incidence * );
-    void showIncidencePopupSignal( Incidence *, const QDate &);
+    void showIncidenceSignal(Incidence *);
+    void editIncidenceSignal(Incidence *);
+    void deleteIncidenceSignal(Incidence *);
+    void showIncidencePopupSignal(Incidence *, const QDate &);
     void showNewEventPopupSignal();
 
-    void itemModified( KOAgendaItem *item );
-    void incidenceSelected( Incidence * );
-    void startMultiModify( const QString & );
+    void itemModified(KOAgendaItem *item);
+    void incidenceSelected(Incidence *);
+    void startMultiModify(const QString &);
     void endMultiModify();
 
-    void lowerYChanged( int );
-    void upperYChanged( int );
+    void lowerYChanged(int);
+    void upperYChanged(int);
 
     void startDragSignal(Incidence *);
-    void droppedToDo( Todo*todo, const QPoint &gpos, bool allDay );
+    void droppedToDo(Todo *todo, const QPoint &gpos, bool allDay);
 
-    void enableAgendaUpdate( bool enable );
-    void zoomView( const int delta, const QPoint &pos, const Qt::Orientation );
+    void enableAgendaUpdate(bool enable);
+    void zoomView(const int delta, const QPoint &pos, const Qt::Orientation);
 
     void mousePosSignal(const QPoint &pos);
     void enterAgenda();
     void leaveAgenda();
 
-    void gridSpacingYChanged( double );
+    void gridSpacingYChanged(double);
 
-  private:
+private:
     enum MouseActionType { NOP, MOVE, SELECT,
-                           RESIZETOP, RESIZEBOTTOM, RESIZELEFT, RESIZERIGHT };
+                           RESIZETOP, RESIZEBOTTOM, RESIZELEFT, RESIZERIGHT
+                         };
 
-  protected:
-    void drawContents( QPainter *p, int cx, int cy, int cw, int ch );
-    int columnWidth( int column );
-    virtual void resizeEvent ( QResizeEvent * );
+protected:
+    void drawContents(QPainter *p, int cx, int cy, int cw, int ch);
+    int columnWidth(int column);
+    virtual void resizeEvent(QResizeEvent *);
 
     /** Handles mouse events. Called from eventFilter */
-    virtual bool eventFilter_mouse ( QObject *, QMouseEvent * );
+    virtual bool eventFilter_mouse(QObject *, QMouseEvent *);
 #ifndef QT_NO_WHEELEVENT
     /** Handles mousewheel events. Called from eventFilter */
-    virtual bool eventFilter_wheel ( QObject *, QWheelEvent * );
+    virtual bool eventFilter_wheel(QObject *, QWheelEvent *);
 #endif
     /** Handles key events. Called from eventFilter */
-    virtual bool eventFilter_key ( QObject *, QKeyEvent * );
+    virtual bool eventFilter_key(QObject *, QKeyEvent *);
 
     /** Handles drag and drop events. Called from eventFilter */
-    virtual bool eventFilter_drag( QObject *, QDropEvent * );
+    virtual bool eventFilter_drag(QObject *, QDropEvent *);
 
     /** returns RESIZELEFT if pos is near the lower edge of the action item,
       RESIZERIGHT if pos is near the higher edge, and MOVE otherwise.
@@ -228,59 +246,59 @@ class KOAgenda : public QScrollView
       the event, although that means moving to the right!
       horizontal is the same as mAllDayAgenda.
     */
-    MouseActionType isInResizeArea( bool horizontal, const QPoint &pos, KOAgendaItem *item );
+    MouseActionType isInResizeArea(bool horizontal, const QPoint &pos, KOAgendaItem *item);
     /** Return whether the cell specified by the grid point belongs to the current select
     */
-    bool ptInSelection( QPoint gpos ) const;
+    bool ptInSelection(QPoint gpos) const;
 
 
     /** Start selecting time span. */
-    void startSelectAction( const QPoint &viewportPos );
+    void startSelectAction(const QPoint &viewportPos);
 
     /** Select time span. */
-    void performSelectAction( const QPoint &viewportPos );
+    void performSelectAction(const QPoint &viewportPos);
 
     /** Emd selecting time span. */
-    void endSelectAction( const QPoint &viewportPos );
+    void endSelectAction(const QPoint &viewportPos);
 
     /** Start moving/resizing agenda item */
-    void startItemAction(const QPoint& viewportPos);
+    void startItemAction(const QPoint &viewportPos);
 
     /** Move/resize agenda item */
-    void performItemAction(const QPoint& viewportPos);
+    void performItemAction(const QPoint &viewportPos);
 
     /** End moving/resizing agenda item */
     void endItemAction();
 
     /** Set cursor, when no item action is in progress */
-    void setNoActionCursor( KOAgendaItem *moveItem, const QPoint &viewportPos );
+    void setNoActionCursor(KOAgendaItem *moveItem, const QPoint &viewportPos);
     /** Sets the cursor according to the given action type. If acting==true,
       the corresponding action is running (i.e. the item is really moved). If
       acting==false the cursor should just indicate that the corresponding action
       is possible */
-    void setActionCursor( int actionType, bool acting=false );
+    void setActionCursor(int actionType, bool acting = false);
 
     /** calculate the width of the column subcells of the given item */
-    double calcSubCellWidth( KOAgendaItem *item );
+    double calcSubCellWidth(KOAgendaItem *item);
     /** Move and resize the given item to the correct position */
-    void placeAgendaItem( KOAgendaItem *item, double subCellWidth );
+    void placeAgendaItem(KOAgendaItem *item, double subCellWidth);
     /** Place agenda item in agenda and adjust other cells if necessary */
-    void placeSubCells( KOAgendaItem *placeItem );
+    void placeSubCells(KOAgendaItem *placeItem);
     /** Place the agenda item at the correct position (ignoring conflicting items) */
-    void adjustItemPosition( KOAgendaItem *item );
+    void adjustItemPosition(KOAgendaItem *item);
 
     /** Process the keyevent, including the ignored keyevents of eventwidgets.
      * Implements pgup/pgdn and cursor key navigation in the view.
      */
-    void keyPressEvent( QKeyEvent * );
+    void keyPressEvent(QKeyEvent *);
 
     void calculateWorkingHours();
 
-    virtual void contentsMousePressEvent ( QMouseEvent * );
+    virtual void contentsMousePressEvent(QMouseEvent *);
 
     void emitNewEventForSelection();
 
-  protected slots:
+protected slots:
     /** delete the items that are queued for deletion */
     void deleteItemsToDelete();
     /** Resizes all the child elements after the size of the agenda
@@ -289,7 +307,7 @@ class KOAgenda : public QScrollView
         lot of time / does a lot of resizes.... see bug 80114 */
     void resizeAllContents();
 
-  private:
+private:
     void init();
     void marcus_bains();
     bool mAllDayMode;

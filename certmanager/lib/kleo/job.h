@@ -40,41 +40,41 @@ class QWidget;
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous crypto operations
+/**
+   @short An abstract base class for asynchronous crypto operations
 
-     During the operation, you might receive progress updates through
-     the progress() signal as they arrive, but an implementation is
-     free to not send progress information. You should show a busy
-     progressbar until the first progress() signal is received.
+   During the operation, you might receive progress updates through
+   the progress() signal as they arrive, but an implementation is
+   free to not send progress information. You should show a busy
+   progressbar until the first progress() signal is received.
 
-     The done() signal is emitted _before_ the result() signals of
-     subclasses and should be used to hide and/or reset progress bars,
-     not to learn of the end of the operation. Use the result()
-     signals for that.
+   The done() signal is emitted _before_ the result() signals of
+   subclasses and should be used to hide and/or reset progress bars,
+   not to learn of the end of the operation. Use the result()
+   signals for that.
 
-     To cancel the operation, simply call slotCancel(). The result()
-     signal of subclasses will still be emitted, though, and will
-     carry the information that the operation was canceled.
-  */
-  class Job : public QObject {
+   To cancel the operation, simply call slotCancel(). The result()
+   signal of subclasses will still be emitted, though, and will
+   carry the information that the operation was canceled.
+*/
+class Job : public QObject {
     Q_OBJECT
-  protected:
-    Job( QObject * parent, const char * name );
-  public:
+protected:
+    Job(QObject *parent, const char *name);
+public:
     ~Job();
 
-    virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString::null ) const;
+    virtual void showErrorDialog(QWidget *parent = 0, const QString &caption = QString::null) const;
 
     virtual QString auditLogAsHtml() const;
 
-  public slots:
+public slots:
     virtual void slotCancel() = 0;
 
-  signals:
-    void progress( const QString & what, int current, int total );
+signals:
+    void progress(const QString &what, int current, int total);
     void done();
-  };
+};
 
 }
 

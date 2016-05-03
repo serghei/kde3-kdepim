@@ -35,52 +35,52 @@
 
 namespace Akregator {
 
-TagNodeItem::TagNodeItem(FolderItem* parent, TagNode* node) : TreeNodeItem(parent, node)
+TagNodeItem::TagNodeItem(FolderItem *parent, TagNode *node) : TreeNodeItem(parent, node)
 {
     initialize(node);
 }
 
-TagNodeItem::TagNodeItem(FolderItem* parent, TreeNodeItem* after, TagNode* node) : TreeNodeItem(parent, after, node)
+TagNodeItem::TagNodeItem(FolderItem *parent, TreeNodeItem *after, TagNode *node) : TreeNodeItem(parent, after, node)
 {
     initialize(node);
 }
 
-TagNodeItem::TagNodeItem(KListView* parent, TagNode* node) : TreeNodeItem(parent, node)
+TagNodeItem::TagNodeItem(KListView *parent, TagNode *node) : TreeNodeItem(parent, node)
 {
     initialize(node);
 }
 
-TagNodeItem::TagNodeItem(KListView* parent, TreeNodeItem* after, TagNode* node) : TreeNodeItem(parent, after, node)
+TagNodeItem::TagNodeItem(KListView *parent, TreeNodeItem *after, TagNode *node) : TreeNodeItem(parent, after, node)
 {
     initialize(node);
 }
 
-void TagNodeItem::initialize(TagNode* node)
+void TagNodeItem::initialize(TagNode *node)
 {
     setExpandable(false);
 
-    if (node)
+    if(node)
     {
         setText(0, node->title());
-        setPixmap ( 0, KGlobal::iconLoader()->loadIcon(node->icon(), KIcon::Small) );
+        setPixmap(0, KGlobal::iconLoader()->loadIcon(node->icon(), KIcon::Small));
     }
 }
 
 void TagNodeItem::nodeChanged()
 {
-    setPixmap ( 0, KGlobal::iconLoader()->loadIcon(node()->icon(), KIcon::Small));
+    setPixmap(0, KGlobal::iconLoader()->loadIcon(node()->icon(), KIcon::Small));
     TreeNodeItem::nodeChanged();
 }
 
-TagNode* TagNodeItem::node() 
-{ 
-    return static_cast<TagNode*> (m_node); 
+TagNode *TagNodeItem::node()
+{
+    return static_cast<TagNode *>(m_node);
 }
 
-void TagNodeItem::showContextMenu(const QPoint& p)
+void TagNodeItem::showContextMenu(const QPoint &p)
 {
-    QWidget* w = ActionManager::getInstance()->container("tagnode_popup");
-    if (w)
+    QWidget *w = ActionManager::getInstance()->container("tagnode_popup");
+    if(w)
         static_cast<QPopupMenu *>(w)->exec(p);
 }
 

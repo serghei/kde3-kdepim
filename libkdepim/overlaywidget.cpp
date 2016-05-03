@@ -31,10 +31,10 @@
 #include "overlaywidget.h"
 using namespace KPIM;
 
-OverlayWidget::OverlayWidget( QWidget* alignWidget, QWidget* parent, const char* name )
-  : QHBox( parent, name ), mAlignWidget( 0 )
+OverlayWidget::OverlayWidget(QWidget *alignWidget, QWidget *parent, const char *name)
+    : QHBox(parent, name), mAlignWidget(0)
 {
-  setAlignWidget( alignWidget );
+    setAlignWidget(alignWidget);
 }
 
 OverlayWidget::~OverlayWidget()
@@ -43,50 +43,51 @@ OverlayWidget::~OverlayWidget()
 
 void OverlayWidget::reposition()
 {
-  if ( !mAlignWidget )
-    return;
-  // p is in the alignWidget's coordinates
-  QPoint p;
-  // We are always above the alignWidget, right-aligned with it.
-  p.setX( mAlignWidget->width() - width() );
-  p.setY( -height() );
-  // Position in the toplevelwidget's coordinates
-  QPoint pTopLevel = mAlignWidget->mapTo( topLevelWidget(), p );
-  // Position in the widget's parentWidget coordinates
-  QPoint pParent = parentWidget()->mapFrom( topLevelWidget(), pTopLevel );
-  // Move 'this' to that position.
-  move( pParent );
+    if(!mAlignWidget)
+        return;
+    // p is in the alignWidget's coordinates
+    QPoint p;
+    // We are always above the alignWidget, right-aligned with it.
+    p.setX(mAlignWidget->width() - width());
+    p.setY(-height());
+    // Position in the toplevelwidget's coordinates
+    QPoint pTopLevel = mAlignWidget->mapTo(topLevelWidget(), p);
+    // Position in the widget's parentWidget coordinates
+    QPoint pParent = parentWidget()->mapFrom(topLevelWidget(), pTopLevel);
+    // Move 'this' to that position.
+    move(pParent);
 }
 
-void OverlayWidget::setAlignWidget( QWidget * w )
+void OverlayWidget::setAlignWidget(QWidget *w)
 {
-  if (w == mAlignWidget)
-    return;
+    if(w == mAlignWidget)
+        return;
 
-  if (mAlignWidget)
-    mAlignWidget->removeEventFilter(this);
+    if(mAlignWidget)
+        mAlignWidget->removeEventFilter(this);
 
-  mAlignWidget = w;
+    mAlignWidget = w;
 
-  if (mAlignWidget)
-    mAlignWidget->installEventFilter(this);
+    if(mAlignWidget)
+        mAlignWidget->installEventFilter(this);
 
-  reposition();
-}
-
-bool OverlayWidget::eventFilter( QObject* o, QEvent* e)
-{
-  if ( o == mAlignWidget &&
-       ( e->type() == QEvent::Move || e->type() == QEvent::Resize ) ) {
     reposition();
-  }
-  return QFrame::eventFilter(o,e);
 }
 
-void OverlayWidget::resizeEvent( QResizeEvent* ev )
+bool OverlayWidget::eventFilter(QObject *o, QEvent *e)
 {
-  reposition();
-  QFrame::resizeEvent( ev );
+    if(o == mAlignWidget &&
+            (e->type() == QEvent::Move || e->type() == QEvent::Resize))
+    {
+        reposition();
+    }
+    return QFrame::eventFilter(o, e);
+}
+
+void OverlayWidget::resizeEvent(QResizeEvent *ev)
+{
+    reposition();
+    QFrame::resizeEvent(ev);
 }
 
 #include "overlaywidget.moc"

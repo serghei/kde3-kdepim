@@ -32,15 +32,14 @@
 
 namespace Akregator {
 
-class TreeNode::TreeNodePrivate
-{
-    public:
-    
+class TreeNode::TreeNodePrivate {
+public:
+
     bool doNotify;
     bool nodeChangeOccurred;
     bool articleChangeOccurred;
     QString title;
-    Folder* parent;
+    Folder *parent;
     uint id;
     bool signalDestroyedEmitted;
 };
@@ -55,16 +54,16 @@ TreeNode::TreeNode()
     d->parent = 0;
     d->id = 0;
     d->signalDestroyedEmitted = false;
-    
+
 }
 
 void TreeNode::emitSignalDestroyed()
 {
-    if (!d->signalDestroyedEmitted)
+    if(!d->signalDestroyedEmitted)
     {
         emit signalDestroyed(this);
         d->signalDestroyedEmitted = true;
-    } 
+    }
 }
 
 TreeNode::~TreeNode()
@@ -74,67 +73,67 @@ TreeNode::~TreeNode()
     d = 0;
 }
 
-const QString& TreeNode::title() const
+const QString &TreeNode::title() const
 {
     return d->title;
 }
 
-void TreeNode::setTitle(const QString& title)
+void TreeNode::setTitle(const QString &title)
 {
 
-    if (d->title != title)
+    if(d->title != title)
     {
         d->title = title;
         nodeModified();
     }
 }
 
-TreeNode* TreeNode::nextSibling() const
+TreeNode *TreeNode::nextSibling() const
 {
-    if (!d->parent)
+    if(!d->parent)
         return 0;
-    QValueList<TreeNode*> children = d->parent->children();
-    TreeNode* me = (TreeNode*)this;
-        
+    QValueList<TreeNode *> children = d->parent->children();
+    TreeNode *me = (TreeNode *)this;
+
     int idx = children.findIndex(me);
-    
-    return idx+1 < children.size() ? *(children.at(idx+1)) : 0L;
+
+    return idx + 1 < children.size() ? *(children.at(idx + 1)) : 0L;
 }
 
-TreeNode* TreeNode::prevSibling() const
+TreeNode *TreeNode::prevSibling() const
 {
-    if (!d->parent)
+    if(!d->parent)
         return 0;
-    QValueList<TreeNode*> children = d->parent->children();
-    TreeNode* me = (TreeNode*)this;
-    
+    QValueList<TreeNode *> children = d->parent->children();
+    TreeNode *me = (TreeNode *)this;
+
     int idx = children.findIndex(me);
-    return idx > 0 ? *(d->parent->children().at(idx-1)) : 0L;
+    return idx > 0 ? *(d->parent->children().at(idx - 1)) : 0L;
 }
 
-Folder* TreeNode::parent() const
+Folder *TreeNode::parent() const
 {
     return d->parent;
 }
 
-void TreeNode::setParent(Folder* parent)
+void TreeNode::setParent(Folder *parent)
 {
     d->parent = parent;
 }
 
 void TreeNode::setNotificationMode(bool doNotify, bool notifyOccurredChanges)
 {
-    if (doNotify && !d->doNotify) // turned on
+    if(doNotify && !d->doNotify)  // turned on
     {
         d->doNotify = true;
-        if (d->nodeChangeOccurred && notifyOccurredChanges)
+        if(d->nodeChangeOccurred && notifyOccurredChanges)
             emit signalChanged(this);
-        if (d->articleChangeOccurred && notifyOccurredChanges)
+        if(d->articleChangeOccurred && notifyOccurredChanges)
             doArticleNotification();
         d->nodeChangeOccurred = false;
         d->articleChangeOccurred = false;
     }
-    if (!doNotify && d->doNotify) //turned off
+    if(!doNotify && d->doNotify)  //turned off
     {
         d->nodeChangeOccurred = false;
         d->articleChangeOccurred = false;
@@ -154,7 +153,7 @@ void TreeNode::setId(uint id)
 
 void TreeNode::nodeModified()
 {
-    if (d->doNotify)
+    if(d->doNotify)
         emit signalChanged(this);
     else
         d->nodeChangeOccurred = true;
@@ -162,7 +161,7 @@ void TreeNode::nodeModified()
 
 void TreeNode::articlesModified()
 {
-    if (d->doNotify)
+    if(d->doNotify)
         doArticleNotification();
     else
         d->articleChangeOccurred = true;

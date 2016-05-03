@@ -24,19 +24,18 @@
 
 #include <qwidget.h>
 
-class DropWidget : public QWidget
-{
-  Q_OBJECT
+class DropWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    DropWidget( QWidget *parent, const char *name = 0 );
+public:
+    DropWidget(QWidget *parent, const char *name = 0);
 
-  signals:
-    void summaryWidgetDropped( QWidget *target, QWidget *widget, int alignment );
+signals:
+    void summaryWidgetDropped(QWidget *target, QWidget *widget, int alignment);
 
-  protected:
-    virtual void dragEnterEvent( QDragEnterEvent* );
-    virtual void dropEvent( QDropEvent* );
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
 };
 
 #endif

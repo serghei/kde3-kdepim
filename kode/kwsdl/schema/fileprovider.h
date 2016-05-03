@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -30,21 +30,20 @@ class Job;
 
 namespace Schema {
 
-class FileProvider : QObject
-{
-  Q_OBJECT
+class FileProvider : QObject {
+    Q_OBJECT
 
-  public:
+public:
     FileProvider();
 
-    bool get( const QString &url, QString &target );
+    bool get(const QString &url, QString &target);
     void cleanUp();
 
-  private slots:
-    void slotData( KIO::Job*, const QByteArray& );
-    void slotResult( KIO::Job* );
+private slots:
+    void slotData(KIO::Job *, const QByteArray &);
+    void slotResult(KIO::Job *);
 
-  private:
+private:
     QString mFileName;
     QByteArray mData;
     bool mBlocked;

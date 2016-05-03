@@ -168,333 +168,334 @@ class PilotDatabase;
 * with a non-zero timeout and that timeout has elapsed. The
 * tickler is stopped before timeout is emitted.
 */
-class KDE_EXPORT KPilotLink : public QObject
-{
-Q_OBJECT
-friend class SyncAction;
+class KDE_EXPORT KPilotLink : public QObject {
+    Q_OBJECT
+    friend class SyncAction;
 public:
-	/** A list of DBInfo structures. */
-	typedef QValueList<struct DBInfo> DBInfoList;
+    /** A list of DBInfo structures. */
+    typedef QValueList<struct DBInfo> DBInfoList;
 
-	/** Constructor. Use reset() to start looking for a device. */
-	KPilotLink( QObject *parent = 0, const char *name = 0 );
+    /** Constructor. Use reset() to start looking for a device. */
+    KPilotLink(QObject *parent = 0, const char *name = 0);
 
-	/** Destructor. This rudely interrupts any communication in progress.
-	* It is best to call endOfSync() or finishSync() before destroying
-	* the device.
-	*/
-	virtual ~KPilotLink();
-
-
-	/** Provides a human-readable status string. */
-	virtual QString statusString() const = 0;
-
-	/**
-	* True if HotSync has been started but not finished yet
-	* (ie. the physical Pilot is waiting for sync commands)
-	*/
-	virtual bool isConnected() const = 0;
+    /** Destructor. This rudely interrupts any communication in progress.
+    * It is best to call endOfSync() or finishSync() before destroying
+    * the device.
+    */
+    virtual ~KPilotLink();
 
 
-	/**
-	* Information on what kind of device we're dealing with.
-	* A link is associated with a path -- either the node in
-	* /dev that the physical device is attached to, or an
-	* IP address, or a filesystem path for local links.
-	* Whichever is being used, this function returns its
-	* name in a human-readable form.
-	*/
-	QString pilotPath() const
-	{
-		return fPilotPath;
-	}
+    /** Provides a human-readable status string. */
+    virtual QString statusString() const = 0;
 
-	/**
-	* Return the device link to the Init state and try connecting
-	* to the given device path (if it's non-empty). What the
-	* path means depends on the kind of link we're instantiating.
-	*
-	* @see reset()
-	* @see pilotPath()
-	*/
-	virtual void reset(const QString &pilotPath) = 0;
+    /**
+    * True if HotSync has been started but not finished yet
+    * (ie. the physical Pilot is waiting for sync commands)
+    */
+    virtual bool isConnected() const = 0;
 
-	/** Allows our class to receive custom events that our threads
-	* will be giving to us, including tickle timeouts and 
-	* device communication events. 
-	*/
-	virtual bool event(QEvent *e);
 
-	/**
-	* Install the list of files (full paths!) named by @p l
-	* onto the handheld (or whatever this link represents).
-	* If @p deleteFiles  is true, the source files are removed.
-	*
-	* @return the number of files successfully installed.
-	*/
-	unsigned int installFiles(const QStringList &l, const bool deleteFiles);
+    /**
+    * Information on what kind of device we're dealing with.
+    * A link is associated with a path -- either the node in
+    * /dev that the physical device is attached to, or an
+    * IP address, or a filesystem path for local links.
+    * Whichever is being used, this function returns its
+    * name in a human-readable form.
+    */
+    QString pilotPath() const
+    {
+        return fPilotPath;
+    }
 
-	/**
-	* Write a log entry to the handheld. If @p log is true,
-	* then the signal logMessage() is also emitted. This
-	* function is supposed to @em only write to the handheld's
-	* log (with a physical device, that is what appears on
-	* screen at the end of a sync).
-	*/
-	void addSyncLogEntry(const QString &entry,bool log=true);
+    /**
+    * Return the device link to the Init state and try connecting
+    * to the given device path (if it's non-empty). What the
+    * path means depends on the kind of link we're instantiating.
+    *
+    * @see reset()
+    * @see pilotPath()
+    */
+    virtual void reset(const QString &pilotPath) = 0;
 
-	/**
-	* Find a database with the given @p name (and optionally,
-	* type @p type and creator ID (from pi_mktag) @p creator,
-	* on searching from index @p index on the handheld.
-	* Fills in the DBInfo structure @p info if found.
-	*
-	* @return >=0 on success. See the documentation for each
-	*         subclass for particular meanings.
-	* @return < 0 on error.
-	*/
-	virtual int findDatabase(const char *name,
-		struct DBInfo *info,
-		int index=0,
-		unsigned long type=0,
-		unsigned long creator=0) = 0;
+    /** Allows our class to receive custom events that our threads
+    * will be giving to us, including tickle timeouts and
+    * device communication events.
+    */
+    virtual bool event(QEvent *e);
 
-	/**
-	* Retrieve the database indicated by DBInfo @p *db into the
-	* local file @p path. This copies all the data, and you can
-	* create a PilotLocalDatabase from the resulting @p path .
-	*
-	* @return @c true on success
-	*/
-	virtual bool retrieveDatabase(const QString &path, struct DBInfo *db) = 0;
+    /**
+    * Install the list of files (full paths!) named by @p l
+    * onto the handheld (or whatever this link represents).
+    * If @p deleteFiles  is true, the source files are removed.
+    *
+    * @return the number of files successfully installed.
+    */
+    unsigned int installFiles(const QStringList &l, const bool deleteFiles);
 
-	/**
-	* Fill the DBInfo structure @p db with information about
-	* the next database (in some ordering) counting from
-	* @p index.
-	*
-	* @return < 0 on error
-	*/
-	virtual int getNextDatabase(int index,struct DBInfo *db) = 0;
+    /**
+    * Write a log entry to the handheld. If @p log is true,
+    * then the signal logMessage() is also emitted. This
+    * function is supposed to @em only write to the handheld's
+    * log (with a physical device, that is what appears on
+    * screen at the end of a sync).
+    */
+    void addSyncLogEntry(const QString &entry, bool log = true);
 
-	/**
-	* Returns a list of DBInfo structures describing all the
-	* databases available on the link (ie. device) with the
-	* given card number @p cardno and flags @p flags. No known
-	* handheld uses a cardno other than 0; use flags to
-	* indicate what kind of databases to fetch -- @c dlpDBListRAM
-	* or @c dlpDBListROM.
-	*
-	* @return list of DBInfo objects, one for each database
-	* @note ownership of the DBInfo objects is passed to the
-	*       caller, who must delete the objects.
-	*/
-	virtual DBInfoList getDBList(int cardno=0, int flags=dlpDBListRAM) = 0;
+    /**
+    * Find a database with the given @p name (and optionally,
+    * type @p type and creator ID (from pi_mktag) @p creator,
+    * on searching from index @p index on the handheld.
+    * Fills in the DBInfo structure @p info if found.
+    *
+    * @return >=0 on success. See the documentation for each
+    *         subclass for particular meanings.
+    * @return < 0 on error.
+    */
+    virtual int findDatabase(const char *name,
+                             struct DBInfo *info,
+                             int index = 0,
+                             unsigned long type = 0,
+                             unsigned long creator = 0) = 0;
 
-	/**
-	* Return a database object for manipulating the database with
-	* name @p name on the link. This database may be local or
-	* remote, depending on the kind of link in use.
-	*
-	* @return pointer to database object, or 0 on error.
-	* @note ownership of the database object is given to the caller,
-	*       who must delete the object in time.
-	*/
-	virtual PilotDatabase *database( const QString &name ) = 0;
+    /**
+    * Retrieve the database indicated by DBInfo @p *db into the
+    * local file @p path. This copies all the data, and you can
+    * create a PilotLocalDatabase from the resulting @p path .
+    *
+    * @return @c true on success
+    */
+    virtual bool retrieveDatabase(const QString &path, struct DBInfo *db) = 0;
 
-	/**
-	* Return a database object for manipulating the database with
-	* the name stored in the DBInfo structure @p info . The default
-	* version goes through method database( const QString & ), above.
-	*
-	* @return pointer to database object, or 0 on error.
-	* @note ownership of the database object is given to the caller.
-	*/
-	virtual PilotDatabase *database( const DBInfo *info );
+    /**
+    * Fill the DBInfo structure @p db with information about
+    * the next database (in some ordering) counting from
+    * @p index.
+    *
+    * @return < 0 on error
+    */
+    virtual int getNextDatabase(int index, struct DBInfo *db) = 0;
 
-	/**
-	* Retrieve the user information from the device. Ownership
-	* is kept by the link, and at the end of a sync the user
-	* information is synced back to the link -- so it may be
-	* modified, but don't make local copies of it.
-	*
-	* @note Do not call this before the sync begins!
-	*/
-	KPilotUser &getPilotUser()
-	{
-		return *fPilotUser;
-	}
+    /**
+    * Returns a list of DBInfo structures describing all the
+    * databases available on the link (ie. device) with the
+    * given card number @p cardno and flags @p flags. No known
+    * handheld uses a cardno other than 0; use flags to
+    * indicate what kind of databases to fetch -- @c dlpDBListRAM
+    * or @c dlpDBListROM.
+    *
+    * @return list of DBInfo objects, one for each database
+    * @note ownership of the DBInfo objects is passed to the
+    *       caller, who must delete the objects.
+    */
+    virtual DBInfoList getDBList(int cardno = 0, int flags = dlpDBListRAM) = 0;
 
-	/**
-	* System information about the handheld. Ownership is kept
-	* by the link. For non-device links, something fake is
-	* returned.
-	*
-	* @note Do not call this before the sync begins!
-	*/
-	const KPilotSysInfo &getSysInfo()
-	{
-		return *fPilotSysInfo;
-	}
+    /**
+    * Return a database object for manipulating the database with
+    * name @p name on the link. This database may be local or
+    * remote, depending on the kind of link in use.
+    *
+    * @return pointer to database object, or 0 on error.
+    * @note ownership of the database object is given to the caller,
+    *       who must delete the object in time.
+    */
+    virtual PilotDatabase *database(const QString &name) = 0;
 
-	/**
-	* Retrieve information about the data card @p card;
-	* I don't think that any pilot supports card numbers
-	* other than 0. Non-device links return something fake.
-	*
-	* This function may return NULL (non-device links or
-	* on error).
-	*
-	* @note Ownership of the KPilotCard object is given
-	*       to the caller, who must delete it.
-	*/
-	virtual const KPilotCard *getCardInfo(int card=0) = 0;
+    /**
+    * Return a database object for manipulating the database with
+    * the name stored in the DBInfo structure @p info . The default
+    * version goes through method database( const QString & ), above.
+    *
+    * @return pointer to database object, or 0 on error.
+    * @note ownership of the database object is given to the caller.
+    */
+    virtual PilotDatabase *database(const DBInfo *info);
 
-	/**
-	* When ending the sync, you can do so gracefully, updating the
-	* last-sync time to indicate a successful sync and setting the
-	* user name on the device, or you can skip that (for unsuccessful
-	* syncs, generally).
-	*/
-	enum EndOfSyncFlags {
-		NoUpdate, ///<  Do not update the user info
-		UpdateUserInfo ///< Update user info and last successful sync date
-	} ;
+    /**
+    * Retrieve the user information from the device. Ownership
+    * is kept by the link, and at the end of a sync the user
+    * information is synced back to the link -- so it may be
+    * modified, but don't make local copies of it.
+    *
+    * @note Do not call this before the sync begins!
+    */
+    KPilotUser &getPilotUser()
+    {
+        return *fPilotUser;
+    }
 
-	/**
-	* Custom events we can be handling...
-	*/
-	enum CustomEvents { 
-		EventTickleTimeout = 1066
-	};
-	
-	/**
-	* End the sync in a gracuful manner. If @p f is UpdateUserInfo,
-	* the sync was successful and the user info and last successful sync
-	* timestamp are updated.
-	*/
-	virtual void endSync( EndOfSyncFlags f ) = 0;
+    /**
+    * System information about the handheld. Ownership is kept
+    * by the link. For non-device links, something fake is
+    * returned.
+    *
+    * @note Do not call this before the sync begins!
+    */
+    const KPilotSysInfo &getSysInfo()
+    {
+        return *fPilotSysInfo;
+    }
+
+    /**
+    * Retrieve information about the data card @p card;
+    * I don't think that any pilot supports card numbers
+    * other than 0. Non-device links return something fake.
+    *
+    * This function may return NULL (non-device links or
+    * on error).
+    *
+    * @note Ownership of the KPilotCard object is given
+    *       to the caller, who must delete it.
+    */
+    virtual const KPilotCard *getCardInfo(int card = 0) = 0;
+
+    /**
+    * When ending the sync, you can do so gracefully, updating the
+    * last-sync time to indicate a successful sync and setting the
+    * user name on the device, or you can skip that (for unsuccessful
+    * syncs, generally).
+    */
+    enum EndOfSyncFlags
+    {
+        NoUpdate, ///<  Do not update the user info
+        UpdateUserInfo ///< Update user info and last successful sync date
+    } ;
+
+    /**
+    * Custom events we can be handling...
+    */
+    enum CustomEvents
+    {
+        EventTickleTimeout = 1066
+    };
+
+    /**
+    * End the sync in a gracuful manner. If @p f is UpdateUserInfo,
+    * the sync was successful and the user info and last successful sync
+    * timestamp are updated.
+    */
+    virtual void endSync(EndOfSyncFlags f) = 0;
 
 signals:
-	/**
-	* A timeout associated with tickling has occurred. Each
-	* time startTickle() is called, you can state how long
-	* tickling should last (at most) before timing out.
-	*
-	* You can only get a timeout when the Qt event loop is
-	* running, which somewhat limits the usefulness of timeouts.
-	*/
-	void timeout();
+    /**
+    * A timeout associated with tickling has occurred. Each
+    * time startTickle() is called, you can state how long
+    * tickling should last (at most) before timing out.
+    *
+    * You can only get a timeout when the Qt event loop is
+    * running, which somewhat limits the usefulness of timeouts.
+    */
+    void timeout();
 
-	/** Signal that a message has been written to the sync log. */
-	void logMessage(const QString &);
+    /** Signal that a message has been written to the sync log. */
+    void logMessage(const QString &);
 
-	/** Signal that an error has occurred, for logging. */
-	void logError(const QString &);
+    /** Signal that an error has occurred, for logging. */
+    void logError(const QString &);
 
-	/**
-	* Signal that progress has been made, for logging purposes.
-	* @p p is the percentage completed (0 <= s <= 100).
-	* The string @p s is logged as well, if non-Null.
-	*/
-	void logProgress(const QString &s, int p);
+    /**
+    * Signal that progress has been made, for logging purposes.
+    * @p p is the percentage completed (0 <= s <= 100).
+    * The string @p s is logged as well, if non-Null.
+    */
+    void logProgress(const QString &s, int p);
 
-	/**
-	* Emitted once the user information has been read and
-	* the HotSync is really ready to go.
-	*/
-	void deviceReady( KPilotLink * );
+    /**
+    * Emitted once the user information has been read and
+    * the HotSync is really ready to go.
+    */
+    void deviceReady(KPilotLink *);
 
 
 public slots:
-	/**
-	* Release all resources, including the master pilot socket,
-	* timers, etc.
-	*/
-	virtual void close() = 0;
+    /**
+    * Release all resources, including the master pilot socket,
+    * timers, etc.
+    */
+    virtual void close() = 0;
 
-	/**
-	* Assuming things have been set up at least once already by
-	* a call to reset() with parameters, use this slot to re-start
-	* with the same settings.
-	*/
-	virtual void reset() = 0;
+    /**
+    * Assuming things have been set up at least once already by
+    * a call to reset() with parameters, use this slot to re-start
+    * with the same settings.
+    */
+    virtual void reset() = 0;
 
-	/** Tickle the underlying device exactly once. */
-	virtual bool tickle() = 0;
+    /** Tickle the underlying device exactly once. */
+    virtual bool tickle() = 0;
 
 protected:
-	/**
-	* Path of the device special file that will be used.
-	* Usually /dev/pilot, /dev/ttySx, or /dev/usb/x. May be
-	* a filesystem path for local links.
-	*/
-	QString fPilotPath;
+    /**
+    * Path of the device special file that will be used.
+    * Usually /dev/pilot, /dev/ttySx, or /dev/usb/x. May be
+    * a filesystem path for local links.
+    */
+    QString fPilotPath;
 
-	/**
-	* Start tickling the Handheld (every few seconds). This
-	* lasts until @p timeout seconds have passed (or forever
-	* if @p timeout is zero).
-	*
-	* @note Do not call startTickle() twice with no intervening
-	*       stopTickle().
-	*/
-	void startTickle(unsigned int timeout=0);
+    /**
+    * Start tickling the Handheld (every few seconds). This
+    * lasts until @p timeout seconds have passed (or forever
+    * if @p timeout is zero).
+    *
+    * @note Do not call startTickle() twice with no intervening
+    *       stopTickle().
+    */
+    void startTickle(unsigned int timeout = 0);
 
-	/**
-	* Stop tickling the Handheld. This may block for some
-	* time (less than a second) to allow the tickle thread
-	* to finish.
-	*/
-	void stopTickle();
+    /**
+    * Stop tickling the Handheld. This may block for some
+    * time (less than a second) to allow the tickle thread
+    * to finish.
+    */
+    void stopTickle();
 
-	/**
-	* Install a single file onto the device link. Full pathname
-	* @p f is used; in addition, if @p deleteFile is true remove
-	* the source file. Returns @c true if the install succeeded.
-	*/
-	virtual bool installFile( const QString &f, const bool deleteFile ) = 0;
+    /**
+    * Install a single file onto the device link. Full pathname
+    * @p f is used; in addition, if @p deleteFile is true remove
+    * the source file. Returns @c true if the install succeeded.
+    */
+    virtual bool installFile(const QString &f, const bool deleteFile) = 0;
 
-	/**
-	* Notify the Pilot user that a conduit is running now.
-	* On real devices, this prints out (on screen) which database
-	* is now opened; useful for progress reporting.
-	*
-	* @return -1 on error
-	* @note the default implementation returns 0
-	*/
-	virtual int openConduit();
+    /**
+    * Notify the Pilot user that a conduit is running now.
+    * On real devices, this prints out (on screen) which database
+    * is now opened; useful for progress reporting.
+    *
+    * @return -1 on error
+    * @note the default implementation returns 0
+    */
+    virtual int openConduit();
 
-	/**
-	* Returns a file handle for raw operations. Not recommended.
-	* On links with no physical device backing, returns -1.
-	*
-	* @note the default implementation returns -1
-	*/
-	virtual int pilotSocket() const;
+    /**
+    * Returns a file handle for raw operations. Not recommended.
+    * On links with no physical device backing, returns -1.
+    *
+    * @note the default implementation returns -1
+    */
+    virtual int pilotSocket() const;
 
-	/**
-	* Actually write an entry to the device link. The message
-	* @p s must be guaranteed non-empty.
-	*/
-	virtual void addSyncLogEntryImpl( const QString &s ) = 0;
+    /**
+    * Actually write an entry to the device link. The message
+    * @p s must be guaranteed non-empty.
+    */
+    virtual void addSyncLogEntryImpl(const QString &s) = 0;
 
-	/**
-	* User information structure. Should be filled in when a sync
-	* starts, so that conduits can use the information.
-	*/
-	KPilotUser  *fPilotUser;
+    /**
+    * User information structure. Should be filled in when a sync
+    * starts, so that conduits can use the information.
+    */
+    KPilotUser  *fPilotUser;
 
-	/**
-	* System information about the device. Filled in when the
-	* sync starts. Non-device links need to fake something.
-	*/
-	KPilotSysInfo *fPilotSysInfo;
+    /**
+    * System information about the device. Filled in when the
+    * sync starts. Non-device links need to fake something.
+    */
+    KPilotSysInfo *fPilotSysInfo;
 
 
 private:
-	bool fTickleDone;
-	QThread *fTickleThread;
+    bool fTickleDone;
+    QThread *fTickleThread;
 
 } ;
 

@@ -28,27 +28,26 @@
 class QPushButton;
 class DelegateView;
 
-class DelegatePage : public QWidget
-{
-  Q_OBJECT
+class DelegatePage : public QWidget {
+    Q_OBJECT
 
-  public:
-    DelegatePage( QWidget *parent = 0 );
+public:
+    DelegatePage(QWidget *parent = 0);
     ~DelegatePage();
 
-  private slots:
+private slots:
     void loadAllDelegates();
     void addDelegate();
     void editDelegate();
     void removeDelegate();
 
-    void delegateAdded( KIO::Job* );
-    void delegateRemoved( KIO::Job* );
-    void allDelegates( KIO::Job* );
+    void delegateAdded(KIO::Job *);
+    void delegateRemoved(KIO::Job *);
+    void allDelegates(KIO::Job *);
 
     void selectionChanged();
 
-  private:
+private:
     QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;

@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -38,7 +38,7 @@
 
 class DwObserver {
 public:
-    virtual void Notify()=0;
+    virtual void Notify() = 0;
 };
 
 
@@ -118,7 +118,8 @@ class DwProtocolClient {
 
 public:
 
-    enum Failure {
+    enum Failure
+    {
         kFailNoFailure      = 0, // No failure
         kFailNoWinsock      = 1, // A usable Winsock DLL could not be found
         kFailNetDown        = 2, // The network is down
@@ -126,14 +127,15 @@ public:
         kFailConnReset      = 4, // The connection was reset
         kFailNetUnreachable = 5, // The network is unreachable
         kFailTimedOut       = 6, // Timed out while waiting for an operation
-                                 // to complete
+        // to complete
         kFailConnDropped    = 7,
         kFailConnRefused    = 8,
         kFailNoResources    = 9
     };
     //. Enumerated values for failures.
 
-    enum Error {
+    enum Error
+    {
         kErrNoError = 0,
         kErrUnknownError = 0x4000,
         kErrBadParameter = 0x4001,
@@ -162,7 +164,7 @@ public:
     //. Frees the resources used by this object.
     //. In a Win32 environment, the destructor calls {\tt WSACleanup()}.
 
-    virtual int Open(const char* aServer, DwUint16 aPort);
+    virtual int Open(const char *aServer, DwUint16 aPort);
     //. Opens a TCP connection to the server {\tt aServer} at port {\tt aPort}.
     //. {\tt aServer} may be either a host name, such as "smtp.acme.com" or an
     //. IP number in dotted decimal format, such as "147.81.64.59".  If the
@@ -195,7 +197,7 @@ public:
     int LastFailure() const;
     //. Returns an enumerated value indicating what failure last occurred.
 
-    const char* LastFailureStr() const;
+    const char *LastFailureStr() const;
     //. Returns a failure message string associated with the failure code
     //. returned by {\tt LastFailure()}.
 
@@ -206,14 +208,15 @@ public:
     //. by system calls.  In some cases, an error code defined by MIME++ may
     //. returned to indicate improper use of the {\tt DwProtocolClient} class.
 
-    const char* LastErrorStr() const;
+    const char *LastErrorStr() const;
     //. Returns an error message string associated with the error code returned
     //. by {\tt LastError()}.
 
 protected:
 
-    enum {
-        kWSAStartup=1,  // Win32
+    enum
+    {
+        kWSAStartup = 1, // Win32
         kgethostbyname,
         ksocket,
         ksetsockopt,
@@ -231,13 +234,13 @@ protected:
     DwBool      mIsOpen;
     int         mSocket;
     DwUint16    mPort;
-    char*       mServerName;
+    char       *mServerName;
     int         mReceiveTimeout;
     int         mLastCommand;
     int         mFailureCode;
-    const char* mFailureStr;
+    const char *mFailureStr;
     int         mErrorCode;
-    const char* mErrorStr;
+    const char *mErrorStr;
 
     virtual void HandleError(int aErrorCode, int aSystemCall);
     //. Interprets error codes.  {\tt aErrorCode} is an error code,
@@ -248,7 +251,7 @@ protected:
     //. {\tt HandleError()} sets values for {\tt mErrorStr},
     //. {\tt mFailureCode}, and {\tt mFailureStr}.
 
-    int PSend(const char* aBuf, int aBufLen);
+    int PSend(const char *aBuf, int aBufLen);
     //. Sends {\tt aBufLen} characters from the buffer {\tt aBuf}.  Returns
     //. the number of characters sent.  If the number of characters sent
     //. is less than the number of characters specified in {\tt aBufLen},
@@ -256,7 +259,7 @@ protected:
     //. error occurred.  To determine if a failure also occurred, call the
     //. member function {\tt LastFailure()}.
 
-    int PReceive(char* aBuf, int aBufSize);
+    int PReceive(char *aBuf, int aBufSize);
     //. Receives up to {\tt aBufSize} characters into the buffer {\tt aBuf}.
     //. Returns the number of characters received.  If zero is returned, the
     //. caller should call the member function {\tt LastError()} to determine

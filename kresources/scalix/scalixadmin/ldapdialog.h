@@ -24,15 +24,14 @@
 
 class LdapView;
 
-class LdapDialog : public KDialogBase
-{
-  public:
-    LdapDialog( QWidget *parent = 0 );
+class LdapDialog : public KDialogBase {
+public:
+    LdapDialog(QWidget *parent = 0);
 
     QString selectedUser() const;
 
 
-  private:
+private:
     LdapView *mView;
 };
 

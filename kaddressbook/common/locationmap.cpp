@@ -46,50 +46,51 @@ LocationMap::~LocationMap()
 
 LocationMap *LocationMap::instance()
 {
-  if ( !mSelf )
-    locationMapDeleter.setObject( mSelf, new LocationMap );
+    if(!mSelf)
+        locationMapDeleter.setObject(mSelf, new LocationMap);
 
-  return mSelf;
+    return mSelf;
 }
 
-void LocationMap::showAddress( const KABC::Address &addr )
+void LocationMap::showAddress(const KABC::Address &addr)
 {
-  KURL url( createUrl( addr ) );
-  if ( url.isEmpty() )
-    return;
+    KURL url(createUrl(addr));
+    if(url.isEmpty())
+        return;
 
-  kapp->invokeBrowser( url.url() );
+    kapp->invokeBrowser(url.url());
 }
 
-QString LocationMap::createUrl( const KABC::Address &addr )
+QString LocationMap::createUrl(const KABC::Address &addr)
 {
-  /**
-    This method makes substitutions for the following place holders:
-      %s street
-      %r region
-      %l locality
-      %z zip code
-      %c country (in ISO format)
-   */
+    /**
+      This method makes substitutions for the following place holders:
+        %s street
+        %r region
+        %l locality
+        %z zip code
+        %c country (in ISO format)
+     */
 
-  QString urlTemplate = KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() );
-  if ( urlTemplate.isEmpty() ) {
-    KMessageBox::error( 0, i18n( "No service provider available for map lookup!\nPlease add one in the configuration dialog." ) );
-    return QString::null;
-  }
+    QString urlTemplate = KABPrefs::instance()->locationMapURL().arg(KGlobal::locale()->country());
+    if(urlTemplate.isEmpty())
+    {
+        KMessageBox::error(0, i18n("No service provider available for map lookup!\nPlease add one in the configuration dialog."));
+        return QString::null;
+    }
 
 #if KDE_VERSION >= 319
-  return urlTemplate.replace( "%s", addr.street() ).
-                     replace( "%r", addr.region() ).
-                     replace( "%l", addr.locality() ).
-                     replace( "%z", addr.postalCode() ).
-                     replace( "%c", addr.countryToISO( addr.country() ) );
+    return urlTemplate.replace("%s", addr.street()).
+           replace("%r", addr.region()).
+           replace("%l", addr.locality()).
+           replace("%z", addr.postalCode()).
+           replace("%c", addr.countryToISO(addr.country()));
 #else
-  return urlTemplate.replace( "%s", addr.street() ).
-                     replace( "%r", addr.region() ).
-                     replace( "%l", addr.locality() ).
-                     replace( "%z", addr.postalCode() ).
-                     replace( "%c", "" );
+    return urlTemplate.replace("%s", addr.street()).
+           replace("%r", addr.region()).
+           replace("%l", addr.locality()).
+           replace("%z", addr.postalCode()).
+           replace("%c", "");
 #endif
 }
 

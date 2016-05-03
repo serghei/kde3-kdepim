@@ -30,29 +30,28 @@
 namespace KCal {
 class ICalFormat;
 
-class ExchangeConverterCalendar
-{
-  public:
+class ExchangeConverterCalendar {
+public:
 
     ExchangeConverterCalendar();
-    
-    void setTimeZone( const QString &id );
-    
-    static void createRequestAppointment( QDomDocument &doc, QDomElement &root );
-    static void createRequestTask( QDomDocument &doc, QDomElement &root );
-    static void createRequestJournal( QDomDocument &doc, QDomElement &root );
-    
-    QDomDocument createWebDAV( Incidence *incidence );
-    
-    Incidence::List parseWebDAV( const QDomDocument& davdata );
-    bool readIncidence( const QDomElement &node, Incidence *incidence );
-    
-  protected:
-    static void createRequestIncidence( QDomDocument &doc, QDomElement &root );
-    bool readEvent( const QDomElement &node, Event *event );
-    bool readTodo( const QDomElement &node, Todo *todo );
-    bool readJournal( const QDomElement &node, Journal *journal );
-    bool readTZ( const QDomElement &node, Incidence *incidence );
+
+    void setTimeZone(const QString &id);
+
+    static void createRequestAppointment(QDomDocument &doc, QDomElement &root);
+    static void createRequestTask(QDomDocument &doc, QDomElement &root);
+    static void createRequestJournal(QDomDocument &doc, QDomElement &root);
+
+    QDomDocument createWebDAV(Incidence *incidence);
+
+    Incidence::List parseWebDAV(const QDomDocument &davdata);
+    bool readIncidence(const QDomElement &node, Incidence *incidence);
+
+protected:
+    static void createRequestIncidence(QDomDocument &doc, QDomElement &root);
+    bool readEvent(const QDomElement &node, Event *event);
+    bool readTodo(const QDomElement &node, Todo *todo);
+    bool readJournal(const QDomElement &node, Journal *journal);
+    bool readTZ(const QDomElement &node, Incidence *incidence);
 
     KCal::ICalFormat mFormat;
     class createWebDAVVisitor;

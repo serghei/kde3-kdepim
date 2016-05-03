@@ -38,85 +38,86 @@
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 
-KNMainWindow::KNMainWindow( QWidget* pWidget )
-  : KMainWindow(pWidget,"mainWindow")
+KNMainWindow::KNMainWindow(QWidget *pWidget)
+    : KMainWindow(pWidget, "mainWindow")
 {
-  //setupStatusBar();
-  createStandardStatusBarAction();
-  setStandardToolBarMenuEnabled(true);
+    //setupStatusBar();
+    createStandardStatusBarAction();
+    setStandardToolBarMenuEnabled(true);
 
-  //config stuff
-  KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
-  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
+    //config stuff
+    KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+    KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
+    KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
-  m_mainWidget = new KNMainWidget( this, true, this, 0 );
-  connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),
-           SLOT( setCaption(const QString&)) );
-  setCentralWidget( m_mainWidget );
-  setupStatusBar();
-  connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(const QString&)),
-    this, SLOT(slotShowStatusMsg(const QString& )) );
-  createGUI( "knodeui.rc" );
-  knGlobals.instance = 0;
+    m_mainWidget = new KNMainWidget(this, true, this, 0);
+    connect(m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString &)),
+            SLOT(setCaption(const QString &)));
+    setCentralWidget(m_mainWidget);
+    setupStatusBar();
+    connect(KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(const QString &)),
+            this, SLOT(slotShowStatusMsg(const QString &)));
+    createGUI("knodeui.rc");
+    knGlobals.instance = 0;
 
-  applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
+    applyMainWindowSettings(KGlobal::config(), "mainWindow_options");
 }
 
 KNMainWindow::~KNMainWindow()
 {
-  saveMainWindowSettings(knGlobals.config(),"mainWindow_options");
+    saveMainWindowSettings(knGlobals.config(), "mainWindow_options");
 }
 
-void KNMainWindow::openURL( const KURL& url )
+void KNMainWindow::openURL(const KURL &url)
 {
-  m_mainWidget->openURL( url );
+    m_mainWidget->openURL(url);
 }
 
 void KNMainWindow::slotConfToolbar()
 {
-  saveMainWindowSettings(knGlobals.config(),"mainWindow_options");
-  KEditToolbar dlg(actionCollection(), "knodeui.rc");
-  connect(&dlg,SIGNAL( newToolbarConfig() ), this, SLOT( slotNewToolbarConfig() ));
-  dlg.exec();
+    saveMainWindowSettings(knGlobals.config(), "mainWindow_options");
+    KEditToolbar dlg(actionCollection(), "knodeui.rc");
+    connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(slotNewToolbarConfig()));
+    dlg.exec();
 }
 
 void KNMainWindow::slotNewToolbarConfig()
 {
-  createGUI("knodeui.rc");
-  //initPopups();
-  applyMainWindowSettings(knGlobals.config(),"mainWindow_options");
+    createGUI("knodeui.rc");
+    //initPopups();
+    applyMainWindowSettings(knGlobals.config(), "mainWindow_options");
 }
 
 void KNMainWindow::slotConfKeys()
 {
-  KKeyDialog::configure(actionCollection(), true);
+    KKeyDialog::configure(actionCollection(), true);
 }
 
 bool KNMainWindow::queryClose()
 {
-  return m_mainWidget->queryClose();
+    return m_mainWidget->queryClose();
 }
 
 void KNMainWindow::setupStatusBar()
 {
-  mProgressDialog = new KPIM::ProgressDialog( statusBar(), this );
-  mProgressDialog->hide();
+    mProgressDialog = new KPIM::ProgressDialog(statusBar(), this);
+    mProgressDialog->hide();
 
-  mLittleProgress = new StatusbarProgressWidget( mProgressDialog, statusBar() );
-  mLittleProgress->show();
+    mLittleProgress = new StatusbarProgressWidget(mProgressDialog, statusBar());
+    mLittleProgress->show();
 
-  statusBar()->addWidget( mLittleProgress, 0 , true );
+    statusBar()->addWidget(mLittleProgress, 0 , true);
 
-  mStatusMsgLabel = new KRSqueezedTextLabel( QString::null, statusBar() );
-  mStatusMsgLabel->setAlignment( AlignLeft | AlignVCenter );
-  statusBar()->addWidget( mStatusMsgLabel, 2 );
-  statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
-  statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
+    mStatusMsgLabel = new KRSqueezedTextLabel(QString::null, statusBar());
+    mStatusMsgLabel->setAlignment(AlignLeft | AlignVCenter);
+    statusBar()->addWidget(mStatusMsgLabel, 2);
+    statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
+    statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
 }
 
-void KNMainWindow::slotShowStatusMsg( const QString &msg ) {
-  mStatusMsgLabel->setText( msg );
+void KNMainWindow::slotShowStatusMsg(const QString &msg)
+{
+    mStatusMsgLabel->setText(msg);
 }
 
 #include "knode.moc"

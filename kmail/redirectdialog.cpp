@@ -52,88 +52,90 @@ using KRecentAddress::RecentAddresses;
 
 using namespace KMail;
 
-RedirectDialog::RedirectDialog( QWidget *parent, const char *name,
-                                bool modal, bool immediate )
-  : KDialogBase( parent, name, modal, i18n( "Redirect Message" ),
-                 User1|User2|Cancel, ( immediate ? User1 : User2 ), false )
+RedirectDialog::RedirectDialog(QWidget *parent, const char *name,
+                               bool modal, bool immediate)
+    : KDialogBase(parent, name, modal, i18n("Redirect Message"),
+                  User1 | User2 | Cancel, (immediate ? User1 : User2), false)
 {
-  QVBox *vbox = makeVBoxMainWidget();
-  mLabelTo = new QLabel( i18n( "Select the recipient &addresses "
-                               "to redirect to:" ), vbox );
+    QVBox *vbox = makeVBoxMainWidget();
+    mLabelTo = new QLabel(i18n("Select the recipient &addresses "
+                               "to redirect to:"), vbox);
 
-  QHBox *hbox = new QHBox( vbox );
-  hbox->setSpacing(4);
-  mEditTo = new KMLineEdit( true, hbox, "toLine" );
-  mEditTo->setMinimumWidth( 300 );
+    QHBox *hbox = new QHBox(vbox);
+    hbox->setSpacing(4);
+    mEditTo = new KMLineEdit(true, hbox, "toLine");
+    mEditTo->setMinimumWidth(300);
 
-  mBtnTo = new QPushButton( QString::null, hbox, "toBtn" );
-  mBtnTo->setPixmap( BarIcon( "contents", KIcon::SizeSmall ) );
-  mBtnTo->setMinimumSize( mBtnTo->sizeHint() * 1.2 );
-  QToolTip::add( mBtnTo, i18n("Use the Address-Selection Dialog") );
-  QWhatsThis::add( mBtnTo, i18n("This button opens a separate dialog "
+    mBtnTo = new QPushButton(QString::null, hbox, "toBtn");
+    mBtnTo->setPixmap(BarIcon("contents", KIcon::SizeSmall));
+    mBtnTo->setMinimumSize(mBtnTo->sizeHint() * 1.2);
+    QToolTip::add(mBtnTo, i18n("Use the Address-Selection Dialog"));
+    QWhatsThis::add(mBtnTo, i18n("This button opens a separate dialog "
                                  "where you can select recipients out "
-                                 "of all available addresses." ) );
+                                 "of all available addresses."));
 
-  connect( mBtnTo, SIGNAL(clicked()), SLOT(slotAddrBook()) );
+    connect(mBtnTo, SIGNAL(clicked()), SLOT(slotAddrBook()));
 
-  mLabelTo->setBuddy( mBtnTo );
-  mEditTo->setFocus();
+    mLabelTo->setBuddy(mBtnTo);
+    mEditTo->setFocus();
 
-  setButtonGuiItem( User1, KGuiItem( i18n("&Send Now"), "mail_send" ) );
-  setButtonGuiItem( User2, KGuiItem( i18n("Send &Later"), "queue" ) );
+    setButtonGuiItem(User1, KGuiItem(i18n("&Send Now"), "mail_send"));
+    setButtonGuiItem(User2, KGuiItem(i18n("Send &Later"), "queue"));
 }
 
 
 //-----------------------------------------------------------------------------
 void RedirectDialog::slotUser1()
 {
-  mImmediate = true;
-  accept();
+    mImmediate = true;
+    accept();
 }
 
 //-----------------------------------------------------------------------------
 void RedirectDialog::slotUser2()
 {
-  mImmediate = false;
-  accept();
+    mImmediate = false;
+    accept();
 }
 
 //-----------------------------------------------------------------------------
 void RedirectDialog::accept()
 {
-  mResentTo = mEditTo->text();
-  if ( mResentTo.isEmpty() ) {
-    KMessageBox::sorry( this,
-        i18n("You cannot redirect the message without an address."),
-        i18n("Empty Redirection Address") );
-  }
-  else done( Ok );
+    mResentTo = mEditTo->text();
+    if(mResentTo.isEmpty())
+    {
+        KMessageBox::sorry(this,
+                           i18n("You cannot redirect the message without an address."),
+                           i18n("Empty Redirection Address"));
+    }
+    else done(Ok);
 }
 
 
 //-----------------------------------------------------------------------------
 void RedirectDialog::slotAddrBook()
 {
-  AddressesDialog dlg( this );
+    AddressesDialog dlg(this);
 
-  mResentTo = mEditTo->text();
-  if ( !mResentTo.isEmpty() ) {
-      QStringList lst = KPIM::splitEmailAddrList( mResentTo );
-      dlg.setSelectedTo( lst );
-  }
+    mResentTo = mEditTo->text();
+    if(!mResentTo.isEmpty())
+    {
+        QStringList lst = KPIM::splitEmailAddrList(mResentTo);
+        dlg.setSelectedTo(lst);
+    }
 
-  dlg.setRecentAddresses(
-      RecentAddresses::self( KMKernel::config() )->kabcAddresses() );
+    dlg.setRecentAddresses(
+        RecentAddresses::self(KMKernel::config())->kabcAddresses());
 
-  // Make it impossible to specify Cc or Bcc addresses as we support
-  // only the Redirect-To header!
-  dlg.setShowCC( false );
-  dlg.setShowBCC( false );
+    // Make it impossible to specify Cc or Bcc addresses as we support
+    // only the Redirect-To header!
+    dlg.setShowCC(false);
+    dlg.setShowBCC(false);
 
-  if (dlg.exec()==QDialog::Rejected) return;
+    if(dlg.exec() == QDialog::Rejected) return;
 
-  mEditTo->setText( dlg.to().join(", ") );
-  mEditTo->setEdited( true );
+    mEditTo->setText(dlg.to().join(", "));
+    mEditTo->setEdited(true);
 }
 
 

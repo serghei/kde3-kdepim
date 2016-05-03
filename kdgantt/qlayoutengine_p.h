@@ -62,9 +62,18 @@
 #ifndef QT_NO_LAYOUT
 struct QLayoutStruct
 {
-    void initParameters() { minimumSize = sizeHint = 0;
-    maximumSize = QWIDGETSIZE_MAX; expansive = FALSE; empty = TRUE; }
-    void init() { stretch = 0; initParameters(); }
+    void initParameters()
+    {
+        minimumSize = sizeHint = 0;
+        maximumSize = QWIDGETSIZE_MAX;
+        expansive = FALSE;
+        empty = TRUE;
+    }
+    void init()
+    {
+        stretch = 0;
+        initParameters();
+    }
     //permanent storage:
     int stretch;
     //parameters:
@@ -81,8 +90,8 @@ struct QLayoutStruct
 };
 
 
-void qGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
-		      int space, int spacer );
+void qGeomCalc(QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+               int space, int spacer);
 
 
 
@@ -92,17 +101,20 @@ void qGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
 
   Expansive boxes win over non-expansive boxes.
 */
-static inline void qMaxExpCalc( QCOORD & max, bool &exp,
-			       QCOORD boxmax, bool boxexp )
+static inline void qMaxExpCalc(QCOORD &max, bool &exp,
+                               QCOORD boxmax, bool boxexp)
 {
-    if ( exp ) {
-	if ( boxexp )
-	    max = QMAX( max, boxmax );
-    } else {
-	if ( boxexp )
-	    max = boxmax;
-	else
-	    max = QMIN( max, boxmax );
+    if(exp)
+    {
+        if(boxexp)
+            max = QMAX(max, boxmax);
+    }
+    else
+    {
+        if(boxexp)
+            max = boxmax;
+        else
+            max = QMIN(max, boxmax);
     }
     exp = exp || boxexp;
 }

@@ -22,16 +22,16 @@
 
 class KNGroupDialog : public KNGroupBrowser {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNGroupDialog(QWidget *parent, KNNntpAccount *a);
     ~KNGroupDialog();
 
     void toSubscribe(QSortedList<KNGroupInfo> *l);
     void toUnsubscribe(QStringList *l);
 
-  protected:
+protected:
     enum arrowDirection { right, left };
     enum arrowButton { btn1, btn2 };
     void updateItemState(CheckItem *it);
@@ -41,7 +41,7 @@ class KNGroupDialog : public KNGroupBrowser {
     QListView *subView, *unsubView;
     arrowDirection dir1, dir2;
 
-  protected slots:
+protected slots:
     void slotItemSelected(QListViewItem *it);
     /** deactivates the button when a root item is selected */
     void slotSelectionChanged();
@@ -52,9 +52,9 @@ class KNGroupDialog : public KNGroupBrowser {
     /** new groups */
     void slotUser2();
 
-  signals:
+signals:
     void fetchList(KNNntpAccount *a);
-    void checkNew(KNNntpAccount *a,QDate date);
+    void checkNew(KNNntpAccount *a, QDate date);
 };
 
 #endif

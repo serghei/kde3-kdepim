@@ -30,27 +30,25 @@ class KLineEdit;
 class SyncProcess;
 class QCheckBox;
 
-class ObjectTypeSelector : public QWidget
-{
-  public:
-    ObjectTypeSelector( QWidget *parent );
+class ObjectTypeSelector : public QWidget {
+public:
+    ObjectTypeSelector(QWidget *parent);
 
-    void load( const QSync::Group &group );
-    void save( QSync::Group group );
+    void load(const QSync::Group &group);
+    void save(QSync::Group group);
 
-  private:
-    QMap<QString,QCheckBox *> mObjectTypeChecks;
+private:
+    QMap<QString, QCheckBox *> mObjectTypeChecks;
 };
 
-class GroupConfigCommon : public QWidget
-{
-  public:
-    GroupConfigCommon( QWidget *parent );
+class GroupConfigCommon : public QWidget {
+public:
+    GroupConfigCommon(QWidget *parent);
 
-    void setSyncProcess( SyncProcess *syncProcess );
+    void setSyncProcess(SyncProcess *syncProcess);
     void save();
 
-  private:
+private:
     KLineEdit *mGroupName;
     ObjectTypeSelector *mObjectTypeSelector;
 

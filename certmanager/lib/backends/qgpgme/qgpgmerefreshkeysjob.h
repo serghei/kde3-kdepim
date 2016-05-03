@@ -38,42 +38,42 @@
 #include <qstringlist.h>
 
 namespace Kleo {
-  class GnuPGProcessBase;
+class GnuPGProcessBase;
 }
 
 namespace GpgME {
-  class Error;
+class Error;
 }
 
 class KProcess;
 
 namespace Kleo {
 
-  class QGpgMERefreshKeysJob : public RefreshKeysJob {
+class QGpgMERefreshKeysJob : public RefreshKeysJob {
     Q_OBJECT
-  public:
+public:
     QGpgMERefreshKeysJob();
     ~QGpgMERefreshKeysJob();
 
     /*! \reimp from RefreshKeysJob */
-    GpgME::Error start( const QStringList & patterns );
+    GpgME::Error start(const QStringList &patterns);
 
-  private slots:
+private slots:
     /*! \reimp from Job */
     void slotCancel();
 
-    void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-    void slotStderr( KProcess *, char *, int );
-    void slotProcessExited( KProcess * );
+    void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
+    void slotStderr(KProcess *, char *, int);
+    void slotProcessExited(KProcess *);
 
-  private:
+private:
     GpgME::Error startAProcess();
 
-  private:
-    GnuPGProcessBase * mProcess;
+private:
+    GnuPGProcessBase *mProcess;
     int mError;
     QStringList mPatternsToDo;
-  };
+};
 
 }
 

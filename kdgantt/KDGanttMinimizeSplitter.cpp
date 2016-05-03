@@ -64,130 +64,146 @@ static int mouseOffset;
 static int opaqueOldPos = -1; //### there's only one mouse, but this is a bit risky
 
 
-KDGanttSplitterHandle::KDGanttSplitterHandle( Qt::Orientation o,
-				  KDGanttMinimizeSplitter *parent, const char * name )
-    : QWidget( parent, name ), _activeButton( 0 ), _collapsed( false )
+KDGanttSplitterHandle::KDGanttSplitterHandle(Qt::Orientation o,
+        KDGanttMinimizeSplitter *parent, const char *name)
+    : QWidget(parent, name), _activeButton(0), _collapsed(false)
 {
     s = parent;
     setOrientation(o);
-    setMouseTracking( true );
+    setMouseTracking(true);
 }
 
 QSize KDGanttSplitterHandle::sizeHint() const
 {
-    return QSize(8,8);
+    return QSize(8, 8);
 }
 
-void KDGanttSplitterHandle::setOrientation( Qt::Orientation o )
+void KDGanttSplitterHandle::setOrientation(Qt::Orientation o)
 {
     orient = o;
 #ifndef QT_NO_CURSOR
-    if ( o == KDGanttMinimizeSplitter::Horizontal )
-	setCursor( splitHCursor );
+    if(o == KDGanttMinimizeSplitter::Horizontal)
+        setCursor(splitHCursor);
     else
-	setCursor( splitVCursor );
+        setCursor(splitVCursor);
 #endif
 }
 
 
-void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
+void KDGanttSplitterHandle::mouseMoveEvent(QMouseEvent *e)
 {
-    updateCursor( e->pos() );
-    if ( !(e->state()&LeftButton) )
-	return;
+    updateCursor(e->pos());
+    if(!(e->state()&LeftButton))
+        return;
 
-    if ( _activeButton != 0)
+    if(_activeButton != 0)
         return;
 
     QCOORD pos = s->pick(parentWidget()->mapFromGlobal(e->globalPos()))
-		 - mouseOffset;
-    if ( opaque() ) {
-	s->moveSplitter( pos, id() );
-    } else {
-	int min = pos; int max = pos;
-	s->getRange( id(), &min, &max );
-	s->setRubberband( QMAX( min, QMIN(max, pos )));
+                 - mouseOffset;
+    if(opaque())
+    {
+        s->moveSplitter(pos, id());
+    }
+    else
+    {
+        int min = pos;
+        int max = pos;
+        s->getRange(id(), &min, &max);
+        s->setRubberband(QMAX(min, QMIN(max, pos)));
     }
     _collapsed = false;
 }
 
-void KDGanttSplitterHandle::mousePressEvent( QMouseEvent *e )
+void KDGanttSplitterHandle::mousePressEvent(QMouseEvent *e)
 {
-    if ( e->button() == LeftButton ) {
-        _activeButton = onButton( e->pos() );
+    if(e->button() == LeftButton)
+    {
+        _activeButton = onButton(e->pos());
         mouseOffset = s->pick(e->pos());
-        if ( _activeButton != 0)
+        if(_activeButton != 0)
             repaint();
-        updateCursor( e->pos() );
+        updateCursor(e->pos());
     }
 }
 
-void KDGanttSplitterHandle::updateCursor( const QPoint& p)
+void KDGanttSplitterHandle::updateCursor(const QPoint &p)
 {
-    if ( onButton( p ) != 0 ) {
-        setCursor( arrowCursor );
+    if(onButton(p) != 0)
+    {
+        setCursor(arrowCursor);
     }
-    else {
-        if ( orient == KDGanttMinimizeSplitter::Horizontal )
-            setCursor( splitHCursor );
+    else
+    {
+        if(orient == KDGanttMinimizeSplitter::Horizontal)
+            setCursor(splitHCursor);
         else
-            setCursor( splitVCursor );
+            setCursor(splitVCursor);
     }
 }
 
 
-void KDGanttSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
+void KDGanttSplitterHandle::mouseReleaseEvent(QMouseEvent *e)
 {
-    if ( _activeButton != 0 ) {
-        if ( onButton( e->pos() ) == _activeButton )
+    if(_activeButton != 0)
+    {
+        if(onButton(e->pos()) == _activeButton)
         {
             int pos;
             int min, max;
-            if ( !_collapsed ) {
-                s->expandPos( id(), &min, &max );
-                if ( s->minimizeDirection() == KDGanttMinimizeSplitter::Left
-                     || s->minimizeDirection() == KDGanttMinimizeSplitter::Up ) {
+            if(!_collapsed)
+            {
+                s->expandPos(id(), &min, &max);
+                if(s->minimizeDirection() == KDGanttMinimizeSplitter::Left
+                        || s->minimizeDirection() == KDGanttMinimizeSplitter::Up)
+                {
                     pos = min;
                 }
-                else {
+                else
+                {
                     pos = max;
                 }
 
-                _origPos = s->pick(mapToParent( QPoint( 0,0 ) ));
-                s->moveSplitter( pos, id() );
+                _origPos = s->pick(mapToParent(QPoint(0, 0)));
+                s->moveSplitter(pos, id());
                 _collapsed = true;
             }
-            else {
-                s->moveSplitter( _origPos, id() );
+            else
+            {
+                s->moveSplitter(_origPos, id());
                 _collapsed = false;
             }
 
         }
         _activeButton = 0;
-        updateCursor( e->pos() );
+        updateCursor(e->pos());
     }
-    else {
-        if ( !opaque() && e->button() == LeftButton ) {
+    else
+    {
+        if(!opaque() && e->button() == LeftButton)
+        {
             QCOORD pos = s->pick(parentWidget()->mapFromGlobal(e->globalPos()))
-                - mouseOffset;
-            s->setRubberband( -1 );
-            s->moveSplitter( pos, id() );
+                         - mouseOffset;
+            s->setRubberband(-1);
+            s->moveSplitter(pos, id());
         }
     }
     repaint();
 }
 
-int KDGanttSplitterHandle::onButton( const QPoint& p )
+int KDGanttSplitterHandle::onButton(const QPoint &p)
 {
     QValueList<QPointArray> list = buttonRegions();
     int index = 1;
-    for( QValueList<QPointArray>::Iterator it = list.begin(); it != list.end(); ++it ) {
+    for(QValueList<QPointArray>::Iterator it = list.begin(); it != list.end(); ++it)
+    {
         QRect rect = (*it).boundingRect();
-        rect.setLeft( rect.left()- 4 );
-        rect.setRight( rect.right() + 4);
-        rect.setTop( rect.top()- 4 );
-        rect.setBottom( rect.bottom() + 4);
-        if ( rect.contains( p ) ) {
+        rect.setLeft(rect.left() - 4);
+        rect.setRight(rect.right() + 4);
+        rect.setTop(rect.top() - 4);
+        rect.setBottom(rect.bottom() + 4);
+        if(rect.contains(p))
+        {
             return index;
         }
         index++;
@@ -201,100 +217,109 @@ QValueList<QPointArray> KDGanttSplitterHandle::buttonRegions()
     QValueList<QPointArray> list;
 
     int sw = 8;
-    int voffset[] = { (int) -sw*3, (int) sw*3 };
-    for ( int i = 0; i < 2; i++ ) {
+    int voffset[] = { (int) - sw * 3, (int) sw * 3 };
+    for(int i = 0; i < 2; i++)
+    {
         QPointArray arr;
-        if ( !_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Right ||
-             _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Left) {
-            int mid = height()/2 + voffset[i];
-            arr.setPoints( 3,
-                           1, mid - sw + 4,
-                           sw-3, mid,
-                           1, mid + sw -4);
+        if(!_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Right ||
+                _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Left)
+        {
+            int mid = height() / 2 + voffset[i];
+            arr.setPoints(3,
+                          1, mid - sw + 4,
+                          sw - 3, mid,
+                          1, mid + sw - 4);
         }
-        else if ( !_collapsed &&  s->minimizeDirection() == KDGanttMinimizeSplitter::Left ||
-                  _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Right ) {
-            int mid = height()/2 + voffset[i];
-            arr.setPoints( 3,
-                           sw-4, mid - sw + 4,
-                           0, mid,
-                           sw-4, mid + sw - 4);
+        else if(!_collapsed &&  s->minimizeDirection() == KDGanttMinimizeSplitter::Left ||
+                _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Right)
+        {
+            int mid = height() / 2 + voffset[i];
+            arr.setPoints(3,
+                          sw - 4, mid - sw + 4,
+                          0, mid,
+                          sw - 4, mid + sw - 4);
         }
-        else if ( !_collapsed &&  s->minimizeDirection() == KDGanttMinimizeSplitter::Up ||
-                  _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Down) {
-            int mid = width()/2 + voffset[i];
-            arr.setPoints( 3,
-                           mid - sw + 4, sw-4,
-                           mid, 0,
-                           mid + sw - 4, sw-4 );
+        else if(!_collapsed &&  s->minimizeDirection() == KDGanttMinimizeSplitter::Up ||
+                _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Down)
+        {
+            int mid = width() / 2 + voffset[i];
+            arr.setPoints(3,
+                          mid - sw + 4, sw - 4,
+                          mid, 0,
+                          mid + sw - 4, sw - 4);
         }
-        else if ( !_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Down ||
-                  _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Up ) {
-            int mid = width()/2 + voffset[i];
-            arr.setPoints( 3,
-                           mid - sw + 4, 1,
-                           mid, sw-3,
-                           mid + sw -4, 1);
+        else if(!_collapsed && s->minimizeDirection() == KDGanttMinimizeSplitter::Down ||
+                _collapsed  && s->minimizeDirection() == KDGanttMinimizeSplitter::Up)
+        {
+            int mid = width() / 2 + voffset[i];
+            arr.setPoints(3,
+                          mid - sw + 4, 1,
+                          mid, sw - 3,
+                          mid + sw - 4, 1);
         }
-        list.append( arr );
+        list.append(arr);
     }
     return list;
 }
 
-void KDGanttSplitterHandle::paintEvent( QPaintEvent * )
+void KDGanttSplitterHandle::paintEvent(QPaintEvent *)
 {
-    QPixmap buffer( size() );
-    QPainter p( &buffer );
+    QPixmap buffer(size());
+    QPainter p(&buffer);
 
     // Draw the splitter rectangle
-    p.setBrush( colorGroup().background() );
-    p.setPen( colorGroup().foreground() );
-    p.drawRect( rect() );
-    parentWidget()->style().drawPrimitive( QStyle::PE_Panel, &p, rect(),
-                                           parentWidget()->colorGroup());
+    p.setBrush(colorGroup().background());
+    p.setPen(colorGroup().foreground());
+    p.drawRect(rect());
+    parentWidget()->style().drawPrimitive(QStyle::PE_Panel, &p, rect(),
+                                          parentWidget()->colorGroup());
 
     int sw = 8; // Hardcoded, given I didn't use styles anymore, I didn't like to use their size
 
     // arrow color
-    QColor col = colorGroup().background().dark( 200 );
-    p.setBrush( col );
-    p.setPen( col  );
+    QColor col = colorGroup().background().dark(200);
+    p.setBrush(col);
+    p.setPen(col);
 
     QValueList<QPointArray> list = buttonRegions();
     int index = 1;
-    for ( QValueList<QPointArray>::Iterator it = list.begin(); it != list.end(); ++it ) {
-        if ( index == _activeButton ) {
+    for(QValueList<QPointArray>::Iterator it = list.begin(); it != list.end(); ++it)
+    {
+        if(index == _activeButton)
+        {
             p.save();
-            p.translate( parentWidget()->style().pixelMetric( QStyle::PM_ButtonShiftHorizontal ),
-                         parentWidget()->style().pixelMetric( QStyle::PM_ButtonShiftVertical ) );
-            p.drawPolygon( *it, true );
+            p.translate(parentWidget()->style().pixelMetric(QStyle::PM_ButtonShiftHorizontal),
+                        parentWidget()->style().pixelMetric(QStyle::PM_ButtonShiftVertical));
+            p.drawPolygon(*it, true);
             p.restore();
         }
-        else {
-            p.drawPolygon( *it, true );
+        else
+        {
+            p.drawPolygon(*it, true);
         }
         index++;
     }
 
     // Draw the lines between the arrows
-    if ( s->minimizeDirection() == KDGanttMinimizeSplitter::Left ||
-         s->minimizeDirection() == KDGanttMinimizeSplitter::Right ) {
-        int mid = height()/2;
-        p.drawLine ( 2, mid - sw, 2, mid + sw );
-        p.drawLine ( 4, mid - sw, 4, mid + sw );
+    if(s->minimizeDirection() == KDGanttMinimizeSplitter::Left ||
+            s->minimizeDirection() == KDGanttMinimizeSplitter::Right)
+    {
+        int mid = height() / 2;
+        p.drawLine(2, mid - sw, 2, mid + sw);
+        p.drawLine(4, mid - sw, 4, mid + sw);
     }
-    else if ( s->minimizeDirection() == KDGanttMinimizeSplitter::Up ||
-              s->minimizeDirection() == KDGanttMinimizeSplitter::Down ) {
-        int mid = width()/2;
-        p.drawLine( mid -sw, 2, mid +sw, 2 );
-        p.drawLine( mid -sw, 4, mid +sw, 4 );
+    else if(s->minimizeDirection() == KDGanttMinimizeSplitter::Up ||
+            s->minimizeDirection() == KDGanttMinimizeSplitter::Down)
+    {
+        int mid = width() / 2;
+        p.drawLine(mid - sw, 2, mid + sw, 2);
+        p.drawLine(mid - sw, 4, mid + sw, 4);
     }
-    bitBlt( this, 0, 0, &buffer );
+    bitBlt(this, 0, 0, &buffer);
 }
 #endif
 
-class QSplitterLayoutStruct
-{
+class QSplitterLayoutStruct {
 public:
     KDGanttMinimizeSplitter::ResizeMode mode;
     QCOORD sizer;
@@ -302,18 +327,17 @@ public:
     QWidget *wid;
 };
 
-class QSplitterData
-{
+class QSplitterData {
 public:
-    QSplitterData() : opaque( FALSE ), firstShow( TRUE ) {}
+    QSplitterData() : opaque(FALSE), firstShow(TRUE) {}
 
     QPtrList<QSplitterLayoutStruct> list;
     bool opaque;
     bool firstShow;
 };
 
-void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
-                 int space, int spacer );
+void kdganttGeomCalc(QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+                     int space, int spacer);
 #endif // DOXYGEN_SKIP_INTERNAL
 
 
@@ -366,23 +390,23 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 
 
 
-static QSize minSize( const QWidget* /*w*/ )
+static QSize minSize(const QWidget * /*w*/)
 {
-    return QSize(0,0);
+    return QSize(0, 0);
 }
 
 // This is the original version of minSize
-static QSize minSizeHint( const QWidget* w )
+static QSize minSizeHint(const QWidget *w)
 {
     QSize min = w->minimumSize();
     QSize s;
-    if ( min.height() <= 0 || min.width() <= 0 )
-	s = w->minimumSizeHint();
-    if ( min.height() > 0 )
-	s.setHeight( min.height() );
-    if ( min.width() > 0 )
-	s.setWidth( min.width() );
-    return s.expandedTo(QSize(0,0));
+    if(min.height() <= 0 || min.width() <= 0)
+        s = w->minimumSizeHint();
+    if(min.height() > 0)
+        s.setHeight(min.height());
+    if(min.width() > 0)
+        s.setWidth(min.width());
+    return s.expandedTo(QSize(0, 0));
 }
 
 
@@ -391,12 +415,12 @@ static QSize minSizeHint( const QWidget* w )
   Constructs a horizontal splitter with the \a parent and \a
   name arguments being passed on to the QFrame constructor.
 */
-KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( QWidget *parent, const char *name )
-    :QFrame(parent,name,WPaintUnclipped)
+KDGanttMinimizeSplitter::KDGanttMinimizeSplitter(QWidget *parent, const char *name)
+    : QFrame(parent, name, WPaintUnclipped)
 {
 #if QT_VERSION >= 300
-     orient = Horizontal;
-     init();
+    orient = Horizontal;
+    init();
 #endif
 }
 
@@ -404,12 +428,12 @@ KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( QWidget *parent, const char *n
   Constructs a splitter with orientation \a o with the \a parent
   and \a name arguments being passed on to the QFrame constructor.
 */
-KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( Orientation o, QWidget *parent, const char *name )
-    :QFrame(parent,name,WPaintUnclipped)
+KDGanttMinimizeSplitter::KDGanttMinimizeSplitter(Orientation o, QWidget *parent, const char *name)
+    : QFrame(parent, name, WPaintUnclipped)
 {
 #if QT_VERSION >= 300
-     orient = o;
-     init();
+    orient = o;
+    init();
 #endif
 }
 
@@ -419,7 +443,7 @@ KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( Orientation o, QWidget *parent
 KDGanttMinimizeSplitter::~KDGanttMinimizeSplitter()
 {
 #if QT_VERSION >= 300
-    data->list.setAutoDelete( TRUE );
+    data->list.setAutoDelete(TRUE);
     delete data;
 #endif
 }
@@ -429,10 +453,10 @@ KDGanttMinimizeSplitter::~KDGanttMinimizeSplitter()
 void KDGanttMinimizeSplitter::init()
 {
     data = new QSplitterData;
-    if ( orient == Horizontal )
-	setSizePolicy( QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum) );
+    if(orient == Horizontal)
+        setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     else
-	setSizePolicy( QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Expanding) );
+        setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 #endif
 
@@ -444,25 +468,26 @@ void KDGanttMinimizeSplitter::init()
   By default the orientation is horizontal (the widgets are side by side).
   The possible orientations are Qt:Vertical and Qt::Horizontal (the default).
 */
-void KDGanttMinimizeSplitter::setOrientation( Orientation o )
+void KDGanttMinimizeSplitter::setOrientation(Orientation o)
 {
 #if QT_VERSION >= 300
-    if ( orient == o )
-	return;
+    if(orient == o)
+        return;
     orient = o;
 
-    if ( orient == Horizontal )
-	setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum ) );
+    if(orient == Horizontal)
+        setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     else
-	setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding ) );
+        setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( s->isSplitter )
-	    ((KDGanttSplitterHandle*)s->wid)->setOrientation( o );
-	s = data->list.next();  // ### next at end of loop, no iterator
+    while(s)
+    {
+        if(s->isSplitter)
+            ((KDGanttSplitterHandle *)s->wid)->setOrientation(o);
+        s = data->list.next();  // ### next at end of loop, no iterator
     }
-    recalc( isVisible() );
+    recalc(isVisible());
 #endif
 }
 
@@ -471,7 +496,7 @@ void KDGanttMinimizeSplitter::setOrientation( Orientation o )
 /*!
   Reimplemented from superclass.
 */
-void KDGanttMinimizeSplitter::resizeEvent( QResizeEvent * )
+void KDGanttMinimizeSplitter::resizeEvent(QResizeEvent *)
 {
     doResize();
 }
@@ -486,39 +511,40 @@ void KDGanttMinimizeSplitter::resizeEvent( QResizeEvent * )
   needed.  (If \a first is TRUE, then recalcId is very probably
   needed.)
 */
-QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget( QWidget *w, bool first )
+QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget(QWidget *w, bool first)
 {
     QSplitterLayoutStruct *s;
     KDGanttSplitterHandle *newHandle = 0;
-    if ( data->list.count() > 0 ) {
-	s = new QSplitterLayoutStruct;
-	s->mode = KeepSize;
-	QString tmp = "qt_splithandle_";
-	tmp += w->name();
-	newHandle = new KDGanttSplitterHandle( orientation(), this, tmp.latin1() );
-	s->wid = newHandle;
-	newHandle->setId(data->list.count());
-	s->isSplitter = TRUE;
-	s->sizer = pick( newHandle->sizeHint() );
-	if ( first )
-	    data->list.insert( 0, s );
-	else
-	    data->list.append( s );
+    if(data->list.count() > 0)
+    {
+        s = new QSplitterLayoutStruct;
+        s->mode = KeepSize;
+        QString tmp = "qt_splithandle_";
+        tmp += w->name();
+        newHandle = new KDGanttSplitterHandle(orientation(), this, tmp.latin1());
+        s->wid = newHandle;
+        newHandle->setId(data->list.count());
+        s->isSplitter = TRUE;
+        s->sizer = pick(newHandle->sizeHint());
+        if(first)
+            data->list.insert(0, s);
+        else
+            data->list.append(s);
     }
     s = new QSplitterLayoutStruct;
     s->mode = Stretch;
     s->wid = w;
-    if ( !testWState( WState_Resized ) && w->sizeHint().isValid() )
-	s->sizer = pick( w->sizeHint() );
+    if(!testWState(WState_Resized) && w->sizeHint().isValid())
+        s->sizer = pick(w->sizeHint());
     else
-	s->sizer = pick( w->size() );
+        s->sizer = pick(w->size());
     s->isSplitter = FALSE;
-    if ( first )
-	data->list.insert( 0, s );
+    if(first)
+        data->list.insert(0, s);
     else
-	data->list.append( s );
-    if ( newHandle && isVisible() )
-	newHandle->show(); //will trigger sending of post events
+        data->list.append(s);
+    if(newHandle && isVisible())
+        newHandle->show(); //will trigger sending of post events
     return s;
 }
 
@@ -527,45 +553,52 @@ QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget( QWidget *w, bool firs
   Tells the splitter that a child widget has been inserted or removed.
   The event is passed in \a c.
 */
-void KDGanttMinimizeSplitter::childEvent( QChildEvent *c )
+void KDGanttMinimizeSplitter::childEvent(QChildEvent *c)
 {
-    if ( c->type() == QEvent::ChildInserted ) {
-	if ( !c->child()->isWidgetType() )
-	    return;
+    if(c->type() == QEvent::ChildInserted)
+    {
+        if(!c->child()->isWidgetType())
+            return;
 
-	if ( ((QWidget*)c->child())->testWFlags( WType_TopLevel ) )
-	    return;
+        if(((QWidget *)c->child())->testWFlags(WType_TopLevel))
+            return;
 
-	QSplitterLayoutStruct *s = data->list.first();
-	while ( s ) {
-	    if ( s->wid == c->child() )
-		return;
-	    s = data->list.next();
-	}
-	addWidget( (QWidget*)c->child() );
-	recalc( isVisible() );
+        QSplitterLayoutStruct *s = data->list.first();
+        while(s)
+        {
+            if(s->wid == c->child())
+                return;
+            s = data->list.next();
+        }
+        addWidget((QWidget *)c->child());
+        recalc(isVisible());
 
-    } else if ( c->type() == QEvent::ChildRemoved ) {
-	QSplitterLayoutStruct *p = 0;
-	if ( data->list.count() > 1 )
-	    p = data->list.at(1); //remove handle _after_ first widget.
-	QSplitterLayoutStruct *s = data->list.first();
-	while ( s ) {
-	    if ( s->wid == c->child() ) {
-		data->list.removeRef( s );
-		delete s;
-		if ( p && p->isSplitter ) {
-		    data->list.removeRef( p );
-		    delete p->wid; //will call childEvent
-		    delete p;
-		}
-		recalcId();
-		doResize();
-		return;
-	    }
-	    p = s;
-	    s = data->list.next();
-	}
+    }
+    else if(c->type() == QEvent::ChildRemoved)
+    {
+        QSplitterLayoutStruct *p = 0;
+        if(data->list.count() > 1)
+            p = data->list.at(1); //remove handle _after_ first widget.
+        QSplitterLayoutStruct *s = data->list.first();
+        while(s)
+        {
+            if(s->wid == c->child())
+            {
+                data->list.removeRef(s);
+                delete s;
+                if(p && p->isSplitter)
+                {
+                    data->list.removeRef(p);
+                    delete p->wid; //will call childEvent
+                    delete p;
+                }
+                recalcId();
+                doResize();
+                return;
+            }
+            p = s;
+            s = data->list.next();
+        }
     }
 }
 
@@ -574,41 +607,45 @@ void KDGanttMinimizeSplitter::childEvent( QChildEvent *c )
   Shows a rubber band at position \a p. If \a p is negative, the
   rubber band is removed.
 */
-void KDGanttMinimizeSplitter::setRubberband( int p )
+void KDGanttMinimizeSplitter::setRubberband(int p)
 {
-    QPainter paint( this );
-    paint.setPen( gray );
-    paint.setBrush( gray );
-    paint.setRasterOp( XorROP );
+    QPainter paint(this);
+    paint.setPen(gray);
+    paint.setBrush(gray);
+    paint.setRasterOp(XorROP);
     QRect r = contentsRect();
     const int rBord = 3; //Themable????
     int sw = style().pixelMetric(QStyle::PM_SplitterWidth, this);
-    if ( orient == Horizontal ) {
-	if ( opaqueOldPos >= 0 )
-	    paint.drawRect( opaqueOldPos + sw/2 - rBord , r.y(),
-			    2*rBord, r.height() );
-	if ( p >= 0 )
-	    paint.drawRect( p  + sw/2 - rBord, r.y(), 2*rBord, r.height() );
-    } else {
-	if ( opaqueOldPos >= 0 )
-	    paint.drawRect( r.x(), opaqueOldPos + sw/2 - rBord,
-			    r.width(), 2*rBord );
-	if ( p >= 0 )
-	    paint.drawRect( r.x(), p + sw/2 - rBord, r.width(), 2*rBord );
+    if(orient == Horizontal)
+    {
+        if(opaqueOldPos >= 0)
+            paint.drawRect(opaqueOldPos + sw / 2 - rBord , r.y(),
+                           2 * rBord, r.height());
+        if(p >= 0)
+            paint.drawRect(p  + sw / 2 - rBord, r.y(), 2 * rBord, r.height());
+    }
+    else
+    {
+        if(opaqueOldPos >= 0)
+            paint.drawRect(r.x(), opaqueOldPos + sw / 2 - rBord,
+                           r.width(), 2 * rBord);
+        if(p >= 0)
+            paint.drawRect(r.x(), p + sw / 2 - rBord, r.width(), 2 * rBord);
     }
     opaqueOldPos = p;
 }
 
 
 /*! Reimplemented from superclass. */
-bool KDGanttMinimizeSplitter::event( QEvent *e )
+bool KDGanttMinimizeSplitter::event(QEvent *e)
 {
-    if ( e->type() == QEvent::LayoutHint || ( e->type() == QEvent::Show && data->firstShow ) ) {
-	recalc( isVisible() );
-	if ( e->type() == QEvent::Show )
-	    data->firstShow = FALSE;
+    if(e->type() == QEvent::LayoutHint || (e->type() == QEvent::Show && data->firstShow))
+    {
+        recalc(isVisible());
+        if(e->type() == QEvent::Show)
+            data->firstShow = FALSE;
     }
-    return QWidget::event( e );
+    return QWidget::event(e);
 }
 
 
@@ -619,12 +656,12 @@ bool KDGanttMinimizeSplitter::event( QEvent *e )
   \a w, \a h using painter \a p.
   \sa QStyle::drawPrimitive()
 */
-void KDGanttMinimizeSplitter::drawSplitter( QPainter *p,
-			      QCOORD x, QCOORD y, QCOORD w, QCOORD h )
+void KDGanttMinimizeSplitter::drawSplitter(QPainter *p,
+        QCOORD x, QCOORD y, QCOORD w, QCOORD h)
 {
     style().drawPrimitive(QStyle::PE_Splitter, p, QRect(x, y, w, h), colorGroup(),
-			  (orientation() == Qt::Horizontal ?
-			   QStyle::Style_Horizontal : 0));
+                          (orientation() == Qt::Horizontal ?
+                           QStyle::Style_Horizontal : 0));
 }
 
 
@@ -633,16 +670,17 @@ void KDGanttMinimizeSplitter::drawSplitter( QPainter *p,
   or 0 if there is no such splitter
   (i.e. it is either not in this KDGanttMinimizeSplitter or it is at the end).
 */
-int KDGanttMinimizeSplitter::idAfter( QWidget* w ) const
+int KDGanttMinimizeSplitter::idAfter(QWidget *w) const
 {
     QSplitterLayoutStruct *s = data->list.first();
     bool seen_w = FALSE;
-    while ( s ) {
-	if ( s->isSplitter && seen_w )
-	    return data->list.at();
-	if ( !s->isSplitter && s->wid == w )
-	    seen_w = TRUE;
-	s = data->list.next();
+    while(s)
+    {
+        if(s->isSplitter && seen_w)
+            return data->list.at();
+        if(!s->isSplitter && s->wid == w)
+            seen_w = TRUE;
+        s = data->list.next();
     }
     return 0;
 }
@@ -660,34 +698,38 @@ int KDGanttMinimizeSplitter::idAfter( QWidget* w ) const
 
   \sa idAfter()
 */
-void KDGanttMinimizeSplitter::moveSplitter( QCOORD p, int id )
+void KDGanttMinimizeSplitter::moveSplitter(QCOORD p, int id)
 {
-    p = adjustPos( p, id );
+    p = adjustPos(p, id);
 
     QSplitterLayoutStruct *s = data->list.at(id);
     int oldP = orient == Horizontal ? s->wid->x() : s->wid->y();
     bool upLeft;
-    if ( QApplication::reverseLayout() && orient == Horizontal ) {
-	p += s->wid->width();
-	upLeft = p > oldP;
-    } else
-	upLeft = p < oldP;
+    if(QApplication::reverseLayout() && orient == Horizontal)
+    {
+        p += s->wid->width();
+        upLeft = p > oldP;
+    }
+    else
+        upLeft = p < oldP;
 
-    moveAfter( p, id, upLeft );
-    moveBefore( p-1, id-1, upLeft );
+    moveAfter(p, id, upLeft);
+    moveBefore(p - 1, id - 1, upLeft);
 
     storeSizes();
 }
 
 
-void KDGanttMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
+void KDGanttMinimizeSplitter::setG(QWidget *w, int p, int s, bool isSplitter)
 {
-    if ( orient == Horizontal ) {
-	if ( QApplication::reverseLayout() && orient == Horizontal && !isSplitter )
-	    p = contentsRect().width() - p - s;
-	w->setGeometry( p, contentsRect().y(), s, contentsRect().height() );
-    } else
-	w->setGeometry( contentsRect().x(), p, contentsRect().width(), s );
+    if(orient == Horizontal)
+    {
+        if(QApplication::reverseLayout() && orient == Horizontal && !isSplitter)
+            p = contentsRect().width() - p - s;
+        w->setGeometry(p, contentsRect().y(), s, contentsRect().height());
+    }
+    else
+        w->setGeometry(contentsRect().x(), p, contentsRect().width(), s);
 }
 
 
@@ -696,48 +738,62 @@ void KDGanttMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
 
   \sa idAfter()
 */
-void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
+void KDGanttMinimizeSplitter::moveBefore(int pos, int id, bool upLeft)
 {
-    if( id < 0 )
-	return;
+    if(id < 0)
+        return;
     QSplitterLayoutStruct *s = data->list.at(id);
-    if ( !s )
-	return;
+    if(!s)
+        return;
     QWidget *w = s->wid;
-    if ( w->isHidden() ) {
-	moveBefore( pos, id-1, upLeft );
-    } else if ( s->isSplitter ) {
-	int pos1, pos2;
-	int dd = s->sizer;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
-	    pos1 = pos;
-	    pos2 = pos + dd;
-	} else {
-	    pos2 = pos - dd;
-	    pos1 = pos2 + 1;
-	}
-	if ( upLeft ) {
-	    setG( w, pos1, dd, TRUE );
-	    moveBefore( pos2, id-1, upLeft );
-	} else {
-	    moveBefore( pos2, id-1, upLeft );
-	    setG( w, pos1, dd, TRUE );
-	}
-    } else {
-	int dd, newLeft, nextPos;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
-	    dd = w->geometry().right() - pos;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
-	    newLeft = pos+1;
-	    nextPos = newLeft + dd;
-	} else {
-	    dd = pos - pick( w->pos() ) + 1;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
-	    newLeft = pos-dd+1;
-	    nextPos = newLeft - 1;
-	}
-	setG( w, newLeft, dd, TRUE );
-	moveBefore( nextPos, id-1, upLeft );
+    if(w->isHidden())
+    {
+        moveBefore(pos, id - 1, upLeft);
+    }
+    else if(s->isSplitter)
+    {
+        int pos1, pos2;
+        int dd = s->sizer;
+        if(QApplication::reverseLayout() && orient == Horizontal)
+        {
+            pos1 = pos;
+            pos2 = pos + dd;
+        }
+        else
+        {
+            pos2 = pos - dd;
+            pos1 = pos2 + 1;
+        }
+        if(upLeft)
+        {
+            setG(w, pos1, dd, TRUE);
+            moveBefore(pos2, id - 1, upLeft);
+        }
+        else
+        {
+            moveBefore(pos2, id - 1, upLeft);
+            setG(w, pos1, dd, TRUE);
+        }
+    }
+    else
+    {
+        int dd, newLeft, nextPos;
+        if(QApplication::reverseLayout() && orient == Horizontal)
+        {
+            dd = w->geometry().right() - pos;
+            dd = QMAX(pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+            newLeft = pos + 1;
+            nextPos = newLeft + dd;
+        }
+        else
+        {
+            dd = pos - pick(w->pos()) + 1;
+            dd = QMAX(pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+            newLeft = pos - dd + 1;
+            nextPos = newLeft - 1;
+        }
+        setG(w, newLeft, dd, TRUE);
+        moveBefore(nextPos, id - 1, upLeft);
     }
 }
 
@@ -747,71 +803,89 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 
   \sa idAfter()
 */
-void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
+void KDGanttMinimizeSplitter::moveAfter(int pos, int id, bool upLeft)
 {
     QSplitterLayoutStruct *s = id < int(data->list.count()) ?
-			       data->list.at(id) : 0;
-    if ( !s )
-	return;
+                               data->list.at(id) : 0;
+    if(!s)
+        return;
     QWidget *w = s->wid;
-    if ( w->isHidden() ) {
-	moveAfter( pos, id+1, upLeft );
-    } else if ( pick( w->pos() ) == pos ) {
-	//No need to do anything if it's already there.
-	return;
-    } else if ( s->isSplitter ) {
-	int dd = s->sizer;
-	int pos1, pos2;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
-	    pos2 = pos - dd;
-	    pos1 = pos2 + 1;
-	} else {
-	    pos1 = pos;
-	    pos2 = pos + dd;
-	}
-	if ( upLeft ) {
-	    setG( w, pos1, dd, TRUE );
-	    moveAfter( pos2, id+1, upLeft );
-	} else {
-	    moveAfter( pos2, id+1, upLeft );
-	    setG( w, pos1, dd, TRUE );
-	}
-    } else {
-	int left = pick( w->pos() );
-	int right, dd,/* newRight,*/ newLeft, nextPos;
-	if ( QApplication::reverseLayout() && orient == Horizontal ) {
-	    dd = pos - left + 1;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
-	    newLeft = pos-dd+1;
-	    nextPos = newLeft - 1;
-	} else {
-	    right = pick( w->geometry().bottomRight() );
-	    dd = right - pos + 1;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
-	    /*newRight = pos+dd-1;*/
-	    newLeft = pos;
-	    nextPos = newLeft + dd;
-	}
-	setG( w, newLeft, dd, TRUE );
-	/*if( right != newRight )*/
-	moveAfter( nextPos, id+1, upLeft );
+    if(w->isHidden())
+    {
+        moveAfter(pos, id + 1, upLeft);
+    }
+    else if(pick(w->pos()) == pos)
+    {
+        //No need to do anything if it's already there.
+        return;
+    }
+    else if(s->isSplitter)
+    {
+        int dd = s->sizer;
+        int pos1, pos2;
+        if(QApplication::reverseLayout() && orient == Horizontal)
+        {
+            pos2 = pos - dd;
+            pos1 = pos2 + 1;
+        }
+        else
+        {
+            pos1 = pos;
+            pos2 = pos + dd;
+        }
+        if(upLeft)
+        {
+            setG(w, pos1, dd, TRUE);
+            moveAfter(pos2, id + 1, upLeft);
+        }
+        else
+        {
+            moveAfter(pos2, id + 1, upLeft);
+            setG(w, pos1, dd, TRUE);
+        }
+    }
+    else
+    {
+        int left = pick(w->pos());
+        int right, dd,/* newRight,*/ newLeft, nextPos;
+        if(QApplication::reverseLayout() && orient == Horizontal)
+        {
+            dd = pos - left + 1;
+            dd = QMAX(pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+            newLeft = pos - dd + 1;
+            nextPos = newLeft - 1;
+        }
+        else
+        {
+            right = pick(w->geometry().bottomRight());
+            dd = right - pos + 1;
+            dd = QMAX(pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+            /*newRight = pos+dd-1;*/
+            newLeft = pos;
+            nextPos = newLeft + dd;
+        }
+        setG(w, newLeft, dd, TRUE);
+        /*if( right != newRight )*/
+        moveAfter(nextPos, id + 1, upLeft);
     }
 }
 
 
-void KDGanttMinimizeSplitter::expandPos( int id, int*  min, int* max )
+void KDGanttMinimizeSplitter::expandPos(int id, int  *min, int *max)
 {
-    QSplitterLayoutStruct *s = data->list.at(id-1);
-    QWidget* w = s->wid;
-    *min = pick( w->mapToParent( QPoint(0,0) ) );
+    QSplitterLayoutStruct *s = data->list.at(id - 1);
+    QWidget *w = s->wid;
+    *min = pick(w->mapToParent(QPoint(0, 0)));
 
-    if ( (uint) id == data->list.count() ) {
-        pick( size() );
+    if((uint) id == data->list.count())
+    {
+        pick(size());
     }
-    else {
-        QSplitterLayoutStruct *s = data->list.at(id+1);
-        QWidget* w = s->wid;
-        *max = pick( w->mapToParent( QPoint( w->width(), w->height() ) ) ) -8;
+    else
+    {
+        QSplitterLayoutStruct *s = data->list.at(id + 1);
+        QWidget *w = s->wid;
+        *max = pick(w->mapToParent(QPoint(w->width(), w->height()))) - 8;
     }
 }
 
@@ -822,52 +896,67 @@ void KDGanttMinimizeSplitter::expandPos( int id, int*  min, int* max )
   \sa idAfter()
 */
 
-void KDGanttMinimizeSplitter::getRange( int id, int *min, int *max )
+void KDGanttMinimizeSplitter::getRange(int id, int *min, int *max)
 {
     int minB = 0;	//before
     int maxB = 0;
     int minA = 0;
     int maxA = 0;	//after
     int n = data->list.count();
-    if ( id < 0 || id >= n )
-	return;
+    if(id < 0 || id >= n)
+        return;
     int i;
-    for ( i = 0; i < id; i++ ) {
-	QSplitterLayoutStruct *s = data->list.at(i);
-	if ( s->wid->isHidden() ) {
-	    //ignore
-	} else if ( s->isSplitter ) {
-	    minB += s->sizer;
-	    maxB += s->sizer;
-	} else {
-	    minB += pick( minSize(s->wid) );
-	    maxB += pick( s->wid->maximumSize() );
-	}
+    for(i = 0; i < id; i++)
+    {
+        QSplitterLayoutStruct *s = data->list.at(i);
+        if(s->wid->isHidden())
+        {
+            //ignore
+        }
+        else if(s->isSplitter)
+        {
+            minB += s->sizer;
+            maxB += s->sizer;
+        }
+        else
+        {
+            minB += pick(minSize(s->wid));
+            maxB += pick(s->wid->maximumSize());
+        }
     }
-    for ( i = id; i < n; i++ ) {
-	QSplitterLayoutStruct *s = data->list.at(i);
-	if ( s->wid->isHidden() ) {
-	    //ignore
-	} else if ( s->isSplitter ) {
-	    minA += s->sizer;
-	    maxA += s->sizer;
-	} else {
-	    minA += pick( minSize(s->wid) );
-	    maxA += pick( s->wid->maximumSize() );
-	}
+    for(i = id; i < n; i++)
+    {
+        QSplitterLayoutStruct *s = data->list.at(i);
+        if(s->wid->isHidden())
+        {
+            //ignore
+        }
+        else if(s->isSplitter)
+        {
+            minA += s->sizer;
+            maxA += s->sizer;
+        }
+        else
+        {
+            minA += pick(minSize(s->wid));
+            maxA += pick(s->wid->maximumSize());
+        }
     }
     QRect r = contentsRect();
-    if ( orient == Horizontal && QApplication::reverseLayout() ) {
-	int splitterWidth = style().pixelMetric(QStyle::PM_SplitterWidth, this);
-	if ( min )
-	    *min = pick(r.topRight()) - QMIN( maxB, pick(r.size())-minA ) - splitterWidth;
-	if ( max )
-	    *max = pick(r.topRight()) - QMAX( minB, pick(r.size())-maxA ) - splitterWidth;
-    } else {
-	if ( min )
-	    *min = pick(r.topLeft()) + QMAX( minB, pick(r.size())-maxA );
-	if ( max )
-	    *max = pick(r.topLeft()) + QMIN( maxB, pick(r.size())-minA );
+    if(orient == Horizontal && QApplication::reverseLayout())
+    {
+        int splitterWidth = style().pixelMetric(QStyle::PM_SplitterWidth, this);
+        if(min)
+            *min = pick(r.topRight()) - QMIN(maxB, pick(r.size()) - minA) - splitterWidth;
+        if(max)
+            *max = pick(r.topRight()) - QMAX(minB, pick(r.size()) - maxA) - splitterWidth;
+    }
+    else
+    {
+        if(min)
+            *min = pick(r.topLeft()) + QMAX(minB, pick(r.size()) - maxA);
+        if(max)
+            *max = pick(r.topLeft()) + QMIN(maxB, pick(r.size()) - minA);
     }
 }
 
@@ -878,12 +967,12 @@ void KDGanttMinimizeSplitter::getRange( int id, int *min, int *max )
   \sa idAfter()
 */
 
-int KDGanttMinimizeSplitter::adjustPos( int p, int id )
+int KDGanttMinimizeSplitter::adjustPos(int p, int id)
 {
     int min = 0;
     int max = 0;
-    getRange( id, &min, &max );
-    p = QMAX( min, QMIN( p, max ) );
+    getRange(id, &min, &max);
+    p = QMAX(min, QMIN(p, max));
 
     return p;
 }
@@ -894,50 +983,61 @@ void KDGanttMinimizeSplitter::doResize()
     QRect r = contentsRect();
     int i;
     int n = data->list.count();
-    QMemArray<QLayoutStruct> a( n );
-    for ( i = 0; i< n; i++ ) {
-	a[i].init();
-	QSplitterLayoutStruct *s = data->list.at(i);
-	if ( s->wid->isHidden() ) {
-	    a[i].stretch = 0;
-	    a[i].sizeHint = a[i].minimumSize = 0;
-	    a[i].maximumSize = 0;
-	} else if ( s->isSplitter ) {
-	    a[i].stretch = 0;
-	    a[i].sizeHint = a[i].minimumSize = a[i].maximumSize = s->sizer;
-	    a[i].empty = FALSE;
-	} else if ( s->mode == KeepSize ) {
-	    a[i].stretch = 0;
-	    a[i].minimumSize = pick( minSize(s->wid) );
-	    a[i].sizeHint = s->sizer;
-	    a[i].maximumSize = pick( s->wid->maximumSize() );
-	    a[i].empty = FALSE;
-	} else if ( s->mode == FollowSizeHint ) {
-	    a[i].stretch = 0;
-	    a[i].minimumSize = a[i].sizeHint = pick( s->wid->sizeHint() );
-	    a[i].maximumSize = pick( s->wid->maximumSize() );
-	    a[i].empty = FALSE;
-	} else { //proportional
-	    a[i].stretch = s->sizer;
-	    a[i].maximumSize = pick( s->wid->maximumSize() );
-	    a[i].sizeHint = a[i].minimumSize = pick( minSize(s->wid) );
-	    a[i].empty = FALSE;
-	}
+    QMemArray<QLayoutStruct> a(n);
+    for(i = 0; i < n; i++)
+    {
+        a[i].init();
+        QSplitterLayoutStruct *s = data->list.at(i);
+        if(s->wid->isHidden())
+        {
+            a[i].stretch = 0;
+            a[i].sizeHint = a[i].minimumSize = 0;
+            a[i].maximumSize = 0;
+        }
+        else if(s->isSplitter)
+        {
+            a[i].stretch = 0;
+            a[i].sizeHint = a[i].minimumSize = a[i].maximumSize = s->sizer;
+            a[i].empty = FALSE;
+        }
+        else if(s->mode == KeepSize)
+        {
+            a[i].stretch = 0;
+            a[i].minimumSize = pick(minSize(s->wid));
+            a[i].sizeHint = s->sizer;
+            a[i].maximumSize = pick(s->wid->maximumSize());
+            a[i].empty = FALSE;
+        }
+        else if(s->mode == FollowSizeHint)
+        {
+            a[i].stretch = 0;
+            a[i].minimumSize = a[i].sizeHint = pick(s->wid->sizeHint());
+            a[i].maximumSize = pick(s->wid->maximumSize());
+            a[i].empty = FALSE;
+        }
+        else     //proportional
+        {
+            a[i].stretch = s->sizer;
+            a[i].maximumSize = pick(s->wid->maximumSize());
+            a[i].sizeHint = a[i].minimumSize = pick(minSize(s->wid));
+            a[i].empty = FALSE;
+        }
     }
 
-    kdganttGeomCalc( a, 0, n, pick( r.topLeft() ), pick( r.size() ), 0 );
+    kdganttGeomCalc(a, 0, n, pick(r.topLeft()), pick(r.size()), 0);
 
-    for ( i = 0; i< n; i++ ) {
-	QSplitterLayoutStruct *s = data->list.at(i);
-	setG( s->wid, a[i].pos, a[i].size );
+    for(i = 0; i < n; i++)
+    {
+        QSplitterLayoutStruct *s = data->list.at(i);
+        setG(s->wid, a[i].pos, a[i].size);
     }
 
 }
 
 
-void KDGanttMinimizeSplitter::recalc( bool update )
+void KDGanttMinimizeSplitter::recalc(bool update)
 {
-    int fi = 2*frameWidth();
+    int fi = 2 * frameWidth();
     int maxl = fi;
     int minl = fi;
     int maxt = QWIDGETSIZE_MAX;
@@ -949,62 +1049,78 @@ void KDGanttMinimizeSplitter::recalc( bool update )
       The splitter before the first visible widget is hidden.
       The splitter before any other visible widget is visible.
     */
-    for ( int i = 0; i< n; i++ ) {
-	QSplitterLayoutStruct *s = data->list.at(i);
-	if ( !s->isSplitter ) {
-	    QSplitterLayoutStruct *p = (i > 0) ? data->list.at( i-1 ) : 0;
-	    if ( p && p->isSplitter )
-		if ( first || s->wid->isHidden() )
-		    p->wid->hide(); //may trigger new recalc
-		else
-		    p->wid->show(); //may trigger new recalc
-	    if ( !s->wid->isHidden() )
-		first = FALSE;
-	}
+    for(int i = 0; i < n; i++)
+    {
+        QSplitterLayoutStruct *s = data->list.at(i);
+        if(!s->isSplitter)
+        {
+            QSplitterLayoutStruct *p = (i > 0) ? data->list.at(i - 1) : 0;
+            if(p && p->isSplitter)
+                if(first || s->wid->isHidden())
+                    p->wid->hide(); //may trigger new recalc
+                else
+                    p->wid->show(); //may trigger new recalc
+            if(!s->wid->isHidden())
+                first = FALSE;
+        }
     }
 
-    bool empty=TRUE;
-    for ( int j = 0; j< n; j++ ) {
-	QSplitterLayoutStruct *s = data->list.at(j);
-	if ( !s->wid->isHidden() ) {
-	    empty = FALSE;
-	    if ( s->isSplitter ) {
-		minl += s->sizer;
-		maxl += s->sizer;
-	    } else {
-		QSize minS = minSize(s->wid);
-		minl += pick( minS );
-		maxl += pick( s->wid->maximumSize() );
-		mint = QMAX( mint, trans( minS ));
-		int tm = trans( s->wid->maximumSize() );
-		if ( tm > 0 )
-		    maxt = QMIN( maxt, tm );
-	    }
-	}
+    bool empty = TRUE;
+    for(int j = 0; j < n; j++)
+    {
+        QSplitterLayoutStruct *s = data->list.at(j);
+        if(!s->wid->isHidden())
+        {
+            empty = FALSE;
+            if(s->isSplitter)
+            {
+                minl += s->sizer;
+                maxl += s->sizer;
+            }
+            else
+            {
+                QSize minS = minSize(s->wid);
+                minl += pick(minS);
+                maxl += pick(s->wid->maximumSize());
+                mint = QMAX(mint, trans(minS));
+                int tm = trans(s->wid->maximumSize());
+                if(tm > 0)
+                    maxt = QMIN(maxt, tm);
+            }
+        }
     }
-    if ( empty ) {
-        if ( parentWidget() != 0 && parentWidget()->inherits("KDGanttMinimizeSplitter") ) {
+    if(empty)
+    {
+        if(parentWidget() != 0 && parentWidget()->inherits("KDGanttMinimizeSplitter"))
+        {
             // nested splitters; be nice
             maxl = maxt = 0;
-        } else {
+        }
+        else
+        {
             // KDGanttMinimizeSplitter with no children yet
             maxl = QWIDGETSIZE_MAX;
         }
-    } else {
-        maxl = QMIN( maxl, QWIDGETSIZE_MAX );
     }
-    if ( maxt < mint )
-	maxt = mint;
+    else
+    {
+        maxl = QMIN(maxl, QWIDGETSIZE_MAX);
+    }
+    if(maxt < mint)
+        maxt = mint;
 
-    if ( orient == Horizontal ) {
-	setMaximumSize( maxl, maxt );
-	setMinimumSize( minl, mint );
-    } else {
-	setMaximumSize( maxt, maxl );
-	setMinimumSize( mint, minl );
+    if(orient == Horizontal)
+    {
+        setMaximumSize(maxl, maxt);
+        setMinimumSize(minl, mint);
     }
-    if ( update )
-	doResize();
+    else
+    {
+        setMaximumSize(maxt, maxl);
+        setMinimumSize(mint, minl);
+    }
+    if(update)
+        doResize();
 }
 
 /*!
@@ -1013,18 +1129,20 @@ void KDGanttMinimizeSplitter::recalc( bool update )
   \sa ResizeMode
 */
 
-void KDGanttMinimizeSplitter::setResizeMode( QWidget *w, ResizeMode mode )
+void KDGanttMinimizeSplitter::setResizeMode(QWidget *w, ResizeMode mode)
 {
     processChildEvents();
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( s->wid == w  ) {
-	    s->mode = mode;
-	    return;
-	}
-	s = data->list.next();
+    while(s)
+    {
+        if(s->wid == w)
+        {
+            s->mode = mode;
+            return;
+        }
+        s = data->list.next();
     }
-    s = addWidget( w, TRUE );
+    s = addWidget(w, TRUE);
     s->mode = mode;
 }
 
@@ -1049,7 +1167,7 @@ bool KDGanttMinimizeSplitter::opaqueResize() const
   \sa opaqueResize()
 */
 
-void KDGanttMinimizeSplitter::setOpaqueResize( bool on )
+void KDGanttMinimizeSplitter::setOpaqueResize(bool on)
 {
     data->opaque = on;
 }
@@ -1059,28 +1177,31 @@ void KDGanttMinimizeSplitter::setOpaqueResize( bool on )
   Moves widget \a w to the leftmost/top position.
 */
 
-void KDGanttMinimizeSplitter::moveToFirst( QWidget *w )
+void KDGanttMinimizeSplitter::moveToFirst(QWidget *w)
 {
     processChildEvents();
     bool found = FALSE;
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( s->wid == w  ) {
-	    found = TRUE;
-	    QSplitterLayoutStruct *p = data->list.prev();
-	    if ( p ) { // not already at first place
-		data->list.take(); //take p
-		data->list.take(); // take s
-		data->list.insert( 0, p );
-		data->list.insert( 0, s );
-	    }
-	    break;
-	}
-	s = data->list.next();
+    while(s)
+    {
+        if(s->wid == w)
+        {
+            found = TRUE;
+            QSplitterLayoutStruct *p = data->list.prev();
+            if(p)      // not already at first place
+            {
+                data->list.take(); //take p
+                data->list.take(); // take s
+                data->list.insert(0, p);
+                data->list.insert(0, s);
+            }
+            break;
+        }
+        s = data->list.next();
     }
-     if ( !found )
-	addWidget( w, TRUE );
-     recalcId();
+    if(!found)
+        addWidget(w, TRUE);
+    recalcId();
 }
 
 
@@ -1088,38 +1209,42 @@ void KDGanttMinimizeSplitter::moveToFirst( QWidget *w )
   Moves widget \a w to the rightmost/bottom position.
 */
 
-void KDGanttMinimizeSplitter::moveToLast( QWidget *w )
+void KDGanttMinimizeSplitter::moveToLast(QWidget *w)
 {
     processChildEvents();
     bool found = FALSE;
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( s->wid == w  ) {
-	    found = TRUE;
-	    data->list.take(); // take s
-	    QSplitterLayoutStruct *p = data->list.current();
-	    if ( p ) { // the splitter handle after s
-		data->list.take(); //take p
-		data->list.append( p );
-	    }
-	    data->list.append( s );
-	    break;
-	}
-	s = data->list.next();
+    while(s)
+    {
+        if(s->wid == w)
+        {
+            found = TRUE;
+            data->list.take(); // take s
+            QSplitterLayoutStruct *p = data->list.current();
+            if(p)      // the splitter handle after s
+            {
+                data->list.take(); //take p
+                data->list.append(p);
+            }
+            data->list.append(s);
+            break;
+        }
+        s = data->list.next();
     }
-     if ( !found )
-	addWidget( w);
-     recalcId();
+    if(!found)
+        addWidget(w);
+    recalcId();
 }
 
 
 void KDGanttMinimizeSplitter::recalcId()
 {
     int n = data->list.count();
-    for ( int i = 0; i < n; i++ ) {
-	QSplitterLayoutStruct *s = data->list.at(i);
-	if ( s->isSplitter )
-	    ((KDGanttSplitterHandle*)s->wid)->setId(i);
+    for(int i = 0; i < n; i++)
+    {
+        QSplitterLayoutStruct *s = data->list.at(i);
+        if(s->isSplitter)
+            ((KDGanttSplitterHandle *)s->wid)->setId(i);
     }
 }
 
@@ -1131,24 +1256,28 @@ QSize KDGanttMinimizeSplitter::sizeHint() const
     constPolish();
     int l = 0;
     int t = 0;
-    if ( children() ) {
-	const QObjectList * c = children();
-	QObjectListIt it( *c );
-	QObject * o;
+    if(children())
+    {
+        const QObjectList *c = children();
+        QObjectListIt it(*c);
+        QObject *o;
 
-	while( (o=it.current()) != 0 ) {
-	    ++it;
-	    if ( o->isWidgetType() &&
-		 !((QWidget*)o)->isHidden() ) {
-		QSize s = ((QWidget*)o)->sizeHint();
-		if ( s.isValid() ) {
-		    l += pick( s );
-		    t = QMAX( t, trans( s ) );
-		}
-	    }
-	}
+        while((o = it.current()) != 0)
+        {
+            ++it;
+            if(o->isWidgetType() &&
+                    !((QWidget *)o)->isHidden())
+            {
+                QSize s = ((QWidget *)o)->sizeHint();
+                if(s.isValid())
+                {
+                    l += pick(s);
+                    t = QMAX(t, trans(s));
+                }
+            }
+        }
     }
-    return orientation() == Horizontal ? QSize( l, t ) : QSize( t, l );
+    return orientation() == Horizontal ? QSize(l, t) : QSize(t, l);
 }
 
 
@@ -1161,24 +1290,28 @@ QSize KDGanttMinimizeSplitter::minimumSizeHint() const
     constPolish();
     int l = 0;
     int t = 0;
-    if ( children() ) {
-	const QObjectList * c = children();
-	QObjectListIt it( *c );
-	QObject * o;
+    if(children())
+    {
+        const QObjectList *c = children();
+        QObjectListIt it(*c);
+        QObject *o;
 
-	while( (o=it.current()) != 0 ) {
-	    ++it;
-	    if ( o->isWidgetType() &&
-		 !((QWidget*)o)->isHidden() ) {
-		QSize s = minSizeHint((QWidget*)o);
-		if ( s.isValid() ) {
-		    l += pick( s );
-		    t = QMAX( t, trans( s ) );
-		}
-	    }
-	}
+        while((o = it.current()) != 0)
+        {
+            ++it;
+            if(o->isWidgetType() &&
+                    !((QWidget *)o)->isHidden())
+            {
+                QSize s = minSizeHint((QWidget *)o);
+                if(s.isValid())
+                {
+                    l += pick(s);
+                    t = QMAX(t, trans(s));
+                }
+            }
+        }
     }
-    return orientation() == Horizontal ? QSize( l, t ) : QSize( t, l );
+    return orientation() == Horizontal ? QSize(l, t) : QSize(t, l);
 }
 
 
@@ -1189,10 +1322,11 @@ QSize KDGanttMinimizeSplitter::minimumSizeHint() const
 void KDGanttMinimizeSplitter::storeSizes()
 {
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( !s->isSplitter )
-	    s->sizer = pick( s->wid->size() );
-	s = data->list.next();
+    while(s)
+    {
+        if(!s->isSplitter)
+            s->sizer = pick(s->wid->size());
+        s = data->list.next();
     }
 }
 
@@ -1206,23 +1340,28 @@ void KDGanttMinimizeSplitter::storeSizes()
   calling QWidget::hide() will not work.
 */
 
-void KDGanttMinimizeSplitter::setHidden( QWidget *w, bool hide )
+void KDGanttMinimizeSplitter::setHidden(QWidget *w, bool hide)
 {
-    if ( w == w1 ) {
-	w1show = !hide;
-    } else if ( w == w2 ) {
-	w2show = !hide;
-    } else {
-#ifdef QT_CHECK_RANGE
-	qWarning( "KDGanttMinimizeSplitter::setHidden(), unknown widget" );
-#endif
-	return;
+    if(w == w1)
+    {
+        w1show = !hide;
     }
-    if ( hide )
-	w->hide();
+    else if(w == w2)
+    {
+        w2show = !hide;
+    }
     else
-	w->show();
-    recalc( TRUE );
+    {
+#ifdef QT_CHECK_RANGE
+        qWarning("KDGanttMinimizeSplitter::setHidden(), unknown widget");
+#endif
+        return;
+    }
+    if(hide)
+        w->hide();
+    else
+        w->show();
+    recalc(TRUE);
 }
 
 
@@ -1230,15 +1369,15 @@ void KDGanttMinimizeSplitter::setHidden( QWidget *w, bool hide )
   Returns the hidden status of \a w
 */
 
-bool KDGanttMinimizeSplitter::isHidden( QWidget *w ) const
+bool KDGanttMinimizeSplitter::isHidden(QWidget *w) const
 {
-    if ( w == w1 )
-	return !w1show;
-     else if ( w == w2 )
-	return !w2show;
+    if(w == w1)
+        return !w1show;
+    else if(w == w2)
+        return !w2show;
 #ifdef QT_CHECK_RANGE
     else
-	qWarning( "KDGanttMinimizeSplitter::isHidden(), unknown widget" );
+        qWarning("KDGanttMinimizeSplitter::isHidden(), unknown widget");
 #endif
     return FALSE;
 }
@@ -1268,16 +1407,18 @@ bool KDGanttMinimizeSplitter::isHidden( QWidget *w ) const
 
 QValueList<int> KDGanttMinimizeSplitter::sizes() const
 {
-    if ( !testWState(WState_Polished) ) {
-	QWidget* that = (QWidget*) this;
-	that->polish();
+    if(!testWState(WState_Polished))
+    {
+        QWidget *that = (QWidget *) this;
+        that->polish();
     }
     QValueList<int> list;
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( !s->isSplitter )
-	    list.append( s->sizer );
-	s = data->list.next();
+    while(s)
+    {
+        if(!s->isSplitter)
+            list.append(s->sizer);
+        s = data->list.next();
     }
     return list;
 }
@@ -1297,17 +1438,19 @@ QValueList<int> KDGanttMinimizeSplitter::sizes() const
   \sa sizes()
 */
 
-void KDGanttMinimizeSplitter::setSizes( QValueList<int> list )
+void KDGanttMinimizeSplitter::setSizes(QValueList<int> list)
 {
     processChildEvents();
     QValueList<int>::Iterator it = list.begin();
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s && it != list.end() ) {
-	if ( !s->isSplitter ) {
-	    s->sizer = *it;
-	    ++it;
-	}
-	s = data->list.next();
+    while(s && it != list.end())
+    {
+        if(!s->isSplitter)
+        {
+            s->sizer = *it;
+            ++it;
+        }
+        s = data->list.next();
     }
     doResize();
 }
@@ -1320,7 +1463,7 @@ void KDGanttMinimizeSplitter::setSizes( QValueList<int> list )
 
 void KDGanttMinimizeSplitter::processChildEvents()
 {
-    QApplication::sendPostedEvents( this, QEvent::ChildInserted );
+    QApplication::sendPostedEvents(this, QEvent::ChildInserted);
 }
 
 
@@ -1328,17 +1471,18 @@ void KDGanttMinimizeSplitter::processChildEvents()
   Reimplemented from superclass.
 */
 
-void KDGanttMinimizeSplitter::styleChange( QStyle& old )
+void KDGanttMinimizeSplitter::styleChange(QStyle &old)
 {
     int sw = style().pixelMetric(QStyle::PM_SplitterWidth, this);
     QSplitterLayoutStruct *s = data->list.first();
-    while ( s ) {
-	if ( s->isSplitter )
-	    s->sizer = sw;
-	s = data->list.next();
+    while(s)
+    {
+        if(s->isSplitter)
+            s->sizer = sw;
+        s = data->list.next();
     }
     doResize();
-    QFrame::styleChange( old );
+    QFrame::styleChange(old);
 }
 
 #endif
@@ -1350,7 +1494,7 @@ void KDGanttMinimizeSplitter::styleChange( QStyle& old )
   otherwise either KDGanttMinimizeSplitter::Up or KDGanttMinimizeSplitter::Down
   should be used.
 */
-void KDGanttMinimizeSplitter::setMinimizeDirection( Direction direction )
+void KDGanttMinimizeSplitter::setMinimizeDirection(Direction direction)
 {
     _direction = direction;
 }
@@ -1367,12 +1511,16 @@ KDGanttMinimizeSplitter::Direction KDGanttMinimizeSplitter::minimizeDirection() 
   This is a copy of qGeomCalc() in qlayoutengine.cpp which
   unfortunately isn't exported.
 */
-static inline int toFixed( int i ) { return i * 256; }
-static inline int fRound( int i ) {
-    return ( i % 256 < 128 ) ? i / 256 : 1 + i / 256;
+static inline int toFixed(int i)
+{
+    return i * 256;
 }
-void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
-		int space, int spacer )
+static inline int fRound(int i)
+{
+    return (i % 256 < 128) ? i / 256 : 1 + i / 256;
+}
+void kdganttGeomCalc(QMemArray<QLayoutStruct> &chain, int start, int count, int pos,
+                     int space, int spacer)
 {
     typedef int fixed;
     int cHint = 0;
@@ -1385,159 +1533,186 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
     //    bool canShrink = FALSE; // anyone who could be persuaded to shrink?
 
     int i;
-    for ( i = start; i < start + count; i++ ) {
-	chain[i].done = FALSE;
-	cHint += chain[i].sizeHint;
-	cMin += chain[i].minimumSize;
-	cMax += chain[i].maximumSize;
-	sumStretch += chain[i].stretch;
-	if ( !chain[i].empty )
-	    spacerCount++;
-	wannaGrow = wannaGrow || chain[i].expansive;
+    for(i = start; i < start + count; i++)
+    {
+        chain[i].done = FALSE;
+        cHint += chain[i].sizeHint;
+        cMin += chain[i].minimumSize;
+        cMax += chain[i].maximumSize;
+        sumStretch += chain[i].stretch;
+        if(!chain[i].empty)
+            spacerCount++;
+        wannaGrow = wannaGrow || chain[i].expansive;
     }
 
     int extraspace = 0;
-    if ( spacerCount )
-	spacerCount--; // only spacers between things
-    if ( space < cMin + spacerCount * spacer ) {
-	//	qDebug("not enough space");
-	for ( i = start; i < start+count; i++ ) {
-	    chain[i].size = chain[i].minimumSize;
-	    chain[i].done = TRUE;
-	}
-    } else if ( space < cHint + spacerCount*spacer ) {
-	// Less space than sizeHint, but more than minimum.
-	// Currently take space equally from each, like in Qt 2.x.
-	// Commented-out lines will give more space to stretchier items.
-	int n = count;
-	int space_left = space - spacerCount*spacer;
-	int overdraft = cHint - space_left;
-	//first give to the fixed ones:
-	for ( i = start; i < start+count; i++ ) {
-	    if ( !chain[i].done && chain[i].minimumSize >= chain[i].sizeHint) {
-		chain[i].size = chain[i].sizeHint;
-		chain[i].done = TRUE;
-		space_left -= chain[i].sizeHint;
-		// sumStretch -= chain[i].stretch;
-		n--;
-	    }
-	}
-	bool finished = n == 0;
-	while ( !finished ) {
-	    finished = TRUE;
-	    fixed fp_over = toFixed( overdraft );
-	    fixed fp_w = 0;
+    if(spacerCount)
+        spacerCount--; // only spacers between things
+    if(space < cMin + spacerCount * spacer)
+    {
+        //	qDebug("not enough space");
+        for(i = start; i < start + count; i++)
+        {
+            chain[i].size = chain[i].minimumSize;
+            chain[i].done = TRUE;
+        }
+    }
+    else if(space < cHint + spacerCount * spacer)
+    {
+        // Less space than sizeHint, but more than minimum.
+        // Currently take space equally from each, like in Qt 2.x.
+        // Commented-out lines will give more space to stretchier items.
+        int n = count;
+        int space_left = space - spacerCount * spacer;
+        int overdraft = cHint - space_left;
+        //first give to the fixed ones:
+        for(i = start; i < start + count; i++)
+        {
+            if(!chain[i].done && chain[i].minimumSize >= chain[i].sizeHint)
+            {
+                chain[i].size = chain[i].sizeHint;
+                chain[i].done = TRUE;
+                space_left -= chain[i].sizeHint;
+                // sumStretch -= chain[i].stretch;
+                n--;
+            }
+        }
+        bool finished = n == 0;
+        while(!finished)
+        {
+            finished = TRUE;
+            fixed fp_over = toFixed(overdraft);
+            fixed fp_w = 0;
 
-	    for ( i = start; i < start+count; i++ ) {
-		if ( chain[i].done )
-		    continue;
-		// if ( sumStretch <= 0 )
-		fp_w += fp_over / n;
-		// else
-		//    fp_w += (fp_over * chain[i].stretch) / sumStretch;
-		int w = fRound( fp_w );
-		chain[i].size = chain[i].sizeHint - w;
-		fp_w -= toFixed( w ); //give the difference to the next
-		if ( chain[i].size < chain[i].minimumSize ) {
-		    chain[i].done = TRUE;
-		    chain[i].size = chain[i].minimumSize;
-		    finished = FALSE;
-		    overdraft -= chain[i].sizeHint - chain[i].minimumSize;
-		    // sumStretch -= chain[i].stretch;
-		    n--;
-		    break;
-		}
-	    }
-	}
-    } else { //extra space
-	int n = count;
-	int space_left = space - spacerCount*spacer;
-	// first give to the fixed ones, and handle non-expansiveness
-	for ( i = start; i < start + count; i++ ) {
-	    if ( !chain[i].done && (chain[i].maximumSize <= chain[i].sizeHint
-				    || wannaGrow && !chain[i].expansive) ) {
-		chain[i].size = chain[i].sizeHint;
-		chain[i].done = TRUE;
-		space_left -= chain[i].sizeHint;
-		sumStretch -= chain[i].stretch;
-		n--;
-	    }
-	}
-	extraspace = space_left;
-	/*
-	  Do a trial distribution and calculate how much it is off.
-	  If there are more deficit pixels than surplus pixels, give
-	  the minimum size items what they need, and repeat.
-	  Otherwise give to the maximum size items, and repeat.
+            for(i = start; i < start + count; i++)
+            {
+                if(chain[i].done)
+                    continue;
+                // if ( sumStretch <= 0 )
+                fp_w += fp_over / n;
+                // else
+                //    fp_w += (fp_over * chain[i].stretch) / sumStretch;
+                int w = fRound(fp_w);
+                chain[i].size = chain[i].sizeHint - w;
+                fp_w -= toFixed(w);   //give the difference to the next
+                if(chain[i].size < chain[i].minimumSize)
+                {
+                    chain[i].done = TRUE;
+                    chain[i].size = chain[i].minimumSize;
+                    finished = FALSE;
+                    overdraft -= chain[i].sizeHint - chain[i].minimumSize;
+                    // sumStretch -= chain[i].stretch;
+                    n--;
+                    break;
+                }
+            }
+        }
+    }
+    else     //extra space
+    {
+        int n = count;
+        int space_left = space - spacerCount * spacer;
+        // first give to the fixed ones, and handle non-expansiveness
+        for(i = start; i < start + count; i++)
+        {
+            if(!chain[i].done && (chain[i].maximumSize <= chain[i].sizeHint
+                                  || wannaGrow && !chain[i].expansive))
+            {
+                chain[i].size = chain[i].sizeHint;
+                chain[i].done = TRUE;
+                space_left -= chain[i].sizeHint;
+                sumStretch -= chain[i].stretch;
+                n--;
+            }
+        }
+        extraspace = space_left;
+        /*
+          Do a trial distribution and calculate how much it is off.
+          If there are more deficit pixels than surplus pixels, give
+          the minimum size items what they need, and repeat.
+          Otherwise give to the maximum size items, and repeat.
 
-	  I have a wonderful mathematical proof for the correctness
-	  of this principle, but unfortunately this comment is too
-	  small to contain it.
-	*/
-	int surplus, deficit;
-	do {
-	    surplus = deficit = 0;
-	    fixed fp_space = toFixed( space_left );
-	    fixed fp_w = 0;
-	    for ( i = start; i < start+count; i++ ) {
-		if ( chain[i].done )
-		    continue;
-		extraspace = 0;
-		if ( sumStretch <= 0 )
-		    fp_w += fp_space / n;
-		else
-		    fp_w += (fp_space * chain[i].stretch) / sumStretch;
-		int w = fRound( fp_w );
-		chain[i].size = w;
-		fp_w -= toFixed( w ); // give the difference to the next
-		if ( w < chain[i].sizeHint ) {
-		    deficit +=  chain[i].sizeHint - w;
-		} else if ( w > chain[i].maximumSize ) {
-		    surplus += w - chain[i].maximumSize;
-		}
-	    }
-	    if ( deficit > 0 && surplus <= deficit ) {
-		// give to the ones that have too little
-		for ( i = start; i < start+count; i++ ) {
-		    if ( !chain[i].done &&
-			 chain[i].size < chain[i].sizeHint ) {
-			chain[i].size = chain[i].sizeHint;
-			chain[i].done = TRUE;
-			space_left -= chain[i].sizeHint;
-			sumStretch -= chain[i].stretch;
-			n--;
-		    }
-		}
-	    }
-	    if ( surplus > 0 && surplus >= deficit ) {
-		// take from the ones that have too much
-		for ( i = start; i < start+count; i++ ) {
-		    if ( !chain[i].done &&
-			 chain[i].size > chain[i].maximumSize ) {
-			chain[i].size = chain[i].maximumSize;
-			chain[i].done = TRUE;
-			space_left -= chain[i].maximumSize;
-			sumStretch -= chain[i].stretch;
-			n--;
-		    }
-		}
-	    }
-	} while ( n > 0 && surplus != deficit );
-	if ( n == 0 )
-	    extraspace = space_left;
+          I have a wonderful mathematical proof for the correctness
+          of this principle, but unfortunately this comment is too
+          small to contain it.
+        */
+        int surplus, deficit;
+        do
+        {
+            surplus = deficit = 0;
+            fixed fp_space = toFixed(space_left);
+            fixed fp_w = 0;
+            for(i = start; i < start + count; i++)
+            {
+                if(chain[i].done)
+                    continue;
+                extraspace = 0;
+                if(sumStretch <= 0)
+                    fp_w += fp_space / n;
+                else
+                    fp_w += (fp_space * chain[i].stretch) / sumStretch;
+                int w = fRound(fp_w);
+                chain[i].size = w;
+                fp_w -= toFixed(w);   // give the difference to the next
+                if(w < chain[i].sizeHint)
+                {
+                    deficit +=  chain[i].sizeHint - w;
+                }
+                else if(w > chain[i].maximumSize)
+                {
+                    surplus += w - chain[i].maximumSize;
+                }
+            }
+            if(deficit > 0 && surplus <= deficit)
+            {
+                // give to the ones that have too little
+                for(i = start; i < start + count; i++)
+                {
+                    if(!chain[i].done &&
+                            chain[i].size < chain[i].sizeHint)
+                    {
+                        chain[i].size = chain[i].sizeHint;
+                        chain[i].done = TRUE;
+                        space_left -= chain[i].sizeHint;
+                        sumStretch -= chain[i].stretch;
+                        n--;
+                    }
+                }
+            }
+            if(surplus > 0 && surplus >= deficit)
+            {
+                // take from the ones that have too much
+                for(i = start; i < start + count; i++)
+                {
+                    if(!chain[i].done &&
+                            chain[i].size > chain[i].maximumSize)
+                    {
+                        chain[i].size = chain[i].maximumSize;
+                        chain[i].done = TRUE;
+                        space_left -= chain[i].maximumSize;
+                        sumStretch -= chain[i].stretch;
+                        n--;
+                    }
+                }
+            }
+        }
+        while(n > 0 && surplus != deficit);
+        if(n == 0)
+            extraspace = space_left;
     }
 
     // as a last resort, we distribute the unwanted space equally
     // among the spacers (counting the start and end of the chain).
 
     //### should do a sub-pixel allocation of extra space
-    int extra = extraspace / ( spacerCount + 2 );
+    int extra = extraspace / (spacerCount + 2);
     int p = pos + extra;
-    for ( i = start; i < start+count; i++ ) {
-	chain[i].pos = p;
-	p = p + chain[i].size;
-	if ( !chain[i].empty )
-	    p += spacer+extra;
+    for(i = start; i < start + count; i++)
+    {
+        chain[i].pos = p;
+        p = p + chain[i].size;
+        if(!chain[i].empty)
+            p += spacer + extra;
     }
 }
 

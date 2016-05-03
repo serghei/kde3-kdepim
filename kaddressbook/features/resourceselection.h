@@ -31,16 +31,17 @@
 class QListViewItem;
 class QPushButton;
 
-namespace KPIM { class ResourceABC; }
+namespace KPIM {
+class ResourceABC;
+}
 
 class ResourceItem;
 
-class ResourceSelection : public KAB::ExtensionWidget
-{
-  Q_OBJECT
+class ResourceSelection : public KAB::ExtensionWidget {
+    Q_OBJECT
 
-  public:
-    ResourceSelection( KAB::Core*, QWidget *parent, const char *name );
+public:
+    ResourceSelection(KAB::Core *, QWidget *parent, const char *name);
     virtual ~ResourceSelection();
 
     QString title() const;
@@ -48,25 +49,25 @@ class ResourceSelection : public KAB::ExtensionWidget
 
     void contactsSelectionChanged() {};
 
-  private slots:
+private slots:
     void add();
     void edit();
     void remove();
-    void currentChanged( QListViewItem* );
+    void currentChanged(QListViewItem *);
 
     void updateView();
 
-    void slotSubresourceAdded( KPIM::ResourceABC *resource,
-                               const QString& /*type*/,
-                               const QString& subResource );
-    void slotSubresourceRemoved( KPIM::ResourceABC* /*resource*/,
-                                 const QString& /*type*/,
-                                 const QString& subResource );
+    void slotSubresourceAdded(KPIM::ResourceABC *resource,
+                              const QString & /*type*/,
+                              const QString &subResource);
+    void slotSubresourceRemoved(KPIM::ResourceABC * /*resource*/,
+                                const QString & /*type*/,
+                                const QString &subResource);
 
-  private:
+private:
     void initGUI();
 
-    ResourceItem* selectedItem() const;
+    ResourceItem *selectedItem() const;
 
     KListView *mListView;
     QPushButton *mAddButton;

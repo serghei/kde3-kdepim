@@ -36,7 +36,9 @@ class DesignerFields;
 class EmbeddedURLPage;
 }
 
-namespace KOrg { class IncidenceChangerBase; }
+namespace KOrg {
+class IncidenceChangerBase;
+}
 
 class KOEditorDetails;
 class KOAttendeeEditor;
@@ -52,96 +54,103 @@ using namespace KOrg;
 /**
   This is the base class for the calendar component editors.
 */
-class KOIncidenceEditor : public KDialogBase
-{
+class KOIncidenceEditor : public KDialogBase {
     Q_OBJECT
-  public:
+public:
     /**
       Construct new IncidenceEditor.
     */
-    KOIncidenceEditor( const QString &caption, Calendar *calendar,
-                       QWidget *parent );
+    KOIncidenceEditor(const QString &caption, Calendar *calendar,
+                      QWidget *parent);
     virtual ~KOIncidenceEditor();
 
     /** This incidence has been modified externally */
-    virtual void modified (int /*change*/=0) {}
+    virtual void modified(int /*change*/ = 0) {}
 
     virtual void reload() = 0;
 
-    virtual void selectInvitationCounterProposal( bool enable );
+    virtual void selectInvitationCounterProposal(bool enable);
 
-  public slots:
+public slots:
     /** Edit an existing todo. */
     virtual void editIncidence(Incidence *, Calendar *) = 0;
-    virtual void setIncidenceChanger( IncidenceChangerBase *changer ) {
-        mChanger = changer; }
+    virtual void setIncidenceChanger(IncidenceChangerBase *changer)
+    {
+        mChanger = changer;
+    }
     /** Initialize editor. This function creates the tab widgets. */
     virtual void init() = 0;
     /**
       Adds attachments to the editor
     */
-    void addAttachments( const QStringList &attachments,
-                         const QStringList& mimeTypes = QStringList(),
-                         bool inlineAttachment = false );
+    void addAttachments(const QStringList &attachments,
+                        const QStringList &mimeTypes = QStringList(),
+                        bool inlineAttachment = false);
     /**
       Adds attendees to the editor
     */
-    void addAttendees( const QStringList &attendees );
+    void addAttendees(const QStringList &attendees);
 
 
-  signals:
-    void deleteAttendee( Incidence * );
+signals:
+    void deleteAttendee(Incidence *);
 
     void editCategories();
     void updateCategoryConfig();
-    void dialogClose( Incidence * );
-    void editCanceled( Incidence * );
+    void dialogClose(Incidence *);
+    void editCanceled(Incidence *);
 
-    void deleteIncidenceSignal( Incidence * );
-    void signalAddAttachments( const QStringList &attachments,
-                               const QStringList& mimeTypes = QStringList(),
-                               bool inlineAttachment = false );
+    void deleteIncidenceSignal(Incidence *);
+    void signalAddAttachments(const QStringList &attachments,
+                              const QStringList &mimeTypes = QStringList(),
+                              bool inlineAttachment = false);
 
 
-  protected slots:
+protected slots:
     void slotApply();
     void slotOk();
     void slotCancel();
-    void openURL( const KURL &url );
+    void openURL(const KURL &url);
 
     virtual void slotManageTemplates();
 
-    virtual void slotSaveTemplate( const QString & ) = 0;
-    virtual void slotLoadTemplate( const QString& );
-    virtual void slotTemplatesChanged( const QStringList& );
+    virtual void slotSaveTemplate(const QString &) = 0;
+    virtual void slotLoadTemplate(const QString &);
+    virtual void slotTemplatesChanged(const QStringList &);
 
-  protected:
-    virtual QString type() { return QString::null; }
-    virtual QStringList& templates() const = 0;
-    virtual void loadTemplate( /*const*/ CalendarLocal& ) = 0;
+protected:
+    virtual QString type()
+    {
+        return QString::null;
+    }
+    virtual QStringList &templates() const = 0;
+    virtual void loadTemplate(/*const*/ CalendarLocal &) = 0;
 
     void setupAttendeesTab();
-    void setupDesignerTabs( const QString &type );
+    void setupDesignerTabs(const QString &type);
 
-    void saveAsTemplate( Incidence *, const QString &name );
+    void saveAsTemplate(Incidence *, const QString &name);
 
-    void readDesignerFields( Incidence *i );
-    void writeDesignerFields( Incidence *i );
+    void readDesignerFields(Incidence *i);
+    void writeDesignerFields(Incidence *i);
     // Returns the page widget. To remove the tab, just delete that one.
-    QWidget *addDesignerTab( const QString &uifile );
+    QWidget *addDesignerTab(const QString &uifile);
 
-    void setupEmbeddedURLPage( const QString &label, const QString &url,
-                               const QString &mimetype );
-    void createEmbeddedURLPages( Incidence *i );
+    void setupEmbeddedURLPage(const QString &label, const QString &url,
+                              const QString &mimetype);
+    void createEmbeddedURLPages(Incidence *i);
 
     /**
       Process user input and create or update event. Returns false if input is invalid.
     */
-    virtual bool processInput() { return false; }
+    virtual bool processInput()
+    {
+        return false;
+    }
 
     virtual void processCancel() {}
 
-    void cancelRemovedAttendees( Incidence *incidence );
+    void cancelRemovedAttendees(Incidence *incidence);
 
     Calendar *mCalendar;
 
@@ -150,7 +159,7 @@ class KOIncidenceEditor : public KDialogBase
     KOrg::IncidenceChangerBase *mChanger;
 
     QPtrList<KPIM::DesignerFields> mDesignerFields;
-    QMap<QWidget*, KPIM::DesignerFields*> mDesignerFieldForWidget;
+    QMap<QWidget *, KPIM::DesignerFields *> mDesignerFieldForWidget;
     QPtrList<QWidget> mEmbeddedURLPages;
     QPtrList<QWidget> mAttachedDesignerFields;
     bool mIsCounter;

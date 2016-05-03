@@ -3,11 +3,11 @@
 #include <string.h>
 #include <mimelib/binhex.h>
 
-const char * const kPreamble =
+const char *const kPreamble =
     "(This file must be converted with BinHex 4.0)";
 
 const char kBinhexChars[] =
-  "!\"#$%&'()*+,-012345689@ABCDEFGHIJKLMNPQRSTUVXYZ[`abcdefhijklmpqr";
+    "!\"#$%&'()*+,-012345689@ABCDEFGHIJKLMNPQRSTUVXYZ[`abcdefhijklmpqr";
 //            1         2         3         4         5         6
 // 0 123456789012345678901234567890123456789012345678901234567890123
 
@@ -15,58 +15,60 @@ const char kBinhexChars[] =
 #define SKIP 0x7E
 #define FAIL 0x7D
 
-const char kBinhexTable[] = {
-// 0x00
+const char kBinhexTable[] =
+{
+    // 0x00
     SKIP, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, SKIP, SKIP, FAIL, FAIL, SKIP, FAIL, FAIL,
-// 0x10
+    // 0x10
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0x20
+    // 0x20
     SKIP, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
     0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, FAIL, FAIL,
-// 0x30
+    // 0x30
     0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, FAIL,
     0x14, 0x15, DONE, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0x40
+    // 0x40
     0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
     0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, FAIL,
-// 0x50
+    // 0x50
     0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, FAIL,
     0x2C, 0x2D, 0x2E, 0x2F, FAIL, FAIL, FAIL, FAIL,
-// 0x60
+    // 0x60
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, FAIL,
     0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, FAIL, FAIL,
-// 0x70
+    // 0x70
     0x3D, 0x3E, 0x3F, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0x80
+    // 0x80
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0x90
+    // 0x90
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0xA0
+    // 0xA0
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0xB0
+    // 0xB0
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0xC0
+    // 0xC0
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0xD0
+    // 0xD0
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0xE0
+    // 0xE0
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
-// 0xF0
+    // 0xF0
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
     FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
 };
 
-static DwUint16 kCrcTable[] = {
+static DwUint16 kCrcTable[] =
+{
     0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
     0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
     0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
@@ -105,11 +107,12 @@ static DwUint16 kCrcTable[] = {
 inline DwUint16 UPDATE_CRC(DwUint16 crc, int ch)
 {
     int idx = ((crc >> 8) ^ ch) & 0xff;
-    return (DwUint16) ((crc << 8) ^ kCrcTable[idx]);
+    return (DwUint16)((crc << 8) ^ kCrcTable[idx]);
 }
 
 
-struct DwBinhexEncodeCtx {
+struct DwBinhexEncodeCtx
+{
     DwBinhexEncodeCtx();
     void PutChar(int aChar);
     void EncodeChar(int aChar);
@@ -134,7 +137,8 @@ DwBinhexEncodeCtx::DwBinhexEncodeCtx()
 
 inline void DwBinhexEncodeCtx::PutChar(int aChar)
 {
-    if (mLineLength == 64) {
+    if(mLineLength == 64)
+    {
         mBuffer.append(DW_EOL);
         mLineLength = 0;
     }
@@ -146,71 +150,85 @@ inline void DwBinhexEncodeCtx::PutChar(int aChar)
 void DwBinhexEncodeCtx::EncodeChar(int aChar)
 {
     // If we're in a run...
-    if (aChar == mLastChar && mRunLen < 255) {
+    if(aChar == mLastChar && mRunLen < 255)
+    {
         ++mRunLen;
         return;
     }
     // If we are not in a run, and have not just finished a run...
-    if (mRunLen == 1) {
+    if(mRunLen == 1)
+    {
         // Output the current character, but watch for 0x90, which must be
         // output as the two character sequence 0x90 0x00
-        if (aChar != 0x90) {
+        if(aChar != 0x90)
+        {
             mScratch[mScratchPos++] = (DwUint8) aChar;
         }
-        else {
+        else
+        {
             mScratch[mScratchPos++] = (DwUint8) 0x90;
             mScratch[mScratchPos++] = (DwUint8) 0x00;
         }
     }
     // If we just finished a run of length 2 ...
-    else if (mRunLen == 2) {
+    else if(mRunLen == 2)
+    {
         // Output the last character, but watch for 0x90, which must be
         // output as the two character sequence 0x90 0x00
-        if (mLastChar != 0x90) {
+        if(mLastChar != 0x90)
+        {
             mScratch[mScratchPos++] = (DwUint8) mLastChar;
         }
-        else {
+        else
+        {
             mScratch[mScratchPos++] = (DwUint8) 0x90;
             mScratch[mScratchPos++] = (DwUint8) 0x00;
         }
         // Output the current character, but watch for 0x90, which must be
         // output as the two character sequence 0x90 0x00
-        if (aChar != 0x90) {
+        if(aChar != 0x90)
+        {
             mScratch[mScratchPos++] = (DwUint8) aChar;
         }
-        else {
+        else
+        {
             mScratch[mScratchPos++] = (DwUint8) 0x90;
             mScratch[mScratchPos++] = (DwUint8) 0x00;
         }
     }
     // If we just finished a run of length greater than 2 ...
-    else /* if (mRunLen > 2) */ {
+    else /* if (mRunLen > 2) */
+    {
         // Output the run length code
         mScratch[mScratchPos++] = (DwUint8) 0x90;
         mScratch[mScratchPos++] = (DwUint8) mRunLen;
         // Output the current character, but watch for 0x90, which must be
         // output as the two character sequence 0x90 0x00
-        if (aChar != 0x90) {
+        if(aChar != 0x90)
+        {
             mScratch[mScratchPos++] = (DwUint8) aChar;
         }
-        else {
+        else
+        {
             mScratch[mScratchPos++] = (DwUint8) 0x90;
             mScratch[mScratchPos++] = (DwUint8) 0x00;
         }
     }
     mRunLen = 1;
     mLastChar = aChar;
-    while (mScratchPos >= 3) {
+    while(mScratchPos >= 3)
+    {
         int n = mScratch[0] >> 2;
-        PutChar(kBinhexChars[n&0x3f]);
+        PutChar(kBinhexChars[n & 0x3f]);
         n = (mScratch[0] << 4) | ((mScratch[1] >> 4) & 0x0f);
-        PutChar(kBinhexChars[n&0x3f]);
+        PutChar(kBinhexChars[n & 0x3f]);
         n = (mScratch[1] << 2) | ((mScratch[2] >> 6) & 0x03);
-        PutChar(kBinhexChars[n&0x3f]);
+        PutChar(kBinhexChars[n & 0x3f]);
         n = mScratch[2];
-        PutChar(kBinhexChars[n&0x3f]);
-        for (int i=0; i < mScratchPos-3; ++i) {
-            mScratch[i] = mScratch[i+3];
+        PutChar(kBinhexChars[n & 0x3f]);
+        for(int i = 0; i < mScratchPos - 3; ++i)
+        {
+            mScratch[i] = mScratch[i + 3];
         }
         mScratchPos -= 3;
     }
@@ -219,54 +237,62 @@ void DwBinhexEncodeCtx::EncodeChar(int aChar)
 
 void DwBinhexEncodeCtx::Finalize()
 {
-    if (mRunLen == 1) {
+    if(mRunLen == 1)
+    {
     }
-    else if (mRunLen == 2) {
+    else if(mRunLen == 2)
+    {
         // Output the last character, but watch for 0x90, which must be
         // output as the two character sequence 0x90 0x00
-        if (mLastChar != 0x90) {
+        if(mLastChar != 0x90)
+        {
             mScratch[mScratchPos++] = (DwUint8) mLastChar;
         }
-        else {
+        else
+        {
             mScratch[mScratchPos++] = (DwUint8) 0x90;
             mScratch[mScratchPos++] = (DwUint8) 0x00;
         }
     }
-    else /* if aCtx->mRunLen > 2) */ {
+    else /* if aCtx->mRunLen > 2) */
+    {
         // Output the run length code
         mScratch[mScratchPos++] = (DwUint8) 0x90;
         mScratch[mScratchPos++] = (DwUint8) mRunLen;
     }
     int n;
-    while (mScratchPos >= 3) {
+    while(mScratchPos >= 3)
+    {
         n = mScratch[0] >> 2;
-        PutChar(kBinhexChars[n&0x3f]);
+        PutChar(kBinhexChars[n & 0x3f]);
         n = (mScratch[0] << 4) | ((mScratch[1] >> 4) & 0x0f);
-        PutChar(kBinhexChars[n&0x3f]);
+        PutChar(kBinhexChars[n & 0x3f]);
         n = (mScratch[1] << 2) | ((mScratch[2] >> 6) & 0x03);
-        PutChar(kBinhexChars[n&0x3f]);
+        PutChar(kBinhexChars[n & 0x3f]);
         n = mScratch[2];
-        PutChar(kBinhexChars[n&0x3f]);
-        for (int i=0; i < mScratchPos-3; ++i) {
-            mScratch[i] = mScratch[i+3];
+        PutChar(kBinhexChars[n & 0x3f]);
+        for(int i = 0; i < mScratchPos - 3; ++i)
+        {
+            mScratch[i] = mScratch[i + 3];
         }
         mScratchPos -= 3;
     }
-    switch (mScratchPos) {
-    case 0:
-        break;
-    case 1:
-        n = mScratch[0] >> 2;
-        PutChar(kBinhexChars[n&0x3f]);
-        n = (mScratch[0] << 4);
-        PutChar(kBinhexChars[n&0x3f]);        
-    case 2:
-        n = mScratch[0] >> 2;
-        PutChar(kBinhexChars[n&0x3f]);
-        n = (mScratch[0] << 4) | ((mScratch[1] >> 4) & 0x0f);
-        PutChar(kBinhexChars[n&0x3f]);
-        n = (mScratch[1] << 2);
-        PutChar(kBinhexChars[n&0x3f]);
+    switch(mScratchPos)
+    {
+        case 0:
+            break;
+        case 1:
+            n = mScratch[0] >> 2;
+            PutChar(kBinhexChars[n & 0x3f]);
+            n = (mScratch[0] << 4);
+            PutChar(kBinhexChars[n & 0x3f]);
+        case 2:
+            n = mScratch[0] >> 2;
+            PutChar(kBinhexChars[n & 0x3f]);
+            n = (mScratch[0] << 4) | ((mScratch[1] >> 4) & 0x0f);
+            PutChar(kBinhexChars[n & 0x3f]);
+            n = (mScratch[1] << 2);
+            PutChar(kBinhexChars[n & 0x3f]);
     }
 }
 
@@ -275,7 +301,8 @@ void DwBinhexEncodeCtx::Finalize()
 //============================================================================
 
 
-struct DwBinhexDecodeCtx {
+struct DwBinhexDecodeCtx
+{
     DwBinhexDecodeCtx();
     int GetChar();
     int DecodeChar();
@@ -308,63 +335,69 @@ DwBinhexDecodeCtx::DwBinhexDecodeCtx()
 int DwBinhexDecodeCtx::GetChar()
 {
     // Refill the scratch buffer, if necessary
-    if (mScratchCount == 0) {
+    if(mScratchCount == 0)
+    {
         // Get up to four ASCII chars
         char cc[4];
         size_t k = 0;
         size_t len = mBinhexChars.length();
-        const DwString& binhexChars = mBinhexChars;
-        while (k < (size_t) 4 && mPos < len) {
+        const DwString &binhexChars = mBinhexChars;
+        while(k < (size_t) 4 && mPos < len)
+        {
             int ch = binhexChars[mPos++] & 0xff;
             ch = kBinhexTable[ch];
-            switch (ch) {
-            case DONE:
-                goto BREAK_1;
-            case SKIP:
-                break;
-            case FAIL:
-                mError = 1; // error!
-                return -1;
-            default:
-                cc[k++] = (char) ch;
-                break;
+            switch(ch)
+            {
+                case DONE:
+                    goto BREAK_1;
+                case SKIP:
+                    break;
+                case FAIL:
+                    mError = 1; // error!
+                    return -1;
+                default:
+                    cc[k++] = (char) ch;
+                    break;
             }
         }
-        BREAK_1:
+BREAK_1:
         // Convert the ASCII chars to 8-bit chars
         mScratch[0] = 0;
         mScratch[1] = 0;
         mScratch[2] = 0;
         mScratchCount = 0;
         mScratchPos = 0;
-        switch (k) {
-        case 4:
-            mScratch[2] |= (DwUint8) (cc[3] & 0x3f);
+        switch(k)
+        {
+            case 4:
+                mScratch[2] |= (DwUint8)(cc[3] & 0x3f);
             // fall through
-        case 3:
-            mScratch[2] |= (DwUint8) (cc[2] << 6);
-            mScratch[1] |= (DwUint8) ((cc[2] >> 2) & 0x0f);
-            ++mScratchCount;
+            case 3:
+                mScratch[2] |= (DwUint8)(cc[2] << 6);
+                mScratch[1] |= (DwUint8)((cc[2] >> 2) & 0x0f);
+                ++mScratchCount;
             // fall through
-        case 2:
-            mScratch[1] |= (DwUint8) (cc[1] << 4);
-            mScratch[0] |= (DwUint8) ((cc[1] >> 4) & 0x03);
-            ++mScratchCount;
+            case 2:
+                mScratch[1] |= (DwUint8)(cc[1] << 4);
+                mScratch[0] |= (DwUint8)((cc[1] >> 4) & 0x03);
+                ++mScratchCount;
             // fall through
-        case 1:
-            mScratch[0] |= (DwUint8) (cc[0] << 2);
-            ++mScratchCount;
-        case 0:
-            break;
+            case 1:
+                mScratch[0] |= (DwUint8)(cc[0] << 2);
+                ++mScratchCount;
+            case 0:
+                break;
         }
     }
     // Return an 8-bit char, or -1 if there are no more chars
     int ch;
-    if (mScratchCount > 0) {
+    if(mScratchCount > 0)
+    {
         --mScratchCount;
         ch = mScratch[mScratchPos++] & 0xff;
     }
-    else {
+    else
+    {
         ch = -1;
     }
     return ch;
@@ -374,32 +407,39 @@ int DwBinhexDecodeCtx::GetChar()
 int DwBinhexDecodeCtx::DecodeChar()
 {
     int ch;
-    if (mRunLen > 1) {
+    if(mRunLen > 1)
+    {
         ch = mLastChar;
         --mRunLen;
     }
-    else /* if (mRunLen == 1) */ {
+    else /* if (mRunLen == 1) */
+    {
         ch = GetChar();
         // 0x90 is the escape character
-        if ((ch & 0xff) == 0x90) {
+        if((ch & 0xff) == 0x90)
+        {
             ch = GetChar();
-            if (ch == -1) {
+            if(ch == -1)
+            {
                 // end of buffer or illegal character
                 mError = 1; // error!
             }
-            else if (ch == 0) {
+            else if(ch == 0)
+            {
                 // 0x90 0x00 is decoded to 0x90
                 ch = 0x90;
                 mRunLen = 1;
             }
-            else if (ch == 1) {
+            else if(ch == 1)
+            {
                 // Could be interpreted as a run of length 1, but in all
                 // likelihood, it's an error.
                 mError = 1; // error!
                 ch = -1;
                 mRunLen = 1;
             }
-            else if (ch >= 2) {
+            else if(ch >= 2)
+            {
                 // 0x90 n indicates a run of length n
                 mRunLen = ch - 1;
                 ch = mLastChar;
@@ -436,42 +476,42 @@ void DwBinhex::Initialize()
 }
 
 
-void DwBinhex::SetFileName(const char* aName)
+void DwBinhex::SetFileName(const char *aName)
 {
     strncpy(mFileName, aName, 64);
     mFileName[63] = 0;
 }
 
 
-const char* DwBinhex::FileName() const
+const char *DwBinhex::FileName() const
 {
     return mFileName;
 }
 
 
-void DwBinhex::SetFileType(const char* aType)
+void DwBinhex::SetFileType(const char *aType)
 {
     memcpy(mFileType, aType, 4);
 }
 
 
-void DwBinhex::FileType(char* aBuf) const
+void DwBinhex::FileType(char *aBuf) const
 {
     memcpy(aBuf, mFileType, 4);
 }
 
 
-void DwBinhex::SetFileCreator(const char* aCreator)
+void DwBinhex::SetFileCreator(const char *aCreator)
 {
     memcpy(mFileCreator, aCreator, 4);
 }
 
-void DwBinhex::FileCreator(char* aBuf) const
+void DwBinhex::FileCreator(char *aBuf) const
 {
     memcpy(aBuf, mFileCreator, 4);
 }
 
- 
+
 void DwBinhex::SetFlag1(DwUint8 aFlag)
 {
     mFlag1 = aFlag;
@@ -496,37 +536,37 @@ DwUint8 DwBinhex::Flag2() const
 }
 
 
-void DwBinhex::SetDataFork(const DwString& aStr)
+void DwBinhex::SetDataFork(const DwString &aStr)
 {
     mDataFork = aStr;
 }
 
 
-const DwString& DwBinhex::DataFork() const
+const DwString &DwBinhex::DataFork() const
 {
     return mDataFork;
 }
 
 
-void DwBinhex::SetResourceFork(const DwString& aStr)
+void DwBinhex::SetResourceFork(const DwString &aStr)
 {
     mResourceFork = aStr;
 }
 
 
-const DwString& DwBinhex::ResourceFork() const
+const DwString &DwBinhex::ResourceFork() const
 {
     return mResourceFork;
 }
 
 
-void DwBinhex::SetBinhexChars(const DwString& aStr)
+void DwBinhex::SetBinhexChars(const DwString &aStr)
 {
     mBinhexChars = aStr;
 }
 
 
-const DwString& DwBinhex::BinhexChars() const
+const DwString &DwBinhex::BinhexChars() const
 {
     return mBinhexChars;
 }
@@ -534,8 +574,8 @@ const DwString& DwBinhex::BinhexChars() const
 
 void DwBinhex::Encode()
 {
-    size_t bufSize = (mResourceFork.length()+2)/3*4
-        + (mDataFork.length()+2)/3*4 + 27 + strlen(mFileName);
+    size_t bufSize = (mResourceFork.length() + 2) / 3 * 4
+                     + (mDataFork.length() + 2) / 3 * 4 + 27 + strlen(mFileName);
     DwBinhexEncodeCtx ctx;
     ctx.mBuffer.reserve(bufSize);
     ctx.mBuffer.assign(kPreamble);
@@ -549,7 +589,8 @@ void DwBinhex::Encode()
     ctx.EncodeChar(ch);
     // File name
     size_t j;
-    for (j=0; j < fileNameLen; ++j) {
+    for(j = 0; j < fileNameLen; ++j)
+    {
         ch = mFileName[j] & 0xff;
         crc = UPDATE_CRC(crc, ch);
         ctx.EncodeChar(ch);
@@ -559,13 +600,15 @@ void DwBinhex::Encode()
     crc = UPDATE_CRC(crc, ch);
     ctx.EncodeChar(ch);
     // File type
-    for (j=0; j < (size_t) 4; ++j) {
+    for(j = 0; j < (size_t) 4; ++j)
+    {
         ch = mFileType[j] & 0xff;
         crc = UPDATE_CRC(crc, ch);
         ctx.EncodeChar(ch);
     }
     // File creator
-    for (j=0; j < (size_t) 4; ++j) {
+    for(j = 0; j < (size_t) 4; ++j)
+    {
         ch = mFileCreator[j] & 0xff;
         crc = UPDATE_CRC(crc, ch);
         ctx.EncodeChar(ch);
@@ -615,7 +658,8 @@ void DwBinhex::Encode()
     // Data fork
     crc = 0;
     size_t dataForkLen = mDataFork.length();
-    for (j=0; j < dataForkLen; ++j) {
+    for(j = 0; j < dataForkLen; ++j)
+    {
         ch = mDataFork[j] & 0xff;
         crc = UPDATE_CRC(crc, ch);
         ctx.EncodeChar(ch);
@@ -629,7 +673,8 @@ void DwBinhex::Encode()
     // Resource fork
     crc = 0;
     size_t rsrcForkLen = mResourceFork.length();
-    for (j=0; j < rsrcForkLen; ++j) {
+    for(j = 0; j < rsrcForkLen; ++j)
+    {
         ch = mResourceFork[j] & 0xff;
         crc = UPDATE_CRC(crc, ch);
         ctx.EncodeChar(ch);
@@ -661,32 +706,37 @@ int DwBinhex::Decode()
 
     DwBinhexDecodeCtx ctx;
     ctx.mBinhexChars = mBinhexChars;
-	// Find the preamble
+    // Find the preamble
     ctx.mPos = ctx.mBinhexChars.find("(This file must be converted "
-        "with BinHex", 0);
-    if (ctx.mPos == DwString::npos) {
+                                     "with BinHex", 0);
+    if(ctx.mPos == DwString::npos)
+    {
         return -1; // error!
     }
     ctx.mPos += 40;
     // Advance to just past the colon
     ctx.mPos = ctx.mBinhexChars.find((char) ':', ctx.mPos);
-    if (ctx.mPos == DwString::npos) {
+    if(ctx.mPos == DwString::npos)
+    {
         return -1; // error!
     }
     ++ctx.mPos;
     DwUint16 crc = 0;
     // File name length
     int ch = ctx.DecodeChar();
-    if (ch < 1 || 63 < ch) {
+    if(ch < 1 || 63 < ch)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     size_t fileNameLen = (size_t) ch;
     // File name
     size_t j;
-    for (j=0; j < fileNameLen; ++j) {
+    for(j = 0; j < fileNameLen; ++j)
+    {
         ch = ctx.DecodeChar();
-        if (ch == -1) {
+        if(ch == -1)
+        {
             return -1; // error!
         }
         crc = UPDATE_CRC(crc, ch);
@@ -694,23 +744,28 @@ int DwBinhex::Decode()
     }
     // Version
     ch = ctx.DecodeChar();
-    if (ch != 0) {
+    if(ch != 0)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     // File type
-    for (j=0; j < (size_t) 4; ++j) {
+    for(j = 0; j < (size_t) 4; ++j)
+    {
         ch = ctx.DecodeChar();
-        if (ch == -1) {
+        if(ch == -1)
+        {
             return -1; // error!
         }
         crc = UPDATE_CRC(crc, ch);
         mFileType[j] = (char) ch;
     }
     // File creator
-    for (j=0; j < (size_t) 4; ++j) {
+    for(j = 0; j < (size_t) 4; ++j)
+    {
         ch = ctx.DecodeChar();
-        if (ch == -1) {
+        if(ch == -1)
+        {
             return -1; // error!
         }
         crc = UPDATE_CRC(crc, ch);
@@ -718,40 +773,46 @@ int DwBinhex::Decode()
     }
     // Flags
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     mFlag1 = (DwUint8) ch;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     mFlag2 = (DwUint8) ch;
     // Data fork length
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     DwUint32 dataForkLen = ch & 0xff;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     dataForkLen <<= 8;
     dataForkLen |= ch & 0xff;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     dataForkLen <<= 8;
     dataForkLen |= ch & 0xff;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
@@ -759,27 +820,31 @@ int DwBinhex::Decode()
     dataForkLen |= ch & 0xff;
     // Resource fork length
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     DwUint32 rsrcForkLen = ch & 0xff;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     rsrcForkLen <<= 8;
     rsrcForkLen |= ch & 0xff;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
     rsrcForkLen <<= 8;
     rsrcForkLen |= ch & 0xff;
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc = UPDATE_CRC(crc, ch);
@@ -787,68 +852,81 @@ int DwBinhex::Decode()
     rsrcForkLen |= ch & 0xff;
     // Header CRC
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
-    DwUint16 crc1 = (DwUint16) (ch & 0xff);
+    DwUint16 crc1 = (DwUint16)(ch & 0xff);
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc1 <<= 8;
-    crc1 |= (DwUint16) (ch & 0xff);
-    if (crc1 != crc) {
+    crc1 |= (DwUint16)(ch & 0xff);
+    if(crc1 != crc)
+    {
         return -1; // error!
     }
 
     // Data fork
     crc = 0;
-    for (j=0; j < dataForkLen; ++j) {
+    for(j = 0; j < dataForkLen; ++j)
+    {
         ch = ctx.DecodeChar();
-        if (ch == -1) {
+        if(ch == -1)
+        {
             return -1; // error!
         }
         crc = UPDATE_CRC(crc, ch);
         mDataFork.append((size_t) 1, (char) ch);
     }
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
-    crc1 = (DwUint16) (ch & 0xff);
+    crc1 = (DwUint16)(ch & 0xff);
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc1 <<= 8;
-    crc1 |= (DwUint16) (ch & 0xff);
-    if (crc1 != crc) {
+    crc1 |= (DwUint16)(ch & 0xff);
+    if(crc1 != crc)
+    {
         mDataFork = "";
         return -1; // error!
     }
 
     // Resource fork
     crc = 0;
-    for (j=0; j < rsrcForkLen; ++j) {
+    for(j = 0; j < rsrcForkLen; ++j)
+    {
         ch = ctx.DecodeChar();
-        if (ch == -1) {
+        if(ch == -1)
+        {
             return -1; // error!
         }
         crc = UPDATE_CRC(crc, ch);
         mResourceFork.append((size_t) 1, (char) ch);
     }
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
-    crc1 = (DwUint16) (ch & 0xff);
+    crc1 = (DwUint16)(ch & 0xff);
     ch = ctx.DecodeChar();
-    if (ch == -1) {
+    if(ch == -1)
+    {
         return -1; // error!
     }
     crc1 <<= 8;
-    crc1 |= (DwUint16) (ch & 0xff);
-    if (crc1 != crc) {
+    crc1 |= (DwUint16)(ch & 0xff);
+    if(crc1 != crc)
+    {
         mResourceFork = "";
         return -1; // error!
     }

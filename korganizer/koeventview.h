@@ -52,11 +52,10 @@ class QPopupMenu;
   @author Preston Brown <pbrown@kde.org>
   @see KOListView, KOAgendaView, KOMonthView
 */
-class KOEventView : public KOrg::BaseView
-{
+class KOEventView : public KOrg::BaseView {
     Q_OBJECT
 
-  public:
+public:
     /**
      * Constructs a view.
      * @param cal is a pointer to the calendar object from which events
@@ -64,7 +63,7 @@ class KOEventView : public KOrg::BaseView
      * @param parent is the parent QWidget.
      * @param name is the view name.
      */
-    KOEventView(Calendar *cal,QWidget *parent=0,const char *name=0);
+    KOEventView(Calendar *cal, QWidget *parent = 0, const char *name = 0);
 
     /**
      * Destructor.  Views will do view-specific cleanups here.
@@ -88,17 +87,20 @@ class KOEventView : public KOrg::BaseView
     QPopupMenu *newEventPopup();
 
     /** This view is an view for displaying events. */
-    bool isEventView() { return true; }
+    bool isEventView()
+    {
+        return true;
+    }
 
-  public slots:
+public slots:
 
     /**
      Perform the default action for an incidence, e.g. open the event editor,
      when double-clicking an event in the agenda view.
     */
-    void defaultAction( Incidence * );
+    void defaultAction(Incidence *);
 
-  signals:
+signals:
     /**
      * when the view changes the dates that are selected in one way or
      * another, this signal is emitted.  It should be connected back to
@@ -113,10 +115,10 @@ class KOEventView : public KOrg::BaseView
      * Emitted when an event is moved using the mouse in an agenda
      * view (week / month).
      */
-    void shiftedEvent(const QDate& olddate, const QDate& newdate);
+    void shiftedEvent(const QDate &olddate, const QDate &newdate);
 
 
-  protected slots:
+protected slots:
     void popupShow();
     void popupEdit();
     void popupDelete();
@@ -124,7 +126,7 @@ class KOEventView : public KOrg::BaseView
     void popupCopy();
     virtual void showNewEventPopup();
 
-  protected:
+protected:
     Incidence *mCurrentIncidence;  // Incidence selected e.g. for a context menu
 };
 

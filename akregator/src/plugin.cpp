@@ -16,16 +16,16 @@ Plugin::~Plugin()
 
 
 void
-Plugin::addPluginProperty( const QString& key, const QString& value )
+Plugin::addPluginProperty(const QString &key, const QString &value)
 {
     m_properties[key.lower()] = value;
 }
 
 
 QString
-Plugin::pluginProperty( const QString& key )
+Plugin::pluginProperty(const QString &key)
 {
-    if ( m_properties.find( key.lower() ) == m_properties.end() )
+    if(m_properties.find(key.lower()) == m_properties.end())
         return "false";
 
     return m_properties[key.lower()];
@@ -33,9 +33,9 @@ Plugin::pluginProperty( const QString& key )
 
 
 bool
-Plugin::hasPluginProperty( const QString& key )
+Plugin::hasPluginProperty(const QString &key)
 {
-    return m_properties.find( key.lower() ) != m_properties.end();
+    return m_properties.find(key.lower()) != m_properties.end();
 }
 
 }

@@ -1,7 +1,7 @@
 #ifndef _KPILOT_KROUPWARE_H
 #define _KPILOT_KROUPWARE_H
 /* kroupware.h			KPilot
-** 
+**
 ** Copyright still to be determined.
 **
 ** This file defines the actions taken when KPilot
@@ -22,7 +22,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -34,53 +34,52 @@
 
 class QString;
 
-class KroupwareSync : public SyncAction
-{
+class KroupwareSync : public SyncAction {
 public:
-	// Creates a pre- or post-sync action
-	// depending on @p pre (pre==true makes
-	// it a pre-sync action, pre==false makes
-	// it a post-sync action).
-	//
-	// Which things it syncs is based on
-	// @p parts, which is a bitwise OR of
-	// values from the KroupwareParts enum.
-	//
-	KroupwareSync(bool pre,int parts,KPilotDeviceLink *p);
-	
-	enum KroupwareParts 
-	{
-		Cal=1,
-		Todo=2,
-		Notes=4,
-		Address=8
-	} ;
-	
+    // Creates a pre- or post-sync action
+    // depending on @p pre (pre==true makes
+    // it a pre-sync action, pre==false makes
+    // it a post-sync action).
+    //
+    // Which things it syncs is based on
+    // @p parts, which is a bitwise OR of
+    // values from the KroupwareParts enum.
+    //
+    KroupwareSync(bool pre, int parts, KPilotDeviceLink *p);
+
+    enum KroupwareParts
+    {
+        Cal = 1,
+        Todo = 2,
+        Notes = 4,
+        Address = 8
+    } ;
+
 protected:
-	virtual bool exec();
-	
-	void preSync();   // Functions to collect all the actions
-	void postSync();  //   together. Call {start,end}*().
-	
+    virtual bool exec();
+
+    void preSync();   // Functions to collect all the actions
+    void postSync();  //   together. Call {start,end}*().
+
 protected:
-	bool fPre;
-	int fParts;
-	
+    bool fPre;
+    int fParts;
+
 private:
-	bool _syncWithKMail;
+    bool _syncWithKMail;
 
-	void cleanupConfig();
-	void start_syncCal_TodosWithKMail( bool cal, bool todos);
-	void start_syncAddWithKMail();
-	void start_syncNotesWithKMail();
-	void end_syncCal_TodosWithKMail( bool cal, bool todos);
-	void end_syncAddWithKMail();
-	void end_syncNotesWithKMail();
+    void cleanupConfig();
+    void start_syncCal_TodosWithKMail(bool cal, bool todos);
+    void start_syncAddWithKMail();
+    void start_syncNotesWithKMail();
+    void end_syncCal_TodosWithKMail(bool cal, bool todos);
+    void end_syncAddWithKMail();
+    void end_syncNotesWithKMail();
 
-	
+
 public:
-	/* Try to start KMail. Returns true on success. */
-	static bool startKMail(QString *errormessage);
+    /* Try to start KMail. Returns true on success. */
+    static bool startKMail(QString *errormessage);
 } ;
 
 #endif

@@ -25,27 +25,39 @@
 
 class KListViewItem;
 
-enum FolderType {
-  Unbound,
-  Calendar,
-  Tasks,
-  Contacts
+enum FolderType
+{
+    Unbound,
+    Calendar,
+    Tasks,
+    Contacts
 };
 
-class KDE_EXPORT SloxFolder
-{
-  public:
-    SloxFolder( const QString &id, const QString &parentId, const QString &type, const QString &name, bool def = false );
+class KDE_EXPORT SloxFolder {
+public:
+    SloxFolder(const QString &id, const QString &parentId, const QString &type, const QString &name, bool def = false);
 
-    QString id() const { return mId; }
-    QString parentId() const { return mParentId; }
-    FolderType type() const { return mType; }
+    QString id() const
+    {
+        return mId;
+    }
+    QString parentId() const
+    {
+        return mParentId;
+    }
+    FolderType type() const
+    {
+        return mType;
+    }
     QString name() const;
-    bool isDefault() const { return mDefault; }
+    bool isDefault() const
+    {
+        return mDefault;
+    }
 
     KListViewItem *item;
 
-  private:
+private:
     QString mId, mParentId;
     FolderType mType;
     QString mName;

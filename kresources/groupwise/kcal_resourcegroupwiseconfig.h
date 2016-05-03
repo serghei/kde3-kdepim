@@ -36,23 +36,22 @@ class ResourceCachedSaveConfig;
 
 /**
   Configuration widget for Groupwise resource.
-  
+
   @see KCalResourceGroupwise
 */
-class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
-{ 
+class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    ResourceGroupwiseConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceGroupwiseConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource );
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  protected slots:
+protected slots:
     void slotViewUserSettings();
 
-  private:
+private:
     KLineEdit *mUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;

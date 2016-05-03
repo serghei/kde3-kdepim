@@ -26,15 +26,15 @@
 using namespace KOrg;
 
 class Datenums : public CalendarDecoration {
-  public:
+public:
     Datenums();
     ~Datenums() {}
-    
+
     void configure(QWidget *parent);
     QString shortText(const QDate &);
-    
+
     QString info();
-  protected:
+protected:
     int mDateNum;
 };
 

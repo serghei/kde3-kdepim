@@ -42,28 +42,28 @@ class KProcess;
 class QTimer;
 
 class CRLView : public QDialog {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  CRLView( QWidget* parent = 0, const char* name = 0, bool modal = false );
-  ~CRLView();
+    CRLView(QWidget *parent = 0, const char *name = 0, bool modal = false);
+    ~CRLView();
 public slots:
-  void slotUpdateView();
+    void slotUpdateView();
 
 protected slots:
-  void slotReadStdout( KProcess*, char* buf, int len);
-  void slotProcessExited();
-  void slotAppendBuffer();
+    void slotReadStdout(KProcess *, char *buf, int len);
+    void slotProcessExited();
+    void slotAppendBuffer();
 
 protected:
-  void closeEvent( QCloseEvent * );
+    void closeEvent(QCloseEvent *);
 
-private:  
-  QTextEdit*   _textView;
-  QPushButton* _updateButton;
-  QPushButton* _closeButton;
-  KProcess*    _process;
-  QTimer*      _timer;
-  QString      _buffer;
+private:
+    QTextEdit   *_textView;
+    QPushButton *_updateButton;
+    QPushButton *_closeButton;
+    KProcess    *_process;
+    QTimer      *_timer;
+    QString      _buffer;
 };
 
 #endif // CRLVIEW_H

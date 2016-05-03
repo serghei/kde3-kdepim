@@ -42,45 +42,46 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
+class Error;
+class Context;
+class Key;
 }
 
 namespace Kleo {
 
-  class QGpgMESignJob : public SignJob, private QGpgMEJob {
+class QGpgMESignJob : public SignJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMESignJob( GpgME::Context * context );
+public:
+    QGpgMESignJob(GpgME::Context *context);
     ~QGpgMESignJob();
 
     /*! \reimp from SignJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const QByteArray & plainText,
-			GpgME::Context::SignatureMode mode );
+    GpgME::Error start(const std::vector<GpgME::Key> &signers,
+                       const QByteArray &plainText,
+                       GpgME::Context::SignatureMode mode);
 
     /*! \reimp from SignJob */
-    GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
-			       const QByteArray & plainText,
-			       GpgME::Context::SignatureMode mode,
-			       QByteArray & signature );
+    GpgME::SigningResult exec(const std::vector<GpgME::Key> &signers,
+                              const QByteArray &plainText,
+                              GpgME::Context::SignatureMode mode,
+                              QByteArray &signature);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray & );
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    GpgME::Error setup(const std::vector<GpgME::Key> &, const QByteArray &);
 
-  private:
+private:
     GpgME::SigningResult mResult;
-  };
+};
 
 }
 

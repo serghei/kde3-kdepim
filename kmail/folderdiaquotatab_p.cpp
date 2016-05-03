@@ -51,37 +51,37 @@ using namespace KMail;
 
 struct QuotaInfo;
 
-QuotaWidget::QuotaWidget( QWidget* parent, const char* name )
-        :QWidget( parent, name )
+QuotaWidget::QuotaWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-      QVBoxLayout *box = new QVBoxLayout(this);
-      QWidget *stuff = new QWidget( this );
-      QGridLayout* layout =
-          new QGridLayout( stuff, 3, 3,
-                           KDialog::marginHint(),
-                           KDialog::spacingHint() );
-      mInfoLabel = new QLabel("", stuff );
-      mRootLabel = new QLabel("", stuff );
-      mProgressBar = new QProgressBar( stuff );
-      layout->addWidget( new QLabel( i18n("Root:" ), stuff ), 0, 0 );
-      layout->addWidget( mRootLabel, 0, 1 );
-      layout->addWidget( new QLabel( i18n("Usage:"), stuff ), 1, 0 );
-      //layout->addWidget( new QLabel( i18n("Status:"), stuff ), 2, 0 );
-      layout->addWidget( mInfoLabel, 1, 1 );
-      layout->addWidget( mProgressBar, 2, 1 );
-      box->addWidget( stuff );
-      box->addStretch( 2 );
+    QVBoxLayout *box = new QVBoxLayout(this);
+    QWidget *stuff = new QWidget(this);
+    QGridLayout *layout =
+        new QGridLayout(stuff, 3, 3,
+                        KDialog::marginHint(),
+                        KDialog::spacingHint());
+    mInfoLabel = new QLabel("", stuff);
+    mRootLabel = new QLabel("", stuff);
+    mProgressBar = new QProgressBar(stuff);
+    layout->addWidget(new QLabel(i18n("Root:"), stuff), 0, 0);
+    layout->addWidget(mRootLabel, 0, 1);
+    layout->addWidget(new QLabel(i18n("Usage:"), stuff), 1, 0);
+    //layout->addWidget( new QLabel( i18n("Status:"), stuff ), 2, 0 );
+    layout->addWidget(mInfoLabel, 1, 1);
+    layout->addWidget(mProgressBar, 2, 1);
+    box->addWidget(stuff);
+    box->addStretch(2);
 }
 
-void QuotaWidget::setQuotaInfo( const QuotaInfo& info )
+void QuotaWidget::setQuotaInfo(const QuotaInfo &info)
 {
-      // we are assuming only to get STORAGE type info here, thus
-      // casting to int is safe
-      int current = info.current().toInt();
-      int max = info.max().toInt();
-      mProgressBar->setProgress( current, max );
-      mInfoLabel->setText( info.toString() );
-      mRootLabel->setText( info.root() );
+    // we are assuming only to get STORAGE type info here, thus
+    // casting to int is safe
+    int current = info.current().toInt();
+    int max = info.max().toInt();
+    mProgressBar->setProgress(current, max);
+    mInfoLabel->setText(info.toString());
+    mRootLabel->setText(info.root());
 }
 
 

@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -28,26 +28,25 @@
 
 namespace Schema {
 
-class QualifiedName
-{
-  public:
+class QualifiedName {
+public:
     typedef QValueList<QualifiedName> List;
 
     QualifiedName();
-    QualifiedName( const QString &name );
+    QualifiedName(const QString &name);
 
-    void operator=( const QString &name );
+    void operator=(const QString &name);
 
     QString localName() const;
     QString prefix() const;
 
-    void setNameSpace( const QString &nameSpace );
+    void setNameSpace(const QString &nameSpace);
     QString nameSpace() const;
 
-    bool operator==( const QualifiedName& ) const;
+    bool operator==(const QualifiedName &) const;
 
-  private:
-    void parse( const QString& );
+private:
+    void parse(const QString &);
 
     QString mNameSpace;
     QString mLocalName;

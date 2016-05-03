@@ -40,50 +40,50 @@
 #include <utility>
 
 namespace GpgME {
-  class Error;
-  class Key;
-  class DecryptionResult;
-  class VerificationResult;
+class Error;
+class Key;
+class DecryptionResult;
+class VerificationResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous combined decrypters and verifiers
+/**
+   @short An abstract base class for asynchronous combined decrypters and verifiers
 
-     To use a DecryptVerifyJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the operation with a
-     call to start(). This call might fail, in which case the
-     DecryptVerifyJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
+   To use a DecryptVerifyJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the operation with a
+   call to start(). This call might fail, in which case the
+   DecryptVerifyJob instance will have scheduled it's own destruction with
+   a call to QObject::deleteLater().
 
-     After result() is emitted, the DecryptVerifyJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class DecryptVerifyJob : public Job {
+   After result() is emitted, the DecryptVerifyJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class DecryptVerifyJob : public Job {
     Q_OBJECT
-  protected:
-    DecryptVerifyJob( QObject * parent, const char * name );
-  public:
+protected:
+    DecryptVerifyJob(QObject *parent, const char *name);
+public:
     ~DecryptVerifyJob();
 
     /**
        Starts the combined decryption and verification operation.
        \a cipherText is the data to decrypt and later verify.
     */
-    virtual GpgME::Error start( const QByteArray & cipherText ) = 0;
+    virtual GpgME::Error start(const QByteArray &cipherText) = 0;
 
     /** Synchronous equivalent of start() */
-    virtual std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-      exec( const QByteArray & cipherText, QByteArray & plainText ) = 0;
+    virtual std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
+    exec(const QByteArray &cipherText, QByteArray &plainText) = 0;
 
-  signals:
-    void result( const GpgME::DecryptionResult & decryptionresult,
-		 const GpgME::VerificationResult & verificationresult,
-		 const QByteArray & plainText );
-  };
+signals:
+    void result(const GpgME::DecryptionResult &decryptionresult,
+                const GpgME::VerificationResult &verificationresult,
+                const QByteArray &plainText);
+};
 
 }
 

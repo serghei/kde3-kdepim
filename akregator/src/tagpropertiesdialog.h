@@ -31,26 +31,25 @@ namespace Akregator {
 
 class Tag;
 
-class TagPropertiesDialog : public KDialogBase 
-{
+class TagPropertiesDialog : public KDialogBase {
     Q_OBJECT
 
-    public:
+public:
 
-        TagPropertiesDialog(QWidget *parent=0, const char *name=0);
-        virtual ~TagPropertiesDialog();
+    TagPropertiesDialog(QWidget *parent = 0, const char *name = 0);
+    virtual ~TagPropertiesDialog();
 
-        void setTag(const Tag& tag);
+    void setTag(const Tag &tag);
 
-    protected slots:
+protected slots:
 
-        virtual void slotOk();
-        virtual void slotApply();
-        virtual void slotTextChanged(const QString& text);
+    virtual void slotOk();
+    virtual void slotApply();
+    virtual void slotTextChanged(const QString &text);
 
-    private:
-        class TagPropertiesDialogPrivate;
-        TagPropertiesDialogPrivate* d;
+private:
+    class TagPropertiesDialogPrivate;
+    TagPropertiesDialogPrivate *d;
 };
 
 } // namespace Akregator

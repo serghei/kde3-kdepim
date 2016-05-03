@@ -25,20 +25,19 @@
 
 class KWidgetList;
 
-class MultiConflictDialog : public ConflictDialog
-{
-  Q_OBJECT
+class MultiConflictDialog : public ConflictDialog {
+    Q_OBJECT
 
-  public:
-    MultiConflictDialog( QSync::SyncMapping &mapping, QWidget *parent );
+public:
+    MultiConflictDialog(QSync::SyncMapping &mapping, QWidget *parent);
     ~MultiConflictDialog();
 
-  private slots:
+private slots:
     void useSelectedChange();
     void duplicateChange();
     void ignoreChange();
 
-  private:
+private:
     void initGUI();
 
     KWidgetList *mWidgetList;

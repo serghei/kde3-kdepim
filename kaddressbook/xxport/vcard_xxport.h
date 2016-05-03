@@ -26,25 +26,27 @@
 
 #include <xxport.h>
 
-class VCardXXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class VCardXXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    VCardXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "vcard"; }
+    QString identifier() const
+    {
+        return "vcard";
+    }
 
-  public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    KABC::AddresseeList importContacts( const QString &data ) const;
+public slots:
+    bool exportContacts(const KABC::AddresseeList &list, const QString &data);
+    KABC::AddresseeList importContacts(const QString &data) const;
 
-  private:
-    KABC::AddresseeList parseVCard( const QString &data ) const;
-    bool doExport( const KURL &url, const QString &data );
-    void addKey( KABC::Addressee &addr, KABC::Key::Types type );
+private:
+    KABC::AddresseeList parseVCard(const QString &data) const;
+    bool doExport(const KURL &url, const QString &data);
+    void addKey(KABC::Addressee &addr, KABC::Key::Types type);
 
-    KABC::AddresseeList filterContacts( const KABC::AddresseeList& );
+    KABC::AddresseeList filterContacts(const KABC::AddresseeList &);
 };
 
 #endif

@@ -42,30 +42,42 @@
 #define PGP6_BACKEND_NAME "Kpgp/pgp6"
 
 namespace Kleo {
-  class CryptoConfig;
+class CryptoConfig;
 }
 class QString;
 class KpgpWrapper;
 
 namespace Kleo {
 
-  class KpgpBackendBase : public Kleo::CryptoBackend {
-  public:
+class KpgpBackendBase : public Kleo::CryptoBackend {
+public:
     KpgpBackendBase();
     ~KpgpBackendBase();
 
-    CryptoConfig * config() const { return 0; }
-    Protocol * openpgp() const;
-    Protocol * smime() const { return 0; }
+    CryptoConfig *config() const
+    {
+        return 0;
+    }
+    Protocol *openpgp() const;
+    Protocol *smime() const
+    {
+        return 0;
+    }
 
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return false; }
+    bool supportsOpenPGP() const
+    {
+        return true;
+    }
+    bool supportsSMIME() const
+    {
+        return false;
+    }
 
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
-  private:
-    mutable KpgpWrapper * mOpenPGPProtocol;
-  };
+    bool checkForOpenPGP(QString *reason = 0) const;
+    bool checkForSMIME(QString *reason = 0) const;
+private:
+    mutable KpgpWrapper *mOpenPGPProtocol;
+};
 
 }
 

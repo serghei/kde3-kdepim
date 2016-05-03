@@ -41,53 +41,66 @@
 static const char kleopatra_version[] = "0.40";
 static const char description[] = I18N_NOOP("KDE Key Manager");
 
-struct about_data {
-  const char * name;
-  const char * desc;
-  const char * email;
-  const char * web;
+struct about_data
+{
+    const char *name;
+    const char *desc;
+    const char *email;
+    const char *web;
 };
 
-static const about_data authors[] = {
-  { "Marc Mutz", I18N_NOOP("Current Maintainer"), "mutz@kde.org", 0 },
-  { "Steffen Hansen", I18N_NOOP("Former Maintainer"), "hansen@kde.org", 0 },
-  { "Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
-  { "Jesper Petersen", I18N_NOOP("Original Author"), "blackie@kde.org", 0 },
+static const about_data authors[] =
+{
+    { "Marc Mutz", I18N_NOOP("Current Maintainer"), "mutz@kde.org", 0 },
+    { "Steffen Hansen", I18N_NOOP("Former Maintainer"), "hansen@kde.org", 0 },
+    { "Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
+    { "Jesper Petersen", I18N_NOOP("Original Author"), "blackie@kde.org", 0 },
 };
 
 
-static const about_data credits[] = {
-  { "David Faure",
-    I18N_NOOP("Backend configuration framework, KIO integration"),
-    "faure@kde.org", 0 },
-  { "Michel Boyer de la Giroday",
-    I18N_NOOP("Key-state dependant colors and fonts in the key list"),
-    "michel@klaralvdalens-datakonsult.se", 0 },
-  { "Daniel Molkentin",
-    I18N_NOOP("Certificate Wizard KIOSK integration, infrastructure"),
-    "molkentin@kde.org", 0 },
-  { "Ralf Nolden",
-    I18N_NOOP("Support for obsolete EMAIL RDN in Certificate Wizard"),
-    "nolden@kde.org", 0 },
-  { "Karl-Heinz Zimmer",
-    I18N_NOOP("DN display ordering support, infrastructure"),
-    "khz@kde.org", 0 },
+static const about_data credits[] =
+{
+    {
+        "David Faure",
+        I18N_NOOP("Backend configuration framework, KIO integration"),
+        "faure@kde.org", 0
+    },
+    {
+        "Michel Boyer de la Giroday",
+        I18N_NOOP("Key-state dependant colors and fonts in the key list"),
+        "michel@klaralvdalens-datakonsult.se", 0
+    },
+    {
+        "Daniel Molkentin",
+        I18N_NOOP("Certificate Wizard KIOSK integration, infrastructure"),
+        "molkentin@kde.org", 0
+    },
+    {
+        "Ralf Nolden",
+        I18N_NOOP("Support for obsolete EMAIL RDN in Certificate Wizard"),
+        "nolden@kde.org", 0
+    },
+    {
+        "Karl-Heinz Zimmer",
+        I18N_NOOP("DN display ordering support, infrastructure"),
+        "khz@kde.org", 0
+    },
 };
 
 
 AboutData::AboutData()
-  : KAboutData( "kleopatra", I18N_NOOP("Kleopatra"),
-		kleopatra_version, description, License_GPL,
-		"(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
-		"Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
-		"(c) 2004 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB" )
+    : KAboutData("kleopatra", I18N_NOOP("Kleopatra"),
+                 kleopatra_version, description, License_GPL,
+                 "(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
+                 "Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
+                 "(c) 2004 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB")
 {
-  using ::authors;
-  using ::credits;
-  for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-    addAuthor( authors[i].name, authors[i].desc,
-	       authors[i].email, authors[i].web );
-  for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
-    addCredit( credits[i].name, credits[i].desc,
-	       credits[i].email, credits[i].web );
+    using ::authors;
+    using ::credits;
+    for(unsigned int i = 0 ; i < sizeof authors / sizeof * authors ; ++i)
+        addAuthor(authors[i].name, authors[i].desc,
+                  authors[i].email, authors[i].web);
+    for(unsigned int i = 0 ; i < sizeof credits / sizeof * credits ; ++i)
+        addCredit(credits[i].name, credits[i].desc,
+                  credits[i].email, credits[i].web);
 }

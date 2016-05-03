@@ -26,22 +26,21 @@
 #include <kdemacros.h>
 
 namespace KCal {
-    class CalendarLocal;
-    class Journal;
+class CalendarLocal;
+class Journal;
 }
 
 
 /**
  * This converts and removes old note storage and config files.
  */
-class KDE_EXPORT KNotesLegacy
-{
+class KDE_EXPORT KNotesLegacy {
 public:
     static void cleanUp();
-    static bool convert( KCal::CalendarLocal *calendar );
+    static bool convert(KCal::CalendarLocal *calendar);
 private:
-    static bool convertKNotes1Config( KCal::Journal *j, QDir& dir, const QString& file );
-    static bool convertKNotes2Config( KCal::Journal *j, QDir& dir, const QString& file );
+    static bool convertKNotes1Config(KCal::Journal *j, QDir &dir, const QString &file);
+    static bool convertKNotes2Config(KCal::Journal *j, QDir &dir, const QString &file);
 };
 
 #endif

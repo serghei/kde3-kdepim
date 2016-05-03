@@ -46,108 +46,125 @@
 
 namespace KMail {
 
-  KHtmlPartHtmlWriter::KHtmlPartHtmlWriter( KHTMLPart * part,
-					    QObject * parent, const char * name )
-    : QObject( parent, name ), HtmlWriter(),
-      mHtmlPart( part ), mState( Ended ), mHtmlTimer( 0, "mHtmlTimer" )
-  {
-    assert( part );
-    connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
-  }
+KHtmlPartHtmlWriter::KHtmlPartHtmlWriter(KHTMLPart *part,
+        QObject *parent, const char *name)
+    : QObject(parent, name), HtmlWriter(),
+      mHtmlPart(part), mState(Ended), mHtmlTimer(0, "mHtmlTimer")
+{
+    assert(part);
+    connect(&mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()));
+}
 
-  KHtmlPartHtmlWriter::~KHtmlPartHtmlWriter() {
+KHtmlPartHtmlWriter::~KHtmlPartHtmlWriter()
+{
 
-  }
+}
 
-  void KHtmlPartHtmlWriter::begin( const QString & css ) {
-    if ( mState != Ended ) {
-      kdWarning( 5006 ) << "KHtmlPartHtmlWriter: begin() called on non-ended session!" << endl;
-      reset();
+void KHtmlPartHtmlWriter::begin(const QString &css)
+{
+    if(mState != Ended)
+    {
+        kdWarning(5006) << "KHtmlPartHtmlWriter: begin() called on non-ended session!" << endl;
+        reset();
     }
 
     mEmbeddedPartMap.clear();
 
     // clear the widget:
-    mHtmlPart->view()->setUpdatesEnabled( false );
-    mHtmlPart->view()->viewport()->setUpdatesEnabled( false );
-    static_cast<QScrollView *>(mHtmlPart->widget())->ensureVisible( 0, 0 );
+    mHtmlPart->view()->setUpdatesEnabled(false);
+    mHtmlPart->view()->viewport()->setUpdatesEnabled(false);
+    static_cast<QScrollView *>(mHtmlPart->widget())->ensureVisible(0, 0);
 
-    mHtmlPart->begin( KURL( "file:/" ) );
-    if ( !css.isEmpty() )
-      mHtmlPart->setUserStyleSheet( css );
+    mHtmlPart->begin(KURL("file:/"));
+    if(!css.isEmpty())
+        mHtmlPart->setUserStyleSheet(css);
     mState = Begun;
-  }
+}
 
-  void KHtmlPartHtmlWriter::end() {
-    kdWarning( mState != Begun, 5006 ) << "KHtmlPartHtmlWriter: end() called on non-begun or queued session!" << endl;
+void KHtmlPartHtmlWriter::end()
+{
+    kdWarning(mState != Begun, 5006) << "KHtmlPartHtmlWriter: end() called on non-begun or queued session!" << endl;
     mHtmlPart->end();
 
     resolveCidUrls();
 
-    mHtmlPart->view()->viewport()->setUpdatesEnabled( true );
-    mHtmlPart->view()->setUpdatesEnabled( true );
-    mHtmlPart->view()->viewport()->repaint( false );
+    mHtmlPart->view()->viewport()->setUpdatesEnabled(true);
+    mHtmlPart->view()->setUpdatesEnabled(true);
+    mHtmlPart->view()->viewport()->repaint(false);
     mState = Ended;
-  }
+}
 
-  void KHtmlPartHtmlWriter::reset() {
-    if ( mState != Ended ) {
-      mHtmlTimer.stop();
-      mHtmlQueue.clear();
-      mState = Begun; // don't run into end()'s warning
-      end();
+void KHtmlPartHtmlWriter::reset()
+{
+    if(mState != Ended)
+    {
+        mHtmlTimer.stop();
+        mHtmlQueue.clear();
+        mState = Begun; // don't run into end()'s warning
+        end();
     }
     mState = Ended;
-  }
+}
 
-  void KHtmlPartHtmlWriter::write( const QString & str ) {
-    kdWarning( mState != Begun, 5006 ) << "KHtmlPartHtmlWriter: write() called in Ended or Queued state!" << endl;
-    mHtmlPart->write( str );
-  }
+void KHtmlPartHtmlWriter::write(const QString &str)
+{
+    kdWarning(mState != Begun, 5006) << "KHtmlPartHtmlWriter: write() called in Ended or Queued state!" << endl;
+    mHtmlPart->write(str);
+}
 
-  void KHtmlPartHtmlWriter::queue( const QString & str ) {
+void KHtmlPartHtmlWriter::queue(const QString &str)
+{
     static const uint chunksize = 16384;
-    for ( uint pos = 0 ; pos < str.length() ; pos += chunksize )
-      mHtmlQueue.push_back( str.mid( pos, chunksize ) );
+    for(uint pos = 0 ; pos < str.length() ; pos += chunksize)
+        mHtmlQueue.push_back(str.mid(pos, chunksize));
     mState = Queued;
-  }
+}
 
-  void KHtmlPartHtmlWriter::flush() {
+void KHtmlPartHtmlWriter::flush()
+{
     slotWriteNextHtmlChunk();
-  }
+}
 
-  void KHtmlPartHtmlWriter::slotWriteNextHtmlChunk() {
-    if ( mHtmlQueue.empty() ) {
-      mState = Begun; // don't run into end()'s warning
-      end();
-    } else {
-      mHtmlPart->write( mHtmlQueue.front() );
-      mHtmlQueue.pop_front();
-      mHtmlTimer.start( 0, true );
+void KHtmlPartHtmlWriter::slotWriteNextHtmlChunk()
+{
+    if(mHtmlQueue.empty())
+    {
+        mState = Begun; // don't run into end()'s warning
+        end();
     }
-  }
+    else
+    {
+        mHtmlPart->write(mHtmlQueue.front());
+        mHtmlQueue.pop_front();
+        mHtmlTimer.start(0, true);
+    }
+}
 
-  void KHtmlPartHtmlWriter::embedPart( const QCString & contentId,
-                                       const QString & contentURL ) {
+void KHtmlPartHtmlWriter::embedPart(const QCString &contentId,
+                                    const QString &contentURL)
+{
     mEmbeddedPartMap[QString(contentId)] = contentURL;
-  }
+}
 
-  void KHtmlPartHtmlWriter::resolveCidUrls()
-  {
+void KHtmlPartHtmlWriter::resolveCidUrls()
+{
     DOM::HTMLDocument document = mHtmlPart->htmlDocument();
     DOM::HTMLCollection images = document.images();
-    for ( DOM::Node node = images.firstItem(); !node.isNull(); node = images.nextItem() ) {
-      DOM::HTMLImageElement image( node );
-      KURL url( image.src().string() );
-      if ( url.protocol() == "cid" ) {
-        EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.find( url.path() );
-        if ( it != mEmbeddedPartMap.end() ) {
-          kdDebug(5006) << "Replacing " << url.prettyURL() << " by " << it.data() << endl;
-          image.setSrc( it.data() );
+    for(DOM::Node node = images.firstItem(); !node.isNull(); node = images.nextItem())
+    {
+        DOM::HTMLImageElement image(node);
+        KURL url(image.src().string());
+        if(url.protocol() == "cid")
+        {
+            EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.find(url.path());
+            if(it != mEmbeddedPartMap.end())
+            {
+                kdDebug(5006) << "Replacing " << url.prettyURL() << " by " << it.data() << endl;
+                image.setSrc(it.data());
+            }
         }
-      }
     }
-  }
+}
 
 } // namespace KMail
 

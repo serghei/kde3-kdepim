@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -31,41 +31,40 @@
 
 namespace Schema {
 
-class TypesTable
-{
-  public:
+class TypesTable {
+public:
     TypesTable();
     ~TypesTable();
 
     void clear();
 
-    int addType( XSDType *type );
-    int addExtType( XSDType *type, int id );
+    int addType(XSDType *type);
+    int addExtType(XSDType *type, int id);
 
-    int typeId( const QualifiedName &name, bool create = false );
+    int typeId(const QualifiedName &name, bool create = false);
 
-    QString typeName( int id ) const;
+    QString typeName(int id) const;
 
-    int addExternalTypeId( const QualifiedName &type, XSDType *type );
+    int addExternalTypeId(const QualifiedName &type, XSDType *type);
 
     int numExtRefs() const;
-    QualifiedName extRefName( int index ) const;
-    int extRefType( int index ) const;
+    QualifiedName extRefName(int index) const;
+    int extRefType(int index) const;
 
-    void resolveForwardElementRefs( const QString &name, Element &element );
-    void resolveForwardAttributeRefs( const QString &name, Attribute &attribute );
+    void resolveForwardElementRefs(const QString &name, Element &element);
+    void resolveForwardAttributeRefs(const QString &name, Attribute &attribute);
 
-    XSDType *typePtr( int id ) const;
+    XSDType *typePtr(int id) const;
 
     int numTypes() const;
 
     bool detectUndefinedTypes();
 
-    void setTargetNamespace( const QString &nameSpace );
+    void setTargetNamespace(const QString &nameSpace);
     QString targetNamespace() const;
 
-  private:
-    QValueList<XSDType*> mTypes;
+private:
+    QValueList<XSDType *> mTypes;
 
     //maintains a map of all user defined type names and their ids
     QMap<QString, int> mUserTypes;
@@ -77,8 +76,8 @@ class TypesTable
 
     struct ExternRef
     {
-      int localTypeId;
-      QualifiedName qname;
+        int localTypeId;
+        QualifiedName qname;
     };
 
     QValueList<struct ExternRef> mExternRefs;

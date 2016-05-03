@@ -29,15 +29,14 @@ class MainWidget;
   This class serves as the main window for Kitchensync. It handles the
   menus, toolbars, and status bars.
  */
-class MainWindow : public KMainWindow
-{
-  Q_OBJECT
+class MainWindow : public KMainWindow {
+    Q_OBJECT
 
-  public:
+public:
     MainWindow();
     virtual ~MainWindow();
 
-  private:
+private:
     void initActions();
 
     MainWidget *mWidget;

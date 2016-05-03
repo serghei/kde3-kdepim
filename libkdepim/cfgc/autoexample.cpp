@@ -36,31 +36,31 @@
 
 #include <qlabel.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "example", I18N_NOOP("autoconfig example"), "0.1" );
-  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+    KAboutData aboutData("example", I18N_NOOP("autoconfig example"), "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  // Create a new dialog with the same name as the above checking code.
-  KAutoConfigDialog *dialog = new KAutoConfigDialog(0, "settings");
-  
-  // Add the general page.  Store the settings in the General group and
-  // use the icon package_settings.
-  GeneralBase *general = new GeneralBase( 0 );
-  dialog->addPage( general, i18n("General"), "General", "" );
+    // Create a new dialog with the same name as the above checking code.
+    KAutoConfigDialog *dialog = new KAutoConfigDialog(0, "settings");
 
-  MyOptionsBase *myOptions = new MyOptionsBase( 0 );
+    // Add the general page.  Store the settings in the General group and
+    // use the icon package_settings.
+    GeneralBase *general = new GeneralBase(0);
+    dialog->addPage(general, i18n("General"), "General", "");
 
-//  myOptions->show();
-  dialog->addPage( myOptions, i18n("MyOptions"), "MyOptions", "" );
+    MyOptionsBase *myOptions = new MyOptionsBase(0);
 
-//  app.setMainWidget( dialog );
+    //  myOptions->show();
+    dialog->addPage(myOptions, i18n("MyOptions"), "MyOptions", "");
 
-  dialog->show();
-    
-  return app.exec();
+    //  app.setMainWidget( dialog );
+
+    dialog->show();
+
+    return app.exec();
 }

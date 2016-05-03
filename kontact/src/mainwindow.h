@@ -48,48 +48,48 @@ class KRSqueezedTextLabel;
 class KHTMLPart;
 class KeyPressEater;
 
-namespace KPIM
-{
-  class StatusbarProgressWidget;
+namespace KPIM {
+class StatusbarProgressWidget;
 }
 
-namespace Kontact
-{
+namespace Kontact {
 
 class Plugin;
 class SidePaneBase;
 class AboutDialog;
 
-typedef QValueList<Kontact::Plugin*> PluginList;
+typedef QValueList<Kontact::Plugin *> PluginList;
 
-class MainWindow : public Kontact::Core, public KDCOPServiceStarter, public KontactIface
-{
-  Q_OBJECT
+class MainWindow : public Kontact::Core, public KDCOPServiceStarter, public KontactIface {
+    Q_OBJECT
 
-  public:
+public:
     MainWindow();
     ~MainWindow();
 
     // KDCOPServiceStarter interface
-    virtual int startServiceFor( const QString& serviceType,
-                                 const QString& constraint = QString::null,
-                                 const QString& preferences = QString::null,
-                                 QString *error = 0, QCString* dcopService = 0,
-                                 int flags = 0 );
+    virtual int startServiceFor(const QString &serviceType,
+                                const QString &constraint = QString::null,
+                                const QString &preferences = QString::null,
+                                QString *error = 0, QCString *dcopService = 0,
+                                int flags = 0);
 
-    virtual PluginList pluginList() const { return mPlugins; }
-    void setActivePluginModule( const QString & );
+    virtual PluginList pluginList() const
+    {
+        return mPlugins;
+    }
+    void setActivePluginModule(const QString &);
 
-  public slots:
-    virtual void selectPlugin( Kontact::Plugin *plugin );
-    virtual void selectPlugin( const QString &pluginName );
+public slots:
+    virtual void selectPlugin(Kontact::Plugin *plugin);
+    virtual void selectPlugin(const QString &pluginName);
 
     void updateConfig();
 
-  protected slots:
+protected slots:
     void initObject();
     void initGUI();
-    void slotActivePartChanged( KParts::Part *part );
+    void slotActivePartChanged(KParts::Part *part);
     void slotPreferences();
     void slotNewClicked();
     void slotSyncClicked();
@@ -97,44 +97,44 @@ class MainWindow : public Kontact::Core, public KDCOPServiceStarter, public Kont
     void slotShowTip();
     void slotRequestFeature();
     void slotConfigureProfiles();
-    void slotLoadProfile( const QString& id );
-    void slotSaveToProfile( const QString& id );
+    void slotLoadProfile(const QString &id);
+    void slotSaveToProfile(const QString &id);
     void slotNewToolbarConfig();
     void slotShowIntroduction();
     void showAboutDialog();
-    void slotShowStatusMsg( const QString& );
+    void slotShowStatusMsg(const QString &);
     void activatePluginModule();
-    void slotOpenUrl( const KURL &url );
+    void slotOpenUrl(const KURL &url);
 
-  private:
+private:
     void initWidgets();
     void initAboutScreen();
     void loadSettings();
     void saveSettings();
 
-    bool isPluginLoaded( const KPluginInfo * );
-    Kontact::Plugin *pluginFromInfo( const KPluginInfo * );
+    bool isPluginLoaded(const KPluginInfo *);
+    Kontact::Plugin *pluginFromInfo(const KPluginInfo *);
     void loadPlugins();
     void unloadPlugins();
-    bool removePlugin( const KPluginInfo * );
-    void addPlugin( Kontact::Plugin *plugin );
-    void partLoaded( Kontact::Plugin *plugin, KParts::ReadOnlyPart *part );
+    bool removePlugin(const KPluginInfo *);
+    void addPlugin(Kontact::Plugin *plugin);
+    void partLoaded(Kontact::Plugin *plugin, KParts::ReadOnlyPart *part);
     void setupActions();
-    void showTip( bool );
+    void showTip(bool);
     virtual bool queryClose();
-    virtual void readProperties( KConfig *config );
-    virtual void saveProperties( KConfig *config );
-    void paintAboutScreen( const QString& msg );
+    virtual void readProperties(KConfig *config);
+    virtual void saveProperties(KConfig *config);
+    void paintAboutScreen(const QString &msg);
     static QString introductionString();
-    KToolBar* findToolBar(const char* name);
+    KToolBar *findToolBar(const char *name);
 
-  private slots:
+private slots:
     void pluginsChanged();
 
     void configureShortcuts();
     void configureToolbars();
 
-  private:
+private:
     QFrame *mTopWidget;
 
     QSplitter *mSplitter;
@@ -147,10 +147,10 @@ class MainWindow : public Kontact::Core, public KDCOPServiceStarter, public Kont
     KParts::PartManager *mPartManager;
     PluginList mPlugins;
     PluginList mDelayedPreload;
-    QValueList<KPluginInfo*> mPluginInfos;
+    QValueList<KPluginInfo *> mPluginInfos;
     KHTMLPart *mIntroPart;
 
-    KRSqueezedTextLabel* mStatusMsgLabel;
+    KRSqueezedTextLabel *mStatusMsgLabel;
     KPIM::StatusbarProgressWidget *mLittleProgress;
 
     QString mActiveModule;

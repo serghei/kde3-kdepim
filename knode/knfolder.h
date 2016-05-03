@@ -24,27 +24,48 @@
 
 class KNFolder : public KNArticleCollection  {
 
-  friend class KNCleanUp;
+    friend class KNCleanUp;
 
-  public:
+public:
     KNFolder();
-    KNFolder(int id, const QString &name, KNFolder *parent=0);
-    KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent=0);
+    KNFolder(int id, const QString &name, KNFolder *parent = 0);
+    KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent = 0);
     ~KNFolder();
 
     //type
-    collectionType type()               { return CTfolder; }
+    collectionType type()
+    {
+        return CTfolder;
+    }
 
     //id
-    int id() const                           { return i_d; }
-    void setId(int i)                   { i_d=i; }
-    int parentId() const                     { return p_arentId; }
-    bool isStandardFolder()             { return (i_d > 0) && (i_d <=3); }
-    bool isRootFolder()                 { return i_d==0; }
+    int id() const
+    {
+        return i_d;
+    }
+    void setId(int i)
+    {
+        i_d = i;
+    }
+    int parentId() const
+    {
+        return p_arentId;
+    }
+    bool isStandardFolder()
+    {
+        return (i_d > 0) && (i_d <= 3);
+    }
+    bool isRootFolder()
+    {
+        return i_d == 0;
+    }
 
     //list item handling
     void updateListItem();
-    bool wasOpen()const                      { return w_asOpen; }
+    bool wasOpen()const
+    {
+        return w_asOpen;
+    }
 
     //info
     QString path();
@@ -53,51 +74,59 @@ class KNFolder : public KNArticleCollection  {
     void saveInfo();
 
     //article access
-    KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(KNArticleCollection::at(i)); }
-    KNLocalArticle* byId(int id)        { return static_cast<KNLocalArticle*>(KNArticleCollection::byId(id)); }
-    KNLocalArticle* byMessageId(const QCString &mid)
-                                        { return static_cast<KNLocalArticle*>(KNArticleCollection::byMessageId(mid)); }
+    KNLocalArticle *at(int i)
+    {
+        return static_cast<KNLocalArticle *>(KNArticleCollection::at(i));
+    }
+    KNLocalArticle *byId(int id)
+    {
+        return static_cast<KNLocalArticle *>(KNArticleCollection::byId(id));
+    }
+    KNLocalArticle *byMessageId(const QCString &mid)
+    {
+        return static_cast<KNLocalArticle *>(KNArticleCollection::byMessageId(mid));
+    }
 
     //parent
     void setParent(KNCollection *p);
 
     //load, save and delete
     bool loadHdrs();
-    bool unloadHdrs(bool force=true);
+    bool unloadHdrs(bool force = true);
     bool loadArticle(KNLocalArticle *a);
-    bool saveArticles( KNLocalArticle::List &l );
-    void removeArticles( KNLocalArticle::List &l, bool del = true );
+    bool saveArticles(KNLocalArticle::List &l);
+    void removeArticles(KNLocalArticle::List &l, bool del = true);
     void deleteAll();
     void deleteFiles();
 
     //index synchronization
-    void syncIndex(bool force=false);
+    void syncIndex(bool force = false);
 
-    protected:
-      void closeFiles();
-      int i_d;            // unique id: 0: root folder 1-3: standard folders
-      int p_arentId;      // -1 for the root folder
-      bool i_ndexDirty;   // do we need to sync?
-      bool w_asOpen;      // was this folder open in the listview on the last shutdown?
-      KNFile m_boxFile;
-      QFile i_ndexFile;
-      QString i_nfoPath;
+protected:
+    void closeFiles();
+    int i_d;            // unique id: 0: root folder 1-3: standard folders
+    int p_arentId;      // -1 for the root folder
+    bool i_ndexDirty;   // do we need to sync?
+    bool w_asOpen;      // was this folder open in the listview on the last shutdown?
+    KNFile m_boxFile;
+    QFile i_ndexFile;
+    QString i_nfoPath;
 
-      /* helper-class: stores index-data of an article */
-      class DynData {
-        public:
-          DynData()  {}
-          ~DynData() {}
-          void setData(KNLocalArticle *a);
-          void getData(KNLocalArticle *a);
+    /* helper-class: stores index-data of an article */
+    class DynData {
+    public:
+        DynData()  {}
+        ~DynData() {}
+        void setData(KNLocalArticle *a);
+        void getData(KNLocalArticle *a);
 
-          int id,
-              so,
-              eo,
-              sId;
-          time_t ti;
-          bool flags[6];
-      };
+        int id,
+            so,
+            eo,
+            sId;
+        time_t ti;
+        bool flags[6];
+    };
 };
 
 #endif

@@ -26,16 +26,16 @@
 
 namespace KMail {
 
-  class PartMetaData {
-  public:
+class PartMetaData {
+public:
     PartMetaData()
-      : sigSummary( GpgME::Signature::None ),
-        isSigned( false ),
-        isGoodSignature( false ),
-        isEncrypted( false ),
-        isDecryptable( false ),
-        technicalProblem( false ),
-        isEncapsulatedRfc822Message( false )
+        : sigSummary(GpgME::Signature::None),
+          isSigned(false),
+          isGoodSignature(false),
+          isEncrypted(false),
+          isDecryptable(false),
+          technicalProblem(false),
+          isEncapsulatedRfc822Message(false)
     {
     }
     GpgME::Signature::Summary sigSummary;
@@ -56,7 +56,7 @@ namespace KMail {
     bool isDecryptable : 1;
     bool technicalProblem : 1;
     bool isEncapsulatedRfc822Message : 1;
-  };
+};
 
 } // namespace KMail
 

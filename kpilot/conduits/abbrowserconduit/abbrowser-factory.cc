@@ -34,12 +34,11 @@
 #include "abbrowser-conduit.h"
 #include "abbrowser-setup.h"
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_address()
-{
-	return new ConduitFactory<AbbrowserWidgetSetup,AbbrowserConduit>(0,"abbrowserconduit");
-}
+    void *init_conduit_address()
+    {
+        return new ConduitFactory<AbbrowserWidgetSetup, AbbrowserConduit>(0, "abbrowserconduit");
+    }
 
 }

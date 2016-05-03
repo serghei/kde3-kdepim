@@ -38,22 +38,21 @@ class KMMessage;
 
 namespace KMail {
 
-class MaildirJob : public FolderJob
-{
-  Q_OBJECT
+class MaildirJob : public FolderJob {
+    Q_OBJECT
 public:
-  MaildirJob( KMMessage *msg, JobType jt = tGetMessage, KMFolder *folder = 0 );
-  MaildirJob( QPtrList<KMMessage>& msgList, const QString& sets,
-              JobType jt = tGetMessage, KMFolder *folder = 0 );
-  virtual ~MaildirJob();
+    MaildirJob(KMMessage *msg, JobType jt = tGetMessage, KMFolder *folder = 0);
+    MaildirJob(QPtrList<KMMessage> &msgList, const QString &sets,
+               JobType jt = tGetMessage, KMFolder *folder = 0);
+    virtual ~MaildirJob();
 
-  void setParentFolder( const KMFolderMaildir* parent );
+    void setParentFolder(const KMFolderMaildir *parent);
 protected:
-  void execute();
+    void execute();
 protected slots:
-  void startJob();
+    void startJob();
 private:
-  KMFolderMaildir* mParentFolder;
+    KMFolderMaildir *mParentFolder;
 };
 
 }

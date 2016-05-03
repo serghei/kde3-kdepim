@@ -42,7 +42,9 @@
 #include <qstring.h>
 #include <qobject.h>
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 namespace KCal {
 class Calendar;
 class FreeBusy;
@@ -52,37 +54,35 @@ class FreeBusyManager;
 /**
  * Class for downloading FreeBusy Lists
  */
-class FreeBusyDownloadJob : public QObject
-{
+class FreeBusyDownloadJob : public QObject {
     Q_OBJECT
-  public:
-    FreeBusyDownloadJob( const QString &email, const KURL &url,
-                   FreeBusyManager *manager, const char *name = 0 );
+public:
+    FreeBusyDownloadJob(const QString &email, const KURL &url,
+                        FreeBusyManager *manager, const char *name = 0);
 
     virtual ~FreeBusyDownloadJob();
 
-  protected slots:
-    void slotResult( KIO::Job * );
-    void slotData(  KIO::Job *, const QByteArray &data );
+protected slots:
+    void slotResult(KIO::Job *);
+    void slotData(KIO::Job *, const QByteArray &data);
 
-  signals:
-    void freeBusyDownloaded( KCal::FreeBusy *, const QString& email );
-    void freeBusyDownloadError( const QString& email );
+signals:
+    void freeBusyDownloaded(KCal::FreeBusy *, const QString &email);
+    void freeBusyDownloadError(const QString &email);
 
-  private:
+private:
     FreeBusyManager *mManager;
     QString mEmail;
 
     QCString mFreeBusyData;
 };
 
-class FreeBusyManager : public QObject, public KCal::FreeBusyCache
-{
+class FreeBusyManager : public QObject, public KCal::FreeBusyCache {
     Q_OBJECT
-  public:
-    FreeBusyManager( QObject *parent, const char *name );
+public:
+    FreeBusyManager(QObject *parent, const char *name);
 
-    void setCalendar( KCal::Calendar * );
+    void setCalendar(KCal::Calendar *);
 
     /// KOrganizer publishes the free/busy list
     void publishFreeBusy();
@@ -95,26 +95,26 @@ class FreeBusyManager : public QObject, public KCal::FreeBusyCache
 
       Return true if a download is initiated, and false otherwise
     */
-    bool retrieveFreeBusy( const QString &email, bool forceDownload );
+    bool retrieveFreeBusy(const QString &email, bool forceDownload);
 
     void cancelRetrieval();
 
-    KCal::FreeBusy *iCalToFreeBusy( const QCString &data );
+    KCal::FreeBusy *iCalToFreeBusy(const QCString &data);
 
     /**
       Load freebusy information belonging to email.
     */
-    KCal::FreeBusy *loadFreeBusy( const QString &email );
+    KCal::FreeBusy *loadFreeBusy(const QString &email);
     /**
       Store freebusy information belonging to email.
     */
-    bool saveFreeBusy( KCal::FreeBusy *freebusy, const KCal::Person &person );
-//    bool saveFreeBusy( KCal::FreeBusy *, const QString &email );
+    bool saveFreeBusy(KCal::FreeBusy *freebusy, const KCal::Person &person);
+    //    bool saveFreeBusy( KCal::FreeBusy *, const QString &email );
 
     /**
       Return URL of freeBusy information for given email address.
     */
-    KURL freeBusyUrl( const QString &email );
+    KURL freeBusyUrl(const QString &email);
 
     /**
       Return directory used for stroing free/busy information.
@@ -125,20 +125,20 @@ class FreeBusyManager : public QObject, public KCal::FreeBusyCache
       Change the broken Url status
       mBrokenUrl is used to show the 'broken url popup' only once
      */
-    void setBrokenUrl( bool isBroken );
+    void setBrokenUrl(bool isBroken);
 
-  public slots:
+public slots:
     // When something changed in the calendar, we get this called
     void slotPerhapsUploadFB();
 
-  signals:
+signals:
     /**
       This signal is emitted to return results of free/busy requests.
     */
-    void freeBusyRetrieved( KCal::FreeBusy *, const QString &email );
+    void freeBusyRetrieved(KCal::FreeBusy *, const QString &email);
 
-  protected:
-    void timerEvent( QTimerEvent* );
+protected:
+    void timerEvent(QTimerEvent *);
 
     /**
       Return free/busy list of calendar owner as iCalendar string.
@@ -153,16 +153,16 @@ class FreeBusyManager : public QObject, public KCal::FreeBusyCache
     /**
       Convert free/busy object to iCalendar string.
     */
-    QString freeBusyToIcal( KCal::FreeBusy * );
+    QString freeBusyToIcal(KCal::FreeBusy *);
 
-  protected slots:
+protected slots:
     bool processRetrieveQueue();
 
-  private slots:
-    void slotUploadFreeBusyResult( KIO::Job * );
-    void slotFreeBusyDownloadError( const QString& email );
+private slots:
+    void slotUploadFreeBusyResult(KIO::Job *);
+    void slotFreeBusyDownloadError(const QString &email);
 
-  private:
+private:
     KCal::Calendar *mCalendar;
     KCal::ICalFormat mFormat;
 

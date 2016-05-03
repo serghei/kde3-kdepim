@@ -23,10 +23,9 @@
 #include <dcopobject.h>
 
 
-class KOrganizerIface : virtual public DCOPObject
-{
+class KOrganizerIface : virtual public DCOPObject {
     K_DCOP
-  k_dcop:
+k_dcop:
     virtual bool openURL(const QString &url) = 0;
     virtual bool mergeURL(const QString &url) = 0;
     virtual void closeURL() = 0;
@@ -52,8 +51,8 @@ class KOrganizerIface : virtual public DCOPObject
     */
     virtual bool addIncidence(const QString &iCal) = 0;
 
-    virtual void loadProfile( const QString& path ) = 0;
-    virtual void saveToProfile( const QString& path ) const = 0;
+    virtual void loadProfile(const QString &path) = 0;
+    virtual void saveToProfile(const QString &path) const = 0;
 };
 
 #endif

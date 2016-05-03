@@ -42,11 +42,10 @@ class KMServerTest;
 class AccountTypeBox;
 class KMTransportInfo;
 
-class AccountWizard : public KWizard
-{
-  Q_OBJECT
+class AccountWizard : public KWizard {
+    Q_OBJECT
 
-  public:
+public:
     /**
       Starts the wizard. The wizard is only shown when it has not be
       run successfully before.
@@ -54,15 +53,15 @@ class AccountWizard : public KWizard
       @param kernel The mail kernel the wizard should work on.
       @param parent The parent widget of the dialog.
      */
-    static void start( KMKernel *kernel, QWidget *parent = 0 );
+    static void start(KMKernel *kernel, QWidget *parent = 0);
 
     /**
       Reimplemented
      */
-    void showPage( QWidget *page );
+    void showPage(QWidget *page);
 
-  protected:
-    AccountWizard( KMKernel *kernel, QWidget *parent );
+protected:
+    AccountWizard(KMKernel *kernel, QWidget *parent);
     ~AccountWizard() {};
 
     void setupWelcomePage();
@@ -71,7 +70,7 @@ class AccountWizard : public KWizard
     void setupLoginInformationPage();
     void setupServerInformationPage();
 
-  protected slots:
+protected slots:
     void chooseLocation();
     virtual void accept();
     void createTransport();
@@ -80,23 +79,23 @@ class AccountWizard : public KWizard
     void accountCreated();
     void finished();
 
-  private slots:
-    void popCapabilities( const QStringList&, const QStringList& );
-    void imapCapabilities( const QStringList&, const QStringList& );
-    void smtpCapabilities( const QStringList&, const QStringList&,
-                           const QString&, const QString&, const QString& );
+private slots:
+    void popCapabilities(const QStringList &, const QStringList &);
+    void imapCapabilities(const QStringList &, const QStringList &);
+    void smtpCapabilities(const QStringList &, const QStringList &,
+                          const QString &, const QString &, const QString &);
 
-  private:
+private:
     QString accountName() const;
-    QLabel *createInfoLabel( const QString &msg );
+    QLabel *createInfoLabel(const QString &msg);
 
-    void checkPopCapabilities( const QString&, int );
-    void checkImapCapabilities( const QString&, int );
-    void checkSmtpCapabilities( const QString&, int );
-    uint popCapabilitiesFromStringList( const QStringList& );
-    uint imapCapabilitiesFromStringList( const QStringList& );
-    uint authMethodsFromString( const QString& );
-    uint authMethodsFromStringList( const QStringList& );
+    void checkPopCapabilities(const QString &, int);
+    void checkImapCapabilities(const QString &, int);
+    void checkSmtpCapabilities(const QString &, int);
+    uint popCapabilitiesFromStringList(const QStringList &);
+    uint imapCapabilitiesFromStringList(const QStringList &);
+    uint authMethodsFromString(const QString &);
+    uint authMethodsFromStringList(const QStringList &);
 
     QWidget *mWelcomePage;
 

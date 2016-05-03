@@ -46,34 +46,32 @@ class Calendar;
 }
 using namespace KCal;
 
-class FocusLineEdit : public QLineEdit
-{
+class FocusLineEdit : public QLineEdit {
     Q_OBJECT
-  public:
-    FocusLineEdit( QWidget *parent );
+public:
+    FocusLineEdit(QWidget *parent);
 
-  signals:
+signals:
     void focusReceivedSignal();
 
-  protected:
-    void focusInEvent ( QFocusEvent *e );
+protected:
+    void focusInEvent(QFocusEvent *e);
 
-  private:
+private:
     bool mSkipFirst;
 };
 
-class KOEditorGeneral : public QObject
-{
+class KOEditorGeneral : public QObject {
     Q_OBJECT
-  public:
-    KOEditorGeneral (QObject* parent=0,const char* name=0);
+public:
+    KOEditorGeneral(QObject *parent = 0, const char *name = 0);
     virtual ~KOEditorGeneral();
 
-    void initHeader( QWidget *parent,QBoxLayout *topLayout );
-    void initDescription(QWidget *,QBoxLayout *);
-    void initSecrecy(QWidget *,QBoxLayout *);
-    void initAlarm(QWidget *,QBoxLayout *);
-    void initAttachments(QWidget *,QBoxLayout *);
+    void initHeader(QWidget *parent, QBoxLayout *topLayout);
+    void initDescription(QWidget *, QBoxLayout *);
+    void initSecrecy(QWidget *, QBoxLayout *);
+    void initAlarm(QWidget *, QBoxLayout *);
+    void initAttachments(QWidget *, QBoxLayout *);
 
     /** Set widgets to default values */
     void setDefaults(bool allDay);
@@ -83,36 +81,39 @@ class KOEditorGeneral : public QObject
     void writeIncidence(Incidence *);
 
     /** Check if the input is valid. */
-    bool validateInput() { return true; }
+    bool validateInput()
+    {
+        return true;
+    }
 
-    void enableAlarm( bool enable );
-    void toggleAlarm( bool on );
+    void enableAlarm(bool enable);
+    void toggleAlarm(bool on);
 
-    void setSummary( const QString & );
-    void setDescription( const QString & );
+    void setSummary(const QString &);
+    void setDescription(const QString &);
 
     QObject *typeAheadReceiver() const;
 
-  public slots:
+public slots:
     void setCategories(const QStringList &categories);
     void selectCategories();
-    void addAttachments( const QStringList &attachments,
-                         const QStringList& mimeTypes = QStringList(),
-                         bool inlineAttachment = false );
+    void addAttachments(const QStringList &attachments,
+                        const QStringList &mimeTypes = QStringList(),
+                        bool inlineAttachment = false);
 
 
-  protected slots:
+protected slots:
     void editAlarms();
     void updateAlarmWidgets();
     void updateDefaultAlarmTime();
-    void updateAttendeeSummary( int count );
+    void updateAttendeeSummary(int count);
 
-  signals:
+signals:
     void openCategoryDialog();
     void updateCategoryConfig();
     void focusReceivedSignal();
-    void openURL( const KURL & );
-  protected:
+    void openURL(const KURL &);
+protected:
     Alarm *alarmFromSimplePage() const;
 
     QLineEdit               *mSummaryEdit;
@@ -135,7 +136,7 @@ class KOEditorGeneral : public QObject
 
     enum AlarmStackPages { SimpleAlarmPage, AdvancedAlarmLabel };
 
-  private:
+private:
     QStringList mCategories;
     KCal::Alarm::List mAlarmList;
 };

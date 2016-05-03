@@ -41,104 +41,103 @@ class PilotDatabase;
 #include "pilotComponent.h"
 #include "pilotAddress.h"
 
-class AddressWidget : public PilotComponent
-{
-Q_OBJECT
+class AddressWidget : public PilotComponent {
+    Q_OBJECT
 
 public:
-	AddressWidget(QWidget* parent,const QString& dbpath);
-	~AddressWidget();
+    AddressWidget(QWidget *parent, const QString &dbpath);
+    ~AddressWidget();
 
-	// Pilot Component Methods:
-	virtual void showComponent();
-	virtual void hideComponent();
-	virtual bool preHotSync(QString &);
-	virtual void postHotSync();
+    // Pilot Component Methods:
+    virtual void showComponent();
+    virtual void hideComponent();
+    virtual bool preHotSync(QString &);
+    virtual void postHotSync();
 
 public slots:
-	/**
-	* Called when a particular address is selected. This slot displays
-	* it in the viewer widget.
-	*/
-	void slotShowAddress(int);
-	void slotEditRecord();
-	void slotCreateNewRecord();
-	void slotDeleteRecord();
-	void slotEditCancelled();
-	void slotExport();
+    /**
+    * Called when a particular address is selected. This slot displays
+    * it in the viewer widget.
+    */
+    void slotShowAddress(int);
+    void slotEditRecord();
+    void slotCreateNewRecord();
+    void slotDeleteRecord();
+    void slotEditCancelled();
+    void slotExport();
 
-	void slotUpdateButtons();	// Enable/disable buttons
+    void slotUpdateButtons();	// Enable/disable buttons
 
 signals:
-	void recordChanged(PilotAddress *);
+    void recordChanged(PilotAddress *);
 
 protected slots:
-	/**
-	* When an edit window is closed, the corresponding record
-	* is updated and possibly re-displayed.
-	*/
-	void slotUpdateRecord(PilotAddress*);
+    /**
+    * When an edit window is closed, the corresponding record
+    * is updated and possibly re-displayed.
+    */
+    void slotUpdateRecord(PilotAddress *);
 
-	/**
-	* Pop up an edit window for a new record.
-	*/
-	void slotAddRecord(PilotAddress*);
+    /**
+    * Pop up an edit window for a new record.
+    */
+    void slotAddRecord(PilotAddress *);
 
-	/**
-	* Change category. This means that the display should be
-	* cleared and that the list should be repopulated.
-	*/
-	void slotSetCategory(int);
+    /**
+    * Change category. This means that the display should be
+    * cleared and that the list should be repopulated.
+    */
+    void slotSetCategory(int);
 
 private:
-	void setupWidget();
-	void updateWidget(); // Called with the lists have changed..
-	void writeAddress(PilotAddress* which,PilotDatabase *db=0L);
+    void setupWidget();
+    void updateWidget(); // Called with the lists have changed..
+    void writeAddress(PilotAddress *which, PilotDatabase *db = 0L);
 
-	/**
-	* getAllAddresses reads the database and places all
-	* the addresses from the database in the list
-	* in memory --- not the list on the screen.
-	* @see fAddressList
-	*/
-	int getAllAddresses(PilotDatabase *addressDB);
+    /**
+    * getAllAddresses reads the database and places all
+    * the addresses from the database in the list
+    * in memory --- not the list on the screen.
+    * @see fAddressList
+    */
+    int getAllAddresses(PilotDatabase *addressDB);
 
-	/**
-	* Create a sensible "title" for an address, composed
-	* of first + last name if possible.
-	*/
-	QString createTitle(PilotAddress *,int displayMode);
+    /**
+    * Create a sensible "title" for an address, composed
+    * of first + last name if possible.
+    */
+    QString createTitle(PilotAddress *, int displayMode);
 
-	/**
-	* We use a QComboBox fCatList to hold the user-visible names
-	* of all the categories. The QTextView fAddrInfo is for
-	* displaying the currently selected address, if any.
-	* The QListBox fListBox lists all the addresses in the
-	* currently selected category.
-	*
-	* The entire address database is read into memory in the
-	* QList fAddressList. We need the appinfo block from the
-	* database to determine which categories there are; this
-	* is held in fAddressAppInfo.
-	*
-	* The two buttons should speak for themselves.
-	*/
-	QComboBox            *fCatList;
-	QTextView            *fAddrInfo;
-	PilotAddressInfo     *fAddressAppInfo;
-	QPtrList<PilotAddress>   fAddressList;
-	QListBox             *fListBox;
-	QPushButton	     *fEditButton,*fDeleteButton;
+    /**
+    * We use a QComboBox fCatList to hold the user-visible names
+    * of all the categories. The QTextView fAddrInfo is for
+    * displaying the currently selected address, if any.
+    * The QListBox fListBox lists all the addresses in the
+    * currently selected category.
+    *
+    * The entire address database is read into memory in the
+    * QList fAddressList. We need the appinfo block from the
+    * database to determine which categories there are; this
+    * is held in fAddressAppInfo.
+    *
+    * The two buttons should speak for themselves.
+    */
+    QComboBox            *fCatList;
+    QTextView            *fAddrInfo;
+    PilotAddressInfo     *fAddressAppInfo;
+    QPtrList<PilotAddress>   fAddressList;
+    QListBox             *fListBox;
+    QPushButton	     *fEditButton, *fDeleteButton;
 
 protected:
-	/**
-	* Keep track of how many open address editing windows there
-	* are. You can't sync when there are open windows.
-	*/
-	int fPendingAddresses;
+    /**
+    * Keep track of how many open address editing windows there
+    * are. You can't sync when there are open windows.
+    */
+    int fPendingAddresses;
 
 public:
-	typedef enum { PhoneNumberLength=16 } Constants ;
+    typedef enum { PhoneNumberLength = 16 } Constants ;
 };
 
 #endif

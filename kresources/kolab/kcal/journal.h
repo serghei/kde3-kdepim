@@ -39,7 +39,7 @@
 class QDomElement;
 
 namespace KCal {
-  class Journal;
+class Journal;
 }
 
 namespace Kolab {
@@ -52,50 +52,53 @@ namespace Kolab {
  */
 class Journal : public KolabBase {
 public:
-  /// Use this to parse an xml string to a journal entry
-  /// The caller is responsible for deleting the returned journal
-  static KCal::Journal* xmlToJournal( const QString& xml, const QString& tz );
+    /// Use this to parse an xml string to a journal entry
+    /// The caller is responsible for deleting the returned journal
+    static KCal::Journal *xmlToJournal(const QString &xml, const QString &tz);
 
-  /// Use this to get an xml string describing this journal entry
-  static QString journalToXML( KCal::Journal*, const QString& tz );
+    /// Use this to get an xml string describing this journal entry
+    static QString journalToXML(KCal::Journal *, const QString &tz);
 
-  explicit Journal( const QString& tz, KCal::Journal* journal = 0 );
-  virtual ~Journal();
+    explicit Journal(const QString &tz, KCal::Journal *journal = 0);
+    virtual ~Journal();
 
-  virtual QString type() const { return "Journal"; }
+    virtual QString type() const
+    {
+        return "Journal";
+    }
 
-  void saveTo( KCal::Journal* journal );
+    void saveTo(KCal::Journal *journal);
 
-  virtual void setSummary( const QString& summary );
-  virtual QString summary() const;
+    virtual void setSummary(const QString &summary);
+    virtual QString summary() const;
 
-  virtual void setStartDate( const QDateTime& startDate );
-  virtual QDateTime startDate() const;
+    virtual void setStartDate(const QDateTime &startDate);
+    virtual QDateTime startDate() const;
 
-  virtual void setEndDate( const QDateTime& endDate );
-  virtual QDateTime endDate() const;
+    virtual void setEndDate(const QDateTime &endDate);
+    virtual QDateTime endDate() const;
 
-  // Load the attributes of this class
-  virtual bool loadAttribute( QDomElement& );
+    // Load the attributes of this class
+    virtual bool loadAttribute(QDomElement &);
 
-  // Save the attributes of this class
-  virtual bool saveAttributes( QDomElement& ) const;
+    // Save the attributes of this class
+    virtual bool saveAttributes(QDomElement &) const;
 
-  // Load this journal by reading the XML file
-  virtual bool loadXML( const QDomDocument& xml );
+    // Load this journal by reading the XML file
+    virtual bool loadXML(const QDomDocument &xml);
 
-  // Serialize this journal to an XML string
-  virtual QString saveXML() const;
+    // Serialize this journal to an XML string
+    virtual QString saveXML() const;
 
 protected:
-  // Read all known fields from this ical journal
-  void setFields( const KCal::Journal* );
+    // Read all known fields from this ical journal
+    void setFields(const KCal::Journal *);
 
-  QString productID() const;
+    QString productID() const;
 
-  QString mSummary;
-  QDateTime mStartDate;
-  QDateTime mEndDate;
+    QString mSummary;
+    QDateTime mStartDate;
+    QDateTime mEndDate;
 };
 
 }

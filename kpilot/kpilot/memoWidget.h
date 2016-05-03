@@ -39,73 +39,73 @@ class KTextEdit;
 class PilotMemo;
 class PilotListItem;
 
-class MemoWidget : public PilotComponent
-{
-Q_OBJECT
+class MemoWidget : public PilotComponent {
+    Q_OBJECT
 
 public:
-	MemoWidget(QWidget* parent, const QString& dbpath);
-	virtual ~MemoWidget();
+    MemoWidget(QWidget *parent, const QString &dbpath);
+    virtual ~MemoWidget();
 
-	// Pilot Component Methods:
-	/* virtual */ void showComponent();
-	/* virtual */ void hideComponent();
-	/* virtual */ bool preHotSync(QString &);
-	/* virtual */ void postHotSync();
+    // Pilot Component Methods:
+    /* virtual */ void showComponent();
+    /* virtual */ void hideComponent();
+    /* virtual */ bool preHotSync(QString &);
+    /* virtual */ void postHotSync();
 
-	// Added by David Bishop, please move to correct location!
-	bool saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
-	bool saveAsText(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
+    // Added by David Bishop, please move to correct location!
+    bool saveAsXML(const QString &fileName, const QPtrList<PilotListItem> &menu_item);
+    bool saveAsText(const QString &fileName, const QPtrList<PilotListItem> &menu_item);
 
-	typedef enum {
-		MAX_MEMO_LEN = 8192
-		} Constants ;
+    typedef enum
+    {
+        MAX_MEMO_LEN = 8192
+    } Constants ;
 
 protected:
-	void initializeCategories(PilotDatabase *);
-	void initializeMemos(PilotDatabase *);
+    void initializeCategories(PilotDatabase *);
+    void initializeMemos(PilotDatabase *);
 
-	void saveChangedMemo();
+    void saveChangedMemo();
 
-	bool addMemo(const QString &text, int category);
+    bool addMemo(const QString &text, int category);
 
 public slots:
-	/**
-	* Called whenever the selected memo changes in order to:
-	*   - display it if necessary
-	*   - update which buttons are active, to prevent the delete
-	*     button from being active when it can't do anything.
-	*
-	*/
-	void slotShowMemo(int);
-	void slotUpdateButtons();
+    /**
+    * Called whenever the selected memo changes in order to:
+    *   - display it if necessary
+    *   - update which buttons are active, to prevent the delete
+    *     button from being active when it can't do anything.
+    *
+    */
+    void slotShowMemo(int);
+    void slotUpdateButtons();
 
-	void slotImportMemo();
-	void slotExportMemo();
-	void slotDeleteMemo();
-	void slotAddMemo();
-	void slotSetCategory(int);
+    void slotImportMemo();
+    void slotExportMemo();
+    void slotDeleteMemo();
+    void slotAddMemo();
+    void slotSetCategory(int);
 
 protected:
-	void showMemo(const PilotMemo *);
+    void showMemo(const PilotMemo *);
 
 
 private:
-	void setupWidget();
-	void updateWidget(); // Called with the lists have changed..
-	void writeMemo(PilotMemo* which);
+    void setupWidget();
+    void updateWidget(); // Called with the lists have changed..
+    void writeMemo(PilotMemo *which);
 
-	class Private;
+    class Private;
 
-	QComboBox* fCatList;
+    QComboBox *fCatList;
 
-	KTextEdit*		fTextWidget;
-	Private *d;
-	QListBox*		fListBox;
+    KTextEdit		*fTextWidget;
+    Private *d;
+    QListBox		*fListBox;
 
-	QPushButton *fExportButton,*fDeleteButton;
+    QPushButton *fExportButton, *fDeleteButton;
 
-	int lastSelectedMemo;
+    int lastSelectedMemo;
 };
 
 

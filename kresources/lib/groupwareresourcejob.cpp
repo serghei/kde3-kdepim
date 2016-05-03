@@ -27,32 +27,32 @@
 
 using namespace KPIM;
 
-GroupwareJob::GroupwareJob( GroupwareDataAdaptor *adaptor )
-  : mAdaptor( adaptor )
+GroupwareJob::GroupwareJob(GroupwareDataAdaptor *adaptor)
+    : mAdaptor(adaptor)
 {
-  QTimer::singleShot( 0, this, SLOT( run() ) );
+    QTimer::singleShot(0, this, SLOT(run()));
 }
 
 bool GroupwareJob::error() const
 {
-  return !mErrorString.isNull();
+    return !mErrorString.isNull();
 }
 
 QString GroupwareJob::errorString() const
 {
-  return mErrorString;
+    return mErrorString;
 }
 
 void GroupwareJob::success()
 {
-  mErrorString = QString::null;
-  emit( result( this ) );
+    mErrorString = QString::null;
+    emit(result(this));
 }
 
-void GroupwareJob::error( const QString &errorString )
+void GroupwareJob::error(const QString &errorString)
 {
-  mErrorString = errorString;
-  emit( result( this ) );
+    mErrorString = errorString;
+    emit(result(this));
 }
 
 

@@ -15,49 +15,60 @@
 /////////////////////////////////////////////////////////////////////////////
 
 template<class T>
-class c4_ArrayT
-{
+class c4_ArrayT {
 #ifdef _MSC_VER
-  d4_std::vector< T, d4_std::allocator<T> > _vector;
+    d4_std::vector< T, d4_std::allocator<T> > _vector;
 #else
-  d4_std::vector< T, d4_std::alloc > _vector;
+    d4_std::vector< T, d4_std::alloc > _vector;
 #endif
 
 public:
-  c4_ArrayT ()              { }
-  ~c4_ArrayT ()             { }
+    c4_ArrayT()              { }
+    ~c4_ArrayT()             { }
 
-  int GetSize() const           { return _vector.size(); }
-  void SetSize(int nNewSize, int =-1)   { _vector.resize(nNewSize); }
+    int GetSize() const
+    {
+        return _vector.size();
+    }
+    void SetSize(int nNewSize, int = -1)
+    {
+        _vector.resize(nNewSize);
+    }
 
-  T GetAt(int nIndex) const       { return _vector[nIndex]; }
-  T& ElementAt(int nIndex)        { return _vector[nIndex]; }
+    T GetAt(int nIndex) const
+    {
+        return _vector[nIndex];
+    }
+    T &ElementAt(int nIndex)
+    {
+        return _vector[nIndex];
+    }
 
-  void SetAt(int nIndex, const T& newElement)
-  {
-    _vector[nIndex] = newElement;
-  }
+    void SetAt(int nIndex, const T &newElement)
+    {
+        _vector[nIndex] = newElement;
+    }
 
-  int Add(const T& newElement)
-  {
-    int n = _vector.size();
-    _vector.push_back(newElement);
-    return n;
-  }
+    int Add(const T &newElement)
+    {
+        int n = _vector.size();
+        _vector.push_back(newElement);
+        return n;
+    }
 
-  void InsertAt(int nIndex, const T& newElement, int nCount =1)
-  {
-    _vector.insert(&_vector[nIndex], nCount, newElement);
-  }
+    void InsertAt(int nIndex, const T &newElement, int nCount = 1)
+    {
+        _vector.insert(&_vector[nIndex], nCount, newElement);
+    }
 
-  void RemoveAt(int nIndex, int nCount =1)
-  {
-    _vector.erase(&_vector[nIndex], &_vector[nIndex+nCount]);
-  }
+    void RemoveAt(int nIndex, int nCount = 1)
+    {
+        _vector.erase(&_vector[nIndex], &_vector[nIndex + nCount]);
+    }
 };
 
 typedef c4_ArrayT<t4_i32>   c4_DWordArray;
-typedef c4_ArrayT<void*>    c4_PtrArray;
+typedef c4_ArrayT<void *>    c4_PtrArray;
 typedef c4_ArrayT<c4_String>  c4_StringArray;
 
 /////////////////////////////////////////////////////////////////////////////

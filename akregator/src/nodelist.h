@@ -32,7 +32,7 @@ class QDomDocument;
 class QDomNode;
 class QString;
 
-template <class K,class T> class QMap;
+template <class K, class T> class QMap;
 template <class T> class QValueList;
 
 // hack for KDE 3.x series
@@ -46,40 +46,39 @@ namespace Akregator {
 class Folder;
 class TreeNode;
 
-class KDE_EXPORT NodeList : public QObject
-{
+class KDE_EXPORT NodeList : public QObject {
 
-Q_OBJECT
+    Q_OBJECT
 
 public:
-    NodeList(QObject *parent=0, const char *name=0);
+    NodeList(QObject *parent = 0, const char *name = 0);
     virtual ~NodeList();
 
-    virtual Folder* rootNode() const;
+    virtual Folder *rootNode() const;
 
-    virtual bool readFromXML(const QDomDocument& doc) = 0;
+    virtual bool readFromXML(const QDomDocument &doc) = 0;
 
     virtual QDomDocument toXML() const = 0;
 
     virtual bool isEmpty() const;
 
-    TreeNode* findByID(int id) const;
+    TreeNode *findByID(int id) const;
 
     /** returns the title of the feed list (as used in the OPML document) */
-    const QString& title() const;
+    const QString &title() const;
 
     /** sets the title of the feed list */
-    void setTitle(const QString& name);
+    void setTitle(const QString &name);
 
     /** returns a flat list containing all nodes in the tree */
-    const QValueList<TreeNode*>& asFlatList() const;
+    const QValueList<TreeNode *> &asFlatList() const;
 
 signals:
-    void signalDestroyed(NodeList*);
+    void signalDestroyed(NodeList *);
     /** emitted when a node was added to the list */
-    void signalNodeAdded(TreeNode*);
+    void signalNodeAdded(TreeNode *);
     /** emitted when a node was removed from the list */
-    void signalNodeRemoved(TreeNode*);
+    void signalNodeRemoved(TreeNode *);
 
 public slots:
 
@@ -89,27 +88,30 @@ public slots:
     void clear();
 
 public:         // compat with KDE-3.x assertions, remove for KDE 4
-// protected:
+    // protected:
 
-    QValueList<TreeNode*>* flatList() const;
-    QMap<int, TreeNode*>* idMap() const;
-    
+    QValueList<TreeNode *> *flatList() const;
+    QMap<int, TreeNode *> *idMap() const;
+
     int generateID();
-    void setRootNode(Folder* folder);
-    virtual void addNode(TreeNode* node, bool preserveID);
-    virtual void removeNode(TreeNode* node);
-  
-public slots:         // compat with KDE-3.x assertions, remove for KDE 4
-// protected slots:
+    void setRootNode(Folder *folder);
+    virtual void addNode(TreeNode *node, bool preserveID);
+    virtual void removeNode(TreeNode *node);
 
-    virtual void slotNodeDestroyed(TreeNode* node);
-    virtual void slotNodeAdded(TreeNode* node);
-    virtual void slotNodeRemoved(Folder* parent, TreeNode* node);
+public slots:         // compat with KDE-3.x assertions, remove for KDE 4
+    // protected slots:
+
+    virtual void slotNodeDestroyed(TreeNode *node);
+    virtual void slotNodeAdded(TreeNode *node);
+    virtual void slotNodeRemoved(Folder *parent, TreeNode *node);
 
 public:         // compat with KDE-3.x assertions, remove for KDE 4
-// private:
-    NodeList(const NodeList&) : QObject() {}
-    NodeList& operator=(const NodeList&) { return *this; }
+    // private:
+    NodeList(const NodeList &) : QObject() {}
+    NodeList &operator=(const NodeList &)
+    {
+        return *this;
+    }
 
     friend class AddNodeVisitor;
     class AddNodeVisitor;
@@ -118,8 +120,8 @@ public:         // compat with KDE-3.x assertions, remove for KDE 4
     class RemoveNodeVisitor;
 
     class NodeListPrivate;
-    NodeListPrivate* d;
-    
+    NodeListPrivate *d;
+
 };
 
 } // namespace Akregator

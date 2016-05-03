@@ -42,21 +42,20 @@ class SloxBase;
 
   @see KCalResourceSlox
 */
-class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
-{
+class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    KCalResourceSloxConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCalResourceSloxConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource );
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  private slots:
+private slots:
     void selectCalendarFolder();
     void selectTaskFolder();
 
-  private:
+private:
     KURLRequester *mDownloadUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;

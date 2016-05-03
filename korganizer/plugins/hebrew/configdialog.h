@@ -25,24 +25,24 @@
 /**
 @author Jonathan Singer
 */
-class ConfigDialog:public KDialogBase
-{
+class ConfigDialog: public KDialogBase {
 Q_OBJECT public:
 
-  ConfigDialog(QWidget * parent = 0);
-  virtual ~ ConfigDialog();
+    ConfigDialog(QWidget *parent = 0);
+    virtual ~ ConfigDialog();
 
 protected:
-  void load();
-  void save();
+    void load();
+    void save();
 
-  protected slots: void slotOk();
+protected slots:
+    void slotOk();
 
 private:
-   QCheckBox * omer_box;
-  QCheckBox *parsha_box;
-  QCheckBox *israel_box;
-  QCheckBox *chol_box;
+    QCheckBox *omer_box;
+    QCheckBox *parsha_box;
+    QCheckBox *israel_box;
+    QCheckBox *chol_box;
 
 };
 

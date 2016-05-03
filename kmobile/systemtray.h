@@ -25,8 +25,7 @@
 class KMainWindow;
 class KAction;
 
-class SystemTray : public KSystemTray
-{
+class SystemTray : public KSystemTray {
     Q_OBJECT
 
 public:
@@ -38,7 +37,7 @@ protected slots:
     void menuItemSelected();
 
 protected:
-    void contextMenuAboutToShow( KPopupMenu* menu );
+    void contextMenuAboutToShow(KPopupMenu *menu);
 
 private:
     void setToolTip(const QString &tip = QString::null);

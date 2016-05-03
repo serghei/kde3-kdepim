@@ -36,10 +36,10 @@
 
 namespace KMail {
 
-  class CSSHelper : public KPIM::CSSHelper {
-  public:
-    CSSHelper( const QPaintDeviceMetrics &pdm );
-  };
+class CSSHelper : public KPIM::CSSHelper {
+public:
+    CSSHelper(const QPaintDeviceMetrics &pdm);
+};
 
 } // namespace KMail
 

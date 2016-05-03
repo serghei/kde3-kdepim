@@ -22,11 +22,11 @@
 class QSocketNotifier;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 namespace KPIM {
-  class ProgressItem;
+class ProgressItem;
 }
 using KPIM::ProgressItem;
 
@@ -36,11 +36,11 @@ class KNNntpClient;
 
 class KNNetAccess : public QObject  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
-    KNNetAccess(QObject *parent=0, const char *name=0);
+    KNNetAccess(QObject *parent = 0, const char *name = 0);
     ~KNNetAccess();
 
     void addJob(KNJobData *job);
@@ -51,11 +51,17 @@ class KNNetAccess : public QObject  {
     void cancelAllJobs();
 
     /** current statusbar message */
-    QString currentMsg() const        { return currMsg; }
+    QString currentMsg() const
+    {
+        return currMsg;
+    }
 
-    QMutex& nntpMutex() { return nntp_Mutex; }
+    QMutex &nntpMutex()
+    {
+        return nntp_Mutex;
+    }
 
-  protected:
+protected:
     /** passes a signal through the ipc-pipe to the net-thread */
     void triggerAsyncThread(int pipeFd);
     void startJobNntp();
@@ -68,34 +74,34 @@ class KNNetAccess : public QObject  {
     QString currMsg;
 
     KNNntpClient *nntpClient;
-    QValueList<KNJobData*> nntpJobQueue, smtpJobQueue;
+    QValueList<KNJobData *> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     QMutex nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2];
     QSocketNotifier *nntpNotifier;
 
-  protected slots:
+protected slots:
     void slotThreadSignal(int i);
 
-  signals:
+signals:
     void netActive(bool);
 
-  private:
-    void cancelCurrentNntpJob( int type = 0 );
-    void cancelCurrentSmtpJob( int type = 0 );
+private:
+    void cancelCurrentNntpJob(int type = 0);
+    void cancelCurrentSmtpJob(int type = 0);
     /** Update activitiy status, i.e. emit netActive signal. */
     void updateStatus();
 
-  private slots:
-    void slotJobResult( KIO::Job *job );
+private slots:
+    void slotJobResult(KIO::Job *job);
 
-    void slotCancelJob( KPIM::ProgressItem *item );
+    void slotCancelJob(KPIM::ProgressItem *item);
 
     void slotPasswordsChanged();
 
-  private:
+private:
     /// jobs waiting for async wallet loading
-    QValueList<KNJobData*> mWalletQueue;
+    QValueList<KNJobData *> mWalletQueue;
 
 };
 

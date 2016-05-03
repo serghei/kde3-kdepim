@@ -26,33 +26,32 @@
 
 #include "korganizer/incidencechangerbase.h"
 
-class KDE_EXPORT IncidenceChanger : public KOrg::IncidenceChangerBase
-{
-Q_OBJECT
+class KDE_EXPORT IncidenceChanger : public KOrg::IncidenceChangerBase {
+    Q_OBJECT
 public:
-  IncidenceChanger( Calendar*cal, QObject *parent ) : IncidenceChangerBase( cal, parent ) {}
-  ~IncidenceChanger() {}
+    IncidenceChanger(Calendar *cal, QObject *parent) : IncidenceChangerBase(cal, parent) {}
+    ~IncidenceChanger() {}
 
-  bool beginChange( Incidence * incidence );
-  bool sendGroupwareMessage( Incidence *incidence, KCal::Scheduler::Method method, bool deleting = false );
-  bool endChange( Incidence *incidence );
+    bool beginChange(Incidence *incidence);
+    bool sendGroupwareMessage(Incidence *incidence, KCal::Scheduler::Method method, bool deleting = false);
+    bool endChange(Incidence *incidence);
 
-  bool addIncidence( Incidence *incidence, QWidget *parent = 0 );
-  bool changeIncidence( Incidence *oldinc, Incidence *newinc, int action = -1 );
-  bool deleteIncidence( Incidence *incidence );
+    bool addIncidence(Incidence *incidence, QWidget *parent = 0);
+    bool changeIncidence(Incidence *oldinc, Incidence *newinc, int action = -1);
+    bool deleteIncidence(Incidence *incidence);
 
-  bool cutIncidence( Incidence *incidence );
-  static bool incidencesEqual( Incidence *inc1, Incidence *inc2 );
-  static bool assignIncidence( Incidence *inc1, Incidence *inc2 );
+    bool cutIncidence(Incidence *incidence);
+    static bool incidencesEqual(Incidence *inc1, Incidence *inc2);
+    static bool assignIncidence(Incidence *inc1, Incidence *inc2);
 public slots:
-  void cancelAttendees( Incidence *incidence );
+    void cancelAttendees(Incidence *incidence);
 
 protected:
-  bool myAttendeeStatusChanged( Incidence *oldInc, Incidence *newInc );
+    bool myAttendeeStatusChanged(Incidence *oldInc, Incidence *newInc);
 
 private:
-  class ComparisonVisitor;
-  class AssignmentVisitor;
+    class ComparisonVisitor;
+    class AssignmentVisitor;
 };
 
 #endif

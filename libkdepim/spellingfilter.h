@@ -29,48 +29,46 @@
 
 #include <kdepimmacros.h>
 
-class KDE_EXPORT SpellingFilter
-{
+class KDE_EXPORT SpellingFilter {
 public:
-  enum UrlFiltering { DontFilterUrls, FilterUrls };
-  enum EmailAddressFiltering { DontFilterEmailAddresses, FilterEmailAddresses };
+    enum UrlFiltering { DontFilterUrls, FilterUrls };
+    enum EmailAddressFiltering { DontFilterEmailAddresses, FilterEmailAddresses };
 
-  SpellingFilter(const QString& text, const QString& quotePrefix,
-    UrlFiltering filterUrls = FilterUrls,
-    EmailAddressFiltering filterEmailAddresses = FilterEmailAddresses,
-    const QStringList& filterStrings = QStringList());
+    SpellingFilter(const QString &text, const QString &quotePrefix,
+                   UrlFiltering filterUrls = FilterUrls,
+                   EmailAddressFiltering filterEmailAddresses = FilterEmailAddresses,
+                   const QStringList &filterStrings = QStringList());
 
-  QString originalText() const;
-  QString filteredText() const;
+    QString originalText() const;
+    QString filteredText() const;
 
-  class TextCensor;
+    class TextCensor;
 
 private:
-  const QString mOriginal;
-  QString mFiltered;
+    const QString mOriginal;
+    QString mFiltered;
 };
 
-class SpellingFilter::TextCensor : public LinkLocator
-{
+class SpellingFilter::TextCensor : public LinkLocator {
 public:
-  TextCensor(const QString& s);
+    TextCensor(const QString &s);
 
-  void censorQuotations(const QString& quotePrefix);
-  void censorUrls();
-  void censorEmailAddresses();
-  void censorString(const QString& s);
+    void censorQuotations(const QString &quotePrefix);
+    void censorUrls();
+    void censorEmailAddresses();
+    void censorString(const QString &s);
 
-  QString censoredText() const;
+    QString censoredText() const;
 
 private:
-  bool atLineStart() const;
-  void skipLine();
+    bool atLineStart() const;
+    void skipLine();
 
-  bool atQuotation(const QString& quotePrefix) const;
-  void skipQuotation(const QString& quotePrefix);
-  void findQuotation(const QString& quotePrefix);
+    bool atQuotation(const QString &quotePrefix) const;
+    void skipQuotation(const QString &quotePrefix);
+    void findQuotation(const QString &quotePrefix);
 
-  void findEmailAddress();
+    void findEmailAddress();
 };
 
 #endif // SPELLINGFILTER_H_INCLUDED

@@ -34,25 +34,33 @@ class Calendar;
 
 using namespace KCal;
 
-class CalPrintList : public CalPrintPluginBase
-{
-  public:
-    CalPrintList():CalPrintPluginBase() {}
+class CalPrintList : public CalPrintPluginBase {
+public:
+    CalPrintList(): CalPrintPluginBase() {}
     virtual ~CalPrintList() {}
-    virtual QString description() { return i18n("Print list"); }
-    virtual QString info() { return i18n("Prints a list of events and to-dos"); }
-    virtual int sortID() { return 950; }
-    virtual QWidget *createConfigWidget( QWidget* );
+    virtual QString description()
+    {
+        return i18n("Print list");
+    }
+    virtual QString info()
+    {
+        return i18n("Prints a list of events and to-dos");
+    }
+    virtual int sortID()
+    {
+        return 950;
+    }
+    virtual QWidget *createConfigWidget(QWidget *);
 
-  public:
+public:
     virtual void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate& from, const QDate& to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     bool mUseDateRange;
 };
 

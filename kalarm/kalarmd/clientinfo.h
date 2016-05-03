@@ -33,40 +33,66 @@ class ADCalendar;
 =  Class: ClientInfo
 =  Details of a KAlarm client application.
 =============================================================================*/
-class ClientInfo
-{
-	public:
-		typedef QMap<QCString, ClientInfo*>::ConstIterator ConstIterator;
+class ClientInfo {
+public:
+    typedef QMap<QCString, ClientInfo *>::ConstIterator ConstIterator;
 
-		ClientInfo(const QCString &appName, const QString &title, const QCString &dcopObj,
-		           const QString& calendar, bool startClient);
-		ClientInfo(const QCString &appName, const QString &title, const QCString &dcopObj,
-			   ADCalendar* calendar, bool startClient);
-		~ClientInfo();
-		ADCalendar*          setCalendar(const QString& url);
-		void                 detachCalendar()            { mCalendar = 0; }
-		void                 setStartClient(bool start)  { mStartClient = start; }
+    ClientInfo(const QCString &appName, const QString &title, const QCString &dcopObj,
+               const QString &calendar, bool startClient);
+    ClientInfo(const QCString &appName, const QString &title, const QCString &dcopObj,
+               ADCalendar *calendar, bool startClient);
+    ~ClientInfo();
+    ADCalendar          *setCalendar(const QString &url);
+    void                 detachCalendar()
+    {
+        mCalendar = 0;
+    }
+    void                 setStartClient(bool start)
+    {
+        mStartClient = start;
+    }
 
-		QCString             appName() const             { return mAppName; }
-		QString              title() const               { return mTitle; }
-		QCString             dcopObject() const          { return mDcopObject; }
-		ADCalendar*          calendar() const            { return mCalendar; }
-		bool                 startClient() const         { return mStartClient; }
+    QCString             appName() const
+    {
+        return mAppName;
+    }
+    QString              title() const
+    {
+        return mTitle;
+    }
+    QCString             dcopObject() const
+    {
+        return mDcopObject;
+    }
+    ADCalendar          *calendar() const
+    {
+        return mCalendar;
+    }
+    bool                 startClient() const
+    {
+        return mStartClient;
+    }
 
-		static ConstIterator begin()                     { return mClients.begin(); }
-		static ConstIterator end()                       { return mClients.end(); }
-		static ClientInfo*   get(const QCString& appName);
-		static ClientInfo*   get(const ADCalendar*);
-		static void          remove(const QCString& appName);
-		static void          clear();
+    static ConstIterator begin()
+    {
+        return mClients.begin();
+    }
+    static ConstIterator end()
+    {
+        return mClients.end();
+    }
+    static ClientInfo   *get(const QCString &appName);
+    static ClientInfo   *get(const ADCalendar *);
+    static void          remove(const QCString &appName);
+    static void          clear();
 
-	private:
-		static QMap<QCString, ClientInfo*> mClients;  // list of all constructed clients
-		QCString             mAppName;      // client's executable and DCOP name
-		QString              mTitle;        // application title for display purposes
-		QCString             mDcopObject;   // object to receive DCOP messages
-		ADCalendar*          mCalendar;     // this client's event calendar
-		bool                 mStartClient;  // whether to notify events via command line if client app isn't running
+private:
+    static QMap<QCString, ClientInfo *> mClients; // list of all constructed clients
+    QCString             mAppName;      // client's executable and DCOP name
+    QString              mTitle;        // application title for display purposes
+    QCString             mDcopObject;   // object to receive DCOP messages
+    ADCalendar          *mCalendar;     // this client's event calendar
+    bool                 mStartClient;  // whether to notify events via command line if client app isn't running
 };
 
 #endif

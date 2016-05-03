@@ -24,10 +24,9 @@
 
 #include <kdialogbase.h>
 
-class InputDialog : public KDialogBase
-{
-  public:
-    InputDialog( QWidget *page, QWidget *parent );
+class InputDialog : public KDialogBase {
+public:
+    InputDialog(QWidget *page, QWidget *parent);
 };
 
 #endif

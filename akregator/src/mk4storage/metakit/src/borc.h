@@ -8,7 +8,7 @@
 
 #define q4_BORC 1
 
-  // get rid of several common warning messages
+// get rid of several common warning messages
 #if !q4_STRICT
 #pragma warn -aus // 'identifier' is assigned a value that is never used
 #pragma warn -par // Parameter 'parameter' is never used.
@@ -18,7 +18,7 @@
 
 #if __BORLANDC__ >= 0x500
 #define q4_BOOL 1     // supports the bool datatype
-  // undo previous defaults, because q4_BOOL is not set early enough
+// undo previous defaults, because q4_BOOL is not set early enough
 #undef false
 #undef true
 #undef bool

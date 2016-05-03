@@ -29,30 +29,30 @@ class QHBox;
  * This is a BoxContainer for both Horizontal and Vertical displays.
  */
 
-class HVContainer : public BoxContainer
-{ Q_OBJECT
+class HVContainer : public BoxContainer {
+    Q_OBJECT
 public:
-	/**
-	 * Constructor: all elements are passed to BoxContainer, except orientation.
-	 *
-	 * @param orientation The orientation of the box: it is a vertical or horizontal box?
-	 */
-	HVContainer( Qt::Orientation orientation, QObject * parent = 0 , const char * name = 0 );
-	~HVContainer();
-	
-	/**
-	 * This functions calls show() to the box
-	 */
-	virtual void showBox();
+    /**
+     * Constructor: all elements are passed to BoxContainer, except orientation.
+     *
+     * @param orientation The orientation of the box: it is a vertical or horizontal box?
+     */
+    HVContainer(Qt::Orientation orientation, QObject *parent = 0 , const char *name = 0);
+    ~HVContainer();
+
+    /**
+     * This functions calls show() to the box
+     */
+    virtual void showBox();
 protected:
-	/**
-	 * This function returns a new instance of the container.
-	 *
-	 * @return A new instance of this container.
-	 */
-	virtual BoxContainerItem* newBoxInstance() const;
+    /**
+     * This function returns a new instance of the container.
+     *
+     * @return A new instance of this container.
+     */
+    virtual BoxContainerItem *newBoxInstance() const;
 private:
-	QHBox *box;
+    QHBox *box;
 };
 
 #endif //MK_HVCONTAINER_H

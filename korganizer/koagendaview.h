@@ -44,56 +44,54 @@ class TimeLabels;
 class KConfig;
 
 namespace KCal {
-  class ResourceCalendar;
+class ResourceCalendar;
 }
 
 namespace KOrg {
-  class IncidenceChangerBase;
+class IncidenceChangerBase;
 }
 
-class EventIndicator : public QFrame
-{
+class EventIndicator : public QFrame {
     Q_OBJECT
-  public:
+public:
     enum Location { Top, Bottom };
-    EventIndicator( Location loc = Top, QWidget *parent = 0,
-                    const char *name = 0 );
+    EventIndicator(Location loc = Top, QWidget *parent = 0,
+                   const char *name = 0);
     virtual ~EventIndicator();
 
-    void changeColumns( int columns );
+    void changeColumns(int columns);
 
-    void enableColumn( int column, bool enable );
+    void enableColumn(int column, bool enable);
 
-  protected:
-    void drawContents( QPainter * );
+protected:
+    void drawContents(QPainter *);
 
-  private:
+private:
     int mColumns;
     Location mLocation;
     QPixmap mPixmap;
     QMemArray<bool> mEnabled;
 };
 
-class KOAlternateLabel : public QLabel
-{
+class KOAlternateLabel : public QLabel {
     Q_OBJECT
-  public:
-    KOAlternateLabel( const QString &shortlabel, const QString &longlabel,
-                      const QString &extensivelabel = QString::null,
-                      QWidget *parent = 0, const char *name = 0 );
+public:
+    KOAlternateLabel(const QString &shortlabel, const QString &longlabel,
+                     const QString &extensivelabel = QString::null,
+                     QWidget *parent = 0, const char *name = 0);
     ~KOAlternateLabel();
 
     virtual QSize minimumSizeHint() const;
 
-  public slots:
-    void setText( const QString & );
+public slots:
+    void setText(const QString &);
     void useShortText();
     void useLongText();
     void useExtensiveText();
     void useDefaultText();
 
-  protected:
-    virtual void resizeEvent( QResizeEvent * );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
     virtual void squeezeTextToLabel();
     bool mTextTypeFixed;
     QString mShortText, mLongText, mExtensiveText;
@@ -103,11 +101,10 @@ class KOAlternateLabel : public QLabel
   KOAgendaView is the agenda-like view used to display events in a single one or
   multi-day view.
 */
-class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
-{
+class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer {
     Q_OBJECT
-  public:
-    KOAgendaView( Calendar *cal, QWidget *parent = 0, const char *name = 0, bool isSideBySide = false );
+public:
+    KOAgendaView(Calendar *cal, QWidget *parent = 0, const char *name = 0, bool isSideBySide = false);
     virtual ~KOAgendaView();
 
 
@@ -133,86 +130,101 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     KOrg::CalPrinterBase::PrintType printType();
 
     /** start-datetime of selection */
-    QDateTime selectionStart() { return mTimeSpanBegin; }
+    QDateTime selectionStart()
+    {
+        return mTimeSpanBegin;
+    }
     /** end-datetime of selection */
-    QDateTime selectionEnd() { return mTimeSpanEnd; }
+    QDateTime selectionEnd()
+    {
+        return mTimeSpanEnd;
+    }
     /** returns true if selection is for whole day */
-    bool selectedIsAllDay() { return mTimeSpanInAllDay; }
+    bool selectedIsAllDay()
+    {
+        return mTimeSpanInAllDay;
+    }
     /** make selected start/end invalid */
     void deleteSelectedDateTime();
     /** returns if only a single cell is selected, or a range of cells */
     bool selectedIsSingleCell();
 
-    void setTypeAheadReceiver( QObject * );
+    void setTypeAheadReceiver(QObject *);
 
     /** Show only incidences from the given resource. */
-    void setResource( KCal::ResourceCalendar *res, const QString &subResource = QString::null );
+    void setResource(KCal::ResourceCalendar *res, const QString &subResource = QString::null);
 
-    KOAgenda* agenda() const { return mAgenda; }
-    QSplitter* splitter() const { return mSplitterAgenda; }
+    KOAgenda *agenda() const
+    {
+        return mAgenda;
+    }
+    QSplitter *splitter() const
+    {
+        return mSplitterAgenda;
+    }
 
     /* reimplmented from KCal::Calendar::Observer */
-    void calendarIncidenceAdded( Incidence *incidence );
-    void calendarIncidenceChanged( Incidence *incidence );
-    void calendarIncidenceRemoved( Incidence *incidence );
+    void calendarIncidenceAdded(Incidence *incidence);
+    void calendarIncidenceChanged(Incidence *incidence);
+    void calendarIncidenceRemoved(Incidence *incidence);
 
-  public slots:
+public slots:
     virtual void updateView();
     virtual void updateConfig();
-    virtual void showDates( const QDate &start, const QDate &end );
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showDates(const QDate &start, const QDate &end);
+    virtual void showIncidences(const Incidence::List &incidenceList);
 
-    void insertIncidence( Incidence *incidence, const QDate &curDate, int curCol = -1 );
-    void changeIncidenceDisplayAdded( Incidence *incidence );
-    void changeIncidenceDisplay( Incidence *incidence, int mode );
+    void insertIncidence(Incidence *incidence, const QDate &curDate, int curCol = -1);
+    void changeIncidenceDisplayAdded(Incidence *incidence);
+    void changeIncidenceDisplay(Incidence *incidence, int mode);
 
     void clearSelection();
 
-    void startDrag( Incidence * );
+    void startDrag(Incidence *);
 
     void readSettings();
-    void readSettings( KConfig * );
-    void writeSettings( KConfig * );
+    void readSettings(KConfig *);
+    void writeSettings(KConfig *);
 
-    void setContentsPos( int y );
+    void setContentsPos(int y);
 
-    void setExpandedButton( bool expanded );
+    void setExpandedButton(bool expanded);
 
     void finishTypeAhead();
 
     /** reschedule the todo  to the given x- and y- coordinates. Third parameter determines all-day (no time specified) */
-    void slotTodoDropped( Todo *, const QPoint &, bool );
+    void slotTodoDropped(Todo *, const QPoint &, bool);
 
-    void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( KOrg::IncidenceChangerBase *changer );
+    void enableAgendaUpdate(bool enable);
+    void setIncidenceChanger(KOrg::IncidenceChangerBase *changer);
 
-    void zoomInHorizontally( const QDate& date=QDate() );
-    void zoomOutHorizontally( const QDate& date=QDate() );
+    void zoomInHorizontally(const QDate &date = QDate());
+    void zoomOutHorizontally(const QDate &date = QDate());
 
-    void zoomInVertically( );
-    void zoomOutVertically( );
+    void zoomInVertically();
+    void zoomOutVertically();
 
-    void zoomView( const int delta, const QPoint &pos,
-      const Qt::Orientation orient=Qt::Horizontal );
+    void zoomView(const int delta, const QPoint &pos,
+                  const Qt::Orientation orient = Qt::Horizontal);
 
     void clearTimeSpanSelection();
 
     void resourcesChanged();
 
-  signals:
+signals:
     void toggleExpand();
-    void zoomViewHorizontally(const QDate &, int count );
+    void zoomViewHorizontally(const QDate &, int count);
 
     void timeSpanSelectionChanged();
 
-  protected:
+protected:
     /** Fill agenda beginning with date startDate */
-    void fillAgenda( const QDate &startDate );
+    void fillAgenda(const QDate &startDate);
 
     /** Fill agenda using the current set value for the start date */
     void fillAgenda();
 
-    void connectAgenda( KOAgenda*agenda, QPopupMenu*popup, KOAgenda* otherAgenda );
+    void connectAgenda(KOAgenda *agenda, QPopupMenu *popup, KOAgenda *otherAgenda);
 
     /** Create labels for the selected dates. */
     void createDayLabels();
@@ -222,7 +234,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
     */
     void setHolidayMasks();
 
-    void removeIncidence( Incidence * );
+    void removeIncidence(Incidence *);
     /**
       Updates the event indicators after a certain incidence was modified or
       removed.
@@ -231,24 +243,24 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::Observer
 
     void updateTimeBarWidth();
 
-  protected slots:
+protected slots:
     /** Update event belonging to agenda item */
-    void updateEventDates( KOAgendaItem *item );
+    void updateEventDates(KOAgendaItem *item);
     /** update just the display of the given incidence, called by a single-shot timer */
     void doUpdateItem();
 
-    void updateEventIndicatorTop( int newY );
-    void updateEventIndicatorBottom( int newY );
+    void updateEventIndicatorTop(int newY);
+    void updateEventIndicatorBottom(int newY);
 
     /** Updates data for selected timespan */
-    void newTimeSpanSelected( const QPoint &start, const QPoint &end );
+    void newTimeSpanSelected(const QPoint &start, const QPoint &end);
     /** Updates data for selected timespan for all day event*/
-    void newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end );
+    void newTimeSpanSelectedAllDay(const QPoint &start, const QPoint &end);
 
-  private:
-    bool filterByResource( Incidence *incidence );
+private:
+    bool filterByResource(Incidence *incidence);
 
-  private:
+private:
     // view widgets
     QFrame *mDayLabels;
     QHBox *mDayLabelsFrame;

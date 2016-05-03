@@ -47,92 +47,105 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class ShellProcess : public KShellProcess
-{
-		Q_OBJECT
-	public:
-		/** Current status of the shell process.
-		 *  @li INACTIVE - start() has not yet been called to run the command.
-		 *  @li RUNNING - the command is currently running.
-		 *  @li SUCCESS - the command appears to have exited successfully.
-		 *  @li UNAUTHORISED - shell commands are not authorised for this user.
-		 *  @li DIED - the command didn't exit cleanly, i.e. was killed or died.
-		 *  @li NOT_FOUND - the command was either not found or not executable.
-		 *  @li START_FAIL - the command couldn't be started for other reasons.
-		 */
-		enum Status {
-			INACTIVE,     // start() has not yet been called to run the command
-			RUNNING,      // command is currently running
-			SUCCESS,      // command appears to have exited successfully
-			UNAUTHORISED, // shell commands are not authorised for this user
-			DIED,         // command didn't exit cleanly, i.e. was killed or died
-			NOT_FOUND,    // command either not found or not executable
-			START_FAIL    // command couldn't be started for other reasons
-		};
-		/** Constructor.
-		 *  @param command The command line to be run when start() is called.
-		 */
-		explicit ShellProcess(const QString& command);
-		/** Executes the configured command.
-		 *  @param comm Which communication links should be established to the child process
-		 *  (stdin/stdout/stderr).
-		 */
-		bool            start(Communication comm = NoCommunication);
-		/** Returns the current status of the shell process. */
-		Status          status() const       { return mStatus; }
-		/** Returns whether the command was run successfully.
-		 *  @return True if the command has been run and appears to have exited successfully.
-		 */
-		bool            normalExit() const   { return mStatus == SUCCESS; }
-		/** Returns the command configured to be run. */
-		const QString&  command() const      { return mCommand; }
-		/** Returns the error message corresponding to the command exit status.
-		 *  @return Error message if an error occurred. Null string if the command has not yet
-		 *          exited, or if the command ran successfully.
-		 */
-		QString         errorMessage() const;
-		/** Writes a string to the process's STDIN. */
-		void            writeStdin(const char* buffer, int bufflen);
-		/** Tell the process to exit once any outstanding STDIN strings have been written. */
-		void            stdinExit();
-		/** Returns whether the user is authorised to run shell commands. Shell commands may
-		 *  be prohibited in kiosk mode, for example.
-		 */
-		static bool     authorised();
-		/** Determines which shell to use.
-		 *  @return file name of shell, excluding path.
-		 */
-		static const QCString& shellName()   { shellPath();  return mShellName; }
-		/** Determines which shell to use.
-		 *  @return path name of shell.
-		 */
-		static const QCString& shellPath();
+class ShellProcess : public KShellProcess {
+    Q_OBJECT
+public:
+    /** Current status of the shell process.
+     *  @li INACTIVE - start() has not yet been called to run the command.
+     *  @li RUNNING - the command is currently running.
+     *  @li SUCCESS - the command appears to have exited successfully.
+     *  @li UNAUTHORISED - shell commands are not authorised for this user.
+     *  @li DIED - the command didn't exit cleanly, i.e. was killed or died.
+     *  @li NOT_FOUND - the command was either not found or not executable.
+     *  @li START_FAIL - the command couldn't be started for other reasons.
+     */
+    enum Status
+    {
+        INACTIVE,     // start() has not yet been called to run the command
+        RUNNING,      // command is currently running
+        SUCCESS,      // command appears to have exited successfully
+        UNAUTHORISED, // shell commands are not authorised for this user
+        DIED,         // command didn't exit cleanly, i.e. was killed or died
+        NOT_FOUND,    // command either not found or not executable
+        START_FAIL    // command couldn't be started for other reasons
+    };
+    /** Constructor.
+     *  @param command The command line to be run when start() is called.
+     */
+    explicit ShellProcess(const QString &command);
+    /** Executes the configured command.
+     *  @param comm Which communication links should be established to the child process
+     *  (stdin/stdout/stderr).
+     */
+    bool            start(Communication comm = NoCommunication);
+    /** Returns the current status of the shell process. */
+    Status          status() const
+    {
+        return mStatus;
+    }
+    /** Returns whether the command was run successfully.
+     *  @return True if the command has been run and appears to have exited successfully.
+     */
+    bool            normalExit() const
+    {
+        return mStatus == SUCCESS;
+    }
+    /** Returns the command configured to be run. */
+    const QString  &command() const
+    {
+        return mCommand;
+    }
+    /** Returns the error message corresponding to the command exit status.
+     *  @return Error message if an error occurred. Null string if the command has not yet
+     *          exited, or if the command ran successfully.
+     */
+    QString         errorMessage() const;
+    /** Writes a string to the process's STDIN. */
+    void            writeStdin(const char *buffer, int bufflen);
+    /** Tell the process to exit once any outstanding STDIN strings have been written. */
+    void            stdinExit();
+    /** Returns whether the user is authorised to run shell commands. Shell commands may
+     *  be prohibited in kiosk mode, for example.
+     */
+    static bool     authorised();
+    /** Determines which shell to use.
+     *  @return file name of shell, excluding path.
+     */
+    static const QCString &shellName()
+    {
+        shellPath();
+        return mShellName;
+    }
+    /** Determines which shell to use.
+     *  @return path name of shell.
+     */
+    static const QCString &shellPath();
 
-	signals:
-		/** Signal emitted when the shell process execution completes. It is not emitted
-		 *  if start() did not attempt to start the command execution, e.g. in kiosk mode.
-		 */
-		void  shellExited(ShellProcess*);
+signals:
+    /** Signal emitted when the shell process execution completes. It is not emitted
+     *  if start() did not attempt to start the command execution, e.g. in kiosk mode.
+     */
+    void  shellExited(ShellProcess *);
 
-	private slots:
-		void  writtenStdin(KProcess*);
-		void  slotExited(KProcess*);
+private slots:
+    void  writtenStdin(KProcess *);
+    void  slotExited(KProcess *);
 
-	private:
-		// Prohibit the following inherited methods
-		ShellProcess&  operator<<(const QString&);
-		ShellProcess&  operator<<(const QCString&);
-		ShellProcess&  operator<<(const QStringList&);
-		ShellProcess&  operator<<(const char*);
+private:
+    // Prohibit the following inherited methods
+    ShellProcess  &operator<<(const QString &);
+    ShellProcess  &operator<<(const QCString &);
+    ShellProcess  &operator<<(const QStringList &);
+    ShellProcess  &operator<<(const char *);
 
-		static QCString      mShellName;    // name of shell to be used
-		static QCString      mShellPath;    // path of shell to be used
-		static bool          mInitialised;  // true once static data has been initialised
-		static bool          mAuthorised;   // true if shell commands are authorised
-		QString              mCommand;      // copy of command to be executed
-		QValueList<QCString> mStdinQueue;   // queued strings to send to STDIN
-		Status               mStatus;       // current execution status
-		bool                 mStdinExit;    // exit once STDIN queue has been written
+    static QCString      mShellName;    // name of shell to be used
+    static QCString      mShellPath;    // path of shell to be used
+    static bool          mInitialised;  // true once static data has been initialised
+    static bool          mAuthorised;   // true if shell commands are authorised
+    QString              mCommand;      // copy of command to be executed
+    QValueList<QCString> mStdinQueue;   // queued strings to send to STDIN
+    Status               mStatus;       // current execution status
+    bool                 mStdinExit;    // exit once STDIN queue has been written
 };
 
 #endif // SHELLPROCESS_H

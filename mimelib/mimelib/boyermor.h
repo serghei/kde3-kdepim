@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -48,22 +48,22 @@
 class DW_EXPORT DwBoyerMoore {
 
 public:
-    
-    DwBoyerMoore(const char* aCstr);
-    DwBoyerMoore(const DwString& aStr);
-    DwBoyerMoore(const DwBoyerMoore& other);
+
+    DwBoyerMoore(const char *aCstr);
+    DwBoyerMoore(const DwString &aStr);
+    DwBoyerMoore(const DwBoyerMoore &other);
     //. Constructs a {\tt DwBoyerMoore} object for searching for a particular
     //. string.
 
     virtual ~DwBoyerMoore();
 
-    const DwBoyerMoore & operator=( const DwBoyerMoore & other );
+    const DwBoyerMoore &operator=(const DwBoyerMoore &other);
 
-    void Assign(const char* aCstr);
-    void Assign(const DwString& aStr);
+    void Assign(const char *aCstr);
+    void Assign(const DwString &aStr);
     //. Sets the string to search for.
 
-    size_t FindIn(const DwString& aStr, size_t aPos, bool aCs = true) const;
+    size_t FindIn(const DwString &aStr, size_t aPos, bool aCs = true) const;
     //. Searches for the search string in {\tt aStr} starting at position
     //. {\tt aPos}.  If found, the function returns the first position in
     //. {\tt aStr} where the search string was found.  If not found, the
@@ -73,12 +73,12 @@ public:
 private:
 
     size_t mPatLen;
-    char* mPat;
-    char* mCiPat;
+    char *mPat;
+    char *mCiPat;
     unsigned char mSkipAmt[256];
     unsigned char mCiSkipAmt[256]; // case insensitive skip table
 
-    void _Assign(const char* aPat, size_t aPatLen);
+    void _Assign(const char *aPat, size_t aPatLen);
 };
 
 #endif

@@ -34,96 +34,104 @@
 
 #include "csv_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_csv_xxport, CSVXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER(libkaddrbk_csv_xxport, CSVXXPort)
 
-CSVXXPort::CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::XXPort( ab, parent, name )
+CSVXXPort::CSVXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::XXPort(ab, parent, name)
 {
-  createImportAction( i18n( "Import CSV List..." ) );
-  createExportAction( i18n( "Export CSV List..." ) );
+    createImportAction(i18n("Import CSV List..."));
+    createExportAction(i18n("Export CSV List..."));
 }
 
-bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
+bool CSVXXPort::exportContacts(const KABC::AddresseeList &list, const QString &)
 {
-  KURL url = KFileDialog::getSaveURL( "addressbook.csv" );
-  if ( url.isEmpty() )
-      return true;
+    KURL url = KFileDialog::getSaveURL("addressbook.csv");
+    if(url.isEmpty())
+        return true;
 
-  if ( !url.isLocalFile() ) {
-    KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.url() )
-                          .arg( strerror( tmpFile.status() ) ) );
-      return false;
+    if(!url.isLocalFile())
+    {
+        KTempFile tmpFile;
+        if(tmpFile.status() != 0)
+        {
+            QString txt = i18n("<qt>Unable to open file <b>%1</b>.%2.</qt>");
+            KMessageBox::error(parentWidget(), txt.arg(url.url())
+                               .arg(strerror(tmpFile.status())));
+            return false;
+        }
+
+        doExport(tmpFile.file(), list);
+        tmpFile.close();
+
+        return KIO::NetAccess::upload(tmpFile.name(), url, parentWidget());
     }
+    else
+    {
+        QFile file(url.path());
+        if(!file.open(IO_WriteOnly))
+        {
+            QString txt = i18n("<qt>Unable to open file <b>%1</b>.</qt>");
+            KMessageBox::error(parentWidget(), txt.arg(url.path()));
+            return false;
+        }
 
-    doExport( tmpFile.file(), list );
-    tmpFile.close();
+        doExport(&file, list);
+        file.close();
 
-    return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
-  } else {
-    QFile file( url.path() );
-    if ( !file.open( IO_WriteOnly ) ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.path() ) );
-      return false;
+        KMessageBox::information(parentWidget(), i18n("The contacts have been exported successfully."));
+
+        return true;
     }
-
-    doExport( &file, list );
-    file.close();
-
-    KMessageBox::information( parentWidget(), i18n( "The contacts have been exported successfully." ) );
-
-    return true;
-  }
 }
 
-KABC::AddresseeList CSVXXPort::importContacts( const QString& ) const
+KABC::AddresseeList CSVXXPort::importContacts(const QString &) const
 {
-  CSVImportDialog dlg( addressBook(), parentWidget() );
-  if ( dlg.exec() )
-    return dlg.contacts();
-  else
-    return KABC::AddresseeList();
+    CSVImportDialog dlg(addressBook(), parentWidget());
+    if(dlg.exec())
+        return dlg.contacts();
+    else
+        return KABC::AddresseeList();
 }
 
-void CSVXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
+void CSVXXPort::doExport(QFile *fp, const KABC::AddresseeList &list)
 {
-  QTextStream t( fp );
-  t.setEncoding( QTextStream::Locale );
+    QTextStream t(fp);
+    t.setEncoding(QTextStream::Locale);
 
-  KABC::AddresseeList::ConstIterator iter;
-  KABC::Field::List fields = addressBook()->fields();
-  KABC::Field::List::Iterator fieldIter;
-  bool first = true;
+    KABC::AddresseeList::ConstIterator iter;
+    KABC::Field::List fields = addressBook()->fields();
+    KABC::Field::List::Iterator fieldIter;
+    bool first = true;
 
-  // First output the column headings
-  for ( fieldIter = fields.begin(); fieldIter != fields.end(); ++fieldIter ) {
-    if ( !first )
-      t << ",";
+    // First output the column headings
+    for(fieldIter = fields.begin(); fieldIter != fields.end(); ++fieldIter)
+    {
+        if(!first)
+            t << ",";
 
-    t << "\"" << (*fieldIter)->label() << "\"";
-    first = false;
-  }
-  t << "\n";
-
-  // Then all the addressee objects
-  KABC::Addressee addr;
-  for ( iter = list.begin(); iter != list.end(); ++iter ) {
-    addr = *iter;
-    first = true;
-
-    for ( fieldIter = fields.begin(); fieldIter != fields.end(); ++fieldIter ) {
-      if ( !first )
-        t << ",";
-
-      t << "\"" << (*fieldIter)->value( addr ).replace( "\n", "\\n" ) << "\"";
-      first = false;
+        t << "\"" << (*fieldIter)->label() << "\"";
+        first = false;
     }
-
     t << "\n";
-  }
+
+    // Then all the addressee objects
+    KABC::Addressee addr;
+    for(iter = list.begin(); iter != list.end(); ++iter)
+    {
+        addr = *iter;
+        first = true;
+
+        for(fieldIter = fields.begin(); fieldIter != fields.end(); ++fieldIter)
+        {
+            if(!first)
+                t << ",";
+
+            t << "\"" << (*fieldIter)->value(addr).replace("\n", "\\n") << "\"";
+            first = false;
+        }
+
+        t << "\n";
+    }
 }
 
 #include "csv_xxport.moc"

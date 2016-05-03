@@ -42,19 +42,19 @@ class KAccount;
 
 //==========================================================================
 
-class KDE_EXPORT KGroupInfo
-{
-  public:
-    enum Status {
-      unknown,
-      readOnly,
-      postingAllowed,
-      moderated
+class KDE_EXPORT KGroupInfo {
+public:
+    enum Status
+    {
+        unknown,
+        readOnly,
+        postingAllowed,
+        moderated
     };
 
-    KGroupInfo( const QString &name, const QString &description = QString::null,
-        bool newGroup = false, bool subscribed = false,
-        Status status = unknown, QString path = QString::null );
+    KGroupInfo(const QString &name, const QString &description = QString::null,
+               bool newGroup = false, bool subscribed = false,
+               Status status = unknown, QString path = QString::null);
 
     QString name, description;
     bool newGroup, subscribed;
@@ -69,31 +69,45 @@ class KDE_EXPORT KGroupInfo
 //==========================================================================
 
 /** A class representing a single group item (what's that?) */
-class KDE_EXPORT GroupItem : public QCheckListItem
-{
-  public:
-    GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser,
-        bool isCheckItem = false );
-    GroupItem( QListViewItem *i, const KGroupInfo &gi, KSubscription* browser,
-        bool isCheckItem = false );
+class KDE_EXPORT GroupItem : public QCheckListItem {
+public:
+    GroupItem(QListView *v, const KGroupInfo &gi, KSubscription *browser,
+              bool isCheckItem = false);
+    GroupItem(QListViewItem *i, const KGroupInfo &gi, KSubscription *browser,
+              bool isCheckItem = false);
 
     /**
      * Get/Set the KGroupInfo
      */
-    KGroupInfo info() { return mInfo; }
-    void setInfo( KGroupInfo info );
+    KGroupInfo info()
+    {
+        return mInfo;
+    }
+    void setInfo(KGroupInfo info);
 
     /**
      * Get/Set the original parent
      */
-    QListViewItem* originalParent() { return mOriginalParent; }
-    void setOriginalParent( QListViewItem* parent ) { mOriginalParent = parent; }
+    QListViewItem *originalParent()
+    {
+        return mOriginalParent;
+    }
+    void setOriginalParent(QListViewItem *parent)
+    {
+        mOriginalParent = parent;
+    }
 
     /**
      * Get/Set the last open state
      */
-    bool lastOpenState() { return mLastOpenState; }
-    void setLastOpenState( bool last ) { mLastOpenState = last; }
+    bool lastOpenState()
+    {
+        return mLastOpenState;
+    }
+    void setLastOpenState(bool last)
+    {
+        mLastOpenState = last;
+    }
 
     /**
      * Sets the description from the KGroupInfo
@@ -104,51 +118,60 @@ class KDE_EXPORT GroupItem : public QCheckListItem
     /**
      * Get if this is a checkable item
      */
-    bool isCheckItem() const { return mIsCheckItem; }
+    bool isCheckItem() const
+    {
+        return mIsCheckItem;
+    }
 
     /**
      * Get/Set if state changes should be ignored
      */
-    bool ignoreStateChange() { return mIgnoreStateChange; }
-    void setIgnoreStateChange( bool ignore ) { mIgnoreStateChange = ignore; }
+    bool ignoreStateChange()
+    {
+        return mIgnoreStateChange;
+    }
+    void setIgnoreStateChange(bool ignore)
+    {
+        mIgnoreStateChange = ignore;
+    }
 
     /**
      * Reimplemented
      * Sets the subscribed property (only while items are loaded)
      */
-    virtual void setOn( bool on );
+    virtual void setOn(bool on);
 
     /**
      * Reimlemented
      * Calls KSubscription::changeItemState if mIgnoreStateChange == false
      */
-    virtual void stateChange( bool on );
+    virtual void stateChange(bool on);
 
     /**
      * Reimplemented
      * Sets items invisible or disabled or even moves them
      */
-    void setVisible( bool b );
+    void setVisible(bool b);
 
     /**
      * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
-    virtual void paintCell( QPainter * p, const QColorGroup & cg,
-        int column, int width, int align );
+    virtual void paintCell(QPainter *p, const QColorGroup &cg,
+                           int column, int width, int align);
 
     /**
      * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
-    virtual void paintFocus( QPainter *, const QColorGroup & cg,
-                 const QRect & r );
+    virtual void paintFocus(QPainter *, const QColorGroup &cg,
+                            const QRect &r);
 
     /**
      * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
-    virtual int width( const QFontMetrics&, const QListView*, int column) const;
+    virtual int width(const QFontMetrics &, const QListView *, int column) const;
 
     /**
      * Reimplemented
@@ -157,12 +180,15 @@ class KDE_EXPORT GroupItem : public QCheckListItem
     virtual void setup();
 
     /** Reimplemented */
-    virtual int rtti () const { return 15689; }
+    virtual int rtti() const
+    {
+        return 15689;
+    }
 
-  protected:
+protected:
     KGroupInfo mInfo;
-    KSubscription* mBrowser;
-    QListViewItem* mOriginalParent;
+    KSubscription *mBrowser;
+    QListViewItem *mOriginalParent;
     // remember last open state
     bool mLastOpenState;
     // is this a checkable item
@@ -185,102 +211,129 @@ class KDE_EXPORT GroupItem : public QCheckListItem
  *
  */
 
-class KDE_EXPORT KSubscription : public KDialogBase
-{
-  Q_OBJECT
+class KDE_EXPORT KSubscription : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * The direction of the buttons
      */
-    enum Direction {
-      Left,
-      Right
+    enum Direction
+    {
+        Left,
+        Right
     };
 
-    KSubscription( QWidget *parent, const QString &caption, KAccount* acct,
-        int buttons = 0, const QString &user1 = QString::null,
-        bool descriptionColumn = true );
+    KSubscription(QWidget *parent, const QString &caption, KAccount *acct,
+                  int buttons = 0, const QString &user1 = QString::null,
+                  bool descriptionColumn = true);
 
     ~KSubscription();
 
     /**
      * Get/Set the account
      */
-    KAccount* account() { return mAcct; }
-    void setAccount( KAccount * acct ) { mAcct = acct; }
+    KAccount *account()
+    {
+        return mAcct;
+    }
+    void setAccount(KAccount *acct)
+    {
+        mAcct = acct;
+    }
 
     /**
      * Access to the treewidget that holds the GroupItems
      */
-    QListView* folderTree() { return groupView; }
+    QListView *folderTree()
+    {
+        return groupView;
+    }
 
     /**
      * Access to the searchfield
      */
-    KLineEdit* searchField() { return filterEdit; }
+    KLineEdit *searchField()
+    {
+        return filterEdit;
+    }
 
     /**
      * The item that should be selected on startup
      */
-    void setStartItem( const KGroupInfo &info );
+    void setStartItem(const KGroupInfo &info);
 
     /**
      * Removes the item from the listview
      */
-    void removeListItem( QListView *view, const KGroupInfo &gi );
+    void removeListItem(QListView *view, const KGroupInfo &gi);
 
     /**
      * Gets the item from the listview
      * Returns 0 if the item can't be found
      */
-    QListViewItem* getListItem( QListView *view, const KGroupInfo &gi );
+    QListViewItem *getListItem(QListView *view, const KGroupInfo &gi);
 
     /**
      * Is the item in the given listview
      */
-    bool itemInListView( QListView *view, const KGroupInfo &gi );
+    bool itemInListView(QListView *view, const KGroupInfo &gi);
 
     /**
      * Makes all changes after an item is toggled
      * called by the item's stateChange-method
      */
-    void changeItemState( GroupItem* item, bool on );
+    void changeItemState(GroupItem *item, bool on);
 
     /**
      * Get/Set the direction of button1
      */
-    Direction directionButton1() { return mDirButton1; }
-    void setDirectionButton1( Direction dir );
+    Direction directionButton1()
+    {
+        return mDirButton1;
+    }
+    void setDirectionButton1(Direction dir);
 
     /**
      * Get/Set the direction of button2
      */
-    Direction directionButton2() { return mDirButton2; }
-    void setDirectionButton2( Direction dir );
+    Direction directionButton2()
+    {
+        return mDirButton2;
+    }
+    void setDirectionButton2(Direction dir);
 
     /**
      * Returns true if items are being constructed
      * Call 'slotLoadingComplete' to switch this
      */
-    bool isLoading() { return mLoading; }
+    bool isLoading()
+    {
+        return mLoading;
+    }
 
     /**
      * Hide 'Disable tree view' checkbox
      */
-    void hideTreeCheckbox() { noTreeCB->hide(); }
+    void hideTreeCheckbox()
+    {
+        noTreeCB->hide();
+    }
 
     /**
      * Hide 'New Only' checkbox
      */
-    void hideNewOnlyCheckbox() { newCB->hide(); }
+    void hideNewOnlyCheckbox()
+    {
+        newCB->hide();
+    }
 
     /**
      * Update the item-states (visible, enabled) when a filter
      * criteria changed
      */
-    void filterChanged( QListViewItem* item = 0,
-        const QString & text = QString::null );
+    void filterChanged(QListViewItem *item = 0,
+                       const QString &text = QString::null);
 
     /**
      * The amount of items that are visible and enabled
@@ -303,7 +356,7 @@ class KDE_EXPORT KSubscription : public KDialogBase
     void restoreOpenStates();
 
 
-  public slots:
+public slots:
     /**
      * Call this slot when you have created all items
      */
@@ -312,7 +365,7 @@ class KDE_EXPORT KSubscription : public KDialogBase
     /**
      * Changes the current state of the buttons
      */
-    void slotChangeButtonState( QListViewItem* );
+    void slotChangeButtonState(QListViewItem *);
 
     /**
      * Buttons are clicked
@@ -330,7 +383,7 @@ class KDE_EXPORT KSubscription : public KDialogBase
      */
     void slotLoadFolders();
 
-  protected slots:
+protected slots:
     /**
      * Slot for the checkboxes
      */
@@ -339,9 +392,9 @@ class KDE_EXPORT KSubscription : public KDialogBase
     /**
      * Filter text changed
      */
-    void slotFilterTextChanged( const QString & text );
+    void slotFilterTextChanged(const QString &text);
 
-  signals:
+signals:
     /**
      * Emitted when the amount of items in the
      * groupView changes (e.g. on filtering)
@@ -349,9 +402,9 @@ class KDE_EXPORT KSubscription : public KDialogBase
     void listChanged();
 
 
-  protected:
+protected:
     // current account
-    KAccount* mAcct;
+    KAccount *mAcct;
 
     // widgets
     QWidget *page;

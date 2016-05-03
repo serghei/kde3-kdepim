@@ -32,7 +32,7 @@ class EncodingDetectorPrivate;
 /**
  * @short Provides encoding detection capabilities.
  *
- * Searches for encoding declaration inside raw data -- meta and xml tags. 
+ * Searches for encoding declaration inside raw data -- meta and xml tags.
  * In the case it can't find it, uses heuristics for specified language.
  *
  * If it finds unicode BOM marks, it changes encoding regardless of what the user has told
@@ -54,8 +54,7 @@ class EncodingDetectorPrivate;
  * @short Guess encoding of char array
  *
  */
-class EncodingDetector
-{
+class EncodingDetector {
 public:
     enum EncodingChoiceSource
     {
@@ -98,7 +97,7 @@ public:
     /**
      * Allows to set Default codec, EncodingChoiceSource, AutoDetectScript
      */
-    EncodingDetector(QTextCodec* codec, EncodingChoiceSource source, AutoDetectScript script=None);
+    EncodingDetector(QTextCodec *codec, EncodingChoiceSource source, AutoDetectScript script = None);
     ~EncodingDetector();
 
     //const QTextCodec* codec() const;
@@ -112,14 +111,14 @@ public:
     * Convenience method.
     * @returns mime name of detected encoding
     */
-    const char* encoding() const;
+    const char *encoding() const;
 
     bool visuallyOrdered() const;
 
-//     void setAutoDetectLanguage( const QString& );
-//     const QString& autoDetectLanguage() const;
+    //     void setAutoDetectLanguage( const QString& );
+    //     const QString& autoDetectLanguage() const;
 
-    void setAutoDetectLanguage( AutoDetectScript );
+    void setAutoDetectLanguage(AutoDetectScript);
     AutoDetectScript autoDetectLanguage() const;
 
     EncodingChoiceSource encodingChoiceSource() const;
@@ -128,18 +127,18 @@ public:
     * Analyze text data.
     * @returns true if there was enough data for accurate detection
     */
-    bool analyze( const char *data, int len );
+    bool analyze(const char *data, int len);
 
     /**
     * Analyze text data.
     * @returns true if there was enough data for accurate detection
     */
-    bool analyze( const QByteArray &data );
+    bool analyze(const QByteArray &data);
 
     /**
      * Takes lang name _after_ it were i18n()'ed
      */
-    static AutoDetectScript scriptForName(const QString& lang);
+    static AutoDetectScript scriptForName(const QString &lang);
     static QString nameForScript(AutoDetectScript);
     static AutoDetectScript scriptForLanguageCode(const QString &lang);
     static bool hasAutoDetectionForScript(AutoDetectScript);
@@ -152,15 +151,15 @@ protected:
      *
      * Please somebody read http://de.wikipedia.org/wiki/UTF-8 and check this code...
      */
-    bool errorsIfUtf8 (const char* data, int length);
+    bool errorsIfUtf8(const char *data, int length);
 
     /**
     * @returns QTextDecoder for detected encoding
     */
-    QTextDecoder* decoder();
+    QTextDecoder *decoder();
 
 private:
-    EncodingDetectorPrivate* const d;
+    EncodingDetectorPrivate *const d;
 };
 
 #endif

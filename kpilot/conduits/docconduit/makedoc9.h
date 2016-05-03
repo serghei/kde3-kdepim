@@ -56,56 +56,64 @@ typedef unsigned short WORD;
 
 
 class tBuf {
- private:
-//      byte hichar[10];
-//      int hicharnum;
-//      bool space;
+private:
+    //      byte hichar[10];
+    //      int hicharnum;
+    //      bool space;
 
-	byte * buf;
-	unsigned len;
-	bool isCompressed;
- public:
-	 tBuf() {
-		buf = 0L;
-		len=0;
-		isCompressed=false;
-	};
+    byte *buf;
+    unsigned len;
+    bool isCompressed;
+public:
+    tBuf()
+    {
+        buf = 0L;
+        len = 0;
+        isCompressed = false;
+    };
 
-	~tBuf()
-	{
-		if (buf)
-			delete[]buf;
-	}
+    ~tBuf()
+    {
+        if(buf)
+            delete[]buf;
+    }
 
-	void Clear() {
-		delete[]buf;
-		buf = 0L;
-	}
-	void setText(const byte * text, unsigned int txtlen =
-		0, bool txtcomp = false);
-	byte *text() const {
-		return buf;
-	}
-	unsigned Len() const {
-		return len;
-	}
-	void setCompressed(bool compressed = true) {
-		isCompressed = compressed;
-	}
-	bool compressed() const {
-		return isCompressed;
-	}
-	unsigned RemoveBinary();
-	unsigned DuplicateCR();
+    void Clear()
+    {
+        delete[]buf;
+        buf = 0L;
+    }
+    void setText(const byte *text, unsigned int txtlen =
+                     0, bool txtcomp = false);
+    byte *text() const
+    {
+        return buf;
+    }
+    unsigned Len() const
+    {
+        return len;
+    }
+    void setCompressed(bool compressed = true)
+    {
+        isCompressed = compressed;
+    }
+    bool compressed() const
+    {
+        return isCompressed;
+    }
+    unsigned RemoveBinary();
+    unsigned DuplicateCR();
 
-	unsigned Decompress();
-	unsigned Compress();
+    unsigned Decompress();
+    unsigned Compress();
 
- private:
-	unsigned Issue(byte src, int &bSpace);
-	void Dump() const {
-		printf("\nbuffer len=%d", len);
-}};
+private:
+    unsigned Issue(byte src, int &bSpace);
+    void Dump() const
+    {
+        printf("\nbuffer len=%d", len);
+    }
+};
 
 
 #endif

@@ -28,24 +28,23 @@ class KListView;
 class SloxFolder;
 class SloxFolderManager;
 
-class KDE_EXPORT SloxFolderDialog : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget* parent = 0, const char *name = 0 );
+class KDE_EXPORT SloxFolderDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    SloxFolderDialog(SloxFolderManager *manager, FolderType type, QWidget *parent = 0, const char *name = 0);
     ~SloxFolderDialog();
 
     QString selectedFolder() const;
-    void setSelectedFolder( const QString &id );
+    void setSelectedFolder(const QString &id);
 
-  protected slots:
+protected slots:
     virtual void slotUser1();
     void updateFolderView();
 
-  private:
-    void createFolderViewItem( SloxFolder *folder );
+private:
+    void createFolderViewItem(SloxFolder *folder);
 
-  private:
+private:
     KListView *mListView;
     SloxFolderManager *mManager;
     QString mFolderId;

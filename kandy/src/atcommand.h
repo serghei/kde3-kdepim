@@ -29,19 +29,37 @@
 #include <qptrlist.h>
 
 class ATParameter {
-  public:
+public:
     ATParameter();
-    ATParameter(const QString &value,const QString &name="",
-                bool userInput=false);
+    ATParameter(const QString &value, const QString &name = "",
+                bool userInput = false);
 
-    void setName(const QString &name) { mName = name; }
-    QString name() const { return mName; }
-    void setValue(const QString &value) { mValue = value; }
-    QString value() const { return mValue; }
-    void setUserInput(bool userInput) { mUserInput = userInput; }
-    bool userInput() const { return mUserInput; }
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
+    QString name() const
+    {
+        return mName;
+    }
+    void setValue(const QString &value)
+    {
+        mValue = value;
+    }
+    QString value() const
+    {
+        return mValue;
+    }
+    void setUserInput(bool userInput)
+    {
+        mUserInput = userInput;
+    }
+    bool userInput() const
+    {
+        return mUserInput;
+    }
 
-  private:
+private:
     QString mName;
     QString mValue;
     bool mUserInput;
@@ -52,11 +70,11 @@ class ATParameter {
 */
 // TODO: emit a signal, when the command was executed.
 class ATCommand {
-  public:
+public:
     ATCommand();
     ATCommand(const QString &cmdString);
-    ATCommand(const QString &cmdName,const QString &cmdString,
-              bool hexOutput=false);
+    ATCommand(const QString &cmdName, const QString &cmdString,
+              bool hexOutput = false);
     virtual ~ATCommand();
 
     void setCmdName(const QString &);
@@ -84,13 +102,19 @@ class ATCommand {
     void clearParameters();
     QPtrList<ATParameter> parameters();
 
-    void setParameter(int index,const QString &value);
-    void setParameter(int index,int value);
+    void setParameter(int index, const QString &value);
+    void setParameter(int index, int value);
 
-    void setAutoDelete(bool autoDelete) { mAutoDelete = autoDelete; }
-    bool autoDelete() { return mAutoDelete; }
+    void setAutoDelete(bool autoDelete)
+    {
+        mAutoDelete = autoDelete;
+    }
+    bool autoDelete()
+    {
+        return mAutoDelete;
+    }
 
-  private:
+private:
     void construct();
     void setResultFields(QString fieldsString);
     void extractParameters();

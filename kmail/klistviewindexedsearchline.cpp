@@ -5,12 +5,12 @@
  * KMail is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation.
- * 
+ *
  * KMail is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -38,36 +38,41 @@
 
 using KMail::HeaderListQuickSearch;
 
-KListViewIndexedSearchLine::KListViewIndexedSearchLine( QWidget* parent, KListView* listView, KActionCollection* actionCollection, const char* name ):
-	HeaderListQuickSearch( parent, listView, actionCollection, name ),
-	mFiltering( false )
+KListViewIndexedSearchLine::KListViewIndexedSearchLine(QWidget *parent, KListView *listView, KActionCollection *actionCollection, const char *name):
+    HeaderListQuickSearch(parent, listView, actionCollection, name),
+    mFiltering(false)
 {
 }
 
-KListViewIndexedSearchLine::~KListViewIndexedSearchLine() {
+KListViewIndexedSearchLine::~KListViewIndexedSearchLine()
+{
 }
 
 
-void KListViewIndexedSearchLine::updateSearch( const QString& s ) {
-	kdDebug( 5006 ) << "updateSearch( -" << s << "- )" << endl;
-	mFiltering = false;
-	if ( !s.isNull() && !s.isEmpty() ) {
-		bool ok = false;
-		KMMsgIndex* index = kmkernel->msgIndex();
-		if ( index ) {
-			mResults = index->simpleSearch( s, &ok );
-			std::sort( mResults.begin(), mResults.end() );
-			mFiltering = ok;
-		}
-	}
-	KListViewSearchLine::updateSearch( s );
+void KListViewIndexedSearchLine::updateSearch(const QString &s)
+{
+    kdDebug(5006) << "updateSearch( -" << s << "- )" << endl;
+    mFiltering = false;
+    if(!s.isNull() && !s.isEmpty())
+    {
+        bool ok = false;
+        KMMsgIndex *index = kmkernel->msgIndex();
+        if(index)
+        {
+            mResults = index->simpleSearch(s, &ok);
+            std::sort(mResults.begin(), mResults.end());
+            mFiltering = ok;
+        }
+    }
+    KListViewSearchLine::updateSearch(s);
 }
 
-bool KListViewIndexedSearchLine::itemMatches( const QListViewItem* item, const QString& s ) const {
-	if ( mFiltering && 
-			std::binary_search( mResults.begin(), mResults.end(), static_cast<const KMail::HeaderItem*>( item )->msgSerNum() ) )
-		return true;
-	return KMail::HeaderListQuickSearch::itemMatches( item, s );
+bool KListViewIndexedSearchLine::itemMatches(const QListViewItem *item, const QString &s) const
+{
+    if(mFiltering &&
+            std::binary_search(mResults.begin(), mResults.end(), static_cast<const KMail::HeaderItem *>(item)->msgSerNum()))
+        return true;
+    return KMail::HeaderListQuickSearch::itemMatches(item, s);
 }
 
 #include "klistviewindexedsearchline.moc"

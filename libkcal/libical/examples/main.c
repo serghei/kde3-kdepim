@@ -8,5 +8,6 @@ int main()
 }
 
 
-void do_something(icalcomponent* comp){
+void do_something(icalcomponent *comp)
+{
 }

@@ -28,31 +28,31 @@
 
 namespace Akregator {
 
-QString Utils::stripTags(const QString& str)
+QString Utils::stripTags(const QString &str)
 {
     return QString(str).replace(QRegExp("<[^>]*>"), "");
 }
 
-uint Utils::calcHash(const QString& str)
+uint Utils::calcHash(const QString &str)
 {
-    if (str.isNull()) // handle null string as "", prevents crash
+    if(str.isNull())  // handle null string as "", prevents crash
         return calcHash("");
-    const char* s = str.ascii();
+    const char *s = str.ascii();
     uint hash = 5381;
     int c;
-    while ( ( c = *s++ ) ) hash = ((hash << 5) + hash) + c; // hash*33 + c
+    while((c = *s++)) hash = ((hash << 5) + hash) + c;      // hash*33 + c
     return hash;
 }
 
-QString Utils::fileNameForUrl(const QString& url_p)
+QString Utils::fileNameForUrl(const QString &url_p)
 {
     QString url2(url_p);
-    
+
     url2 = url2.replace("/", "_").replace(":", "_");
-    
-    if (url2.length() > 255)
+
+    if(url2.length() > 255)
         url2 = url2.left(200) + QString::number(Akregator::Utils::calcHash(url2), 16);
-    
+
     return url2;
 }
 

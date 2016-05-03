@@ -32,28 +32,26 @@
 
 class QPoint;
 
-namespace Akregator 
-{
+namespace Akregator {
 
 class Folder;
 
-class FolderItem : public TreeNodeItem
-{
+class FolderItem : public TreeNodeItem {
 
 public:
-    FolderItem(FolderItem* parent, Folder* node);
-    FolderItem(FolderItem* parent, TreeNodeItem* after, Folder* node);
-    FolderItem(KListView* parent, Folder* node);
-    FolderItem(KListView* parent, TreeNodeItem* after, Folder* node);
+    FolderItem(FolderItem *parent, Folder *node);
+    FolderItem(FolderItem *parent, TreeNodeItem *after, Folder *node);
+    FolderItem(KListView *parent, Folder *node);
+    FolderItem(KListView *parent, TreeNodeItem *after, Folder *node);
     virtual ~FolderItem();
-    
-    virtual Folder* node();
-    
+
+    virtual Folder *node();
+
     virtual void setOpen(bool open);
-    virtual void showContextMenu(const QPoint& p);
+    virtual void showContextMenu(const QPoint &p);
 
 private:
-    void initialize(Folder* node);
+    void initialize(Folder *node);
 };
 
 }

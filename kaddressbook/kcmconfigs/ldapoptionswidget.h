@@ -31,41 +31,40 @@ class KListView;
 class QListViewItem;
 class QPushButton;
 
-class LDAPOptionsWidget : public QWidget
-{
-  Q_OBJECT
+class LDAPOptionsWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    LDAPOptionsWidget( QWidget* parent = 0, const char* name = 0 );
+public:
+    LDAPOptionsWidget(QWidget *parent = 0, const char *name = 0);
     ~LDAPOptionsWidget();
 
     void restoreSettings();
     void saveSettings();
     void defaults();
 
-  signals:
-    void changed( bool );
+signals:
+    void changed(bool);
 
-  private slots:
+private slots:
     void slotAddHost();
     void slotEditHost();
     void slotRemoveHost();
-    void slotSelectionChanged( QListViewItem* );
-    void slotItemClicked( QListViewItem* );
+    void slotSelectionChanged(QListViewItem *);
+    void slotItemClicked(QListViewItem *);
     void slotMoveUp();
     void slotMoveDown();
 
-  private:
+private:
     void initGUI();
 
-    KListView* mHostListView;
+    KListView *mHostListView;
 
-    QPushButton* mAddButton;
-    QPushButton* mEditButton;
-    QPushButton* mRemoveButton;
+    QPushButton *mAddButton;
+    QPushButton *mEditButton;
+    QPushButton *mRemoveButton;
 
-    QToolButton* mUpButton;
-    QToolButton* mDownButton;
+    QToolButton *mUpButton;
+    QToolButton *mDownButton;
 };
 
 #endif

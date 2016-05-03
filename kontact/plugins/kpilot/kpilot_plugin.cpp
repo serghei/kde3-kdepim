@@ -31,39 +31,40 @@
 #include "kpilot_plugin.h"
 
 typedef KGenericFactory< KPilotPlugin, Kontact::Core > KPilotPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_kpilotplugin,
-                            KPilotPluginFactory( "kontact_kpilotplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_kpilotplugin,
+                           KPilotPluginFactory("kontact_kpilotplugin"))
 
-KPilotPlugin::KPilotPlugin( Kontact::Core *core, const char *name, const QStringList& )
-  : Kontact::Plugin( core, core, "kpilot" ), mAboutData( 0 )
+KPilotPlugin::KPilotPlugin(Kontact::Core *core, const char *name, const QStringList &)
+    : Kontact::Plugin(core, core, "kpilot"), mAboutData(0)
 {
-  setInstance( KPilotPluginFactory::instance() );
-	// TODO: Make sure kpilotDaemon is running!
+    setInstance(KPilotPluginFactory::instance());
+    // TODO: Make sure kpilotDaemon is running!
 
 
 }
 
-Kontact::Summary *KPilotPlugin::createSummaryWidget( QWidget *parentWidget )
+Kontact::Summary *KPilotPlugin::createSummaryWidget(QWidget *parentWidget)
 {
-  return new SummaryWidget( parentWidget );
+    return new SummaryWidget(parentWidget);
 }
 
 const KAboutData *KPilotPlugin::aboutData()
 {
-  if ( !mAboutData ) {
-	mAboutData = new KAboutData("kpilotplugin", I18N_NOOP("KPilot Information"),
-		KPILOT_VERSION,
-		I18N_NOOP("KPilot - HotSync software for KDE\n\n"),
-		KAboutData::License_GPL, "(c) 2004 Reinhold Kainhofer");
-	mAboutData->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Plugin Developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	mAboutData->addAuthor("Dan Pilone",
-		I18N_NOOP("Project Leader"),
-		0, "http://www.kpilot.org/");
-	mAboutData->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
-		"groot@kde.org", "http://people.fruitsalad.org/adridg/");
-  }
+    if(!mAboutData)
+    {
+        mAboutData = new KAboutData("kpilotplugin", I18N_NOOP("KPilot Information"),
+                                    KPILOT_VERSION,
+                                    I18N_NOOP("KPilot - HotSync software for KDE\n\n"),
+                                    KAboutData::License_GPL, "(c) 2004 Reinhold Kainhofer");
+        mAboutData->addAuthor("Reinhold Kainhofer",
+                              I18N_NOOP("Plugin Developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+        mAboutData->addAuthor("Dan Pilone",
+                              I18N_NOOP("Project Leader"),
+                              0, "http://www.kpilot.org/");
+        mAboutData->addAuthor("Adriaan de Groot",
+                              I18N_NOOP("Maintainer"),
+                              "groot@kde.org", "http://people.fruitsalad.org/adridg/");
+    }
 
-  return mAboutData;
+    return mAboutData;
 }

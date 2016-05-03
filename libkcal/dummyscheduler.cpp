@@ -37,7 +37,7 @@
 using namespace KCal;
 
 DummyScheduler::DummyScheduler(Calendar *calendar)
-  : Scheduler(calendar)
+    : Scheduler(calendar)
 {
 }
 
@@ -45,83 +45,95 @@ DummyScheduler::~DummyScheduler()
 {
 }
 
-bool DummyScheduler::publish (IncidenceBase *incidence,const QString &/*recipients*/)
+bool DummyScheduler::publish(IncidenceBase *incidence, const QString &/*recipients*/)
 {
-  QString messageText = mFormat->createScheduleMessage(incidence,
-                                                       Scheduler::Publish);
+    QString messageText = mFormat->createScheduleMessage(incidence,
+                          Scheduler::Publish);
 
-  return saveMessage(messageText);
+    return saveMessage(messageText);
 }
 
-bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method,const QString &/*recipients*/)
+bool DummyScheduler::performTransaction(IncidenceBase *incidence, Method method, const QString &/*recipients*/)
 {
-  QString messageText = mFormat->createScheduleMessage(incidence,method);
+    QString messageText = mFormat->createScheduleMessage(incidence, method);
 
-  return saveMessage(messageText);
+    return saveMessage(messageText);
 }
 
-bool DummyScheduler::performTransaction(IncidenceBase *incidence,Method method)
+bool DummyScheduler::performTransaction(IncidenceBase *incidence, Method method)
 {
-  QString messageText = mFormat->createScheduleMessage(incidence,method);
+    QString messageText = mFormat->createScheduleMessage(incidence, method);
 
-  return saveMessage(messageText);
+    return saveMessage(messageText);
 }
 
 bool DummyScheduler::saveMessage(const QString &message)
 {
-  QFile f("dummyscheduler.store");
-  if (f.open(IO_WriteOnly | IO_Append)) {
-    QTextStream t(&f);
-    t << message << endl;
-    f.close();
-    return true;
-  } else {
-    return false;
-  }
+    QFile f("dummyscheduler.store");
+    if(f.open(IO_WriteOnly | IO_Append))
+    {
+        QTextStream t(&f);
+        t << message << endl;
+        f.close();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 QPtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
 {
-  QPtrList<ScheduleMessage> messageList;
+    QPtrList<ScheduleMessage> messageList;
 
-  QFile f("dummyscheduler.store");
-  if (!f.open(IO_ReadOnly)) {
-    kdDebug(5800) << "DummyScheduler::retrieveTransactions(): Can't open file"
-              << endl;
-  } else {
-    QTextStream t(&f);
-    QString messageString;
-    QString messageLine = t.readLine();
-    while (!messageLine.isNull()) {
-//      kdDebug(5800) << "++++++++" << messageLine << endl;
-      messageString += messageLine + "\n";
-      if (messageLine.find("END:VCALENDAR") >= 0) {
-        kdDebug(5800) << "---------------" << messageString << endl;
-        ScheduleMessage *message = mFormat->parseScheduleMessage(mCalendar,
-                                                                 messageString);
-        kdDebug(5800) << "--Parsed" << endl;
-        if (message) {
-          messageList.append(message);
-        } else {
-          QString errorMessage;
-          if (mFormat->exception()) {
-            errorMessage = mFormat->exception()->message();
-          }
-          kdDebug(5800) << "DummyScheduler::retrieveTransactions() Error parsing "
-                       "message: " << errorMessage << endl;
-        }
-        messageString="";
-      }
-      messageLine = t.readLine();
+    QFile f("dummyscheduler.store");
+    if(!f.open(IO_ReadOnly))
+    {
+        kdDebug(5800) << "DummyScheduler::retrieveTransactions(): Can't open file"
+                      << endl;
     }
-    f.close();
-  }
+    else
+    {
+        QTextStream t(&f);
+        QString messageString;
+        QString messageLine = t.readLine();
+        while(!messageLine.isNull())
+        {
+            //      kdDebug(5800) << "++++++++" << messageLine << endl;
+            messageString += messageLine + "\n";
+            if(messageLine.find("END:VCALENDAR") >= 0)
+            {
+                kdDebug(5800) << "---------------" << messageString << endl;
+                ScheduleMessage *message = mFormat->parseScheduleMessage(mCalendar,
+                                           messageString);
+                kdDebug(5800) << "--Parsed" << endl;
+                if(message)
+                {
+                    messageList.append(message);
+                }
+                else
+                {
+                    QString errorMessage;
+                    if(mFormat->exception())
+                    {
+                        errorMessage = mFormat->exception()->message();
+                    }
+                    kdDebug(5800) << "DummyScheduler::retrieveTransactions() Error parsing "
+                                  "message: " << errorMessage << endl;
+                }
+                messageString = "";
+            }
+            messageLine = t.readLine();
+        }
+        f.close();
+    }
 
-  return messageList;
+    return messageList;
 }
 
 QString DummyScheduler::freeBusyDir()
 {
-  // the dummy scheduler should never handle freebusy stuff - so it's hardcoded
-  return QString("");
+    // the dummy scheduler should never handle freebusy stuff - so it's hardcoded
+    return QString("");
 }

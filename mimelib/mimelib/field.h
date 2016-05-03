@@ -78,8 +78,8 @@ class DW_EXPORT DwField : public DwMessageComponent {
 public:
 
     DwField();
-    DwField(const DwField& aField);
-    DwField(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwField(const DwField &aField);
+    DwField(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwField} object's field name and field body to the empty
     //. string, set its parent to {\tt NULL}, and sets its {\tt DwFieldBody}
@@ -98,7 +98,7 @@ public:
 
     virtual ~DwField();
 
-    const DwField& operator = (const DwField& aField);
+    const DwField &operator = (const DwField &aField);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aField}.  The parent node of the {\tt DwField} object
     //. is not changed.
@@ -136,45 +136,45 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwField} on the free store that has the same
     //. value as this {\tt DwField} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    DwFieldBody* FieldBody() const;
+    DwFieldBody *FieldBody() const;
     //. Returns the {\tt DwFieldBody} object contained by this {\tt DwField}
     //. object.  If there is no field body, {\tt NULL} will be returned.
 
-    const DwString& FieldNameStr() const;
+    const DwString &FieldNameStr() const;
     //. Returns the field name of this header field as a string.
 
-    const DwString& FieldBodyStr() const;
+    const DwString &FieldBodyStr() const;
     //. Returns the field body of this header field as a string.
 
-    DwField* Next() const;
+    DwField *Next() const;
     //. Returns the next {\tt DwField} object following this
     //. {\tt DwField} object in the list contained in a {\tt DwHeaders}.
     //. Returns {\tt NULL} if this object is last in the list.
 
-    void SetFieldBody(DwFieldBody* aFieldBody);
+    void SetFieldBody(DwFieldBody *aFieldBody);
     //. Sets the {\tt DwFieldBody} object contained by this object.
 
-    void SetFieldNameStr(const DwString& aStr);
+    void SetFieldNameStr(const DwString &aStr);
     //. Sets the field name of this header field.
 
-    void SetFieldBodyStr(const DwString& aStr);
+    void SetFieldBodyStr(const DwString &aStr);
     //. Sets the field body of this header field.
 
-    void SetNext(const DwField* aField);
+    void SetNext(const DwField *aField);
     //. This {\it advanced} function sets {\tt aField} as the next field
     //. following this field in the list of fields contained in the headers.
     //. Since {\tt DwHeaders} contains member functions for adding
     //. {\tt DwField} objects to its list, this function should be
     //. avoided for most applications.
 
-    static DwField* NewField(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwField *NewField(const DwString &aStr,
+                             DwMessageComponent *aParent);
     //. Creates a new {\tt DwField} object on the free store.
     //. If the static data member {\tt sNewField} is {\tt NULL},
     //. this member function will create a new {\tt DwField}
@@ -183,8 +183,8 @@ public:
     //. which is assumed to return an object from a class derived from
     //. {\tt DwField}, and return that object.
 
-    static DwFieldBody* CreateFieldBody(const DwString& aFieldName,
-        const DwString& aFieldBody, DwMessageComponent* aParent);
+    static DwFieldBody *CreateFieldBody(const DwString &aFieldName,
+                                        const DwString &aFieldBody, DwMessageComponent *aParent);
     //. The static member function {\tt CreateFieldBody()} is called from
     //. the {\tt Parse()} member function and is responsible for creating a
     //. {\tt DwFieldBody} object for this particular field.  A typical
@@ -207,18 +207,18 @@ public:
     //. {\tt _CreateFieldBody()} from your own function for fields you
     //. do not wish to handle.
 
-    static DwFieldBody* _CreateFieldBody(const DwString& aFieldName,
-        const DwString& aFieldBody, DwMessageComponent* aParent);
+    static DwFieldBody *_CreateFieldBody(const DwString &aFieldName,
+                                         const DwString &aFieldBody, DwMessageComponent *aParent);
 
     //+ Var sNewField
-    static DwField* (*sNewField)(const DwString&, DwMessageComponent*);
+    static DwField *(*sNewField)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewField} is not {\tt NULL}, it is assumed to point
     //. to a user-supplied function that returns an object from a class
     //. derived from {\tt DwField}.
 
     //+ Var sCreateFieldBody
-    static DwFieldBody* (*sCreateFieldBody)(const DwString& aFieldName,
-        const DwString& aFieldBody, DwMessageComponent* aParent);
+    static DwFieldBody *(*sCreateFieldBody)(const DwString &aFieldName,
+                                            const DwString &aFieldBody, DwMessageComponent *aParent);
     //. See {\tt CreateFieldBody()}.
 
 protected:
@@ -229,22 +229,22 @@ protected:
     DwString mFieldBodyStr;
     // the {\it field-body}
 
-    DwFieldBody* mFieldBody;
+    DwFieldBody *mFieldBody;
     // pointer to the {\tt DwFieldBody} object
 
-    void _SetFieldBody(DwFieldBody* aFieldBody);
+    void _SetFieldBody(DwFieldBody *aFieldBody);
     //. Sets the {\tt DwFieldBody} object contained by this object.  This
     //. function differs from {\tt SetFieldBody()} in that it does not
     //. set the is-modified flag.
 
 private:
 
-    const DwField* mNext;
-    static const char* const sClassName;
+    const DwField *mNext;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -262,7 +262,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

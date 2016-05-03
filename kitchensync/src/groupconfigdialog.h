@@ -25,18 +25,17 @@
 class GroupConfig;
 class SyncProcess;
 
-class GroupConfigDialog : public KDialogBase
-{
-  Q_OBJECT
+class GroupConfigDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    GroupConfigDialog( QWidget *parent, SyncProcess * );
+public:
+    GroupConfigDialog(QWidget *parent, SyncProcess *);
     ~GroupConfigDialog();
 
-  protected slots:
+protected slots:
     void slotOk();
 
-  private:
+private:
     GroupConfig *mConfigWidget;
 };
 

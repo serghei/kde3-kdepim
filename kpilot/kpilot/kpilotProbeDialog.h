@@ -39,64 +39,78 @@ class QGridLayout;
 template <class T> class QValueList;
 template<class Key, class T> class QMap;
 
-typedef QValueList<KPilotDeviceLink*> PilotLinkList;
+typedef QValueList<KPilotDeviceLink *> PilotLinkList;
 
-typedef QMap<QString, KPilotDeviceLink*> PilotLinkMap;
+typedef QMap<QString, KPilotDeviceLink *> PilotLinkMap;
 
-class ProbeDialog : public KDialogBase
-{
-Q_OBJECT
+class ProbeDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	ProbeDialog(QWidget *p=0L,const char *n=0L);
-	~ProbeDialog();
+    ProbeDialog(QWidget *p = 0L, const char *n = 0L);
+    ~ProbeDialog();
 
-	bool detected() const { return mDetected; }
-	QString userName() const { return mUserName; }
-	QString device() const { return mDevice; }
-	QStringList dbs()  const { return mDBs; }
+    bool detected() const
+    {
+        return mDetected;
+    }
+    QString userName() const
+    {
+        return mUserName;
+    }
+    QString device() const
+    {
+        return mDevice;
+    }
+    QStringList dbs()  const
+    {
+        return mDBs;
+    }
 
 
 protected slots:
-	void startDetection();
-	void timeout();
-	void connection(KPilotDeviceLink*lnk);
-	void retrieveDBList();
-	void disconnectDevices();
-	void processEvents();
-	void progress();
-	void detect();
-	void detect(int i);
+    void startDetection();
+    void timeout();
+    void connection(KPilotDeviceLink *lnk);
+    void retrieveDBList();
+    void disconnectDevices();
+    void processEvents();
+    void progress();
+    void detect();
+    void detect(int i);
 public slots:
-	int exec();
-	void slotUser1 () { startDetection(); }
+    int exec();
+    void slotUser1()
+    {
+        startDetection();
+    }
 protected:
-	QLabel* fInfoText;
-	QGroupBox* fResultsGroup;
-	QLabel* fUserLabel;
-	QLabel* fDeviceLabel;
-	QLabel* fUser;
-	QLabel* fDevice;
-	QGroupBox* fStatusGroup;
-	QLabel* fStatus;
-	KProgress* fProgress;
+    QLabel *fInfoText;
+    QGroupBox *fResultsGroup;
+    QLabel *fUserLabel;
+    QLabel *fDeviceLabel;
+    QLabel *fUser;
+    QLabel *fDevice;
+    QGroupBox *fStatusGroup;
+    QLabel *fStatus;
+    KProgress *fProgress;
 
-	QTimer* fProcessEventsTimer;
-	QTimer* fTimeoutTimer;
-	QTimer* fProgressTimer;
-	QTimer* fRotateLinksTimer;
+    QTimer *fProcessEventsTimer;
+    QTimer *fTimeoutTimer;
+    QTimer *fProgressTimer;
+    QTimer *fRotateLinksTimer;
 protected:
-	QGridLayout* fResultsGroupLayout;
-	QGridLayout* fStatusGroupLayout;
+    QGridLayout *fResultsGroupLayout;
+    QGridLayout *fStatusGroupLayout;
 
-	QStringList mDevicesToProbe[3];
-	PilotLinkList mDeviceLinks[3];
-	int mProbeDevicesIndex;
-	KPilotDeviceLink *mActiveLink;
+    QStringList mDevicesToProbe[3];
+    PilotLinkList mDeviceLinks[3];
+    int mProbeDevicesIndex;
+    KPilotDeviceLink *mActiveLink;
 
-	bool mDetected;
-	QString mUserName;
-	QString mDevice;
-	QStringList mDBs;
+    bool mDetected;
+    QString mUserName;
+    QString mDevice;
+    QStringList mDBs;
 } ;
 
 #endif

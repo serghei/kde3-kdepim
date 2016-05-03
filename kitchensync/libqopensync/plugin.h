@@ -28,12 +28,11 @@ class OSyncPlugin;
 
 namespace QSync {
 
-class Plugin
-{
-  friend class Environment;
-  friend class Member;
+class Plugin {
+    friend class Environment;
+    friend class Member;
 
-  public:
+public:
     Plugin();
     ~Plugin();
 
@@ -57,7 +56,7 @@ class Plugin
      */
     QString description() const;
 
-  private:
+private:
     OSyncPlugin *mPlugin;
 };
 

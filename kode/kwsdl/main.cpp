@@ -33,45 +33,46 @@
 
 static const KCmdLineOptions options[] =
 {
-  { "d", 0, 0 },
-  { "directory <dir>", I18N_NOOP( "Directory to generate files in" ), "." },
-  { "n", 0, 0 },
-  { "namespace <namespace>", I18N_NOOP( "Namespace of the created classes" ), "." },
-  { "+wsdl", I18N_NOOP( "WSDL file" ), 0 },
-  KCmdLineLastOption
+    { "d", 0, 0 },
+    { "directory <dir>", I18N_NOOP("Directory to generate files in"), "." },
+    { "n", 0, 0 },
+    { "namespace <namespace>", I18N_NOOP("Namespace of the created classes"), "." },
+    { "+wsdl", I18N_NOOP("WSDL file"), 0 },
+    KCmdLineLastOption
 };
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "kwsdl_compiler", I18N_NOOP( "KDE wsdl compiler" ), "0.1",
-                        I18N_NOOP( "KDE WSDL Compiler" ),
-                        KAboutData::License_LGPL );
+    KAboutData aboutData("kwsdl_compiler", I18N_NOOP("KDE wsdl compiler"), "0.1",
+                         I18N_NOOP("KDE WSDL Compiler"),
+                         KAboutData::License_LGPL);
 
-  aboutData.addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+    aboutData.addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  if ( args->count() < 1 || args->count() > 1 ) {
-    qDebug( "Invalid arguments, try --help." );
-    return 1;
-  }
+    if(args->count() < 1 || args->count() > 1)
+    {
+        qDebug("Invalid arguments, try --help.");
+        return 1;
+    }
 
-  KApplication app( false, false );
+    KApplication app(false, false);
 
-  QString outputDirectory = QFile::decodeName( args->getOption( "directory" ) );
-  if ( outputDirectory.isEmpty() )
-    outputDirectory = QDir::current().path();
+    QString outputDirectory = QFile::decodeName(args->getOption("directory"));
+    if(outputDirectory.isEmpty())
+        outputDirectory = QDir::current().path();
 
-  KWSDL::Compiler compiler;
-  compiler.setWSDLUrl( args->url( 0 ).path() );
-  compiler.setOutputDirectory( outputDirectory );
-  if ( args->isSet( "namespace" ) )
-    compiler.setNameSpace( args->getOption( "namespace" ) );
+    KWSDL::Compiler compiler;
+    compiler.setWSDLUrl(args->url(0).path());
+    compiler.setOutputDirectory(outputDirectory);
+    if(args->isSet("namespace"))
+        compiler.setNameSpace(args->getOption("namespace"));
 
-  QTimer::singleShot( 0, &compiler, SLOT( run() ) );
+    QTimer::singleShot(0, &compiler, SLOT(run()));
 
-  return app.exec();
+    return app.exec();
 }

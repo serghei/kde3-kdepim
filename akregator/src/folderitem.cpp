@@ -33,37 +33,37 @@
 
 namespace Akregator {
 
-FolderItem::FolderItem(FolderItem* parent, Folder* node) : TreeNodeItem(parent, node)
+FolderItem::FolderItem(FolderItem *parent, Folder *node) : TreeNodeItem(parent, node)
 {
     initialize(node);
 }
 
-FolderItem::FolderItem(FolderItem* parent, TreeNodeItem* after, Folder* node) : TreeNodeItem(parent, after, node)
+FolderItem::FolderItem(FolderItem *parent, TreeNodeItem *after, Folder *node) : TreeNodeItem(parent, after, node)
 {
     initialize(node);
 }
 
-FolderItem::FolderItem(KListView* parent, Folder* node) : TreeNodeItem(parent, node)
+FolderItem::FolderItem(KListView *parent, Folder *node) : TreeNodeItem(parent, node)
 {
     initialize(node);
 }
 
-FolderItem::FolderItem(KListView* parent, TreeNodeItem* after, Folder* node) : TreeNodeItem(parent, after, node)
+FolderItem::FolderItem(KListView *parent, TreeNodeItem *after, Folder *node) : TreeNodeItem(parent, after, node)
 {
     initialize(node);
 }
 
-void FolderItem::initialize(Folder* node)
+void FolderItem::initialize(Folder *node)
 {
     setOpen(node->isOpen());
-    setPixmap ( 0, KGlobal::iconLoader()->loadIcon("folder", KIcon::Small) );
-    if (node)
+    setPixmap(0, KGlobal::iconLoader()->loadIcon("folder", KIcon::Small));
+    if(node)
         setText(0, node->title());
 }
 
-Folder* FolderItem::node() 
-{ 
-    return static_cast<Folder*> (m_node); 
+Folder *FolderItem::node()
+{
+    return static_cast<Folder *>(m_node);
 }
 
 void FolderItem::setOpen(bool open)
@@ -76,10 +76,10 @@ FolderItem::~FolderItem()
 {}
 
 
-void FolderItem::showContextMenu(const QPoint& p)
+void FolderItem::showContextMenu(const QPoint &p)
 {
-    QWidget* w = ActionManager::getInstance()->container("feedgroup_popup");
-    if (w)
+    QWidget *w = ActionManager::getInstance()->container("feedgroup_popup");
+    if(w)
         static_cast<QPopupMenu *>(w)->exec(p);
 }
 

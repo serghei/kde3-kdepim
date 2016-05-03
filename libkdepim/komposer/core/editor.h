@@ -28,21 +28,21 @@
 #include <qstringlist.h>
 
 namespace KParts {
-  class Part;
+class Part;
 }
 
 namespace Komposer {
 
-  class Core;
+class Core;
 
-  class Editor : public Plugin
-  {
+class Editor : public Plugin {
     Q_OBJECT
-  public:
-    enum TextType {
-      Plain    = 1 << 0,
-      RichText = 1 << 1,
-      HTML     = 1 << 2
+public:
+    enum TextType
+    {
+        Plain    = 1 << 0,
+        RichText = 1 << 1,
+        HTML     = 1 << 2
     };
     virtual ~Editor();
 
@@ -50,14 +50,14 @@ namespace Komposer {
      * This is the magic function that all derivatives have to reimplement.
      * It returns the actual editor component.
      */
-    virtual QWidget *widget() =0;
+    virtual QWidget *widget() = 0;
 
     int supportedTextFormats() const;
 
     /**
      * Returns the full text inside the editor.
      */
-    virtual QString text() const =0;
+    virtual QString text() const = 0;
 
     /**
      * This function is called when the plugin is selected by the user before the
@@ -74,30 +74,33 @@ namespace Komposer {
      * @note Make sure you offer the modules in the form:
      * <code>"pathrelativetosettings/mysettings.desktop"</code>
      */
-    virtual QStringList configModules() const { return QStringList(); }
+    virtual QStringList configModules() const
+    {
+        return QStringList();
+    }
 
 
-  public slots:
+public slots:
     /**
      * Sets the text of the opened editor.
      * Most commonly used on replaying.
      * If any text is present if will be deleted.
      */
-    virtual void setText( const QString &txt ) =0;
+    virtual void setText(const QString &txt) = 0;
 
     /**
      * Changes currently used signature. If no signature is present
      * a new one should be appened.
      */
-    virtual void changeSignature( const QString &txt ) =0;
+    virtual void changeSignature(const QString &txt) = 0;
 
-  protected:
-    Editor( QObject *parent, const char *name, const QStringList &args );
+protected:
+    Editor(QObject *parent, const char *name, const QStringList &args);
 
-  private:
+private:
     class Private;
     Private *d;
-  };
+};
 
 }
 

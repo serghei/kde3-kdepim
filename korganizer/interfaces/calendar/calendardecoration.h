@@ -37,11 +37,16 @@ namespace KOrg {
   It provides entities like texts and pictures for a given date. Implementations
   can implement all functions or only a subset.
 */
-class CalendarDecoration : public Plugin
-{
-  public:
-    static int interfaceVersion() { return 2; }
-    static QString serviceType() { return "Calendar/Decoration"; }
+class CalendarDecoration : public Plugin {
+public:
+    static int interfaceVersion()
+    {
+        return 2;
+    }
+    static QString serviceType()
+    {
+        return "Calendar/Decoration";
+    }
 
     typedef QPtrList<CalendarDecoration> List;
 
@@ -51,31 +56,45 @@ class CalendarDecoration : public Plugin
     /**
       Return a short text for a given date, ususally only a few words.
     */
-    virtual QString shortText( const QDate & ) { return QString::null; }
+    virtual QString shortText(const QDate &)
+    {
+        return QString::null;
+    }
     /**
       Return along text for a given date. This text can be of any length, but
       usually it will have one or a few paragraphs.
     */
-    virtual QString longText( const QDate & ) { return QString::null; }
+    virtual QString longText(const QDate &)
+    {
+        return QString::null;
+    }
 
     /**
       Return a small pixmap. The size should be something like 30x30 pixels.
     */
-    virtual QPixmap smallPixmap( const QDate &) { return QPixmap(); }
+    virtual QPixmap smallPixmap(const QDate &)
+    {
+        return QPixmap();
+    }
     /**
       Return a large pixmap. The size should be something like 300x300 pixels.
     */
-    virtual QPixmap largePixmap( const QDate &) { return QPixmap(); }
+    virtual QPixmap largePixmap(const QDate &)
+    {
+        return QPixmap();
+    }
 
     /**
       Return a small widget. It should have the size of a pushbutton.
     */
-    virtual QWidget *smallWidget( QWidget *, const QDate & ) { return 0; }
+    virtual QWidget *smallWidget(QWidget *, const QDate &)
+    {
+        return 0;
+    }
 };
 
-class CalendarDecorationFactory : public PluginFactory
-{
-  public:
+class CalendarDecorationFactory : public PluginFactory {
+public:
     virtual CalendarDecoration *create() = 0;
 };
 

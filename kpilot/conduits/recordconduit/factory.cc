@@ -45,100 +45,98 @@
 #include "settings.h"
 
 
-class ConduitConfig : public ConduitConfigBase
-{
+class ConduitConfig : public ConduitConfigBase {
 public:
-	ConduitConfig(QWidget *parent=0L, const char *n=0L);
-	virtual void commit();
-	virtual void load();
+    ConduitConfig(QWidget *parent = 0L, const char *n = 0L);
+    virtual void commit();
+    virtual void load();
 protected:
-	RecordWidget *fConfigWidget;
-	KAboutData *fAbout;
+    RecordWidget *fConfigWidget;
+    KAboutData *fAbout;
 } ;
 
 ConduitConfig::ConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new RecordWidget(p))
+    ConduitConfigBase(p, n),
+    fConfigWidget(new RecordWidget(p))
 {
-	FUNCTIONSETUP;
-	fConduitName = i18n("Record Conduit");
-	fAbout = new KAboutData("recordConduit",
-		I18N_NOOP("Record Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Record Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2005, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
-		"groot@kde.org",
-		"http://people.fruitsalad.org/adridg/");
+    FUNCTIONSETUP;
+    fConduitName = i18n("Record Conduit");
+    fAbout = new KAboutData("recordConduit",
+                            I18N_NOOP("Record Conduit for KPilot"),
+                            KPILOT_VERSION,
+                            I18N_NOOP("Configures the Record Conduit for KPilot"),
+                            KAboutData::License_GPL,
+                            "(C) 2005, Adriaan de Groot");
+    fAbout->addAuthor("Adriaan de Groot",
+                      I18N_NOOP("Primary Author"),
+                      "groot@kde.org",
+                      "http://people.fruitsalad.org/adridg/");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
-	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fDatabases,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fFailImmediately,SIGNAL(toggled(bool)),
-		this,SLOT(modified()));
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
+    fWidget = fConfigWidget;
+    QObject::connect(fConfigWidget->fLogMessage, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fDatabases, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fFailImmediately, SIGNAL(toggled(bool)),
+                     this, SLOT(modified()));
 }
 
 /* virtual */ void ConduitConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGKPILOT << fname
-		<< ": Databases="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Message="
+                << fConfigWidget->fLogMessage->text()
+                << endl;
+    DEBUGKPILOT << fname
+                << ": Databases="
+                << fConfigWidget->fDatabases->text()
+                << endl;
 #endif
 
-	ConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
-	ConduitSettings::setDatabases( fConfigWidget->fDatabases->text() );
-	ConduitSettings::setFailImmediately( fConfigWidget->fFailImmediately->isChecked());
-	ConduitSettings::self()->writeConfig();
-	unmodified();
+    ConduitSettings::setLogMessage(fConfigWidget->fLogMessage->text());
+    ConduitSettings::setDatabases(fConfigWidget->fDatabases->text());
+    ConduitSettings::setFailImmediately(fConfigWidget->fFailImmediately->isChecked());
+    ConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 /* virtual */ void ConduitConfig::load()
 {
-	FUNCTIONSETUP;
-	ConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    ConduitSettings::self()->readConfig();
 
-	fConfigWidget->fLogMessage->setText( ConduitSettings::logMessage() );
-	fConfigWidget->fDatabases->setText( ConduitSettings::databases().join(",") );
-	fConfigWidget->fFailImmediately->setChecked( ConduitSettings::failImmediately() );
+    fConfigWidget->fLogMessage->setText(ConduitSettings::logMessage());
+    fConfigWidget->fDatabases->setText(ConduitSettings::databases().join(","));
+    fConfigWidget->fFailImmediately->setChecked(ConduitSettings::failImmediately());
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Read Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGKPILOT << fname
-		<< ": Read Database="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Read Message="
+                << fConfigWidget->fLogMessage->text()
+                << endl;
+    DEBUGKPILOT << fname
+                << ": Read Database="
+                << fConfigWidget->fDatabases->text()
+                << endl;
 #endif
 
-	unmodified();
+    unmodified();
 }
 
 typedef PilotDatabase PilotDatabaseContainer;
 
 typedef RecordConduit<PilotRecord, PilotDatabaseContainer, PilotRecord, PilotAppInfoBase, NullMapper<PilotRecord> > RecordAction;
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_record()
-{
-	return new ConduitFactory<ConduitConfig,RecordAction>(0,"recordconduit");
-}
+    void *init_conduit_record()
+    {
+        return new ConduitFactory<ConduitConfig, RecordAction>(0, "recordconduit");
+    }
 
 }
 

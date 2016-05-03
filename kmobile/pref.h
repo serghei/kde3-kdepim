@@ -11,8 +11,7 @@
 class KMobilePrefPageOne;
 class KMobilePrefPageTwo;
 
-class KMobilePreferences : public KDialogBase
-{
+class KMobilePreferences : public KDialogBase {
     Q_OBJECT
 public:
     KMobilePreferences();
@@ -22,15 +21,13 @@ private:
     KMobilePrefPageTwo *m_pageTwo;
 };
 
-class KMobilePrefPageOne : public QFrame
-{
+class KMobilePrefPageOne : public QFrame {
     Q_OBJECT
 public:
     KMobilePrefPageOne(QWidget *parent = 0);
 };
 
-class KMobilePrefPageTwo : public QFrame
-{
+class KMobilePrefPageTwo : public QFrame {
     Q_OBJECT
 public:
     KMobilePrefPageTwo(QWidget *parent = 0);

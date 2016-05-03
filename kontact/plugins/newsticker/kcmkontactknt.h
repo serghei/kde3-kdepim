@@ -35,30 +35,29 @@ class KPushButton;
 
 class NewsItem;
 
-class KCMKontactKNT : public KCModule
-{
-  Q_OBJECT
+class KCMKontactKNT : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMKontactKNT( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMKontactKNT(QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
     virtual void save();
     virtual void defaults();
-    virtual const KAboutData* aboutData() const;
+    virtual const KAboutData *aboutData() const;
 
-  private slots:
+private slots:
     void addNews();
     void removeNews();
     void newFeed();
     void deleteFeed();
 
-    void selectedChanged( QListViewItem *item );
-    void allCurrentChanged( QListViewItem *item );
+    void selectedChanged(QListViewItem *item);
+    void allCurrentChanged(QListViewItem *item);
 
     void modified();
 
-  private:
+private:
     void initGUI();
     void loadNews();
     void loadCustomNews();
@@ -79,22 +78,21 @@ class KCMKontactKNT : public KCModule
     QSpinBox *mArticleCount;
 
     QMap<QString, QString> mFeedMap;
-    QValueList<NewsItem*> mCustomFeeds;
+    QValueList<NewsItem *> mCustomFeeds;
 };
 
-class NewsEditDialog : public KDialogBase
-{
-  Q_OBJECT
+class NewsEditDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    NewsEditDialog( const QString&, const QString&, QWidget *parent );
+public:
+    NewsEditDialog(const QString &, const QString &, QWidget *parent);
     QString title() const;
     QString url() const;
 
-  private slots:
+private slots:
     void modified();
 
-  private:
+private:
     QLineEdit *mTitle;
     QLineEdit *mURL;
 };

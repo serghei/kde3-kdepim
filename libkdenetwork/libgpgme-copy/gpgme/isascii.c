@@ -22,7 +22,7 @@
 #endif
 
 int
-isascii (int c)
+isascii(int c)
 {
-  return (((c) & ~0x7f) == 0);
+    return (((c) & ~0x7f) == 0);
 }

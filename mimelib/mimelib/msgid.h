@@ -57,8 +57,8 @@ class DW_EXPORT DwMsgId : public DwFieldBody {
 public:
 
     DwMsgId();
-    DwMsgId(const DwMsgId& aMsgId);
-    DwMsgId(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMsgId(const DwMsgId &aMsgId);
+    DwMsgId(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMsgId} object's string representation to the empty string
     //. and sets its parent to NULL.
@@ -76,7 +76,7 @@ public:
 
     virtual ~DwMsgId();
 
-    const DwMsgId& operator = (const DwMsgId& aMsgId);
+    const DwMsgId &operator = (const DwMsgId &aMsgId);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aMsgId}.  The parent node of the {\tt DwMsgId} object
     //. is not changed.
@@ -105,7 +105,7 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwMsgId} on the free store that has the same
     //. value as this {\tt DwMsgId} object.  The basic idea is that of
@@ -115,20 +115,20 @@ public:
     //. Creates a value for the msg-id.  Uses the current time,
     //. process id, and fully qualified domain name for the host.
 
-    const DwString& LocalPart() const;
+    const DwString &LocalPart() const;
     //. Returns the local-part of the msg-id.
 
-    void SetLocalPart(const DwString& aLocalPart);
+    void SetLocalPart(const DwString &aLocalPart);
     //. Sets the local-part of the msg-id.
 
-    const DwString& Domain() const;
+    const DwString &Domain() const;
     //. Returns the domain of the msg-id.
 
-    void SetDomain(const DwString& aDomain);
+    void SetDomain(const DwString &aDomain);
     //. Sets the domain of the msg-id.
 
-    static DwMsgId* NewMsgId(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwMsgId *NewMsgId(const DwString &aStr,
+                             DwMessageComponent *aParent);
     //. Creates a new {\tt DwMsgId} object on the free store.
     //. If the static data member {\tt sNewMsgId} is NULL,
     //. this member function will create a new {\tt DwMsgId}
@@ -138,12 +138,12 @@ public:
     //. {\tt DwMsgId}, and return that object.
 
     //+ Var sNewMsgId
-    static DwMsgId* (*sNewMsgId)(const DwString&, DwMessageComponent*);
+    static DwMsgId *(*sNewMsgId)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewMsgId} is not NULL, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived from
     //. {\tt DwMsgId}.
 
-    static const char* sHostName;
+    static const char *sHostName;
     //. Host name of machine, used to create msg-id string.  This data member
     //. is ignored if the platform supports a gethostname() function call.
 
@@ -151,11 +151,11 @@ private:
 
     DwString mLocalPart;
     DwString mDomain;
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -173,7 +173,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

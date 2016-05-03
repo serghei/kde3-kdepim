@@ -49,90 +49,97 @@
 #include <qfontmetrics.h>
 #include <qtimer.h>
 
-CRLView::CRLView( QWidget* parent, const char* name, bool modal )
-  : QDialog( parent, name, modal ), _process(0)
+CRLView::CRLView(QWidget *parent, const char *name, bool modal)
+    : QDialog(parent, name, modal), _process(0)
 {
-  QVBoxLayout* topLayout = new QVBoxLayout( this, 10, 4 );
+    QVBoxLayout *topLayout = new QVBoxLayout(this, 10, 4);
 
-  topLayout->addWidget( new QLabel( i18n("CRL cache dump:"), this ) );
+    topLayout->addWidget(new QLabel(i18n("CRL cache dump:"), this));
 
-  _textView = new QTextEdit( this );
-  _textView->setFont( KGlobalSettings::fixedFont() );
-  _textView->setTextFormat( QTextEdit::LogText );
-  topLayout->addWidget( _textView );
+    _textView = new QTextEdit(this);
+    _textView->setFont(KGlobalSettings::fixedFont());
+    _textView->setTextFormat(QTextEdit::LogText);
+    topLayout->addWidget(_textView);
 
-  QHBoxLayout* hbLayout = new QHBoxLayout( topLayout );
+    QHBoxLayout *hbLayout = new QHBoxLayout(topLayout);
 
-  _updateButton = new KPushButton( i18n("&Update"), this );
-  _closeButton = new KPushButton( KStdGuiItem::close(), this );
+    _updateButton = new KPushButton(i18n("&Update"), this);
+    _closeButton = new KPushButton(KStdGuiItem::close(), this);
 
-  hbLayout->addWidget( _updateButton );
-  hbLayout->addStretch();
-  hbLayout->addWidget( _closeButton );
+    hbLayout->addWidget(_updateButton);
+    hbLayout->addStretch();
+    hbLayout->addWidget(_closeButton);
 
-  // connections:
-  connect( _updateButton, SIGNAL( clicked() ),
-	   this, SLOT( slotUpdateView() ) );
-  connect( _closeButton, SIGNAL( clicked() ),
-	   this, SLOT( close() ) );
+    // connections:
+    connect(_updateButton, SIGNAL(clicked()),
+            this, SLOT(slotUpdateView()));
+    connect(_closeButton, SIGNAL(clicked()),
+            this, SLOT(close()));
 
-  resize( _textView->fontMetrics().width( 'M' ) * 80,
-	  _textView->fontMetrics().lineSpacing() * 25 );
+    resize(_textView->fontMetrics().width('M') * 80,
+           _textView->fontMetrics().lineSpacing() * 25);
 
-  _timer = new QTimer( this );
-  connect( _timer, SIGNAL(timeout()), SLOT(slotAppendBuffer()) );
+    _timer = new QTimer(this);
+    connect(_timer, SIGNAL(timeout()), SLOT(slotAppendBuffer()));
 }
 
 CRLView::~CRLView()
 {
-  delete _process; _process = 0;
+    delete _process;
+    _process = 0;
 }
 
-void CRLView::closeEvent( QCloseEvent * e ) {
-  QDialog::closeEvent( e );
-  delete _process; _process = 0;
+void CRLView::closeEvent(QCloseEvent *e)
+{
+    QDialog::closeEvent(e);
+    delete _process;
+    _process = 0;
 }
 
 void CRLView::slotUpdateView()
 {
-  _updateButton->setEnabled( false );
-  _textView->clear();
-  _buffer = QString::null;
-  if( _process == 0 ) {
-    _process = new KProcess();
-    *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
-    connect( _process, SIGNAL( receivedStdout( KProcess*, char*, int) ),
-	     this, SLOT( slotReadStdout( KProcess*, char*, int ) ) );
-    connect( _process, SIGNAL( processExited( KProcess* ) ),
-	     this, SLOT( slotProcessExited() ) );
-  }
-  if( _process->isRunning() ) _process->kill();
-  if( !_process->start( KProcess::NotifyOnExit, KProcess::Stdout ) ) {
-    KMessageBox::error( this, i18n( "Unable to start gpgsm process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
-    slotProcessExited();
-  }
-  _timer->start( 1000 );
+    _updateButton->setEnabled(false);
+    _textView->clear();
+    _buffer = QString::null;
+    if(_process == 0)
+    {
+        _process = new KProcess();
+        *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
+        connect(_process, SIGNAL(receivedStdout(KProcess *, char *, int)),
+                this, SLOT(slotReadStdout(KProcess *, char *, int)));
+        connect(_process, SIGNAL(processExited(KProcess *)),
+                this, SLOT(slotProcessExited()));
+    }
+    if(_process->isRunning()) _process->kill();
+    if(!_process->start(KProcess::NotifyOnExit, KProcess::Stdout))
+    {
+        KMessageBox::error(this, i18n("Unable to start gpgsm process. Please check your installation."), i18n("Certificate Manager Error"));
+        slotProcessExited();
+    }
+    _timer->start(1000);
 }
 
-void CRLView::slotReadStdout( KProcess*, char* buf, int len)
+void CRLView::slotReadStdout(KProcess *, char *buf, int len)
 {
-  _buffer.append( QString::fromUtf8( buf, len ) );
+    _buffer.append(QString::fromUtf8(buf, len));
 }
 
-void CRLView::slotAppendBuffer() {
-  _textView->append( _buffer );
-  _buffer = QString::null;
+void CRLView::slotAppendBuffer()
+{
+    _textView->append(_buffer);
+    _buffer = QString::null;
 }
 
 void CRLView::slotProcessExited()
 {
-  _timer->stop();
-  slotAppendBuffer();
-  _updateButton->setEnabled( true );
+    _timer->stop();
+    slotAppendBuffer();
+    _updateButton->setEnabled(true);
 
-  if( !_process->normalExit() ) {
-    KMessageBox::error( this, i18n( "The GpgSM process ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
-  }
+    if(!_process->normalExit())
+    {
+        KMessageBox::error(this, i18n("The GpgSM process ended prematurely because of an unexpected error."), i18n("Certificate Manager Error"));
+    }
 }
 
 #include "crlview.moc"

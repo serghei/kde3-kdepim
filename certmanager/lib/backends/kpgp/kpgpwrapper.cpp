@@ -56,9 +56,9 @@
 //#include <backends/kpgp/kpgpdecryptverifyjob.h>
 //#include <backends/kpgp/kpgpcryptoconfig.h>
 
-KpgpWrapper::KpgpWrapper( const QString & name )
-  : mName( name ),
-    mPgpBase( 0 )
+KpgpWrapper::KpgpWrapper(const QString &name)
+    : mName(name),
+      mPgpBase(0)
 {
 
 }
@@ -70,104 +70,105 @@ KpgpWrapper::~KpgpWrapper()
 
 QString KpgpWrapper::name() const
 {
-  return mName;
+    return mName;
 }
 
 QString KpgpWrapper::displayName() const
 {
-  return mName;
+    return mName;
 }
 
-Kleo::KeyListJob * KpgpWrapper::keyListJob( bool /*remote*/,
-                                            bool /*includeSigs*/,
-                                            bool /*validate*/ ) const
+Kleo::KeyListJob *KpgpWrapper::keyListJob(bool /*remote*/,
+        bool /*includeSigs*/,
+        bool /*validate*/) const
 {
-  return new Kleo::KpgpKeyListJob( pgpBase() );
+    return new Kleo::KpgpKeyListJob(pgpBase());
 }
 
-Kleo::EncryptJob * KpgpWrapper::encryptJob( bool /*armor*/,
-                                            bool /*textmode*/ ) const
+Kleo::EncryptJob *KpgpWrapper::encryptJob(bool /*armor*/,
+        bool /*textmode*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::DecryptJob * KpgpWrapper::decryptJob() const
+Kleo::DecryptJob *KpgpWrapper::decryptJob() const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::SignJob * KpgpWrapper::signJob( bool /*armor*/, bool /*textMode*/ ) const
+Kleo::SignJob *KpgpWrapper::signJob(bool /*armor*/, bool /*textMode*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::VerifyDetachedJob * KpgpWrapper::verifyDetachedJob( bool /*textmode*/ ) const
+Kleo::VerifyDetachedJob *KpgpWrapper::verifyDetachedJob(bool /*textmode*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::VerifyOpaqueJob * KpgpWrapper::verifyOpaqueJob( bool /*textmode*/ ) const
+Kleo::VerifyOpaqueJob *KpgpWrapper::verifyOpaqueJob(bool /*textmode*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::KeyGenerationJob * KpgpWrapper::keyGenerationJob() const
+Kleo::KeyGenerationJob *KpgpWrapper::keyGenerationJob() const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::ImportJob * KpgpWrapper::importJob() const
+Kleo::ImportJob *KpgpWrapper::importJob() const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::ExportJob * KpgpWrapper::publicKeyExportJob( bool /*armor*/ ) const
+Kleo::ExportJob *KpgpWrapper::publicKeyExportJob(bool /*armor*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::ExportJob * KpgpWrapper::secretKeyExportJob( bool /*armor*/ ) const
+Kleo::ExportJob *KpgpWrapper::secretKeyExportJob(bool /*armor*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::DownloadJob * KpgpWrapper::downloadJob( bool /*armor*/ ) const
+Kleo::DownloadJob *KpgpWrapper::downloadJob(bool /*armor*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::DeleteJob * KpgpWrapper::deleteJob() const
+Kleo::DeleteJob *KpgpWrapper::deleteJob() const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::SignEncryptJob * KpgpWrapper::signEncryptJob( bool /*armor*/,
-                                                    bool /*textMode*/ ) const
+Kleo::SignEncryptJob *KpgpWrapper::signEncryptJob(bool /*armor*/,
+        bool /*textMode*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::DecryptVerifyJob * KpgpWrapper::decryptVerifyJob( bool /*textmode*/ ) const
+Kleo::DecryptVerifyJob *KpgpWrapper::decryptVerifyJob(bool /*textmode*/) const
 {
-  return 0;
+    return 0;
 }
 
-Kleo::RefreshKeysJob * KpgpWrapper::refreshKeysJob() const
+Kleo::RefreshKeysJob *KpgpWrapper::refreshKeysJob() const
 {
-  return 0;
+    return 0;
 }
 
-Kpgp::Base * KpgpWrapper::pgpBase() const
+Kpgp::Base *KpgpWrapper::pgpBase() const
 {
-  if ( !mPgpBase ) {
-    if ( name() == GPG1_BACKEND_NAME )
-      mPgpBase = new Kpgp::BaseG();
-    else if ( name() == PGP2_BACKEND_NAME )
-      mPgpBase = new Kpgp::Base2();
-    else if ( name() == PGP5_BACKEND_NAME )
-      mPgpBase = new Kpgp::Base5();
-    else if ( name() == PGP6_BACKEND_NAME )
-      mPgpBase = new Kpgp::Base6();
-  }
-  return mPgpBase;
+    if(!mPgpBase)
+    {
+        if(name() == GPG1_BACKEND_NAME)
+            mPgpBase = new Kpgp::BaseG();
+        else if(name() == PGP2_BACKEND_NAME)
+            mPgpBase = new Kpgp::Base2();
+        else if(name() == PGP5_BACKEND_NAME)
+            mPgpBase = new Kpgp::Base5();
+        else if(name() == PGP6_BACKEND_NAME)
+            mPgpBase = new Kpgp::Base6();
+    }
+    return mPgpBase;
 }

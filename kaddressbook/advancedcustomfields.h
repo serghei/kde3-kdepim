@@ -36,23 +36,22 @@
 
 #include "contacteditorwidget.h"
 
-class AdvancedCustomFields : public KAB::ContactEditorWidget
-{
-  Q_OBJECT
+class AdvancedCustomFields : public KAB::ContactEditorWidget {
+    Q_OBJECT
 
-  public:
-    AdvancedCustomFields( const QString &uiFile, KABC::AddressBook *ab,
-                          QWidget *parent, const char *name = 0 );
+public:
+    AdvancedCustomFields(const QString &uiFile, KABC::AddressBook *ab,
+                         QWidget *parent, const char *name = 0);
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
 
     QString pageIdentifier() const;
     QString pageTitle() const;
 
-  private:
-    void initGUI( const QString& );
+private:
+    void initGUI(const QString &);
 
     KPIM::DesignerFields *mFields;
 };

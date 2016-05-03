@@ -39,79 +39,78 @@ namespace KCal {
   In keeping with RFC2445, property names must be composed only of the
   characters A-Z, a-z, 0-9 and '-'.
 */
-class LIBKCAL_EXPORT CustomProperties
-{
-  public:
+class LIBKCAL_EXPORT CustomProperties {
+public:
     /**
       Construct a new empty custom properties instance.
     */
     CustomProperties();
-    CustomProperties( const CustomProperties & );
+    CustomProperties(const CustomProperties &);
     ~CustomProperties();
 
-    bool operator==( const CustomProperties & ) const;
+    bool operator==(const CustomProperties &) const;
 
     /**
       Create or modify a custom calendar property.
-      
+
       @param app   Application name as it appears in the custom property name.
       @param key   Property identifier specific to the application.
       @param value The property's value. A call with a value of QString::null
                    will be ignored.
     */
-    void setCustomProperty( const QCString &app, const QCString &key,
-                            const QString &value );
+    void setCustomProperty(const QCString &app, const QCString &key,
+                           const QString &value);
     /**
       Delete a custom calendar property.
-      
+
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
     */
-    void removeCustomProperty( const QCString &app, const QCString &key );
+    void removeCustomProperty(const QCString &app, const QCString &key);
     /**
       Return the value of a custom calendar property.
-      
+
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
       @return Property value, or QString::null if (and only if) the property
               does not exist.
     */
-    QString customProperty( const QCString &app, const QCString &key ) const;
+    QString customProperty(const QCString &app, const QCString &key) const;
 
     /**
       Create or modify a non-KDE or non-standard custom calendar property.
-      
+
       @param name Full property name
       @param value The property's value. A call with a value of QString::null
                    will be ignored.
     */
-    void setNonKDECustomProperty( const QCString &name, const QString &value );
+    void setNonKDECustomProperty(const QCString &name, const QString &value);
     /**
       Delete a non-KDE or non-standard custom calendar property.
-      
+
       @param name Full property name
     */
-    void removeNonKDECustomProperty( const QCString &name );
+    void removeNonKDECustomProperty(const QCString &name);
     /**
       Return the value of a non-KDE or non-standard custom calendar property.
-      
+
       @param name Full property name
       @return Property value, or QString::null if (and only if) the property
               does not exist.
     */
-    QString nonKDECustomProperty( const QCString& name ) const;
+    QString nonKDECustomProperty(const QCString &name) const;
 
     /**
       Initialise the alarm's custom calendar properties to the specified
       key/value pairs.
     */
-    void setCustomProperties( const QMap<QCString, QString> &properties );
+    void setCustomProperties(const QMap<QCString, QString> &properties);
     /**
       Return all custom calendar property key/value pairs.
     */
     QMap<QCString, QString> customProperties() const;
 
-  protected:
+protected:
     /**
       Called when a custom property has been changed.
       The default implementation does nothing: override in derived classes
@@ -119,8 +118,8 @@ class LIBKCAL_EXPORT CustomProperties
     */
     virtual void customPropertyUpdated()  {}
 
-  private:
-    static bool checkName(const QCString& name);
+private:
+    static bool checkName(const QCString &name);
 
     QMap<QCString, QString> mProperties;   // custom calendar properties
 

@@ -29,51 +29,57 @@
 
 namespace GpgME {
 
-  class Key;
-  class Data;
-  class TrustItem;
-  class ProgressProvider;
-  class PassphraseProvider;
-  class EventLoopInteractor;
+class Key;
+class Data;
+class TrustItem;
+class ProgressProvider;
+class PassphraseProvider;
+class EventLoopInteractor;
 
-  class KeyListResult;
-  class KeyGenerationResult;
-  class ImportResult;
-  class DecryptionResult;
-  class VerificationResult;
-  class SigningResult;
-  class EncryptionResult;
+class KeyListResult;
+class KeyGenerationResult;
+class ImportResult;
+class DecryptionResult;
+class VerificationResult;
+class SigningResult;
+class EncryptionResult;
 
-  class EngineInfo;
+class EngineInfo;
 
-  class KDE_EXPORT Error {
-  public:
-    Error( int e=0 ) : mErr( e ) {}
+class KDE_EXPORT Error {
+public:
+    Error(int e = 0) : mErr(e) {}
 
-    const char * source() const;
-    const char * asString() const;
+    const char *source() const;
+    const char *asString() const;
 
     int code() const;
     int sourceID() const;
 
     bool isCanceled() const;
 
-    operator int() const { return mErr; }
-    operator bool() const { return mErr && !isCanceled(); }
-  private:
+    operator int() const
+    {
+        return mErr;
+    }
+    operator bool() const
+    {
+        return mErr && !isCanceled();
+    }
+private:
     int mErr;
-  };
+};
 
-  class KDE_EXPORT Context {
-    Context( gpgme_ctx_t );
-  public:
+class KDE_EXPORT Context {
+    Context(gpgme_ctx_t);
+public:
     enum Protocol { OpenPGP, CMS, Unknown };
 
     //
     // Creation and destruction:
     //
 
-    static Context * createForProtocol( Protocol proto );
+    static Context *createForProtocol(Protocol proto);
     virtual ~Context();
 
     //
@@ -82,49 +88,51 @@ namespace GpgME {
 
     Protocol protocol() const;
 
-    void setArmor( bool useArmor );
+    void setArmor(bool useArmor);
     bool armor() const;
 
-    void setTextMode( bool useTextMode );
+    void setTextMode(bool useTextMode);
     bool textMode() const;
 
-    enum CertificateInclusion {
-      DefaultCertificates = -256,
-      AllCertificatesExceptRoot = -2,
-      AllCertificates = -1,
-      NoCertificates = 0,
-      OnlySenderCertificate = 1
+    enum CertificateInclusion
+    {
+        DefaultCertificates = -256,
+        AllCertificatesExceptRoot = -2,
+        AllCertificates = -1,
+        NoCertificates = 0,
+        OnlySenderCertificate = 1
     };
-    void setIncludeCertificates( int which );
+    void setIncludeCertificates(int which);
     int includeCertificates() const;
 
-    enum KeyListMode {
-      Local = 0x1,
-      Extern = 0x2,
-      Signatures = 0x4,
-      Validate = 0x10
+    enum KeyListMode
+    {
+        Local = 0x1,
+        Extern = 0x2,
+        Signatures = 0x4,
+        Validate = 0x10
     };
-    void setKeyListMode( unsigned int keyListMode );
-    void addKeyListMode( unsigned int keyListMode );
+    void setKeyListMode(unsigned int keyListMode);
+    void addKeyListMode(unsigned int keyListMode);
     unsigned int keyListMode() const;
 
-    void setPassphraseProvider( PassphraseProvider * provider );
-    PassphraseProvider * passphraseProvider() const;
+    void setPassphraseProvider(PassphraseProvider *provider);
+    PassphraseProvider *passphraseProvider() const;
 
-    void setProgressProvider( ProgressProvider * provider );
-    ProgressProvider * progressProvider() const;
+    void setProgressProvider(ProgressProvider *provider);
+    ProgressProvider *progressProvider() const;
 
-    void setManagedByEventLoopInteractor( bool managed );
+    void setManagedByEventLoopInteractor(bool managed);
     bool managedByEventLoopInteractor() const;
 
-    GpgME::Error setLocale( int category, const char * value );
+    GpgME::Error setLocale(int category, const char *value);
 
-  private:
+private:
     friend class EventLoopInteractor;
-    void installIOCallbacks( gpgme_io_cbs * iocbs );
+    void installIOCallbacks(gpgme_io_cbs *iocbs);
     void uninstallIOCallbacks();
 
-  public:
+public:
     //
     //
     // Key Management
@@ -135,54 +143,54 @@ namespace GpgME {
     // Key Listing
     //
 
-    GpgME::Error startKeyListing( const char * pattern=0, bool secretOnly=false );
-    GpgME::Error startKeyListing( const char * patterns[], bool secretOnly=false );
+    GpgME::Error startKeyListing(const char *pattern = 0, bool secretOnly = false);
+    GpgME::Error startKeyListing(const char *patterns[], bool secretOnly = false);
 
-    Key nextKey( GpgME::Error & e );
+    Key nextKey(GpgME::Error &e);
 
     KeyListResult endKeyListing();
     KeyListResult keyListResult() const;
 
-    Key key( const char * fingerprint, GpgME::Error & e, bool secret=false );
+    Key key(const char *fingerprint, GpgME::Error &e, bool secret = false);
 
     //
     // Key Generation
     //
 
-    KeyGenerationResult generateKey( const char * parameters, Data & pubKey );
-    GpgME::Error startKeyGeneration( const char * parameters, Data & pubkey );
+    KeyGenerationResult generateKey(const char *parameters, Data &pubKey);
+    GpgME::Error startKeyGeneration(const char *parameters, Data &pubkey);
     KeyGenerationResult keyGenerationResult() const;
 
     //
     // Key Export
     //
 
-    GpgME::Error exportPublicKeys( const char * pattern, Data & keyData );
-    GpgME::Error exportPublicKeys( const char * pattern[], Data & keyData );
-    GpgME::Error startPublicKeyExport( const char * pattern, Data & keyData );
-    GpgME::Error startPublicKeyExport( const char * pattern[], Data & keyData );
+    GpgME::Error exportPublicKeys(const char *pattern, Data &keyData);
+    GpgME::Error exportPublicKeys(const char *pattern[], Data &keyData);
+    GpgME::Error startPublicKeyExport(const char *pattern, Data &keyData);
+    GpgME::Error startPublicKeyExport(const char *pattern[], Data &keyData);
 
     //
     // Key Import
     //
 
-    ImportResult importKeys( const Data & data );
-    GpgME::Error startKeyImport( const Data & data );
+    ImportResult importKeys(const Data &data);
+    GpgME::Error startKeyImport(const Data &data);
     ImportResult importResult() const;
 
     //
     // Key Deletion
     //
 
-    GpgME::Error deleteKey( const Key & key, bool allowSecretKeyDeletion=false );
-    GpgME::Error startKeyDeletion( const Key & key, bool allowSecretKeyDeletion=false );
+    GpgME::Error deleteKey(const Key &key, bool allowSecretKeyDeletion = false);
+    GpgME::Error startKeyDeletion(const Key &key, bool allowSecretKeyDeletion = false);
 
     //
     // Trust Item Management
     //
 
-    GpgME::Error startTrustItemListing( const char * pattern, int maxLevel );
-    TrustItem nextTrustItem( GpgME::Error & e );
+    GpgME::Error startTrustItemListing(const char *pattern, int maxLevel);
+    TrustItem nextTrustItem(GpgME::Error &e);
     GpgME::Error endTrustItemListing();
 
     //
@@ -195,26 +203,26 @@ namespace GpgME {
     // Decryption
     //
 
-    DecryptionResult decrypt( const Data & cipherText, Data & plainText );
-    GpgME::Error startDecryption( const Data & cipherText, Data & plainText );
+    DecryptionResult decrypt(const Data &cipherText, Data &plainText);
+    GpgME::Error startDecryption(const Data &cipherText, Data &plainText);
     DecryptionResult decryptionResult() const;
 
     //
     // Signature Verification
     //
 
-    VerificationResult verifyDetachedSignature( const Data & signature, const Data & signedText );
-    VerificationResult verifyOpaqueSignature( const Data & signedData, Data & plainText );
-    GpgME::Error startDetachedSignatureVerification( const Data & signature, const Data & signedText );
-    GpgME::Error startOpaqueSignatureVerification( const Data & signedData, Data & plainText );
+    VerificationResult verifyDetachedSignature(const Data &signature, const Data &signedText);
+    VerificationResult verifyOpaqueSignature(const Data &signedData, Data &plainText);
+    GpgME::Error startDetachedSignatureVerification(const Data &signature, const Data &signedText);
+    GpgME::Error startOpaqueSignatureVerification(const Data &signedData, Data &plainText);
     VerificationResult verificationResult() const;
 
     //
     // Combined Decryption and Signature Verification
     //
 
-    std::pair<DecryptionResult,VerificationResult> decryptAndVerify( const Data & cipherText, Data & plainText );
-    GpgME::Error startCombinedDecryptionAndVerification( const Data & cipherText, Data & plainText );
+    std::pair<DecryptionResult, VerificationResult> decryptAndVerify(const Data &cipherText, Data &plainText);
+    GpgME::Error startCombinedDecryptionAndVerification(const Data &cipherText, Data &plainText);
     // use verificationResult() and decryptionResult() to retrieve the result objects...
 
     //
@@ -222,30 +230,31 @@ namespace GpgME {
     //
 
     void clearSigningKeys();
-    GpgME::Error addSigningKey( const Key & signer );
-    Key signingKey( unsigned int index ) const;
+    GpgME::Error addSigningKey(const Key &signer);
+    Key signingKey(unsigned int index) const;
 
     enum SignatureMode { Normal, Detached, Clearsigned };
-    SigningResult sign( const Data & plainText, Data & signature, SignatureMode mode );
-    GpgME::Error startSigning( const Data & plainText, Data & signature, SignatureMode mode );
+    SigningResult sign(const Data &plainText, Data &signature, SignatureMode mode);
+    GpgME::Error startSigning(const Data &plainText, Data &signature, SignatureMode mode);
     SigningResult signingResult() const;
 
     //
     // Encryption
     //
 
-    enum EncryptionFlags { None=0, AlwaysTrust=1 };
-    EncryptionResult encrypt( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText, EncryptionFlags flags );
-    GpgME::Error encryptSymmetrically( const Data & plainText, Data & cipherText );
-    GpgME::Error startEncryption( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText, EncryptionFlags flags );
+    enum EncryptionFlags { None = 0, AlwaysTrust = 1 };
+    EncryptionResult encrypt(const std::vector<Key> &recipients, const Data &plainText, Data &cipherText, EncryptionFlags flags);
+    GpgME::Error encryptSymmetrically(const Data &plainText, Data &cipherText);
+    GpgME::Error startEncryption(const std::vector<Key> &recipients, const Data &plainText, Data &cipherText, EncryptionFlags flags);
     EncryptionResult encryptionResult() const;
 
     //
     // Combined Signing and Encryption
     //
 
-    std::pair<SigningResult,EncryptionResult> signAndEncrypt( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText, EncryptionFlags flags );
-    GpgME::Error startCombinedSigningAndEncryption( const std::vector<Key> & recipients, const Data & plainText, Data & cipherText, EncryptionFlags flags );
+    std::pair<SigningResult, EncryptionResult> signAndEncrypt(const std::vector<Key> &recipients, const Data &plainText, Data &cipherText,
+            EncryptionFlags flags);
+    GpgME::Error startCombinedSigningAndEncryption(const std::vector<Key> &recipients, const Data &plainText, Data &cipherText, EncryptionFlags flags);
     // use encryptionResult() and signingResult() to retrieve the result objects...
 
     //
@@ -253,12 +262,13 @@ namespace GpgME {
     // Audit Log
     //
     //
-    enum AuditLogFlags {
+    enum AuditLogFlags
+    {
         HtmlAuditLog = 1,
         AuditLogWithHelp = 128
     };
-    GpgME::Error startGetAuditLog( Data & output, unsigned int flags=0 );
-    GpgME::Error getAuditLog( Data & output, unsigned int flags=0 );
+    GpgME::Error startGetAuditLog(Data &output, unsigned int flags = 0);
+    GpgME::Error getAuditLog(Data &output, unsigned int flags = 0);
 
     //
     //
@@ -272,43 +282,47 @@ namespace GpgME {
     GpgME::Error cancelPendingOperation();
 
     class Private;
-    Private * impl() const { return d; }
-  private:
-    Private * d;
+    Private *impl() const
+    {
+        return d;
+    }
+private:
+    Private *d;
 
-  private: // disable...
-    Context( const Context & );
-    const Context & operator=( const Context & );
-  };
+private: // disable...
+    Context(const Context &);
+    const Context &operator=(const Context &);
+};
 
-  //
-  //
-  // Globals
-  //
-  //
+//
+//
+// Globals
+//
+//
 
-  KDE_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
+KDE_EXPORT GpgME::Error setDefaultLocale(int category, const char *value);
 
-  KDE_EXPORT Context * wait( GpgME::Error & e, bool hang=true );
-  typedef void (*IdleFunction)(void);
-  KDE_EXPORT IdleFunction registerIdleFunction( IdleFunction idleFunction );
+KDE_EXPORT Context *wait(GpgME::Error &e, bool hang = true);
+typedef void (*IdleFunction)(void);
+KDE_EXPORT IdleFunction registerIdleFunction(IdleFunction idleFunction);
 
-  typedef void (*IOCallback)( void * data, int fd );
+typedef void (*IOCallback)(void *data, int fd);
 
-  KDE_EXPORT EngineInfo engineInfo( Context::Protocol proto );
+KDE_EXPORT EngineInfo engineInfo(Context::Protocol proto);
 
-  KDE_EXPORT GpgME::Error checkEngine( Context::Protocol proto );
+KDE_EXPORT GpgME::Error checkEngine(Context::Protocol proto);
 
-  enum Feature {
-      ValidatingKeylistModeFeature = 0x00000001,
-      CancelOperationFeature       = 0x00000002,
-      WrongKeyUsageFeature         = 0x00000004,
+enum Feature
+{
+    ValidatingKeylistModeFeature = 0x00000001,
+    CancelOperationFeature       = 0x00000002,
+    WrongKeyUsageFeature         = 0x00000004,
 
-      AuditLogFeature              = 0x00001000,
+    AuditLogFeature              = 0x00001000,
 
-      FeatureMaxValue              = 0x80000000
-  };
-  KDE_EXPORT bool hasFeature( unsigned long feature );
+    FeatureMaxValue              = 0x80000000
+};
+KDE_EXPORT bool hasFeature(unsigned long feature);
 
 } // namespace GpgME
 

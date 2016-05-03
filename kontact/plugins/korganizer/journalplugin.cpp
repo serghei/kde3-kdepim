@@ -34,31 +34,31 @@
 #include <dcopref.h>
 
 #include "core.h"
-#include "journalplugin.h" 
+#include "journalplugin.h"
 #include "korg_uniqueapp.h"
 
 
 typedef KGenericFactory< JournalPlugin, Kontact::Core > JournalPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_journalplugin,
-                            JournalPluginFactory( "kontact_journalplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_journalplugin,
+                           JournalPluginFactory("kontact_journalplugin"))
 
-JournalPlugin::JournalPlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "korganizer" ),
-    mIface( 0 )
+JournalPlugin::JournalPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "korganizer"),
+      mIface(0)
 {
-  setInstance( JournalPluginFactory::instance() );
-  instance()->iconLoader()->addAppDir("kdepim");
+    setInstance(JournalPluginFactory::instance());
+    instance()->iconLoader()->addAppDir("kdepim");
 
-  insertNewAction( new KAction( i18n( "New Journal..." ), "newjournal",
-                   CTRL+SHIFT+Key_J, this, SLOT( slotNewJournal() ), actionCollection(),
-                   "new_journal" ) );
-  insertSyncAction( new KAction( i18n( "Synchronize Journal" ), "reload",
-                   0, this, SLOT( slotSyncJournal() ), actionCollection(),
-                   "journal_sync" ) );
+    insertNewAction(new KAction(i18n("New Journal..."), "newjournal",
+                                CTRL + SHIFT + Key_J, this, SLOT(slotNewJournal()), actionCollection(),
+                                "new_journal"));
+    insertSyncAction(new KAction(i18n("Synchronize Journal"), "reload",
+                                 0, this, SLOT(slotSyncJournal()), actionCollection(),
+                                 "journal_sync"));
 
 
-  mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
-      new Kontact::UniqueAppHandlerFactory<KOrganizerUniqueAppHandler>(), this );
+    mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
+        new Kontact::UniqueAppHandlerFactory<KOrganizerUniqueAppHandler>(), this);
 }
 
 JournalPlugin::~JournalPlugin()
@@ -67,73 +67,75 @@ JournalPlugin::~JournalPlugin()
 
 KParts::ReadOnlyPart *JournalPlugin::createPart()
 {
-  KParts::ReadOnlyPart *part = loadPart();
+    KParts::ReadOnlyPart *part = loadPart();
 
-  if ( !part )
-    return 0;
+    if(!part)
+        return 0;
 
-  dcopClient(); // ensure that we register to DCOP as "korganizer"
-  mIface = new KCalendarIface_stub( dcopClient(), "kontact", "CalendarIface" );
+    dcopClient(); // ensure that we register to DCOP as "korganizer"
+    mIface = new KCalendarIface_stub(dcopClient(), "kontact", "CalendarIface");
 
-  return part;
+    return part;
 }
 
 void JournalPlugin::select()
 {
-  interface()->showJournalView();
+    interface()->showJournalView();
 }
 
 QStringList JournalPlugin::invisibleToolbarActions() const
 {
-  QStringList invisible;
-  invisible += "new_event";
-  invisible += "new_todo";
-  invisible += "new_journal";
+    QStringList invisible;
+    invisible += "new_event";
+    invisible += "new_todo";
+    invisible += "new_journal";
 
-  invisible += "view_day";
-  invisible += "view_list";
-  invisible += "view_workweek";
-  invisible += "view_week";
-  invisible += "view_nextx";
-  invisible += "view_month";
-  invisible += "view_todo";
-  return invisible;
+    invisible += "view_day";
+    invisible += "view_list";
+    invisible += "view_workweek";
+    invisible += "view_week";
+    invisible += "view_nextx";
+    invisible += "view_month";
+    invisible += "view_todo";
+    return invisible;
 }
 
 KCalendarIface_stub *JournalPlugin::interface()
 {
-  if ( !mIface ) {
-    part();
-  }
-  Q_ASSERT( mIface );
-  return mIface;
+    if(!mIface)
+    {
+        part();
+    }
+    Q_ASSERT(mIface);
+    return mIface;
 }
 
 void JournalPlugin::slotNewJournal()
 {
-  interface()->openJournalEditor( "" );
+    interface()->openJournalEditor("");
 }
 
 void JournalPlugin::slotSyncJournal()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", QString("Journal") );
+    DCOPRef ref("kmail", "KMailICalIface");
+    ref.send("triggerSync", QString("Journal"));
 }
 
-bool JournalPlugin::createDCOPInterface( const QString& serviceType )
+bool JournalPlugin::createDCOPInterface(const QString &serviceType)
 {
-  kdDebug(5602) << k_funcinfo << serviceType << endl;
-  if ( serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar" ) {
-    if ( part() )
-      return true;
-  }
+    kdDebug(5602) << k_funcinfo << serviceType << endl;
+    if(serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar")
+    {
+        if(part())
+            return true;
+    }
 
-  return false;
+    return false;
 }
 
 bool JournalPlugin::isRunningStandalone()
 {
-  return mUniqueAppWatcher->isRunningStandalone();
+    return mUniqueAppWatcher->isRunningStandalone();
 }
 
 #include "journalplugin.moc"

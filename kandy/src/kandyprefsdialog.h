@@ -39,25 +39,24 @@
 /**
   Dialog to change the kandy configuration.
 */
-class KandyPrefsDialog : public KPrefsDialog
-{
+class KandyPrefsDialog : public KPrefsDialog {
     Q_OBJECT
-  public:
+public:
     /** Initialize dialog and pages */
-    KandyPrefsDialog(QWidget *parent=0,char *name=0,bool modal=false);
+    KandyPrefsDialog(QWidget *parent = 0, char *name = 0, bool modal = false);
     ~KandyPrefsDialog();
 
-  protected:
+protected:
     void setupSerialTab();
     void setupAddressbookTab();
     void setupWindowsTab();
- private:
+private:
     KPrefsWidString *serialDevice;
     KPrefsWidString *baudRate;
     KPrefsWidString *lockDir;
     KPrefsWidBool *openOnStartup;
     KPrefsWidBool *autoSetClock;
-    
+
     KPrefsWidBool *excHome;
     KPrefsWidBool *excWork;
     KPrefsWidBool *excMsg;
@@ -69,7 +68,7 @@ class KandyPrefsDialog : public KPrefsDialog
     KPrefsWidBool *excCar;
     KPrefsWidBool *excISDN;
     KPrefsWidBool *excPager;
-    
+
     KPrefsWidBool *useHomeSuff;
     KPrefsWidBool *useWorkSuff;
     KPrefsWidBool *useMessagingSuff;
@@ -81,7 +80,7 @@ class KandyPrefsDialog : public KPrefsDialog
     KPrefsWidBool *useCarSuff;
     KPrefsWidBool *useISDNSuff;
     KPrefsWidBool *usePagerSuff;
-    
+
     KPrefsWidString *HomeSuff;
     KPrefsWidString *WorkSuff;
     KPrefsWidString *MessagingSuff;
@@ -93,7 +92,7 @@ class KandyPrefsDialog : public KPrefsDialog
     KPrefsWidString *CarSuff;
     KPrefsWidString *ISDNSuff;
     KPrefsWidString *PagerSuff;
-    
+
     KPrefsWidBool *startupTerminal;
     KPrefsWidBool *startupMobile;
     KPrefsWidString *DisplayWidth;

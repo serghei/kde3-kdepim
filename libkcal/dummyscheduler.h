@@ -31,23 +31,22 @@ namespace KCal {
   This class implements the iTIP interface as a primitive local version for
   testing. It uses a file dummyscheduler.store as inbox/outbox.
 */
-class DummyScheduler : public Scheduler
-{
-  public:
+class DummyScheduler : public Scheduler {
+public:
     DummyScheduler(Calendar *);
     virtual ~DummyScheduler();
-    
-    bool publish (IncidenceBase *incidence,const QString &recipients);
-    bool performTransaction(IncidenceBase *incidence,Method method);
-    bool performTransaction(IncidenceBase *incidence,Method method,const QString &recipients);
+
+    bool publish(IncidenceBase *incidence, const QString &recipients);
+    bool performTransaction(IncidenceBase *incidence, Method method);
+    bool performTransaction(IncidenceBase *incidence, Method method, const QString &recipients);
     QPtrList<ScheduleMessage> retrieveTransactions();
 
     virtual QString freeBusyDir();
-  
-  protected:
+
+protected:
     bool saveMessage(const QString &);
 
-  private:
+private:
     class Private;
     Private *d;
 };

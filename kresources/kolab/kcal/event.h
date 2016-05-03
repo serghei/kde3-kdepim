@@ -51,50 +51,53 @@ namespace Kolab {
  */
 class Event : public Incidence {
 public:
-  /// Use this to parse an xml string to a event entry
-  /// The caller is responsible for deleting the returned event
-  static KCal::Event* xmlToEvent( const QString& xml, const QString& tz, KCal::ResourceKolab* res = 0,
-                                  const QString& subResource = QString::null, Q_UINT32 sernum = 0 );
+    /// Use this to parse an xml string to a event entry
+    /// The caller is responsible for deleting the returned event
+    static KCal::Event *xmlToEvent(const QString &xml, const QString &tz, KCal::ResourceKolab *res = 0,
+                                   const QString &subResource = QString::null, Q_UINT32 sernum = 0);
 
-  /// Use this to get an xml string describing this event entry
-  static QString eventToXML( KCal::Event*, const QString& tz );
+    /// Use this to get an xml string describing this event entry
+    static QString eventToXML(KCal::Event *, const QString &tz);
 
-  /// Create a event object and
-  explicit Event( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
-                  const QString& tz, KCal::Event* event = 0 );
-  virtual ~Event();
+    /// Create a event object and
+    explicit Event(KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
+                   const QString &tz, KCal::Event *event = 0);
+    virtual ~Event();
 
-  void saveTo( KCal::Event* event );
+    void saveTo(KCal::Event *event);
 
-  virtual QString type() const { return "Event"; }
+    virtual QString type() const
+    {
+        return "Event";
+    }
 
-  virtual void setTransparency( KCal::Event::Transparency transparency );
-  virtual KCal::Event::Transparency transparency() const;
+    virtual void setTransparency(KCal::Event::Transparency transparency);
+    virtual KCal::Event::Transparency transparency() const;
 
-  virtual void setEndDate( const QDateTime& date );
-  virtual void setEndDate( const QDate& date );
-  virtual void setEndDate( const QString& date );
-  virtual QDateTime endDate() const;
+    virtual void setEndDate(const QDateTime &date);
+    virtual void setEndDate(const QDate &date);
+    virtual void setEndDate(const QString &date);
+    virtual QDateTime endDate() const;
 
-  // Load the attributes of this class
-  virtual bool loadAttribute( QDomElement& );
+    // Load the attributes of this class
+    virtual bool loadAttribute(QDomElement &);
 
-  // Save the attributes of this class
-  virtual bool saveAttributes( QDomElement& ) const;
+    // Save the attributes of this class
+    virtual bool saveAttributes(QDomElement &) const;
 
-  // Load this event by reading the XML file
-  virtual bool loadXML( const QDomDocument& xml );
+    // Load this event by reading the XML file
+    virtual bool loadXML(const QDomDocument &xml);
 
-  // Serialize this event to an XML string
-  virtual QString saveXML() const;
+    // Serialize this event to an XML string
+    virtual QString saveXML() const;
 
 protected:
-  // Read all known fields from this ical incidence
-  void setFields( const KCal::Event* );
+    // Read all known fields from this ical incidence
+    void setFields(const KCal::Event *);
 
-  KCal::Event::Transparency mShowTimeAs;
-  QDateTime mEndDate;
-  bool mHasEndDate;
+    KCal::Event::Transparency mShowTimeAs;
+    QDateTime mEndDate;
+    bool mHasEndDate;
 };
 
 }

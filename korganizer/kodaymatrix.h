@@ -53,26 +53,25 @@ using namespace KCal;
  *  This class asks the day matrix object for a appropriate label which
  *  is in our special case the name of the holiday or null if this day is no holiday.
  */
-class DynamicTip : public QToolTip
-{
-  public:
+class DynamicTip : public QToolTip {
+public:
     /**
      * Constructor that expects a KODayMatrix object as parent.
      *
      * @param parent the parent KODayMatrix control.
      */
-    DynamicTip( QWidget *parent );
+    DynamicTip(QWidget *parent);
 
-  protected:
+protected:
     /**
      * Qt's callback to ask the object to provide an approrpiate text for the
      * tooltip to be shown.
      *
      * @param pos coordinates of the mouse.
      */
-    void maybeTip( const QPoint &pos );
+    void maybeTip(const QPoint &pos);
 
-  private:
+private:
     /** the parent control this tooltip is designed for. */
     KODayMatrix *mMatrix;
 };
@@ -102,17 +101,16 @@ class DynamicTip : public QToolTip
  *
  *  @author Eitzenberger Thomas
  */
-class KODayMatrix: public QFrame, public KCal::Calendar::Observer
-{
+class KODayMatrix: public QFrame, public KCal::Calendar::Observer {
     Q_OBJECT
-  public:
+public:
     /** constructor to create a day matrix widget.
      *
      *  @param parent widget that is the parent of the day matrix.
      *  Normally this should be a KDateNavigator
      *  @param name name of the widget
      */
-    KODayMatrix( QWidget *parent, const char *name );
+    KODayMatrix(QWidget *parent, const char *name);
 
     /** destructor that deallocates all dynamically allocated private members.
      */
@@ -122,7 +120,7 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
       Associate a calendar with this day matrix. If there is a calendar, the day
       matrix will accept drops and days with events will be highlighted.
     */
-    void setCalendar( Calendar * );
+    void setCalendar(Calendar *);
 
     /** updates the day matrix to start with the given date. Does all the necessary
      *  checks for holidays or events on a day and stores them for display later on.
@@ -131,7 +129,7 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
      *  @param actdate recalculates the day matrix to show NUMDAYS starting from this
      *                 date.
      */
-    void updateView( const QDate &actdate );
+    void updateView(const QDate &actdate);
 
     /**
       Update event states of dates. Depending of the preferences days with
@@ -142,23 +140,23 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
     /** returns the QDate object associated with day indexed by the
      *  supplied offset.
      */
-    const QDate& getDate( int offset );
+    const QDate &getDate(int offset);
 
     /** returns the official name of this holy day or 0 if there is no label
      *  for this day.
      */
-    QString getHolidayLabel( int offset );
+    QString getHolidayLabel(int offset);
 
     /** adds all actual selected days from mSelStart to mSelEnd to the supplied
      *  DateList.
      */
-    void addSelectedDaysTo( DateList & );
+    void addSelectedDaysTo(DateList &);
 
     /** sets the actual to be displayed selection in the day matrix starting from
      *  start and ending with end. Theview must be manually updated by calling
      *  repaint. (?)
      */
-    void setSelectedDaysFrom( const QDate &start, const QDate &end );
+    void setSelectedDaysFrom(const QDate &start, const QDate &end);
 
     /**
       Clear all selections.
@@ -168,7 +166,10 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
     /** Is today visible in the view? Keep this in sync with
     * the values today (below) can take.
     */
-    bool isTodayVisible() const { return mToday >= 0; }
+    bool isTodayVisible() const
+    {
+        return mToday >= 0;
+    }
 
     /** If today is visible, then we can find out if today is
     * near the beginning or the end of the month.
@@ -176,15 +177,21 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
     * in the array of visible dates and going from
     * top left (0) to bottom right (41).
     */
-    bool isBeginningOfMonth() const { return mToday <= 8; }
-    bool isEndOfMonth() const { return mToday >= 27; }
+    bool isBeginningOfMonth() const
+    {
+        return mToday <= 8;
+    }
+    bool isEndOfMonth() const
+    {
+        return mToday >= 27;
+    }
 
     /* reimplmented from KCal::Calendar::Observer */
-    void calendarIncidenceAdded( Incidence *incidence );
-    void calendarIncidenceChanged( Incidence *incidence );
-    void calendarIncidenceRemoved( Incidence *incidence );
+    void calendarIncidenceAdded(Incidence *incidence);
+    void calendarIncidenceChanged(Incidence *incidence);
+    void calendarIncidenceRemoved(Incidence *incidence);
 
-  public slots:
+public slots:
     /** Recalculates all the flags of the days in the matrix like holidays or events
      *  on a day (Actually calls above method with the actual startdate).
      */
@@ -201,60 +208,60 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
      */
     void resourcesChanged();
 
-  signals:
+signals:
     /** emitted if the user selects a block of days with the mouse by dragging a rectangle
      *  inside the matrix
      *
      *  @param daylist list of days that have been selected by the user
      */
-    void selected( const KCal::DateList &daylist );
+    void selected(const KCal::DateList &daylist);
 
     /** emitted if the user has dropped an incidence (event or todo) inside the matrix
      *
      *  @param incidence the dropped calendar incidence
      *  @param dt QDate that has been selected
      */
-    void incidenceDropped( Incidence *incidence, const QDate &dt );
+    void incidenceDropped(Incidence *incidence, const QDate &dt);
     /** emitted if the user has dropped an event inside the matrix and chose to move it instead of copy
      *
      *  @param oldincidence the new calendar incidence
      *  @param dt QDate that has been selected
      */
-    void incidenceDroppedMove( Incidence *oldincidence, const QDate &dt );
+    void incidenceDroppedMove(Incidence *oldincidence, const QDate &dt);
 
-  protected:
-    void paintEvent( QPaintEvent *ev );
+protected:
+    void paintEvent(QPaintEvent *ev);
 
-    void mousePressEvent( QMouseEvent *e );
+    void mousePressEvent(QMouseEvent *e);
 
-    void mouseReleaseEvent( QMouseEvent *e );
+    void mouseReleaseEvent(QMouseEvent *e);
 
-    void mouseMoveEvent( QMouseEvent *e );
+    void mouseMoveEvent(QMouseEvent *e);
 
-    void dragEnterEvent( QDragEnterEvent * );
+    void dragEnterEvent(QDragEnterEvent *);
 
-    void dragMoveEvent( QDragMoveEvent * );
+    void dragMoveEvent(QDragMoveEvent *);
 
-    void dragLeaveEvent( QDragLeaveEvent * );
+    void dragLeaveEvent(QDragLeaveEvent *);
 
-    void dropEvent( QDropEvent * );
+    void dropEvent(QDropEvent *);
 
-    void resizeEvent( QResizeEvent * );
+    void resizeEvent(QResizeEvent *);
 
-  private:
+private:
     /** returns the index of the day located at the matrix's widget (x,y) position.
      *
      *  @param x horizontal coordinate
      *  @param y vertical coordinate
      */
-    int getDayIndexFrom( int x, int y );
+    int getDayIndexFrom(int x, int y);
 
     /** calculates a "shaded" color from the supplied color object.
      *  (Copied from Cornelius's kdpdatebutton.cpp)
      *
      *  @param color source based on which a shaded color should be calculated.
      */
-    QColor getShadedColor( const QColor &color );
+    QColor getShadedColor(const QColor &color);
 
     /** number of days to be displayed. For now there is no support for any other number then 42.
         so change it at your own risk :o) */
@@ -279,7 +286,7 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
     int      *mEvents;
 
     /** stores holiday names of the days shown in the matrix. */
-    QMap<int,QString>  mHolidays;
+    QMap<int, QString>  mHolidays;
 
     /** index of today or -1 if today is not visible in the matrix. */
     int       mToday;
@@ -299,7 +306,7 @@ class KODayMatrix: public QFrame, public KCal::Calendar::Observer
     int       mSelEnd;
 
     /** dynamic tooltip to handle mouse dependent tips for each day in the matrix. */
-    DynamicTip* mToolTip;
+    DynamicTip *mToolTip;
 
     /** default width of the frame drawn around today if it is visible in the matrix. */
     int       mTodayMarginWidth;

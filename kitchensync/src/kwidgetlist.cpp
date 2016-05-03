@@ -25,281 +25,313 @@
 
 #include "kwidgetlist.h"
 
-class KWidgetList::Private
-{
-  public:
+class KWidgetList::Private {
+public:
     Private()
-      : mSelectedItem( 0 )
+        : mSelectedItem(0)
     {
     }
 
-    QValueList<KWidgetListItem*> mItems;
+    QValueList<KWidgetListItem *> mItems;
     KWidgetListItem *mSelectedItem;
     QVBox *mBox;
 };
 
-KWidgetList::KWidgetList( QWidget *parent, const char *name )
-  : QScrollView( parent, name ),
-    d( new Private )
+KWidgetList::KWidgetList(QWidget *parent, const char *name)
+    : QScrollView(parent, name),
+      d(new Private)
 {
-  d->mBox = new QVBox( viewport() );
-  addChild( d->mBox );
+    d->mBox = new QVBox(viewport());
+    addChild(d->mBox);
 
-  setResizePolicy( AutoOneFit );
-  setFocusPolicy( QWidget::StrongFocus );
+    setResizePolicy(AutoOneFit);
+    setFocusPolicy(QWidget::StrongFocus);
 
-  viewport()->setFocus();
+    viewport()->setFocus();
 }
 
 KWidgetList::~KWidgetList()
 {
-  clear();
+    clear();
 
-  delete d;
-  d = 0;
+    delete d;
+    d = 0;
 }
 
 uint KWidgetList::count() const
 {
-  return d->mItems.count();
+    return d->mItems.count();
 }
 
-void KWidgetList::appendItem( KWidgetListItem *item )
+void KWidgetList::appendItem(KWidgetListItem *item)
 {
-  if ( !item )
-    return;
+    if(!item)
+        return;
 
-  if ( !d->mItems.contains( item ) ) {
-    d->mItems.append( item );
-    item->reparent( d->mBox, 0, QPoint( 0, 0 ), true );
-    item->setSelected( false );
-    item->installEventFilter( this );
+    if(!d->mItems.contains(item))
+    {
+        d->mItems.append(item);
+        item->reparent(d->mBox, 0, QPoint(0, 0), true);
+        item->setSelected(false);
+        item->installEventFilter(this);
 
-    if ( d->mItems.count() == 1 ) {
-      d->mSelectedItem = item;
-    } else {
-      if ( !d->mSelectedItem )
-        setSelected( item );
-      else
-        d->mSelectedItem->setSelected( true );
+        if(d->mItems.count() == 1)
+        {
+            d->mSelectedItem = item;
+        }
+        else
+        {
+            if(!d->mSelectedItem)
+                setSelected(item);
+            else
+                d->mSelectedItem->setSelected(true);
+        }
     }
-  }
 }
 
-void KWidgetList::removeItem( int index )
+void KWidgetList::removeItem(int index)
 {
-  if ( index < 0 || index >= (int)d->mItems.count() )
-    return;
+    if(index < 0 || index >= (int)d->mItems.count())
+        return;
 
-  KWidgetListItem *item = d->mItems[ index ];
-  d->mItems.remove( item );
+    KWidgetListItem *item = d->mItems[ index ];
+    d->mItems.remove(item);
 
-  if ( d->mSelectedItem == item ) {
-    // TODO: smarter selection
-    if ( !d->mItems.isEmpty() )
-      setSelected( d->mItems.first() );
-    else
-      d->mSelectedItem = 0;
-  }
+    if(d->mSelectedItem == item)
+    {
+        // TODO: smarter selection
+        if(!d->mItems.isEmpty())
+            setSelected(d->mItems.first());
+        else
+            d->mSelectedItem = 0;
+    }
 
-  delete item;
+    delete item;
 
-  if ( d->mItems.count() == 1 )
-    d->mItems.first()->setSelected( false );
+    if(d->mItems.count() == 1)
+        d->mItems.first()->setSelected(false);
 }
 
-void KWidgetList::takeItem( KWidgetListItem *item )
+void KWidgetList::takeItem(KWidgetListItem *item)
 {
-  d->mItems.remove( item );
-  item->reparent( 0, 0, QPoint( 0, 0 ) );
-  item->removeEventFilter( this );
-  item->hide();
+    d->mItems.remove(item);
+    item->reparent(0, 0, QPoint(0, 0));
+    item->removeEventFilter(this);
+    item->hide();
 
-  if ( d->mSelectedItem == item ) {
-    // TODO: smarter selection
-    if ( !d->mItems.isEmpty() )
-      setSelected( d->mItems.first() );
-    else
-      d->mSelectedItem = 0;
-  }
+    if(d->mSelectedItem == item)
+    {
+        // TODO: smarter selection
+        if(!d->mItems.isEmpty())
+            setSelected(d->mItems.first());
+        else
+            d->mSelectedItem = 0;
+    }
 }
 
-void KWidgetList::setSelected( KWidgetListItem *item )
+void KWidgetList::setSelected(KWidgetListItem *item)
 {
-  if ( !item )
-    return;
+    if(!item)
+        return;
 
-  if ( d->mItems.contains( item ) == 0 )
-    return;
+    if(d->mItems.contains(item) == 0)
+        return;
 
-  if ( d->mSelectedItem )
-    d->mSelectedItem->setSelected( false );
+    if(d->mSelectedItem)
+        d->mSelectedItem->setSelected(false);
 
-  item->setSelected( true );
-  d->mSelectedItem = item;
+    item->setSelected(true);
+    d->mSelectedItem = item;
 }
 
-void KWidgetList::setSelected( int index )
+void KWidgetList::setSelected(int index)
 {
-  setSelected( item( index ) );
+    setSelected(item(index));
 }
 
-bool KWidgetList::isSelected( KWidgetListItem *item ) const
+bool KWidgetList::isSelected(KWidgetListItem *item) const
 {
-  return ( d->mSelectedItem == item );
+    return (d->mSelectedItem == item);
 }
 
-bool KWidgetList::isSelected( int index ) const
+bool KWidgetList::isSelected(int index) const
 {
-  return isSelected( item( index ) );
+    return isSelected(item(index));
 }
 
 KWidgetListItem *KWidgetList::selectedItem() const
 {
-  return d->mSelectedItem;
+    return d->mSelectedItem;
 }
 
-KWidgetListItem *KWidgetList::item( int index ) const
+KWidgetListItem *KWidgetList::item(int index) const
 {
-  if ( index < 0 || index >= (int)d->mItems.count() )
-    return 0;
-  else
-    return d->mItems[ index ];
+    if(index < 0 || index >= (int)d->mItems.count())
+        return 0;
+    else
+        return d->mItems[ index ];
 }
 
-int KWidgetList::index( KWidgetListItem *item ) const
+int KWidgetList::index(KWidgetListItem *item) const
 {
-  return d->mItems.findIndex( item );
+    return d->mItems.findIndex(item);
 }
 
 void KWidgetList::clear()
 {
-  QValueList<KWidgetListItem*>::Iterator it;
-  for ( it = d->mItems.begin(); it != d->mItems.end(); ++it )
-    delete *it;
+    QValueList<KWidgetListItem *>::Iterator it;
+    for(it = d->mItems.begin(); it != d->mItems.end(); ++it)
+        delete *it;
 
-  d->mItems.clear();
+    d->mItems.clear();
 
-  d->mSelectedItem = 0;
+    d->mSelectedItem = 0;
 }
 
 void KWidgetList::setFocus()
 {
-  viewport()->setFocus();
+    viewport()->setFocus();
 }
 
-bool KWidgetList::eventFilter( QObject *object, QEvent *event )
+bool KWidgetList::eventFilter(QObject *object, QEvent *event)
 {
-  if ( event->type() == QEvent::MouseButtonPress ) {
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
-    if ( mouseEvent->button() & LeftButton ) {
-      QValueList<KWidgetListItem*>::Iterator it;
-      for ( it = d->mItems.begin(); it != d->mItems.end(); ++it ) {
-        if ( *it == object ) {
-          if ( d->mItems.count() != 1 ) {
-            setSelected( *it );
-            emit selectionChanged( *it );
-          }
-          return true;
+    if(event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        if(mouseEvent->button() & LeftButton)
+        {
+            QValueList<KWidgetListItem *>::Iterator it;
+            for(it = d->mItems.begin(); it != d->mItems.end(); ++it)
+            {
+                if(*it == object)
+                {
+                    if(d->mItems.count() != 1)
+                    {
+                        setSelected(*it);
+                        emit selectionChanged(*it);
+                    }
+                    return true;
+                }
+            }
         }
-      }
     }
-  } else if ( event->type() == QEvent::MouseButtonDblClick ) {
-    QValueList<KWidgetListItem*>::Iterator it;
-    for ( it = d->mItems.begin(); it != d->mItems.end(); ++it ) {
-      if ( *it == object ) {
-        if ( d->mItems.count() != 1 ) {
-          setSelected( *it );
-          emit doubleClicked( *it );
+    else if(event->type() == QEvent::MouseButtonDblClick)
+    {
+        QValueList<KWidgetListItem *>::Iterator it;
+        for(it = d->mItems.begin(); it != d->mItems.end(); ++it)
+        {
+            if(*it == object)
+            {
+                if(d->mItems.count() != 1)
+                {
+                    setSelected(*it);
+                    emit doubleClicked(*it);
+                }
+                return true;
+            }
         }
-        return true;
-      }
     }
-  } else if ( event->type() == QEvent::KeyPress ) {
-    QKeyEvent *keyEvent = static_cast<QKeyEvent*>( event );
-    if ( keyEvent->key() == Qt::Key_Up ) {
-      if ( d->mSelectedItem == 0 ) {
-        if ( !d->mItems.isEmpty() ) {
-          setSelected( d->mItems.first() );
-          return true;
-        }
-      }
+    else if(event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if(keyEvent->key() == Qt::Key_Up)
+        {
+            if(d->mSelectedItem == 0)
+            {
+                if(!d->mItems.isEmpty())
+                {
+                    setSelected(d->mItems.first());
+                    return true;
+                }
+            }
 
-      for ( int i = 0; i < (int)d->mItems.count(); ++i ) {
-        if ( d->mItems[ i ] == d->mSelectedItem ) {
-          if ( ( i - 1 ) >= 0 ) {
-            setSelected( d->mItems[ i - 1 ] );
+            for(int i = 0; i < (int)d->mItems.count(); ++i)
+            {
+                if(d->mItems[ i ] == d->mSelectedItem)
+                {
+                    if((i - 1) >= 0)
+                    {
+                        setSelected(d->mItems[ i - 1 ]);
+                        return true;
+                    }
+                }
+            }
             return true;
-          }
         }
-      }
-      return true;
-    } else if ( keyEvent->key() == Qt::Key_Down ) {
-      if ( d->mSelectedItem == 0 ) {
-        if ( !d->mItems.isEmpty() ) {
-          setSelected( d->mItems.last() );
-          return true;
-        }
-      }
+        else if(keyEvent->key() == Qt::Key_Down)
+        {
+            if(d->mSelectedItem == 0)
+            {
+                if(!d->mItems.isEmpty())
+                {
+                    setSelected(d->mItems.last());
+                    return true;
+                }
+            }
 
-      for ( int i = 0; i < (int)d->mItems.count(); ++i )
-        if ( d->mItems[ i ] == d->mSelectedItem ) {
-          if ( ( i + 1 ) < (int)d->mItems.count() ) {
-            setSelected( d->mItems[ i + 1 ] );
+            for(int i = 0; i < (int)d->mItems.count(); ++i)
+                if(d->mItems[ i ] == d->mSelectedItem)
+                {
+                    if((i + 1) < (int)d->mItems.count())
+                    {
+                        setSelected(d->mItems[ i + 1 ]);
+                        return true;
+                    }
+                }
             return true;
-          }
         }
-      return true;
     }
-  }
 
-  return QScrollView::eventFilter( object, event );
+    return QScrollView::eventFilter(object, event);
 }
 
-KWidgetListItem::KWidgetListItem( KWidgetList *parent, const char *name )
-  : QWidget( parent, name )
+KWidgetListItem::KWidgetListItem(KWidgetList *parent, const char *name)
+    : QWidget(parent, name)
 {
-  mForegroundColor = KGlobalSettings::textColor();
-  mBackgroundColor = KGlobalSettings::baseColor();
-  mSelectionForegroundColor = KGlobalSettings::highlightedTextColor();
-  mSelectionBackgroundColor = KGlobalSettings::highlightColor();
+    mForegroundColor = KGlobalSettings::textColor();
+    mBackgroundColor = KGlobalSettings::baseColor();
+    mSelectionForegroundColor = KGlobalSettings::highlightedTextColor();
+    mSelectionBackgroundColor = KGlobalSettings::highlightColor();
 
-  setFocusPolicy( QWidget::StrongFocus );
+    setFocusPolicy(QWidget::StrongFocus);
 }
 
 KWidgetListItem::~KWidgetListItem()
 {
 }
 
-void KWidgetListItem::setSelected( bool select )
+void KWidgetListItem::setSelected(bool select)
 {
-  if ( select ) {
-    setPaletteForegroundColor( mSelectionForegroundColor );
-    setPaletteBackgroundColor( mSelectionBackgroundColor );
-  } else {
-    setPaletteForegroundColor( mForegroundColor );
-    setPaletteBackgroundColor( mBackgroundColor );
-  }
+    if(select)
+    {
+        setPaletteForegroundColor(mSelectionForegroundColor);
+        setPaletteBackgroundColor(mSelectionBackgroundColor);
+    }
+    else
+    {
+        setPaletteForegroundColor(mForegroundColor);
+        setPaletteBackgroundColor(mBackgroundColor);
+    }
 }
 
-void KWidgetListItem::setForegroundColor( const QColor &color )
+void KWidgetListItem::setForegroundColor(const QColor &color)
 {
-  mForegroundColor = color;
+    mForegroundColor = color;
 }
 
-void KWidgetListItem::setBackgroundColor( const QColor &color )
+void KWidgetListItem::setBackgroundColor(const QColor &color)
 {
-  mBackgroundColor = color;
+    mBackgroundColor = color;
 }
 
-void KWidgetListItem::setSelectionForegroundColor( const QColor &color )
+void KWidgetListItem::setSelectionForegroundColor(const QColor &color)
 {
-  mSelectionForegroundColor = color;
+    mSelectionForegroundColor = color;
 }
 
-void KWidgetListItem::setSelectionBackgroundColor( const QColor &color )
+void KWidgetListItem::setSelectionBackgroundColor(const QColor &color)
 {
-  mSelectionBackgroundColor = color;
+    mSelectionBackgroundColor = color;
 }
 
 #include "kwidgetlist.moc"

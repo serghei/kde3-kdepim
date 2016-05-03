@@ -37,20 +37,19 @@
 
 namespace KPIM {
 
-class KDE_EXPORT FolderSelectDialog : public KDialogBase
-{
+class KDE_EXPORT FolderSelectDialog : public KDialogBase {
 private:
-  FolderSelectDialog( const QString& caption, const QString& label,
-                      const QStringList& list );
+    FolderSelectDialog(const QString &caption, const QString &label,
+                       const QStringList &list);
 
 public:
-  static QString getItem( const QString& caption, const QString& label,
-                          const QStringList& list );
+    static QString getItem(const QString &caption, const QString &label,
+                           const QStringList &list);
 
 protected:
-  virtual void closeEvent(QCloseEvent *event);
+    virtual void closeEvent(QCloseEvent *event);
 private:
-  KListBox* mListBox;
+    KListBox *mListBox;
 };
 
 }

@@ -2,17 +2,17 @@
    Copyright (C) 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
- 
+
    GPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as
    published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
-   
+
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
-   
+
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -35,20 +35,20 @@
    malloc()'ed buffer in *VALUE.  If the environment variable is not
    set, return NULL in *VALUE.  */
 gpgme_error_t
-_gpgme_getenv (const char *name, char **value)
+_gpgme_getenv(const char *name, char **value)
 {
-  char *env_value;
+    char *env_value;
 
-  env_value = getenv (name);
-  if (!env_value)
-    *value = NULL;
-  else
+    env_value = getenv(name);
+    if(!env_value)
+        *value = NULL;
+    else
     {
-      *value = strdup (env_value);
-      if (!*value)
-	return gpg_error_from_errno (errno);
+        *value = strdup(env_value);
+        if(!*value)
+            return gpg_error_from_errno(errno);
     }
-  return 0;
+    return 0;
 }
 
 #else

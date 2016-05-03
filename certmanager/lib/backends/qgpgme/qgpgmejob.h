@@ -45,17 +45,17 @@
 #include <kdepimmacros.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Data;
+class Error;
+class Context;
+class Data;
 }
 
 namespace Kleo {
-  class Job;
+class Job;
 }
 
 namespace QGpgME {
-  class QByteArrayDataProvider;
+class QByteArrayDataProvider;
 }
 
 class QString;
@@ -63,51 +63,57 @@ class QStringList;
 
 namespace Kleo {
 
-  /** This is a hackish helper class to avoid code duplication in this
-      backend's Kleo::Job subclasses. It contains several workarounds
-      for moc/signal/slot shortcomings, most of which the author of
-      this thinks are Qt bugs (lazy implementations), first and
-      foremost the inability of moc to handle inheritance from
-      multiple QObject-derived subclasses.
+/** This is a hackish helper class to avoid code duplication in this
+    backend's Kleo::Job subclasses. It contains several workarounds
+    for moc/signal/slot shortcomings, most of which the author of
+    this thinks are Qt bugs (lazy implementations), first and
+    foremost the inability of moc to handle inheritance from
+    multiple QObject-derived subclasses.
 
-      To use it, inherit from the Job-subclass, then from this class,
-      add QGPGME_JOB to just after Q OBJECT and implement
-      doOperationDoneEvent() by emitting your variant of the result()
-      signal there. Pass "this" as the first argument this QGpgMEJOb's
-      ctor. The rest is dealt with automatically.
-  */
-  class KDE_EXPORT QGpgMEJob : public GpgME::ProgressProvider, public GpgME::PassphraseProvider {
-  public:
-    QGpgMEJob( Kleo::Job * _this, GpgME::Context * context );
+    To use it, inherit from the Job-subclass, then from this class,
+    add QGPGME_JOB to just after Q OBJECT and implement
+    doOperationDoneEvent() by emitting your variant of the result()
+    signal there. Pass "this" as the first argument this QGpgMEJOb's
+    ctor. The rest is dealt with automatically.
+*/
+class KDE_EXPORT QGpgMEJob : public GpgME::ProgressProvider, public GpgME::PassphraseProvider {
+public:
+    QGpgMEJob(Kleo::Job *_this, GpgME::Context *context);
     ~QGpgMEJob();
 
-  protected:
+protected:
     /*! Called on operation-done events, between emitting done() and
       calling deleteLater(). You should emit your result signal here. */
-    virtual void doOperationDoneEvent( const GpgME::Error & e ) = 0;
+    virtual void doOperationDoneEvent(const GpgME::Error &e) = 0;
     /*! Hooks up mCtx to be managed by the event loop interactor */
     void hookupContextToEventLoopInteractor();
     /*! Fills mPatterns from the stringlist, resets chunking to the full list */
-    void setPatterns( const QStringList & sl, bool allowEmpty=false );
+    void setPatterns(const QStringList &sl, bool allowEmpty = false);
     /*! Returnes the number of patterns set */
-    unsigned int numPatterns() const { return mNumPatterns; }
+    unsigned int numPatterns() const
+    {
+        return mNumPatterns;
+    }
     /*! Skips to the next chunk of patterns. @return patterns() */
-    const char* * nextChunk();
+    const char * *nextChunk();
     /*! @return patterns, offset by the current chunk */
-    const char* * patterns() const;
+    const char * *patterns() const;
     /*! Set the current pattern chunksize to size and reset the chunk index to zero */
-    void setChunkSize( unsigned int size );
+    void setChunkSize(unsigned int size);
     /*! @return current chunksize */
-    unsigned int chunkSize() const { return mChunkSize; }
+    unsigned int chunkSize() const
+    {
+        return mChunkSize;
+    }
     /*! Creates an empty GpgME::Data/QGpgME::QByteArrayDataProvider pair */
     void createOutData();
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
       filled with the contents of \a in */
-    void createInData( const QByteArray & in );
+    void createInData(const QByteArray &in);
     /*! Sets the list of signing keys */
-    GpgME::Error setSigningKeys( const std::vector<GpgME::Key> & signers );
+    GpgME::Error setSigningKeys(const std::vector<GpgME::Key> &signers);
     /*! Call this to implement a slotOperationDoneEvent() */
-    void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
+    void doSlotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e);
     /*! Call this to extract the audit log from mCtx */
     void getAuditLog();
 
@@ -115,39 +121,42 @@ namespace Kleo {
     // only boring stuff below this line...
     //
 
-  protected:
-    virtual void doEmitProgressSignal( const QString & what, int current, int total ) = 0;
+protected:
+    virtual void doEmitProgressSignal(const QString &what, int current, int total) = 0;
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
-    QString auditLogAsHtml() const { return mAuditLogAsHtml; }
+    QString auditLogAsHtml() const
+    {
+        return mAuditLogAsHtml;
+    }
 
-  private:
+private:
     /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
-    char * getPassphrase( const char * useridHint, const char * description,
-			  bool previousWasBad, bool & canceled );
+    void showProgress(const char *what, int type, int current, int total);
+    char *getPassphrase(const char *useridHint, const char *description,
+                        bool previousWasBad, bool &canceled);
     void deleteAllPatterns();
 
-  public:
+public:
     void checkInvariants() const;
 
-  protected:
-    Kleo::Job * mThis;
-    GpgME::Context * mCtx;
-    GpgME::Data * mInData;
-    QGpgME::QByteArrayDataProvider * mInDataDataProvider;
-    GpgME::Data * mOutData;
-    QGpgME::QByteArrayDataProvider * mOutDataDataProvider;
-  private:
-    const char* * mPatterns;
+protected:
+    Kleo::Job *mThis;
+    GpgME::Context *mCtx;
+    GpgME::Data *mInData;
+    QGpgME::QByteArrayDataProvider *mInDataDataProvider;
+    GpgME::Data *mOutData;
+    QGpgME::QByteArrayDataProvider *mOutDataDataProvider;
+private:
+    const char * *mPatterns;
     // holds the entry - if any - in mPattern that was replaced with
     // NULL to create a temporary end-of-array marker for gpgme:
-    const char * mReplacedPattern;
+    const char *mReplacedPattern;
     unsigned int mNumPatterns;
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
     QString mAuditLogAsHtml;
-  };
+};
 
 }
 

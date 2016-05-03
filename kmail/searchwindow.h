@@ -52,143 +52,142 @@ class KMSearchPatternEdit;
 class KStatusBar;
 class DwBoyerMoore;
 namespace KMail {
-  class FolderRequester;
+class FolderRequester;
 }
 
 typedef QPtrList<KMMsgBase> KMMessageList;
 
 namespace KMail {
 
-  /**
-   * The SearchWindow class provides a dialog for triggering a search on
-   * folders and storing that search as a search folder. It shows the search
-   * results in a listview and allows triggering of operations such as printing
-   * or moving on them.
-   */
-class SearchWindow: public KDialogBase, virtual public KXMLGUIClient
-{
-  Q_OBJECT
+/**
+ * The SearchWindow class provides a dialog for triggering a search on
+ * folders and storing that search as a search folder. It shows the search
+ * results in a listview and allows triggering of operations such as printing
+ * or moving on them.
+ */
+class SearchWindow: public KDialogBase, virtual public KXMLGUIClient {
+    Q_OBJECT
 
 public:
-  /**
-   * Creates a new search window.
-   * @param parent The parent widget.
-   * @param name The (widget) name of the dialog.
-   * @param curFolder The folder which will be pre-selected as the base folder
-   * of search operations.
-   * @param modal Whether the dialog is to be shown modal.
-   */
-  SearchWindow( KMMainWidget* parent, const char* name=0,
-                       KMFolder *curFolder=0, bool modal=false );
-  virtual ~SearchWindow();
+    /**
+     * Creates a new search window.
+     * @param parent The parent widget.
+     * @param name The (widget) name of the dialog.
+     * @param curFolder The folder which will be pre-selected as the base folder
+     * of search operations.
+     * @param modal Whether the dialog is to be shown modal.
+     */
+    SearchWindow(KMMainWidget *parent, const char *name = 0,
+                 KMFolder *curFolder = 0, bool modal = false);
+    virtual ~SearchWindow();
 
-  /**
-   * Changes the base folder for search operations to a different folder.
-   * @param curFolder The folder to use as the new base for searches.
-   */
-  void activateFolder( KMFolder* curFolder );
+    /**
+     * Changes the base folder for search operations to a different folder.
+     * @param curFolder The folder to use as the new base for searches.
+     */
+    void activateFolder(KMFolder *curFolder);
 
-  /**
-   * Provides access to the list of currently selected message in the listview.
-   * @return The list of currenty selected search result messages.
-   */
-  KMMessageList selectedMessages();
+    /**
+     * Provides access to the list of currently selected message in the listview.
+     * @return The list of currenty selected search result messages.
+     */
+    KMMessageList selectedMessages();
 
-  /**
-   * Provides access to the currently selected message.
-   * @return the currently selected message.
-   */
-  KMMessage* message();
+    /**
+     * Provides access to the currently selected message.
+     * @return the currently selected message.
+     */
+    KMMessage *message();
 
-  void setSearchPattern( const KMSearchPattern& pattern );
+    void setSearchPattern(const KMSearchPattern &pattern);
 
 protected slots:
-  /** Update status line widget. */
-  virtual void updStatus(void);
+    /** Update status line widget. */
+    virtual void updStatus(void);
 
-  virtual void slotClose();
-  virtual void slotSearch();
-  virtual void slotStop();
-  void scheduleRename( const QString &);
-  void renameSearchFolder();
-  void openSearchFolder();
-  void folderInvalidated(KMFolder *);
-  virtual bool slotShowMsg(QListViewItem *);
-  void slotShowSelectedMsg();
-  void slotCurrentChanged(QListViewItem *);
-  virtual void updateContextMenuActions();
-  virtual void slotContextMenuRequested( QListViewItem*, const QPoint &, int );
-  virtual void copySelectedToFolder( int menuId );
-  virtual void moveSelectedToFolder( int menuId );
-  virtual void slotFolderActivated();
-  void slotClearSelection();
-  void slotReplyToMsg();
-  void slotReplyAllToMsg();
-  void slotReplyListToMsg();
-  void slotForwardInlineMsg();
-  void slotForwardAttachedMsg();
-  void slotForwardDigestMsg();
-  void slotRedirectMsg();
-  void slotSaveMsg();
-  void slotSaveAttachments();
-  void slotPrintMsg();
-  void slotCopyMsgs();
-  void slotCutMsgs();
+    virtual void slotClose();
+    virtual void slotSearch();
+    virtual void slotStop();
+    void scheduleRename(const QString &);
+    void renameSearchFolder();
+    void openSearchFolder();
+    void folderInvalidated(KMFolder *);
+    virtual bool slotShowMsg(QListViewItem *);
+    void slotShowSelectedMsg();
+    void slotCurrentChanged(QListViewItem *);
+    virtual void updateContextMenuActions();
+    virtual void slotContextMenuRequested(QListViewItem *, const QPoint &, int);
+    virtual void copySelectedToFolder(int menuId);
+    virtual void moveSelectedToFolder(int menuId);
+    virtual void slotFolderActivated();
+    void slotClearSelection();
+    void slotReplyToMsg();
+    void slotReplyAllToMsg();
+    void slotReplyListToMsg();
+    void slotForwardInlineMsg();
+    void slotForwardAttachedMsg();
+    void slotForwardDigestMsg();
+    void slotRedirectMsg();
+    void slotSaveMsg();
+    void slotSaveAttachments();
+    void slotPrintMsg();
+    void slotCopyMsgs();
+    void slotCutMsgs();
 
-  /** GUI cleanup after search */
-  virtual void searchDone();
-  virtual void slotAddMsg(int idx);
-  virtual void slotRemoveMsg(KMFolder *, Q_UINT32 serNum);
-  void enableGUI();
+    /** GUI cleanup after search */
+    virtual void searchDone();
+    virtual void slotAddMsg(int idx);
+    virtual void slotRemoveMsg(KMFolder *, Q_UINT32 serNum);
+    void enableGUI();
 
-  void setEnabledSearchButton(bool);
-
-protected:
-
-  /** Reimplemented to react to Escape. */
-  virtual void keyPressEvent(QKeyEvent*);
-
-  /** Reimplemented to stop searching when the window is closed */
-  virtual void closeEvent(QCloseEvent*);
+    void setEnabledSearchButton(bool);
 
 protected:
-  bool mStopped;
-  bool mCloseRequested;
-  int mFetchingInProgress;
-  int mSortColumn;
-  SortOrder mSortOrder;
-  QGuardedPtr<KMFolderSearch> mFolder;
-  QTimer *mTimer;
 
-  // GC'd by Qt
-  QRadioButton *mChkbxAllFolders;
-  QRadioButton *mChkbxSpecificFolders;
-  KMail::FolderRequester *mCbxFolders;
-  QPushButton *mBtnSearch;
-  QPushButton *mBtnStop;
-  QCheckBox *mChkSubFolders;
-  KListView* mLbxMatches;
-  QLabel *mSearchFolderLbl;
-  QLineEdit *mSearchFolderEdt;
-  QPushButton *mSearchFolderOpenBtn;
-  QPushButton *mSearchResultOpenBtn;
-  KStatusBar* mStatusBar;
-  QWidget* mLastFocus; // to remember the position of the focus
-  QMap<int,KMFolder*> mMenuToFolder;
-  KAction *mReplyAction, *mReplyAllAction, *mReplyListAction, *mSaveAsAction,
-    *mForwardInlineAction, *mForwardAttachedAction, *mForwardDigestAction,
-    *mRedirectAction, *mPrintAction, *mClearAction, *mSaveAtchAction,
-    *mCopyAction, *mCutAction;
-  KActionMenu *mForwardActionMenu;
-  QValueList<QGuardedPtr<KMFolder> > mFolders;
-  QTimer mRenameTimer;
+    /** Reimplemented to react to Escape. */
+    virtual void keyPressEvent(QKeyEvent *);
 
-  // not owned by us
-  KMMainWidget* mKMMainWidget;
-  KMSearchPatternEdit *mPatternEdit;
-  KMSearchPattern *mSearchPattern;
+    /** Reimplemented to stop searching when the window is closed */
+    virtual void closeEvent(QCloseEvent *);
 
-  static const int MSGID_COLUMN;
+protected:
+    bool mStopped;
+    bool mCloseRequested;
+    int mFetchingInProgress;
+    int mSortColumn;
+    SortOrder mSortOrder;
+    QGuardedPtr<KMFolderSearch> mFolder;
+    QTimer *mTimer;
+
+    // GC'd by Qt
+    QRadioButton *mChkbxAllFolders;
+    QRadioButton *mChkbxSpecificFolders;
+    KMail::FolderRequester *mCbxFolders;
+    QPushButton *mBtnSearch;
+    QPushButton *mBtnStop;
+    QCheckBox *mChkSubFolders;
+    KListView *mLbxMatches;
+    QLabel *mSearchFolderLbl;
+    QLineEdit *mSearchFolderEdt;
+    QPushButton *mSearchFolderOpenBtn;
+    QPushButton *mSearchResultOpenBtn;
+    KStatusBar *mStatusBar;
+    QWidget *mLastFocus; // to remember the position of the focus
+    QMap<int, KMFolder *> mMenuToFolder;
+    KAction *mReplyAction, *mReplyAllAction, *mReplyListAction, *mSaveAsAction,
+            *mForwardInlineAction, *mForwardAttachedAction, *mForwardDigestAction,
+            *mRedirectAction, *mPrintAction, *mClearAction, *mSaveAtchAction,
+            *mCopyAction, *mCutAction;
+    KActionMenu *mForwardActionMenu;
+    QValueList<QGuardedPtr<KMFolder> > mFolders;
+    QTimer mRenameTimer;
+
+    // not owned by us
+    KMMainWidget *mKMMainWidget;
+    KMSearchPatternEdit *mPatternEdit;
+    KMSearchPattern *mSearchPattern;
+
+    static const int MSGID_COLUMN;
 };
 
 } // namespace KMail

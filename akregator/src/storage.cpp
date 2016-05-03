@@ -26,14 +26,14 @@
 namespace Akregator {
 namespace Backend {
 
-Storage* Storage::m_instance = 0;
+Storage *Storage::m_instance = 0;
 
-Storage* Storage::getInstance()
+Storage *Storage::getInstance()
 {
     return m_instance;
 }
 
-void Storage::setInstance(Storage* instance)
+void Storage::setInstance(Storage *instance)
 {
     m_instance = instance;
 }

@@ -40,28 +40,27 @@
 class KDCanvasRectangle;
 class QBrush;
 
-class KDGanttViewTaskItem : public KDGanttViewItem
-{
+class KDGanttViewTaskItem : public KDGanttViewItem {
 public:
-    KDGanttViewTaskItem( KDGanttView* view,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
-    KDGanttViewTaskItem( KDGanttViewItem* parent,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
-    KDGanttViewTaskItem( KDGanttView* view, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
-    KDGanttViewTaskItem( KDGanttViewItem* parent, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
+    KDGanttViewTaskItem(KDGanttView *view,
+                        const QString &lvtext = QString::null,
+                        const QString &name = QString::null);
+    KDGanttViewTaskItem(KDGanttViewItem *parent,
+                        const QString &lvtext = QString::null,
+                        const QString &name = QString::null);
+    KDGanttViewTaskItem(KDGanttView *view, KDGanttViewItem *after,
+                        const QString &lvtext = QString::null,
+                        const QString &name = QString::null);
+    KDGanttViewTaskItem(KDGanttViewItem *parent, KDGanttViewItem *after,
+                        const QString &lvtext = QString::null,
+                        const QString &name = QString::null);
     virtual ~KDGanttViewTaskItem();
 
-    void setStartTime( const QDateTime& start );
-    void setEndTime( const QDateTime& end );
+    void setStartTime(const QDateTime &start);
+    void setEndTime(const QDateTime &end);
 
 protected:
-    void showItem( bool show = true, int coordY = 0 );
+    void showItem(bool show = true, int coordY = 0);
 
 private:
     void initItem();

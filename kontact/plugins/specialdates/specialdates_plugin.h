@@ -29,22 +29,27 @@
 
 class SDSummaryWidget;
 
-class SpecialdatesPlugin : public Kontact::Plugin
-{
-  public:
-    SpecialdatesPlugin( Kontact::Core *core, const char *name, const QStringList& );
+class SpecialdatesPlugin : public Kontact::Plugin {
+public:
+    SpecialdatesPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~SpecialdatesPlugin();
 
-    int weight() const { return 310; }
+    int weight() const
+    {
+        return 310;
+    }
 
     const KAboutData *aboutData();
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parentWidget );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parentWidget);
 
-  protected:
-	virtual KParts::ReadOnlyPart *createPart() { return nullptr; }
+protected:
+    virtual KParts::ReadOnlyPart *createPart()
+    {
+        return nullptr;
+    }
 
-  private:
+private:
     KAboutData *mAboutData;
 
 };

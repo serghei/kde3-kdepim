@@ -42,23 +42,20 @@ class KProgress;
 class KParts::BrowserExtension;
 class KParts::PartManager;
 
-namespace KPIM
-{
-    class StatusbarProgressWidget;
+namespace KPIM {
+class StatusbarProgressWidget;
 }
 
-namespace Akregator
-{
+namespace Akregator {
 
 class Part;
 class MainWindow;
 
-class BrowserInterface : public KParts::BrowserInterface
-{
+class BrowserInterface : public KParts::BrowserInterface {
     Q_OBJECT
-    
+
 public:
-    BrowserInterface(Akregator::MainWindow *shell, const char *name );
+    BrowserInterface(Akregator::MainWindow *shell, const char *name);
 
 private:
     Akregator::MainWindow *m_shell;
@@ -71,28 +68,27 @@ private:
  *
  * @short Application Shell
  */
-class MainWindow : public KParts::MainWindow
-{
+class MainWindow : public KParts::MainWindow {
     Q_OBJECT
 public:
 
     MainWindow();
     virtual ~MainWindow();
-    
+
     /**
      * Creates the progress widget in the status bar and the ProgressDialog
-     * and connects them. 
+     * and connects them.
      */
     void setupProgressWidgets();
 
     virtual void setCaption(const QString &);
 
-   /**
-    Loads the part
-    @return Whether the part has been successfully created or not.
-    */
+    /**
+     Loads the part
+     @return Whether the part has been successfully created or not.
+     */
     bool loadPart();
-    
+
 public slots:
     void slotClearStatusText();
     void slotSetStatusBarText(const QString &c);
@@ -110,37 +106,37 @@ protected:
      * with @ref saveProperties
      */
     void readProperties(KConfig *);
-    /** 
+    /**
      *  Reimplemented to save settings
      */
     virtual bool queryExit();
-      
+
     /**
      * Reimplemented to say if app will be running in system tray if necessary
      */
-    virtual bool queryClose(); 
+    virtual bool queryClose();
 
 protected slots:
 
     void slotQuit();
-    
+
 private:
 
     void setupActions();
     void connectActionCollection(KActionCollection *coll);
-    
+
     KParts::BrowserExtension *browserExtension(KParts::ReadOnlyPart *p);
 
 private slots:
-  
+
     void optionsConfigureKeys();
     void optionsConfigureToolbars();
-    
+
     void applyNewToolbarConfig();
 
 private:
     BrowserInterface *m_browserIface;
-  
+
     Akregator::Part *m_part;
     KPIM::StatusbarProgressWidget *m_progressBar;
     KSqueezedTextLabel *m_statusLabel;

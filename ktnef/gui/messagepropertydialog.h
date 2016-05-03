@@ -23,18 +23,17 @@
 class KListView;
 class KTNEFMessage;
 
-class MessagePropertyDialog : public KDialogBase
-{
-	Q_OBJECT
+class MessagePropertyDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg );
+    MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg);
 
 protected slots:
-	void slotUser1();
+    void slotUser1();
 
 private:
-	KTNEFMessage *m_message;
-	KListView    *m_listview;
+    KTNEFMessage *m_message;
+    KListView    *m_listview;
 };
 
 #endif /* MESSAGEPROPERTYDIALOG_H */

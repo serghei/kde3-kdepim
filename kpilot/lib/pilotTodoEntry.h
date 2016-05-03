@@ -46,120 +46,128 @@
 */
 
 /** A decoded ToDo item. */
-class KDE_EXPORT PilotTodoEntry : public PilotRecordBase
-{
+class KDE_EXPORT PilotTodoEntry : public PilotRecordBase {
 public:
-	/** Create an empty ToDo item. All attributes are 0. */
-	PilotTodoEntry();
+    /** Create an empty ToDo item. All attributes are 0. */
+    PilotTodoEntry();
 
-	/**
-	* Constructor. Create a ToDo item and fill it with data from the
-	* uninterpreted record @p rec. The record may be NULL, in which
-	* case the todo is empty and its category and ID are zero, as in
-	* the constructor above.
-	*/
-	PilotTodoEntry(PilotRecord * rec);
+    /**
+    * Constructor. Create a ToDo item and fill it with data from the
+    * uninterpreted record @p rec. The record may be NULL, in which
+    * case the todo is empty and its category and ID are zero, as in
+    * the constructor above.
+    */
+    PilotTodoEntry(PilotRecord *rec);
 
-	/** Copy an existing ToDo item. */
-	PilotTodoEntry(const PilotTodoEntry &e);
+    /** Copy an existing ToDo item. */
+    PilotTodoEntry(const PilotTodoEntry &e);
 
-	/** Delete a ToDo item. */
-	~PilotTodoEntry()
-	{
-		free_ToDo(&fTodoInfo);
-	}
+    /** Delete a ToDo item. */
+    ~PilotTodoEntry()
+    {
+        free_ToDo(&fTodoInfo);
+    }
 
-	/** Return a string for the ToDo item. If @param richText is true, then
-	* use qt style markup to make the string clearer when displayed.
-	*/
-	QString getTextRepresentation(Qt::TextFormat richText);
+    /** Return a string for the ToDo item. If @param richText is true, then
+    * use qt style markup to make the string clearer when displayed.
+    */
+    QString getTextRepresentation(Qt::TextFormat richText);
 
-	/** Assign an existing ToDo item to this one. */
-	PilotTodoEntry& operator=(const PilotTodoEntry &e);
+    /** Assign an existing ToDo item to this one. */
+    PilotTodoEntry &operator=(const PilotTodoEntry &e);
 
-	/** Accessor for the Due Date of the ToDo item. */
-	struct tm getDueDate() const { return fTodoInfo.due; }
+    /** Accessor for the Due Date of the ToDo item. */
+    struct tm getDueDate() const
+    {
+        return fTodoInfo.due;
+    }
 
-	/** Set the Due Date for the ToDo item. */
-	void setDueDate(struct tm& d)
-	{
-		fTodoInfo.due = d;
-	}
+    /** Set the Due Date for the ToDo item. */
+    void setDueDate(struct tm &d)
+    {
+        fTodoInfo.due = d;
+    }
 
-	/** Return the indefinite status of the ToDo (? that is, whether it
-	* had a Due Date that is relevant or not). Return values are 0
-	* (not indefinite) or non-0.
-	*/
-	int getIndefinite() const
-	{
-		return fTodoInfo.indefinite;
-	}
+    /** Return the indefinite status of the ToDo (? that is, whether it
+    * had a Due Date that is relevant or not). Return values are 0
+    * (not indefinite) or non-0.
+    */
+    int getIndefinite() const
+    {
+        return fTodoInfo.indefinite;
+    }
 
-	/** Set whether the ToDo is indefinite or not. */
-	void setIndefinite(int i)
-	{
-		fTodoInfo.indefinite = i;
-	}
+    /** Set whether the ToDo is indefinite or not. */
+    void setIndefinite(int i)
+    {
+        fTodoInfo.indefinite = i;
+    }
 
-	/** Return the priority of the ToDo item. The priority ranges
-	* from 1-5 on the handheld, so this needs to be mapped (perhaps)
-	* onto KOrganizer's priority levels.
-	*/
-	int getPriority() const
-	{
-		return fTodoInfo.priority;
-	}
+    /** Return the priority of the ToDo item. The priority ranges
+    * from 1-5 on the handheld, so this needs to be mapped (perhaps)
+    * onto KOrganizer's priority levels.
+    */
+    int getPriority() const
+    {
+        return fTodoInfo.priority;
+    }
 
-	/** Set the priority of the ToDo. */
-	void setPriority(int p)
-	{
-		fTodoInfo.priority = p;
-	}
+    /** Set the priority of the ToDo. */
+    void setPriority(int p)
+    {
+        fTodoInfo.priority = p;
+    }
 
-	/** Return whether the ToDo is complete (done, finished) or not. */
-	int getComplete() const
-	{
-		return fTodoInfo.complete;
-	}
+    /** Return whether the ToDo is complete (done, finished) or not. */
+    int getComplete() const
+    {
+        return fTodoInfo.complete;
+    }
 
-	/** Set whether the ToDo is done. */
-	void setComplete(int c)
-	{
-		fTodoInfo.complete = c;
-	}
+    /** Set whether the ToDo is done. */
+    void setComplete(int c)
+    {
+        fTodoInfo.complete = c;
+    }
 
-	/** Get the ToDo item's description (which is the title shown on
-	* the handheld, and the item's Title in KDE). This uses the default codec.
-	*/
-	QString getDescription() const;
-	/** Set the ToDo item's description. */
-	void  setDescription(const QString &);
+    /** Get the ToDo item's description (which is the title shown on
+    * the handheld, and the item's Title in KDE). This uses the default codec.
+    */
+    QString getDescription() const;
+    /** Set the ToDo item's description. */
+    void  setDescription(const QString &);
 
-	/** Get the ToDo item's note (the longer text, not immediately accessible
-	* on the handheld). This uses the default codec.
-	*/
-	QString getNote() const;
+    /** Get the ToDo item's note (the longer text, not immediately accessible
+    * on the handheld). This uses the default codec.
+    */
+    QString getNote() const;
 
-	/** Set the ToDo item's note. */
-	void  setNote(const QString &note);
+    /** Set the ToDo item's note. */
+    void  setNote(const QString &note);
 
-	/** Returns the label for the category this ToDo item is in. */
-	QString getCategoryLabel() const;
+    /** Returns the label for the category this ToDo item is in. */
+    QString getCategoryLabel() const;
 
-	PilotRecord *pack() const;
+    PilotRecord *pack() const;
 
 protected:
-	const char *getDescriptionP() const { return fTodoInfo.description; } ;
-	void setDescriptionP(const char *, int len=-1) ;
-	const char *getNoteP() const { return fTodoInfo.note; } ;
-	void setNoteP(const char *, int len=-1) ;
+    const char *getDescriptionP() const
+    {
+        return fTodoInfo.description;
+    } ;
+    void setDescriptionP(const char *, int len = -1) ;
+    const char *getNoteP() const
+    {
+        return fTodoInfo.note;
+    } ;
+    void setNoteP(const char *, int len = -1) ;
 
 private:
-	struct ToDo fTodoInfo;
-	unsigned int fDescriptionSize, fNoteSize;
+    struct ToDo fTodoInfo;
+    unsigned int fDescriptionSize, fNoteSize;
 };
 
-typedef PilotAppInfo<ToDoAppInfo,unpack_ToDoAppInfo, pack_ToDoAppInfo> PilotToDoInfo;
+typedef PilotAppInfo<ToDoAppInfo, unpack_ToDoAppInfo, pack_ToDoAppInfo> PilotToDoInfo;
 
 
 #endif

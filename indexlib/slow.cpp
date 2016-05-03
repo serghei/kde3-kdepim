@@ -6,17 +6,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -35,30 +35,33 @@
 
 using std::string;
 
-slow::slow( string str ):
-	strings_( path_concat( str, "strings" ) ),
-	docs_( path_concat( str, "docs" ) )
+slow::slow(string str):
+    strings_(path_concat(str, "strings")),
+    docs_(path_concat(str, "docs"))
 {
 }
 
-void slow::remove( string name )
+void slow::remove(string name)
 {
-	stringarray::remove( path_concat( name, "strings" ) );
-	stringarray::remove( path_concat( name, "docs" ) );
+    stringarray::remove(path_concat(name, "strings"));
+    stringarray::remove(path_concat(name, "docs"));
 }
 
-void slow::add( string str, string doc ) {
-	docs_.add( doc );
-	strings_.add( str );
+void slow::add(string str, string doc)
+{
+    docs_.add(doc);
+    strings_.add(str);
 }
 
-std::vector<unsigned> slow::search( string str ) const {
-	std::vector<unsigned> res;
-	indexlib::Match m( str );
+std::vector<unsigned> slow::search(string str) const
+{
+    std::vector<unsigned> res;
+    indexlib::Match m(str);
 
-	for ( unsigned i = 0; i != strings_.size(); ++i ) {
-		if ( m.process( strings_.get_cstr( i ) ) ) res.push_back( i );
-	}
-	return res;
+    for(unsigned i = 0; i != strings_.size(); ++i)
+    {
+        if(m.process(strings_.get_cstr(i))) res.push_back(i);
+    }
+    return res;
 }
 

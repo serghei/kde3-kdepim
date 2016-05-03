@@ -31,12 +31,12 @@ class QPixmap;
 
 class KNListBoxItem : public QListBoxItem  {
 
-  public:
-    KNListBoxItem(const QString& text, QPixmap *pm=0);
+public:
+    KNListBoxItem(const QString &text, QPixmap *pm = 0);
     ~KNListBoxItem();
 
 
-  protected:
+protected:
     virtual void paint(QPainter *);
     virtual int height(const QListBox *) const;
     virtual int width(const QListBox *) const;
@@ -49,15 +49,14 @@ class KNListBoxItem : public QListBoxItem  {
 
 
 /** a list box which ignores Enter, useful for dialogs */
-class KNDialogListBox : public QListBox
-{
-   public:
+class KNDialogListBox : public QListBox {
+public:
     // alwaysIgnore==false: enter is ignored when the widget isn't visible/out of focus
-    KNDialogListBox(bool alwaysIgnore=false, QWidget * parent=0, const char * name=0);
+    KNDialogListBox(bool alwaysIgnore = false, QWidget *parent = 0, const char *name = 0);
     ~KNDialogListBox();
 
-  protected:
-    void keyPressEvent( QKeyEvent *e );
+protected:
+    void keyPressEvent(QKeyEvent *e);
 
     bool a_lwaysIgnore;
 };
@@ -66,20 +65,19 @@ class KNDialogListBox : public QListBox
 //====================================================================================
 
 
-class KNDockWidgetHeaderDrag : public KDockWidgetHeaderDrag
-{
-  Q_OBJECT
+class KNDockWidgetHeaderDrag : public KDockWidgetHeaderDrag {
+    Q_OBJECT
 
-  public:
-    KNDockWidgetHeaderDrag(QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock,
-                            const char* name = 0);
+public:
+    KNDockWidgetHeaderDrag(QWidget *focusWidget, KDockWidgetAbstractHeader *parent, KDockWidget *dock,
+                           const char *name = 0);
     virtual ~KNDockWidgetHeaderDrag();
 
-  protected slots:
+protected slots:
     void slotFocusChanged(QFocusEvent *e);
 
-  protected:
-    virtual void paintEvent( QPaintEvent* );
+protected:
+    virtual void paintEvent(QPaintEvent *);
 
     bool f_ocus;
 };

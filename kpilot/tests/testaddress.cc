@@ -40,67 +40,67 @@
 
 static const KCmdLineOptions options[] =
 {
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    {"data-dir <path>", "Set data directory", "."},
+    KCmdLineLastOption
 };
 
 
 
 int main(int argc, char **argv)
 {
-	KApplication::disableAutoDcopRegistration();
+    KApplication::disableAutoDcopRegistration();
 
-	KAboutData aboutData("testaddress","Test Addresses","0.1");
-	KCmdLineArgs::init(argc,argv,&aboutData);
-	KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("testaddress", "Test Addresses", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	KApplication app( false, false );
+    KApplication app(false, false);
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
-	debug_level= (args->isSet("verbose")) ? 4 : 0;
+    debug_level = (args->isSet("verbose")) ? 4 : 0;
 #endif
-	QString datadir = args->getOption("data-dir");
+    QString datadir = args->getOption("data-dir");
 
-	DEBUGKPILOT << "### testaddresses\n#\n#" << endl;
+    DEBUGKPILOT << "### testaddresses\n#\n#" << endl;
 
-	Pilot::setupPilotCodec( CSL1("Latin1") );
+    Pilot::setupPilotCodec(CSL1("Latin1"));
 
-	PilotLocalDatabase db( datadir, "AddressDB" );
-	PilotAddressInfo appinfo( &db );
+    PilotLocalDatabase db(datadir, "AddressDB");
+    PilotAddressInfo appinfo(&db);
 
-	appinfo.dump();
+    appinfo.dump();
 
-	for (unsigned int i=0; i<db.recordCount(); ++i)
-	{
-		PilotRecord *r = db.readRecordByIndex( i );
+    for(unsigned int i = 0; i < db.recordCount(); ++i)
+    {
+        PilotRecord *r = db.readRecordByIndex(i);
 
-		if (r)
-		{
-			DEBUGKPILOT << "# Record @" << (void *)r << " ID=" << r->id() << endl;
-			PilotAddress a( r );
-			DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation(&appinfo,Qt::PlainText) << endl;
-			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
-			DEBUGKPILOT << "# ID " << a.id() << endl;
+        if(r)
+        {
+            DEBUGKPILOT << "# Record @" << (void *)r << " ID=" << r->id() << endl;
+            PilotAddress a(r);
+            DEBUGKPILOT << "# Text Representation:" << endl << a.getTextRepresentation(&appinfo, Qt::PlainText) << endl;
+            DEBUGKPILOT << "# Category#" << a.category() << endl;
+            DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
+            DEBUGKPILOT << "# ID " << a.id() << endl;
 
-			// With the given address database, where all the
-			// categories are already filled, this should fail
-			// (and give a useful error message).
-			//
-			a.setCategory( appinfo.findCategory(CSL1("Fake Cat")) );
-			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
-			// This category exists, so it should succeed
-			//
-			a.setCategory( appinfo.findCategory(CSL1("Business")) );
-			DEBUGKPILOT << "# Category#" << a.category() << endl;
-			DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
-		}
-	}
+            // With the given address database, where all the
+            // categories are already filled, this should fail
+            // (and give a useful error message).
+            //
+            a.setCategory(appinfo.findCategory(CSL1("Fake Cat")));
+            DEBUGKPILOT << "# Category#" << a.category() << endl;
+            DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
+            // This category exists, so it should succeed
+            //
+            a.setCategory(appinfo.findCategory(CSL1("Business")));
+            DEBUGKPILOT << "# Category#" << a.category() << endl;
+            DEBUGKPILOT << "# Category Label " << appinfo.categoryName(a.category()) << endl;
+        }
+    }
 
-	return 0;
+    return 0;
 }
 

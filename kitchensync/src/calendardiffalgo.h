@@ -30,21 +30,20 @@ using namespace KPIM;
 
 namespace KSync {
 
-class CalendarDiffAlgo : public DiffAlgo
-{
-  public:
-    CalendarDiffAlgo( KCal::Incidence *leftIncidence, KCal::Incidence *rightIncidence );
+class CalendarDiffAlgo : public DiffAlgo {
+public:
+    CalendarDiffAlgo(KCal::Incidence *leftIncidence, KCal::Incidence *rightIncidence);
 
     void run();
 
-  private:
+private:
     template <class L>
-    void diffList( const QString &id, const QValueList<L> &left, const QValueList<L> &right );
+    void diffList(const QString &id, const QValueList<L> &left, const QValueList<L> &right);
 
-    void diffIncidenceBase( KCal::IncidenceBase*, KCal::IncidenceBase* );
-    void diffIncidence( KCal::Incidence*, KCal::Incidence* );
-    void diffEvent( KCal::Event*, KCal::Event* );
-    void diffTodo( KCal::Todo*, KCal::Todo* );
+    void diffIncidenceBase(KCal::IncidenceBase *, KCal::IncidenceBase *);
+    void diffIncidence(KCal::Incidence *, KCal::Incidence *);
+    void diffEvent(KCal::Event *, KCal::Event *);
+    void diffTodo(KCal::Todo *, KCal::Todo *);
 
     KCal::Incidence *mLeftIncidence;
     KCal::Incidence *mRightIncidence;

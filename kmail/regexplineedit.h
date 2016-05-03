@@ -44,35 +44,34 @@ class QDialog;
 
 namespace KMail {
 
-  class RegExpLineEdit : public QWidget
-  {
+class RegExpLineEdit : public QWidget {
     Q_OBJECT
 
-  public:
-    RegExpLineEdit( const QString &str, QWidget *parent = 0,
-                    const char *name = 0 );
-    RegExpLineEdit( QWidget *parent = 0, const char *name = 0 );
+public:
+    RegExpLineEdit(const QString &str, QWidget *parent = 0,
+                   const char *name = 0);
+    RegExpLineEdit(QWidget *parent = 0, const char *name = 0);
 
     QString text() const;
 
-  public slots:
+public slots:
     void clear();
-    void setText( const QString & );
-    void showEditButton( bool );
+    void setText(const QString &);
+    void showEditButton(bool);
 
-  signals:
-    void textChanged( const QString & );
+signals:
+    void textChanged(const QString &);
 
-  protected slots:
+protected slots:
     void slotEditRegExp();
 
-  private:
-    void initWidget( const QString & = QString::null );
+private:
+    void initWidget(const QString & = QString::null);
 
-    KLineEdit * mLineEdit;
-    QPushButton * mRegExpEditButton;
-    QDialog * mRegExpEditDialog;
-  };
+    KLineEdit *mLineEdit;
+    QPushButton *mRegExpEditButton;
+    QDialog *mRegExpEditDialog;
+};
 
 } // namespace KMail
 

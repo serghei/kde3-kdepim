@@ -31,31 +31,30 @@
 
 namespace KWSDL {
 
-class WSDL
-{
-  public:
-    void setBindings( const Binding::List &bindings );
+class WSDL {
+public:
+    void setBindings(const Binding::List &bindings);
     Binding::List bindings() const;
 
-    void setMessages( const Message::List &messages );
+    void setMessages(const Message::List &messages);
     Message::List messages() const;
 
-    void setPorts( const Port::List &ports );
+    void setPorts(const Port::List &ports);
     Port::List ports() const;
 
-    void setService( const Service &service );
+    void setService(const Service &service);
     Service service() const;
 
-    void setTypes( const Schema::Types &types );
+    void setTypes(const Schema::Types &types);
     Schema::Types types() const;
 
-    Message findMessage( const QString& ) const;
-    Message findOutputMessage( const QString& ) const;
-    Port findPort( const QString& ) const;
-    Binding findBinding( const QString& ) const;
-    Binding::Operation findBindingOperation( const QString&, const QString& ) const;
+    Message findMessage(const QString &) const;
+    Message findOutputMessage(const QString &) const;
+    Port findPort(const QString &) const;
+    Binding findBinding(const QString &) const;
+    Binding::Operation findBindingOperation(const QString &, const QString &) const;
 
-  private:
+private:
     Binding::List mBindings;
     Message::List mMessages;
     Port::List mPorts;

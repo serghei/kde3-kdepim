@@ -29,14 +29,13 @@
 
 namespace KOrg {
 
-class IdentityManager : public KPIM::IdentityManager
-{
+class IdentityManager : public KPIM::IdentityManager {
 public:
-  IdentityManager( QObject * parent=0, const char * name=0 )
-    : KPIM::IdentityManager( true /*readonly*/, parent, name ) {}
+    IdentityManager(QObject *parent = 0, const char *name = 0)
+        : KPIM::IdentityManager(true /*readonly*/, parent, name) {}
 
 protected:
-  virtual void createDefaultIdentity( QString& fullName, QString& emailAddress );
+    virtual void createDefaultIdentity(QString &fullName, QString &emailAddress);
 };
 
 } // namespace

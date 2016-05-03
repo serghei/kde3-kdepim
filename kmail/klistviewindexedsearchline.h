@@ -7,16 +7,16 @@
  * KMail is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation.
- * 
+ *
  * KMail is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -46,13 +46,12 @@ class KListViewSearchLine;
  * Extends HeaderListQuickSearch to also search inside message bodies using KMMsgIndex
  */
 
-class KDEUI_EXPORT KListViewIndexedSearchLine: public KMail::HeaderListQuickSearch
-{
+class KDEUI_EXPORT KListViewIndexedSearchLine: public KMail::HeaderListQuickSearch {
     Q_OBJECT
 
 public:
 
-    explicit KListViewIndexedSearchLine(QWidget *parent, KListView *listView, KActionCollection* action, const char *name = 0);
+    explicit KListViewIndexedSearchLine(QWidget *parent, KListView *listView, KActionCollection *action, const char *name = 0);
     ~KListViewIndexedSearchLine();
 
 public slots:

@@ -45,22 +45,21 @@ class GroupwareDataAdaptor;
 class GroupwarePrefsBase;
 
 
-class KDE_EXPORT FolderLister : public QObject
-{
+class KDE_EXPORT FolderLister : public QObject {
     Q_OBJECT
-  public:
+public:
     enum Type { AddressBook, Calendar };
-    enum ContentType {
-      Contact=0x1, Event=0x2, Todo=0x4, Journal=0x8,
-      Message=0x10, Memo=0x20, Folder=0x40,
-      Incidences=Event|Todo|Journal, All=Contact|Incidences,
-      Unknown=0x000
+    enum ContentType
+    {
+        Contact = 0x1, Event = 0x2, Todo = 0x4, Journal = 0x8,
+        Message = 0x10, Memo = 0x20, Folder = 0x40,
+        Incidences = Event | Todo | Journal, All = Contact | Incidences,
+        Unknown = 0x000
     };
 
-    class Entry
-    {
-      public:
-        Entry() : active( false ) {}
+    class Entry {
+    public:
+        Entry() : active(false) {}
 
         typedef QValueList<Entry> List;
 
@@ -69,54 +68,60 @@ class KDE_EXPORT FolderLister : public QObject
         ContentType type;
         bool active;
     };
-    static QStringList contentTypeToStrings( ContentType );
-    ContentType contentTypeFromString( const QString &type );
+    static QStringList contentTypeToStrings(ContentType);
+    ContentType contentTypeFromString(const QString &type);
 
     QValueList<ContentType> supportedTypes();
 
-    FolderLister( Type );
+    FolderLister(Type);
 
     /** Initialize the retrieval with given root URL */
-    virtual void retrieveFolders( const KURL & );
+    virtual void retrieveFolders(const KURL &);
 
-    void setFolders( const Entry::List & );
-    Entry::List folders() const { return mFolders; }
+    void setFolders(const Entry::List &);
+    Entry::List folders() const
+    {
+        return mFolders;
+    }
 
-    void setAdaptor( KPIM::GroupwareDataAdaptor *adaptor );
-    GroupwareDataAdaptor* adaptor() const { return mAdaptor; }
+    void setAdaptor(KPIM::GroupwareDataAdaptor *adaptor);
+    GroupwareDataAdaptor *adaptor() const
+    {
+        return mAdaptor;
+    }
 
     KURL::List activeFolderIds() const;
-    bool isActive( const QString &id ) const;
+    bool isActive(const QString &id) const;
 
-    void setWriteDestinationId( KPIM::FolderLister::ContentType type, const QString &dest );
-    QString writeDestinationId( KPIM::FolderLister::ContentType type ) const;
-    
-    void readConfig( KPIM::GroupwarePrefsBase *newprefs );
-    void writeConfig( KPIM::GroupwarePrefsBase *newprefs );
+    void setWriteDestinationId(KPIM::FolderLister::ContentType type, const QString &dest);
+    QString writeDestinationId(KPIM::FolderLister::ContentType type) const;
+
+    void readConfig(KPIM::GroupwarePrefsBase *newprefs);
+    void writeConfig(KPIM::GroupwarePrefsBase *newprefs);
 
 
-  signals:
+signals:
     void foldersRead();
 
-  protected slots:
-    void slotListJobResult( KIO::Job * );
+protected slots:
+    void slotListJobResult(KIO::Job *);
     /** Adds the folder with the given url and display name to the folder
      *  tree (if is has an appropriate type) */
-    virtual void processFolderResult( const KURL &href,
-                                      const QString &displayName,
-                                      KPIM::FolderLister::ContentType  type );
+    virtual void processFolderResult(const KURL &href,
+                                     const QString &displayName,
+                                     KPIM::FolderLister::ContentType  type);
     /** Retrieve information about the folder u. If it has sub-folders, it
         descends into the hierarchy */
-    virtual void doRetrieveFolder( const KURL &u );
+    virtual void doRetrieveFolder(const KURL &u);
     /** A subitem was detected. If it's a folder, we need to descend, otherwise
         we just add the url to the list of processed URLs. */
-    void folderSubitemRetrieved( const KURL &url, bool isFolder );
+    void folderSubitemRetrieved(const KURL &url, bool isFolder);
 
-  protected:
+protected:
     /** Creates the job to retrieve information about the folder at the given
         url. It's results will be interpreted by interpretFolderResult
     */
-    virtual KIO::Job *createListFoldersJob( const KURL &url );
+    virtual KIO::Job *createListFoldersJob(const KURL &url);
     /** Interprets the results returned by the liste job (created by
      *  createJob(url) ). The default implementation calls
      *  interpretFolderListJob of the GroupwareDataAdaptor. Typically,
@@ -124,22 +129,25 @@ class KDE_EXPORT FolderLister : public QObject
      *  folder of the appropriate type, by calling processsFolderResult.
      *  If the folder has subfolders, just call doRetrieveFolder(url)
      *  recursively. */
-    virtual void interpretListFoldersJob( KIO::Job *job );
+    virtual void interpretListFoldersJob(KIO::Job *job);
     /** List of folders that will always be included (subfolders won't!).
      *  Usually this is not needed as you should traverse the whole folder
      *  tree starting from the user's root dir. */
     virtual Entry::List defaultFolders();
     /** Type of this folder lister (i.e. AddressBook or Calendar) */
-    Type getType() const { return mType; }
+    Type getType() const
+    {
+        return mType;
+    }
 
 
-  protected:
+protected:
     Type mType;
     KURL::List mUrls;
     QStringList mProcessedPathes;
     Entry::List mFolders;
     GroupwareDataAdaptor *mAdaptor;
-  private:
+private:
     // TODO: We need multiple destinations for Events, Tasks and Journals
     QMap<KPIM::FolderLister::ContentType, QString> mWriteDestinationId;
     KURL mOldURL;

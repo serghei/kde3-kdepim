@@ -47,59 +47,59 @@
 
 namespace KMail {
 
-HeaderListQuickSearch::HeaderListQuickSearch( QWidget *parent,
-                                              KListView *listView,
-                                              KActionCollection *actionCollection,
-                                              const char *name )
-  : KListViewSearchLine(parent, listView, name), mStatusCombo(0), mStatus(0),  statusList()
+HeaderListQuickSearch::HeaderListQuickSearch(QWidget *parent,
+        KListView *listView,
+        KActionCollection *actionCollection,
+        const char *name)
+    : KListViewSearchLine(parent, listView, name), mStatusCombo(0), mStatus(0),  statusList()
 {
-  KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
-                                           QApplication::reverseLayout()
-                                           ? "clear_left"
-                                           : "locationbar_erase",
-                                           0, this,
-                                           SLOT( reset() ),
-                                           actionCollection,
-                                           "reset_quicksearch" );
-  resetQuickSearch->plug( parent );
-  resetQuickSearch->setWhatsThis( i18n( "Reset Quick Search\n"
+    KAction *resetQuickSearch = new KAction(i18n("Reset Quick Search"),
+                                            QApplication::reverseLayout()
+                                            ? "clear_left"
+                                            : "locationbar_erase",
+                                            0, this,
+                                            SLOT(reset()),
+                                            actionCollection,
+                                            "reset_quicksearch");
+    resetQuickSearch->plug(parent);
+    resetQuickSearch->setWhatsThis(i18n("Reset Quick Search\n"
                                         "Resets the quick search so that "
-                                        "all messages are shown again." ) );
+                                        "all messages are shown again."));
 
-  QLabel *label = new QLabel( i18n("Stat&us:"), parent, "kde toolbar widget" );
+    QLabel *label = new QLabel(i18n("Stat&us:"), parent, "kde toolbar widget");
 
-  mStatusCombo = new QComboBox( parent, "quick search status combo box" );
-  mStatusCombo->insertItem( SmallIcon( "run" ), i18n("Any Status") );
+    mStatusCombo = new QComboBox(parent, "quick search status combo box");
+    mStatusCombo->insertItem(SmallIcon("run"), i18n("Any Status"));
 
-  insertStatus( StatusUnread );
-  insertStatus( StatusNew );
-  insertStatus( StatusImportant );
-  insertStatus( StatusReplied );
-  insertStatus( StatusForwarded );
-  insertStatus( StatusToDo );
-  insertStatus( StatusHasAttachment );
-  insertStatus( StatusWatched );
-  insertStatus( StatusIgnored );
-  mStatusCombo->setCurrentItem( 0 );
-  mStatusCombo->installEventFilter( this );
-  connect( mStatusCombo, SIGNAL ( activated( int ) ),
-           this, SLOT( slotStatusChanged( int ) ) );
+    insertStatus(StatusUnread);
+    insertStatus(StatusNew);
+    insertStatus(StatusImportant);
+    insertStatus(StatusReplied);
+    insertStatus(StatusForwarded);
+    insertStatus(StatusToDo);
+    insertStatus(StatusHasAttachment);
+    insertStatus(StatusWatched);
+    insertStatus(StatusIgnored);
+    mStatusCombo->setCurrentItem(0);
+    mStatusCombo->installEventFilter(this);
+    connect(mStatusCombo, SIGNAL(activated(int)),
+            this, SLOT(slotStatusChanged(int)));
 
-  label->setBuddy( mStatusCombo );
+    label->setBuddy(mStatusCombo);
 
-  KToolBarButton * btn = new KToolBarButton( "mail_find", 0, parent,
-                                            0, i18n( "Open Full Search" ) );
-  connect( btn, SIGNAL( clicked() ), SIGNAL( requestFullSearch() ) );
+    KToolBarButton *btn = new KToolBarButton("mail_find", 0, parent,
+            0, i18n("Open Full Search"));
+    connect(btn, SIGNAL(clicked()), SIGNAL(requestFullSearch()));
 
-  /* Disable the signal connected by KListViewSearchLine since it will call 
-   * itemAdded during KMHeaders::readSortOrder() which will in turn result
-   * in getMsgBaseForItem( item ) wanting to access items which are no longer
-   * there. Rather rely on KMHeaders::msgAdded and its signal. */
-  disconnect(listView, SIGNAL(itemAdded(QListViewItem *)),
-             this, SLOT(itemAdded(QListViewItem *)));
-  KMHeaders *headers = static_cast<KMHeaders*>( listView );
-  connect( headers, SIGNAL( msgAddedToListView( QListViewItem* ) ),
-           this, SLOT( itemAdded( QListViewItem* ) ) );
+    /* Disable the signal connected by KListViewSearchLine since it will call
+     * itemAdded during KMHeaders::readSortOrder() which will in turn result
+     * in getMsgBaseForItem( item ) wanting to access items which are no longer
+     * there. Rather rely on KMHeaders::msgAdded and its signal. */
+    disconnect(listView, SIGNAL(itemAdded(QListViewItem *)),
+               this, SLOT(itemAdded(QListViewItem *)));
+    KMHeaders *headers = static_cast<KMHeaders *>(listView);
+    connect(headers, SIGNAL(msgAddedToListView(QListViewItem *)),
+            this, SLOT(itemAdded(QListViewItem *)));
 
 }
 
@@ -108,72 +108,77 @@ HeaderListQuickSearch::~HeaderListQuickSearch()
 }
 
 
-bool HeaderListQuickSearch::eventFilter( QObject *watched, QEvent *event )
+bool HeaderListQuickSearch::eventFilter(QObject *watched, QEvent *event)
 {
-  if ( watched == mStatusCombo ) {
-    KMMainWidget *mainWidget = 0;
+    if(watched == mStatusCombo)
+    {
+        KMMainWidget *mainWidget = 0;
 
-    // Travel up the parents list until we find the main widget
-    for ( QWidget *curWidget = parentWidget(); curWidget; curWidget = curWidget->parentWidget() ) {
-      mainWidget = ::qt_cast<KMMainWidget *>( curWidget );
-      if ( mainWidget )
-        break;
+        // Travel up the parents list until we find the main widget
+        for(QWidget *curWidget = parentWidget(); curWidget; curWidget = curWidget->parentWidget())
+        {
+            mainWidget = ::qt_cast<KMMainWidget *>(curWidget);
+            if(mainWidget)
+                break;
+        }
+
+        if(mainWidget)
+        {
+            switch(event->type())
+            {
+                case QEvent::FocusIn:
+                    mainWidget->setAccelsEnabled(false);
+                    break;
+                case QEvent::FocusOut:
+                    mainWidget->setAccelsEnabled(true);
+                    break;
+                default:
+                    // Avoid compiler warnings
+                    break;
+            }
+        }
     }
 
-    if ( mainWidget ) {
-      switch ( event->type() ) {
-      case QEvent::FocusIn:
-        mainWidget->setAccelsEnabled( false );
-        break;
-      case QEvent::FocusOut:
-        mainWidget->setAccelsEnabled( true );
-        break;
-      default:
-        // Avoid compiler warnings
-        break;
-      }
-    }
-  }
-
-  // In either case, always return false, we NEVER want to eat the event
-  return false;
+    // In either case, always return false, we NEVER want to eat the event
+    return false;
 }
 
 
 bool HeaderListQuickSearch::itemMatches(const QListViewItem *item, const QString &s) const
 {
-  mCurrentSearchTerm = s; // bit of a hack, but works
-  if ( mStatus != 0 ) {
-    KMHeaders *headers = static_cast<KMHeaders*>( item->listView() );
-    const KMMsgBase *msg = headers->getMsgBaseForItem( item );
-    if ( !msg || ! ( msg->status() & mStatus ) )
-      return false;
-  }
-  return KListViewSearchLine::itemMatches(item, s);
+    mCurrentSearchTerm = s; // bit of a hack, but works
+    if(mStatus != 0)
+    {
+        KMHeaders *headers = static_cast<KMHeaders *>(item->listView());
+        const KMMsgBase *msg = headers->getMsgBaseForItem(item);
+        if(!msg || !(msg->status() & mStatus))
+            return false;
+    }
+    return KListViewSearchLine::itemMatches(item, s);
 }
 
 //-----------------------------------------------------------------------------
 void HeaderListQuickSearch::reset()
 {
-  clear();
-  mStatusCombo->setCurrentItem( 0 );
-  slotStatusChanged( 0 );
+    clear();
+    mStatusCombo->setCurrentItem(0);
+    slotStatusChanged(0);
 }
 
-void HeaderListQuickSearch::slotStatusChanged( int index )
+void HeaderListQuickSearch::slotStatusChanged(int index)
 {
-  if ( index == 0 )
-    mStatus = 0;
-  else
-    mStatus = KMSearchRuleStatus::statusFromEnglishName( statusList[index - 1] );
-  updateSearch();
+    if(index == 0)
+        mStatus = 0;
+    else
+        mStatus = KMSearchRuleStatus::statusFromEnglishName(statusList[index - 1]);
+    updateSearch();
 }
 
 void HeaderListQuickSearch::insertStatus(KMail::StatusValueTypes which)
 {
-  mStatusCombo->insertItem( SmallIcon( KMail::StatusValues[which].icon ),
-    i18n( KMail::StatusValues[ which ].text ) );
-  statusList.append( KMail::StatusValues[ which ].text );
+    mStatusCombo->insertItem(SmallIcon(KMail::StatusValues[which].icon),
+                             i18n(KMail::StatusValues[ which ].text));
+    statusList.append(KMail::StatusValues[ which ].text);
 }
 
 

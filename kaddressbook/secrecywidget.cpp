@@ -29,44 +29,44 @@
 
 #include "secrecywidget.h"
 
-SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+SecrecyWidget::SecrecyWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
-  mSecrecyCombo = new KComboBox( this );
-  layout->addWidget( mSecrecyCombo );
+    QVBoxLayout *layout = new QVBoxLayout(this, KDialog::marginHint(),
+                                          KDialog::spacingHint());
+    mSecrecyCombo = new KComboBox(this);
+    layout->addWidget(mSecrecyCombo);
 
-  const KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
-  KABC::Secrecy::TypeList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
-    mSecrecyCombo->insertItem( KABC::Secrecy::typeLabel( *it ), *it );
+    const KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
+    KABC::Secrecy::TypeList::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+        mSecrecyCombo->insertItem(KABC::Secrecy::typeLabel(*it), *it);
 
-  connect( mSecrecyCombo, SIGNAL( activated( const QString& ) ),
-           SIGNAL( changed() ) );
+    connect(mSecrecyCombo, SIGNAL(activated(const QString &)),
+            SIGNAL(changed()));
 }
 
 SecrecyWidget::~SecrecyWidget()
 {
 }
 
-void SecrecyWidget::setReadOnly( bool readOnly )
+void SecrecyWidget::setReadOnly(bool readOnly)
 {
-  mSecrecyCombo->setEnabled( !readOnly );
+    mSecrecyCombo->setEnabled(!readOnly);
 }
 
-void SecrecyWidget::setSecrecy( const KABC::Secrecy &secrecy )
+void SecrecyWidget::setSecrecy(const KABC::Secrecy &secrecy)
 {
-  if ( secrecy.type() != KABC::Secrecy::Invalid )
-    mSecrecyCombo->setCurrentItem( secrecy.type() );
+    if(secrecy.type() != KABC::Secrecy::Invalid)
+        mSecrecyCombo->setCurrentItem(secrecy.type());
 }
 
 KABC::Secrecy SecrecyWidget::secrecy() const
 {
-  KABC::Secrecy secrecy;
-  secrecy.setType( mSecrecyCombo->currentItem() );
+    KABC::Secrecy secrecy;
+    secrecy.setType(mSecrecyCombo->currentItem());
 
-  return secrecy;
+    return secrecy;
 }
 
 #include "secrecywidget.moc"

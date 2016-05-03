@@ -26,61 +26,59 @@
 
 class KWidgetListItem;
 
-class KWidgetList : public QScrollView
-{
-  Q_OBJECT
+class KWidgetList : public QScrollView {
+    Q_OBJECT
 
-  public:
-    KWidgetList( QWidget *parent = 0, const char *name = 0 );
+public:
+    KWidgetList(QWidget *parent = 0, const char *name = 0);
     ~KWidgetList();
 
     uint count() const;
 
-    void appendItem( KWidgetListItem *item );
-    void removeItem( int index );
-    void takeItem( KWidgetListItem *item );
+    void appendItem(KWidgetListItem *item);
+    void removeItem(int index);
+    void takeItem(KWidgetListItem *item);
 
-    void setSelected( KWidgetListItem *item );
-    void setSelected( int index );
+    void setSelected(KWidgetListItem *item);
+    void setSelected(int index);
 
-    bool isSelected( KWidgetListItem *item ) const;
-    bool isSelected( int index ) const;
+    bool isSelected(KWidgetListItem *item) const;
+    bool isSelected(int index) const;
 
     KWidgetListItem *selectedItem() const;
-    KWidgetListItem *item( int index ) const;
+    KWidgetListItem *item(int index) const;
 
-    int index( KWidgetListItem *item ) const;
+    int index(KWidgetListItem *item) const;
 
-    virtual bool eventFilter( QObject *object, QEvent *event );
+    virtual bool eventFilter(QObject *object, QEvent *event);
 
-  public slots:
+public slots:
     void clear();
     virtual void setFocus();
 
-  signals:
-    void selectionChanged( KWidgetListItem *item );
-    void doubleClicked( KWidgetListItem *item );
+signals:
+    void selectionChanged(KWidgetListItem *item);
+    void doubleClicked(KWidgetListItem *item);
 
-  private:
+private:
     class Private;
     Private *d;
 };
 
-class KWidgetListItem : public QWidget
-{
-  public:
-    KWidgetListItem( KWidgetList *parent, const char *name = 0 );
+class KWidgetListItem : public QWidget {
+public:
+    KWidgetListItem(KWidgetList *parent, const char *name = 0);
     ~KWidgetListItem();
 
-    void setSelected( bool selected );
+    void setSelected(bool selected);
 
-  protected:
-    void setForegroundColor( const QColor& );
-    void setBackgroundColor( const QColor& );
-    void setSelectionForegroundColor( const QColor& );
-    void setSelectionBackgroundColor( const QColor& );
+protected:
+    void setForegroundColor(const QColor &);
+    void setBackgroundColor(const QColor &);
+    void setSelectionForegroundColor(const QColor &);
+    void setSelectionBackgroundColor(const QColor &);
 
-  private:
+private:
     QColor mForegroundColor;
     QColor mBackgroundColor;
     QColor mSelectionForegroundColor;

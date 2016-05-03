@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -34,12 +34,14 @@
 #if defined(DW_USE_NAMESPACES)
 namespace DwMime {
 #else
-struct DwMime {
+struct DwMime
+{
 #endif
 
 // Content transfer encoding
 
-enum {
+enum
+{
     kCteNull,
     kCteUnknown,
     kCte7bit,
@@ -53,7 +55,8 @@ enum {
 
 // Content types
 
-enum {
+enum
+{
     kTypeNull,
     kTypeUnknown,
     kTypeText,
@@ -69,7 +72,8 @@ enum {
 
 // Content subtypes
 
-enum {
+enum
+{
     kSubtypeNull,
     kSubtypeUnknown,
     // Text
@@ -119,7 +123,8 @@ enum {
 
 // Well-known header fields
 
-enum {
+enum
+{
     kFldNull,
     kFldUnknown,
     // RFC-822
@@ -176,7 +181,8 @@ enum {
 
 
 // Disposition type (Content-Disposition header field, see RFC-1806)
-enum {
+enum
+{
     kDispTypeNull,
     kDispTypeUnknown,
     kDispTypeInline,

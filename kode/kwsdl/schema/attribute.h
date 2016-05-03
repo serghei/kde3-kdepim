@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -28,23 +28,22 @@
 
 namespace Schema {
 
-class Attribute
-{
-  public:
+class Attribute {
+public:
     typedef QValueList<Attribute> List;
-    typedef QValueList<Attribute*> PtrList;
+    typedef QValueList<Attribute *> PtrList;
 
     Attribute();
 
-    Attribute( const QString &name, int type, bool qualified = false,
-               const QString &defaultValue = QString(),
-               const QString &fixedValue = QString(),
-               bool use = true );
+    Attribute(const QString &name, int type, bool qualified = false,
+              const QString &defaultValue = QString(),
+              const QString &fixedValue = QString(),
+              bool use = true);
 
     QString name() const;
     int type() const;
 
-    void setTypeName( const QString &typeName );
+    void setTypeName(const QString &typeName);
     QString typeName() const;
 
     QString defaultValue() const;
@@ -53,7 +52,7 @@ class Attribute
     bool isQualified() const;
     bool isUsed() const;
 
-  private:
+private:
     QString mName;
     int mType;
     QString mTypeName;

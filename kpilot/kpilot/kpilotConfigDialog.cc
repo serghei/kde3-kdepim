@@ -65,383 +65,388 @@
 
 /* virtual */ QString ConfigPage::maybeSaveText() const
 {
-	return i18n("<qt>The settings for configuration page <i>%1</i> have been changed. Do you "
-		"want to save the changes before continuing?</qt>").arg(this->conduitName());
+    return i18n("<qt>The settings for configuration page <i>%1</i> have been changed. Do you "
+                "want to save the changes before continuing?</qt>").arg(this->conduitName());
 }
 
-DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+DeviceConfigPage::DeviceConfigPage(QWidget *w, const char *n) : ConfigPage(w, n)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConfigWidget = new DeviceConfigWidget( w );
-	// Fill the encodings list
-	{
-		QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
-		for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it )
-		{
-			fConfigWidget->fPilotEncoding->insertItem(*it);
-		}
-	}
+    fConfigWidget = new DeviceConfigWidget(w);
+    // Fill the encodings list
+    {
+        QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
+        for(QStringList::Iterator it = l.begin(); it != l.end(); ++it)
+        {
+            fConfigWidget->fPilotEncoding->insertItem(*it);
+        }
+    }
 
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+    fConfigWidget->resize(fConfigWidget->size());
+    fWidget = fConfigWidget;
 
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-	fConfigWidget->fPilotDevice->setMaxLength(13);
+    fConfigWidget->fPilotDevice->setMaxLength(13);
 #endif
 
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fPilotDevice, SIGNAL(textChanged(const QString &)));
-	CM(fPilotSpeed, SIGNAL(activated(int)));
-	CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
-	CM(fUserName, SIGNAL(textChanged(const QString &)));
-	CM(fWorkaround, SIGNAL(activated(int)));
+    CM(fPilotDevice, SIGNAL(textChanged(const QString &)));
+    CM(fPilotSpeed, SIGNAL(activated(int)));
+    CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
+    CM(fUserName, SIGNAL(textChanged(const QString &)));
+    CM(fWorkaround, SIGNAL(activated(int)));
 #undef CM
 
-	fConduitName = i18n("Device");
+    fConduitName = i18n("Device");
 }
 
 void DeviceConfigPage::load()
 {
-	FUNCTIONSETUP;
-	KPilotSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    KPilotSettings::self()->readConfig();
 
-	/* General tab in the setup dialog */
-	fConfigWidget->fPilotDevice->setText(KPilotSettings::pilotDevice());
-	fConfigWidget->fPilotSpeed->setCurrentItem(KPilotSettings::pilotSpeed());
-	getEncoding();
-	fConfigWidget->fUserName->setText(KPilotSettings::userName());
+    /* General tab in the setup dialog */
+    fConfigWidget->fPilotDevice->setText(KPilotSettings::pilotDevice());
+    fConfigWidget->fPilotSpeed->setCurrentItem(KPilotSettings::pilotSpeed());
+    getEncoding();
+    fConfigWidget->fUserName->setText(KPilotSettings::userName());
 
-	switch(KPilotSettings::workarounds())
-	{
-	case KPilotSettings::eWorkaroundNone :
-		fConfigWidget->fWorkaround->setCurrentItem(0);
-		break;
-	case KPilotSettings::eWorkaroundUSB :
-		fConfigWidget->fWorkaround->setCurrentItem(1);
-		break;
-	default:
-		WARNINGKPILOT << "Unknown workaround number "
-			<< (int) KPilotSettings::workarounds()
-			<< endl;
-		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
-		fConfigWidget->fWorkaround->setCurrentItem(0);
-	}
-	unmodified();
+    switch(KPilotSettings::workarounds())
+    {
+        case KPilotSettings::eWorkaroundNone :
+            fConfigWidget->fWorkaround->setCurrentItem(0);
+            break;
+        case KPilotSettings::eWorkaroundUSB :
+            fConfigWidget->fWorkaround->setCurrentItem(1);
+            break;
+        default:
+            WARNINGKPILOT << "Unknown workaround number "
+                          << (int) KPilotSettings::workarounds()
+                          << endl;
+            KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+            fConfigWidget->fWorkaround->setCurrentItem(0);
+    }
+    unmodified();
 }
 
 /* virtual */ bool DeviceConfigPage::validate()
 {
-	int r = KMessageBox::Yes;
+    int r = KMessageBox::Yes;
 
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-	QString d = fConfigWidget->fPilotDevice->text();
+    QString d = fConfigWidget->fPilotDevice->text();
 
-	if (d.length() > 13)
-	{
-	r = KMessageBox::questionYesNo(
-		fConfigWidget,
-		i18n("<qt>The device name you entered (<i>%1</i>) "
-			"is longer than 13 characters. This is "
-			"probably unsupported and can cause problems. "
-			"Are you sure you want to use this device name?</qt>")
-			.arg(d),
-		i18n("Device Name too Long"), i18n("Use"), i18n("Do Not Use")
-		) ;
-	}
+    if(d.length() > 13)
+    {
+        r = KMessageBox::questionYesNo(
+                fConfigWidget,
+                i18n("<qt>The device name you entered (<i>%1</i>) "
+                     "is longer than 13 characters. This is "
+                     "probably unsupported and can cause problems. "
+                     "Are you sure you want to use this device name?</qt>")
+                .arg(d),
+                i18n("Device Name too Long"), i18n("Use"), i18n("Do Not Use")
+            ) ;
+    }
 #endif
 
-	return KMessageBox::Yes == r;
+    return KMessageBox::Yes == r;
 }
 
 /* virtual */ void DeviceConfigPage::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	// General page
-	KPilotSettings::setPilotDevice(fConfigWidget->fPilotDevice->text());
-	KPilotSettings::setPilotSpeed(fConfigWidget->fPilotSpeed->currentItem());
-	setEncoding();
-	KPilotSettings::setUserName(fConfigWidget->fUserName->text());
+    // General page
+    KPilotSettings::setPilotDevice(fConfigWidget->fPilotDevice->text());
+    KPilotSettings::setPilotSpeed(fConfigWidget->fPilotSpeed->currentItem());
+    setEncoding();
+    KPilotSettings::setUserName(fConfigWidget->fUserName->text());
 
-	switch(fConfigWidget->fWorkaround->currentItem())
-	{
-	case 0 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone); break;
-	case 1 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB); break;
-	default :
-		WARNINGKPILOT << "Unknown workaround number "
-			<< fConfigWidget->fWorkaround->currentItem()
-			<< endl;
-		KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+    switch(fConfigWidget->fWorkaround->currentItem())
+    {
+        case 0 :
+            KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
+            break;
+        case 1 :
+            KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB);
+            break;
+        default :
+            WARNINGKPILOT << "Unknown workaround number "
+                          << fConfigWidget->fWorkaround->currentItem()
+                          << endl;
+            KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone);
 
-	}
-	KPilotConfig::updateConfigVersion();
-	KPilotSettings::self()->writeConfig();
-	unmodified();
+    }
+    KPilotConfig::updateConfigVersion();
+    KPilotSettings::self()->writeConfig();
+    unmodified();
 }
 
 /* slot */ void DeviceConfigPage::changePortType(int i)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	switch (i)
-	{
-	case 0:
-		fConfigWidget->fPilotSpeed->setEnabled(true);
-		break;
-	case 1:
-	case 2:
-		fConfigWidget->fPilotSpeed->setEnabled(false);
-		break;
-	default:
-		WARNINGKPILOT << "Unknown port type " << i << endl;
-	}
+    switch(i)
+    {
+        case 0:
+            fConfigWidget->fPilotSpeed->setEnabled(true);
+            break;
+        case 1:
+        case 2:
+            fConfigWidget->fPilotSpeed->setEnabled(false);
+            break;
+        default:
+            WARNINGKPILOT << "Unknown port type " << i << endl;
+    }
 }
 
 void DeviceConfigPage::getEncoding()
 {
-	FUNCTIONSETUP;
-	QString e = KPilotSettings::encoding();
-	if (e.isEmpty())
-		fConfigWidget->fPilotEncoding->setCurrentText(CSL1("ISO8859-15"));
-	else
-		fConfigWidget->fPilotEncoding->setCurrentText(e);
+    FUNCTIONSETUP;
+    QString e = KPilotSettings::encoding();
+    if(e.isEmpty())
+        fConfigWidget->fPilotEncoding->setCurrentText(CSL1("ISO8859-15"));
+    else
+        fConfigWidget->fPilotEncoding->setCurrentText(e);
 }
 
 void DeviceConfigPage::setEncoding()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QString enc = fConfigWidget->fPilotEncoding->currentText();
-	if (enc.isEmpty())
-	{
-		WARNINGKPILOT << "Empty encoding. Will ignore it." << endl;
-	}
-	else
-	{
-		KPilotSettings::setEncoding(enc);
-	}
+    QString enc = fConfigWidget->fPilotEncoding->currentText();
+    if(enc.isEmpty())
+    {
+        WARNINGKPILOT << "Empty encoding. Will ignore it." << endl;
+    }
+    else
+    {
+        KPilotSettings::setEncoding(enc);
+    }
 }
 
-SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+SyncConfigPage::SyncConfigPage(QWidget *w, const char *n) : ConfigPage(w, n)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConfigWidget = new SyncConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+    fConfigWidget = new SyncConfigWidget(w);
+    fConfigWidget->resize(fConfigWidget->size());
+    fWidget = fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fSpecialSync, SIGNAL(activated(int)));
-	CM(fFullSyncCheck, SIGNAL(toggled(bool)));
-	CM(fScreenlockSecure, SIGNAL(toggled(bool)));
-	CM(fConflictResolution, SIGNAL(activated(int)));
+    CM(fSpecialSync, SIGNAL(activated(int)));
+    CM(fFullSyncCheck, SIGNAL(toggled(bool)));
+    CM(fScreenlockSecure, SIGNAL(toggled(bool)));
+    CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
 
-	fConduitName = i18n("HotSync");
+    fConduitName = i18n("HotSync");
 }
 
 #define MENU_ITEM_COUNT (4)
-static SyncAction::SyncMode::Mode syncTypeMap[MENU_ITEM_COUNT] = {
-	SyncAction::SyncMode::eHotSync,
-	SyncAction::SyncMode::eFullSync,
-	SyncAction::SyncMode::eCopyPCToHH,
-	SyncAction::SyncMode::eCopyHHToPC
-	} ;
+static SyncAction::SyncMode::Mode syncTypeMap[MENU_ITEM_COUNT] =
+{
+    SyncAction::SyncMode::eHotSync,
+    SyncAction::SyncMode::eFullSync,
+    SyncAction::SyncMode::eCopyPCToHH,
+    SyncAction::SyncMode::eCopyHHToPC
+} ;
 
 void SyncConfigPage::load()
 {
-	FUNCTIONSETUP;
-	KPilotSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    KPilotSettings::self()->readConfig();
 
-	/* Sync tab */
-	int synctype=KPilotSettings::syncType();
-	if (synctype<0) synctype=(int) SyncAction::SyncMode::eHotSync;
-	for (unsigned int i=0; i<MENU_ITEM_COUNT; ++i)
-	{
-		if (syncTypeMap[i] == synctype)
-		{
-			fConfigWidget->fSpecialSync->setCurrentItem(i);
-			synctype=-1;
-			break;
-		}
-	}
-	if (synctype != -1)
-	{
-		fConfigWidget->fSpecialSync->setCurrentItem(0); /* HotSync */
-	}
+    /* Sync tab */
+    int synctype = KPilotSettings::syncType();
+    if(synctype < 0) synctype = (int) SyncAction::SyncMode::eHotSync;
+    for(unsigned int i = 0; i < MENU_ITEM_COUNT; ++i)
+    {
+        if(syncTypeMap[i] == synctype)
+        {
+            fConfigWidget->fSpecialSync->setCurrentItem(i);
+            synctype = -1;
+            break;
+        }
+    }
+    if(synctype != -1)
+    {
+        fConfigWidget->fSpecialSync->setCurrentItem(0); /* HotSync */
+    }
 
-	fConfigWidget->fFullSyncCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
-	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
-	fConfigWidget->fScreenlockSecure->setChecked(KPilotSettings::screenlockSecure());
+    fConfigWidget->fFullSyncCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
+    fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
+    fConfigWidget->fScreenlockSecure->setChecked(KPilotSettings::screenlockSecure());
 
-	unmodified();
+    unmodified();
 }
 
 /* virtual */ void SyncConfigPage::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	/* Sync tab */
-	int synctype = -1;
-	unsigned int selectedsync = fConfigWidget->fSpecialSync->currentItem();
-	if (selectedsync < MENU_ITEM_COUNT)
-	{
-		synctype = syncTypeMap[selectedsync];
-	}
-	if (synctype < 0)
-	{
-		synctype = SyncAction::SyncMode::eHotSync;
-	}
+    /* Sync tab */
+    int synctype = -1;
+    unsigned int selectedsync = fConfigWidget->fSpecialSync->currentItem();
+    if(selectedsync < MENU_ITEM_COUNT)
+    {
+        synctype = syncTypeMap[selectedsync];
+    }
+    if(synctype < 0)
+    {
+        synctype = SyncAction::SyncMode::eHotSync;
+    }
 
-	KPilotSettings::setSyncType(synctype);
-	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullSyncCheck->isChecked());
-	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
-	KPilotSettings::setScreenlockSecure(fConfigWidget->fScreenlockSecure->isChecked());
+    KPilotSettings::setSyncType(synctype);
+    KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullSyncCheck->isChecked());
+    KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
+    KPilotSettings::setScreenlockSecure(fConfigWidget->fScreenlockSecure->isChecked());
 
-	KPilotConfig::updateConfigVersion();
-	KPilotSettings::self()->writeConfig();
-	unmodified();
+    KPilotConfig::updateConfigVersion();
+    KPilotSettings::self()->writeConfig();
+    unmodified();
 }
 
 
-BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+BackupConfigPage::BackupConfigPage(QWidget *w, const char *n) : ConfigPage(w, n)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConfigWidget = new BackupConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+    fConfigWidget = new BackupConfigWidget(w);
+    fConfigWidget->resize(fConfigWidget->size());
+    fWidget = fConfigWidget;
 
-	connect(fConfigWidget->fBackupOnlyChooser, SIGNAL( clicked() ),
-		SLOT( slotSelectNoBackupDBs() ) );
-	connect(fConfigWidget->fSkipDBChooser, SIGNAL(clicked()),
-		SLOT(slotSelectNoRestoreDBs()));
+    connect(fConfigWidget->fBackupOnlyChooser, SIGNAL(clicked()),
+            SLOT(slotSelectNoBackupDBs()));
+    connect(fConfigWidget->fSkipDBChooser, SIGNAL(clicked()),
+            SLOT(slotSelectNoRestoreDBs()));
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
-	CM(fSkipDB, SIGNAL(textChanged(const QString &)));
-	CM(fBackupFrequency, SIGNAL(activated(int)));
+    CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
+    CM(fSkipDB, SIGNAL(textChanged(const QString &)));
+    CM(fBackupFrequency, SIGNAL(activated(int)));
 #undef CM
 
-	fConduitName = i18n("Backup");
+    fConduitName = i18n("Backup");
 }
 
 void BackupConfigPage::load()
 {
-	FUNCTIONSETUP;
-	KPilotSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    KPilotSettings::self()->readConfig();
 
-	/* Backup tab */
-	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
-	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
-	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
+    /* Backup tab */
+    fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
+    fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
+    fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
 
-	int backupfreq=KPilotSettings::backupFrequency();
+    int backupfreq = KPilotSettings::backupFrequency();
 
-	fConfigWidget->fBackupFrequency->setCurrentItem(backupfreq);
+    fConfigWidget->fBackupFrequency->setCurrentItem(backupfreq);
 
-	unmodified();
+    unmodified();
 }
 
 /* virtual */ void BackupConfigPage::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	/* Backup tab */
-	KPilotSettings::setSkipBackupDB(
-		QStringList::split(CSL1(","),fConfigWidget->fBackupOnly->text()));
-	KPilotSettings::setSkipRestoreDB(
-		QStringList::split(CSL1(","),fConfigWidget->fSkipDB->text()));
-	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
-	KPilotSettings::setBackupFrequency(fConfigWidget->fBackupFrequency->currentItem());
+    /* Backup tab */
+    KPilotSettings::setSkipBackupDB(
+        QStringList::split(CSL1(","), fConfigWidget->fBackupOnly->text()));
+    KPilotSettings::setSkipRestoreDB(
+        QStringList::split(CSL1(","), fConfigWidget->fSkipDB->text()));
+    KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
+    KPilotSettings::setBackupFrequency(fConfigWidget->fBackupFrequency->currentItem());
 
-	KPilotConfig::updateConfigVersion();
-	KPilotSettings::self()->writeConfig();
-	unmodified();
+    KPilotConfig::updateConfigVersion();
+    KPilotSettings::self()->writeConfig();
+    unmodified();
 }
 
 void BackupConfigPage::slotSelectNoBackupDBs()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fBackupOnly->text() ));
+    QStringList selectedDBs(QStringList::split(',', fConfigWidget->fBackupOnly->text()));
 
-	QStringList deviceDBs=KPilotSettings::deviceDBs();
-	QStringList addedDBs=KPilotSettings::addedDBs();
-	KPilotDBSelectionDialog*dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoBackupDBs");
-	if (dlg && (dlg->exec()==QDialog::Accepted) )
-	{
-		fConfigWidget->fBackupOnly->setText(
-			dlg->getSelectedDBs().join(CSL1(",")));
-		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
-	}
-	KPILOT_DELETE(dlg);
+    QStringList deviceDBs = KPilotSettings::deviceDBs();
+    QStringList addedDBs = KPilotSettings::addedDBs();
+    KPilotDBSelectionDialog *dlg = new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoBackupDBs");
+    if(dlg && (dlg->exec() == QDialog::Accepted))
+    {
+        fConfigWidget->fBackupOnly->setText(
+            dlg->getSelectedDBs().join(CSL1(",")));
+        KPilotSettings::setAddedDBs(dlg->getAddedDBs());
+    }
+    KPILOT_DELETE(dlg);
 }
 
 void BackupConfigPage::slotSelectNoRestoreDBs()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fSkipDB->text() ));
+    QStringList selectedDBs(QStringList::split(',', fConfigWidget->fSkipDB->text()));
 
-	QStringList deviceDBs=KPilotSettings::deviceDBs();
-	QStringList addedDBs=KPilotSettings::addedDBs();
-	KPilotDBSelectionDialog*dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoRestoreDBs");
-	if (dlg && (dlg->exec()==QDialog::Accepted) )
-	{
-		fConfigWidget->fSkipDB->setText(
-			dlg->getSelectedDBs().join(CSL1(",")));
-		KPilotSettings::setAddedDBs( dlg->getAddedDBs() );
-	}
-	KPILOT_DELETE(dlg);
+    QStringList deviceDBs = KPilotSettings::deviceDBs();
+    QStringList addedDBs = KPilotSettings::addedDBs();
+    KPilotDBSelectionDialog *dlg = new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, 0, "NoRestoreDBs");
+    if(dlg && (dlg->exec() == QDialog::Accepted))
+    {
+        fConfigWidget->fSkipDB->setText(
+            dlg->getSelectedDBs().join(CSL1(",")));
+        KPilotSettings::setAddedDBs(dlg->getAddedDBs());
+    }
+    KPILOT_DELETE(dlg);
 }
 
 
 
-ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+ViewersConfigPage::ViewersConfigPage(QWidget *w, const char *n) : ConfigPage(w, n)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConfigWidget = new ViewersConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+    fConfigWidget = new ViewersConfigWidget(w);
+    fConfigWidget->resize(fConfigWidget->size());
+    fWidget = fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fInternalEditors, SIGNAL(toggled(bool)));
-	CM(fUseSecret, SIGNAL(toggled(bool)));
-	CM(fAddressGroup, SIGNAL(clicked(int)));
-	CM(fUseKeyField, SIGNAL(toggled(bool)));
+    CM(fInternalEditors, SIGNAL(toggled(bool)));
+    CM(fUseSecret, SIGNAL(toggled(bool)));
+    CM(fAddressGroup, SIGNAL(clicked(int)));
+    CM(fUseKeyField, SIGNAL(toggled(bool)));
 #undef CM
 
-	fConduitName = i18n("Viewers");
+    fConduitName = i18n("Viewers");
 }
 
 void ViewersConfigPage::load()
 {
-	FUNCTIONSETUP;
-	KPilotSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    KPilotSettings::self()->readConfig();
 
-	fConfigWidget->fInternalEditors->setChecked( false /* KPilotSettings::internalEditors() */ );
-	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
-	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
-	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
-	unmodified();
+    fConfigWidget->fInternalEditors->setChecked(false /* KPilotSettings::internalEditors() */);
+    fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
+    fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
+    fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
+    unmodified();
 }
 
 /* virtual */ void ViewersConfigPage::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	KPilotSettings::setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
-	KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
-	KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
-		fConfigWidget->fAddressGroup->selected()));
-	KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
-	KPilotConfig::updateConfigVersion();
-	KPilotSettings::self()->writeConfig();
-	unmodified();
+    KPilotSettings::setInternalEditors(fConfigWidget->fInternalEditors->isChecked());
+    KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
+    KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
+            fConfigWidget->fAddressGroup->selected()));
+    KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
+    KPilotConfig::updateConfigVersion();
+    KPilotSettings::self()->writeConfig();
+    unmodified();
 }
 
 
@@ -452,77 +457,77 @@ void ViewersConfigPage::load()
 
 
 
-StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
+StartExitConfigPage::StartExitConfigPage(QWidget *w, const char *n) : ConfigPage(w, n)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConfigWidget = new StartExitConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->size());
-	fWidget = fConfigWidget;
+    fConfigWidget = new StartExitConfigWidget(w);
+    fConfigWidget->resize(fConfigWidget->size());
+    fWidget = fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fStartDaemonAtLogin, SIGNAL(toggled(bool)));
-	CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
-	CM(fDockDaemon, SIGNAL(toggled(bool)));
-	CM(fQuitAfterSync, SIGNAL(toggled(bool)));
+    CM(fStartDaemonAtLogin, SIGNAL(toggled(bool)));
+    CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
+    CM(fDockDaemon, SIGNAL(toggled(bool)));
+    CM(fQuitAfterSync, SIGNAL(toggled(bool)));
 #undef CM
 
-	fConduitName = i18n("Startup and Exit");
+    fConduitName = i18n("Startup and Exit");
 }
 
 void StartExitConfigPage::load()
 {
-	FUNCTIONSETUP;
-	KPilotSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    KPilotSettings::self()->readConfig();
 
-	fConfigWidget->fStartDaemonAtLogin->setChecked(KPilotSettings::startDaemonAtLogin());
-	fConfigWidget->fDockDaemon->setChecked(KPilotSettings::dockDaemon());
-	fConfigWidget->fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
-	fConfigWidget->fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
-	unmodified();
+    fConfigWidget->fStartDaemonAtLogin->setChecked(KPilotSettings::startDaemonAtLogin());
+    fConfigWidget->fDockDaemon->setChecked(KPilotSettings::dockDaemon());
+    fConfigWidget->fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
+    fConfigWidget->fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
+    unmodified();
 }
 
 
 /* virtual */ void StartExitConfigPage::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QString autostart = KGlobalSettings::autostartPath();
-	QString desktopfile = CSL1("kpilotdaemon.desktop");
-	QString desktopcategory = CSL1("kde/");
-	QString location = KGlobal::dirs()->findResource("xdgdata-apps",desktopcategory + desktopfile);
-	if (location.isEmpty()) // Fallback to KDE 3.0?
-	{
-		location = KGlobal::dirs()->findResource("apps",desktopfile);
-	}
+    QString autostart = KGlobalSettings::autostartPath();
+    QString desktopfile = CSL1("kpilotdaemon.desktop");
+    QString desktopcategory = CSL1("kde/");
+    QString location = KGlobal::dirs()->findResource("xdgdata-apps", desktopcategory + desktopfile);
+    if(location.isEmpty())  // Fallback to KDE 3.0?
+    {
+        location = KGlobal::dirs()->findResource("apps", desktopfile);
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Autostart=" << autostart << endl;
-	DEBUGKPILOT << fname << ": desktop=" << desktopfile << endl;
-	DEBUGKPILOT << fname << ": location=" << location << endl;
+    DEBUGKPILOT << fname << ": Autostart=" << autostart << endl;
+    DEBUGKPILOT << fname << ": desktop=" << desktopfile << endl;
+    DEBUGKPILOT << fname << ": location=" << location << endl;
 #endif
 
-	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
-	if (KPilotSettings::startDaemonAtLogin())
-	{
-		if (!location.isEmpty())
-		{
-			KURL src;
-			src.setPath(location);
-			KURL dst;
-			dst.setPath(autostart+desktopfile);
-			KIO::NetAccess::file_copy(src,dst,-1 /* 0666? */,true /* overwrite */);
-		}
-	}
-	else
-	{
-		QFile::remove(autostart+desktopfile);
-	}
-	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
-	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
-	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
-	KPilotConfig::updateConfigVersion();
-	KPilotSettings::self()->writeConfig();
-	unmodified();
+    KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());
+    if(KPilotSettings::startDaemonAtLogin())
+    {
+        if(!location.isEmpty())
+        {
+            KURL src;
+            src.setPath(location);
+            KURL dst;
+            dst.setPath(autostart + desktopfile);
+            KIO::NetAccess::file_copy(src, dst, -1 /* 0666? */, true /* overwrite */);
+        }
+    }
+    else
+    {
+        QFile::remove(autostart + desktopfile);
+    }
+    KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
+    KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
+    KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
+    KPilotConfig::updateConfigVersion();
+    KPilotSettings::self()->writeConfig();
+    unmodified();
 }
 

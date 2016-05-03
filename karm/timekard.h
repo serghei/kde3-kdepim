@@ -43,9 +43,8 @@ class TaskView;
  *  day of the week should be read from the KControlPanel.  Currently, it is
  *  hardcoded to Sunday.
  */
-class Week
-{
-  public:
+class Week {
+public:
     /** Need an empty constructor to use in a QValueList. */
     Week();
     Week(QDate from);
@@ -63,8 +62,8 @@ class Week
      * days, one being a Sunday and the other being a Monday, you will get two
      * weeks back in the list.
      */
-    static QValueList<Week> weeksFromDateRange(const QDate& from,
-        const QDate& to);
+    static QValueList<Week> weeksFromDateRange(const QDate &from,
+            const QDate &to);
 
     /**
      *  Return the name of the week.
@@ -75,16 +74,15 @@ class Week
     QString name() const;
 
 
-  private:
+private:
     QDate _start;
 };
 
 /**
  *  Routines to output timecard data.
  */
-class TimeKard
-{
-  public:
+class TimeKard {
+public:
     TimeKard() {};
 
     enum WhichTime { TotalTime, SessionTime };
@@ -101,29 +99,29 @@ class TimeKard
      * print the task subtree for a root task and when they want to print
      * all tasks.
      */
-    QString totalsAsText(TaskView* taskview, bool justThisTask, WhichTime which);
+    QString totalsAsText(TaskView *taskview, bool justThisTask, WhichTime which);
 
     /**
      * Generates ascii text of weekly task history, for current task on down.
      *
      * Formatted for pasting into clipboard.
      */
-    QString historyAsText(TaskView* taskview, const QDate& from,
-        const QDate& to, bool justThisTask, bool perWeek, bool totalsOnly);
+    QString historyAsText(TaskView *taskview, const QDate &from,
+                          const QDate &to, bool justThisTask, bool perWeek, bool totalsOnly);
 
 private:
     void printTask(Task *t, QString &s, int level, WhichTime which);
 
-    void printTaskHistory(const Task *t, const QMap<QString, long>& datamap,
-                          QMap<QString, long>& daytotals,
-                          const QDate& from, const QDate& to,
-                          const int level, QString& retval, bool totalsOnly);
+    void printTaskHistory(const Task *t, const QMap<QString, long> &datamap,
+                          QMap<QString, long> &daytotals,
+                          const QDate &from, const QDate &to,
+                          const int level, QString &retval, bool totalsOnly);
 
-    QString sectionHistoryAsText(TaskView* taskview,
-                                 const QDate& sectionFrom, const QDate& sectionTo,
-                                 const QDate& from, const QDate& to,
-                                 const QString& name,
+    QString sectionHistoryAsText(TaskView *taskview,
+                                 const QDate &sectionFrom, const QDate &sectionTo,
+                                 const QDate &from, const QDate &to,
+                                 const QString &name,
                                  bool justThisTask, bool totalsOnly);
 
-  };
+};
 #endif // KARM_TIMEKARD_H

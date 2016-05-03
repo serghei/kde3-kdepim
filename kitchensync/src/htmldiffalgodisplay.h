@@ -29,21 +29,20 @@ using namespace KPIM;
 
 namespace KSync {
 
-class HTMLDiffAlgoDisplay : virtual public DiffAlgoDisplay, public KTextBrowser
-{
-  public:
-    HTMLDiffAlgoDisplay( QWidget *parent );
+class HTMLDiffAlgoDisplay : virtual public DiffAlgoDisplay, public KTextBrowser {
+public:
+    HTMLDiffAlgoDisplay(QWidget *parent);
 
     void begin();
     void end();
-    void setLeftSourceTitle( const QString &title );
-    void setRightSourceTitle( const QString &title );
-    void additionalLeftField( const QString &id, const QString &value );
-    void additionalRightField( const QString &id, const QString &value );
-    void conflictField( const QString &id, const QString &leftValue,
-                        const QString &rightValue );
+    void setLeftSourceTitle(const QString &title);
+    void setRightSourceTitle(const QString &title);
+    void additionalLeftField(const QString &id, const QString &value);
+    void additionalRightField(const QString &id, const QString &value);
+    void conflictField(const QString &id, const QString &leftValue,
+                       const QString &rightValue);
 
-  private:
+private:
     QString mLeftTitle;
     QString mRightTitle;
     QString mText;

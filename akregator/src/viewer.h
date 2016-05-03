@@ -29,94 +29,91 @@
 
 class KURL;
 
-namespace KIO
-{
-    class MetaData;
+namespace KIO {
+class MetaData;
 }
 
-namespace Akregator
-{
-    class Viewer : public KHTMLPart
-    {
-        Q_OBJECT
-        public:
+namespace Akregator {
+class Viewer : public KHTMLPart {
+    Q_OBJECT
+public:
 
-           /**
-            * Display article in external browser.
-            */
-            static void displayInExternalBrowser(const KURL &url, const QString& mimetype=QString::null);    
+    /**
+     * Display article in external browser.
+     */
+    static void displayInExternalBrowser(const KURL &url, const QString &mimetype = QString::null);
 
-            Viewer(QWidget* parent, const char* name);
-            virtual ~Viewer();
+    Viewer(QWidget *parent, const char *name);
+    virtual ~Viewer();
 
-            virtual bool closeURL();
-        
-            
-        public slots:
-            
-            void slotScrollUp(); 
-            void slotScrollDown();
-            void slotZoomIn();
-            void slotZoomOut();
-            void slotSetZoomFactor(int percent);
-            void slotPrint();
-            void setSafeMode();
+    virtual bool closeURL();
 
-            virtual void slotPaletteOrFontChanged() = 0;
-        
-        signals:
-            /** This gets emitted when url gets clicked */
-            void urlClicked(const KURL& url, Viewer* viewer, bool newTab, bool background);
 
-            protected: // methods
-            int pointsToPixel(int points) const;
+public slots:
 
-        protected slots:
-        
-            // FIXME: Sort out how things are supposed to work and clean up the following slots
+    void slotScrollUp();
+    void slotScrollDown();
+    void slotZoomIn();
+    void slotZoomOut();
+    void slotSetZoomFactor(int percent);
+    void slotPrint();
+    void setSafeMode();
 
-            /** reimplemented to handle url selection according to the settings for LMB and MMB */
-            virtual void urlSelected(const QString &url, int button, int state, const QString &_target, KParts::URLArgs args);
+    virtual void slotPaletteOrFontChanged() = 0;
 
-            /** slot for handling openURLRequestDelayed() signal from the browserextension. Handles POST requests (for forms) only, other link handling goes to urlSelected(). Does nothing in Viewer, reimplemented in PageViewer to make forms working */
-            virtual void slotOpenURLRequest(const KURL& url, const KParts::URLArgs& args);
+signals:
+    /** This gets emitted when url gets clicked */
+    void urlClicked(const KURL &url, Viewer *viewer, bool newTab, bool background);
 
-            virtual void slotPopupMenu(KXMLGUIClient*, const QPoint&, const KURL&, const KParts::URLArgs&, KParts::BrowserExtension::PopupFlags, mode_t);
+protected: // methods
+    int pointsToPixel(int points) const;
 
-            /** Copies current link to clipboard. */
-            void slotCopyLinkAddress();
+protected slots:
 
-            /** Copies currently selected text to clipboard */
-            virtual void slotCopy();
+    // FIXME: Sort out how things are supposed to work and clean up the following slots
 
-            /** Opens @c m_url inside this viewer */
-            virtual void slotOpenLinkInternal();
+    /** reimplemented to handle url selection according to the settings for LMB and MMB */
+    virtual void urlSelected(const QString &url, int button, int state, const QString &_target, KParts::URLArgs args);
 
-            /** Opens @c m_url in external viewer, eg. Konqueror */
-            virtual void slotOpenLinkInBrowser();
+    /** slot for handling openURLRequestDelayed() signal from the browserextension. Handles POST requests (for forms) only, other link handling goes to urlSelected(). Does nothing in Viewer, reimplemented in PageViewer to make forms working */
+    virtual void slotOpenURLRequest(const KURL &url, const KParts::URLArgs &args);
 
-            /** Opens @c m_url in foreground tab */
-            virtual void slotOpenLinkInForegroundTab();
+    virtual void slotPopupMenu(KXMLGUIClient *, const QPoint &, const KURL &, const KParts::URLArgs &, KParts::BrowserExtension::PopupFlags, mode_t);
 
-            /** Opens @c m_url in background tab */
-            virtual void slotOpenLinkInBackgroundTab();
-            
-            virtual void slotOpenLinkInThisTab();
+    /** Copies current link to clipboard. */
+    void slotCopyLinkAddress();
 
-            virtual void slotSaveLinkAs();
+    /** Copies currently selected text to clipboard */
+    virtual void slotCopy();
 
-            /** This changes cursor to wait cursor */
-            void slotStarted(KIO::Job *);
+    /** Opens @c m_url inside this viewer */
+    virtual void slotOpenLinkInternal();
 
-            /** This reverts cursor back to normal one */
-            void slotCompleted();
+    /** Opens @c m_url in external viewer, eg. Konqueror */
+    virtual void slotOpenLinkInBrowser();
 
-            virtual void slotSelectionChanged();
+    /** Opens @c m_url in foreground tab */
+    virtual void slotOpenLinkInForegroundTab();
 
-        protected: // attributes
-            KURL m_url;
-            
-    };
+    /** Opens @c m_url in background tab */
+    virtual void slotOpenLinkInBackgroundTab();
+
+    virtual void slotOpenLinkInThisTab();
+
+    virtual void slotSaveLinkAs();
+
+    /** This changes cursor to wait cursor */
+    void slotStarted(KIO::Job *);
+
+    /** This reverts cursor back to normal one */
+    void slotCompleted();
+
+    virtual void slotSelectionChanged();
+
+protected: // attributes
+    KURL m_url;
+
+};
 }
 
 #endif // VIEWER_H

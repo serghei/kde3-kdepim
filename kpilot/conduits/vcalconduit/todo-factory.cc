@@ -34,13 +34,12 @@
 #include "todo-setup.h"
 #include "todo-conduit.h"
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_todo()
-{
-	return new ConduitFactory<ToDoWidgetSetup,TodoConduit>;
-}
+    void *init_conduit_todo()
+    {
+        return new ConduitFactory<ToDoWidgetSetup, TodoConduit>;
+    }
 
 }
 

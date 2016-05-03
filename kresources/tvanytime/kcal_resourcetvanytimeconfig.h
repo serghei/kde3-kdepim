@@ -38,17 +38,16 @@ class ResourceCachedSaveConfig;
   Configuration widget for TVAnytime resource.
   @see KCal::ResourceTVAnytime
 */
-class KDE_EXPORT ResourceTVAnytimeConfig : public KRES::ConfigWidget
-{
-Q_OBJECT
-  public:
-    ResourceTVAnytimeConfig( QWidget *parent = 0, const char *name = 0 );
+class KDE_EXPORT ResourceTVAnytimeConfig : public KRES::ConfigWidget {
+    Q_OBJECT
+public:
+    ResourceTVAnytimeConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource );
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  private:
+private:
     KLineEdit *mUrl;
     QSpinBox *mDays;
     ResourceCachedReloadConfig *mReloadConfig;

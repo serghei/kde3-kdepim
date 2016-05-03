@@ -1,19 +1,19 @@
 /* conversion.c - String conversion helper functions.
    Copyright (C) 2000 Werner Koch (dd9jn)
    Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
- 
+
    This file is part of GPGME.
 
    GPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as
    published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
-   
+
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
-   
+
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -42,27 +42,27 @@
    represent.  Returns -1 if one of the characters is not a
    hexadecimal digit.  */
 int
-_gpgme_hextobyte (const char *str)
+_gpgme_hextobyte(const char *str)
 {
-  int val = 0;
-  int i;
+    int val = 0;
+    int i;
 
 #define NROFHEXDIGITS 2
-  for (i = 0; i < NROFHEXDIGITS; i++)
+    for(i = 0; i < NROFHEXDIGITS; i++)
     {
-      if (*str >= '0' && *str <= '9')
-	val += *str - '0';
-      else if (*str >= 'A' && *str <= 'F')
-	val += 10 + *str - 'A';
-      else if (*str >= 'a' && *str <= 'f')
-	val += 10 + *str - 'a';
-      else
-	return -1;
-      if (i < NROFHEXDIGITS - 1)
-	val *= 16;
-      str++;
+        if(*str >= '0' && *str <= '9')
+            val += *str - '0';
+        else if(*str >= 'A' && *str <= 'F')
+            val += 10 + *str - 'A';
+        else if(*str >= 'a' && *str <= 'f')
+            val += 10 + *str - 'a';
+        else
+            return -1;
+        if(i < NROFHEXDIGITS - 1)
+            val *= 16;
+        str++;
     }
-  return val;
+    return val;
 }
 
 
@@ -73,99 +73,99 @@ _gpgme_hextobyte (const char *str)
    is desired or not, the caller is expected to make sure that *DESTP
    is large enough if LEN is not zero.  */
 gpgme_error_t
-_gpgme_decode_c_string (const char *src, char **destp, size_t len)
+_gpgme_decode_c_string(const char *src, char **destp, size_t len)
 {
-  char *dest;
+    char *dest;
 
-  /* Set up the destination buffer.  */
-  if (len)
+    /* Set up the destination buffer.  */
+    if(len)
     {
-      if (len < strlen (src) + 1)
-	return gpg_error (GPG_ERR_INTERNAL);
+        if(len < strlen(src) + 1)
+            return gpg_error(GPG_ERR_INTERNAL);
 
-      dest = *destp;
+        dest = *destp;
     }
-  else
+    else
     {
-      /* The converted string will never be larger than the original
-	 string.  */
-      dest = malloc (strlen (src) + 1);
-      if (!dest)
-	return gpg_error_from_errno (errno);
+        /* The converted string will never be larger than the original
+        string.  */
+        dest = malloc(strlen(src) + 1);
+        if(!dest)
+            return gpg_error_from_errno(errno);
 
-      *destp = dest;
+        *destp = dest;
     }
 
-  /* Convert the string.  */
-  while (*src)
+    /* Convert the string.  */
+    while(*src)
     {
-      if (*src != '\\')
-	{
-	  *(dest++) = *(src++);
-	  continue;
-	}
+        if(*src != '\\')
+        {
+            *(dest++) = *(src++);
+            continue;
+        }
 
-      switch (src[1])
-	{
+        switch(src[1])
+        {
 #define DECODE_ONE(match,result)	\
 	case match:			\
 	  src += 2;			\
 	  *(dest++) = result;		\
 	  break;
 
-	  DECODE_ONE ('\'', '\'');
-	  DECODE_ONE ('\"', '\"');
-	  DECODE_ONE ('\?', '\?');
-	  DECODE_ONE ('\\', '\\');
-	  DECODE_ONE ('a', '\a');
-	  DECODE_ONE ('b', '\b');
-	  DECODE_ONE ('f', '\f');
-	  DECODE_ONE ('n', '\n');
-	  DECODE_ONE ('r', '\r');
-	  DECODE_ONE ('t', '\t');
-	  DECODE_ONE ('v', '\v');
+                DECODE_ONE('\'', '\'');
+                DECODE_ONE('\"', '\"');
+                DECODE_ONE('\?', '\?');
+                DECODE_ONE('\\', '\\');
+                DECODE_ONE('a', '\a');
+                DECODE_ONE('b', '\b');
+                DECODE_ONE('f', '\f');
+                DECODE_ONE('n', '\n');
+                DECODE_ONE('r', '\r');
+                DECODE_ONE('t', '\t');
+                DECODE_ONE('v', '\v');
 
-	case 'x':
-	  {
-	    int val = _gpgme_hextobyte (&src[2]);
+            case 'x':
+            {
+                int val = _gpgme_hextobyte(&src[2]);
 
-	    if (val == -1)
-	      {
-		/* Should not happen.  */
-		*(dest++) = *(src++);
-		*(dest++) = *(src++);
-		if (*src)
-		  *(dest++) = *(src++);
-		if (*src)
-		  *(dest++) = *(src++);
-	      }
-	    else
-	      {
-		if (!val)
-		  {
-		    /* A binary zero is not representable in a C
-		       string.  */
-		    *(dest++) = '\\';
-		    *(dest++) = '0'; 
-		  }
-		else 
-		  *((unsigned char *) dest++) = val;
-		src += 4;
-	      }
-	  }
-	  break;
+                if(val == -1)
+                {
+                    /* Should not happen.  */
+                    *(dest++) = *(src++);
+                    *(dest++) = *(src++);
+                    if(*src)
+                        *(dest++) = *(src++);
+                    if(*src)
+                        *(dest++) = *(src++);
+                }
+                else
+                {
+                    if(!val)
+                    {
+                        /* A binary zero is not representable in a C
+                           string.  */
+                        *(dest++) = '\\';
+                        *(dest++) = '0';
+                    }
+                    else
+                        *((unsigned char *) dest++) = val;
+                    src += 4;
+                }
+            }
+            break;
 
-	default:
-	  {
-	    /* Should not happen.  */
-	    *(dest++) = *(src++);
-	    *(dest++) = *(src++);
-	  }
-        } 
+            default:
+            {
+                /* Should not happen.  */
+                *(dest++) = *(src++);
+                *(dest++) = *(src++);
+            }
+        }
     }
-  *(dest++) = 0;
+    *(dest++) = 0;
 
-  return 0;
+    return 0;
 }
 
 
@@ -177,69 +177,69 @@ _gpgme_decode_c_string (const char *src, char **destp, size_t len)
    is large enough if LEN is not zero.  If BINARY is 1, then '\0'
    characters are allowed in the output.  */
 gpgme_error_t
-_gpgme_decode_percent_string (const char *src, char **destp, size_t len,
-			      int binary)
+_gpgme_decode_percent_string(const char *src, char **destp, size_t len,
+                             int binary)
 {
-  char *dest;
+    char *dest;
 
-  /* Set up the destination buffer.  */
-  if (len)
+    /* Set up the destination buffer.  */
+    if(len)
     {
-      if (len < strlen (src) + 1)
-	return gpg_error (GPG_ERR_INTERNAL);
+        if(len < strlen(src) + 1)
+            return gpg_error(GPG_ERR_INTERNAL);
 
-      dest = *destp;
+        dest = *destp;
     }
-  else
+    else
     {
-      /* The converted string will never be larger than the original
-	 string.  */
-      dest = malloc (strlen (src) + 1);
-      if (!dest)
-	return gpg_error_from_errno (errno);
+        /* The converted string will never be larger than the original
+        string.  */
+        dest = malloc(strlen(src) + 1);
+        if(!dest)
+            return gpg_error_from_errno(errno);
 
-      *destp = dest;
+        *destp = dest;
     }
 
-  /* Convert the string.  */
-  while (*src)
+    /* Convert the string.  */
+    while(*src)
     {
-      if (*src != '%')
-	{
-	  *(dest++) = *(src++);
-	  continue;
-	}
-      else
-	{
-	  int val = _gpgme_hextobyte (&src[1]);
-	  
-	  if (val == -1)
-	    {
-	      /* Should not happen.  */
-	      *(dest++) = *(src++);
-	      if (*src)
-		*(dest++) = *(src++);
-	      if (*src)
-		*(dest++) = *(src++);
-	    }
-	  else
-	    {
-	      if (!val && !binary)
-		{
-		  /* A binary zero is not representable in a C
-		     string.  */
-		  *(dest++) = '\\';
-		  *(dest++) = '0'; 
-		}
-	      else 
-		*((unsigned char *) dest++) = val;
-	      src += 3;
-	    }
-	}
-    }
-  *(dest++) = 0;
+        if(*src != '%')
+        {
+            *(dest++) = *(src++);
+            continue;
+        }
+        else
+        {
+            int val = _gpgme_hextobyte(&src[1]);
 
-  return 0;
+            if(val == -1)
+            {
+                /* Should not happen.  */
+                *(dest++) = *(src++);
+                if(*src)
+                    *(dest++) = *(src++);
+                if(*src)
+                    *(dest++) = *(src++);
+            }
+            else
+            {
+                if(!val && !binary)
+                {
+                    /* A binary zero is not representable in a C
+                       string.  */
+                    *(dest++) = '\\';
+                    *(dest++) = '0';
+                }
+                else
+                    *((unsigned char *) dest++) = val;
+                src += 3;
+            }
+        }
+    }
+    *(dest++) = 0;
+
+    return 0;
 }
 
 
@@ -249,56 +249,56 @@ _gpgme_decode_percent_string (const char *src, char **destp, size_t len,
    Epoch. Leading spaces are skipped. If ENDP is not NULL, it will
    point to the next non-parsed character in TIMESTRING. */
 time_t
-_gpgme_parse_timestamp (const char *timestamp, char **endp)
+_gpgme_parse_timestamp(const char *timestamp, char **endp)
 {
-  /* Need to skip leading spaces, because that is what strtoul does
-     but not our ISO 8601 checking code. */
-  while (*timestamp && *timestamp== ' ')
-    timestamp++;
-  if (!*timestamp)
-    return 0;
+    /* Need to skip leading spaces, because that is what strtoul does
+       but not our ISO 8601 checking code. */
+    while(*timestamp && *timestamp == ' ')
+        timestamp++;
+    if(!*timestamp)
+        return 0;
 
-  if (strlen (timestamp) >= 15 && timestamp[8] == 'T')
+    if(strlen(timestamp) >= 15 && timestamp[8] == 'T')
     {
-      struct tm buf;
-      int year;
+        struct tm buf;
+        int year;
 
-      year = atoi_4 (timestamp);
-      if (year < 1900)
-        return (time_t)(-1);
+        year = atoi_4(timestamp);
+        if(year < 1900)
+            return (time_t)(-1);
 
-      /* Fixme: We would better use a configure test to see whether
-         mktime can handle dates beyond 2038. */
-      if (sizeof (time_t) <= 4 && year >= 2038)
-        return (time_t)2145914603; /* 2037-12-31 23:23:23 */
+        /* Fixme: We would better use a configure test to see whether
+           mktime can handle dates beyond 2038. */
+        if(sizeof(time_t) <= 4 && year >= 2038)
+            return (time_t)2145914603; /* 2037-12-31 23:23:23 */
 
-      memset (&buf, 0, sizeof buf);
-      buf.tm_year = year - 1900;
-      buf.tm_mon = atoi_2 (timestamp+4) - 1; 
-      buf.tm_mday = atoi_2 (timestamp+6);
-      buf.tm_hour = atoi_2 (timestamp+9);
-      buf.tm_min = atoi_2 (timestamp+11);
-      buf.tm_sec = atoi_2 (timestamp+13);
+        memset(&buf, 0, sizeof buf);
+        buf.tm_year = year - 1900;
+        buf.tm_mon = atoi_2(timestamp + 4) - 1;
+        buf.tm_mday = atoi_2(timestamp + 6);
+        buf.tm_hour = atoi_2(timestamp + 9);
+        buf.tm_min = atoi_2(timestamp + 11);
+        buf.tm_sec = atoi_2(timestamp + 13);
 
-      if (endp)
-        *endp = (char*)(timestamp + 15);
+        if(endp)
+            *endp = (char *)(timestamp + 15);
 #ifdef HAVE_TIMEGM
-      return timegm (&buf);
+        return timegm(&buf);
 #else
-      {
-        time_t tim;
-        
-        putenv ("TZ=UTC");
-        tim = mktime (&buf);
+        {
+            time_t tim;
+
+            putenv("TZ=UTC");
+            tim = mktime(&buf);
 #ifdef __GNUC__
 #warning fixme: we must somehow reset TZ here.  It is not threadsafe anyway.
 #endif
-        return tim;
-      }
+            return tim;
+        }
 #endif /* !HAVE_TIMEGM */
     }
-  else
-    return (time_t)strtoul (timestamp, endp, 10);
+    else
+        return (time_t)strtoul(timestamp, endp, 10);
 }
 
 
@@ -306,10 +306,10 @@ _gpgme_parse_timestamp (const char *timestamp, char **endp)
 
 static struct
 {
-  char *name;
-  gpgme_error_t err;
+    char *name;
+    gpgme_error_t err;
 } gnupg_errors[] =
-  {
+{
     { "EOF", GPG_ERR_EOF },
     { "No_Error", GPG_ERR_NO_ERROR },
     { "General_Error", GPG_ERR_GENERAL },
@@ -388,27 +388,27 @@ static struct
     { "Card_Not_Initialized", GPG_ERR_CARD_NOT_INITIALIZED },
     { "Unsupported_Operation", GPG_ERR_UNSUPPORTED_OPERATION },
     { "Wrong_Key_Usage", GPG_ERR_WRONG_KEY_USAGE }
-  };
-    
+};
+
 
 gpgme_error_t
-_gpgme_map_gnupg_error (char *err)
+_gpgme_map_gnupg_error(char *err)
 {
-  unsigned int i;
+    unsigned int i;
 
-  /* Future version of GnuPG might return the error code directly, so
-     we first test for a a numerical value and use that verbatim.
-     Note that this numerical value might be followed by an
-     underschore and the textual representation of the error code. */
-  if (*err >= '0' && *err <= '9')
-    return strtoul (err, NULL, 10);
+    /* Future version of GnuPG might return the error code directly, so
+       we first test for a a numerical value and use that verbatim.
+       Note that this numerical value might be followed by an
+       underschore and the textual representation of the error code. */
+    if(*err >= '0' && *err <= '9')
+        return strtoul(err, NULL, 10);
 
-  /* Well, this is a token, use the mapping table to get the error.
-     The drawback is that we won't receive an error source and have to
-     use GPG as source. */
-  for (i = 0; i < DIM (gnupg_errors); i++)
-    if (!strcmp (gnupg_errors[i].name, err))
-      return gpg_err_make (GPG_ERR_SOURCE_GPG, gnupg_errors[i].err);
+    /* Well, this is a token, use the mapping table to get the error.
+       The drawback is that we won't receive an error source and have to
+       use GPG as source. */
+    for(i = 0; i < DIM(gnupg_errors); i++)
+        if(!strcmp(gnupg_errors[i].name, err))
+            return gpg_err_make(GPG_ERR_SOURCE_GPG, gnupg_errors[i].err);
 
-  return gpg_err_make (GPG_ERR_SOURCE_GPG, GPG_ERR_GENERAL);
+    return gpg_err_make(GPG_ERR_SOURCE_GPG, GPG_ERR_GENERAL);
 }

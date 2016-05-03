@@ -23,19 +23,18 @@
 namespace KPIM {
 namespace ThreadWeaver {
 
-    /** A WeaverThreadLogger may be attached to a Weaver to gain debug
-       information about thread execution.  */
-    class KDE_EXPORT WeaverThreadLogger : public WeaverExtension
-    {
-        Q_OBJECT
-    public:
-        WeaverThreadLogger( QObject *parent = 0, const char *name = 0);
-        ~WeaverThreadLogger();
-        void threadCreated (Thread *);
-        void threadDestroyed (Thread *);
-        void threadBusy (Thread *);
-        void threadSuspended (Thread *);
-    };
+/** A WeaverThreadLogger may be attached to a Weaver to gain debug
+   information about thread execution.  */
+class KDE_EXPORT WeaverThreadLogger : public WeaverExtension {
+    Q_OBJECT
+public:
+    WeaverThreadLogger(QObject *parent = 0, const char *name = 0);
+    ~WeaverThreadLogger();
+    void threadCreated(Thread *);
+    void threadDestroyed(Thread *);
+    void threadBusy(Thread *);
+    void threadSuspended(Thread *);
+};
 
 }
 }

@@ -34,35 +34,36 @@
 class KInstance;
 class KAboutData;
 
-class KNotesConduitFactory : public KLibFactory
-{
-Q_OBJECT
+class KNotesConduitFactory : public KLibFactory {
+    Q_OBJECT
 
 public:
-	KNotesConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~KNotesConduitFactory();
+    KNotesConduitFactory(QObject * = 0L, const char * = 0L);
+    virtual ~KNotesConduitFactory();
 
-	static KAboutData *about() { return fAbout; } ;
+    static KAboutData *about()
+    {
+        return fAbout;
+    } ;
 
-	// The KNotes instance, unlike previous conduits (alphabetically)
-	// has const char * const members. The extra const prevents people
-	// from assigning to this variable, so you have to work hard to
-	// break its value. We store group and entry keys in here.
+    // The KNotes instance, unlike previous conduits (alphabetically)
+    // has const char * const members. The extra const prevents people
+    // from assigning to this variable, so you have to work hard to
+    // break its value. We store group and entry keys in here.
 
 protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
+    virtual QObject *createObject(QObject *parent = 0,
+                                  const char *name = 0,
+                                  const char *classname = "QObject",
+                                  const QStringList &args = QStringList());
 private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
+    KInstance *fInstance;
+    static KAboutData *fAbout;
 } ;
 
-extern "C"
-{
+extern "C" {
 
-void *init_libknotesconduit();
+    void *init_libknotesconduit();
 
 }
 

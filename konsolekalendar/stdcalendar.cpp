@@ -33,68 +33,81 @@
 
 using namespace KCal;
 
-StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
-  : CalendarResources( KPimPrefs::timezone() )
+StdCalendar::StdCalendar(const QString &fileName, const QString &resName)
+    : CalendarResources(KPimPrefs::timezone())
 {
-  mManager = resourceManager();
-  if ( mManager->isEmpty() ) {
-    addFileResource( fileName, resName );
-  } else {
-    CalendarResourceManager::ActiveIterator it;
-    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      (*it)->load();
+    mManager = resourceManager();
+    if(mManager->isEmpty())
+    {
+        addFileResource(fileName, resName);
     }
-  }
+    else
+    {
+        CalendarResourceManager::ActiveIterator it;
+        for(it = mManager->activeBegin(); it != mManager->activeEnd(); ++it)
+        {
+            (*it)->load();
+        }
+    }
 }
 
 StdCalendar::StdCalendar()
-  : CalendarResources( KPimPrefs::timezone() )
+    : CalendarResources(KPimPrefs::timezone())
 {
-  readConfig();
+    readConfig();
 
-  mManager = resourceManager();
-  if ( mManager->isEmpty() ) {
-    KConfig config( "korganizerrc" );
-    config.setGroup( "General" );
-    QString fileName = config.readPathEntry( "Active Calendar" );
+    mManager = resourceManager();
+    if(mManager->isEmpty())
+    {
+        KConfig config("korganizerrc");
+        config.setGroup("General");
+        QString fileName = config.readPathEntry("Active Calendar");
 
-    if ( !fileName.isEmpty() ) {
-      addFileResource( fileName, i18n( "Active Calendar" ) );
+        if(!fileName.isEmpty())
+        {
+            addFileResource(fileName, i18n("Active Calendar"));
 
-    } else {
-      // No resource created, i.e. no path found in config => use default path
-      addFileResource( locateLocal( "data", "korganizer/std.ics" ),
-                                    i18n( "Default Calendar" ) );
+        }
+        else
+        {
+            // No resource created, i.e. no path found in config => use default path
+            addFileResource(locateLocal("data", "korganizer/std.ics"),
+                            i18n("Default Calendar"));
+        }
     }
-  }
 }
 
-void StdCalendar::addFileResource( const QString &fileName,
-                                   const QString &resName )
+void StdCalendar::addFileResource(const QString &fileName,
+                                  const QString &resName)
 {
-  KCal::ResourceCalendar *resource = 0;
+    KCal::ResourceCalendar *resource = 0;
 
-  if ( !fileName.isEmpty() ) {
-    KURL url( fileName );
-    if ( url.isLocalFile() ) {
-      kdDebug() << "Local resource at " << url << endl;
-      resource = mManager->createResource( "file" );
-      if ( resource )
-        resource->setValue( "File", url.path() );
-    } else {
-      kdDebug() << "Remote Resource at " << url << endl;
-      resource = mManager->createResource( "remote" );
-      if ( resource )
-        resource->setValue( "URL", url.url() );
-    }
+    if(!fileName.isEmpty())
+    {
+        KURL url(fileName);
+        if(url.isLocalFile())
+        {
+            kdDebug() << "Local resource at " << url << endl;
+            resource = mManager->createResource("file");
+            if(resource)
+                resource->setValue("File", url.path());
+        }
+        else
+        {
+            kdDebug() << "Remote Resource at " << url << endl;
+            resource = mManager->createResource("remote");
+            if(resource)
+                resource->setValue("URL", url.url());
+        }
 
-    if ( resource ) {
-      resource->setTimeZoneId( KPimPrefs::timezone() );
-      resource->setResourceName( resName );
-      mManager->add( resource );
-      mManager->setStandardResource( resource );
+        if(resource)
+        {
+            resource->setTimeZoneId(KPimPrefs::timezone());
+            resource->setResourceName(resName);
+            mManager->add(resource);
+            mManager->setStandardResource(resource);
+        }
     }
-  }
 }
 
 StdCalendar::~StdCalendar()

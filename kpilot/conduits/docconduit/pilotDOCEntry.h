@@ -35,36 +35,40 @@
 class PilotRecord;
 
 
-class PilotDOCEntry:public PilotRecordBase {
+class PilotDOCEntry: public PilotRecordBase {
 private:
-	bool compress;
-	tBuf fText;
+    bool compress;
+    tBuf fText;
 public:
-	static const int TEXT_SIZE;
-	PilotDOCEntry();
-	PilotDOCEntry(PilotRecord * rec, bool compressed = false);
-	PilotDOCEntry(const PilotDOCEntry & e);
-	~PilotDOCEntry() {};
-	PilotDOCEntry & operator=(const PilotDOCEntry & e);
+    static const int TEXT_SIZE;
+    PilotDOCEntry();
+    PilotDOCEntry(PilotRecord *rec, bool compressed = false);
+    PilotDOCEntry(const PilotDOCEntry &e);
+    ~PilotDOCEntry() {};
+    PilotDOCEntry &operator=(const PilotDOCEntry &e);
 
 
-	QString getText() {
-		fText.Decompress();
-		return QString::fromLatin1((const char *) fText.text());
-	};
-	void setText(QString newtext, bool compressed = false) {
-		fText.setText((const unsigned char *) newtext.latin1(),
-			newtext.length(), compressed);
-	};
+    QString getText()
+    {
+        fText.Decompress();
+        return QString::fromLatin1((const char *) fText.text());
+    };
+    void setText(QString newtext, bool compressed = false)
+    {
+        fText.setText((const unsigned char *) newtext.latin1(),
+                      newtext.length(), compressed);
+    };
 
-	bool getCompress() const {
-		return compress;
-	}
-	void setCompress(bool compressed) {
-		compress = compressed;
-	};
+    bool getCompress() const
+    {
+        return compress;
+    }
+    void setCompress(bool compressed)
+    {
+        compress = compressed;
+    };
 
-	PilotRecord *pack(); // Not const because it can change the compression
+    PilotRecord *pack(); // Not const because it can change the compression
 };
 
 

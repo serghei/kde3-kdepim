@@ -36,110 +36,104 @@ class Incidence;
 
 namespace KOrg {
 
-class History : public QObject
-{
+class History : public QObject {
     Q_OBJECT
-  public:
-    History( KCal::Calendar * );
+public:
+    History(KCal::Calendar *);
 
-    void recordDelete( KCal::Incidence * );
-    void recordAdd( KCal::Incidence * );
-    void recordEdit( KCal::Incidence *oldIncidence,
-                     KCal::Incidence *newIncidence );
-    void startMultiModify( const QString &description );
+    void recordDelete(KCal::Incidence *);
+    void recordAdd(KCal::Incidence *);
+    void recordEdit(KCal::Incidence *oldIncidence,
+                    KCal::Incidence *newIncidence);
+    void startMultiModify(const QString &description);
     void endMultiModify();
 
-  public slots:
+public slots:
     void undo();
     void redo();
 
-  signals:
+signals:
     void undone();
     void redone();
 
-    void undoAvailable( const QString & );
-    void redoAvailable( const QString & );
+    void undoAvailable(const QString &);
+    void redoAvailable(const QString &);
 
-  protected:
+protected:
     void truncate();
 
-  private:
-  
-    class Entry
-    {
-      public:
-        Entry( KCal::Calendar * );
+private:
+
+    class Entry {
+    public:
+        Entry(KCal::Calendar *);
         virtual ~Entry();
-    
+
         virtual void undo() = 0;
         virtual void redo() = 0;
 
         virtual QString text() = 0;
 
-      protected:
+    protected:
         KCal::Calendar *mCalendar;
     };
 
-    class EntryDelete : public Entry
-    {
-      public:
-        EntryDelete( KCal::Calendar *, KCal::Incidence * );
+    class EntryDelete : public Entry {
+    public:
+        EntryDelete(KCal::Calendar *, KCal::Incidence *);
         ~EntryDelete();
-        
+
         void undo();
         void redo();
-    
+
         QString text();
-    
-      private:
+
+    private:
         KCal::Incidence *mIncidence;
     };
 
-    class EntryAdd : public Entry
-    {
-      public:
-        EntryAdd( KCal::Calendar *, KCal::Incidence * );
+    class EntryAdd : public Entry {
+    public:
+        EntryAdd(KCal::Calendar *, KCal::Incidence *);
         ~EntryAdd();
-        
+
         void undo();
         void redo();
 
         QString text();
 
-      private:
+    private:
         KCal::Incidence *mIncidence;
     };
-    
-    class EntryEdit : public Entry
-    {
-      public:
-        EntryEdit( KCal::Calendar *calendar, KCal::Incidence *oldIncidence,
-                   KCal::Incidence *newIncidence );
+
+    class EntryEdit : public Entry {
+    public:
+        EntryEdit(KCal::Calendar *calendar, KCal::Incidence *oldIncidence,
+                  KCal::Incidence *newIncidence);
         ~EntryEdit();
-        
+
         void undo();
         void redo();
-      
+
         QString text();
-      
-      private:
+
+    private:
         KCal::Incidence *mOldIncidence;
         KCal::Incidence *mNewIncidence;
     };
 
-    class MultiEntry : public Entry
-    {
-      public:
-        MultiEntry( KCal::Calendar *calendar, const QString &text );
+    class MultiEntry : public Entry {
+    public:
+        MultiEntry(KCal::Calendar *calendar, const QString &text);
         ~MultiEntry();
-        
-        void appendEntry( Entry* entry );
+
+        void appendEntry(Entry *entry);
         void undo();
         void redo();
-      
+
         QString text();
-      
-      private:
+
+    private:
         QPtrList<Entry> mEntries;
         QString mText;
     };

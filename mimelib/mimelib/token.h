@@ -55,9 +55,10 @@
 #include <iosfwd>
 #endif
 
-enum {
-    eTkError=-1,
-    eTkNull=0,
+enum
+{
+    eTkError = -1,
+    eTkNull = 0,
     eTkSpecial,
     eTkAtom,
     eTkComment,
@@ -71,15 +72,21 @@ enum {
 class DW_EXPORT DwTokenizer {
     friend class DwTokenString;
 public:
-    const DwString& Token() const { return mToken; }
-    int Type() const              { return mTkType; }
+    const DwString &Token() const
+    {
+        return mToken;
+    }
+    int Type() const
+    {
+        return mTkType;
+    }
     void StripDelimiters();
-    static std::ostream* mDebugOut;
+    static std::ostream *mDebugOut;
 protected:
-    DwTokenizer(const DwString& aStr);
-    DwTokenizer(const char* aCStr);
+    DwTokenizer(const DwString &aStr);
+    DwTokenizer(const char *aCStr);
     virtual ~DwTokenizer();
-    void PrintToken(std::ostream*);
+    void PrintToken(std::ostream *);
     // Quoted strings, comments, and domain literals are parsed
     // identically in RFC822 and RFC1521
     void ParseQuotedString();
@@ -98,14 +105,14 @@ protected:
 class DW_EXPORT DwRfc822Tokenizer : public DwTokenizer {
     friend class DwAddressParser;
 public:
-    DwRfc822Tokenizer(const DwString& aStr);
-    DwRfc822Tokenizer(const char* aCStr);
+    DwRfc822Tokenizer(const DwString &aStr);
+    DwRfc822Tokenizer(const char *aCStr);
     virtual ~DwRfc822Tokenizer();
     int Restart();
     int operator ++ (); // prefix increment operator
 private:
     DwRfc822Tokenizer();
-    DwRfc822Tokenizer(const DwRfc822Tokenizer&);
+    DwRfc822Tokenizer(const DwRfc822Tokenizer &);
     void ParseToken();
     void ParseAtom();
 };
@@ -113,14 +120,14 @@ private:
 
 class DW_EXPORT DwRfc1521Tokenizer : public DwTokenizer {
 public:
-    DwRfc1521Tokenizer(const DwString& aStr);
-    DwRfc1521Tokenizer(const char* aCStr);
+    DwRfc1521Tokenizer(const DwString &aStr);
+    DwRfc1521Tokenizer(const char *aCStr);
     virtual ~DwRfc1521Tokenizer();
     int Restart();
     int operator ++ (); // prefix increment operator
 private:
     DwRfc1521Tokenizer();
-    DwRfc1521Tokenizer(const DwRfc1521Tokenizer&);
+    DwRfc1521Tokenizer(const DwRfc1521Tokenizer &);
     void ParseToken();
     void ParseAtom();
 };
@@ -133,12 +140,15 @@ private:
 
 class DW_EXPORT DwTokenString {
 public:
-    DwTokenString(const DwString&);
+    DwTokenString(const DwString &);
     virtual ~DwTokenString();
-    const DwString& Tokens() const { return mTokens; }
-    void SetFirst(const DwTokenizer&);
-    void SetLast(const DwTokenizer&);
-    void ExtendTo(const DwTokenizer&);
+    const DwString &Tokens() const
+    {
+        return mTokens;
+    }
+    void SetFirst(const DwTokenizer &);
+    void SetLast(const DwTokenizer &);
+    void ExtendTo(const DwTokenizer &);
     // void Concatenate(const DwTokenizer&);
 protected:
     const DwString mString;

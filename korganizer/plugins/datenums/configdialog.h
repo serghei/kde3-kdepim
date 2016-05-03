@@ -23,21 +23,20 @@
 
 class QButtonGroup;
 
-class ConfigDialog : public KDialogBase
-{
+class ConfigDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    ConfigDialog(QWidget *parent=0);
+public:
+    ConfigDialog(QWidget *parent = 0);
     virtual ~ConfigDialog();
 
-  protected:
+protected:
     void load();
     void save();
 
-  protected slots:
+protected slots:
     void slotOk();
 
-  private:
+private:
     QButtonGroup *mDayNumGroup;
 };
 

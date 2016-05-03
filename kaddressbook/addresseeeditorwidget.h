@@ -61,17 +61,18 @@ class CategorySelectDialog;
 class CategoryEditDialog;
 }
 
-namespace KABC { class AddressBook; }
+namespace KABC {
+class AddressBook;
+}
 
-class AddresseeEditorWidget : public AddresseeEditorBase
-{
-  Q_OBJECT
+class AddresseeEditorWidget : public AddresseeEditorBase {
+    Q_OBJECT
 
-  public:
-    AddresseeEditorWidget( QWidget *parent, const char *name = 0 );
+public:
+    AddresseeEditorWidget(QWidget *parent, const char *name = 0);
     ~AddresseeEditorWidget();
 
-    void setAddressee( const KABC::Addressee& );
+    void setAddressee(const KABC::Addressee &);
     const KABC::Addressee &addressee();
 
     void load();
@@ -83,9 +84,9 @@ class AddresseeEditorWidget : public AddresseeEditorBase
 
     bool readyToClose();
 
-  protected slots:
-    void textChanged( const QString& );
-    void pageChanged( QWidget *wdg );
+protected slots:
+    void textChanged(const QString &);
+    void pageChanged(QWidget *wdg);
 
     /**
       Emits the modified signal and sets the dirty flag. Any slot
@@ -94,10 +95,10 @@ class AddresseeEditorWidget : public AddresseeEditorBase
      */
     void emitModified();
 
-    void dateChanged( const QDate& );
+    void dateChanged(const QDate &);
     void invalidDate();
-    void nameTextChanged( const QString& );
-    void organizationTextChanged( const QString& );
+    void nameTextChanged(const QString &);
+    void organizationTextChanged(const QString &);
     void nameBoxChanged();
     void nameButtonClicked();
     void selectCategories();
@@ -105,21 +106,21 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     /**
       Called whenever the categories change in the categories dialog.
      */
-    void categoriesSelected( const QStringList& );
+    void categoriesSelected(const QStringList &);
 
     /**
       Edits which categories are available in the CategorySelectDialog.
      */
     void editCategories();
 
-  private:
+private:
     void initGUI();
     void setupTab1();
     void setupTab2();
     void setupAdditionalTabs();
     void setupCustomFieldsTabs();
 
-    void setReadOnly( bool );
+    void setReadOnly(bool);
 
     KABC::Addressee mAddressee;
     int mFormattedNameType;

@@ -28,11 +28,10 @@ class OSyncFilter;
 
 namespace QSync {
 
-class Filter
-{
-  friend class Group;
+class Filter {
+    friend class Group;
 
-  public:
+public:
     Filter();
     ~Filter();
 
@@ -45,16 +44,19 @@ class Filter
       Sets the configuration string of this filter. The format of
       string is filter specific.
      */
-    void setConfiguration( const QString &configuration );
+    void setConfiguration(const QString &configuration);
 
     /**
       Returns the configuration string of this filter.
      */
     QString configuration() const;
 
-    bool operator==( const Filter &filter ) const { return mFilter == filter.mFilter; }
+    bool operator==(const Filter &filter) const
+    {
+        return mFilter == filter.mFilter;
+    }
 
-  private:
+private:
     OSyncFilter *mFilter;
 };
 

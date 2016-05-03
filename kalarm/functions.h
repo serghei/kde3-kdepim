@@ -33,27 +33,29 @@ class QWidget;
 class QString;
 class KAction;
 class KActionCollection;
-namespace KCal { class Event; }
+namespace KCal {
+class Event;
+}
 class KAEvent;
 class MainWindow;
 class AlarmListView;
 class TemplateListView;
 class TemplateMenuAction;
 
-namespace KAlarm
-{
+namespace KAlarm {
 
 /** Return codes from fileType() */
 enum FileType { Unknown, TextPlain, TextFormatted, TextApplication, Image };
 /** Return codes from calendar update functions.
  *  The codes are ordered by severity.
  */
-enum UpdateStatus {
-	UPDATE_OK,          // update succeeded
-	UPDATE_KORG_ERR,    // update succeeded, but KOrganizer update failed
-	UPDATE_ERROR,       // update failed partially
-	UPDATE_FAILED,      // update failed completely
-	SAVE_FAILED         // calendar was updated in memory, but save failed
+enum UpdateStatus
+{
+    UPDATE_OK,          // update succeeded
+    UPDATE_KORG_ERR,    // update succeeded, but KOrganizer update failed
+    UPDATE_ERROR,       // update failed partially
+    UPDATE_FAILED,      // update failed completely
+    SAVE_FAILED         // calendar was updated in memory, but save failed
 };
 /** Error codes supplied as parameter to displayUpdateError() */
 enum UpdateError { ERR_ADD, ERR_DELETE, ERR_REACTIVATE, ERR_TEMPLATE };
@@ -62,53 +64,64 @@ enum KOrgUpdateError { KORG_ERR_ADD, KORG_ERR_MODIFY, KORG_ERR_DELETE };
 
 
 /** Display a main window with the specified event selected */
-MainWindow*         displayMainWindowSelected(const QString& eventID = QString::null);
-bool                readConfigWindowSize(const char* window, QSize&);
-void                writeConfigWindowSize(const char* window, const QSize&);
+MainWindow         *displayMainWindowSelected(const QString &eventID = QString::null);
+bool                readConfigWindowSize(const char *window, QSize &);
+void                writeConfigWindowSize(const char *window, const QSize &);
 /** Check from its mime type whether a file appears to be a text or image file.
  *  If a text file, its type is distinguished.
  */
-FileType            fileType(const QString& mimetype);
+FileType            fileType(const QString &mimetype);
 /** Return current KAlarm version number */
 int                 Version();
-inline int          Version(int major, int minor, int rev)     { return major*10000 + minor*100 + rev; }
-int                 getVersionNumber(const QString& version, QString* subVersion = 0);
+inline int          Version(int major, int minor, int rev)
+{
+    return major * 10000 + minor * 100 + rev;
+}
+int                 getVersionNumber(const QString &version, QString *subVersion = 0);
 /** Return which version of KAlarm was the first to use the current calendar/event format */
-inline int          currentCalendarVersion()        { return KAEvent::calVersion(); }
-inline QString      currentCalendarVersionString()  { return KAEvent::calVersionString(); }
-QString             browseFile(const QString& caption, QString& defaultDir, const QString& initialFile = QString::null,
-                               const QString& filter = QString::null, int mode = 0, QWidget* parent = 0, const char* name = 0);
-bool                edit(const QString& eventID);
-bool                editNew(const QString& templateName = QString::null);
+inline int          currentCalendarVersion()
+{
+    return KAEvent::calVersion();
+}
+inline QString      currentCalendarVersionString()
+{
+    return KAEvent::calVersionString();
+}
+QString             browseFile(const QString &caption, QString &defaultDir, const QString &initialFile = QString::null,
+                               const QString &filter = QString::null, int mode = 0, QWidget *parent = 0, const char *name = 0);
+bool                edit(const QString &eventID);
+bool                editNew(const QString &templateName = QString::null);
 /** Create a "New Alarm" KAction */
-KAction*            createNewAlarmAction(const QString& label, QObject* receiver, const char* slot, KActionCollection*, const char* name);
+KAction            *createNewAlarmAction(const QString &label, QObject *receiver, const char *slot, KActionCollection *, const char *name);
 /** Create a "New From Template" KAction */
-TemplateMenuAction* createNewFromTemplateAction(const QString& label, QObject* receiver, const char* slot, KActionCollection*, const char* name);
+TemplateMenuAction *createNewFromTemplateAction(const QString &label, QObject *receiver, const char *slot, KActionCollection *, const char *name);
 /** Returns a list of all alarm templates.
  *  If shell commands are disabled, command alarm templates are omitted.
  */
 QValueList<KAEvent> templateList();
-void                outputAlarmWarnings(QWidget* parent, const KAEvent* = 0);
+void                outputAlarmWarnings(QWidget *parent, const KAEvent * = 0);
 void                resetDaemon();
 void                resetDaemonIfQueued();    // must only be called from KAlarmApp::processQueue()
 QString             runKMail(bool minimise);
-bool                runProgram(const QCString& program, const QCString& windowName, QCString& dcopName, QString& errorMessage);
+bool                runProgram(const QCString &program, const QCString &windowName, QCString &dcopName, QString &errorMessage);
 
-UpdateStatus        addEvent(KAEvent&, AlarmListView* selectionView, QWidget* errmsgParent = 0, bool useEventID = false, bool allowKOrgUpdate = true);
-bool                addExpiredEvent(KAEvent&);
-UpdateStatus        addTemplate(KAEvent&, TemplateListView* selectionView, QWidget* errmsgParent = 0);
-UpdateStatus        modifyEvent(KAEvent& oldEvent, const KAEvent& newEvent, AlarmListView* selectionView, QWidget* errmsgParent = 0);
-UpdateStatus        updateEvent(KAEvent&, AlarmListView* selectionView, QWidget* errmsgParent = 0, bool archiveOnDelete = true, bool incRevision = true);
-UpdateStatus        updateTemplate(const KAEvent&, TemplateListView* selectionView, QWidget* errmsgParent = 0);
-UpdateStatus        deleteEvent(KAEvent&, bool archive = true, QWidget* errmsgParent = 0);
-UpdateStatus        deleteTemplate(const KAEvent&);
-void                deleteDisplayEvent(const QString& eventID);
-UpdateStatus        reactivateEvent(KAEvent&, AlarmListView* selectionView, bool useEventID = false);
-UpdateStatus        enableEvent(KAEvent&, AlarmListView* selectionView, bool enable);
-void                displayUpdateError(QWidget* parent, UpdateStatus, UpdateError, int nAlarms);
-void                displayKOrgUpdateError(QWidget* parent, KOrgUpdateError, int nAlarms);
+UpdateStatus        addEvent(KAEvent &, AlarmListView *selectionView, QWidget *errmsgParent = 0, bool useEventID = false,
+                             bool allowKOrgUpdate = true);
+bool                addExpiredEvent(KAEvent &);
+UpdateStatus        addTemplate(KAEvent &, TemplateListView *selectionView, QWidget *errmsgParent = 0);
+UpdateStatus        modifyEvent(KAEvent &oldEvent, const KAEvent &newEvent, AlarmListView *selectionView, QWidget *errmsgParent = 0);
+UpdateStatus        updateEvent(KAEvent &, AlarmListView *selectionView, QWidget *errmsgParent = 0, bool archiveOnDelete = true,
+                                bool incRevision = true);
+UpdateStatus        updateTemplate(const KAEvent &, TemplateListView *selectionView, QWidget *errmsgParent = 0);
+UpdateStatus        deleteEvent(KAEvent &, bool archive = true, QWidget *errmsgParent = 0);
+UpdateStatus        deleteTemplate(const KAEvent &);
+void                deleteDisplayEvent(const QString &eventID);
+UpdateStatus        reactivateEvent(KAEvent &, AlarmListView *selectionView, bool useEventID = false);
+UpdateStatus        enableEvent(KAEvent &, AlarmListView *selectionView, bool enable);
+void                displayUpdateError(QWidget *parent, UpdateStatus, UpdateError, int nAlarms);
+void                displayKOrgUpdateError(QWidget *parent, KOrgUpdateError, int nAlarms);
 
-QString             stripAccel(const QString&);
+QString             stripAccel(const QString &);
 
 int                 localeFirstDayOfWeek();
 
@@ -116,13 +129,19 @@ int                 localeFirstDayOfWeek();
  * Standard day number = 1 (Mon) .. 7 (Sun)
  * Locale day number in week = 0 .. 6
  */
-inline int          weekDay_to_localeDayInWeek(int weekDay)  { return (weekDay + 7 - localeFirstDayOfWeek()) % 7; }
+inline int          weekDay_to_localeDayInWeek(int weekDay)
+{
+    return (weekDay + 7 - localeFirstDayOfWeek()) % 7;
+}
 
 /* Given a day number in the week for the user's locale, return the standard KDE day number.
  * 'index' = 0 .. 6
  * Standard day number = 1 (Mon) .. 7 (Sun)
  */
-inline int          localeDayInWeek_to_weekDay(int index)  { return (index + localeFirstDayOfWeek() - 1) % 7 + 1; }
+inline int          localeDayInWeek_to_weekDay(int index)
+{
+    return (index + localeFirstDayOfWeek() - 1) % 7 + 1;
+}
 
 } // namespace KAlarm
 

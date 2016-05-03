@@ -45,235 +45,240 @@
 #include "kabprefs.h"
 #include "filtereditdialog.h"
 
-FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Edit Address Book Filter" ),
-                 Help | Ok | Cancel, Ok, parent, name, false, true )
+FilterEditDialog::FilterEditDialog(QWidget *parent, const char *name)
+    : KDialogBase(Plain, i18n("Edit Address Book Filter"),
+                  Help | Ok | Cancel, Ok, parent, name, false, true)
 {
-  initGUI();
+    initGUI();
 
-  const QStringList cats = KABPrefs::instance()->customCategories();
+    const QStringList cats = KABPrefs::instance()->customCategories();
 
-  QStringList::ConstIterator it;
-  for ( it = cats.begin(); it != cats.end(); ++it )
-    mCategoriesView->insertItem( new QCheckListItem( mCategoriesView, *it, QCheckListItem::CheckBox ) );
+    QStringList::ConstIterator it;
+    for(it = cats.begin(); it != cats.end(); ++it)
+        mCategoriesView->insertItem(new QCheckListItem(mCategoriesView, *it, QCheckListItem::CheckBox));
 
-  filterNameTextChanged( mNameEdit->text() );
+    filterNameTextChanged(mNameEdit->text());
 }
 
 FilterEditDialog::~FilterEditDialog()
 {
 }
 
-void FilterEditDialog::setFilter( const Filter &filter )
+void FilterEditDialog::setFilter(const Filter &filter)
 {
-  mNameEdit->setText( filter.name() );
+    mNameEdit->setText(filter.name());
 
-  QStringList categories = filter.categories();
-  QListViewItem *item = mCategoriesView->firstChild();
-  while ( item != 0 ) {
-    if ( categories.contains( item->text( 0 ) ) ) {
-      QCheckListItem *checkItem = static_cast<QCheckListItem*>( item );
-      checkItem->setOn( true );
+    QStringList categories = filter.categories();
+    QListViewItem *item = mCategoriesView->firstChild();
+    while(item != 0)
+    {
+        if(categories.contains(item->text(0)))
+        {
+            QCheckListItem *checkItem = static_cast<QCheckListItem *>(item);
+            checkItem->setOn(true);
+        }
+
+        item = item->nextSibling();
     }
 
-    item = item->nextSibling();
-  }
-
-  if ( filter.matchRule() == Filter::Matching )
-    mMatchRuleGroup->setButton( 0 );
-  else
-    mMatchRuleGroup->setButton( 1 );
+    if(filter.matchRule() == Filter::Matching)
+        mMatchRuleGroup->setButton(0);
+    else
+        mMatchRuleGroup->setButton(1);
 }
 
 Filter FilterEditDialog::filter()
 {
-  Filter filter;
+    Filter filter;
 
-  filter.setName( mNameEdit->text() );
+    filter.setName(mNameEdit->text());
 
-  QStringList categories;
-  QListViewItem *item = mCategoriesView->firstChild();
-  while ( item != 0 ) {
-    QCheckListItem *checkItem = static_cast<QCheckListItem*>( item );
-    if ( checkItem->isOn() )
-      categories.append( item->text( 0 ) );
+    QStringList categories;
+    QListViewItem *item = mCategoriesView->firstChild();
+    while(item != 0)
+    {
+        QCheckListItem *checkItem = static_cast<QCheckListItem *>(item);
+        if(checkItem->isOn())
+            categories.append(item->text(0));
 
-    item = item->nextSibling();
-  }
-  filter.setCategories( categories );
+        item = item->nextSibling();
+    }
+    filter.setCategories(categories);
 
-  if ( mMatchRuleGroup->find( 0 )->isOn() )
-    filter.setMatchRule( Filter::Matching );
-  else
-    filter.setMatchRule( Filter::NotMatching );
+    if(mMatchRuleGroup->find(0)->isOn())
+        filter.setMatchRule(Filter::Matching);
+    else
+        filter.setMatchRule(Filter::NotMatching);
 
-  return filter;
+    return filter;
 }
 
 void FilterEditDialog::initGUI()
 {
-  resize( 490, 300 );
+    resize(490, 300);
 
-  QWidget *page = plainPage();
-  QLabel *label;
+    QWidget *page = plainPage();
+    QLabel *label;
 
-  QGridLayout *topLayout = new QGridLayout( page, 3, 2, 0, spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(page, 3, 2, 0, spacingHint());
 
-  label = new QLabel( i18n( "Name:" ), page );
-  mNameEdit = new KLineEdit( page );
-  mNameEdit->setFocus();
-  topLayout->addWidget( label, 0, 0 );
-  topLayout->addWidget( mNameEdit, 0, 1 );
-  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( filterNameTextChanged( const QString&) ) );
+    label = new QLabel(i18n("Name:"), page);
+    mNameEdit = new KLineEdit(page);
+    mNameEdit->setFocus();
+    topLayout->addWidget(label, 0, 0);
+    topLayout->addWidget(mNameEdit, 0, 1);
+    connect(mNameEdit, SIGNAL(textChanged(const QString &)),
+            SLOT(filterNameTextChanged(const QString &)));
 
-  mCategoriesView = new KListView( page );
-  mCategoriesView->addColumn( i18n( "Category" ) );
-  mCategoriesView->setFullWidth( true );
-  topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );
+    mCategoriesView = new KListView(page);
+    mCategoriesView->addColumn(i18n("Category"));
+    mCategoriesView->setFullWidth(true);
+    topLayout->addMultiCellWidget(mCategoriesView, 1, 1, 0, 1);
 
-  mMatchRuleGroup = new QButtonGroup( page );
-  mMatchRuleGroup->setExclusive( true );
+    mMatchRuleGroup = new QButtonGroup(page);
+    mMatchRuleGroup->setExclusive(true);
 
-  QBoxLayout *gbLayout = new QVBoxLayout( mMatchRuleGroup );
-  gbLayout->setSpacing( KDialog::spacingHint() );
-  gbLayout->setMargin( KDialog::marginHint() );
+    QBoxLayout *gbLayout = new QVBoxLayout(mMatchRuleGroup);
+    gbLayout->setSpacing(KDialog::spacingHint());
+    gbLayout->setMargin(KDialog::marginHint());
 
-  QRadioButton *radio = new QRadioButton( i18n( "Show only contacts matching the selected categories" ), mMatchRuleGroup );
-  radio->setChecked( true );
-  mMatchRuleGroup->insert( radio );
-  gbLayout->addWidget( radio );
+    QRadioButton *radio = new QRadioButton(i18n("Show only contacts matching the selected categories"), mMatchRuleGroup);
+    radio->setChecked(true);
+    mMatchRuleGroup->insert(radio);
+    gbLayout->addWidget(radio);
 
-  radio = new QRadioButton( i18n( "Show all contacts except those matching the selected categories" ), mMatchRuleGroup );
-  mMatchRuleGroup->insert( radio );
-  gbLayout->addWidget( radio );
+    radio = new QRadioButton(i18n("Show all contacts except those matching the selected categories"), mMatchRuleGroup);
+    mMatchRuleGroup->insert(radio);
+    gbLayout->addWidget(radio);
 
-  topLayout->addMultiCellWidget( mMatchRuleGroup, 2, 2, 0, 1 );
+    topLayout->addMultiCellWidget(mMatchRuleGroup, 2, 2, 0, 1);
 }
 
-void FilterEditDialog::filterNameTextChanged( const QString &text )
+void FilterEditDialog::filterNameTextChanged(const QString &text)
 {
-  enableButtonOK( !text.isEmpty() );
+    enableButtonOK(!text.isEmpty());
 }
 
 void FilterEditDialog::slotHelp()
 {
-  kapp->invokeHelp( "using-filters" );
+    kapp->invokeHelp("using-filters");
 }
 
-FilterDialog::FilterDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Edit Address Book Filters" ),
-                 Ok | Cancel, Ok, parent, name, false, true )
+FilterDialog::FilterDialog(QWidget *parent, const char *name)
+    : KDialogBase(Plain, i18n("Edit Address Book Filters"),
+                  Ok | Cancel, Ok, parent, name, false, true)
 {
-  initGUI();
+    initGUI();
 }
 
 FilterDialog::~FilterDialog()
 {
 }
 
-void FilterDialog::setFilters( const Filter::List &list )
+void FilterDialog::setFilters(const Filter::List &list)
 {
-  mFilterList.clear();
-  mInternalFilterList.clear();
+    mFilterList.clear();
+    mInternalFilterList.clear();
 
-  Filter::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( (*it).isInternal() )
-      mInternalFilterList.append( *it );
-    else
-      mFilterList.append( *it );
-  }
+    Filter::List::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        if((*it).isInternal())
+            mInternalFilterList.append(*it);
+        else
+            mFilterList.append(*it);
+    }
 
-  refresh();
+    refresh();
 }
 
 Filter::List FilterDialog::filters() const
 {
-  Filter::List list = mFilterList + mInternalFilterList;
-  return list;
+    Filter::List list = mFilterList + mInternalFilterList;
+    return list;
 }
 
 void FilterDialog::add()
 {
-  FilterEditDialog dlg( this );
+    FilterEditDialog dlg(this);
 
-  if ( dlg.exec() )
-    mFilterList.append( dlg.filter() );
+    if(dlg.exec())
+        mFilterList.append(dlg.filter());
 
-  refresh();
+    refresh();
 
-  mFilterListBox->setCurrentItem( mFilterListBox->count() - 1 );
+    mFilterListBox->setCurrentItem(mFilterListBox->count() - 1);
 }
 
 void FilterDialog::edit()
 {
-  FilterEditDialog dlg( this );
+    FilterEditDialog dlg(this);
 
-  uint pos = mFilterListBox->currentItem();
+    uint pos = mFilterListBox->currentItem();
 
-  dlg.setFilter( mFilterList[ pos ] );
+    dlg.setFilter(mFilterList[ pos ]);
 
-  if ( dlg.exec() ) {
-    mFilterList.remove( mFilterList.at( pos ) );
-    mFilterList.insert( mFilterList.at( pos ), dlg.filter() );
-  }
+    if(dlg.exec())
+    {
+        mFilterList.remove(mFilterList.at(pos));
+        mFilterList.insert(mFilterList.at(pos), dlg.filter());
+    }
 
-  refresh();
+    refresh();
 
-  mFilterListBox->setCurrentItem( pos );
+    mFilterListBox->setCurrentItem(pos);
 }
 
 void FilterDialog::remove()
 {
-  mFilterList.remove( mFilterList.at( mFilterListBox->currentItem() ) );
+    mFilterList.remove(mFilterList.at(mFilterListBox->currentItem()));
 
-  selectionChanged( 0 );
+    selectionChanged(0);
 
-  refresh();
+    refresh();
 }
 
 void FilterDialog::refresh()
 {
-  mFilterListBox->clear();
+    mFilterListBox->clear();
 
-  Filter::List::ConstIterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    mFilterListBox->insertItem( (*it).name() );
+    Filter::List::ConstIterator it;
+    for(it = mFilterList.begin(); it != mFilterList.end(); ++it)
+        mFilterListBox->insertItem((*it).name());
 }
 
-void FilterDialog::selectionChanged( QListBoxItem *item )
+void FilterDialog::selectionChanged(QListBoxItem *item)
 {
-  bool state = ( item != 0 );
+    bool state = (item != 0);
 
-  mEditButton->setEnabled( state );
-  mRemoveButton->setEnabled( state );
+    mEditButton->setEnabled(state);
+    mRemoveButton->setEnabled(state);
 }
 
 void FilterDialog::initGUI()
 {
-  resize( 330, 200 );
+    resize(330, 200);
 
-  QWidget *page = plainPage();
+    QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 1, 2, 0, spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(page, 1, 2, 0, spacingHint());
 
-  mFilterListBox = new KListBox( page );
-  topLayout->addWidget( mFilterListBox, 0, 0 );
-  connect( mFilterListBox, SIGNAL( selectionChanged( QListBoxItem * ) ),
-           SLOT( selectionChanged( QListBoxItem * ) ) );
-  connect( mFilterListBox, SIGNAL( doubleClicked ( QListBoxItem * ) ),
-           SLOT( edit() ) );
+    mFilterListBox = new KListBox(page);
+    topLayout->addWidget(mFilterListBox, 0, 0);
+    connect(mFilterListBox, SIGNAL(selectionChanged(QListBoxItem *)),
+            SLOT(selectionChanged(QListBoxItem *)));
+    connect(mFilterListBox, SIGNAL(doubleClicked(QListBoxItem *)),
+            SLOT(edit()));
 
-  KButtonBox *buttonBox = new KButtonBox( page, Vertical );
-  buttonBox->addButton( i18n( "&Add..." ), this, SLOT( add() ) );
-  mEditButton = buttonBox->addButton( i18n( "&Edit..." ), this, SLOT( edit() ) );
-  mEditButton->setEnabled( false );
-  mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), this, SLOT( remove() ) );
-  mRemoveButton->setEnabled( false );
+    KButtonBox *buttonBox = new KButtonBox(page, Vertical);
+    buttonBox->addButton(i18n("&Add..."), this, SLOT(add()));
+    mEditButton = buttonBox->addButton(i18n("&Edit..."), this, SLOT(edit()));
+    mEditButton->setEnabled(false);
+    mRemoveButton = buttonBox->addButton(i18n("&Remove"), this, SLOT(remove()));
+    mRemoveButton->setEnabled(false);
 
-  buttonBox->layout();
-  topLayout->addWidget( buttonBox, 0, 1 );
+    buttonBox->layout();
+    topLayout->addWidget(buttonBox, 0, 1);
 }
 
 #include "filtereditdialog.moc"

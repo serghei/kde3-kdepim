@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -36,237 +36,237 @@
 #include "listCat.moc"
 
 
-ListCategorizer::ListCategorizer(QWidget * parent,
-	const char *name) :
-	KListView(parent, name), 
-	fStartOpen(false)
+ListCategorizer::ListCategorizer(QWidget *parent,
+                                 const char *name) :
+    KListView(parent, name),
+    fStartOpen(false)
 {
-	FUNCTIONSETUP;
-	setupWidget();
+    FUNCTIONSETUP;
+    setupWidget();
 }
 
-ListCategorizer::ListCategorizer(const QStringList & i,
-	bool startOpen,
-	QWidget * parent,
-	const char *name) :
-	KListView(parent, name), 
-	fStartOpen(startOpen)
+ListCategorizer::ListCategorizer(const QStringList &i,
+                                 bool startOpen,
+                                 QWidget *parent,
+                                 const char *name) :
+    KListView(parent, name),
+    fStartOpen(startOpen)
 {
-	FUNCTIONSETUP;
-	addCategories(i);
+    FUNCTIONSETUP;
+    addCategories(i);
 }
 
-void ListCategorizer::addCategories(const QStringList & l)
+void ListCategorizer::addCategories(const QStringList &l)
 {
-	FUNCTIONSETUP;
-	QStringList::ConstIterator i;
+    FUNCTIONSETUP;
+    QStringList::ConstIterator i;
 
-	for (i = l.begin(); i != l.end(); ++i)
-	{
-		(void) addCategory(*i);
-	}
+    for(i = l.begin(); i != l.end(); ++i)
+    {
+        (void) addCategory(*i);
+    }
 }
 
-QListViewItem *ListCategorizer::addCategory(const QString & name,
-	const QString & desc)
+QListViewItem *ListCategorizer::addCategory(const QString &name,
+        const QString &desc)
 {
-	FUNCTIONSETUP;
-	QListViewItem *m = new QListViewItem(this, name, desc);
+    FUNCTIONSETUP;
+    QListViewItem *m = new QListViewItem(this, name, desc);
 
-	m->setSelectable(false);
-	m->setOpen(fStartOpen);
-	return m;
+    m->setSelectable(false);
+    m->setOpen(fStartOpen);
+    return m;
 }
 
 void ListCategorizer::setupWidget()
 {
-	FUNCTIONSETUP;
-	addColumn(i18n("Category"));
-	addColumn(i18n("Description"));
-	setItemsMovable(false);
-	setDragEnabled(true);
-	setAcceptDrops(true);
-	setDropVisualizer(true);
-	setRootIsDecorated(true);
+    FUNCTIONSETUP;
+    addColumn(i18n("Category"));
+    addColumn(i18n("Description"));
+    setItemsMovable(false);
+    setDragEnabled(true);
+    setAcceptDrops(true);
+    setDropVisualizer(true);
+    setRootIsDecorated(true);
 }
 
-/* virtual */ bool ListCategorizer::acceptDrag(QDropEvent * event) const
+/* virtual */ bool ListCategorizer::acceptDrag(QDropEvent *event) const
 {
-	FUNCTIONSETUP;
-	if (!(event->source()))
-		return false;
-	QListViewItem *p = itemAt(event->pos());
+    FUNCTIONSETUP;
+    if(!(event->source()))
+        return false;
+    QListViewItem *p = itemAt(event->pos());
 
-	if (!p)
-		return false;
+    if(!p)
+        return false;
 
-	return true;
+    return true;
 }
 
-/* virtual */ void ListCategorizer::contentsDropEvent(QDropEvent * e)
+/* virtual */ void ListCategorizer::contentsDropEvent(QDropEvent *e)
 {
-	FUNCTIONSETUP;
-	cleanDropVisualizer();
+    FUNCTIONSETUP;
+    cleanDropVisualizer();
 
-	if (!acceptDrag(e))
-		return;
-	e->accept();
+    if(!acceptDrag(e))
+        return;
+    e->accept();
 
-	QListViewItem *p = itemAt(e->pos());
-	QListViewItem *selection = currentItem();
+    QListViewItem *p = itemAt(e->pos());
+    QListViewItem *selection = currentItem();
 
-	if (!p)
-	{
-		WARNINGKPILOT << "Drop without a category!" << endl;
-		return;
-	}
+    if(!p)
+    {
+        WARNINGKPILOT << "Drop without a category!" << endl;
+        return;
+    }
 
-	QListViewItem *category = p->parent();
+    QListViewItem *category = p->parent();
 
-	if (!category)
-	{
-		category = p;
-	}
+    if(!category)
+    {
+        category = p;
+    }
 
-	moveItem(selection, category, 0L);
+    moveItem(selection, category, 0L);
 }
 
 /* virtual */ void ListCategorizer::startDrag()
 {
-	FUNCTIONSETUP;
-	QListViewItem *p = currentItem();
+    FUNCTIONSETUP;
+    QListViewItem *p = currentItem();
 
-	if (!p || !p->parent())
-		return;
+    if(!p || !p->parent())
+        return;
 
-	KListView::startDrag();
+    KListView::startDrag();
 }
 
-QStringList ListCategorizer::listSiblings(const QListViewItem * p, int column) const
+QStringList ListCategorizer::listSiblings(const QListViewItem *p, int column) const
 {
-	FUNCTIONSETUP;
-	QStringList l;
+    FUNCTIONSETUP;
+    QStringList l;
 
-	while (p)
-	{
-		l.append(p->text(column));
-		p = p->nextSibling();
-	}
+    while(p)
+    {
+        l.append(p->text(column));
+        p = p->nextSibling();
+    }
 
-	return l;
+    return l;
 }
 
-QListViewItem *ListCategorizer::findCategory(const QString & category) const
+QListViewItem *ListCategorizer::findCategory(const QString &category) const
 {
-	FUNCTIONSETUP;
-	QListViewItem *p = firstChild();
+    FUNCTIONSETUP;
+    QListViewItem *p = firstChild();
 
-	while (p)
-	{
-		if (p->text(0) == category)
-			return p;
-		p = p->nextSibling();
-	}
+    while(p)
+    {
+        if(p->text(0) == category)
+            return p;
+        p = p->nextSibling();
+    }
 
-	return 0L;
+    return 0L;
 }
 
-QListViewItem *ListCategorizer::addItem(const QString & category,
-	const QString & name, const QString & description)
+QListViewItem *ListCategorizer::addItem(const QString &category,
+                                        const QString &name, const QString &description)
 {
-	FUNCTIONSETUP;
-	QListViewItem *p = findCategory(category);
+    FUNCTIONSETUP;
+    QListViewItem *p = findCategory(category);
 
-	if (!p)
-		return 0L;
+    if(!p)
+        return 0L;
 
-	return new QListViewItem(p, name, description);
+    return new QListViewItem(p, name, description);
 }
 
 #define RVPAD	(4)
 
 RichListViewItem::RichListViewItem(QListViewItem *p,
-	QString l,
-	int c) :
-	QListViewItem(p,l)
+                                   QString l,
+                                   int c) :
+    QListViewItem(p, l)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fColumns=c;
-	fIsRich = new bool[c];
-	fRect = new QRect[c];
+    fColumns = c;
+    fIsRich = new bool[c];
+    fRect = new QRect[c];
 
-	for (int i=0; i<c; i++)
-	{
-		fIsRich[i]=false;
-	}
+    for(int i = 0; i < c; i++)
+    {
+        fIsRich[i] = false;
+    }
 }
 
 RichListViewItem::~RichListViewItem()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	delete[] fIsRich;
-	delete[] fRect;
+    delete[] fIsRich;
+    delete[] fRect;
 }
 
 void RichListViewItem::computeHeight(int c)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (!fIsRich[c]) return;
+    if(!fIsRich[c]) return;
 
-	QListView *v = listView();
-	
-	fRect[c] = v->fontMetrics().boundingRect(v->itemMargin()+RVPAD,0+RVPAD,
-		v->columnWidth(c)-v->itemMargin()-RVPAD,300,
-		AlignLeft | AlignTop | WordBreak,
-		text(c));
+    QListView *v = listView();
+
+    fRect[c] = v->fontMetrics().boundingRect(v->itemMargin() + RVPAD, 0 + RVPAD,
+               v->columnWidth(c) - v->itemMargin() - RVPAD, 300,
+               AlignLeft | AlignTop | WordBreak,
+               text(c));
 }
 
 
 /* virtual */ void RichListViewItem::setup()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QListViewItem::setup();
+    QListViewItem::setup();
 
-	int h = height();
+    int h = height();
 
-	for (int i=0; i<fColumns; i++)
-	{
-		computeHeight(i);
-		h = kMax(h,fRect[i].height()+2*RVPAD);
-	}
+    for(int i = 0; i < fColumns; i++)
+    {
+        computeHeight(i);
+        h = kMax(h, fRect[i].height() + 2 * RVPAD);
+    }
 
-	setHeight(h);
+    setHeight(h);
 }
 
 
 /* virtual */ void RichListViewItem::paintCell(QPainter *p,
-	const QColorGroup &gc,
-	int column,
-	int width,
-	int alignment)
+        const QColorGroup &gc,
+        int column,
+        int width,
+        int alignment)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ((!column) || (!fIsRich[column]))
-	{
-		QListViewItem::paintCell(p,gc,column,width,alignment);
-		return;
-	}
+    if((!column) || (!fIsRich[column]))
+    {
+        QListViewItem::paintCell(p, gc, column, width, alignment);
+        return;
+    }
 
-	QListView *v = listView();
+    QListView *v = listView();
 
-	p->eraseRect(0,0,width,height());
-	p->setBackgroundColor(gc.background());
-	p->eraseRect(RVPAD,RVPAD,width-RVPAD,height()-RVPAD);
-	p->setPen(gc.text());
-	p->drawText(v->itemMargin()+RVPAD,0+RVPAD,
-		width-v->itemMargin()-RVPAD,height()-RVPAD,
-		AlignTop | AlignLeft | WordBreak,
-		text(column),
-		-1,
-		&fRect[column]);
+    p->eraseRect(0, 0, width, height());
+    p->setBackgroundColor(gc.background());
+    p->eraseRect(RVPAD, RVPAD, width - RVPAD, height() - RVPAD);
+    p->setPen(gc.text());
+    p->drawText(v->itemMargin() + RVPAD, 0 + RVPAD,
+                width - v->itemMargin() - RVPAD, height() - RVPAD,
+                AlignTop | AlignLeft | WordBreak,
+                text(column),
+                -1,
+                &fRect[column]);
 }

@@ -27,20 +27,19 @@
 class QLabel;
 class QTextEdit;
 
-class SendSMSDialog : public KDialogBase
-{
-  Q_OBJECT
+class SendSMSDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    SendSMSDialog( const QString &recipientName, QWidget *parent, const char *name = 0 );
+public:
+    SendSMSDialog(const QString &recipientName, QWidget *parent, const char *name = 0);
 
     QString text() const;
 
-  private slots:
+private slots:
     void updateMessageLength();
     void updateButtons();
 
-  private:
+private:
     QLabel *mMessageLength;
     QTextEdit *mText;
 };

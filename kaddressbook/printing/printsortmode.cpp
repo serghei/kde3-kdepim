@@ -27,50 +27,56 @@
 
 #if KDE_IS_VERSION(3,3,91)
 
-PrintSortMode::PrintSortMode( KABC::Field *field, bool ascending )
-  : mSortField( field ), mAscending( ascending )
+PrintSortMode::PrintSortMode(KABC::Field *field, bool ascending)
+    : mSortField(field), mAscending(ascending)
 {
-  const KABC::Field::List fields = KABC::Field::allFields();
-  KABC::Field::List::ConstIterator it;
-  for ( it = fields.begin(); it != fields.end(); ++it ) {
-    if ( (*it)->label() == KABC::Addressee::givenNameLabel() )
-      mGivenNameField = *it;
-    else if ( (*it)->label() == KABC::Addressee::familyNameLabel() )
-      mFamilyNameField = *it;
-    else if ( (*it)->label() == KABC::Addressee::formattedNameLabel() )
-      mFormattedNameField = *it;
-  }
+    const KABC::Field::List fields = KABC::Field::allFields();
+    KABC::Field::List::ConstIterator it;
+    for(it = fields.begin(); it != fields.end(); ++it)
+    {
+        if((*it)->label() == KABC::Addressee::givenNameLabel())
+            mGivenNameField = *it;
+        else if((*it)->label() == KABC::Addressee::familyNameLabel())
+            mFamilyNameField = *it;
+        else if((*it)->label() == KABC::Addressee::formattedNameLabel())
+            mFormattedNameField = *it;
+    }
 }
 
-bool PrintSortMode::lesser( const KABC::Addressee &first,
-                            const KABC::Addressee &second ) const
+bool PrintSortMode::lesser(const KABC::Addressee &first,
+                           const KABC::Addressee &second) const
 {
-  if ( !mSortField )
-    return false;
+    if(!mSortField)
+        return false;
 
-  int result = QString::localeAwareCompare( mSortField->value( first ),
-                                            mSortField->value( second ) );
-  if ( result == 0 ) {
-    int givenNameResult = QString::localeAwareCompare( mGivenNameField->value( first ),
-                                                       mGivenNameField->value( second ) );
-    if ( givenNameResult == 0 ) {
-      int familyNameResult = QString::localeAwareCompare( mFamilyNameField->value( first ),
-                                                          mFamilyNameField->value( second ) );
-      if ( familyNameResult == 0 ) {
-        result = QString::localeAwareCompare( mFormattedNameField->value( first ),
-                                              mFormattedNameField->value( second ) );
-      } else
-        result = familyNameResult;
-    } else
-      result = givenNameResult;
-  }
+    int result = QString::localeAwareCompare(mSortField->value(first),
+                 mSortField->value(second));
+    if(result == 0)
+    {
+        int givenNameResult = QString::localeAwareCompare(mGivenNameField->value(first),
+                              mGivenNameField->value(second));
+        if(givenNameResult == 0)
+        {
+            int familyNameResult = QString::localeAwareCompare(mFamilyNameField->value(first),
+                                   mFamilyNameField->value(second));
+            if(familyNameResult == 0)
+            {
+                result = QString::localeAwareCompare(mFormattedNameField->value(first),
+                                                     mFormattedNameField->value(second));
+            }
+            else
+                result = familyNameResult;
+        }
+        else
+            result = givenNameResult;
+    }
 
-  bool lesser = result < 0;
+    bool lesser = result < 0;
 
-  if ( !mAscending )
-    lesser = !lesser;
+    if(!mAscending)
+        lesser = !lesser;
 
-  return lesser;
+    return lesser;
 }
 
 #endif

@@ -28,18 +28,20 @@ namespace KCal {
 /**
   This class provides a Todo in the sense of RFC2445.
 */
-class LIBKCAL_EXPORT Todo : public Incidence
-{
-  public:
+class LIBKCAL_EXPORT Todo : public Incidence {
+public:
     typedef ListBase<Todo> List;
 
     Todo();
-    Todo( const Todo & );
+    Todo(const Todo &);
     ~Todo();
-    Todo& operator=( const Todo& );
-    bool operator==( const Todo& ) const;
+    Todo &operator=(const Todo &);
+    bool operator==(const Todo &) const;
 
-    QCString type() const { return "Todo"; }
+    QCString type() const
+    {
+        return "Todo";
+    }
 
     /**
       Returns an exact copy of this todo. The returned object is owned by the
@@ -62,7 +64,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
       current occurrence will be returned. If non-recurrent, the normal due date
       will be returned.
     */
-    QDateTime dtDue( bool first = false ) const;
+    QDateTime dtDue(bool first = false) const;
     /**
       Returns due time as string formatted according to the users locale
       settings.
@@ -75,7 +77,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
       @param shortfmt If set to true, use short date format, if set to false use
                       long format.
     */
-    QString dtDueDateStr( bool shortfmt = true ) const;
+    QString dtDueDateStr(bool shortfmt = true) const;
     /**
       Returns due date and time as string formatted according to the users locale
       settings.
@@ -91,7 +93,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
 
       @param hasDueDate true if todo has a due date, otherwise false
     */
-    void setHasDueDate( bool hasDueDate );
+    void setHasDueDate(bool hasDueDate);
 
     /**
       Returns true if the todo has a start date, otherwise return false.
@@ -102,7 +104,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
 
       @param hasStartDate true if todo has a start date, otherwise false
     */
-    void setHasStartDate( bool hasStartDate );
+    void setHasStartDate(bool hasStartDate);
 
     /**
       Returns the startdate of the todo.
@@ -111,12 +113,12 @@ class LIBKCAL_EXPORT Todo : public Incidence
       If false and the todo recurs, the relative startdate will be returned,
       based on the date returned by dtRecurrence().
     */
-    QDateTime dtStart( bool first = false ) const;
+    QDateTime dtStart(bool first = false) const;
 
     /**
       Sets the startdate of the todo.
     */
-    void setDtStart( const QDateTime &dtStart );
+    void setDtStart(const QDateTime &dtStart);
 
     /** Returns an todo's starting time as a string formatted according to the
      users locale settings.
@@ -125,7 +127,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
      If false and the todo recurs, the relative startdate will be returned,
      based on the date returned by dtRecurrence().
     */
-    QString dtStartTimeStr( bool first = false ) const;
+    QString dtStartTimeStr(bool first = false) const;
     /** Returns an todo's starting date as a string formatted according to the
      users locale settings.
      @param shortfmt If true, use short date format, if set to false use
@@ -135,7 +137,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
      If false and the todo recurs, the relative startdate will be returned,
      based on the date returned by dtRecurrence().
     */
-    QString dtStartDateStr( bool shortfmt = true, bool first = false ) const;
+    QString dtStartDateStr(bool shortfmt = true, bool first = false) const;
     /** Returns an todo's starting date and time as a string formatted according
      to the users locale settings.
      @param first If true, the startdate of the todo will be returned. If the
@@ -143,7 +145,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
      If false and the todo recurs, the relative startdate will be returned,
      based on the date returned by dtRecurrence().
     */
-    QString dtStartStr( bool first = false ) const;
+    QString dtStartStr(bool first = false) const;
 
     /**
       Returns true if the todo is 100% completed, otherwise return false.
@@ -155,7 +157,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
       @param completed If true set completed state to 100%, if false set
                        completed state to 0%.
     */
-    void setCompleted( bool completed );
+    void setCompleted(bool completed);
 
     /**
       Returns how many percent of the task are completed. Returns a value
@@ -166,7 +168,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
       Set how many percent of the task are completed. Valid values are in the
       range from 0 to 100.
     */
-    void setPercentComplete( int );
+    void setPercentComplete(int);
 
     /**
       Returns date and time when todo was completed.
@@ -180,7 +182,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     /**
       Set date and time of completion.
     */
-    void setCompleted( const QDateTime &completed );
+    void setCompleted(const QDateTime &completed);
 
     /**
       Returns true, if todo has a date associated with completion, otherwise
@@ -191,7 +193,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     /**
       Sets the due date/time of the current occurrence if recurrent.
     */
-    void setDtRecurrence( const QDateTime &dt );
+    void setDtRecurrence(const QDateTime &dt);
 
     /**
       Returns the due date/time of the current occurrence if recurrent.
@@ -204,25 +206,31 @@ class LIBKCAL_EXPORT Todo : public Incidence
       check, which make it return false if there's an occurrence between
       the recurstart and today.
     */
-    virtual bool recursOn( const QDate &date ) const;
+    virtual bool recursOn(const QDate &date) const;
 
     /**
       Returns true if this todo is overdue (e.g. due date is lower than today
       and not completed), else false.
      */
-      bool isOverdue() const;
+    bool isOverdue() const;
 
-  protected:
+protected:
     /** Return the end date/time of the base incidence. */
-    virtual QDateTime endDateRecurrenceBase() const { return dtDue(); }
+    virtual QDateTime endDateRecurrenceBase() const
+    {
+        return dtDue();
+    }
 
-  private:
-    bool accept(Visitor &v) { return v.visit( this ); }
+private:
+    bool accept(Visitor &v)
+    {
+        return v.visit(this);
+    }
     /** Returns true if the todo got a new date, else false will be returned. */
     bool recurTodo();
 
     QDateTime mDtDue;                    // due date of todo
-                                         // (first occurrence if recurrent)
+    // (first occurrence if recurrent)
     QDateTime mDtRecurrence;             // due date of recurrence
 
     bool mHasDueDate;                    // if todo has associated due date

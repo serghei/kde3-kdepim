@@ -31,10 +31,9 @@
 */
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_libvcalconduit();
+    void *init_libvcalconduit();
 
 }
 

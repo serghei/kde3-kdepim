@@ -38,47 +38,47 @@ static pthread_mutex_t check_init_lock = PTHREAD_MUTEX_INITIALIZER;
 /* Initialize the mutex *PRIV.  If JUST_CHECK is true, only do this if
    it is not already initialized.  */
 static int
-mutex_pthread_init (void **priv, int just_check)
+mutex_pthread_init(void **priv, int just_check)
 {
-  int err = 0;
+    int err = 0;
 
-  if (just_check)
-    pthread_mutex_lock (&check_init_lock);
-  if (!*priv || !just_check)
+    if(just_check)
+        pthread_mutex_lock(&check_init_lock);
+    if(!*priv || !just_check)
     {
-      pthread_mutex_t *lock = malloc (sizeof (pthread_mutex_t));
-      if (!lock)
-	err = ENOMEM;
-      if (!err)
-	{
-	  err = pthread_mutex_init (lock, NULL);
-	  if (err)
-	    free (lock);
-	  else
-	    *priv = lock;
-	}
+        pthread_mutex_t *lock = malloc(sizeof(pthread_mutex_t));
+        if(!lock)
+            err = ENOMEM;
+        if(!err)
+        {
+            err = pthread_mutex_init(lock, NULL);
+            if(err)
+                free(lock);
+            else
+                *priv = lock;
+        }
     }
-  if (just_check)
-    pthread_mutex_unlock (&check_init_lock);
-  return err;
+    if(just_check)
+        pthread_mutex_unlock(&check_init_lock);
+    return err;
 }
 
 
 static int
-mutex_pthread_destroy (void *priv)
+mutex_pthread_destroy(void *priv)
 {
-  int err = pthread_mutex_destroy ((pthread_mutex_t *) priv);
-  free (priv);
-  return err;
+    int err = pthread_mutex_destroy((pthread_mutex_t *) priv);
+    free(priv);
+    return err;
 }
 
 
 static struct ath_ops ath_pthread_ops =
-  {
+{
     mutex_pthread_init,
     mutex_pthread_destroy,
-    (int (*) (void *)) pthread_mutex_lock,
-    (int (*) (void *)) pthread_mutex_unlock,
+    (int (*)(void *)) pthread_mutex_lock,
+    (int (*)(void *)) pthread_mutex_unlock,
     NULL,	/* read */
     NULL,	/* write */
     NULL,	/* select */
@@ -87,18 +87,18 @@ static struct ath_ops ath_pthread_ops =
     NULL,	/* connect */
     NULL,	/* sendmsg */
     NULL	/* recvmsg */
-  };
+};
 
 
 struct ath_ops *
-ath_pthread_available (void)
+ath_pthread_available(void)
 {
-  /* Need to include pthread_create in our check, as the GNU C library
-     has the pthread_mutex_* functions in their public interface.  */
-  if (pthread_create
-      && pthread_mutex_init && pthread_mutex_destroy
-      && pthread_mutex_lock && pthread_mutex_unlock)
-    return &ath_pthread_ops;
-  else
-    return 0;
+    /* Need to include pthread_create in our check, as the GNU C library
+       has the pthread_mutex_* functions in their public interface.  */
+    if(pthread_create
+            && pthread_mutex_init && pthread_mutex_destroy
+            && pthread_mutex_lock && pthread_mutex_unlock)
+        return &ath_pthread_ops;
+    else
+        return 0;
 }

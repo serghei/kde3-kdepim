@@ -35,53 +35,52 @@
 #include <libkcal/event.h>
 
 
-typedef DatabaseInterpreter<KCal::Event,PilotDateEntry,PilotDateEntry::Mapper> DatebookDB;
+typedef DatabaseInterpreter<KCal::Event, PilotDateEntry, PilotDateEntry::Mapper> DatebookDB;
 
-class CalendarDumper
-{
+class CalendarDumper {
 public:
-	CalendarDumper() {}
+    CalendarDumper() {}
 
-	KCal::CalendarLocal *retrieve(int fd);
-	KCal::CalendarLocal *retrieve(const QString &filename);
+    KCal::CalendarLocal *retrieve(int fd);
+    KCal::CalendarLocal *retrieve(const QString &filename);
 
 protected:
-	KCal::CalendarLocal *retrieve(DatebookDB *db);
+    KCal::CalendarLocal *retrieve(DatebookDB *db);
 } ;
 
 
 
 KCal::CalendarLocal *CalendarDumper::retrieve(int fd)
 {
-	PilotSerialDatabase sdb( fd, CSL1("DatebookDB") );
-	DatebookDB db(&sdb);
-	return retrieve(db);
+    PilotSerialDatabase sdb(fd, CSL1("DatebookDB"));
+    DatebookDB db(&sdb);
+    return retrieve(db);
 }
 
 KCal::CalendarLocal *CalendarDumped::retrieve(const QString &fn)
 {
-	PilotLocalDatabase ldb( fn );
-	DatebookDB db(&ldb);
-	return retrieve(db);
+    PilotLocalDatabase ldb(fn);
+    DatebookDB db(&ldb);
+    return retrieve(db);
 }
 
 KCal::CalendarLocal *retrieve(DatebookDB *db)
 {
-	KCal::CalendarLocal *cal = new CalendarLocal( QString::null );
+    KCal::CalendarLocal *cal = new CalendarLocal(QString::null);
 
-	int count = db->db()->recordCount();
+    int count = db->db()->recordCount();
 
-	if (count < 1)
-	{
-		return cal;
-	}
+    if(count < 1)
+    {
+        return cal;
+    }
 
-	for (int i=0; i<count; i++)
-	{
-		KCal::Event *e = db->readRecordByIndex(i);
-		if (!e) continue;
-		cal->addEvent(e);
-	}
+    for(int i = 0; i < count; i++)
+    {
+        KCal::Event *e = db->readRecordByIndex(i);
+        if(!e) continue;
+        cal->addEvent(e);
+    }
 
-	return cal;
+    return cal;
 }

@@ -40,13 +40,12 @@
 #include <libkcal/calendarlocal.h>
 
 
-class ResourceLocal : public ResourceNotes
-{
+class ResourceLocal : public ResourceNotes {
 public:
-    ResourceLocal( const KConfig* );
+    ResourceLocal(const KConfig *);
     virtual ~ResourceLocal();
 
-    virtual void writeConfig( KConfig *config );
+    virtual void writeConfig(KConfig *config);
 
     /**
      * Load resource data.
@@ -58,13 +57,19 @@ public:
      */
     virtual bool save();
 
-    virtual KURL url() const { return mURL; } ;
-    virtual void setURL(const KURL& url) { mURL = url; } ;
+    virtual KURL url() const
+    {
+        return mURL;
+    } ;
+    virtual void setURL(const KURL &url)
+    {
+        mURL = url;
+    } ;
 
-    virtual bool addNote( KCal::Journal* );
-    virtual bool deleteNote( KCal::Journal* );
+    virtual bool addNote(KCal::Journal *);
+    virtual bool deleteNote(KCal::Journal *);
 
-    virtual KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
+    virtual KCal::Alarm::List alarms(const QDateTime &from, const QDateTime &to);
 
 protected:
     KCal::CalendarLocal mCalendar;

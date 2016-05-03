@@ -24,18 +24,17 @@
 
 class QComboBox;
 
-class ExchangeDialog : public KDialogBase
-{
+class ExchangeDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    ExchangeDialog( const QDate &start, const QDate &end, QWidget *parent=0);
+public:
+    ExchangeDialog(const QDate &start, const QDate &end, QWidget *parent = 0);
     virtual ~ExchangeDialog();
 
-  protected slots:
+protected slots:
     void slotOk();
 
-  private:
-  public:
+private:
+public:
     KDateWidget *m_start;
     KDateWidget *m_end;
 };

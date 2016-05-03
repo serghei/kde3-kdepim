@@ -33,36 +33,36 @@
 
 namespace Akregator {
 
-TagFolderItem::TagFolderItem(FolderItem* parent, TagFolder* node) : FolderItem(parent, node)
+TagFolderItem::TagFolderItem(FolderItem *parent, TagFolder *node) : FolderItem(parent, node)
 {
 }
 
-TagFolderItem::TagFolderItem(FolderItem* parent, TreeNodeItem* after, TagFolder* node) : FolderItem(parent, after, node)
+TagFolderItem::TagFolderItem(FolderItem *parent, TreeNodeItem *after, TagFolder *node) : FolderItem(parent, after, node)
 {
 }
 
-TagFolderItem::TagFolderItem(KListView* parent, TagFolder* node) : FolderItem(parent, node)
+TagFolderItem::TagFolderItem(KListView *parent, TagFolder *node) : FolderItem(parent, node)
 {
 }
 
-TagFolderItem::TagFolderItem(KListView* parent, TreeNodeItem* after, TagFolder* node) : FolderItem(parent, after, node)
+TagFolderItem::TagFolderItem(KListView *parent, TreeNodeItem *after, TagFolder *node) : FolderItem(parent, after, node)
 {
 }
 
 
-TagFolder* TagFolderItem::node() 
-{ 
-    return static_cast<TagFolder*> (m_node); 
+TagFolder *TagFolderItem::node()
+{
+    return static_cast<TagFolder *>(m_node);
 }
 
 TagFolderItem::~TagFolderItem()
 {}
 
 
-void TagFolderItem::showContextMenu(const QPoint& p)
+void TagFolderItem::showContextMenu(const QPoint &p)
 {
-    QWidget* w = ActionManager::getInstance()->container("tagfolder_popup");
-    if (w)
+    QWidget *w = ActionManager::getInstance()->container("tagfolder_popup");
+    if(w)
         static_cast<QPopupMenu *>(w)->exec(p);
 }
 

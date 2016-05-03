@@ -43,34 +43,33 @@ class Journal;
 }
 using namespace KCal;
 
-class KOEditorGeneralJournal : public QObject
-{
+class KOEditorGeneralJournal : public QObject {
     Q_OBJECT
-  public:
-    KOEditorGeneralJournal ( QObject* parent=0, const char* name=0 );
+public:
+    KOEditorGeneralJournal(QObject *parent = 0, const char *name = 0);
     virtual ~KOEditorGeneralJournal();
 
-    void initDate( QWidget *, QBoxLayout * );
-    void initDescription( QWidget *, QBoxLayout * );
-    void initTitle( QWidget *parent, QBoxLayout *topLayout );
+    void initDate(QWidget *, QBoxLayout *);
+    void initDescription(QWidget *, QBoxLayout *);
+    void initTitle(QWidget *parent, QBoxLayout *topLayout);
 
     /** Set widgets to default values */
-    void setDefaults( const QDate &date );
-    void setDate( const QDate &date );
-    void setTime( const QTime &time );
+    void setDefaults(const QDate &date);
+    void setDate(const QDate &date);
+    void setTime(const QTime &time);
     /** Read journal object and setup widgets accordingly */
-    void readJournal( Journal *, bool tmpl = false );
+    void readJournal(Journal *, bool tmpl = false);
     /** Write journal settings to event object */
-    void writeJournal( Journal * );
+    void writeJournal(Journal *);
 
     /** Check if the input is valid. */
     bool validateInput();
 
-    void setDescription( const QString &text );
-    void setSummary( const QString &text );
+    void setDescription(const QString &text);
+    void setSummary(const QString &text);
     void finishSetup();
 
-  protected:
+protected:
     QLineEdit  *mSummaryEdit;
     QLabel     *mSummaryLabel;
     KTextEdit  *mDescriptionEdit;

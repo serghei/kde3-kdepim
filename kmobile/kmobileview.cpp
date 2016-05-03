@@ -35,12 +35,12 @@
 KMobileView::KMobileView(QWidget *parent, KConfig *_config)
     : DCOPObject("kmobileIface"), QIconView(parent)
 {
-   m_config = _config;
-   setSelectionMode(QIconView::Single);
-   setResizeMode(QIconView::Adjust);
-   setAutoArrange(true);
-   connect(this, SIGNAL(doubleClicked(QIconViewItem *)),
-                 SLOT(slotDoubleClicked(QIconViewItem *)));
+    m_config = _config;
+    setSelectionMode(QIconView::Single);
+    setResizeMode(QIconView::Adjust);
+    setAutoArrange(true);
+    connect(this, SIGNAL(doubleClicked(QIconViewItem *)),
+            SLOT(slotDoubleClicked(QIconViewItem *)));
 }
 
 KMobileView::~KMobileView()
@@ -49,65 +49,68 @@ KMobileView::~KMobileView()
 
 bool KMobileView::addNewDevice(KConfig *config, KService::Ptr service)
 {
-   kdDebug() << "New mobile device item:\n";
-   kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
-		.arg(service->library()).arg(service->name()).arg(service->icon())
-		.arg(service->comment());
+    kdDebug() << "New mobile device item:\n";
+    kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
+              .arg(service->library()).arg(service->name()).arg(service->icon())
+              .arg(service->comment());
 
-   KMobileItem *it;
-   it = new KMobileItem(this, config, service);
-   bool available = it->driverAvailable();
-   it->configSave();
-   it->writeKonquMimeFile();
-   return available;
+    KMobileItem *it;
+    it = new KMobileItem(this, config, service);
+    bool available = it->driverAvailable();
+    it->configSave();
+    it->writeKonquMimeFile();
+    return available;
 }
 
 void KMobileView::saveAll()
 {
-   m_config->setGroup( "Main" );
-   m_config->writeEntry( "Entries", count() );
-   for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
-	KMobileItem *it = static_cast<KMobileItem *>(item);
-	it->driverAvailable();
-	it->configSave();
-	it->writeKonquMimeFile();
-   }
-   m_config->sync();
-   emit signalChangeStatusbar( i18n("Configuration saved") );
+    m_config->setGroup("Main");
+    m_config->writeEntry("Entries", count());
+    for(QIconViewItem *item = firstItem(); item; item = item->nextItem())
+    {
+        KMobileItem *it = static_cast<KMobileItem *>(item);
+        it->driverAvailable();
+        it->configSave();
+        it->writeKonquMimeFile();
+    }
+    m_config->sync();
+    emit signalChangeStatusbar(i18n("Configuration saved"));
 }
 
 void KMobileView::restoreAll()
 {
-   m_config->setGroup( "Main" );
-   int num = m_config->readNumEntry( "Entries" );
-   for (int i=0; i<num; ++i) {
-	KMobileItem *it;
-	it = new KMobileItem(this, m_config, i);
-	it->driverAvailable();
-	it->writeKonquMimeFile();
-   }
-   emit signalChangeStatusbar( i18n("Configuration restored") );
+    m_config->setGroup("Main");
+    int num = m_config->readNumEntry("Entries");
+    for(int i = 0; i < num; ++i)
+    {
+        KMobileItem *it;
+        it = new KMobileItem(this, m_config, i);
+        it->driverAvailable();
+        it->writeKonquMimeFile();
+    }
+    emit signalChangeStatusbar(i18n("Configuration restored"));
 }
 
-KMobileItem *KMobileView::findDevice( const QString &deviceName ) const
+KMobileItem *KMobileView::findDevice(const QString &deviceName) const
 {
-   for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
-	if (item->text() == deviceName)
-		return static_cast<KMobileItem *>(item);
-   }
-   return 0L;
+    for(QIconViewItem *item = firstItem(); item; item = item->nextItem())
+    {
+        if(item->text() == deviceName)
+            return static_cast<KMobileItem *>(item);
+    }
+    return 0L;
 }
 
-bool KMobileView::startKonqueror( const QString &devName )
+bool KMobileView::startKonqueror(const QString &devName)
 {
-   KProcess *proc = new KProcess;
-   *proc << "kfmclient" << "openProfile" << "webbrowsing" << "mobile:/"+devName;
-   return proc->start();
+    KProcess *proc = new KProcess;
+    *proc << "kfmclient" << "openProfile" << "webbrowsing" << "mobile:/" + devName;
+    return proc->start();
 }
 
-void KMobileView::slotDoubleClicked( QIconViewItem * item )
+void KMobileView::slotDoubleClicked(QIconViewItem *item)
 {
-   startKonqueror(item->text());
+    startKonqueror(item->text());
 }
 
 
@@ -121,272 +124,273 @@ void KMobileView::slotDoubleClicked( QIconViewItem * item )
 
 QStringList KMobileView::deviceNames()
 {
-   QStringList names;
-   for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
-	names.append(item->text());
-   }
-   return names;
+    QStringList names;
+    for(QIconViewItem *item = firstItem(); item; item = item->nextItem())
+    {
+        names.append(item->text());
+    }
+    return names;
 }
 
-void KMobileView::removeDevice( QString deviceName )
+void KMobileView::removeDevice(QString deviceName)
 {
-   delete findDevice(deviceName);
-   emit signalChangeStatusbar( i18n("%1 removed").arg(deviceName) );
+    delete findDevice(deviceName);
+    emit signalChangeStatusbar(i18n("%1 removed").arg(deviceName));
 }
 
-void KMobileView::configDevice( QString deviceName )
+void KMobileView::configDevice(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return;
-   MUTEX_LOCK(dev->m_dev);
-   dev->m_dev->configDialog(this);
-   MUTEX_UNLOCK(dev->m_dev);
-}
-
-
-bool KMobileView::connectDevice( QString deviceName )
-{
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return false;
-   bool connected;
-   MUTEX_LOCK(dev->m_dev);
-   connected = dev->m_dev->connectDevice();
-   MUTEX_UNLOCK(dev->m_dev);
-   emit signalChangeStatusbar(
-	connected ? i18n("Connection to %1 established").arg(deviceName)
-	          : i18n("Connection to %1 failed").arg(deviceName) );
-   return connected;
-}
-
-bool KMobileView::disconnectDevice( QString deviceName )
-{
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return true;
-   bool disconnected;
-   MUTEX_LOCK(dev->m_dev);
-   disconnected = dev->m_dev->disconnectDevice();
-   MUTEX_UNLOCK(dev->m_dev);
-   emit signalChangeStatusbar(
-	disconnected ? i18n("%1 disconnected").arg(deviceName)
-	             : i18n("Disconnection of %1 failed").arg(deviceName) );
-   return disconnected;
-}
-
-bool KMobileView::connected( QString deviceName )
-{
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return false;
-   bool conn;
-   MUTEX_LOCK(dev->m_dev);
-   conn = dev->m_dev->connected();
-   MUTEX_UNLOCK(dev->m_dev);
-   return conn;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return;
+    MUTEX_LOCK(dev->m_dev);
+    dev->m_dev->configDialog(this);
+    MUTEX_UNLOCK(dev->m_dev);
 }
 
 
-QString KMobileView::deviceClassName( QString deviceName )
+bool KMobileView::connectDevice(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
-   QString cn;
-   MUTEX_LOCK(dev->m_dev);
-   cn = dev->m_dev->deviceClassName();
-   MUTEX_UNLOCK(dev->m_dev);
-   return cn;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return false;
+    bool connected;
+    MUTEX_LOCK(dev->m_dev);
+    connected = dev->m_dev->connectDevice();
+    MUTEX_UNLOCK(dev->m_dev);
+    emit signalChangeStatusbar(
+        connected ? i18n("Connection to %1 established").arg(deviceName)
+        : i18n("Connection to %1 failed").arg(deviceName));
+    return connected;
 }
 
-QString KMobileView::deviceName( QString deviceName )
+bool KMobileView::disconnectDevice(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
-   QString dn;
-   MUTEX_LOCK(dev->m_dev);
-   dn = dev->m_dev->deviceName();
-   MUTEX_UNLOCK(dev->m_dev);
-   return dn;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return true;
+    bool disconnected;
+    MUTEX_LOCK(dev->m_dev);
+    disconnected = dev->m_dev->disconnectDevice();
+    MUTEX_UNLOCK(dev->m_dev);
+    emit signalChangeStatusbar(
+        disconnected ? i18n("%1 disconnected").arg(deviceName)
+        : i18n("Disconnection of %1 failed").arg(deviceName));
+    return disconnected;
 }
 
-QString KMobileView::revision( QString deviceName )
+bool KMobileView::connected(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
-   QString rev;
-   MUTEX_LOCK(dev->m_dev);
-   rev = dev->m_dev->revision();
-   MUTEX_UNLOCK(dev->m_dev);
-   return rev;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return false;
+    bool conn;
+    MUTEX_LOCK(dev->m_dev);
+    conn = dev->m_dev->connected();
+    MUTEX_UNLOCK(dev->m_dev);
+    return conn;
 }
 
-int KMobileView::classType( QString deviceName )
+
+QString KMobileView::deviceClassName(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return KMobileDevice::Unclassified;
-   int ct;
-   MUTEX_LOCK(dev->m_dev);
-   ct = dev->m_dev->classType();
-   MUTEX_UNLOCK(dev->m_dev);
-   return ct;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return QString::null;
+    QString cn;
+    MUTEX_LOCK(dev->m_dev);
+    cn = dev->m_dev->deviceClassName();
+    MUTEX_UNLOCK(dev->m_dev);
+    return cn;
 }
 
-int KMobileView::capabilities( QString deviceName )
+QString KMobileView::deviceName(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return KMobileDevice::hasNothing;
-   int cap;
-   MUTEX_LOCK(dev->m_dev);
-   cap = dev->m_dev->capabilities();
-   MUTEX_UNLOCK(dev->m_dev);
-   return cap;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return QString::null;
+    QString dn;
+    MUTEX_LOCK(dev->m_dev);
+    dn = dev->m_dev->deviceName();
+    MUTEX_UNLOCK(dev->m_dev);
+    return dn;
 }
 
-QString KMobileView::nameForCap( QString deviceName, int cap )
+QString KMobileView::revision(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
-   QString nc;
-   MUTEX_LOCK(dev->m_dev);
-   nc = dev->m_dev->nameForCap(cap);
-   MUTEX_UNLOCK(dev->m_dev);
-   return nc;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return QString::null;
+    QString rev;
+    MUTEX_LOCK(dev->m_dev);
+    rev = dev->m_dev->revision();
+    MUTEX_UNLOCK(dev->m_dev);
+    return rev;
 }
 
-QString KMobileView::iconFileName( QString deviceName )
+int KMobileView::classType(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
-   QString fn;
-   MUTEX_LOCK(dev->m_dev);
-   fn = dev->m_dev->iconFileName();
-   MUTEX_UNLOCK(dev->m_dev);
-   return fn;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return KMobileDevice::Unclassified;
+    int ct;
+    MUTEX_LOCK(dev->m_dev);
+    ct = dev->m_dev->classType();
+    MUTEX_UNLOCK(dev->m_dev);
+    return ct;
 }
 
-int KMobileView::numAddresses( QString deviceName )
+int KMobileView::capabilities(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return 0;
-   int num;
-   MUTEX_LOCK(dev->m_dev);
-   num = dev->m_dev->numAddresses();
-   MUTEX_UNLOCK(dev->m_dev);
-   return num;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return KMobileDevice::hasNothing;
+    int cap;
+    MUTEX_LOCK(dev->m_dev);
+    cap = dev->m_dev->capabilities();
+    MUTEX_UNLOCK(dev->m_dev);
+    return cap;
 }
 
-QString KMobileView::readAddress( QString deviceName, int index )
+QString KMobileView::nameForCap(QString deviceName, int cap)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return QString::null;
+    QString nc;
+    MUTEX_LOCK(dev->m_dev);
+    nc = dev->m_dev->nameForCap(cap);
+    MUTEX_UNLOCK(dev->m_dev);
+    return nc;
+}
 
-   int err;
-   KABC::Addressee adr;
-   MUTEX_LOCK(dev->m_dev);
-   err = dev->m_dev->readAddress(index, adr);
-   MUTEX_UNLOCK(dev->m_dev);
-   if (err)
-	return QString::null;
+QString KMobileView::iconFileName(QString deviceName)
+{
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return QString::null;
+    QString fn;
+    MUTEX_LOCK(dev->m_dev);
+    fn = dev->m_dev->iconFileName();
+    MUTEX_UNLOCK(dev->m_dev);
+    return fn;
+}
 
-   KABC::VCardConverter converter;
-   QString str = converter.createVCard(adr);
-   if (str.isEmpty())
+int KMobileView::numAddresses(QString deviceName)
+{
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return 0;
+    int num;
+    MUTEX_LOCK(dev->m_dev);
+    num = dev->m_dev->numAddresses();
+    MUTEX_UNLOCK(dev->m_dev);
+    return num;
+}
+
+QString KMobileView::readAddress(QString deviceName, int index)
+{
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
         return QString::null;
 
-   emit signalChangeStatusbar( i18n("Read addressbook entry %1 from %2")
-		.arg(index).arg(deviceName) );
+    int err;
+    KABC::Addressee adr;
+    MUTEX_LOCK(dev->m_dev);
+    err = dev->m_dev->readAddress(index, adr);
+    MUTEX_UNLOCK(dev->m_dev);
+    if(err)
+        return QString::null;
 
-   return str;
+    KABC::VCardConverter converter;
+    QString str = converter.createVCard(adr);
+    if(str.isEmpty())
+        return QString::null;
+
+    emit signalChangeStatusbar(i18n("Read addressbook entry %1 from %2")
+                               .arg(index).arg(deviceName));
+
+    return str;
 }
 
-bool KMobileView::storeAddress( QString deviceName, int index, QString vcard, bool append )
+bool KMobileView::storeAddress(QString deviceName, int index, QString vcard, bool append)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return false;
-
-   KABC::VCardConverter converter;
-   KABC::Addressee adr = converter.parseVCard(vcard);
-   if (adr.isEmpty())
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
         return false;
 
-   int err;
-   MUTEX_LOCK(dev->m_dev);
-   err = dev->m_dev->storeAddress(index, adr, append);
-   MUTEX_UNLOCK(dev->m_dev);
-   emit signalChangeStatusbar(
-	err ? i18n("Storing contact %1 on %2 failed").arg(index).arg(deviceName)
-	    : i18n("Contact %1 stored on %2").arg(index).arg(deviceName) );
-   return (err == 0);
+    KABC::VCardConverter converter;
+    KABC::Addressee adr = converter.parseVCard(vcard);
+    if(adr.isEmpty())
+        return false;
+
+    int err;
+    MUTEX_LOCK(dev->m_dev);
+    err = dev->m_dev->storeAddress(index, adr, append);
+    MUTEX_UNLOCK(dev->m_dev);
+    emit signalChangeStatusbar(
+        err ? i18n("Storing contact %1 on %2 failed").arg(index).arg(deviceName)
+        : i18n("Contact %1 stored on %2").arg(index).arg(deviceName));
+    return (err == 0);
 }
 
-int KMobileView::numCalendarEntries( QString deviceName )
+int KMobileView::numCalendarEntries(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return 0;
-   int num;
-   MUTEX_LOCK(dev->m_dev);
-   num = dev->m_dev->numCalendarEntries();
-   MUTEX_UNLOCK(dev->m_dev);
-   return num;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return 0;
+    int num;
+    MUTEX_LOCK(dev->m_dev);
+    num = dev->m_dev->numCalendarEntries();
+    MUTEX_UNLOCK(dev->m_dev);
+    return num;
 }
 
-int KMobileView::numNotes( QString deviceName )
+int KMobileView::numNotes(QString deviceName)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return 0;
-   int num;
-   MUTEX_LOCK(dev->m_dev);
-   num = dev->m_dev->numNotes();
-   MUTEX_UNLOCK(dev->m_dev);
-   return num;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return 0;
+    int num;
+    MUTEX_LOCK(dev->m_dev);
+    num = dev->m_dev->numNotes();
+    MUTEX_UNLOCK(dev->m_dev);
+    return num;
 }
 
-QString KMobileView::readNote( QString deviceName, int index )
+QString KMobileView::readNote(QString deviceName, int index)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return QString::null;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return QString::null;
 
-   QString note;
-   int err;
-   MUTEX_LOCK(dev->m_dev);
-   err = dev->m_dev->readNote(index, note);
-   MUTEX_UNLOCK(dev->m_dev);
-   if (err)
-	return QString::null;
-   emit signalChangeStatusbar( i18n("Read note %1 from %2")
-		.arg(index).arg(deviceName) );
-   return note;
+    QString note;
+    int err;
+    MUTEX_LOCK(dev->m_dev);
+    err = dev->m_dev->readNote(index, note);
+    MUTEX_UNLOCK(dev->m_dev);
+    if(err)
+        return QString::null;
+    emit signalChangeStatusbar(i18n("Read note %1 from %2")
+                               .arg(index).arg(deviceName));
+    return note;
 }
 
-bool KMobileView::storeNote( QString deviceName, int index, QString note )
+bool KMobileView::storeNote(QString deviceName, int index, QString note)
 {
-   KMobileItem *dev = findDevice(deviceName);
-   if (!dev || !dev->driverAvailable())
-	return false;
+    KMobileItem *dev = findDevice(deviceName);
+    if(!dev || !dev->driverAvailable())
+        return false;
 
-   int err;
-   MUTEX_LOCK(dev->m_dev);
-   err = dev->m_dev->storeNote(index, note);
-   MUTEX_UNLOCK(dev->m_dev);
-   if (err)
-	return false;
-   emit signalChangeStatusbar( i18n("Stored note %1 to %2")
-		.arg(index).arg(deviceName) );
-   return true;
+    int err;
+    MUTEX_LOCK(dev->m_dev);
+    err = dev->m_dev->storeNote(index, note);
+    MUTEX_UNLOCK(dev->m_dev);
+    if(err)
+        return false;
+    emit signalChangeStatusbar(i18n("Stored note %1 to %2")
+                               .arg(index).arg(deviceName));
+    return true;
 }
 
 
@@ -406,33 +410,33 @@ bool KMobileView::storeNote( QString deviceName, int index, QString note )
  */
 QStringList KMobileView::kio_devices_deviceInfo(QString deviceName)
 {
-   QStringList mobiles = deviceNames();
-   if (mobiles.count() == 0)
-	return mobiles;
+    QStringList mobiles = deviceNames();
+    if(mobiles.count() == 0)
+        return mobiles;
 
-   QStringList mountList;
-   for ( QStringList::Iterator it = mobiles.begin(); it != mobiles.end(); ++it ) {
-	QString name = *it;
+    QStringList mountList;
+    for(QStringList::Iterator it = mobiles.begin(); it != mobiles.end(); ++it)
+    {
+        QString name = *it;
 
-	if (deviceName.isEmpty())
-		mountList << name;
-	else
-		if (deviceName!=name)
-			continue;
+        if(deviceName.isEmpty())
+            mountList << name;
+        else if(deviceName != name)
+            continue;
 
-	KMobileItem *dev = findDevice(name);
-	QString mime = dev ? dev->getKonquMimeType() : KMOBILE_MIMETYPE_DEVICE;
+        KMobileItem *dev = findDevice(name);
+        QString mime = dev ? dev->getKonquMimeType() : KMOBILE_MIMETYPE_DEVICE;
 
-	mountList << name;
-	mountList << " ";
-	mountList << QString("mobile:/%1").arg(name); // KIO::encodeFileName()
-	mountList << mime;
-	mountList << "true"; // mountState
-	mountList << "---";
-	if (!deviceName.isEmpty())
-		break;
-   }
-   return mountList;
+        mountList << name;
+        mountList << " ";
+        mountList << QString("mobile:/%1").arg(name); // KIO::encodeFileName()
+        mountList << mime;
+        mountList << "true"; // mountState
+        mountList << "---";
+        if(!deviceName.isEmpty())
+            break;
+    }
+    return mountList;
 }
 
 

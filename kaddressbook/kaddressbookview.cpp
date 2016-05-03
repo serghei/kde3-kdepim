@@ -37,167 +37,174 @@
 
 #include "kaddressbookview.h"
 
-KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent,
-                                    const char *name )
-    : QWidget( parent, name ), mCore( core ), mFieldList()
+KAddressBookView::KAddressBookView(KAB::Core *core, QWidget *parent,
+                                   const char *name)
+    : QWidget(parent, name), mCore(core), mFieldList()
 {
-  initGUI();
+    initGUI();
 
-  connect( mCore->searchManager(), SIGNAL( contactsUpdated() ),
-           SLOT( updateView() ) );
+    connect(mCore->searchManager(), SIGNAL(contactsUpdated()),
+            SLOT(updateView()));
 }
 
 KAddressBookView::~KAddressBookView()
 {
-  kdDebug(5720) << "KAddressBookView::~KAddressBookView: destroying - "
-                << name() << endl;
+    kdDebug(5720) << "KAddressBookView::~KAddressBookView: destroying - "
+                  << name() << endl;
 }
 
-void KAddressBookView::readConfig( KConfig *config )
+void KAddressBookView::readConfig(KConfig *config)
 {
-  mFieldList = KABC::Field::restoreFields( config, "KABCFields" );
+    mFieldList = KABC::Field::restoreFields(config, "KABCFields");
 
-  if ( mFieldList.isEmpty() )
-    mFieldList = KABC::Field::defaultFields();
+    if(mFieldList.isEmpty())
+        mFieldList = KABC::Field::defaultFields();
 
-  mDefaultFilterType = (DefaultFilterType)config->readNumEntry( "DefaultFilterType", 1 );
-  mDefaultFilterName = config->readEntry( "DefaultFilterName" );
+    mDefaultFilterType = (DefaultFilterType)config->readNumEntry("DefaultFilterType", 1);
+    mDefaultFilterName = config->readEntry("DefaultFilterName");
 }
 
-void KAddressBookView::writeConfig( KConfig* )
+void KAddressBookView::writeConfig(KConfig *)
 {
-  // Most of writing the config is handled by the ConfigureViewDialog
+    // Most of writing the config is handled by the ConfigureViewDialog
 }
 
 QString KAddressBookView::selectedEmails()
 {
-  bool first = true;
-  QString emailAddrs;
-  const QStringList uidList = selectedUids();
-  KABC::Addressee addr;
-  QString email;
+    bool first = true;
+    QString emailAddrs;
+    const QStringList uidList = selectedUids();
+    KABC::Addressee addr;
+    QString email;
 
-  QStringList::ConstIterator it;
-  for ( it = uidList.begin(); it != uidList.end(); ++it ) {
-    addr = mCore->addressBook()->findByUid( *it );
+    QStringList::ConstIterator it;
+    for(it = uidList.begin(); it != uidList.end(); ++it)
+    {
+        addr = mCore->addressBook()->findByUid(*it);
 
-    if ( !addr.isEmpty() ) {
-      QString m = QString::null;
+        if(!addr.isEmpty())
+        {
+            QString m = QString::null;
 
-      if ( addr.emails().count() > 1 )
-        m = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
+            if(addr.emails().count() > 1)
+                m = KABC::EmailSelector::getEmail(addr.emails(), addr.preferredEmail(), this);
 
-      email = addr.fullEmail( m );
+            email = addr.fullEmail(m);
 
-      if ( !first )
-        emailAddrs += ", ";
-      else
-        first = false;
+            if(!first)
+                emailAddrs += ", ";
+            else
+                first = false;
 
-      emailAddrs += email;
+            emailAddrs += email;
+        }
     }
-  }
 
-  return emailAddrs;
+    return emailAddrs;
 }
 
 KABC::Addressee::List KAddressBookView::addressees()
 {
-  if ( mFilter.isEmpty() )
-    return mCore->searchManager()->contacts();
+    if(mFilter.isEmpty())
+        return mCore->searchManager()->contacts();
 
-  KABC::Addressee::List addresseeList;
-  const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
+    KABC::Addressee::List addresseeList;
+    const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
 
-  KABC::Addressee::List::ConstIterator it;
-  KABC::Addressee::List::ConstIterator contactsEnd( contacts.end() );
-  for ( it = contacts.begin(); it != contactsEnd; ++it ) {
-    if ( mFilter.filterAddressee( *it ) )
-      addresseeList.append( *it );
-  }
+    KABC::Addressee::List::ConstIterator it;
+    KABC::Addressee::List::ConstIterator contactsEnd(contacts.end());
+    for(it = contacts.begin(); it != contactsEnd; ++it)
+    {
+        if(mFilter.filterAddressee(*it))
+            addresseeList.append(*it);
+    }
 
-  return addresseeList;
+    return addresseeList;
 }
 
 void KAddressBookView::initGUI()
 {
-  // Create the layout
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    // Create the layout
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  // Add the view widget
-  mViewWidget = new QWidget( this );
-  layout->addWidget( mViewWidget );
+    // Add the view widget
+    mViewWidget = new QWidget(this);
+    layout->addWidget(mViewWidget);
 }
 
 KABC::Field::List KAddressBookView::fields() const
 {
-  return mFieldList;
+    return mFieldList;
 }
 
-void KAddressBookView::setFilter( const Filter &filter )
+void KAddressBookView::setFilter(const Filter &filter)
 {
-  mFilter = filter;
+    mFilter = filter;
 }
 
 KAddressBookView::DefaultFilterType KAddressBookView::defaultFilterType() const
 {
-  return mDefaultFilterType;
+    return mDefaultFilterType;
 }
 
 const QString &KAddressBookView::defaultFilterName() const
 {
-  return mDefaultFilterName;
+    return mDefaultFilterName;
 }
 
 KAB::Core *KAddressBookView::core() const
 {
-  return mCore;
+    return mCore;
 }
 
-void KAddressBookView::popup( const QPoint &point )
+void KAddressBookView::popup(const QPoint &point)
 {
-  if ( !mCore->guiClient() ) {
-    kdWarning() << "No GUI client set!" << endl;
-    return;
-  }
+    if(!mCore->guiClient())
+    {
+        kdWarning() << "No GUI client set!" << endl;
+        return;
+    }
 
-  QPopupMenu *menu = static_cast<QPopupMenu*>( mCore->guiClient()->factory()->container( "RMBPopup",
-                                               mCore->guiClient() ) );
-  if ( menu )
-    menu->popup( point );
+    QPopupMenu *menu = static_cast<QPopupMenu *>(mCore->guiClient()->factory()->container("RMBPopup",
+                       mCore->guiClient()));
+    if(menu)
+        menu->popup(point);
 }
 
 QWidget *KAddressBookView::viewWidget()
 {
-  return mViewWidget;
+    return mViewWidget;
 }
 
 void KAddressBookView::updateView()
 {
-  const QStringList uidList = selectedUids();
+    const QStringList uidList = selectedUids();
 
-  refresh(); // This relists and deselects everything, in all views
+    refresh(); // This relists and deselects everything, in all views
 
-  if ( !uidList.isEmpty() ) {
-    // Keep previous selection
-    QStringList::ConstIterator it, uidListEnd( uidList.end() );
-    for ( it = uidList.begin(); it != uidListEnd; ++it )
-      setSelected( *it, true );
+    if(!uidList.isEmpty())
+    {
+        // Keep previous selection
+        QStringList::ConstIterator it, uidListEnd(uidList.end());
+        for(it = uidList.begin(); it != uidListEnd; ++it)
+            setSelected(*it, true);
 
-  } else {
-    const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
-    if ( !contacts.isEmpty() )
-      setFirstSelected( true );
+    }
     else
-      emit selected( QString::null );
-  }
+    {
+        const KABC::Addressee::List contacts = mCore->searchManager()->contacts();
+        if(!contacts.isEmpty())
+            setFirstSelected(true);
+        else
+            emit selected(QString::null);
+    }
 }
 
-ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,
-                                                   QWidget *parent,
-                                                   const char *name )
+ViewConfigureWidget *ViewFactory::configureWidget(KABC::AddressBook *ab,
+        QWidget *parent,
+        const char *name)
 {
-  return new ViewConfigureWidget( ab, parent, name );
+    return new ViewConfigureWidget(ab, parent, name);
 }
 
 #include "kaddressbookview.moc"

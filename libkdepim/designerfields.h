@@ -32,36 +32,34 @@
 
 namespace KPIM {
 
-class KDE_EXPORT DesignerFields : public QWidget
-{
+class KDE_EXPORT DesignerFields : public QWidget {
     Q_OBJECT
-  public:
-    DesignerFields( const QString &uiFile, QWidget *parent,
-      const char *name = 0 );
+public:
+    DesignerFields(const QString &uiFile, QWidget *parent,
+                   const char *name = 0);
 
-    class Storage
-    {
-      public:
+    class Storage {
+    public:
         virtual ~Storage() {}
-      
+
         virtual QStringList keys() = 0;
-        virtual QString read( const QString &key ) = 0;
-        virtual void write( const QString &key, const QString &value ) = 0;
+        virtual QString read(const QString &key) = 0;
+        virtual void write(const QString &key, const QString &value) = 0;
     };
 
-    void load( Storage * );
-    void save( Storage * );
+    void load(Storage *);
+    void save(Storage *);
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
     QString identifier() const;
     QString title() const;
 
-  signals:
+signals:
     void modified();
 
-  private:
-    void initGUI( const QString& );
+private:
+    void initGUI(const QString &);
 
     QMap<QString, QWidget *> mWidgets;
     QValueList<QWidget *> mDisabledWidgets;

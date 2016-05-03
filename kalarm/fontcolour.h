@@ -32,47 +32,52 @@ class QPushButton;
 class CheckBox;
 
 
-class FontColourChooser : public QWidget
-{
-	Q_OBJECT
+class FontColourChooser : public QWidget {
+    Q_OBJECT
 public:
-	explicit FontColourChooser(QWidget* parent = 0, const char* name = 0,
-	       bool onlyFixed = false,
-	       const QStringList& fontList = QStringList(),
-	       const QString& frameLabel = i18n("Requested font"),
-	       bool editColours = false, bool fg = true, bool defaultFont = false,
-	       int visibleListSize = 8);
+    explicit FontColourChooser(QWidget *parent = 0, const char *name = 0,
+                               bool onlyFixed = false,
+                               const QStringList &fontList = QStringList(),
+                               const QString &frameLabel = i18n("Requested font"),
+                               bool editColours = false, bool fg = true, bool defaultFont = false,
+                               int visibleListSize = 8);
 
-	void              setDefaultFont();
-	void              setFont(const QFont&, bool onlyFixed = false);
-	bool              defaultFont() const;
-	QFont             font() const;
-	QColor            fgColour() const;
-	QColor            bgColour() const;
-	const ColourList& colours() const   { return mColourList; }
-	void              setFgColour(const QColor&);
-	void              setBgColour(const QColor&);
-	void              setColours(const ColourList&);
-	QString           sampleText() const;
-	void              setSampleText(const QString& text);
-	bool              isReadOnly() const     { return mReadOnly; }
-	void              setReadOnly(bool);
-	virtual bool      eventFilter(QObject*, QEvent*);
+    void              setDefaultFont();
+    void              setFont(const QFont &, bool onlyFixed = false);
+    bool              defaultFont() const;
+    QFont             font() const;
+    QColor            fgColour() const;
+    QColor            bgColour() const;
+    const ColourList &colours() const
+    {
+        return mColourList;
+    }
+    void              setFgColour(const QColor &);
+    void              setBgColour(const QColor &);
+    void              setColours(const ColourList &);
+    QString           sampleText() const;
+    void              setSampleText(const QString &text);
+    bool              isReadOnly() const
+    {
+        return mReadOnly;
+    }
+    void              setReadOnly(bool);
+    virtual bool      eventFilter(QObject *, QEvent *);
 
 private slots:
-	void              setSampleColour();
-	void              slotDefaultFontToggled(bool);
-	void              slotAddColour();
-	void              slotRemoveColour();
+    void              setSampleColour();
+    void              slotDefaultFontToggled(bool);
+    void              slotAddColour();
+    void              slotRemoveColour();
 
 private:
-	ColourCombo*     mFgColourButton;       // or null
-	ColourCombo*     mBgColourButton;
-	QPushButton*     mRemoveColourButton;
-	KFontChooser*    mFontChooser;
-	CheckBox*        mDefaultFont;          // or null
-	ColourList       mColourList;
-	bool             mReadOnly;
+    ColourCombo     *mFgColourButton;       // or null
+    ColourCombo     *mBgColourButton;
+    QPushButton     *mRemoveColourButton;
+    KFontChooser    *mFontChooser;
+    CheckBox        *mDefaultFont;          // or null
+    ColourList       mColourList;
+    bool             mReadOnly;
 };
 
 #endif

@@ -39,63 +39,71 @@ class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
 
-class VCalConduitPrivate : public VCalConduitPrivateBase
-{
+class VCalConduitPrivate : public VCalConduitPrivateBase {
 public:
-	VCalConduitPrivate(KCal::Calendar *buddy);
-	virtual ~VCalConduitPrivate() {};
+    VCalConduitPrivate(KCal::Calendar *buddy);
+    virtual ~VCalConduitPrivate() {};
 
-	KCal::Event::List fAllEvents;
-	KCal::Event::List::ConstIterator fAllEventsIterator;
+    KCal::Event::List fAllEvents;
+    KCal::Event::List::ConstIterator fAllEventsIterator;
 
-	virtual int updateIncidences();
-	virtual void addIncidence(KCal::Incidence*);
-	virtual void removeIncidence(KCal::Incidence *);
-	virtual KCal::Incidence *findIncidence(recordid_t);
-	/**
-	 * Find the incidence based on tosearch's description and date information.
-	 * Returns 0L if no incidence could be found.
-	 */
-	virtual KCal::Incidence *findIncidence(PilotRecordBase *tosearch);
-	virtual KCal::Incidence *getNextIncidence();
-	virtual KCal::Incidence *getNextModifiedIncidence();
-	virtual int count() {return fAllEvents.count();};
+    virtual int updateIncidences();
+    virtual void addIncidence(KCal::Incidence *);
+    virtual void removeIncidence(KCal::Incidence *);
+    virtual KCal::Incidence *findIncidence(recordid_t);
+    /**
+     * Find the incidence based on tosearch's description and date information.
+     * Returns 0L if no incidence could be found.
+     */
+    virtual KCal::Incidence *findIncidence(PilotRecordBase *tosearch);
+    virtual KCal::Incidence *getNextIncidence();
+    virtual KCal::Incidence *getNextModifiedIncidence();
+    virtual int count()
+    {
+        return fAllEvents.count();
+    };
 } ;
 
 
 
-class VCalConduit : public VCalConduitBase
-{
-Q_OBJECT
+class VCalConduit : public VCalConduitBase {
+    Q_OBJECT
 public:
-	VCalConduit(KPilotLink *,
-		const char *name=0L,
-		const QStringList &args = QStringList());
-	virtual ~VCalConduit();
+    VCalConduit(KPilotLink *,
+                const char *name = 0L,
+                const QStringList &args = QStringList());
+    virtual ~VCalConduit();
 
 protected:
-	virtual const QString dbname() { return CSL1("DatebookDB"); };
+    virtual const QString dbname()
+    {
+        return CSL1("DatebookDB");
+    };
 
-	virtual void preSync() {VCalConduitBase::preSync(); _getAppInfo(); };
-	virtual VCalConduitPrivateBase *createPrivateCalendarData(KCal::Calendar *fCalendar);
+    virtual void preSync()
+    {
+        VCalConduitBase::preSync();
+        _getAppInfo();
+    };
+    virtual VCalConduitPrivateBase *createPrivateCalendarData(KCal::Calendar *fCalendar);
 
-	void _getAppInfo();
-	void _setAppInfo();
+    void _getAppInfo();
+    void _setAppInfo();
 
-	virtual PilotRecordBase *newPilotEntry(PilotRecord*r);
-	virtual KCal::Incidence*newIncidence();
-	virtual const QString getTitle(PilotRecordBase *de);
-	virtual VCalConduitSettings *config();
+    virtual PilotRecordBase *newPilotEntry(PilotRecord *r);
+    virtual KCal::Incidence *newIncidence();
+    virtual const QString getTitle(PilotRecordBase *de);
+    virtual VCalConduitSettings *config();
 public:
-	static VCalConduitSettings *theConfig();
+    static VCalConduitSettings *theConfig();
 
 protected:
-	virtual PilotRecord *recordFromIncidence(PilotRecordBase *de,
-		const KCal::Incidence *e);
-	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *e,
-		const PilotRecordBase *de);
+    virtual PilotRecord *recordFromIncidence(PilotRecordBase *de,
+            const KCal::Incidence *e);
+    virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *e,
+            const PilotRecordBase *de);
 
-	PilotDateInfo *fAppointmentAppInfo;
+    PilotDateInfo *fAppointmentAppInfo;
 };
 
 #endif

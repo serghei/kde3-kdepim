@@ -25,22 +25,21 @@
 class KAEvent;
 
 
-class TemplateMenuAction : public KActionMenu
-{
-		Q_OBJECT
-	public:
-		TemplateMenuAction(const QString& label, const QString& icon, QObject* receiver,
-		                   const char* slot, KActionCollection* parent, const char* name = 0);
+class TemplateMenuAction : public KActionMenu {
+    Q_OBJECT
+public:
+    TemplateMenuAction(const QString &label, const QString &icon, QObject *receiver,
+                       const char *slot, KActionCollection *parent, const char *name = 0);
 
-	signals:
-		void   selected(const KAEvent&);
+signals:
+    void   selected(const KAEvent &);
 
-	private slots:
-		void   slotInitMenu();
-		void   slotSelected(int id);
+private slots:
+    void   slotInitMenu();
+    void   slotSelected(int id);
 
-	private:
-		QStringList mOriginalTexts;   // menu item texts without added ampersands
+private:
+    QStringList mOriginalTexts;   // menu item texts without added ampersands
 };
 
 #endif // TEMPLATEMENUACTION_H

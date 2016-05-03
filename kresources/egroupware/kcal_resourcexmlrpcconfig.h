@@ -30,18 +30,17 @@ class KURLRequester;
 
 namespace KCal {
 
-class KDE_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KDE_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceXMLRPCConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceXMLRPCConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  private:
+private:
     KURLRequester *mURL;
     KLineEdit *mDomain;
     KLineEdit *mUser;

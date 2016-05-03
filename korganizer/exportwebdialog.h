@@ -34,51 +34,50 @@ using namespace KCal;
   ExportWebDialog is a class that provides the dialog and functions to export a
   calendar as web page.
 */
-class ExportWebDialog : public KDialogBase, public KPrefsWidManager
-{
+class ExportWebDialog : public KDialogBase, public KPrefsWidManager {
     Q_OBJECT
-  public:
-    ExportWebDialog( HTMLExportSettings *settings, QWidget *parent = 0,
-                     const char *name = 0 );
+public:
+    ExportWebDialog(HTMLExportSettings *settings, QWidget *parent = 0,
+                    const char *name = 0);
     virtual ~ExportWebDialog();
 
-  public slots:
-    void slotTextChanged( const QString & _text);
+public slots:
+    void slotTextChanged(const QString &_text);
 
-  protected:
+protected:
     void setupGeneralPage();
     void setupEventPage();
     void setupTodoPage();
-//    void setupJournalPage();
-//    void setupFreeBusyPage();
-//    void setupAdvancedPage();
+    //    void setupJournalPage();
+    //    void setupFreeBusyPage();
+    //    void setupAdvancedPage();
 
-  public slots:
+public slots:
     void setDefaults();
     void readConfig();
     void writeConfig();
 
-  signals:
+signals:
     void configChanged();
-    void exportHTML( HTMLExportSettings* );
+    void exportHTML(HTMLExportSettings *);
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotApply();
     void slotDefault();
 
-  protected:
+protected:
     virtual void usrReadConfig() {}
     virtual void usrWriteConfig() {}
-    
-  private:
-    HTMLExportSettings* mSettings;
+
+private:
+    HTMLExportSettings *mSettings;
     QFrame *mGeneralPage;
     QFrame *mEventPage;
     QFrame *mTodoPage;
-//    QFrame *mJournalPage;
-//    QFrame *mFreeBusyPage;
-//    QFrame *mAdvancedPage;
+    //    QFrame *mJournalPage;
+    //    QFrame *mFreeBusyPage;
+    //    QFrame *mAdvancedPage;
 };
 
 #endif // _EXPORTWEBDIALOG_H

@@ -29,34 +29,34 @@ class QComboBox;
 
 namespace KMail {
 
-  class XFaceConfigurator : public QWidget {
+class XFaceConfigurator : public QWidget {
     Q_OBJECT
-  public:
-    XFaceConfigurator( QWidget * parent=0, const char * name=0 );
+public:
+    XFaceConfigurator(QWidget *parent = 0, const char *name = 0);
     virtual ~XFaceConfigurator();
 
     bool isXFaceEnabled() const;
-    void setXFaceEnabled( bool enable );
+    void setXFaceEnabled(bool enable);
 
 
     QString xface() const;
-    void setXFace( const QString & text );
+    void setXFace(const QString &text);
 
-  protected:
-    QCheckBox     * mEnableCheck;
-    QTextEdit     * mTextEdit;
-    QLabel        * mXFaceLabel;
-    QComboBox     * mSourceCombo;
+protected:
+    QCheckBox      *mEnableCheck;
+    QTextEdit      *mTextEdit;
+    QLabel         *mXFaceLabel;
+    QComboBox      *mSourceCombo;
 
 
-  private:
-    void setXfaceFromFile( const KURL &url );
+private:
+    void setXfaceFromFile(const KURL &url);
 
-  private slots:
+private slots:
     void slotSelectFile();
     void slotSelectFromAddressbook();
     void slotUpdateXFace();
-  };
+};
 } // namespace KMail
 
 #endif // __KMAIL_XFACECONFIGURATOR_H__

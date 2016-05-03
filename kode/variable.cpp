@@ -26,38 +26,41 @@
 using namespace KODE;
 
 Variable::Variable()
-  : mIsStatic( false )
+    : mIsStatic(false)
 {
 }
 
-Variable::Variable( const QString &name, const QString &type, bool isStatic )
-  : mIsStatic( isStatic )
+Variable::Variable(const QString &name, const QString &type, bool isStatic)
+    : mIsStatic(isStatic)
 {
-  mType = type;
+    mType = type;
 
-  if ( name.isEmpty() ) {
-    mName = "mUndefined";
-  } else {
-    mName = name;
-  }
+    if(name.isEmpty())
+    {
+        mName = "mUndefined";
+    }
+    else
+    {
+        mName = name;
+    }
 }
 
-void Variable::setName( const QString &n )
+void Variable::setName(const QString &n)
 {
-  mName = n;
+    mName = n;
 }
 
-void Variable::setType( const QString &t )
+void Variable::setType(const QString &t)
 {
-  mType = t;
+    mType = t;
 }
 
-void Variable::setStatic( bool s )
+void Variable::setStatic(bool s)
 {
-  mIsStatic = s;
+    mIsStatic = s;
 }
 
-void Variable::setInitializer( const QString &i )
+void Variable::setInitializer(const QString &i)
 {
-  mInitializer = i;
+    mInitializer = i;
 }

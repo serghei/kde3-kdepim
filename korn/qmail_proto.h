@@ -21,38 +21,65 @@
 
 #include "kio_proto.h"
 
-class QMail_Protocol : public KIO_Protocol
-{
+class QMail_Protocol : public KIO_Protocol {
 public:
-	QMail_Protocol() {}
-	virtual ~QMail_Protocol() {}
+    QMail_Protocol() {}
+    virtual ~QMail_Protocol() {}
 
-	virtual KIO_Protocol * clone() const { return new QMail_Protocol; }
+    virtual KIO_Protocol *clone() const
+    {
+        return new QMail_Protocol;
+    }
 
-	virtual bool connectionBased() const { return false; }
+    virtual bool connectionBased() const
+    {
+        return false;
+    }
 
-	virtual QString protocol() const { return "file"; }
-	virtual QString configName() const { return "qmail"; }
+    virtual QString protocol() const
+    {
+        return "file";
+    }
+    virtual QString configName() const
+    {
+        return "qmail";
+    }
 
-	virtual bool canReadSubjects() const { return true; }
-	virtual bool canDeleteMail() const { return true; }
-	virtual bool canReadMail() const { return true; }
-	virtual bool fullMessage() const { return true; }
+    virtual bool canReadSubjects() const
+    {
+        return true;
+    }
+    virtual bool canDeleteMail() const
+    {
+        return true;
+    }
+    virtual bool canReadMail() const
+    {
+        return true;
+    }
+    virtual bool fullMessage() const
+    {
+        return true;
+    }
 
-	virtual void recheckKURL( KURL &kurl, KIO::MetaData& ) const
-		{ if( kurl.path().right( 1 ) == "/" )
-		  	kurl.setPath( kurl.path() +  "new" );
-		  else
-		  	kurl.setPath( kurl.path() + "/new" );
-		}
-	 
-	
-	virtual QString mailboxName() const { return i18n( "Path:" ); }
+    virtual void recheckKURL(KURL &kurl, KIO::MetaData &) const
+    {
+        if(kurl.path().right(1) == "/")
+            kurl.setPath(kurl.path() +  "new");
+        else
+            kurl.setPath(kurl.path() + "/new");
+    }
 
-	virtual void configFillGroupBoxes( QStringList* ) const;
-        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
-        virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
-        virtual void writeEntries( QMap< QString, QString >* ) const;
+
+    virtual QString mailboxName() const
+    {
+        return i18n("Path:");
+    }
+
+    virtual void configFillGroupBoxes(QStringList *) const;
+    virtual void configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *) const;
+    virtual void readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const;
+    virtual void writeEntries(QMap< QString, QString > *) const;
 };
 
 #endif

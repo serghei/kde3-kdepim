@@ -26,23 +26,21 @@
 
 #include <qwidget.h>
 
-namespace Komposer
-{
+namespace Komposer {
 
-  class CoreWidget : public QWidget
-  {
+class CoreWidget : public QWidget {
     Q_OBJECT
-  public:
-    CoreWidget( QWidget *parent, const char *name=0 );
+public:
+    CoreWidget(QWidget *parent, const char *name = 0);
 
-    virtual QString subject() const =0;
-    virtual QStringList to()  const =0;
-    virtual QStringList cc()  const =0;
-    virtual QStringList bcc() const =0;
-    virtual QString from() const =0;
-    virtual QString replyTo() const =0;
-    virtual AttachmentList attachments() const =0;
-  };
+    virtual QString subject() const = 0;
+    virtual QStringList to()  const = 0;
+    virtual QStringList cc()  const = 0;
+    virtual QStringList bcc() const = 0;
+    virtual QString from() const = 0;
+    virtual QString replyTo() const = 0;
+    virtual AttachmentList attachments() const = 0;
+};
 }
 
 #endif

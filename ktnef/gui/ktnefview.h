@@ -24,29 +24,28 @@
 
 class KTNEFAttach;
 
-class KDE_EXPORT KTNEFView : public KListView
-{
-	Q_OBJECT
+class KDE_EXPORT KTNEFView : public KListView {
+    Q_OBJECT
 
 public:
-	KTNEFView(QWidget *parent = 0, const char *name = 0);
-	~KTNEFView();
+    KTNEFView(QWidget *parent = 0, const char *name = 0);
+    ~KTNEFView();
 
-	void setAttachments(QPtrList<KTNEFAttach> *list);
-	QPtrList<KTNEFAttach>* getSelection();
+    void setAttachments(QPtrList<KTNEFAttach> *list);
+    QPtrList<KTNEFAttach> *getSelection();
 
 signals:
-	void dragRequested( const QValueList<KTNEFAttach*>& list );
+    void dragRequested(const QValueList<KTNEFAttach *> &list);
 
 protected:
-	void resizeEvent(QResizeEvent *e);
-	void startDrag();
+    void resizeEvent(QResizeEvent *e);
+    void startDrag();
 
 private slots:
-	void adjustColumnWidth();
+    void adjustColumnWidth();
 
 private:
-	QPtrList<KTNEFAttach>	attachments_;
+    QPtrList<KTNEFAttach>	attachments_;
 };
 
 #endif

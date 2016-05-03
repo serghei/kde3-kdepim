@@ -61,168 +61,178 @@ class QStringList;
  * @version $Id: listCat.h 437980 2005-07-23 19:53:57Z kainhofe $
  */
 
-class ListCategorizer : public KListView
-{
-	Q_OBJECT
+class ListCategorizer : public KListView {
+    Q_OBJECT
 
 public:
-	/**
-	 * Constructor.
-	 *
-	 * This creates a new empty ListCategorizer with
-	 * startOpen set to false. The parameters
-	 * @p parent and @p name are the usual Qt ones.
-	 */
-	ListCategorizer(QWidget *parent,
-		const char *name = 0);
-	/**
-	 * Constructor.
-	 *
-	 * This creates a ListCategorizer with the given @p categories
-	 * already inserted. In addition, this constructor lets you
-	 * specify whether or not startOpen is set.
-	 */
-	ListCategorizer(const QStringList& categories,
-		bool startOpen,
-		QWidget *parent,
-		const char *name = 0);
+    /**
+     * Constructor.
+     *
+     * This creates a new empty ListCategorizer with
+     * startOpen set to false. The parameters
+     * @p parent and @p name are the usual Qt ones.
+     */
+    ListCategorizer(QWidget *parent,
+                    const char *name = 0);
+    /**
+     * Constructor.
+     *
+     * This creates a ListCategorizer with the given @p categories
+     * already inserted. In addition, this constructor lets you
+     * specify whether or not startOpen is set.
+     */
+    ListCategorizer(const QStringList &categories,
+                    bool startOpen,
+                    QWidget *parent,
+                    const char *name = 0);
 
-	/**
-	 * Add a list of categories to the ListCategorizer.
-	 * All the categories are added without descriptions;
-	 * use addCategory on a per-category basis for that.
-	 */
-	void addCategories(const QStringList&);
-	/**
-	 * Add a category with name @p name and optional
-	 * @p description. This can be useful if you want
-	 * either a description for the category or want to
-	 * refer to this category in the future without
-	 * using findCategory().
-	 *
-	 * @return the QListViewItem created for the category
-	 */
-	QListViewItem *addCategory(const QString& name,
-		const QString& description = QString::null);
-	/**
-	 * Returns the list of names of the categories in
-	 * the ListCategorizer.
-	 */
-	QStringList categories() const
-	{
-		return listSiblings(firstChild());
-	} ;
+    /**
+     * Add a list of categories to the ListCategorizer.
+     * All the categories are added without descriptions;
+     * use addCategory on a per-category basis for that.
+     */
+    void addCategories(const QStringList &);
+    /**
+     * Add a category with name @p name and optional
+     * @p description. This can be useful if you want
+     * either a description for the category or want to
+     * refer to this category in the future without
+     * using findCategory().
+     *
+     * @return the QListViewItem created for the category
+     */
+    QListViewItem *addCategory(const QString &name,
+                               const QString &description = QString::null);
+    /**
+     * Returns the list of names of the categories in
+     * the ListCategorizer.
+     */
+    QStringList categories() const
+    {
+        return listSiblings(firstChild());
+    } ;
 
-	/**
-	 * Add a single item to the category named @p category,
-	 * with name @p name and description set to @p description.
-	 * This might be a convenience function, but it's probably
-	 * more convenient to just use QListViewItem's
-	 * constructor. That way you can also hide more data in
-	 * the remaining columns.
-	 */
-	QListViewItem *addItem(const QString& category,
-		const QString& name,
-		const QString& description = QString::null);
-	/**
-	 * Returns the list of strings in column @p column under
-	 * category @p category. You can do this to get, for example
-	 * the names of all the items categorized under a given
-	 * category, or, more usefully, set @p column to something
-	 * other that 0 (name) or 1 (description) to return the
-	 * QStringList hidden in the non-visible columns.
-	 */
-	QStringList items(const QString& category,int column=0) const
-	{
-		return listSiblings(findCategory(category),column);
-	}
+    /**
+     * Add a single item to the category named @p category,
+     * with name @p name and description set to @p description.
+     * This might be a convenience function, but it's probably
+     * more convenient to just use QListViewItem's
+     * constructor. That way you can also hide more data in
+     * the remaining columns.
+     */
+    QListViewItem *addItem(const QString &category,
+                           const QString &name,
+                           const QString &description = QString::null);
+    /**
+     * Returns the list of strings in column @p column under
+     * category @p category. You can do this to get, for example
+     * the names of all the items categorized under a given
+     * category, or, more usefully, set @p column to something
+     * other that 0 (name) or 1 (description) to return the
+     * QStringList hidden in the non-visible columns.
+     */
+    QStringList items(const QString &category, int column = 0) const
+    {
+        return listSiblings(findCategory(category), column);
+    }
 
-	/**
-	 * Given a category categoryName return the QListViewItem
-	 * that represents that category. Probably a useless function,
-	 * since just remembering the pointer addCategory gives
-	 * you is faster and uses hardly any memory.
-	 */
-	QListViewItem *findCategory(const QString& categoryName) const;
-	/**
-	 * Return the list of strings in column @p column of all siblings
-	 * of the given item @p p. If you remembered a pointer to a
-	 * category, you can use
-	 * @code
-	 * QStringList l = lc->listSiblings(stdKDE->firstChild(),2);
-	 * @endcode
-	 * to get the list of strings in hidden column 2 under
-	 * the category you remembered.
-	 */
-	QStringList listSiblings(const QListViewItem *p,int column=0) const;
+    /**
+     * Given a category categoryName return the QListViewItem
+     * that represents that category. Probably a useless function,
+     * since just remembering the pointer addCategory gives
+     * you is faster and uses hardly any memory.
+     */
+    QListViewItem *findCategory(const QString &categoryName) const;
+    /**
+     * Return the list of strings in column @p column of all siblings
+     * of the given item @p p. If you remembered a pointer to a
+     * category, you can use
+     * @code
+     * QStringList l = lc->listSiblings(stdKDE->firstChild(),2);
+     * @endcode
+     * to get the list of strings in hidden column 2 under
+     * the category you remembered.
+     */
+    QStringList listSiblings(const QListViewItem *p, int column = 0) const;
 
-	/**
-	 * @return whether new categories are inserted in an
-	 * open state or not.
-	 *
-	 * @see setStartOpen
-	 */
-	bool startOpen() const { return fStartOpen; } ;
-	/**
-	 * Enable categories being inserted in an open state.
-	 * It is disabled by default but may be set from the
-	 * constructor.
-	 */
-	void setStartOpen(bool b) { fStartOpen=b; } ;
+    /**
+     * @return whether new categories are inserted in an
+     * open state or not.
+     *
+     * @see setStartOpen
+     */
+    bool startOpen() const
+    {
+        return fStartOpen;
+    } ;
+    /**
+     * Enable categories being inserted in an open state.
+     * It is disabled by default but may be set from the
+     * constructor.
+     */
+    void setStartOpen(bool b)
+    {
+        fStartOpen = b;
+    } ;
 
 protected:
-	/**
-	 * Reimplemented to prevent categories from being dragged.
-	 */
-	virtual bool acceptDrag (QDropEvent* event) const;
-	/**
-	 * Reimplemented to prevent categories from being dragged.
-	 */
-	virtual void startDrag();
-	/**
-	 * Reimplemented to prevent categories from being dragged.
-	 */
-	virtual void contentsDropEvent (QDropEvent*);
+    /**
+     * Reimplemented to prevent categories from being dragged.
+     */
+    virtual bool acceptDrag(QDropEvent *event) const;
+    /**
+     * Reimplemented to prevent categories from being dragged.
+     */
+    virtual void startDrag();
+    /**
+     * Reimplemented to prevent categories from being dragged.
+     */
+    virtual void contentsDropEvent(QDropEvent *);
 
 
 
 private:
-	/**
-	 * Call several KListView functions to set up useful
-	 * behavior for this particular class.
-	 */
-	void setupWidget();
+    /**
+     * Call several KListView functions to set up useful
+     * behavior for this particular class.
+     */
+    void setupWidget();
 
-	bool fStartOpen:1;
+    bool fStartOpen: 1;
 } ;
 
 
-class RichListViewItem : public QListViewItem
-{
+class RichListViewItem : public QListViewItem {
 public:
-	RichListViewItem(QListViewItem *parent,
-		QString,
-		int);
-	virtual ~RichListViewItem();
+    RichListViewItem(QListViewItem *parent,
+                     QString,
+                     int);
+    virtual ~RichListViewItem();
 
-	virtual void paintCell(QPainter *,
-		const QColorGroup &,
-		int column,
-		int width,
-		int alignment);
+    virtual void paintCell(QPainter *,
+                           const QColorGroup &,
+                           int column,
+                           int width,
+                           int alignment);
 
-	virtual void setup();
+    virtual void setup();
 
-	bool isRich(int c) const { return fIsRich[c]; } ;
-	void setRich(int c,bool b) { fIsRich[c]=b; } ;
+    bool isRich(int c) const
+    {
+        return fIsRich[c];
+    } ;
+    void setRich(int c, bool b)
+    {
+        fIsRich[c] = b;
+    } ;
 
 protected:
-	void computeHeight(int c);
+    void computeHeight(int c);
 
 protected:
-	bool *fIsRich;
-	QRect *fRect;
-	int fColumns;
+    bool *fIsRich;
+    QRect *fRect;
+    int fColumns;
 
 } ;
 

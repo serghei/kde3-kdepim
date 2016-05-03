@@ -30,29 +30,28 @@ class Job;
 
 class SloxBase;
 
-class KDE_EXPORT SloxAccounts : public QObject
-{
+class KDE_EXPORT SloxAccounts : public QObject {
     Q_OBJECT
-  public:
-    SloxAccounts( SloxBase *res, const KURL &baseUrl );
+public:
+    SloxAccounts(SloxBase *res, const KURL &baseUrl);
     ~SloxAccounts();
 
-    void insertUser( const QString &id, const KABC::Addressee &a );
+    void insertUser(const QString &id, const KABC::Addressee &a);
 
-    KABC::Addressee lookupUser( const QString &id );
+    KABC::Addressee lookupUser(const QString &id);
 
-    QString lookupId( const QString &email );
+    QString lookupId(const QString &email);
 
-  protected:
+protected:
     void requestAccounts();
     void readAccounts();
 
     QString cacheFile() const;
 
-  protected slots:
-    void slotResult( KIO::Job * );
+protected slots:
+    void slotResult(KIO::Job *);
 
-  private:
+private:
     QString mDomain;
 
     KIO::Job *mDownloadJob;

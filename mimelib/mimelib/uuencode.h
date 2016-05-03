@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -71,11 +71,11 @@ public:
     //. this member function to reuse the object for more than one encode
     //. or decode operation.
 
-    void SetFileName(const char* aName);
+    void SetFileName(const char *aName);
     //. Sets the file name to be included in the uuencoded output.  The
     //. implementation limits the file name to 255 characters.
 
-    const char* FileName() const;
+    const char *FileName() const;
     //. Returns the file name extracted while uudecoding. The implementation
     //. limits the file name to 255 characters.
 
@@ -87,17 +87,17 @@ public:
     DwUint16 FileMode() const;
     //. Returns the file mode extracted while uudecoding.
 
-    void SetBinaryChars(const DwString& aStr);
+    void SetBinaryChars(const DwString &aStr);
     //. Sets the string of binary data to be used in the uuencode operation.
 
-    const DwString& BinaryChars() const;
+    const DwString &BinaryChars() const;
     //. Returns the string of binary data extracted during a uudecode
     //. operation.
 
-    void SetAsciiChars(const DwString& aStr);
+    void SetAsciiChars(const DwString &aStr);
     //. Sets the string of ASCII characters to used in the decode operation.
 
-    const DwString& AsciiChars() const;
+    const DwString &AsciiChars() const;
     //. Returns the string of ASCII characters created during a uuencode
     //. operation.
 
@@ -116,7 +116,7 @@ private:
 
     DwString mBinaryChars;
     DwString mAsciiChars;
-   
+
 };
 
 #endif

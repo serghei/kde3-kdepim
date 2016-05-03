@@ -39,60 +39,62 @@ class Event;
 }
 using namespace KCal;
 
-class KOEditorGeneralEvent : public KOEditorGeneral
-{
+class KOEditorGeneralEvent : public KOEditorGeneral {
     Q_OBJECT
-  public:
-    KOEditorGeneralEvent (QObject* parent=0,const char* name=0);
+public:
+    KOEditorGeneralEvent(QObject *parent = 0, const char *name = 0);
     virtual ~KOEditorGeneralEvent();
 
-    void initTime(QWidget *,QBoxLayout *);
-    void initClass(QWidget *,QBoxLayout *);
-    void initInvitationBar( QWidget* parent, QBoxLayout *layout );
+    void initTime(QWidget *, QBoxLayout *);
+    void initClass(QWidget *, QBoxLayout *);
+    void initInvitationBar(QWidget *parent, QBoxLayout *layout);
 
     void finishSetup();
 
     /** Set widgets to default values */
-    void setDefaults( const QDateTime &from, const QDateTime &to, bool allDay );
+    void setDefaults(const QDateTime &from, const QDateTime &to, bool allDay);
     /**
       Read event object and setup widgets accordingly. If templ is true, the
       event is read as template, i.e. the time and date information isn't set.
     */
-    void readEvent( Event *event, Calendar *calendar, bool tmpl = false );
+    void readEvent(Event *event, Calendar *calendar, bool tmpl = false);
     /** Write event settings to event object */
-    void writeEvent( Event * );
+    void writeEvent(Event *);
 
     /** Check if the input is valid. */
     bool validateInput();
 
-    void updateRecurrenceSummary( const QString &summary );
+    void updateRecurrenceSummary(const QString &summary);
 
-    QFrame* invitationBar() const { return mInvitationBar; }
+    QFrame *invitationBar() const
+    {
+        return mInvitationBar;
+    }
 
-  public slots:
-    void setDateTimes( const QDateTime &start, const QDateTime &end );
+public slots:
+    void setDateTimes(const QDateTime &start, const QDateTime &end);
     void setDuration();
 
-  protected slots:
-    void timeStuffDisable( bool disable );
-    void associateTime( bool time );
+protected slots:
+    void timeStuffDisable(bool disable);
+    void associateTime(bool time);
 
-    void startTimeChanged( QTime );
-    void startDateChanged( const QDate& );
-    void endTimeChanged( QTime );
-    void endDateChanged( const QDate& );
+    void startTimeChanged(QTime);
+    void startDateChanged(const QDate &);
+    void endTimeChanged(QTime);
+    void endDateChanged(const QDate &);
 
     void emitDateTimeStr();
 
-  signals:
+signals:
     void allDayChanged(bool);
-    void dateTimeStrChanged( const QString & );
-    void dateTimesChanged( const QDateTime &start, const QDateTime &end );
+    void dateTimeStrChanged(const QString &);
+    void dateTimesChanged(const QDateTime &start, const QDateTime &end);
     void editRecurrence();
     void acceptInvitation();
     void declineInvitation();
 
-  private:
+private:
     QLabel                  *mStartDateLabel;
     QLabel                  *mEndDateLabel;
     KDateEdit               *mStartDateEdit;

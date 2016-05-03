@@ -39,7 +39,7 @@
 class QDomElement;
 
 namespace KCal {
-  class Journal;
+class Journal;
 }
 
 namespace Kolab {
@@ -52,58 +52,61 @@ namespace Kolab {
  */
 class Note : public KolabBase {
 public:
-  /// Use this to parse an xml string to a journal entry
-  /// The caller is responsible for deleting the returned journal
-  static KCal::Journal* xmlToJournal( const QString& xml );
+    /// Use this to parse an xml string to a journal entry
+    /// The caller is responsible for deleting the returned journal
+    static KCal::Journal *xmlToJournal(const QString &xml);
 
-  /// Use this to get an xml string describing this journal entry
-  static QString journalToXML( KCal::Journal* );
+    /// Use this to get an xml string describing this journal entry
+    static QString journalToXML(KCal::Journal *);
 
-  /// Create a note object and
-  explicit Note( KCal::Journal* journal = 0 );
-  virtual ~Note();
+    /// Create a note object and
+    explicit Note(KCal::Journal *journal = 0);
+    virtual ~Note();
 
-  void saveTo( KCal::Journal* journal );
+    void saveTo(KCal::Journal *journal);
 
-  virtual QString type() const { return "Note"; }
+    virtual QString type() const
+    {
+        return "Note";
+    }
 
-  virtual void setSummary( const QString& summary );
-  virtual QString summary() const;
+    virtual void setSummary(const QString &summary);
+    virtual QString summary() const;
 
-  virtual void setBackgroundColor( const QColor& bgColor );
-  virtual QColor backgroundColor() const;
+    virtual void setBackgroundColor(const QColor &bgColor);
+    virtual QColor backgroundColor() const;
 
-  virtual void setForegroundColor( const QColor& fgColor );
-  virtual QColor foregroundColor() const;
+    virtual void setForegroundColor(const QColor &fgColor);
+    virtual QColor foregroundColor() const;
 
-  virtual void setRichText( bool richText );
-  virtual bool richText() const;
+    virtual void setRichText(bool richText);
+    virtual bool richText() const;
 
-  // Load the attributes of this class
-  virtual bool loadAttribute( QDomElement& );
+    // Load the attributes of this class
+    virtual bool loadAttribute(QDomElement &);
 
-  // Save the attributes of this class
-  virtual bool saveAttributes( QDomElement& ) const;
+    // Save the attributes of this class
+    virtual bool saveAttributes(QDomElement &) const;
 
-  // Load this note by reading the XML file
-  virtual bool loadXML( const QDomDocument& xml );
+    // Load this note by reading the XML file
+    virtual bool loadXML(const QDomDocument &xml);
 
-  // Serialize this note to an XML string
-  virtual QString saveXML() const;
+    // Serialize this note to an XML string
+    virtual QString saveXML() const;
 
 protected:
-  // Read all known fields from this ical incidence
-  void setFields( const KCal::Journal* );
+    // Read all known fields from this ical incidence
+    void setFields(const KCal::Journal *);
 
-  // Save all known fields into this ical incidence
-  void saveTo( KCal::Incidence* ) const;
+    // Save all known fields into this ical incidence
+    void saveTo(KCal::Incidence *) const;
 
-  QString productID() const;
+    QString productID() const;
 
-  QString mSummary;
-  QColor mBackgroundColor;
-  QColor mForegroundColor;
-  bool mRichText;
+    QString mSummary;
+    QColor mBackgroundColor;
+    QColor mForegroundColor;
+    bool mRichText;
 };
 
 }

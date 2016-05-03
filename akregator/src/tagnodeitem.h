@@ -27,28 +27,26 @@
 #include "treenodeitem.h"
 #include "tagnode.h"
 
-namespace Akregator 
-{
+namespace Akregator {
 
 class Folder;
 class FolderItem;
 
-class TagNodeItem : public TreeNodeItem
-{
+class TagNodeItem : public TreeNodeItem {
 
 public:
-    TagNodeItem(FolderItem* parent, TagNode* node);
-    TagNodeItem(FolderItem* parent, TreeNodeItem* after, TagNode* node);
-    TagNodeItem(KListView* parent, TagNode* node);
-    TagNodeItem(KListView* parent, TreeNodeItem* after, TagNode* node);
+    TagNodeItem(FolderItem *parent, TagNode *node);
+    TagNodeItem(FolderItem *parent, TreeNodeItem *after, TagNode *node);
+    TagNodeItem(KListView *parent, TagNode *node);
+    TagNodeItem(KListView *parent, TreeNodeItem *after, TagNode *node);
     virtual ~TagNodeItem();
     virtual void nodeChanged();
-    
-    virtual TagNode* node();
-    virtual void showContextMenu(const QPoint& p);
+
+    virtual TagNode *node();
+    virtual void showContextMenu(const QPoint &p);
 
 private:
-    void initialize(TagNode* node);
+    void initialize(TagNode *node);
 };
 
 }

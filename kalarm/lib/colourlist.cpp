@@ -21,23 +21,23 @@
 #include "colourlist.h"
 
 
-ColourList::ColourList(const QColor* colours)
+ColourList::ColourList(const QColor *colours)
 {
-	while (colours->isValid())
-		mList.append((*colours++).rgb());
+    while(colours->isValid())
+        mList.append((*colours++).rgb());
 }
 
-void ColourList::insert(const QColor& colour)
+void ColourList::insert(const QColor &colour)
 {
-	QRgb rgb = colour.rgb();
-	for (QValueListIterator<QRgb> it = mList.begin();  it != mList.end();  ++it)
-	{
-		if (rgb <= *it)
-		{
-			if (rgb != *it)    // don't insert duplicates
-				mList.insert(it, rgb);
-			return;
-		}
-	}
-	mList.append(rgb);
+    QRgb rgb = colour.rgb();
+    for(QValueListIterator<QRgb> it = mList.begin();  it != mList.end();  ++it)
+    {
+        if(rgb <= *it)
+        {
+            if(rgb != *it)     // don't insert duplicates
+                mList.insert(it, rgb);
+            return;
+        }
+    }
+    mList.append(rgb);
 }

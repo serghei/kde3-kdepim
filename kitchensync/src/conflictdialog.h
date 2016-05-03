@@ -28,12 +28,11 @@
 /**
   Base class for SingleConflictDialog and MultiConflictDialog.
  */
-class ConflictDialog : public QDialog
-{
-  public:
-    ConflictDialog( QSync::SyncMapping &mapping, QWidget *parent );
+class ConflictDialog : public QDialog {
+public:
+    ConflictDialog(QSync::SyncMapping &mapping, QWidget *parent);
 
-  protected:
+protected:
     QSync::SyncMapping mMapping;
 };
 

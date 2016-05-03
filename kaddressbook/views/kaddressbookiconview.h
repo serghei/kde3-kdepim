@@ -33,61 +33,64 @@ class KConfig;
 class AddresseeIconView;
 class AddresseeIconViewItem;
 
-namespace KABC { class AddressBook; }
+namespace KABC {
+class AddressBook;
+}
 
 /** This is an example kaddressbook view that is implemented using
 * KIconView. This view is not the most useful view, but it displays
 * how simple implementing a new view can be.
 */
-class KAddressBookIconView : public KAddressBookView
-{
-  Q_OBJECT
+class KAddressBookIconView : public KAddressBookView {
+    Q_OBJECT
 
-  public:
-    KAddressBookIconView( KAB::Core *core, QWidget *parent,
-                          const char *name = 0 );
+public:
+    KAddressBookIconView(KAB::Core *core, QWidget *parent,
+                         const char *name = 0);
     virtual ~KAddressBookIconView();
 
     virtual QStringList selectedUids();
-    virtual QString type() const { return "Icon"; }
+    virtual QString type() const
+    {
+        return "Icon";
+    }
     virtual KABC::Field *sortField() const;
-    virtual void readConfig( KConfig *config );
+    virtual void readConfig(KConfig *config);
 
     void scrollUp();
     void scrollDown();
 
-  public slots:
-    void refresh( const QString &uid = QString() );
-    void setSelected( const QString &uid = QString(), bool selected = true );
-    virtual void setFirstSelected( bool selected = true );
+public slots:
+    void refresh(const QString &uid = QString());
+    void setSelected(const QString &uid = QString(), bool selected = true);
+    virtual void setFirstSelected(bool selected = true);
 
-  protected slots:
-    void addresseeExecuted( QIconViewItem *item );
+protected slots:
+    void addresseeExecuted(QIconViewItem *item);
     void addresseeSelected();
-    void rmbClicked( QIconViewItem*, const QPoint& );
+    void rmbClicked(QIconViewItem *, const QPoint &);
 
-  private:
+private:
     AddresseeIconView *mIconView;
     QPtrList<AddresseeIconViewItem> mIconList;
 };
 
 
-class AddresseeIconView : public KIconView
-{
-  Q_OBJECT
+class AddresseeIconView : public KIconView {
+    Q_OBJECT
 
-  public:
-    AddresseeIconView( QWidget *parent, const char *name = 0 );
+public:
+    AddresseeIconView(QWidget *parent, const char *name = 0);
     ~AddresseeIconView();
 
-  signals:
-    void addresseeDropped( QDropEvent* );
+signals:
+    void addresseeDropped(QDropEvent *);
     void startAddresseeDrag();
 
-  protected:
+protected:
     virtual QDragObject *dragObject();
 
-  protected slots:
-    void itemDropped( QDropEvent*, const QValueList<QIconDragItem>& );
+protected slots:
+    void itemDropped(QDropEvent *, const QValueList<QIconDragItem> &);
 };
 #endif

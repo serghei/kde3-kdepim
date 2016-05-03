@@ -48,93 +48,105 @@
 #include <qcolor.h>
 #include <qstring.h>
 
-KMail::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, WFlags f )
-  : QLabel( parent, name, f ),
-    mMode( Normal )
+KMail::HtmlStatusBar::HtmlStatusBar(QWidget *parent, const char *name, WFlags f)
+    : QLabel(parent, name, f),
+      mMode(Normal)
 {
-  setAlignment( AlignHCenter|AlignTop );
-  // Don't force a minimum height to the reader widget
-  setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Ignored ) );
-  upd();
+    setAlignment(AlignHCenter | AlignTop);
+    // Don't force a minimum height to the reader widget
+    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored));
+    upd();
 }
 
 KMail::HtmlStatusBar::~HtmlStatusBar() {}
 
-void KMail::HtmlStatusBar::upd() {
-  setEraseColor( bgColor() );
-  setPaletteForegroundColor( fgColor() );
-  setText( message() );
+void KMail::HtmlStatusBar::upd()
+{
+    setEraseColor(bgColor());
+    setPaletteForegroundColor(fgColor());
+    setText(message());
 }
 
-void KMail::HtmlStatusBar::setNormalMode() {
-  setMode( Normal );
+void KMail::HtmlStatusBar::setNormalMode()
+{
+    setMode(Normal);
 }
 
-void KMail::HtmlStatusBar::setHtmlMode() {
-  setMode( Html );
+void KMail::HtmlStatusBar::setHtmlMode()
+{
+    setMode(Html);
 }
 
-void KMail::HtmlStatusBar::setNeutralMode() {
-  setMode( Neutral );
+void KMail::HtmlStatusBar::setNeutralMode()
+{
+    setMode(Neutral);
 }
 
-void KMail::HtmlStatusBar::setMode( Mode m ) {
-  if ( m == mode() )
-    return;
-  mMode = m;
-  upd();
+void KMail::HtmlStatusBar::setMode(Mode m)
+{
+    if(m == mode())
+        return;
+    mMode = m;
+    upd();
 }
 
-QString KMail::HtmlStatusBar::message() const {
-  switch ( mode() ) {
-  case Html: // bold: "HTML Message"
-    return i18n( "<qt><b><br>H<br>T<br>M<br>L<br> "
-		 "<br>M<br>e<br>s<br>s<br>a<br>g<br>e</b></qt>" );
-  case Normal: // normal: "No HTML Message"
-    return i18n( "<qt><br>N<br>o<br> "
-		 "<br>H<br>T<br>M<br>L<br> "
-		 "<br>M<br>e<br>s<br>s<br>a<br>g<br>e</qt>" );
-  default:
-  case Neutral:
-    return QString::null;
-  }
+QString KMail::HtmlStatusBar::message() const
+{
+    switch(mode())
+    {
+        case Html: // bold: "HTML Message"
+            return i18n("<qt><b><br>H<br>T<br>M<br>L<br> "
+                        "<br>M<br>e<br>s<br>s<br>a<br>g<br>e</b></qt>");
+        case Normal: // normal: "No HTML Message"
+            return i18n("<qt><br>N<br>o<br> "
+                        "<br>H<br>T<br>M<br>L<br> "
+                        "<br>M<br>e<br>s<br>s<br>a<br>g<br>e</qt>");
+        default:
+        case Neutral:
+            return QString::null;
+    }
 }
 
 namespace {
-  inline KConfig * config() {
+inline KConfig *config()
+{
 #ifndef KMAIL_TESTING
     return KMKernel::config();
 #else
     return kApp->config();
 #endif
-  }
+}
 }
 
-QColor KMail::HtmlStatusBar::fgColor() const {
-  KConfigGroup conf( config(), "Reader" );
-  switch ( mode() ) {
-  case Html:
-    return conf.readColorEntry( "ColorbarForegroundHTML", &Qt::white );
-  case Normal:
-    return conf.readColorEntry( "ColorbarForegroundPlain", &Qt::black );
-  default:
-  case Neutral:
-    return Qt::black;
-  }
+QColor KMail::HtmlStatusBar::fgColor() const
+{
+    KConfigGroup conf(config(), "Reader");
+    switch(mode())
+    {
+        case Html:
+            return conf.readColorEntry("ColorbarForegroundHTML", &Qt::white);
+        case Normal:
+            return conf.readColorEntry("ColorbarForegroundPlain", &Qt::black);
+        default:
+        case Neutral:
+            return Qt::black;
+    }
 }
 
-QColor KMail::HtmlStatusBar::bgColor() const {
-  KConfigGroup conf( config(), "Reader" );
+QColor KMail::HtmlStatusBar::bgColor() const
+{
+    KConfigGroup conf(config(), "Reader");
 
-  switch ( mode() ) {
-  case Html:
-    return conf.readColorEntry( "ColorbarBackgroundHTML", &Qt::black );
-  case Normal:
-    return conf.readColorEntry( "ColorbarBackgroundPlain", &Qt::lightGray );
-  default:
-  case Neutral:
-    return Qt::white;
-  }
+    switch(mode())
+    {
+        case Html:
+            return conf.readColorEntry("ColorbarBackgroundHTML", &Qt::black);
+        case Normal:
+            return conf.readColorEntry("ColorbarBackgroundPlain", &Qt::lightGray);
+        default:
+        case Neutral:
+            return Qt::white;
+    }
 }
 
 #include "htmlstatusbar.moc"

@@ -26,55 +26,58 @@ class KMMainWidget;
 
 namespace KMail {
 
-class FolderTreeBase : public KFolderTree
-{
-  Q_OBJECT
-  public:
-    FolderTreeBase( KMMainWidget *mainWidget, QWidget *parent = 0, const char *name = 0 );
+class FolderTreeBase : public KFolderTree {
+    Q_OBJECT
+public:
+    FolderTreeBase(KMMainWidget *mainWidget, QWidget *parent = 0, const char *name = 0);
 
     /** Returns the main widget that this widget is a child of. */
-    KMMainWidget* mainWidget() const { return mMainWidget; }
+    KMMainWidget *mainWidget() const
+    {
+        return mMainWidget;
+    }
 
     /** Find index of given folder. Returns 0 if not found */
-    virtual QListViewItem* indexOfFolder( const KMFolder* folder ) const
+    virtual QListViewItem *indexOfFolder(const KMFolder *folder) const
     {
-       if ( mFolderToItem.contains( folder ) )
-         return mFolderToItem[ folder ];
-       else
-         return 0;
+        if(mFolderToItem.contains(folder))
+            return mFolderToItem[ folder ];
+        else
+            return 0;
     }
 
-    void insertIntoFolderToItemMap( const KMFolder *folder, QListViewItem* item )
+    void insertIntoFolderToItemMap(const KMFolder *folder, QListViewItem *item)
     {
-      mFolderToItem.insert( folder, item );
+        mFolderToItem.insert(folder, item);
     }
 
-    void removeFromFolderToItemMap( const KMFolder *folder )
+    void removeFromFolderToItemMap(const KMFolder *folder)
     {
-      mFolderToItem.remove( folder );
+        mFolderToItem.remove(folder);
     }
 
-  signals:
+signals:
     /** Messages have been dropped onto a folder */
-    void folderDrop(KMFolder*);
+    void folderDrop(KMFolder *);
 
     /** Messages have been dropped onto a folder with Ctrl */
-    void folderDropCopy(KMFolder*);
+    void folderDropCopy(KMFolder *);
 
     void triggerRefresh();
 
-  public slots:
+public slots:
     /** Update the total and unread columns (if available, or if forced) */
-    void slotUpdateCounts(KMFolder * folder, bool force = false );
+    void slotUpdateCounts(KMFolder *folder, bool force = false);
 
-  protected:
-    enum {
-      DRAG_COPY = 0,
-      DRAG_MOVE = 1,
-      DRAG_CANCEL = 2
+protected:
+    enum
+    {
+        DRAG_COPY = 0,
+        DRAG_MOVE = 1,
+        DRAG_CANCEL = 2
     };
-    int dndMode( bool alwaysAsk = false );
-    void contentsDropEvent( QDropEvent *e );
+    int dndMode(bool alwaysAsk = false);
+    void contentsDropEvent(QDropEvent *e);
 
     /** Catch palette changes */
     virtual bool event(QEvent *e);
@@ -86,11 +89,11 @@ class FolderTreeBase : public KFolderTree
     bool hideLocalInbox() const;
 
     /** Handle drop of a MailList object. */
-    void handleMailListDrop( QDropEvent *event, KMFolder *destination );
+    void handleMailListDrop(QDropEvent *event, KMFolder *destination);
 
-  protected:
+protected:
     KMMainWidget *mMainWidget;
-    QMap<const KMFolder*, QListViewItem*> mFolderToItem;
+    QMap<const KMFolder *, QListViewItem *> mFolderToItem;
 };
 
 }

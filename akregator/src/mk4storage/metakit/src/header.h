@@ -44,7 +44,7 @@
 
 #define __K4CONF_H__    // skip section in "mk4.h", since we use "header.h"
 
-    // if neither MFC nor STD are specified, default to Universal version
+// if neither MFC nor STD are specified, default to Universal version
 #if !q4_MFC && !q4_STD && !defined (q4_UNIV)
 #define q4_UNIV 1
 #endif
@@ -134,7 +134,7 @@
 #define d4_memmove(d,s,n)   bcopy(s,d,n)
 #else
 #define d4_memmove f4_memmove
-extern void f4_memmove(void* d, const void* s, int n);
+extern void f4_memmove(void *d, const void *s, int n);
 #endif
 
 typedef unsigned char t4_byte;  // create typedefs for t4_byte, etc.
@@ -174,7 +174,7 @@ typedef unsigned char t4_byte;  // create typedefs for t4_byte, etc.
 // Debug logging option, called internally where properties are modified
 
 #if q4_LOGPROPMODS
-void f4_DoLogProp(const c4_Handler*, int, const char*, int);
+void f4_DoLogProp(const c4_Handler *, int, const char *, int);
 #else
 #define f4_LogPropMods(a,b) 0
 #endif
@@ -209,7 +209,7 @@ void f4_DoLogProp(const c4_Handler*, int, const char*, int);
 #error Exactly one container library should have been defined
 #endif
 #endif
-    
+
 /////////////////////////////////////////////////////////////////////////////
 
 #endif

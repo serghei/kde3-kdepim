@@ -31,29 +31,28 @@
 class QTextEdit;
 class KAddressBookIface_stub;
 
-class TestPart : public KParts::ReadOnlyPart
-{
-  Q_OBJECT
+class TestPart : public KParts::ReadOnlyPart {
+    Q_OBJECT
 
 public:
 
-  TestPart(QObject *parent=0, const char *name=0);
+    TestPart(QObject *parent = 0, const char *name = 0);
     ~TestPart();
 
 protected:
 
-  virtual bool openFile();
-  bool connectToAddressBook();
+    virtual bool openFile();
+    bool connectToAddressBook();
 
 protected slots:
 
-  void newContact();
-  void unregisteredFromDCOP( const QCString& );
+    void newContact();
+    void unregisteredFromDCOP(const QCString &);
 
 private:
 
-  QTextEdit *m_edit;
-  KAddressBookIface_stub *m_kab_stub;
+    QTextEdit *m_edit;
+    KAddressBookIface_stub *m_kab_stub;
 
 };
 

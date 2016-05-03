@@ -27,15 +27,14 @@ template< class T, class R > class QMap;
 * @author Sirtaj Singh Kang (taj@kde.org)
 * @version $Id: maildrop.h 441746 2005-07-31 20:27:02Z mkelder $
 */
-class KMailDrop : public QObject
-{
-  Q_OBJECT
+class KMailDrop : public QObject {
+    Q_OBJECT
 
-  public:
+public:
 
     enum  Style { Plain, Colour, Icon };
 
-  private:
+private:
 
     QString _caption;
     QString _clickCmd;
@@ -53,7 +52,7 @@ class KMailDrop : public QObject
     bool    _passivePopup;
     bool    _passiveDate;
 
-  public:
+public:
 
     static const char *TypeConfigKey;
     static const char *CaptionConfigKey;
@@ -72,7 +71,7 @@ class KMailDrop : public QObject
     static const char *PassiveDateConfigKey; //Enabled date in Passive popup
     static const char *UseBoxSettingsConfigKey;
     static const char *RealNameConfigKey;
-    
+
     /**
      * KMailDrop Constructor
      */
@@ -83,57 +82,63 @@ class KMailDrop : public QObject
      */
     virtual ~KMailDrop();
 
-    /** 
+    /**
      * @return TRUE if the mailbox and its configuration are valid.
      */
     virtual bool valid() = 0;
 
-    /** 
+    /**
      * Number of messages in the mailbox at the last count.
      * @return The number of messages in the mailbox since last count.
      */
-    int count() {return _lastCount;};
+    int count()
+    {
+        return _lastCount;
+    };
 
-    /** 
+    /**
      * Recheck the number of letters in this mailbox. Raises the
      * changed(int) signal if new mail is found.
      *
      * Concrete subclasses MUST reimplement this method.
      */
-    virtual void recheck()=0;
+    virtual void recheck() = 0;
 
     /**
      * Force a recheck
      */
-    virtual void forceRecheck() { recheck(); }
+    virtual void forceRecheck()
+    {
+        recheck();
+    }
 
-    /** 
+    /**
      */
-    virtual bool startMonitor()=0;
+    virtual bool startMonitor() = 0;
 
-    /** 
+    /**
      */
-    virtual bool stopMonitor()=0;
+    virtual bool stopMonitor() = 0;
 
-    /** 
+    /**
      * Check monitor run status.
      * @return true if monitor is running.
      */
-    virtual bool running()=0;
+    virtual bool running() = 0;
 
-    /** 
+    /**
      * Add a configuration page to the configuration dialog.
      * Each reimplementation should first call the inherited implementation,
      * then call @ref KDropCfgDialog::addConfigPage with a custom
      * @ref KMonitorCfg object.
      */
-//    virtual void addConfigPage( KDropCfgDialog * );
+    //    virtual void addConfigPage( KDropCfgDialog * );
 
-    /** 
+    /**
      * Returns a newly created KBoxFactory object initialized to
-     * be equivalent to this object (prototype pattern). 
+     * be equivalent to this object (prototype pattern).
      *
-     * Deletion of the returned object becomes the responsibility of 
+     * Deletion of the returned object becomes the responsibility of
      * the caller.
      *
      * Subclasses should override this to return objects of their
@@ -149,9 +154,9 @@ class KMailDrop : public QObject
      *@param cfg A configuration object with the group already
      * set to the configuration for this box
      */
-    virtual void readGeneralConfigGroup( const KConfigBase& cfg );
+    virtual void readGeneralConfigGroup(const KConfigBase &cfg);
 
-    /** 
+    /**
      * Read box configuration from a config group. Subclasses that
      * reimplement this should call the overridden method.
      *
@@ -159,10 +164,13 @@ class KMailDrop : public QObject
      *     the configuration for this box.
      * @return true if read was successful, false otherwise.
      */
-    virtual bool readConfigGroup( const KConfigBase& cfg );
-    virtual bool readConfigGroup( const QMap< QString, QString > &, const Protocol * ) { return true; }
+    virtual bool readConfigGroup(const KConfigBase &cfg);
+    virtual bool readConfigGroup(const QMap< QString, QString > &, const Protocol *)
+    {
+        return true;
+    }
 
-    /** 
+    /**
      * Write box configuration to a config group. Subclasses that
      * reimplement this should call the overridden method.
      *
@@ -170,11 +178,11 @@ class KMailDrop : public QObject
      *     the configuration for this box.
      * @return true if read was successful, false otherwise.
      */
-    virtual bool writeConfigGroup( KConfigBase& cfg ) const;
+    virtual bool writeConfigGroup(KConfigBase &cfg) const;
 
-    /** 
+    /**
      * Return the type of this monitor, for display and
-     * configuration purposes. Each concrete subclass should return a 
+     * configuration purposes. Each concrete subclass should return a
      * unique identifier.
      */
     virtual QString type() const = 0;
@@ -185,15 +193,21 @@ class KMailDrop : public QObject
      * readSubject() return a result immediately.
      * @param true by a synchrone type; false by an asynchrone (like KKkioDrop) type.
      */
-    virtual bool synchrone() const { return true; }
-    
+    virtual bool synchrone() const
+    {
+        return true;
+    }
+
     /**
      * Return true if the concrete subclass can read the subjects of
      * all new mails. This will enable the "Read Subjects" menu item.
      */
-    virtual bool canReadSubjects() {return false;}
+    virtual bool canReadSubjects()
+    {
+        return false;
+    }
 
-    /** 
+    /**
      * Read the subjects of all new mails.
      * NOTE: the default implementation stops the timer, calls
      * doReadSubjects, restarts the time if necessary and updates
@@ -205,7 +219,7 @@ class KMailDrop : public QObject
      * terminate before all mail subjects are loaded.
      * @return all new mails subjects as a vector.
      */
-    virtual QValueVector<KornMailSubject> * readSubjects(bool * stop);
+    virtual QValueVector<KornMailSubject> *readSubjects(bool *stop);
 
     /**
      * Read the subjects of all new mails. The concrete subclass has
@@ -216,13 +230,16 @@ class KMailDrop : public QObject
      * terminate before all mail subjects are loaded.
      * @return all new mails subjects as a vector.
      */
-    virtual QValueVector<KornMailSubject> * doReadSubjects(bool * stop);
+    virtual QValueVector<KornMailSubject> *doReadSubjects(bool *stop);
 
     /**
      * Return true if the concrete subclass can delete individual mails.
      * This will enable the "Delete" button in the mail subjects dialog.
      */
-    virtual bool canDeleteMails() {return false;}
+    virtual bool canDeleteMails()
+    {
+        return false;
+    }
 
     /**
      * Delete some mails in the mailbox. The concrete subclass has
@@ -241,18 +258,21 @@ class KMailDrop : public QObject
      * the KornMailSubject instances of the remaining mails might be used
      * further more.
      */
-    virtual bool deleteMails(QPtrList<const KornMailId> * ids, bool * stop);
+    virtual bool deleteMails(QPtrList<const KornMailId> *ids, bool *stop);
 
     /**
      * Return true if the concrete subclass can load individual mails fully.
      * This will enable the "Full Message" button in the mail dialog.
      */
-    virtual bool canReadMail() {return false;}
+    virtual bool canReadMail()
+    {
+        return false;
+    }
 
     /**
      * Load a mail from the mailbox fulle . The concrete subclass has
      * to implement it, if deleteMails() returns true.
-     * @param id id of the mail to load. The id is taken from the corresponding 
+     * @param id id of the mail to load. The id is taken from the corresponding
      * KornMailSubject instances returned by a previous call to doReadSubjects().
      * @param stop: stop flag. If it is set to true during the execution,
      * readMail() should return as soon as possible. The return value
@@ -260,25 +280,67 @@ class KMailDrop : public QObject
      * terminate before the mail is loaded.
      * @return the fully loaded mail (header and body) or "" on error.
      */
-    virtual QString readMail(const KornMailId * id, bool * stop);
+    virtual QString readMail(const KornMailId *id, bool *stop);
 
     // data that belongs in every monitor
 
-    QString       caption()       const { return _caption; }
-    QString       clickCmd()      const { return _clickCmd; }
-    QString       newMailCmd()    const { return _nMailCmd; }
-    QString       soundFile()     const { return _soundFile;}
-    QColor        bgColour()      const { return _bgColour; }
-    QColor        fgColour()      const { return _fgColour; }
-    QColor        newBgColour()   const { return _nbgColour; }
-    QColor        newFgColour()   const { return _nfgColour; }
-    QString       icon()          const { return _icon; }
-    QString       newIcon()       const { return _nIcon; }
-    Style         displayStyle()  const { return _style; }
-    bool          passivePopup()  const { return _passivePopup; }
-    bool	  passiveDate()   const { return _passiveDate; }
-    QString       realName()      const { return _realName; }
-;
+    QString       caption()       const
+    {
+        return _caption;
+    }
+    QString       clickCmd()      const
+    {
+        return _clickCmd;
+    }
+    QString       newMailCmd()    const
+    {
+        return _nMailCmd;
+    }
+    QString       soundFile()     const
+    {
+        return _soundFile;
+    }
+    QColor        bgColour()      const
+    {
+        return _bgColour;
+    }
+    QColor        fgColour()      const
+    {
+        return _fgColour;
+    }
+    QColor        newBgColour()   const
+    {
+        return _nbgColour;
+    }
+    QColor        newFgColour()   const
+    {
+        return _nfgColour;
+    }
+    QString       icon()          const
+    {
+        return _icon;
+    }
+    QString       newIcon()       const
+    {
+        return _nIcon;
+    }
+    Style         displayStyle()  const
+    {
+        return _style;
+    }
+    bool          passivePopup()  const
+    {
+        return _passivePopup;
+    }
+    bool	  passiveDate()   const
+    {
+        return _passiveDate;
+    }
+    QString       realName()      const
+    {
+        return _realName;
+    }
+    ;
     void setCaption(QString);
     void setClickCmd(QString);
     void setNewMailCmd(QString);
@@ -295,7 +357,7 @@ class KMailDrop : public QObject
     void setPassiveDate(bool);
     void setRealName(QString);
 
-    /** 
+    /**
      * This is called by the manager when it wishes to delete
      * a monitor. Clients should connect to the @ref ::notifyDisconnect
      * signal and ensure that the monitor is not accessed after
@@ -305,13 +367,13 @@ class KMailDrop : public QObject
      */
     virtual void notifyClients();
 
-    public slots:
+public slots:
 
     /**
      * Forcibly set the count to zero;
      */
     virtual void forceCountZero();
-    
+
     /*
      * The next slots are used by kio; the present at this places
      * prevent warnings at runtime.
@@ -320,31 +382,31 @@ class KMailDrop : public QObject
     virtual void readMailCanceled() {}
     virtual void deleteMailsCanceled() {}
 
-    protected slots:
+protected slots:
 
-      void setCount( int, KMailDrop* );
-      
+    void setCount(int, KMailDrop *);
+
 signals:
 
-    /** 
-     * This signal is emitted when the mailbox discovers 
+    /**
+     * This signal is emitted when the mailbox discovers
      * new messages in the maildrop.
      */
-    void changed( int, KMailDrop* );
+    void changed(int, KMailDrop *);
 
     /**
      * This signal is emitted when the valid-status changes.
      * @param isValid true then and only then if the box is valid
      */
-    void validChanged( bool isValid );
+    void validChanged(bool isValid);
 
-    /** 
+    /**
      * This is emitted on configuration change, normally
-     * on an updateConfig() but 
+     * on an updateConfig() but
      */
     void configChanged();
 
-    /** 
+    /**
      * Clients should connect to this and discontinue use
      * after it is emitted.
      */
@@ -355,13 +417,13 @@ signals:
      * rechecked the availability of email.
      */
     void rechecked();
-    
+
     /**
      * The next signal is emitted when a passive popup could be displayed.
      * As argument, there is a KornSubject, which contains a subject and
      * some more info that could be used with the popup.
      */
-    void showPassivePopup( QPtrList< KornMailSubject >*, int, bool, const QString& realname );
+    void showPassivePopup(QPtrList< KornMailSubject > *, int, bool, const QString &realname);
 
     /**
      * This signal is emitted when a passive error message should be displayed.
@@ -369,16 +431,16 @@ signals:
      * @param error The error message
      * @param realName The real name of this object.
      */
-    void showPassivePopup( const QString& error, const QString& realname );
-    
+    void showPassivePopup(const QString &error, const QString &realname);
+
     /**
      * readSubjects() might signal readSubject() if
      * an subject is received. This is only useful in
      * asynchrone situations.
      * @param the subject structure which is read
      */
-    void readSubject( KornMailSubject * );
-    
+    void readSubject(KornMailSubject *);
+
     /**
      * readSubjects() might signal readSubjectsTotalSteps() to
      * send the expected total number of steps to a possible
@@ -394,13 +456,13 @@ signals:
      * @param curent progress.
      */
     void readSubjectsProgress(int progress);
-    
+
     /**
      * readSubjects() might signal readSubjectsReady() to
      * remove the progress bar in asynchrone situations.
      * @param: true if succes, false if cancelled
      */
-    void readSubjectsReady( bool success );
+    void readSubjectsReady(bool success);
 
     /**
      * deleteMails() might signal deleteMailsTotalSteps() to
@@ -426,8 +488,8 @@ signals:
      * in asynchrone situations.
      * @param: true if deletion was succesful; elsewise false.
      */
-    void deleteMailsReady( bool );
-    
+    void deleteMailsReady(bool);
+
     /**
      * readMail() might signal readMailTotalSteps() to
      * send the expected total number of steps to a possible
@@ -443,14 +505,14 @@ signals:
      * @param curent progress.
      */
     void readMailProgress(int progress);
-    
+
     /**
      * readMail() might signal readMailReady() if
      * a email is totally read. This is useful
      * in asynchrone situations.
      * @param pointer to the full email-message.
      */
-    void readMailReady( QString* );
+    void readMailReady(QString *);
 };
 
 #endif // SSK_MAILDROP_H

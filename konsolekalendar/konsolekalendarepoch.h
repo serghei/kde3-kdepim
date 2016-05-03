@@ -35,15 +35,13 @@
  * Provides the KonsoleKalendarEpoch class definition.
  */
 
-namespace KCal
-{
-  /**
-   * Class for timestamps expressed as epochs.
-   * @author Allen Winter
-   */
-  class KonsoleKalendarEpoch
-  {
-  public:
+namespace KCal {
+/**
+ * Class for timestamps expressed as epochs.
+ * @author Allen Winter
+ */
+class KonsoleKalendarEpoch {
+public:
     /**
      * Constructor.
      */
@@ -57,15 +55,15 @@ namespace KCal
      * Converts epoch time to QDateTime format.
      * @param epoch epoch time.
      */
-    static QDateTime epoch2QDateTime( uint epoch );
+    static QDateTime epoch2QDateTime(uint epoch);
 
     /**
      * Converts QT DateTime to epoch format.
      * @param dt is a QDateTime to convert to an epoch.
      */
-    static uint QDateTime2epoch( QDateTime dt );
+    static uint QDateTime2epoch(QDateTime dt);
 
-  };
+};
 
 }
 

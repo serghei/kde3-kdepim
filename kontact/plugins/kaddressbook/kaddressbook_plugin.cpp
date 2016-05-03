@@ -48,90 +48,92 @@
 #include "kaddressbook_plugin.h"
 
 typedef KGenericFactory< KAddressbookPlugin, Kontact::Core > KAddressbookPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_kaddressbookplugin,
-                            KAddressbookPluginFactory( "kontact_kaddressbookplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_kaddressbookplugin,
+                           KAddressbookPluginFactory("kontact_kaddressbookplugin"))
 
-KAddressbookPlugin::KAddressbookPlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "kaddressbook" ),
-    mStub( 0 )
+KAddressbookPlugin::KAddressbookPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "kaddressbook"),
+      mStub(0)
 {
-  setInstance( KAddressbookPluginFactory::instance() );
+    setInstance(KAddressbookPluginFactory::instance());
 
-  insertNewAction( new KAction( i18n( "New Contact..." ), "identity",
-			             CTRL+SHIFT+Key_C, this, SLOT( slotNewContact() ), actionCollection(),
-                   "new_contact" ) );
+    insertNewAction(new KAction(i18n("New Contact..."), "identity",
+                                CTRL + SHIFT + Key_C, this, SLOT(slotNewContact()), actionCollection(),
+                                "new_contact"));
 
-  insertNewAction( new KAction( i18n( "&New Distribution List..." ), "kontact_contacts", 0, this,
-                                SLOT( slotNewDistributionList() ), actionCollection(), "new_distributionlist" ) );
+    insertNewAction(new KAction(i18n("&New Distribution List..."), "kontact_contacts", 0, this,
+                                SLOT(slotNewDistributionList()), actionCollection(), "new_distributionlist"));
 
-  insertSyncAction( new KAction( i18n( "Synchronize Contacts" ), "reload",
-                    0, this, SLOT( slotSyncContacts() ), actionCollection(),
-                   "kaddressbook_sync" ) );
-  mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
-      new Kontact::UniqueAppHandlerFactory<KABUniqueAppHandler>(), this );
+    insertSyncAction(new KAction(i18n("Synchronize Contacts"), "reload",
+                                 0, this, SLOT(slotSyncContacts()), actionCollection(),
+                                 "kaddressbook_sync"));
+    mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
+        new Kontact::UniqueAppHandlerFactory<KABUniqueAppHandler>(), this);
 }
 
 KAddressbookPlugin::~KAddressbookPlugin()
 {
 }
 
-KParts::ReadOnlyPart* KAddressbookPlugin::createPart()
+KParts::ReadOnlyPart *KAddressbookPlugin::createPart()
 {
-  KParts::ReadOnlyPart * part = loadPart();
-  if ( !part ) return 0;
+    KParts::ReadOnlyPart *part = loadPart();
+    if(!part) return 0;
 
-  // Create the stub that allows us to talk to the part
-  mStub = new KAddressBookIface_stub( dcopClient(), "kaddressbook",
-                                      "KAddressBookIface" );
-  return part;
+    // Create the stub that allows us to talk to the part
+    mStub = new KAddressBookIface_stub(dcopClient(), "kaddressbook",
+                                       "KAddressBookIface");
+    return part;
 }
 
 QStringList KAddressbookPlugin::configModules() const
 {
-  QStringList modules;
-  modules << "PIM/kabconfig.desktop" << "PIM/kabldapconfig.desktop";
-  return modules;
+    QStringList modules;
+    modules << "PIM/kabconfig.desktop" << "PIM/kabldapconfig.desktop";
+    return modules;
 }
 
 QStringList KAddressbookPlugin::invisibleToolbarActions() const
 {
-  return QStringList( "file_new_contact" );
+    return QStringList("file_new_contact");
 }
 
 KAddressBookIface_stub *KAddressbookPlugin::interface()
 {
-  if ( !mStub ) {
-    part();
-  }
-  Q_ASSERT( mStub );
-  return mStub;
+    if(!mStub)
+    {
+        part();
+    }
+    Q_ASSERT(mStub);
+    return mStub;
 }
 
 void KAddressbookPlugin::slotNewContact()
 {
-  interface()->newContact();
+    interface()->newContact();
 }
 
 
 void KAddressbookPlugin::slotNewDistributionList()
 {
-  interface()->newDistributionList();
+    interface()->newDistributionList();
 }
 
 void KAddressbookPlugin::slotSyncContacts()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", QString("Contact") );
+    DCOPRef ref("kmail", "KMailICalIface");
+    ref.send("triggerSync", QString("Contact"));
 }
 
-bool KAddressbookPlugin::createDCOPInterface( const QString& serviceType )
+bool KAddressbookPlugin::createDCOPInterface(const QString &serviceType)
 {
-  if ( serviceType == "DCOP/AddressBook" )  {
-    Q_ASSERT( mStub );
-    return true;
-  }
+    if(serviceType == "DCOP/AddressBook")
+    {
+        Q_ASSERT(mStub);
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
 void KAddressbookPlugin::configUpdated()
@@ -140,52 +142,57 @@ void KAddressbookPlugin::configUpdated()
 
 bool KAddressbookPlugin::isRunningStandalone()
 {
-  return mUniqueAppWatcher->isRunningStandalone();
+    return mUniqueAppWatcher->isRunningStandalone();
 }
 
-bool KAddressbookPlugin::canDecodeDrag( QMimeSource *mimeSource )
+bool KAddressbookPlugin::canDecodeDrag(QMimeSource *mimeSource)
 {
-  return QTextDrag::canDecode( mimeSource ) ||
-    KPIM::MailListDrag::canDecode( mimeSource );
+    return QTextDrag::canDecode(mimeSource) ||
+           KPIM::MailListDrag::canDecode(mimeSource);
 }
 
 #include <dcopref.h>
 
-void KAddressbookPlugin::processDropEvent( QDropEvent *event )
+void KAddressbookPlugin::processDropEvent(QDropEvent *event)
 {
-  KPIM::MailList mails;
-  if ( KPIM::MailListDrag::decode( event, mails ) ) {
-    if ( mails.count() != 1 ) {
-      KMessageBox::sorry( core(),
-                          i18n( "Drops of multiple mails are not supported." ) );
-    } else {
-      KPIM::MailSummary mail = mails.first();
+    KPIM::MailList mails;
+    if(KPIM::MailListDrag::decode(event, mails))
+    {
+        if(mails.count() != 1)
+        {
+            KMessageBox::sorry(core(),
+                               i18n("Drops of multiple mails are not supported."));
+        }
+        else
+        {
+            KPIM::MailSummary mail = mails.first();
 
-      KMailIface_stub kmailIface( "kmail", "KMailIface" );
-      QString sFrom = kmailIface.getFrom( mail.serialNumber() );
+            KMailIface_stub kmailIface("kmail", "KMailIface");
+            QString sFrom = kmailIface.getFrom(mail.serialNumber());
 
-      if ( !sFrom.isEmpty() ) {
-        KAddrBookExternal::addEmail( sFrom, core() );
-      }
+            if(!sFrom.isEmpty())
+            {
+                KAddrBookExternal::addEmail(sFrom, core());
+            }
+        }
+        return;
     }
-    return;
-  }
 
-  KMessageBox::sorry( core(), i18n( "Cannot handle drop events of type '%1'." )
-                      .arg( event->format() ) );
+    KMessageBox::sorry(core(), i18n("Cannot handle drop events of type '%1'.")
+                       .arg(event->format()));
 }
 
 
-void KAddressbookPlugin::loadProfile( const QString& directory )
+void KAddressbookPlugin::loadProfile(const QString &directory)
 {
-  DCOPRef ref( "kaddressbook", "KAddressBookIface" );
-  ref.send( "loadProfile", directory );
+    DCOPRef ref("kaddressbook", "KAddressBookIface");
+    ref.send("loadProfile", directory);
 }
 
-void KAddressbookPlugin::saveToProfile( const QString& directory ) const
+void KAddressbookPlugin::saveToProfile(const QString &directory) const
 {
-  DCOPRef ref( "kaddressbook", "KAddressBookIface" );
-  ref.send( "saveToProfile", directory );
+    DCOPRef ref("kaddressbook", "KAddressBookIface");
+    ref.send("saveToProfile", directory);
 }
 
 ////
@@ -194,7 +201,7 @@ void KAddressbookPlugin::saveToProfile( const QString& directory ) const
 
 void KABUniqueAppHandler::loadCommandLineOptions()
 {
-    KCmdLineArgs::addCmdLineOptions( kaddressbook_options );
+    KCmdLineArgs::addCmdLineOptions(kaddressbook_options);
 }
 
 int KABUniqueAppHandler::newInstance()
@@ -202,12 +209,13 @@ int KABUniqueAppHandler::newInstance()
     kdDebug(5602) << k_funcinfo << endl;
     // Ensure part is loaded
     (void)plugin()->part();
-    DCOPRef kAB( "kaddressbook", "KAddressBookIface" );
-    DCOPReply reply = kAB.call( "handleCommandLine" );
-    if ( reply.isValid() ) {
+    DCOPRef kAB("kaddressbook", "KAddressBookIface");
+    DCOPReply reply = kAB.call("handleCommandLine");
+    if(reply.isValid())
+    {
         bool handled = reply;
         kdDebug(5602) << k_funcinfo << "handled=" << handled << endl;
-        if ( !handled ) // no args -> simply bring kaddressbook plugin to front
+        if(!handled)    // no args -> simply bring kaddressbook plugin to front
             return Kontact::UniqueAppHandler::newInstance();
     }
     return 0;

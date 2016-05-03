@@ -2,12 +2,12 @@
    Copyright (C) 2003 Klarälvdalens Datakonsult AB
 
    This file is part of QGPGME.
- 
+
    QGPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    QGPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -27,60 +27,60 @@
 #include <kdepimmacros.h>
 
 namespace GpgME {
-  class Context;
-  class Error;
-  class TrustItem;
-  class Key;
+class Context;
+class Error;
+class TrustItem;
+class Key;
 } // namespace GpgME
-  
+
 namespace QGpgME {
 
-  class KDE_EXPORT EventLoopInteractor : public QObject, public GpgME::EventLoopInteractor {
+class KDE_EXPORT EventLoopInteractor : public QObject, public GpgME::EventLoopInteractor {
     Q_OBJECT
-  protected:
-    EventLoopInteractor( QObject * parent, const char * name=0 );
-  public:
+protected:
+    EventLoopInteractor(QObject *parent, const char *name = 0);
+public:
     virtual ~EventLoopInteractor();
 
-    static EventLoopInteractor * instance();
+    static EventLoopInteractor *instance();
 
-  signals:
-    void nextTrustItemEventSignal( GpgME::Context * context, const GpgME::TrustItem & item  );
-    void nextKeyEventSignal( GpgME::Context * context, const GpgME::Key & key );
-    void operationDoneEventSignal( GpgME::Context * context, const GpgME::Error & e );
+signals:
+    void nextTrustItemEventSignal(GpgME::Context *context, const GpgME::TrustItem &item);
+    void nextKeyEventSignal(GpgME::Context *context, const GpgME::Key &key);
+    void operationDoneEventSignal(GpgME::Context *context, const GpgME::Error &e);
 
     void aboutToDestroy();
 
-  protected slots:
-    void slotWriteActivity( int socket );
-    void slotReadActivity( int socket );
-    
-  protected:
+protected slots:
+    void slotWriteActivity(int socket);
+    void slotReadActivity(int socket);
+
+protected:
     //
     // IO Notification Interface
     //
 
     /*! \reimp */
-    void * registerWatcher( int fd, Direction dir, bool & ok );
+    void *registerWatcher(int fd, Direction dir, bool &ok);
     /*! \reimp */
-    void unregisterWatcher( void * tag );
+    void unregisterWatcher(void *tag);
 
     //
     // Event Handler Interface
     //
 
     /*! \reimp */
-    void nextTrustItemEvent( GpgME::Context * context, const GpgME::TrustItem & item );
+    void nextTrustItemEvent(GpgME::Context *context, const GpgME::TrustItem &item);
     /*! \reimp */
-    void nextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
+    void nextKeyEvent(GpgME::Context *context, const GpgME::Key &key);
     /*! \reimp */
-    void operationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
+    void operationDoneEvent(GpgME::Context *context, const GpgME::Error &e);
 
-  private:
+private:
     class Private;
-    Private * d;
-    static EventLoopInteractor * mSelf;
-  };
+    Private *d;
+    static EventLoopInteractor *mSelf;
+};
 
 } // namespace QGpgME
 

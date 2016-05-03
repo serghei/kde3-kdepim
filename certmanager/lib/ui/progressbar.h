@@ -39,36 +39,39 @@ class QTimer;
 
 namespace Kleo {
 
-  /**
-     @short A QProgressBar with self-powered busy indicator
-  */
-  class KDE_EXPORT ProgressBar : public QProgressBar {
+/**
+   @short A QProgressBar with self-powered busy indicator
+*/
+class KDE_EXPORT ProgressBar : public QProgressBar {
     Q_OBJECT
-  public:
-    ProgressBar( QWidget * parent=0, const char * name=0, WFlags f=0 );
+public:
+    ProgressBar(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
-  public slots:
-    void slotProgress( const QString & message, int type, int current, int total );
-    void slotProgress( const QString & message, int current, int total );
+public slots:
+    void slotProgress(const QString &message, int type, int current, int total);
+    void slotProgress(const QString &message, int current, int total);
     /*! reimplementation to support self-powered busy indicator */
-    void setProgress( int progress );
+    void setProgress(int progress);
     /*! reimplementation to support self-powered busy indicator */
-    void setTotalSteps( int total );
+    void setTotalSteps(int total);
     /*! reimplementation to support self-powered busy indicator */
     void reset();
     /*! reimplementation to preserve visibility */
-    void setProgress( int cur, int tot ) { QProgressBar::setProgress( cur, tot ); }
+    void setProgress(int cur, int tot)
+    {
+        QProgressBar::setProgress(cur, tot);
+    }
 
-  private slots:
+private slots:
     void slotBusyTimerTick();
 
-  private:
-    void fixup( bool );
+private:
+    void fixup(bool);
 
-  private:
-    QTimer * mBusyTimer;
+private:
+    QTimer *mBusyTimer;
     int mRealProgress;
-  };
+};
 }
 
 #endif // __KLEO_PROGRESSBAR_H__

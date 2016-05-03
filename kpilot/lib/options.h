@@ -61,10 +61,16 @@
 #include <iostream>
 
 using namespace std;
-inline std::ostream& operator <<(std::ostream &o, const QString &s)
-	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
-inline std::ostream& operator <<(std::ostream &o, const QCString &s)
-	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
+inline std::ostream &operator <<(std::ostream &o, const QString &s)
+{
+    if(s.isEmpty()) return o << "<empty>";
+    else return o << s.latin1();
+}
+inline std::ostream &operator <<(std::ostream &o, const QCString &s)
+{
+    if(s.isEmpty()) return o << "<empty>";
+    else return o << *s;
+}
 
 
 #ifndef NDEBUG
@@ -73,21 +79,26 @@ inline std::ostream& operator <<(std::ostream &o, const QCString &s)
 
 extern KDE_EXPORT int debug_level;
 
-class KDE_EXPORT KPilotDepthCount
-{
+class KDE_EXPORT KPilotDepthCount {
 public:
-	KPilotDepthCount(int, int level, const char *s);
-	KPilotDepthCount(int level, const char *s);
-	~KPilotDepthCount();
-	const char *indent() const;
-	inline const char *name() const { return fName; } ;
-	inline int level() const { return fLevel; } ;
+    KPilotDepthCount(int, int level, const char *s);
+    KPilotDepthCount(int level, const char *s);
+    ~KPilotDepthCount();
+    const char *indent() const;
+    inline const char *name() const
+    {
+        return fName;
+    } ;
+    inline int level() const
+    {
+        return fLevel;
+    } ;
 
 protected:
-	static int depth;
-	int fDepth;
-	int fLevel;
-	const char *fName;
+    static int depth;
+    int fDepth;
+    int fLevel;
+    const char *fName;
 } ;
 
 
@@ -111,18 +122,18 @@ protected:
 
 
 
-inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
+inline std::ostream &operator <<(std::ostream &o, const KPilotDepthCount &d)
 {
-	if (debug_level >= d.level())
-	{
-		o.clear(std::ios_base::goodbit);
-		return o << d.indent() << ' ' << d.name();
-	}
-	else
-	{
-		o.setstate(std::ios_base::badbit | std::ios_base::failbit);
-		return o;
-	}
+    if(debug_level >= d.level())
+    {
+        o.clear(std::ios_base::goodbit);
+        return o << d.indent() << ' ' << d.name();
+    }
+    else
+    {
+        o.setstate(std::ios_base::badbit | std::ios_base::failbit);
+        return o;
+    }
 }
 
 #else

@@ -34,129 +34,129 @@
 
 #include "stylepage.h"
 
-StylePage::StylePage( KABC::AddressBook *ab, QWidget* parent,  const char* name )
-  : QWidget( parent, name ), mAddressBook( ab )
+StylePage::StylePage(KABC::AddressBook *ab, QWidget *parent,  const char *name)
+    : QWidget(parent, name), mAddressBook(ab)
 {
-  initGUI();
+    initGUI();
 
-  initFieldCombo();
+    initFieldCombo();
 
-  mSortTypeCombo->insertItem( i18n( "Ascending" ) );
-  mSortTypeCombo->insertItem( i18n( "Descending" ) );
+    mSortTypeCombo->insertItem(i18n("Ascending"));
+    mSortTypeCombo->insertItem(i18n("Descending"));
 
-  connect( mStyleCombo, SIGNAL( activated( int ) ), SIGNAL( styleChanged( int ) ) );
+    connect(mStyleCombo, SIGNAL(activated(int)), SIGNAL(styleChanged(int)));
 }
 
 StylePage::~StylePage()
 {
 }
 
-void StylePage::setPreview( const QPixmap &pixmap )
+void StylePage::setPreview(const QPixmap &pixmap)
 {
-  if ( pixmap.isNull() )
-    mPreview->setText( i18n( "(No preview available.)" ) );
-  else
-    mPreview->setPixmap( pixmap );
+    if(pixmap.isNull())
+        mPreview->setText(i18n("(No preview available.)"));
+    else
+        mPreview->setPixmap(pixmap);
 }
 
-void StylePage::addStyleName( const QString &name )
+void StylePage::addStyleName(const QString &name)
 {
-  mStyleCombo->insertItem( name );
+    mStyleCombo->insertItem(name);
 }
 
 void StylePage::clearStyleNames()
 {
-  mStyleCombo->clear();
+    mStyleCombo->clear();
 }
 
-void StylePage::setSortField( KABC::Field *field )
+void StylePage::setSortField(KABC::Field *field)
 {
-  mFieldCombo->setCurrentText( field->label() );
+    mFieldCombo->setCurrentText(field->label());
 }
 
-void StylePage::setSortAscending( bool value )
+void StylePage::setSortAscending(bool value)
 {
-  if ( value )
-    mSortTypeCombo->setCurrentItem( 0 );
-  else
-    mSortTypeCombo->setCurrentItem( 1 );
+    if(value)
+        mSortTypeCombo->setCurrentItem(0);
+    else
+        mSortTypeCombo->setCurrentItem(1);
 }
 
-KABC::Field* StylePage::sortField()
+KABC::Field *StylePage::sortField()
 {
-  if ( mFieldCombo->currentItem() == -1 )
-    return mFields[ 0 ];
+    if(mFieldCombo->currentItem() == -1)
+        return mFields[ 0 ];
 
-  return mFields[ mFieldCombo->currentItem() ];
+    return mFields[ mFieldCombo->currentItem() ];
 }
 
 bool StylePage::sortAscending()
 {
-  return ( mSortTypeCombo->currentItem() == 0 );
+    return (mSortTypeCombo->currentItem() == 0);
 }
 
 void StylePage::initFieldCombo()
 {
-  if ( !mAddressBook )
-    return;
+    if(!mAddressBook)
+        return;
 
-  mFieldCombo->clear();
+    mFieldCombo->clear();
 
-  mFields = mAddressBook->fields( KABC::Field::All );
-  KABC::Field::List::ConstIterator it;
-  for ( it = mFields.begin(); it != mFields.end(); ++it )
-    mFieldCombo->insertItem( (*it)->label() );
+    mFields = mAddressBook->fields(KABC::Field::All);
+    KABC::Field::List::ConstIterator it;
+    for(it = mFields.begin(); it != mFields.end(); ++it)
+        mFieldCombo->insertItem((*it)->label());
 }
 
 void StylePage::initGUI()
 {
-  setCaption( i18n( "Choose Printing Style" ) );
+    setCaption(i18n("Choose Printing Style"));
 
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(this, 2, 2, KDialog::marginHint(),
+            KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "What should the print look like?\n"
+    QLabel *label = new QLabel(i18n("What should the print look like?\n"
                                     "KAddressBook has several printing styles, designed for different purposes.\n"
-                                    "Choose the style that suits your needs below." ), this );
-  topLayout->addMultiCellWidget( label, 0, 0, 0, 1 );
+                                    "Choose the style that suits your needs below."), this);
+    topLayout->addMultiCellWidget(label, 0, 0, 0, 1);
 
-  QButtonGroup *group = new QButtonGroup( i18n( "Sorting" ), this );
-  group->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *sortLayout = new QGridLayout( group->layout(), 2, 2,
-                                             KDialog::spacingHint() );
-  sortLayout->setAlignment( Qt::AlignTop );
+    QButtonGroup *group = new QButtonGroup(i18n("Sorting"), this);
+    group->setColumnLayout(0, Qt::Vertical);
+    QGridLayout *sortLayout = new QGridLayout(group->layout(), 2, 2,
+            KDialog::spacingHint());
+    sortLayout->setAlignment(Qt::AlignTop);
 
-  label = new QLabel( i18n( "Criterion:" ), group );
-  sortLayout->addWidget( label, 0, 0 );
+    label = new QLabel(i18n("Criterion:"), group);
+    sortLayout->addWidget(label, 0, 0);
 
-  mFieldCombo = new KComboBox( false, group );
-  sortLayout->addWidget( mFieldCombo, 0, 1 );
+    mFieldCombo = new KComboBox(false, group);
+    sortLayout->addWidget(mFieldCombo, 0, 1);
 
-  label = new QLabel( i18n( "Order:" ), group );
-  sortLayout->addWidget( label, 1, 0 );
+    label = new QLabel(i18n("Order:"), group);
+    sortLayout->addWidget(label, 1, 0);
 
-  mSortTypeCombo = new KComboBox( false, group );
-  sortLayout->addWidget( mSortTypeCombo, 1, 1 );
+    mSortTypeCombo = new KComboBox(false, group);
+    sortLayout->addWidget(mSortTypeCombo, 1, 1);
 
-  topLayout->addWidget( group, 1, 0 );
+    topLayout->addWidget(group, 1, 0);
 
-  group = new QButtonGroup( i18n( "Print Style" ), this );
-  group->setColumnLayout( 0, Qt::Vertical );
-  QVBoxLayout *styleLayout = new QVBoxLayout( group->layout(),
-                                              KDialog::spacingHint() );
+    group = new QButtonGroup(i18n("Print Style"), this);
+    group->setColumnLayout(0, Qt::Vertical);
+    QVBoxLayout *styleLayout = new QVBoxLayout(group->layout(),
+            KDialog::spacingHint());
 
-  mStyleCombo = new KComboBox( false, group );
-  styleLayout->addWidget( mStyleCombo );
+    mStyleCombo = new KComboBox(false, group);
+    styleLayout->addWidget(mStyleCombo);
 
-  mPreview = new QLabel( group );
-  QFont font( mPreview->font() );
-  font.setPointSize( 20 );
-  mPreview->setFont( font );
-  mPreview->setScaledContents( true );
-  mPreview->setAlignment( int( QLabel::WordBreak | QLabel::AlignCenter ) );
-  styleLayout->addWidget( mPreview );
+    mPreview = new QLabel(group);
+    QFont font(mPreview->font());
+    font.setPointSize(20);
+    mPreview->setFont(font);
+    mPreview->setScaledContents(true);
+    mPreview->setAlignment(int(QLabel::WordBreak | QLabel::AlignCenter));
+    styleLayout->addWidget(mPreview);
 
-  topLayout->addWidget( group, 1, 1 );
+    topLayout->addWidget(group, 1, 1);
 }
 
 #include "stylepage.moc"

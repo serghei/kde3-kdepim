@@ -51,12 +51,11 @@ class QEvent;
   @author David Jarvie <software@astrojar.org.uk>
   @author Tobias Koenig <tokoe@kde.org>
 */
-class KDE_EXPORT KDateEdit : public QComboBox
-{
-  Q_OBJECT
+class KDE_EXPORT KDateEdit : public QComboBox {
+    Q_OBJECT
 
-  public:
-    KDateEdit( QWidget *parent = 0, const char *name = 0 );
+public:
+    KDateEdit(QWidget *parent = 0, const char *name = 0);
     virtual ~KDateEdit();
 
     /**
@@ -71,7 +70,7 @@ class KDE_EXPORT KDateEdit : public QComboBox
 
       @param readOnly True to set the widget read-only, false to set it read-write.
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
     /**
       @return True if the widget is read-only, false if read-write.
@@ -80,38 +79,38 @@ class KDE_EXPORT KDateEdit : public QComboBox
 
     virtual void popup();
 
-  signals:
+signals:
     /**
       This signal is emitted whenever the user has entered a new date.
       When the user changes the date by editing the line edit field,
       the signal is not emitted until focus leaves the line edit field.
       The passed date can be invalid.
      */
-    void dateEntered( const QDate &date );
+    void dateEntered(const QDate &date);
 
     /**
       This signal is emitted whenever the user modifies the date.
       The passed date can be invalid.
      */
-    void dateChanged( const QDate &date );
+    void dateChanged(const QDate &date);
 
-  public slots:
+public slots:
     /**
       Sets the date.
 
       @param date The new date to display. This date must be valid or
                   it will not be set
      */
-    void setDate( const QDate &date );
+    void setDate(const QDate &date);
 
-  protected slots:
+protected slots:
     void lineEnterPressed();
-    void slotTextChanged( const QString& );
-    void dateSelected( QDate );
+    void slotTextChanged(const QString &);
+    void dateSelected(QDate);
 
-  protected:
-    virtual bool eventFilter( QObject*, QEvent* );
-    virtual void mousePressEvent( QMouseEvent* );
+protected:
+    virtual bool eventFilter(QObject *, QEvent *);
+    virtual void mousePressEvent(QMouseEvent *);
 
     /**
       Sets the date, without altering the display.
@@ -124,7 +123,7 @@ class KDE_EXPORT KDateEdit : public QComboBox
       @return True if the date was set, false if it was considered invalid and
               remains unchanged.
      */
-    virtual bool assignDate( const QDate &date );
+    virtual bool assignDate(const QDate &date);
 
     /**
       Fills the keyword map. Reimplement it if you want additional
@@ -132,8 +131,8 @@ class KDE_EXPORT KDateEdit : public QComboBox
      */
     void setupKeywords();
 
-  private:
-    QDate parseDate( bool* = 0 ) const;
+private:
+    QDate parseDate(bool * = 0) const;
     void updateView();
 
     KDatePickerPopup *mPopup;

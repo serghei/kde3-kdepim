@@ -40,14 +40,14 @@
 #include "dbFlagsEditor_base.h"
 
 
-DBFlagsEditor::DBFlagsEditor(DBInfo*dbinfo, QWidget *parent) :
-	KDialogBase(parent, "FlagsEditor",false,
-		i18n("Edit Database Flags"), Ok|Cancel),
-	dbi(dbinfo)
+DBFlagsEditor::DBFlagsEditor(DBInfo *dbinfo, QWidget *parent) :
+    KDialogBase(parent, "FlagsEditor", false,
+                i18n("Edit Database Flags"), Ok | Cancel),
+    dbi(dbinfo)
 {
-	widget=new DBFlagsEditorWidget(this);
-	setMainWidget(widget);
-	fillWidgets();
+    widget = new DBFlagsEditorWidget(this);
+    setMainWidget(widget);
+    fillWidgets();
 }
 
 
@@ -57,99 +57,101 @@ DBFlagsEditor::~DBFlagsEditor()
 
 void DBFlagsEditor::slotOk()
 {
-	if (KMessageBox::questionYesNo(this, i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Database Flags"),i18n("Assign"),KStdGuiItem::cancel())==KMessageBox::Yes)
-	{
-		Pilot::toPilot(widget->fDBName->text(),dbi->name,33);
+    if(KMessageBox::questionYesNo(this,
+                                  i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"),
+                                  i18n("Changing Database Flags"), i18n("Assign"), KStdGuiItem::cancel()) == KMessageBox::Yes)
+    {
+        Pilot::toPilot(widget->fDBName->text(), dbi->name, 33);
 
-		char buff[5];
-		strlcpy(buff, widget->fType->text().latin1(), 5);
-		dbi->type=get_long(buff);
+        char buff[5];
+        strlcpy(buff, widget->fType->text().latin1(), 5);
+        dbi->type = get_long(buff);
 
-		strlcpy(buff, widget->fCreator->text().latin1(), 5);
-		dbi->creator=get_long(buff);
+        strlcpy(buff, widget->fCreator->text().latin1(), 5);
+        dbi->creator = get_long(buff);
 
 
 #define setflag(ctrl, flag) if (widget->ctrl->isChecked()) dbi->flags |=flag;\
 	else dbi->flags &= ~flag;
 
-		setflag(fRessourceDB, dlpDBFlagResource);
-		setflag(fReadOnly, dlpDBFlagReadOnly);
-		setflag(fBackupDB, dlpDBFlagBackup);
-		setflag(fCopyProtect, dlpDBFlagCopyPrevention);
-		setflag(fReset, dlpDBFlagReset);
+        setflag(fRessourceDB, dlpDBFlagResource);
+        setflag(fReadOnly, dlpDBFlagReadOnly);
+        setflag(fBackupDB, dlpDBFlagBackup);
+        setflag(fCopyProtect, dlpDBFlagCopyPrevention);
+        setflag(fReset, dlpDBFlagReset);
 #undef setflag
 
-		if (widget->fExcludeDB->isChecked())
-			dbi->miscFlags |= dlpDBMiscFlagExcludeFromSync;
-		else	dbi->miscFlags &= ~dlpDBMiscFlagExcludeFromSync;
+        if(widget->fExcludeDB->isChecked())
+            dbi->miscFlags |= dlpDBMiscFlagExcludeFromSync;
+        else	dbi->miscFlags &= ~dlpDBMiscFlagExcludeFromSync;
 
-		QDateTime ttime;
-		ttime.setDate(widget->fCreationDate->date());
+        QDateTime ttime;
+        ttime.setDate(widget->fCreationDate->date());
 #if KDE_IS_VERSION(3,1,9)
-		ttime.setTime(widget->fCreationTime->time());
+        ttime.setTime(widget->fCreationTime->time());
 #endif
-		dbi->createDate=ttime.toTime_t();
+        dbi->createDate = ttime.toTime_t();
 
-		ttime.setDate(widget->fModificationDate->date());
+        ttime.setDate(widget->fModificationDate->date());
 #if KDE_IS_VERSION(3,1,9)
-		ttime.setTime(widget->fModificationTime->time());
+        ttime.setTime(widget->fModificationTime->time());
 #endif
-		dbi->modifyDate=ttime.toTime_t();
+        dbi->modifyDate = ttime.toTime_t();
 
-		ttime.setDate(widget->fBackupDate->date());
+        ttime.setDate(widget->fBackupDate->date());
 #if KDE_IS_VERSION(3,1,9)
-		ttime.setTime(widget->fBackupTime->time());
+        ttime.setTime(widget->fBackupTime->time());
 #endif
-		dbi->backupDate=ttime.toTime_t();
+        dbi->backupDate = ttime.toTime_t();
 
-		KDialogBase::slotOk();
-	}
+        KDialogBase::slotOk();
+    }
 }
 
 void DBFlagsEditor::slotCancel()
 {
-	KDialogBase::slotCancel();
+    KDialogBase::slotCancel();
 }
 
 void DBFlagsEditor::fillWidgets()
 {
-	// FUNCTIONSETUP
+    // FUNCTIONSETUP
 
-	widget->fDBName->setText(QString::fromLatin1(dbi->name));
+    widget->fDBName->setText(QString::fromLatin1(dbi->name));
 
-	char buff[5];
-	set_long(buff, dbi->type);
-	buff[4]='\0';
-	widget->fType->setText(QString::fromLatin1(buff));
-	set_long(buff, dbi->creator);
-	buff[4]='\0';
-	widget->fCreator->setText(QString::fromLatin1(buff));
+    char buff[5];
+    set_long(buff, dbi->type);
+    buff[4] = '\0';
+    widget->fType->setText(QString::fromLatin1(buff));
+    set_long(buff, dbi->creator);
+    buff[4] = '\0';
+    widget->fCreator->setText(QString::fromLatin1(buff));
 
-	widget->fRessourceDB->setChecked(dbi->flags & dlpDBFlagResource);
-	widget->fReadOnly->setChecked(dbi->flags & dlpDBFlagReadOnly);
-	widget->fBackupDB->setChecked(dbi->flags & dlpDBFlagBackup);
-	widget->fCopyProtect->setChecked(dbi->flags & dlpDBFlagCopyPrevention);
+    widget->fRessourceDB->setChecked(dbi->flags & dlpDBFlagResource);
+    widget->fReadOnly->setChecked(dbi->flags & dlpDBFlagReadOnly);
+    widget->fBackupDB->setChecked(dbi->flags & dlpDBFlagBackup);
+    widget->fCopyProtect->setChecked(dbi->flags & dlpDBFlagCopyPrevention);
 
-	widget->fReset->setChecked(dbi->flags & dlpDBFlagReset);
-	widget->fExcludeDB->setChecked(dbi->miscFlags & dlpDBMiscFlagExcludeFromSync);
+    widget->fReset->setChecked(dbi->flags & dlpDBFlagReset);
+    widget->fExcludeDB->setChecked(dbi->miscFlags & dlpDBMiscFlagExcludeFromSync);
 
-	QDateTime ttime;
-	ttime.setTime_t(dbi->createDate);
-	widget->fCreationDate->setDate(ttime.date());
+    QDateTime ttime;
+    ttime.setTime_t(dbi->createDate);
+    widget->fCreationDate->setDate(ttime.date());
 #if KDE_IS_VERSION(3,1,9)
-	widget->fCreationTime->setTime(ttime.time());
+    widget->fCreationTime->setTime(ttime.time());
 #endif
 
-	ttime.setTime_t(dbi->modifyDate);
-	widget->fModificationDate->setDate(ttime.date());
+    ttime.setTime_t(dbi->modifyDate);
+    widget->fModificationDate->setDate(ttime.date());
 #if KDE_IS_VERSION(3,1,9)
-	widget->fModificationTime->setTime(ttime.time());
+    widget->fModificationTime->setTime(ttime.time());
 #endif
 
-	ttime.setTime_t(dbi->backupDate);
-	widget->fBackupDate->setDate(ttime.date());
+    ttime.setTime_t(dbi->backupDate);
+    widget->fBackupDate->setDate(ttime.date());
 #if KDE_IS_VERSION(3,1,9)
-	widget->fBackupTime->setTime(ttime.time());
+    widget->fBackupTime->setTime(ttime.time());
 #endif
 }
 

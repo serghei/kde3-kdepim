@@ -42,14 +42,13 @@ class TreeNode;
 
     @author Frank Osterfeld
  */
-class ListTabWidget : public QWidget
-{
+class ListTabWidget : public QWidget {
 
-Q_OBJECT
+    Q_OBJECT
 
 public:
 
-    ListTabWidget(QWidget* parent=0, const char* name=0);
+    ListTabWidget(QWidget *parent = 0, const char *name = 0);
     virtual ~ListTabWidget();
 
     enum ViewMode { single, /* horizontalTabs, */  verticalTabs };
@@ -57,12 +56,12 @@ public:
     void setViewMode(ViewMode mode);
     ViewMode viewMode() const;
 
-    void addView(NodeListView* view, const QString& caption, const QPixmap& icon);
+    void addView(NodeListView *view, const QString &caption, const QPixmap &icon);
 
-    NodeListView* activeView() const;
+    NodeListView *activeView() const;
 
 public slots:
-    
+
     /** go one item up */
     void slotItemUp();
     /** go one item down */
@@ -82,16 +81,16 @@ public slots:
     void slotNextUnreadFeed();
 
 signals:
-    void signalNodeSelected(TreeNode*);
+    void signalNodeSelected(TreeNode *);
 
 protected slots:
 
-    void slotRootNodeChanged(NodeListView*, TreeNode*);
+    void slotRootNodeChanged(NodeListView *, TreeNode *);
     void slotTabClicked(int id);
- 
+
 private:
     class ListTabWidgetPrivate;
-    ListTabWidgetPrivate* d;
+    ListTabWidgetPrivate *d;
 };
 
 } // namespace Akregator

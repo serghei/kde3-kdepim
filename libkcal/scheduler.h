@@ -41,45 +41,57 @@ class FreeBusyCache;
 
   @short A Scheduling message
 */
-class ScheduleMessage
-{
-  public:
+class ScheduleMessage {
+public:
     /**
       Message status.
     */
     enum Status { PublishNew, PublishUpdate, Obsolete, RequestNew,
-                  RequestUpdate, Unknown };
-  
+                  RequestUpdate, Unknown
+                };
+
     /**
       Create a scheduling message with method as defined in Scheduler::Method
       and a status.
     */
-    ScheduleMessage( IncidenceBase *, int method, Status status );
+    ScheduleMessage(IncidenceBase *, int method, Status status);
     ~ScheduleMessage() {};
-    
+
     /**
       Return event associated with this message.
     */
-    IncidenceBase *event() { return mIncidence; }
+    IncidenceBase *event()
+    {
+        return mIncidence;
+    }
     /**
       Return iTIP method associated with this message.
     */
-    int method() { return mMethod; }
+    int method()
+    {
+        return mMethod;
+    }
     /**
       Return status of this message.
     */
-    Status status() { return mStatus; }
+    Status status()
+    {
+        return mStatus;
+    }
     /**
       Return error message if there is any.
     */
-    QString error() { return mError; }
+    QString error()
+    {
+        return mError;
+    }
 
     /**
       Return a human-readable name for an iTIP message status.
     */
-    static QString statusName( Status status );
+    static QString statusName(Status status);
 
-  private:
+private:
     IncidenceBase *mIncidence;
     int mMethod;
     Status mStatus;
@@ -94,39 +106,39 @@ class ScheduleMessage
   base class for inheritance by implementations of the iTIP scheme like iMIP or
   iRIP.
 */
-class LIBKCAL_EXPORT Scheduler
-{
-  public:
+class LIBKCAL_EXPORT Scheduler {
+public:
     /**
       iTIP methods.
     */
-    enum Method { Publish,Request,Refresh,Cancel,Add,Reply,Counter,
-                  Declinecounter,NoMethod };
-  
+    enum Method { Publish, Request, Refresh, Cancel, Add, Reply, Counter,
+                  Declinecounter, NoMethod
+                };
+
     /**
       Create scheduler for calendar specified as argument.
     */
-    Scheduler( Calendar *calendar );
+    Scheduler(Calendar *calendar);
     virtual ~Scheduler();
-    
+
     /**
       iTIP publish action
     */
-    virtual bool publish( IncidenceBase *incidence,
-                          const QString &recipients ) = 0;
+    virtual bool publish(IncidenceBase *incidence,
+                         const QString &recipients) = 0;
     /**
       Perform iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
     */
-    virtual bool performTransaction( IncidenceBase *incidence,
-                                     Method method ) = 0;
+    virtual bool performTransaction(IncidenceBase *incidence,
+                                    Method method) = 0;
     /**
-      Perform iTIP transaction on incidence to specified recipient(s). The 
-      method is specified as the method argumanet and can be any valid iTIP 
+      Perform iTIP transaction on incidence to specified recipient(s). The
+      method is specified as the method argumanet and can be any valid iTIP
       method.
     */
-    virtual bool performTransaction( IncidenceBase *incidence, Method method,
-                                     const QString &recipients ) = 0;
+    virtual bool performTransaction(IncidenceBase *incidence, Method method,
+                                    const QString &recipients) = 0;
     /**
       Retrieve incoming iTIP transactions.
     */
@@ -138,20 +150,20 @@ class LIBKCAL_EXPORT Scheduler
       iTIP message with the current calendar and specifies the action to be
       taken for this incidence.
     */
-    bool acceptTransaction( IncidenceBase *, Method method,
-                            ScheduleMessage::Status status );
+    bool acceptTransaction(IncidenceBase *, Method method,
+                           ScheduleMessage::Status status);
 
     /**
       Return a machine-readable name for a iTIP method.
     */
-    static QString methodName( Method );
+    static QString methodName(Method);
     /**
       Return a translated human-readable name for a iTIP method.
     */
-    static QString translatedMethodName( Method );
+    static QString translatedMethodName(Method);
 
-    virtual bool deleteTransaction( IncidenceBase *incidence );
-    
+    virtual bool deleteTransaction(IncidenceBase *incidence);
+
     /**
       Returns the directory where the free-busy information is stored.
     */
@@ -160,30 +172,30 @@ class LIBKCAL_EXPORT Scheduler
     /**
       Set free/busy cache used to store free/busy information.
     */
-    void setFreeBusyCache( FreeBusyCache * );
+    void setFreeBusyCache(FreeBusyCache *);
     /**
       Return free/busy cache.
     */
     FreeBusyCache *freeBusyCache() const;
 
-  protected:
-    bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status,
-                        Method method );
-    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptDeclineCounter( IncidenceBase *,
-                               ScheduleMessage::Status status );
-    bool acceptReply( IncidenceBase *, ScheduleMessage::Status status,
-                      Method method );
-    bool acceptRefresh( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptCounter( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptFreeBusy( IncidenceBase *, Method method );
+protected:
+    bool acceptPublish(IncidenceBase *, ScheduleMessage::Status status,
+                       Method method);
+    bool acceptRequest(IncidenceBase *, ScheduleMessage::Status status);
+    bool acceptAdd(IncidenceBase *, ScheduleMessage::Status status);
+    bool acceptCancel(IncidenceBase *, ScheduleMessage::Status status);
+    bool acceptDeclineCounter(IncidenceBase *,
+                              ScheduleMessage::Status status);
+    bool acceptReply(IncidenceBase *, ScheduleMessage::Status status,
+                     Method method);
+    bool acceptRefresh(IncidenceBase *, ScheduleMessage::Status status);
+    bool acceptCounter(IncidenceBase *, ScheduleMessage::Status status);
+    bool acceptFreeBusy(IncidenceBase *, Method method);
 
     Calendar *mCalendar;
     ICalFormat *mFormat;
 
-  private:
+private:
     class Private;
     Private *d;
 };

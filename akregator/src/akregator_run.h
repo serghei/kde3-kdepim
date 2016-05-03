@@ -22,45 +22,43 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef AKREGATOR_RUN_H 
+#ifndef AKREGATOR_RUN_H
 #define AKREGATOR_RUN_H
 
 #include <kparts/browserrun.h>
 
-namespace Akregator
-{
+namespace Akregator {
 
 class Viewer;
 
-class BrowserRun : public KParts::BrowserRun
-{
+class BrowserRun : public KParts::BrowserRun {
     Q_OBJECT
-    public:
-        /** indicates how HTML pages should be opened. It is passed in the constructor and sent back via the openInViewer signal. This is a workaround to fix opening of non-HTML mimetypes in 3.5, which will be refactored for KDE4 anyway. For 3.5.x it's the easiest way to fix the problem without changing too much code TODO KDE4: refactor, remove this enum  */
-        enum OpeningMode 
-        {
-            CURRENT_TAB,
-            NEW_TAB_FOREGROUND,
-            NEW_TAB_BACKGROUND,
-            EXTERNAL
-        };
+public:
+    /** indicates how HTML pages should be opened. It is passed in the constructor and sent back via the openInViewer signal. This is a workaround to fix opening of non-HTML mimetypes in 3.5, which will be refactored for KDE4 anyway. For 3.5.x it's the easiest way to fix the problem without changing too much code TODO KDE4: refactor, remove this enum  */
+    enum OpeningMode
+    {
+        CURRENT_TAB,
+        NEW_TAB_FOREGROUND,
+        NEW_TAB_BACKGROUND,
+        EXTERNAL
+    };
 
-        BrowserRun(QWidget* mainWindow, Viewer* currentViewer, const KURL& url, const KParts::URLArgs& args, OpeningMode mode);
-        virtual ~BrowserRun();
+    BrowserRun(QWidget *mainWindow, Viewer *currentViewer, const KURL &url, const KParts::URLArgs &args, OpeningMode mode);
+    virtual ~BrowserRun();
 
-    signals:
+signals:
 
-        void signalOpenInViewer(const KURL&, Akregator::Viewer*, Akregator::BrowserRun::OpeningMode);
+    void signalOpenInViewer(const KURL &, Akregator::Viewer *, Akregator::BrowserRun::OpeningMode);
 
-    protected:
-	    virtual void foundMimeType(const QString& type);
+protected:
+    virtual void foundMimeType(const QString &type);
 
-    private slots:
-        void slotViewerDeleted();
+private slots:
+    void slotViewerDeleted();
 
-    private:
-        OpeningMode m_openingMode;
-        Viewer* m_currentViewer;
+private:
+    OpeningMode m_openingMode;
+    Viewer *m_currentViewer;
 };
 
 }

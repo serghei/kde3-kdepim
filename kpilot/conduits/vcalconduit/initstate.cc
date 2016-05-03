@@ -37,73 +37,73 @@
 
 InitState::InitState()
 {
-	fState = eInit;
+    fState = eInit;
 }
 
 InitState::~InitState()
 {
 }
 
-void InitState::startSync( ConduitAction *ca )
+void InitState::startSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Starting InitState." << endl;
+    DEBUGKPILOT << fname << ": Starting InitState." << endl;
 
-	vccb->addLogMessage( i18n( "Initializing conduit ..." ) );
-	vccb->preSync();
+    vccb->addLogMessage(i18n("Initializing conduit ..."));
+    vccb->preSync();
 
-	if ( vccb->syncMode().isTest() )
-	{
-		fNextState = new TestState();
-	}
-	else
-	{
-		switch( vccb->syncMode().mode() )
-		{
-		case ConduitAction::SyncMode::eCopyPCToHH:
-			// TODO: Clear the palm and backup database??? Or just add the
-			// new items ignore the Palm->PC side and leave the existing items
-			// on the palm?
-			fNextState = new PCToHHState();
-			break;
-		case ConduitAction::SyncMode::eCopyHHToPC:
-			// TODO: Clear the backup database and the calendar, update fP
-			//       or just add the palm items and leave the PC ones there????
-			fNextState = new HHToPCState();
-			break;
-		default:
-			fNextState = new HHToPCState();
-			break;
-		}
-	}
+    if(vccb->syncMode().isTest())
+    {
+        fNextState = new TestState();
+    }
+    else
+    {
+        switch(vccb->syncMode().mode())
+        {
+            case ConduitAction::SyncMode::eCopyPCToHH:
+                // TODO: Clear the palm and backup database??? Or just add the
+                // new items ignore the Palm->PC side and leave the existing items
+                // on the palm?
+                fNextState = new PCToHHState();
+                break;
+            case ConduitAction::SyncMode::eCopyHHToPC:
+                // TODO: Clear the backup database and the calendar, update fP
+                //       or just add the palm items and leave the PC ones there????
+                fNextState = new HHToPCState();
+                break;
+            default:
+                fNextState = new HHToPCState();
+                break;
+        }
+    }
 
-	fStarted = true;
-	vccb->setHasNextRecord( false );
+    fStarted = true;
+    vccb->setHasNextRecord(false);
 }
 
-void InitState::handleRecord( ConduitAction *vccb )
+void InitState::handleRecord(ConduitAction *vccb)
 {
-	FUNCTIONSETUP;
-	Q_UNUSED(vccb);
+    FUNCTIONSETUP;
+    Q_UNUSED(vccb);
 }
 
-void InitState::finishSync( ConduitAction *ca )
+void InitState::finishSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Finished InitState." << endl;
-	vccb->setState( fNextState );
+    DEBUGKPILOT << fname << ": Finished InitState." << endl;
+    vccb->setState(fNextState);
 }

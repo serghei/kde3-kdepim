@@ -31,36 +31,38 @@
 #include "plugin.h"
 #include "uniqueapphandler.h"
 
-class TodoPlugin : public Kontact::Plugin
-{
+class TodoPlugin : public Kontact::Plugin {
     Q_OBJECT
-  public:
-    TodoPlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    TodoPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~TodoPlugin();
 
-    virtual bool createDCOPInterface( const QString& serviceType );
+    virtual bool createDCOPInterface(const QString &serviceType);
     virtual bool isRunningStandalone();
-    int weight() const { return 450; }
+    int weight() const
+    {
+        return 450;
+    }
 
-    bool canDecodeDrag( QMimeSource * );
-    void processDropEvent( QDropEvent * );
+    bool canDecodeDrag(QMimeSource *);
+    void processDropEvent(QDropEvent *);
 
     virtual QStringList invisibleToolbarActions() const;
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parent );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parent);
 
     void select();
 
     KCalendarIface_stub *interface();
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
 
-  private slots:
+private slots:
     void slotNewTodo();
     void slotSyncTodos();
 
-  private:
+private:
     KCalendarIface_stub *mIface;
     Kontact::UniqueAppWatcher *mUniqueAppWatcher;
 };

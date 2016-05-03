@@ -23,33 +23,34 @@
 
 static const KCmdLineOptions options[] =
 {
-  KCmdLineLastOption
+    KCmdLineLastOption
 };
 
 int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalogue("kmailcvt");
+    KLocale::setMainCatalogue("kmailcvt");
 
-  KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
-    "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
-    I18N_NOOP("(c) 2000-2005, The KMailCVT developers"));
-  aboutData.addAuthor("Hans Dijkema",I18N_NOOP("Original author"), "kmailcvt@hum.org");
-  aboutData.addAuthor("Danny Kukawka", I18N_NOOP("Maintainer & New filters"), "danny.kukawka@web.de");
-  aboutData.addAuthor("Laurence Anderson", I18N_NOOP("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
-  aboutData.addCredit("Daniel Molkentin", I18N_NOOP("New GUI & cleanups"), "molkentin@kde.org");
+    KAboutData aboutData("kmailcvt", I18N_NOOP("KMailCVT"),
+                         "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
+                         I18N_NOOP("(c) 2000-2005, The KMailCVT developers"));
+    aboutData.addAuthor("Hans Dijkema", I18N_NOOP("Original author"), "kmailcvt@hum.org");
+    aboutData.addAuthor("Danny Kukawka", I18N_NOOP("Maintainer & New filters"), "danny.kukawka@web.de");
+    aboutData.addAuthor("Laurence Anderson", I18N_NOOP("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
+    aboutData.addCredit("Daniel Molkentin", I18N_NOOP("New GUI & cleanups"), "molkentin@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);   // Add our own options.
 
-  KApplication a;
-  KMailCVT *kmailcvt = new KMailCVT();
-  a.setMainWidget(kmailcvt);
-  kmailcvt->show();  
+    KApplication a;
+    KMailCVT *kmailcvt = new KMailCVT();
+    a.setMainWidget(kmailcvt);
+    kmailcvt->show();
 
-  DCOPClient *client=a.dcopClient();
-  if (!client->attach()) {
-    return 1;
-  }
+    DCOPClient *client = a.dcopClient();
+    if(!client->attach())
+    {
+        return 1;
+    }
 
-  return a.exec();
+    return a.exec();
 }

@@ -28,18 +28,17 @@ namespace KABC {
 class AddressBook;
 }
 
-class KABTools
-{
-  public:
+class KABTools {
+public:
     /**
       Sends a mail with vCards as attachments for all given UIDs.
      */
-    static void mailVCards( const QStringList &uids, KABC::AddressBook *ab );
+    static void mailVCards(const QStringList &uids, KABC::AddressBook *ab);
 
     /**
       Merges all passed contacts to a single one.
      */
-    static KABC::Addressee mergeContacts( const KABC::Addressee::List &list );
+    static KABC::Addressee mergeContacts(const KABC::Addressee::List &list);
 };
 
 #endif

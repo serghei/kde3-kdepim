@@ -26,30 +26,31 @@
 
 using namespace KCal;
 
-VCalDrag::VCalDrag( Calendar *cal, QWidget *parent, const char *name )
-  : QStoredDrag( "text/x-vCalendar", parent, name )
+VCalDrag::VCalDrag(Calendar *cal, QWidget *parent, const char *name)
+    : QStoredDrag("text/x-vCalendar", parent, name)
 {
-  VCalFormat format;
-  setEncodedData( format.toString( cal ).utf8() );
-}
-
-bool VCalDrag::canDecode( QMimeSource *me )
-{
-  return me->provides( "text/x-vCalendar" );
-}
-
-bool VCalDrag::decode( QMimeSource *de, Calendar *cal )
-{
-  bool success = false;
-
-  QByteArray payload = de->encodedData( "text/x-vCalendar" );
-  if ( payload.size() ) {
-    QString txt = QString::fromUtf8( payload.data() );
-
     VCalFormat format;
-    success = format.fromString( cal, txt );
-  }
+    setEncodedData(format.toString(cal).utf8());
+}
 
-  return success;
+bool VCalDrag::canDecode(QMimeSource *me)
+{
+    return me->provides("text/x-vCalendar");
+}
+
+bool VCalDrag::decode(QMimeSource *de, Calendar *cal)
+{
+    bool success = false;
+
+    QByteArray payload = de->encodedData("text/x-vCalendar");
+    if(payload.size())
+    {
+        QString txt = QString::fromUtf8(payload.data());
+
+        VCalFormat format;
+        success = format.fromString(cal, txt);
+    }
+
+    return success;
 }
 

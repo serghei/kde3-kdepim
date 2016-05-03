@@ -25,16 +25,18 @@
 
 class SummaryWidget;
 
-class NewsTickerPlugin : public Kontact::Plugin
-{
-  public:
-    NewsTickerPlugin( Kontact::Core *core, const char *name, const QStringList& );
+class NewsTickerPlugin : public Kontact::Plugin {
+public:
+    NewsTickerPlugin(Kontact::Core *core, const char *name, const QStringList &);
     NewsTickerPlugin();
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget* parentWidget );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parentWidget);
 
-  protected:
-    virtual KParts::ReadOnlyPart* createPart() { return 0L; }
+protected:
+    virtual KParts::ReadOnlyPart *createPart()
+    {
+        return 0L;
+    }
 };
 
 #endif

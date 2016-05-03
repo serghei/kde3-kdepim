@@ -26,74 +26,73 @@
 
 #include "ldapview.h"
 
-class LdapItem : public QListViewItem
-{
-  public:
-    LdapItem( QListView *parent, const QString &text, const QString &email )
-      : QListViewItem( parent )
+class LdapItem : public QListViewItem {
+public:
+    LdapItem(QListView *parent, const QString &text, const QString &email)
+        : QListViewItem(parent)
     {
-      setText( 0, text );
-      setText( 1, email );
+        setText(0, text);
+        setText(1, email);
     }
 };
 
 
-LdapView::LdapView( QWidget *parent )
-  : KListView( parent )
+LdapView::LdapView(QWidget *parent)
+    : KListView(parent)
 {
-  addColumn( i18n( "User" ) );
-  setFullWidth( true );
+    addColumn(i18n("User"));
+    setFullWidth(true);
 
-  mClient = new KABC::LdapClient;
+    mClient = new KABC::LdapClient;
 
-  mClient->setHost( Settings::self()->ldapHost() );
-  mClient->setPort( Settings::self()->ldapPort() );
-  mClient->setBase( Settings::self()->ldapBase() );
-  mClient->setBindDN( Settings::self()->ldapBindDn() );
-  mClient->setPwdBindDN( Settings::self()->ldapPassword() );
+    mClient->setHost(Settings::self()->ldapHost());
+    mClient->setPort(Settings::self()->ldapPort());
+    mClient->setBase(Settings::self()->ldapBase());
+    mClient->setBindDN(Settings::self()->ldapBindDn());
+    mClient->setPwdBindDN(Settings::self()->ldapPassword());
 
-  QStringList attrs;
-  attrs << "surname" << "mail";
-  mClient->setAttrs( attrs );
+    QStringList attrs;
+    attrs << "surname" << "mail";
+    mClient->setAttrs(attrs);
 
-  connect( mClient, SIGNAL( result( const KABC::LdapObject& ) ),
-           this, SLOT( entryAdded( const KABC::LdapObject& ) ) );
-  connect( mClient, SIGNAL( error( const QString& ) ),
-           this, SLOT( error( const QString& ) ) );
+    connect(mClient, SIGNAL(result(const KABC::LdapObject &)),
+            this, SLOT(entryAdded(const KABC::LdapObject &)));
+    connect(mClient, SIGNAL(error(const QString &)),
+            this, SLOT(error(const QString &)));
 }
 
 LdapView::~LdapView()
 {
-  mClient->cancelQuery();
-  delete mClient;
+    mClient->cancelQuery();
+    delete mClient;
 }
 
 QString LdapView::selectedUser() const
 {
-  QListViewItem *item = selectedItem();
-  if ( !item )
-    return QString();
-  else
-    return item->text( 1 );
+    QListViewItem *item = selectedItem();
+    if(!item)
+        return QString();
+    else
+        return item->text(1);
 }
 
-void LdapView::setQuery( const QString &query )
+void LdapView::setQuery(const QString &query)
 {
-  clear();
-  mClient->startQuery( query );
+    clear();
+    mClient->startQuery(query);
 }
 
-void LdapView::entryAdded( const KABC::LdapObject &obj )
+void LdapView::entryAdded(const KABC::LdapObject &obj)
 {
-  const QString text = QString( "%1 (%2)" ).arg( obj.attrs[ "surname" ].first() )
-                                           .arg( obj.attrs[ "mail" ].first() );
+    const QString text = QString("%1 (%2)").arg(obj.attrs[ "surname" ].first())
+                         .arg(obj.attrs[ "mail" ].first());
 
-  new LdapItem( this, text, obj.attrs[ "mail" ].first() );
+    new LdapItem(this, text, obj.attrs[ "mail" ].first());
 }
 
-void LdapView::error( const QString &msg )
+void LdapView::error(const QString &msg)
 {
-  KMessageBox::error( this, msg );
+    KMessageBox::error(this, msg);
 }
 
 #include "ldapview.moc"

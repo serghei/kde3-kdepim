@@ -34,38 +34,41 @@
 #include "summary.h"
 
 namespace Kontact {
-  class Plugin;
+class Plugin;
 }
 
 class QGridLayout;
 class QLabel;
 
-class SDSummaryWidget : public Kontact::Summary
-{
-  Q_OBJECT
+class SDSummaryWidget : public Kontact::Summary {
+    Q_OBJECT
 
-  public:
-    SDSummaryWidget( Kontact::Plugin *plugin, QWidget *parent,
-                     const char *name = 0 );
+public:
+    SDSummaryWidget(Kontact::Plugin *plugin, QWidget *parent,
+                    const char *name = 0);
 
     QStringList configModules() const;
     void configUpdated();
-    void updateSummary( bool force = false ) { Q_UNUSED( force ); updateView(); }
+    void updateSummary(bool force = false)
+    {
+        Q_UNUSED(force);
+        updateView();
+    }
 
-  protected:
-    virtual bool eventFilter( QObject *obj, QEvent* e );
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *e);
 
-  private slots:
+private slots:
     void updateView();
-    void popupMenu( const QString &uid );
-    void mailContact( const QString &uid );
-    void viewContact( const QString &uid );
+    void popupMenu(const QString &uid);
+    void mailContact(const QString &uid);
+    void viewContact(const QString &uid);
 
-  private:
-    int span( KCal::Event *event );
-    int dayof( KCal::Event *event, const QDate &date );
+private:
+    int span(KCal::Event *event);
+    int dayof(KCal::Event *event, const QDate &date);
     bool initHolidays();
-    void dateDiff( const QDate &date, int &days, int &years );
+    void dateDiff(const QDate &date, int &days, int &years);
     QGridLayout *mLayout;
     QPtrList<QLabel> mLabels;
     Kontact::Plugin *mPlugin;

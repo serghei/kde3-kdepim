@@ -31,61 +31,60 @@ namespace KCal {
 /**
   This class represents information related to an attachment.
 */
-class KDE_EXPORT Attachment
-{
-  public:
+class KDE_EXPORT Attachment {
+public:
     typedef ListBase<Attachment> List;
 
     /**
       Create a Reference to some URI by copying an existing Attachment.
-      
+
       @param attachment the attachment to be duplicated
     */
-    Attachment( const Attachment &attachment );
+    Attachment(const Attachment &attachment);
 
     /**
       Create a Reference to some URI.
-      
+
       @param uri the uri this attachment refers to
       @param mime the mime type of the resource being linked to
     */
-    Attachment( const QString &uri, const QString &mime = QString::null );
+    Attachment(const QString &uri, const QString &mime = QString::null);
 
     /**
       Create a binary attachment.
-     
+
       @param base64 the attachment in base64 format
       @param mime the mime type of the attachment
     */
-    Attachment( const char *base64, const QString &mime = QString::null );
+    Attachment(const char *base64, const QString &mime = QString::null);
 
     /* The VALUE parameter in iCal */
     bool isUri() const;
     QString uri() const;
-    void setUri( const QString &uri );
-    
+    void setUri(const QString &uri);
+
     bool isBinary() const;
     char *data() const;
-    void setData( const char *base64 );
+    void setData(const char *base64);
 
     /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
-    void setMimeType( const QString &mime );
-		
-		/* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
-		bool showInline() const;
-		void setShowInline( bool showinline );
-		
-		/* The custom X-LABEL parameter to show a human-readable title */
-		QString label() const;
-		void setLabel( const QString &label );
+    void setMimeType(const QString &mime);
 
-  private:
+    /* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
+    bool showInline() const;
+    void setShowInline(bool showinline);
+
+    /* The custom X-LABEL parameter to show a human-readable title */
+    QString label() const;
+    void setLabel(const QString &label);
+
+private:
     QString mMimeType;
     QString mData;
     bool mBinary;
-		bool mShowInline;
-		QString mLabel;
+    bool mShowInline;
+    QString mLabel;
 
     class Private;
     Private *d;

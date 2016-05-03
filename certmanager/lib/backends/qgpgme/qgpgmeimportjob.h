@@ -40,33 +40,34 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
+class Error;
+class Context;
 }
 
 namespace Kleo {
 
-  class QGpgMEImportJob : public ImportJob, private QGpgMEJob {
+class QGpgMEImportJob : public ImportJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEImportJob( GpgME::Context * context );
+public:
+    QGpgMEImportJob(GpgME::Context *context);
     ~QGpgMEImportJob();
 
     /*! \reimp from ImportJob */
-    GpgME::Error start( const QByteArray & keyData );
+    GpgME::Error start(const QByteArray &keyData);
 
     /*! \reimp from ImportJob */
-    GpgME::ImportResult exec( const QByteArray & keyData );
+    GpgME::ImportResult exec(const QByteArray &keyData);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & );
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    void setup(const QByteArray &);
+};
 
 }
 

@@ -31,7 +31,7 @@
 
 /**
  * KDEPIM classes for drag and drop of mails
- * 
+ *
  * // Code example for drag and drop enabled widget
  *
  * void SomeWidget::contentsDropEvent(QDropEvent *e)
@@ -44,16 +44,15 @@
 
 namespace KPIM {
 
-class KDE_EXPORT MailSummary 
-{
+class KDE_EXPORT MailSummary {
 public:
-    MailSummary( Q_UINT32 serialNumber, QString messageId, QString subject, 
-		 QString from, QString to, time_t date );
+    MailSummary(Q_UINT32 serialNumber, QString messageId, QString subject,
+                QString from, QString to, time_t date);
     MailSummary() {}
     ~MailSummary() {}
 
     /*** Set fields for this mail summary  ***/
-    void set( Q_UINT32, QString, QString, QString, QString, time_t );
+    void set(Q_UINT32, QString, QString, QString, QString, time_t);
 
     /*** KMail unique identification number ***/
     Q_UINT32 serialNumber() const;
@@ -92,11 +91,10 @@ public:
 };
 
 // Drag and drop object for mails
-class KDE_EXPORT MailListDrag : public QStoredDrag
-{
+class KDE_EXPORT MailListDrag : public QStoredDrag {
 public:
     // Takes ownership of "src" and deletes it when done
-    MailListDrag( MailList, QWidget * parent = 0, MailTextSource *src = 0 );
+    MailListDrag(MailList, QWidget *parent = 0, MailTextSource *src = 0);
     ~MailListDrag();
 
     const char *format(int i) const;
@@ -106,26 +104,26 @@ public:
     QByteArray encodedData(const char *) const;
 
     /* Reset the list of mail summaries */
-    void setMailList( MailList );
+    void setMailList(MailList);
 
     /* The format for this drag - "x-kmail-drag/message-list" */
-    static const char* format();
-    
+    static const char *format();
+
     /* Returns TRUE if the information in e can be decoded into a QString;
        otherwsie returns FALSE */
-    static bool canDecode( QMimeSource* e );
+    static bool canDecode(QMimeSource *e);
 
     /* Attempts to decode the dropped information;
        Returns TRUE if successful; otherwise return false */
-    static bool decode( QDropEvent* e, MailList& s );
+    static bool decode(QDropEvent *e, MailList &s);
 
     /* Attempts to decode the serialNumbers of the dropped information;
        Returns TRUE if successful; otherwise return false */
-    static bool decode( QDropEvent* e, QByteArray& a );
+    static bool decode(QDropEvent *e, QByteArray &a);
 
     /* Attempts to decode the encoded MailList;
        Returns TRUE if successful; otherwise return false */
-    static bool decode( QByteArray& a, MailList& s );
+    static bool decode(QByteArray &a, MailList &s);
 
 private:
     MailTextSource *_src;

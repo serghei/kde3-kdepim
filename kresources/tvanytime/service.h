@@ -31,22 +31,40 @@
 
 
 class ProgramInformation {
-  public:
+public:
     ProgramInformation() {}
-    ProgramInformation( const QString & title, const QString &synopsis );
+    ProgramInformation(const QString &title, const QString &synopsis);
     virtual ~ProgramInformation() {}
 
-    QString id() const { return mId; }
-    QString title() const { return mTitle; }
-    QString synopsis() const { return mSynopsis; }
-    QStringList genres() const { return mGenres; }
+    QString id() const
+    {
+        return mId;
+    }
+    QString title() const
+    {
+        return mTitle;
+    }
+    QString synopsis() const
+    {
+        return mSynopsis;
+    }
+    QStringList genres() const
+    {
+        return mGenres;
+    }
 
-    void setId ( const QString & id ) { mId = id; }
-    void setGenres( const QStringList & genres ) { mGenres = genres; }
-    bool loadXML( const QDomElement & );
-    bool loadAttribute( const QDomElement& element );
+    void setId(const QString &id)
+    {
+        mId = id;
+    }
+    void setGenres(const QStringList &genres)
+    {
+        mGenres = genres;
+    }
+    bool loadXML(const QDomElement &);
+    bool loadAttribute(const QDomElement &element);
 
-  private:
+private:
     QString mId;
     QString mTitle;
     QString mSynopsis;
@@ -56,19 +74,31 @@ class ProgramInformation {
 typedef QMap< QString, ProgramInformation > ProgramInformationMap;
 
 class ScheduleEvent {
-  public:
+public:
     ScheduleEvent() {}
     virtual ~ScheduleEvent() {}
-    
-    QString crid() const { return mCrid; }
-    QDateTime startTime() const { return mStartTime; }
-    uint duration() const { return mDuration; }
-    QString programUrl() const { return mUrl; }
 
-    bool loadXML( const QDomElement & );
-    bool loadAttribute( const QDomElement& element );
-    
-  private:
+    QString crid() const
+    {
+        return mCrid;
+    }
+    QDateTime startTime() const
+    {
+        return mStartTime;
+    }
+    uint duration() const
+    {
+        return mDuration;
+    }
+    QString programUrl() const
+    {
+        return mUrl;
+    }
+
+    bool loadXML(const QDomElement &);
+    bool loadAttribute(const QDomElement &element);
+
+private:
     QString mCrid;
     QString mUrl;
     QDateTime mStartTime;
@@ -78,26 +108,32 @@ class ScheduleEvent {
 };
 
 class Service {
-  public:
+public:
     Service();
-    Service( bool active, const QString & name, const QString & owner, const KURL & serviceUrl, const KURL & logo, const QStringList & genres );
+    Service(bool active, const QString &name, const QString &owner, const KURL &serviceUrl, const KURL &logo, const QStringList &genres);
     virtual ~Service() {}
-  
-    void setId( const QString & id ) { mId = id; }
-    void setActive( bool active );
-    void setName( const QString& name );
-    void setProgramInformation( const ProgramInformationMap & map );
 
-    QString id() const { return mId; }
+    void setId(const QString &id)
+    {
+        mId = id;
+    }
+    void setActive(bool active);
+    void setName(const QString &name);
+    void setProgramInformation(const ProgramInformationMap &map);
+
+    QString id() const
+    {
+        return mId;
+    }
     bool active() const;
     QString name() const;
     ProgramInformationMap programmeInformation() const;
 
-    bool loadXML( const QDomElement & );
-    bool loadDescription( const QDomElement & );
-    bool loadAttribute( const QDomElement& element );
+    bool loadXML(const QDomElement &);
+    bool loadDescription(const QDomElement &);
+    bool loadAttribute(const QDomElement &element);
 
-  private:
+private:
     QString mId;
     bool mActive;
     QString mName;

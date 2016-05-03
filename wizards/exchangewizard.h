@@ -27,16 +27,15 @@ class KLineEdit;
 class QCheckBox;
 class QSpinBox;
 
-class KDE_EXPORT ExchangeWizard : public KConfigWizard
-{
-  public:
+class KDE_EXPORT ExchangeWizard : public KConfigWizard {
+public:
     ExchangeWizard();
     ~ExchangeWizard();
 
     void usrReadConfig();
     void usrWriteConfig();
 
-  private:
+private:
     KLineEdit *mServerEdit;
     QSpinBox  *mPortEdit;
     KLineEdit *mUserEdit;

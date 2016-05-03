@@ -27,65 +27,71 @@ class QStringList;
 
 class KTNEFWriter {
 public:
-  KTNEFWriter();
-  ~KTNEFWriter();
+    KTNEFWriter();
+    ~KTNEFWriter();
 
-  void addProperty( int tag, int type, const QVariant& value );
+    void addProperty(int tag, int type, const QVariant &value);
 
-  bool writeFile( QIODevice &file );
-  bool writeFile( QDataStream &stream );
+    bool writeFile(QIODevice &file);
+    bool writeFile(QDataStream &stream);
 
-  bool writeProperty( QDataStream &stream, int &bytes, int type);
+    bool writeProperty(QDataStream &stream, int &bytes, int type);
 
-  enum MessageType {
-    Appointment, MeetingCancelled, MeetingRequest,
-    MeetingNo, MeetingYes, MeetingTent
-  };
+    enum MessageType
+    {
+        Appointment, MeetingCancelled, MeetingRequest,
+        MeetingNo, MeetingYes, MeetingTent
+    };
 
-  enum Method {
-      PublishNew, Obsolete, RequestNew, RequestUpdate, Unknown
-  };
+    enum Method
+    {
+        PublishNew, Obsolete, RequestNew, RequestUpdate, Unknown
+    };
 
-  enum Role {
-    ReqParticipant, OptParticipant, NonParticipant, Chair
-  };
+    enum Role
+    {
+        ReqParticipant, OptParticipant, NonParticipant, Chair
+    };
 
-  enum PartStat {
-    NeedsAction, Accepted, Declined, Tentative,
-    Delegated, Completed, InProcess
-  };
+    enum PartStat
+    {
+        NeedsAction, Accepted, Declined, Tentative,
+        Delegated, Completed, InProcess
+    };
 
-  enum Priority {
-    High = 2, Normal = 3, Low = 1
-  };
+    enum Priority
+    {
+        High = 2, Normal = 3, Low = 1
+    };
 
-  enum AlarmAction {
-    Display
-  };
+    enum AlarmAction
+    {
+        Display
+    };
 
-  // This set of functions sets all properties on the file you want to save
-  void setSender(const QString &name, const QString &email);
-  void setMessageType(MessageType m);
-  void setMethod( Method m );
-  void clearAttendees();
-  void addAttendee( const QString& cn, Role r, PartStat p, bool rsvp,
-                    const QString& mailto );
-  void setOrganizer( const QString& organizer ); // Is that the same as sender???
-  void setDtStart( const QDateTime& dtStart );
-  void setDtEnd( const QDateTime& dtEnd );
-  void setLocation( const QString& location );
-  void setUID( const QString& uid );
-  void setDtStamp( const QDateTime& dtStamp );
-  void setCategories( const QStringList& );
-  void setDescription( const QString& );
-  void setSummary( const QString& );
-  void setPriority( Priority p );
-  void setAlarm( const QString& description, AlarmAction action,
-                 const QDateTime& wakeBefore );
+    // This set of functions sets all properties on the file you want to save
+    void setSender(const QString &name, const QString &email);
+    void setMessageType(MessageType m);
+    void setMethod(Method m);
+    void clearAttendees();
+    void addAttendee(const QString &cn, Role r, PartStat p, bool rsvp,
+                     const QString &mailto);
+    void setOrganizer(const QString &organizer);   // Is that the same as sender???
+    void setDtStart(const QDateTime &dtStart);
+    void setDtEnd(const QDateTime &dtEnd);
+    void setLocation(const QString &location);
+    void setUID(const QString &uid);
+    void setDtStamp(const QDateTime &dtStamp);
+    void setCategories(const QStringList &);
+    void setDescription(const QString &);
+    void setSummary(const QString &);
+    void setPriority(Priority p);
+    void setAlarm(const QString &description, AlarmAction action,
+                  const QDateTime &wakeBefore);
 
 private:
-  class PrivateData;
-  PrivateData *mData;
+    class PrivateData;
+    PrivateData *mData;
 };
 
 

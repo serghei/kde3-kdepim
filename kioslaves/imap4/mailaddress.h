@@ -28,54 +28,53 @@
 #include <qcstring.h>
 #include "rfcdecoder.h"
 
-class mailAddress
-{
+class mailAddress {
 public:
-  mailAddress ();
-  ~mailAddress ();
-  mailAddress (char *aCStr);
-    mailAddress (const mailAddress &);
-    mailAddress & operator = (const mailAddress &);
+    mailAddress();
+    ~mailAddress();
+    mailAddress(char *aCStr);
+    mailAddress(const mailAddress &);
+    mailAddress &operator = (const mailAddress &);
 
-  void setUser (const QCString & aUser)
-  {
-    user = aUser;
-  }
-  const QCString & getUser () const
-  {
-    return user;
-  }
-  void setHost (const QCString & aHost)
-  {
-    host = aHost;
-  }
-  const QCString & getHost () const
-  {
-    return host;
-  }
+    void setUser(const QCString &aUser)
+    {
+        user = aUser;
+    }
+    const QCString &getUser() const
+    {
+        return user;
+    }
+    void setHost(const QCString &aHost)
+    {
+        host = aHost;
+    }
+    const QCString &getHost() const
+    {
+        return host;
+    }
 
-  void setFullName (const QString & aFull);
-  const QString getFullName () const;
+    void setFullName(const QString &aFull);
+    const QString getFullName() const;
 
-  void setComment (const QString & aComment);
-  void setCommentRaw (const QCString &);
-  const QString getComment () const;
-  const QCString & getCommentRaw () const;
+    void setComment(const QString &aComment);
+    void setCommentRaw(const QCString &);
+    const QString getComment() const;
+    const QCString &getCommentRaw() const;
 
-  int parseAddress (char *);
-  const QCString getStr ();
-  bool isEmpty () const;
+    int parseAddress(char *);
+    const QCString getStr();
+    bool isEmpty() const;
 
-  static QString emailAddrAsAnchor (const mailAddress &, bool);
-  static QString emailAddrAsAnchor (const QPtrList < mailAddress > &, bool);
+    static QString emailAddrAsAnchor(const mailAddress &, bool);
+    static QString emailAddrAsAnchor(const QPtrList < mailAddress > &, bool);
 
-  void clear();
+    void clear();
 
 private:
-  QCString user;
-  QCString host;
-  QCString rawFullName;
-  QCString rawComment;
+    QCString user;
+    QCString host;
+    QCString rawFullName;
+    QCString rawComment;
 };
 
 #endif

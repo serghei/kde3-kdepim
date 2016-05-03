@@ -40,89 +40,92 @@ namespace KAB {
 class Core;
 }
 
-class Command : public KCommand
-{
-  public:
-    Command( KABC::AddressBook *addressBook ) { mAddressBook = addressBook; }
+class Command : public KCommand {
+public:
+    Command(KABC::AddressBook *addressBook)
+    {
+        mAddressBook = addressBook;
+    }
 
-  protected:
-    KABC::AddressBook *addressBook() const { return mAddressBook; }
-    KABLock *lock() const { return KABLock::self( mAddressBook ); }
+protected:
+    KABC::AddressBook *addressBook() const
+    {
+        return mAddressBook;
+    }
+    KABLock *lock() const
+    {
+        return KABLock::self(mAddressBook);
+    }
 
-  private:
+private:
     KABC::AddressBook *mAddressBook;
 };
 
-class DeleteCommand : public Command
-{
-  public:
-    DeleteCommand( KABC::AddressBook *addressBook, const QStringList &uidList );
+class DeleteCommand : public Command {
+public:
+    DeleteCommand(KABC::AddressBook *addressBook, const QStringList &uidList);
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
-  private:
+private:
     KABC::Addressee::List mAddresseeList;
     QStringList mUIDList;
 };
 
-class PasteCommand : public Command
-{
-  public:
-    PasteCommand( KAB::Core *core,
-                  const KABC::Addressee::List &addressees );
+class PasteCommand : public Command {
+public:
+    PasteCommand(KAB::Core *core,
+                 const KABC::Addressee::List &addressees);
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
-  private:
+private:
     KABC::Addressee::List mAddresseeList;
     KAB::Core *mCore;
 };
 
-class CutCommand : public Command
-{
-  public:
-    CutCommand( KABC::AddressBook *addressBook, const QStringList &uidList );
+class CutCommand : public Command {
+public:
+    CutCommand(KABC::AddressBook *addressBook, const QStringList &uidList);
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
-  private:
+private:
     KABC::Addressee::List mAddresseeList;
     QStringList mUIDList;
     QString mClipText;
     QString mOldText;
 };
 
-class NewCommand : public Command
-{
-  public:
-    NewCommand( KABC::AddressBook *addressBook,
-                const KABC::Addressee::List &addressees );
+class NewCommand : public Command {
+public:
+    NewCommand(KABC::AddressBook *addressBook,
+               const KABC::Addressee::List &addressees);
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
-  private:
+private:
     KABC::Addressee::List mAddresseeList;
 };
 
-class EditCommand : public Command
-{
-  public:
-    EditCommand( KABC::AddressBook *addressBook, const KABC::Addressee &oldAddressee,
-                 const KABC::Addressee &newAddressee );
+class EditCommand : public Command {
+public:
+    EditCommand(KABC::AddressBook *addressBook, const KABC::Addressee &oldAddressee,
+                const KABC::Addressee &newAddressee);
 
     virtual QString name() const;
     virtual void unexecute();
     virtual void execute();
 
-  private:
+private:
     KABC::Addressee mOldAddressee;
     KABC::Addressee mNewAddressee;
 };

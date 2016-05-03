@@ -38,48 +38,54 @@
 
 namespace KMail {
 
-  static const char kmailIdentityMimeType[] = "application/x-kmail-identity-drag";
+static const char kmailIdentityMimeType[] = "application/x-kmail-identity-drag";
 
-  IdentityDrag::IdentityDrag( const KPIM::Identity & ident,
-			      QWidget * dragSource, const char * name )
-    : QDragObject( dragSource, name ), mIdent( ident )
-  {
+IdentityDrag::IdentityDrag(const KPIM::Identity &ident,
+                           QWidget *dragSource, const char *name)
+    : QDragObject(dragSource, name), mIdent(ident)
+{
 
-  }
+}
 
-  const char * IdentityDrag::format( int i ) const {
-    if ( i == 0 )
-      return kmailIdentityMimeType;
+const char *IdentityDrag::format(int i) const
+{
+    if(i == 0)
+        return kmailIdentityMimeType;
     else
-      return 0;
-  }
+        return 0;
+}
 
-  QByteArray IdentityDrag::encodedData( const char * mimetype ) const {
+QByteArray IdentityDrag::encodedData(const char *mimetype) const
+{
     QByteArray a;
 
-    if ( !qstrcmp( mimetype, kmailIdentityMimeType ) ) {
-      QDataStream s( a, IO_WriteOnly );
-      s << mIdent;
+    if(!qstrcmp(mimetype, kmailIdentityMimeType))
+    {
+        QDataStream s(a, IO_WriteOnly);
+        s << mIdent;
     }
 
     return a;
-  }
+}
 
-  bool IdentityDrag::canDecode( const QMimeSource * e ) {
+bool IdentityDrag::canDecode(const QMimeSource *e)
+{
     // ### feel free to add vCard and other stuff here and in decode...
-    return e->provides( kmailIdentityMimeType );
-  }
+    return e->provides(kmailIdentityMimeType);
+}
 
-  bool IdentityDrag::decode( const QMimeSource * e, KPIM::Identity & i ) {
+bool IdentityDrag::decode(const QMimeSource *e, KPIM::Identity &i)
+{
 
-    if ( e->provides( kmailIdentityMimeType ) ) {
-      QDataStream s( e->encodedData( kmailIdentityMimeType ), IO_ReadOnly );
-      s >> i;
-      return true;
+    if(e->provides(kmailIdentityMimeType))
+    {
+        QDataStream s(e->encodedData(kmailIdentityMimeType), IO_ReadOnly);
+        s >> i;
+        return true;
     }
 
     return false;
-  }
+}
 
 }
 

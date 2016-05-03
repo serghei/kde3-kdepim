@@ -35,56 +35,59 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class ButtonGroup : public QButtonGroup
-{
-		Q_OBJECT
-	public:
-		/** Constructor.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		explicit ButtonGroup(QWidget* parent, const char* name = 0);
-		/** Constructor.
-		 *  @param title The title displayed for this button group.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		ButtonGroup(const QString& title, QWidget* parent, const char* name = 0);
-		/** Constructor.
-		 *  @param strips The number of rows or columns of buttons.
-		 *  @param orient The orientation (Qt::Horizontal or Qt::Vertical) of the button group.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		ButtonGroup(int strips, Qt::Orientation orient, QWidget* parent, const char* name = 0);
-		/** Constructor.
-		 *  @param strips The number of rows or columns of buttons.
-		 *  @param orient The orientation (Qt::Horizontal or Qt::Vertical) of the button group.
-		 *  @param title The title displayed for this button group.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		ButtonGroup(int strips, Qt::Orientation orient, const QString& title, QWidget* parent, const char* name = 0);
-		/** Inserts a button in the group.
-		 *  This overrides the insert() method of QButtonGroup, which should really be a virtual method...
-		 *  @param button The button to insert.
-		 *  @param id The identifier for the button.
-		 *  @return The identifier of the inserted button.
-		 */
-		int          insert(QButton* button, int id = -1);
-		/** Sets the button with the specified identifier to be on. If this is an exclusive group,
-		 *  all other buttons in the group will be set off. The buttonSet() signal is emitted.
-		 *  @param id The identifier of the button to set on.
-		 */
-		virtual void setButton(int id)  { QButtonGroup::setButton(id);  emit buttonSet(id); }
-	private slots:
-		void         slotButtonToggled(bool);
-	signals:
-		/** Signal emitted whenever whenever any button in the group changes state,
-		 *  for whatever reason.
-		 *  @param id The identifier of the button which is now selected.
-		 */
-		void         buttonSet(int id);
+class ButtonGroup : public QButtonGroup {
+    Q_OBJECT
+public:
+    /** Constructor.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    explicit ButtonGroup(QWidget *parent, const char *name = 0);
+    /** Constructor.
+     *  @param title The title displayed for this button group.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    ButtonGroup(const QString &title, QWidget *parent, const char *name = 0);
+    /** Constructor.
+     *  @param strips The number of rows or columns of buttons.
+     *  @param orient The orientation (Qt::Horizontal or Qt::Vertical) of the button group.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    ButtonGroup(int strips, Qt::Orientation orient, QWidget *parent, const char *name = 0);
+    /** Constructor.
+     *  @param strips The number of rows or columns of buttons.
+     *  @param orient The orientation (Qt::Horizontal or Qt::Vertical) of the button group.
+     *  @param title The title displayed for this button group.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    ButtonGroup(int strips, Qt::Orientation orient, const QString &title, QWidget *parent, const char *name = 0);
+    /** Inserts a button in the group.
+     *  This overrides the insert() method of QButtonGroup, which should really be a virtual method...
+     *  @param button The button to insert.
+     *  @param id The identifier for the button.
+     *  @return The identifier of the inserted button.
+     */
+    int          insert(QButton *button, int id = -1);
+    /** Sets the button with the specified identifier to be on. If this is an exclusive group,
+     *  all other buttons in the group will be set off. The buttonSet() signal is emitted.
+     *  @param id The identifier of the button to set on.
+     */
+    virtual void setButton(int id)
+    {
+        QButtonGroup::setButton(id);
+        emit buttonSet(id);
+    }
+private slots:
+    void         slotButtonToggled(bool);
+signals:
+    /** Signal emitted whenever whenever any button in the group changes state,
+     *  for whatever reason.
+     *  @param id The identifier of the button which is now selected.
+     */
+    void         buttonSet(int id);
 };
 
 #endif // BUTTONGROUP_H

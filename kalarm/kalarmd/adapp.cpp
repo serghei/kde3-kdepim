@@ -30,42 +30,42 @@
 
 
 AlarmDaemonApp::AlarmDaemonApp()
-	: KUniqueApplication(false, false),
-	  mAd(0)
+    : KUniqueApplication(false, false),
+      mAd(0)
 {
-	disableSessionManagement();
+    disableSessionManagement();
 }
 
 int AlarmDaemonApp::newInstance()
 {
-	kdDebug(5900) << "AlarmDaemonApp::newInstance()" << endl;
+    kdDebug(5900) << "AlarmDaemonApp::newInstance()" << endl;
 
-	/* Prevent the application being restored automatically by the session manager
-	 * at session startup. Instead, the KDE autostart facility is used to start
-	 * the application. This allows the user to configure whether or not it is to
-	 * be started automatically, and also ensures that it is started in the correct
-	 * phase of session startup, i.e. after clients have been restored by the
-	 * session manager.
-	 */
-	disableSessionManagement();
+    /* Prevent the application being restored automatically by the session manager
+     * at session startup. Instead, the KDE autostart facility is used to start
+     * the application. This allows the user to configure whether or not it is to
+     * be started automatically, and also ensures that it is started in the correct
+     * phase of session startup, i.e. after clients have been restored by the
+     * session manager.
+     */
+    disableSessionManagement();
 
-	// Check if we already have a running alarm daemon widget
-	if (mAd)
-		return 0;
+    // Check if we already have a running alarm daemon widget
+    if(mAd)
+        return 0;
 
-	// Check if we are starting up at session startup
-	static bool restored = false;
-	bool autostart = false;
-	if (!restored  &&  isRestored())
-		restored = true;       // make sure we restore only once
-	else
-	{
-		KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-		autostart = args->isSet("autostart");
-		args->clear();      // free up memory
-	}
+    // Check if we are starting up at session startup
+    static bool restored = false;
+    bool autostart = false;
+    if(!restored  &&  isRestored())
+        restored = true;       // make sure we restore only once
+    else
+    {
+        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+        autostart = args->isSet("autostart");
+        args->clear();      // free up memory
+    }
 
-	mAd = new AlarmDaemon(autostart, 0, DAEMON_DCOP_OBJECT);
+    mAd = new AlarmDaemon(autostart, 0, DAEMON_DCOP_OBJECT);
 
-	return 0;
+    return 0;
 }

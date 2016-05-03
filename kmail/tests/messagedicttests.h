@@ -11,8 +11,7 @@
 
 class KMDict;
 
-class MessageDictTester : public KUnitTest::SlotTester
-{
+class MessageDictTester : public KUnitTest::SlotTester {
     Q_OBJECT
 
 public slots:

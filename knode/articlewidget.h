@@ -37,7 +37,7 @@ class KToggleAction;
 class KXMLGUIClient;
 
 namespace Kpgp {
-  class Block;
+class Block;
 }
 
 class KNArticle;
@@ -52,14 +52,14 @@ class CSSHelper;
 */
 class ArticleWidget : public QWidget, public KNJobConsumer {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /// Construct a new article widget
-    ArticleWidget( QWidget *parent,
-                   KXMLGUIClient *guiClient,
-                   KActionCollection *actionCollection,
-                   const char *name = 0 );
+    ArticleWidget(QWidget *parent,
+                  KXMLGUIClient *guiClient,
+                  KActionCollection *actionCollection,
+                  const char *name = 0);
     ~ArticleWidget();
 
     /// read config settings
@@ -68,49 +68,55 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     void writeConfig();
 
     /// display the given article
-    void setArticle( KNArticle *article );
+    void setArticle(KNArticle *article);
     /// returns the currently shown article
-    KNArticle *article() const { return mArticle; }
+    KNArticle *article() const
+    {
+        return mArticle;
+    }
 
-    KAction* setCharsetKeyboardAction() const { return mCharsetSelectKeyb; }
+    KAction *setCharsetKeyboardAction() const
+    {
+        return mCharsetSelectKeyb;
+    }
 
     /// notify all instances about a config change
     static void configChanged();
     /// check wether the given article is displayed in any instance
-    static bool articleVisible( KNArticle *article );
+    static bool articleVisible(KNArticle *article);
     /// notify all instances that the given article has been removed
-    static void articleRemoved( KNArticle *article );
+    static void articleRemoved(KNArticle *article);
     /// notify all instances that the given article has changed
-    static void articleChanged( KNArticle *article );
+    static void articleChanged(KNArticle *article);
     /// notify all instances about an error during loading the given article
-    static void articleLoadError( KNArticle *article, const QString &error );
+    static void articleLoadError(KNArticle *article, const QString &error);
     /// notify all instances that the given collection has been removed
-    static void collectionRemoved( KNArticleCollection *coll );
+    static void collectionRemoved(KNArticleCollection *coll);
     /// cleanup all instances
     static void cleanup();
 
     /// checks wether the readers is scrolled down to the bottom
     bool atBottom() const;
 
-  public slots:
+public slots:
     void scrollUp();
     void scrollDown();
     void scrollPrior();
     void scrollNext();
 
-  signals:
-    void focusChanged( QFocusEvent* );
-    void focusChangeRequest( QWidget* );
+signals:
+    void focusChanged(QFocusEvent *);
+    void focusChangeRequest(QWidget *);
 
-  protected:
+protected:
     /// process download jobs for view source action
-    void processJob( KNJobData *j );
+    void processJob(KNJobData *j);
 
-    virtual void focusInEvent( QFocusEvent *e );
-    virtual void focusOutEvent( QFocusEvent *e );
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    virtual void focusInEvent(QFocusEvent *e);
+    virtual void focusOutEvent(QFocusEvent *e);
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
-  private:
+private:
     void initActions();
 
     /// enable article dependent actions
@@ -123,41 +129,42 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// displays the current article or clears the view if no article is set
     void displayArticle();
     /// displays the given error message in the viewer
-    void displayErrorMessage( const QString &msg );
+    void displayErrorMessage(const QString &msg);
 
     /// display the message header (should be replaced by KMail's HeaderStyle class)
     void displayHeader();
     /** displays the given text block, including quote and signature handling
      *  @param lines A list of lines to display.
      */
-    void displayBodyBlock( const QStringList &lines );
+    void displayBodyBlock(const QStringList &lines);
     /// displays a signature block header
-    QString displaySigHeader( Kpgp::Block* block );
+    QString displaySigHeader(Kpgp::Block *block);
     /// displays a signature footer
-    void displaySigFooter( const QString &signClass );
+    void displaySigFooter(const QString &signClass);
     /// displays the given attachment
-    void displayAttachment( KMime::Content *att, int partNum );
+    void displayAttachment(KMime::Content *att, int partNum);
 
     /// HTML conversion flags for toHtmlString()
-    enum ConversionFlags {
-      None = 0,
-      ParseURL = 1,
-      FancyFormatting = 2,
-      AllowROT13 = 4
+    enum ConversionFlags
+    {
+        None = 0,
+        ParseURL = 1,
+        FancyFormatting = 2,
+        AllowROT13 = 4
     };
     /// convert the given string into an HTML string
-    QString toHtmlString( const QString &line, int flags = ParseURL );
+    QString toHtmlString(const QString &line, int flags = ParseURL);
     /// convert the given image into a data:/ URL
-    static QString imgToDataUrl( const QImage &image, const char* fmt );
+    static QString imgToDataUrl(const QImage &image, const char *fmt);
 
     /** calculates the quoting depth of the given line
      *  @returns -1 if no quoting was found, the quoting level otherwise
      */
-    static int quotingDepth( const QString &line, const QString &quoteChars );
+    static int quotingDepth(const QString &line, const QString &quoteChars);
     /// checks wether the given attachment can be shown inline
-    bool inlinePossible( KMime::Content *c );
+    bool inlinePossible(KMime::Content *c);
     /// checks if the given charset is supported
-    bool canDecodeText( const QCString &charset ) const;
+    bool canDecodeText(const QCString &charset) const;
 
     /// regenerated viewer content without changing scrollbar position
     void updateContents();
@@ -165,15 +172,15 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /** stores the given attachment into a temporary file
      *  @returns the filename the attachment has been stored to
      */
-    QString writeAttachmentToTempFile( KMime::Content *att, int partNum );
+    QString writeAttachmentToTempFile(KMime::Content *att, int partNum);
     /// removes all temporary files
     void removeTempFiles();
 
-  private slots:
+private slots:
     /// called if the user clicked on an URL
-    void slotURLClicked( const KURL &url, bool forceOpen = false );
+    void slotURLClicked(const KURL &url, bool forceOpen = false);
     /// called if the user RMB clicked on an URL
-    void slotURLPopup( const QString &url, const QPoint &point );
+    void slotURLPopup(const QString &url, const QPoint &point);
 
     /// mark as read timeout
     void slotTimeout();
@@ -201,7 +208,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     void slotInlineAttachments();
     void slotHideAttachments();
 
-    void slotSetCharset( const QString &charset );
+    void slotSetCharset(const QString &charset);
     void slotSetCharsetKeyboard();
 
     void slotOpenURL();
@@ -212,7 +219,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     void slotOpenAttachment();
     void slotSaveAttachment();
 
-  private:
+private:
     /// the currently shown article
     KNArticle *mArticle;
     /// attachments of the current article
@@ -239,7 +246,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     KURL mCurrentURL;
 
     /// list of all instances of this class
-    static QValueList<ArticleWidget*> mInstances;
+    static QValueList<ArticleWidget *> mInstances;
 
     KXMLGUIClient *mGuiClient;
     KActionCollection *mActionCollection;

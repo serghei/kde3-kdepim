@@ -1,6 +1,6 @@
 /***************************************************************************
  *   snippet feature from kdevelop/plugins/snippet/                        *
- *                                                                         * 
+ *                                                                         *
  *   Copyright (C) 2007 by Robert Gruber                                   *
  *   rgruber@users.sourceforge.net                                         *
  *                                                                         *
@@ -26,12 +26,11 @@ class SnippetSettingsBase which is created by the
 same named .ui file
 @author Robert Gruber
 */
-class SnippetSettings : public SnippetSettingsBase
-{
-Q_OBJECT
+class SnippetSettings : public SnippetSettingsBase {
+    Q_OBJECT
 public:
     SnippetSettings(QWidget *parent = 0, const char *name = 0);
-    SnippetSettings(SnippetWidget * w, QWidget *parent = 0, const char *name = 0);
+    SnippetSettings(SnippetWidget *w, QWidget *parent = 0, const char *name = 0);
 
     ~SnippetSettings();
 
@@ -39,8 +38,8 @@ public slots:
     void slotOKClicked();
 
 private:
-  SnippetConfig * _cfg;
-  SnippetWidget * _widget;
+    SnippetConfig *_cfg;
+    SnippetWidget *_widget;
 };
 
 #endif

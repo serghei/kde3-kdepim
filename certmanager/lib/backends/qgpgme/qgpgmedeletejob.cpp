@@ -42,29 +42,32 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEDeleteJob::QGpgMEDeleteJob( GpgME::Context * context )
-  : DeleteJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDeleteJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEDeleteJob::QGpgMEDeleteJob(GpgME::Context *context)
+    : DeleteJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDeleteJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEDeleteJob::~QGpgMEDeleteJob() {
+Kleo::QGpgMEDeleteJob::~QGpgMEDeleteJob()
+{
 }
 
-GpgME::Error Kleo::QGpgMEDeleteJob::start( const GpgME::Key & key, bool allowSecretKeyDeletion ) {
+GpgME::Error Kleo::QGpgMEDeleteJob::start(const GpgME::Key &key, bool allowSecretKeyDeletion)
+{
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startKeyDeletion( key, allowSecretKeyDeletion );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startKeyDeletion(key, allowSecretKeyDeletion);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-void Kleo::QGpgMEDeleteJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  emit result( error );
+void Kleo::QGpgMEDeleteJob::doOperationDoneEvent(const GpgME::Error &error)
+{
+    emit result(error);
 }
 
 #include "qgpgmedeletejob.moc"

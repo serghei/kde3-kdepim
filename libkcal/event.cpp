@@ -28,41 +28,41 @@
 using namespace KCal;
 
 Event::Event() :
-  mHasEndDate( false ), mTransparency( Opaque )
+    mHasEndDate(false), mTransparency(Opaque)
 {
 }
 
 Event::Event(const Event &e) : Incidence(e)
 {
-  mDtEnd = e.mDtEnd;
-  mHasEndDate = e.mHasEndDate;
-  mTransparency = e.mTransparency;
+    mDtEnd = e.mDtEnd;
+    mHasEndDate = e.mHasEndDate;
+    mTransparency = e.mTransparency;
 }
 
 Event::~Event()
 {
-//  kdDebug(5800) << "~Event() " << int( this ) << endl;
+    //  kdDebug(5800) << "~Event() " << int( this ) << endl;
 }
 
 Event *Event::clone()
 {
-//  kdDebug(5800) << "Event::clone()" << endl;
-  return new Event(*this);
+    //  kdDebug(5800) << "Event::clone()" << endl;
+    return new Event(*this);
 }
 
-Event& Event::operator=( const Event &e )
+Event &Event::operator=(const Event &e)
 {
-  Incidence::operator=( e );
-  mDtEnd = e.mDtEnd;
-  mHasEndDate = e.mHasEndDate;
-  mTransparency = e.mTransparency;
-  return *this;
+    Incidence::operator=(e);
+    mDtEnd = e.mDtEnd;
+    mHasEndDate = e.mHasEndDate;
+    mTransparency = e.mTransparency;
+    return *this;
 }
 
-bool Event::operator==( const Event& e2 ) const
+bool Event::operator==(const Event &e2) const
 {
     return
-        static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(e2) &&
+        static_cast<const Incidence &>(*this) == static_cast<const Incidence &>(e2) &&
         dtEnd() == e2.dtEnd() &&
         hasEndDate() == e2.hasEndDate() &&
         transparency() == e2.transparency();
@@ -72,83 +72,84 @@ bool Event::operator==( const Event& e2 ) const
 
 void Event::setDtEnd(const QDateTime &dtEnd)
 {
-  if (mReadOnly) return;
+    if(mReadOnly) return;
 
-  mDtEnd = dtEnd;
+    mDtEnd = dtEnd;
 
-  setHasEndDate(true);
-  setHasDuration(false);
+    setHasEndDate(true);
+    setHasDuration(false);
 
-  updated();
+    updated();
 }
 
 QDateTime Event::dtEnd() const
 {
-  if (hasEndDate()) return mDtEnd;
-  if (hasDuration()) return dtStart().addSecs(duration());
+    if(hasEndDate()) return mDtEnd;
+    if(hasDuration()) return dtStart().addSecs(duration());
 
-  kdDebug(5800) << "Warning! Event '" << summary()
-            << "' has neither end date nor duration." << endl;
-  return dtStart();
+    kdDebug(5800) << "Warning! Event '" << summary()
+                  << "' has neither end date nor duration." << endl;
+    return dtStart();
 }
 
 QDate Event::dateEnd() const
 {
-  if ( doesFloat() ) return dtEnd().date();
-  else return dtEnd().addSecs(-1).date();
+    if(doesFloat()) return dtEnd().date();
+    else return dtEnd().addSecs(-1).date();
 }
 
 QString Event::dtEndTimeStr() const
 {
-  return KGlobal::locale()->formatTime(dtEnd().time());
+    return KGlobal::locale()->formatTime(dtEnd().time());
 }
 
 QString Event::dtEndDateStr(bool shortfmt) const
 {
-  return KGlobal::locale()->formatDate(dtEnd().date(),shortfmt);
+    return KGlobal::locale()->formatDate(dtEnd().date(), shortfmt);
 }
 
 QString Event::dtEndStr() const
 {
-  return KGlobal::locale()->formatDateTime(dtEnd());
+    return KGlobal::locale()->formatDateTime(dtEnd());
 }
 
 void Event::setHasEndDate(bool b)
 {
-  mHasEndDate = b;
+    mHasEndDate = b;
 }
 
 bool Event::hasEndDate() const
 {
-  return mHasEndDate;
+    return mHasEndDate;
 }
 
 bool Event::isMultiDay() const
 {
-  // End date is non inclusive, so subtract 1 second...
-  QDateTime start( dtStart() );
-  QDateTime end( dtEnd() );
-  if ( ! doesFloat() ) {
-    end = end.addSecs(-1);
-  }
-  bool multi = ( start.date() != end.date() && start <= end );
-  return multi;
+    // End date is non inclusive, so subtract 1 second...
+    QDateTime start(dtStart());
+    QDateTime end(dtEnd());
+    if(! doesFloat())
+    {
+        end = end.addSecs(-1);
+    }
+    bool multi = (start.date() != end.date() && start <= end);
+    return multi;
 }
 
 void Event::setTransparency(Event::Transparency transparency)
 {
-  if (mReadOnly) return;
-  mTransparency = transparency;
-  updated();
+    if(mReadOnly) return;
+    mTransparency = transparency;
+    updated();
 }
 
 Event::Transparency Event::transparency() const
 {
-  return mTransparency;
+    return mTransparency;
 }
 
 void Event::setDuration(int seconds)
 {
-  setHasEndDate(false);
-  Incidence::setDuration(seconds);
+    setHasEndDate(false);
+    Incidence::setDuration(seconds);
 }

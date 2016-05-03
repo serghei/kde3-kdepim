@@ -29,11 +29,10 @@ class KTextBrowser;
   A dialog that parses chunks of XML documents and
   displays them in a treeview.
  */
-class DebugDialog : public KDialogBase
-{
-  Q_OBJECT
+class DebugDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     /**
       The type of the message.
      */
@@ -53,21 +52,21 @@ class DebugDialog : public KDialogBase
     /**
       Adds a message, which will be shown by the dialog.
      */
-    static void addMessage( const QString &msg, Type type );
+    static void addMessage(const QString &msg, Type type);
 
-  private slots:
+private slots:
     void clear();
     void save();
 
-  protected slots:
+protected slots:
     virtual void slotUser1();
     virtual void slotUser2();
 
-  private:
+private:
     DebugDialog();
     static DebugDialog *mSelf;
 
-    void addText( const QString&, Type );
+    void addText(const QString &, Type);
 
     QStringList mMessages;
     QStringList mHTMLMessages;

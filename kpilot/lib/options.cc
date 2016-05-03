@@ -50,107 +50,107 @@ int debug_level = 0;
 //
 //
 static const char debug_spaces[61] =
-	"                    "
-	"                    "
-	"                    ";
+    "                    "
+    "                    "
+    "                    ";
 
 
 QString rtExpand(const QString &s, Qt::TextFormat richText)
 {
-	if (richText == Qt::RichText)
-	{
-		QString t(s);
-		return t.replace(CSL1("\n"), CSL1("<br/>\n"));
-	}
-	else
-	{
-		return s;
-	}
+    if(richText == Qt::RichText)
+    {
+        QString t(s);
+        return t.replace(CSL1("\n"), CSL1("<br/>\n"));
+    }
+    else
+    {
+        return s;
+    }
 
 }
 
 QDateTime readTm(const struct tm &t)
 {
-	QDateTime dt;
-	dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
-	dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
-	return dt;
+    QDateTime dt;
+    dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
+    dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
+    return dt;
 }
 
 
 
 struct tm writeTm(const QDateTime &dt)
 {
-	struct tm t;
+    struct tm t;
 
-	t.tm_wday = 0; // unimplemented
-	t.tm_yday = 0; // unimplemented
-	t.tm_isdst = 0; // unimplemented
+    t.tm_wday = 0; // unimplemented
+    t.tm_yday = 0; // unimplemented
+    t.tm_isdst = 0; // unimplemented
 #ifdef HAVE_STRUCT_TM_TM_ZONE
-	t.tm_zone = 0; // unimplemented
+    t.tm_zone = 0; // unimplemented
 #endif
 
-	t.tm_year = dt.date().year() - 1900;
-	t.tm_mon = dt.date().month() - 1;
-	t.tm_mday = dt.date().day();
-	t.tm_hour = dt.time().hour();
-	t.tm_min = dt.time().minute();
-	t.tm_sec = dt.time().second();
+    t.tm_year = dt.date().year() - 1900;
+    t.tm_mon = dt.date().month() - 1;
+    t.tm_mday = dt.date().day();
+    t.tm_hour = dt.time().hour();
+    t.tm_min = dt.time().minute();
+    t.tm_sec = dt.time().second();
 
-	return t;
+    return t;
 }
 
 
 
 struct tm writeTm(const QDate &d)
 {
-	QDateTime dt(d);
-	return writeTm(dt);
+    QDateTime dt(d);
+    return writeTm(dt);
 }
 
 KPilotDepthCount::KPilotDepthCount(int, int level, const char *s) :
-	fDepth(depth),
-	fLevel(level),
-	fName(s)
+    fDepth(depth),
+    fLevel(level),
+    fName(s)
 {
-	DEBUGKPILOT << "! DEPRECATED Depth call.\n!   "
-		<< kdBacktrace(4) << endl;
+    DEBUGKPILOT << "! DEPRECATED Depth call.\n!   "
+                << kdBacktrace(4) << endl;
 
-	if (debug_level>=fLevel)
-	{
-		DEBUGKPILOT << indent() << ">" << name() << endl;
-	}
-	depth++;
+    if(debug_level >= fLevel)
+    {
+        DEBUGKPILOT << indent() << ">" << name() << endl;
+    }
+    depth++;
 }
 
 KPilotDepthCount::KPilotDepthCount(int level, const char *s) :
-	fDepth(depth),
-	fLevel(level),
-	fName(s)
+    fDepth(depth),
+    fLevel(level),
+    fName(s)
 {
-	if (debug_level>=fLevel)
-	{
-		DEBUGKPILOT << indent() << ">" << name() << endl;
-	}
-	depth++;
+    if(debug_level >= fLevel)
+    {
+        DEBUGKPILOT << indent() << ">" << name() << endl;
+    }
+    depth++;
 }
 
 KPilotDepthCount::~KPilotDepthCount()
 {
-	depth--;
-	std::cerr.clear(std::ios_base::goodbit);
+    depth--;
+    std::cerr.clear(std::ios_base::goodbit);
 }
 
 const char *KPilotDepthCount::indent() const
 {
-	if (fDepth < 30)
-	{
-		return debug_spaces + 60-fDepth*2;
-	}
-	else
-	{
-		return debug_spaces;
-	}
+    if(fDepth < 30)
+    {
+        return debug_spaces + 60 - fDepth * 2;
+    }
+    else
+    {
+        return debug_spaces;
+    }
 }
 
 int KPilotDepthCount::depth = 0;

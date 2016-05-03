@@ -42,56 +42,55 @@ class KABCore;
   @author Don Sanders <dsanders@kde.org>
   @version 0.1
  */
-class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
-{
-  Q_OBJECT
+class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface {
+    Q_OBJECT
 
-  public:
-    KAddressBookMain( const QString &file = QString::null );
+public:
+    KAddressBookMain(const QString &file = QString::null);
     virtual ~KAddressBookMain();
 
-  public slots:
-    virtual void addEmail( QString addr );
-    virtual void importVCard( const KURL& url );
-    virtual void importVCardFromData( const QString& vCard );
-    virtual ASYNC showContactEditor( QString uid );
+public slots:
+    virtual void addEmail(QString addr);
+    virtual void importVCard(const KURL &url);
+    virtual void importVCardFromData(const QString &vCard);
+    virtual ASYNC showContactEditor(QString uid);
     virtual void newContact();
     virtual void newDistributionList();
-    virtual QString getNameByPhone( QString phone );
+    virtual QString getNameByPhone(QString phone);
     virtual void save();
     virtual void exit();
     virtual bool handleCommandLine();
 
-  protected:
+protected:
     void initActions();
 
     /**
       This function is called when it is time for the app to save its
       properties for session management purposes.
      */
-    void saveProperties( KConfig* );
+    void saveProperties(KConfig *);
 
     /**
       This function is called when this app is restored.  The KConfig
       object points to the session management config file that was saved
       with @ref saveProperties
      */
-    void readProperties( KConfig* );
+    void readProperties(KConfig *);
 
     virtual bool queryClose();
 
     //override
-    void loadProfile( const QString& path );
+    void loadProfile(const QString &path);
 
     //override
-    void saveToProfile( const QString& path ) const;
+    void saveToProfile(const QString &path) const;
 
-  private slots:
+private slots:
     void configureKeyBindings();
     void configureToolbars();
     void newToolbarConfig();
 
-  private:
+private:
     KABCore *mCore;
 };
 

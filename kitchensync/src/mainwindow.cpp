@@ -28,25 +28,25 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
-  : KMainWindow( 0 )
+    : KMainWindow(0)
 {
-  setWFlags( getWFlags() | WGroupLeader );
+    setWFlags(getWFlags() | WGroupLeader);
 
-  setCaption( i18n( "PIM Synchronization" ) );
+    setCaption(i18n("PIM Synchronization"));
 
-  mWidget = new MainWidget( this, this, "MainWidget" );
+    mWidget = new MainWidget(this, this, "MainWidget");
 
-  setCentralWidget( mWidget );
+    setCentralWidget(mWidget);
 
-  initActions();
+    initActions();
 
-  createGUI( "kitchensyncui.rc", false );
-  createGUI( 0 );
+    createGUI("kitchensyncui.rc", false);
+    createGUI(0);
 
-  toolBar()->setIconText( KToolBar::IconTextBottom );
+    toolBar()->setIconText(KToolBar::IconTextBottom);
 
-  resize( 760, 530 ); // initial size
-  setAutoSaveSettings();
+    resize(760, 530);   // initial size
+    setAutoSaveSettings();
 }
 
 MainWindow::~MainWindow()
@@ -55,7 +55,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initActions()
 {
-  KStdAction::quit( this, SLOT( close() ), actionCollection() );
+    KStdAction::quit(this, SLOT(close()), actionCollection());
 }
 
 #include "mainwindow.moc"

@@ -62,8 +62,8 @@ class DW_EXPORT DwMessage : public DwEntity {
 public:
 
     DwMessage();
-    DwMessage(const DwMessage& aMessage);
-    DwMessage(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMessage(const DwMessage &aMessage);
+    DwMessage(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMessage} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -79,19 +79,19 @@ public:
 
     virtual ~DwMessage();
 
-    const DwMessage& operator = (const DwMessage& aMessage);
+    const DwMessage &operator = (const DwMessage &aMessage);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aMessage}.  The parent node of the {\tt DwMessage} object
     //. is not changed.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwMessage} on the free store that has the same
     //. value as this {\tt DwMessage} object.  The basic idea is that of
     //. a ``virtual copy constructor.''
 
-    static DwMessage* NewMessage(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwMessage *NewMessage(const DwString &aStr,
+                                 DwMessageComponent *aParent);
     //. Creates a new {\tt DwMessage} object on the free store.
     //. If the static data member {\tt sNewMessage} is {\tt NULL},
     //. this member function will create a new {\tt DwMessage}
@@ -101,18 +101,18 @@ public:
     //. {\tt DwMessage}, and return that object.
 
     //+ Var sNewMessage
-    static DwMessage* (*sNewMessage)(const DwString&, DwMessageComponent*);
+    static DwMessage *(*sNewMessage)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewMessage} is not {\tt NULL}, it is assumed to point
     //. to a user supplied function that returns an object from a class
     //. derived from  {\tt DwMessage}.
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -123,7 +123,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

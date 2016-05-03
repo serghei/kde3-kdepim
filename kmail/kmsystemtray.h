@@ -38,54 +38,53 @@ class QPoint;
  * KMSystemTray extends KSystemTray and handles system
  * tray notification for KMail
  */
-class KMSystemTray : public KSystemTray
-{
-  Q_OBJECT
+class KMSystemTray : public KSystemTray {
+    Q_OBJECT
 public:
-  /** construtor */
-  KMSystemTray(QWidget* parent=0, const char *name=0);
-  /** destructor */
-  ~KMSystemTray();
+    /** construtor */
+    KMSystemTray(QWidget *parent = 0, const char *name = 0);
+    /** destructor */
+    ~KMSystemTray();
 
-  void setMode(int mode);
-  int mode() const;
+    void setMode(int mode);
+    int mode() const;
 
-  void hideKMail();
+    void hideKMail();
 
 private slots:
-  void updateNewMessageNotification(KMFolder * folder);
-  void foldersChanged();
-  void selectedAccount(int);
-  void updateNewMessages();
+    void updateNewMessageNotification(KMFolder *folder);
+    void foldersChanged();
+    void selectedAccount(int);
+    void updateNewMessages();
 
 protected:
-  void mousePressEvent(QMouseEvent *);
-  bool mainWindowIsOnCurrentDesktop();
-  void showKMail();
-  void buildPopupMenu();
-  void updateCount();
+    void mousePressEvent(QMouseEvent *);
+    bool mainWindowIsOnCurrentDesktop();
+    void showKMail();
+    void buildPopupMenu();
+    void updateCount();
 
-  QString prettyName(KMFolder *);
+    QString prettyName(KMFolder *);
 
 private:
 
-  bool mParentVisible;
-  QPoint mPosOfMainWin;
-  int mDesktopOfMainWin;
+    bool mParentVisible;
+    QPoint mPosOfMainWin;
+    int mDesktopOfMainWin;
 
-  int mMode;
-  int mCount;
-  int mNewMessagePopupId;
+    int mMode;
+    int mCount;
+    int mNewMessagePopupId;
 
-  KPopupMenu * mPopupMenu;
-  QPixmap mDefaultIcon;
-  QImage mLightIconImage;
+    KPopupMenu *mPopupMenu;
+    QPixmap mDefaultIcon;
+    QImage mLightIconImage;
 
-  QValueVector<KMFolder*> mPopupFolders;
-  QMap<QGuardedPtr<KMFolder>, int> mFoldersWithUnread;
-  QMap<QGuardedPtr<KMFolder>, bool> mPendingUpdates;
-  QTimer *mUpdateTimer;
-  time_t mLastUpdate;
+    QValueVector<KMFolder *> mPopupFolders;
+    QMap<QGuardedPtr<KMFolder>, int> mFoldersWithUnread;
+    QMap<QGuardedPtr<KMFolder>, bool> mPendingUpdates;
+    QTimer *mUpdateTimer;
+    time_t mLastUpdate;
 };
 
 #endif

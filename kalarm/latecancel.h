@@ -30,40 +30,42 @@ class QWidgetStack;
 class CheckBox;
 
 
-class LateCancelSelector : public QFrame
-{
-		Q_OBJECT
-	public:
-		LateCancelSelector(bool allowHourMinute, QWidget* parent, const char* name = 0);
-		int            minutes() const;
-		void           setMinutes(int Minutes, bool dateOnly, TimePeriod::Units defaultUnits);
-		void           setDateOnly(bool dateOnly);
-		void           showAutoClose(bool show);
-		bool           isAutoClose() const;
-		void           setAutoClose(bool autoClose);
-		bool           isReadOnly() const     { return mReadOnly; }
-		void           setReadOnly(bool);
+class LateCancelSelector : public QFrame {
+    Q_OBJECT
+public:
+    LateCancelSelector(bool allowHourMinute, QWidget *parent, const char *name = 0);
+    int            minutes() const;
+    void           setMinutes(int Minutes, bool dateOnly, TimePeriod::Units defaultUnits);
+    void           setDateOnly(bool dateOnly);
+    void           showAutoClose(bool show);
+    bool           isAutoClose() const;
+    void           setAutoClose(bool autoClose);
+    bool           isReadOnly() const
+    {
+        return mReadOnly;
+    }
+    void           setReadOnly(bool);
 
-		static QString i18n_CancelIfLate();     // plain text of 'Cancel if late' checkbox
-		static QString i18n_n_CancelIfLate();   // text of 'Cancel if late' checkbox, with 'N' shortcut
-		static QString i18n_AutoCloseWin();     // plain text of 'Auto-close window after this time' checkbox
-		static QString i18n_AutoCloseWinLC();   // plain text of 'Auto-close window after late-cancelation time' checkbox
-		static QString i18n_i_AutoCloseWinLC(); // text of 'Auto-close window after late-cancelation time' checkbox, with 'I' shortcut
+    static QString i18n_CancelIfLate();     // plain text of 'Cancel if late' checkbox
+    static QString i18n_n_CancelIfLate();   // text of 'Cancel if late' checkbox, with 'N' shortcut
+    static QString i18n_AutoCloseWin();     // plain text of 'Auto-close window after this time' checkbox
+    static QString i18n_AutoCloseWinLC();   // plain text of 'Auto-close window after late-cancelation time' checkbox
+    static QString i18n_i_AutoCloseWinLC(); // text of 'Auto-close window after late-cancelation time' checkbox, with 'I' shortcut
 
-	private slots:
-		void           slotToggled(bool);
+private slots:
+    void           slotToggled(bool);
 
-	private:
-		QBoxLayout*    mLayout;            // overall layout for the widget
-		QWidgetStack*  mStack;             // contains mCheckboxFrame and mTimeSelectorFrame
-		QFrame*        mCheckboxFrame;
-		CheckBox*      mCheckbox;          // displayed when late cancellation is not selected
-		QFrame*        mTimeSelectorFrame;
-		TimeSelector*  mTimeSelector;      // displayed when late cancellation is selected
-		CheckBox*      mAutoClose;
-		bool           mDateOnly;          // hours/minutes units not allowed
-		bool           mReadOnly;          // widget is read-only
-		bool           mAutoCloseShown;    // auto-close checkbox is visible
+private:
+    QBoxLayout    *mLayout;            // overall layout for the widget
+    QWidgetStack  *mStack;             // contains mCheckboxFrame and mTimeSelectorFrame
+    QFrame        *mCheckboxFrame;
+    CheckBox      *mCheckbox;          // displayed when late cancellation is not selected
+    QFrame        *mTimeSelectorFrame;
+    TimeSelector  *mTimeSelector;      // displayed when late cancellation is selected
+    CheckBox      *mAutoClose;
+    bool           mDateOnly;          // hours/minutes units not allowed
+    bool           mReadOnly;          // widget is read-only
+    bool           mAutoCloseShown;    // auto-close checkbox is visible
 };
 
 #endif // LATECANCEL_H

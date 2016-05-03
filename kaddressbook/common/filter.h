@@ -36,21 +36,20 @@
 
   @todo This class should be switched to use shared data.
  */
-class Filter
-{
-  public:
+class Filter {
+public:
     typedef QValueList<Filter> List;
 
     enum MatchRule { Matching = 0, NotMatching = 1 };
 
     Filter();
-    Filter( const QString& name );
+    Filter(const QString &name);
     ~Filter();
 
     /**
       Set the name of the filter.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
       @return The name of the filter.
@@ -69,7 +68,7 @@ class Filter
       If the MatchRule is NotMatch, then all the addressees matching the
       filter will be removed from the list.
      */
-    void apply( KABC::Addressee::List &addresseeList );
+    void apply(KABC::Addressee::List &addresseeList);
 
     /**
       Apply the filter to the addressee.
@@ -77,12 +76,12 @@ class Filter
       @return True if the addressee passes the criteria, false otherwise.
       The return values are opposite if the MatchRule is NotMatch.
      */
-    bool filterAddressee( const KABC::Addressee &a ) const;
+    bool filterAddressee(const KABC::Addressee &a) const;
 
     /**
       Enable or disable the filter
      */
-    void setEnabled( bool on );
+    void setEnabled(bool on);
 
     /**
       @return True if this filter is enabled, false otherwise.
@@ -92,7 +91,7 @@ class Filter
     /**
       Set the list of categories. This list is used to filter addressees.
      */
-    void setCategories( const QStringList &list );
+    void setCategories(const QStringList &list);
 
     /**
       @return The list of categories.
@@ -102,12 +101,12 @@ class Filter
     /**
       Saves the filter to the config file. The group should already be set.
      */
-    void save( KConfig *config );
+    void save(KConfig *config);
 
     /**
       Loads the filter from the config file. The group should already be set.
      */
-    void restore( KConfig *config );
+    void restore(KConfig *config);
 
     /**
       Saves a list of filters to the config file.
@@ -118,7 +117,7 @@ class Filter
                        will be append for each filter saved.
       @param list The list of filters to be saved.
      */
-    static void save( KConfig *config, const QString &baseGroup, Filter::List &list );
+    static void save(KConfig *config, const QString &baseGroup, Filter::List &list);
 
     /**
       Restores a list of filters from a config file.
@@ -128,7 +127,7 @@ class Filter
 
       @return The list of filters.
      */
-    static Filter::List restore( KConfig *config, const QString &baseGroup );
+    static Filter::List restore(KConfig *config, const QString &baseGroup);
 
     /**
       Sets the filter rule. If the rule is Filter::Matching (default),
@@ -136,7 +135,7 @@ class Filter
       If the rule is Filter::NotMatching, then the filter will return
       true on items that do not match the filter.
      */
-    void setMatchRule( MatchRule rule );
+    void setMatchRule(MatchRule rule);
 
     /**
       @return The current match rule.
@@ -148,7 +147,7 @@ class Filter
      */
     bool isEmpty() const;
 
-  private:
+private:
     QString mName;
     QStringList mCategoryList;
     MatchRule mMatchRule;

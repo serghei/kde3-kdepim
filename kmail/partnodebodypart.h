@@ -42,32 +42,32 @@ class QTextCodec;
 
 namespace KMail {
 
-  /**
-     @short an implemenation of the BodyPart interface using partNodes
-  */
-  class PartNodeBodyPart : public Interface::BodyPart {
-  public:
-    PartNodeBodyPart( partNode & n, const QTextCodec * codec=0 );
+/**
+   @short an implemenation of the BodyPart interface using partNodes
+*/
+class PartNodeBodyPart : public Interface::BodyPart {
+public:
+    PartNodeBodyPart(partNode &n, const QTextCodec *codec = 0);
 
-    QString makeLink( const QString & path ) const;
+    QString makeLink(const QString &path) const;
     QString asText() const;
     QByteArray asBinary() const;
-    QString contentTypeParameter( const char * param ) const;
+    QString contentTypeParameter(const char *param) const;
     QString contentDescription() const;
     //int contentDisposition() const;
-    QString contentDispositionParameter( const char * param ) const;
+    QString contentDispositionParameter(const char *param) const;
     bool hasCompleteBody() const;
 
-    Interface::BodyPartMemento * memento() const;
-    void setBodyPartMemento( Interface::BodyPartMemento * memento );
+    Interface::BodyPartMemento *memento() const;
+    void setBodyPartMemento(Interface::BodyPartMemento *memento);
     BodyPart::Display defaultDisplay() const;
-    void setDefaultDisplay( BodyPart::Display );
+    void setDefaultDisplay(BodyPart::Display);
 
-  private:
-    partNode & mPartNode;
-    const QTextCodec * mCodec;
+private:
+    partNode &mPartNode;
+    const QTextCodec *mCodec;
     BodyPart::Display mDefaultDisplay;
-  };
+};
 
 } // namespace KMail
 

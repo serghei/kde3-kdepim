@@ -36,43 +36,41 @@ class KURLRequester;
 class KPushButton;
 class KLineEdit;
 
-class LocalCalendar : public QWidget
-{
-  Q_OBJECT
+class LocalCalendar : public QWidget {
+    Q_OBJECT
 
-  public:
-    LocalCalendar( QWidget *parent = 0 );
-    LocalCalendar( const QString &path,
-                   const QString &defaultcal,
-                   const QString &days, QWidget *parent = 0 );
+public:
+    LocalCalendar(QWidget *parent = 0);
+    LocalCalendar(const QString &path,
+                  const QString &defaultcal,
+                  const QString &days, QWidget *parent = 0);
 
     KURLRequester *mPathRequester;
     QCheckBox *mDaysCheckBox;
     QSpinBox *mDaysSpinBox;
     QCheckBox *mDefaultCheckBox;
 
-  signals:
-    void deleteRequest( LocalCalendar* );
+signals:
+    void deleteRequest(LocalCalendar *);
 
-  private slots:
+private slots:
     void deleteWidget();
-    void toggleDays( bool days );
+    void toggleDays(bool days);
 
-  private:
+private:
     void initGui();
 };
 
-class WebdavCalendar : public QWidget
-{
-  Q_OBJECT
+class WebdavCalendar : public QWidget {
+    Q_OBJECT
 
-  public:
-    WebdavCalendar( QWidget *parent = 0 );
-    WebdavCalendar( const QString &username,
-                    const QString &password,
-                    const QString &url,
-                    const QString &defaultcal,
-                    const QString &days, QWidget *parent = 0 );
+public:
+    WebdavCalendar(QWidget *parent = 0);
+    WebdavCalendar(const QString &username,
+                   const QString &password,
+                   const QString &url,
+                   const QString &defaultcal,
+                   const QString &days, QWidget *parent = 0);
 
     KLineEdit *mUrl;
     QCheckBox *mDaysCheckBox;
@@ -81,38 +79,37 @@ class WebdavCalendar : public QWidget
     KLineEdit *mUsername;
     KLineEdit *mPassword;
 
-  signals:
-    void deleteRequest( WebdavCalendar* );
+signals:
+    void deleteRequest(WebdavCalendar *);
 
-  private slots:
+private slots:
     void deleteWidget();
-    void toggleDays( bool state );
+    void toggleDays(bool state);
 
-  private:
+private:
     void initGui();
 };
 
-class ConfigGuiSunbird : public ConfigGui
-{
-  Q_OBJECT
+class ConfigGuiSunbird : public ConfigGui {
+    Q_OBJECT
 
-  public:
-    ConfigGuiSunbird( const QSync::Member &, QWidget *parent );
+public:
+    ConfigGuiSunbird(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
 
     QString save() const;
 
-  public slots:
+public slots:
     void addLocalCalendar();
     void addWebdavCalendar();
 
-    void delLocalCalendar( LocalCalendar* );
-    void delWebdavCalendar( WebdavCalendar* );
+    void delLocalCalendar(LocalCalendar *);
+    void delWebdavCalendar(WebdavCalendar *);
 
-  private:
-    QValueList<LocalCalendar*> mLocalList;
-    QValueList<WebdavCalendar*> mWebdavList;
+private:
+    QValueList<LocalCalendar *> mLocalList;
+    QValueList<WebdavCalendar *> mWebdavList;
 
     QWidget *mLocalWidget;
     QWidget *mWebdavWidget;

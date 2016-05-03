@@ -52,12 +52,11 @@ namespace KAB {
 
 class SearchManager;
 
-class KDE_EXPORT Core : public QObject
-{
-  Q_OBJECT
+class KDE_EXPORT Core : public QObject {
+    Q_OBJECT
 
-  public:
-    Core( KXMLGUIClient *client, QObject *parent, const char *name = 0 );
+public:
+    Core(KXMLGUIClient *client, QObject *parent, const char *name = 0);
 
     /**
       Returns a pointer to the StdAddressBook of the application.
@@ -78,7 +77,10 @@ class KDE_EXPORT Core : public QObject
     /**
       Returns a pointer to the gui client.
      */
-    virtual KXMLGUIClient *guiClient() const { return mGUIClient; }
+    virtual KXMLGUIClient *guiClient() const
+    {
+        return mGUIClient;
+    }
 
     /**
       Returns the current sort field.
@@ -95,7 +97,7 @@ class KDE_EXPORT Core : public QObject
       resource or a null pointer if no resource was selected by
       the user.
      */
-    virtual KABC::Resource *requestResource( QWidget *parent ) = 0;
+    virtual KABC::Resource *requestResource(QWidget *parent) = 0;
 
     /**
       Returns the parent widget.
@@ -107,14 +109,14 @@ class KDE_EXPORT Core : public QObject
 
       @param uids The uids of the contacts, which shall be deleted.
      */
-    virtual void deleteContacts( const QStringList &uids ) = 0;
+    virtual void deleteContacts(const QStringList &uids) = 0;
 
     /**
       Deletes given contacts from the address book.
 
       @param uids The uids of the contacts, which shall be deleted.
      */
-    virtual void deleteDistributionLists( const QStringList &uids ) = 0;
+    virtual void deleteDistributionLists(const QStringList &uids) = 0;
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
@@ -130,9 +132,9 @@ class KDE_EXPORT Core : public QObject
 
     /**
       sets the distribution list to display. If null, the regular
-      address book is to be displayed.  
+      address book is to be displayed.
      */
-    virtual void setSelectedDistributionList( const QString &name ) = 0;
+    virtual void setSelectedDistributionList(const QString &name) = 0;
 #endif
 
     //// This class isn't part of interfaces/, so this method here isn't really useful
@@ -140,33 +142,33 @@ class KDE_EXPORT Core : public QObject
 
     virtual KCommandHistory *commandHistory() const = 0;
 
-    signals:
+signals:
     /**
       Forwarded from SearchManager
       After it is emitted, distributionListNames() might have a different result.
      */
     void contactsUpdated();
 
-  public slots:
+public slots:
     /**
       Is called whenever a contact is selected in the view.
      */
-    virtual void setContactSelected( const QString &uid ) = 0;
+    virtual void setContactSelected(const QString &uid) = 0;
 
     /**
       DCOP METHOD: Adds the given email address to address book.
      */
-    virtual void addEmail( const QString& addr ) = 0;
+    virtual void addEmail(const QString &addr) = 0;
 
     /**
       DCOP METHOD: Imports the vCard, located at the given url.
      */
-    virtual void importVCard( const KURL& url ) = 0;
+    virtual void importVCard(const KURL &url) = 0;
 
     /**
       DCOP METHOD: Imports the given vCard.
      */
-    virtual void importVCardFromData( const QString& vCard ) = 0;
+    virtual void importVCardFromData(const QString &vCard) = 0;
 
     /**
       DCOP METHOD: Opens contact editor to input a new contact.
@@ -182,19 +184,19 @@ class KDE_EXPORT Core : public QObject
       DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
-    virtual QString getNameByPhone( const QString& phone ) = 0;
+    virtual QString getNameByPhone(const QString &phone) = 0;
 
     /**
       Shows an edit dialog for the given uid.
      */
-    virtual void editContact( const QString &uid = QString::null ) = 0;
+    virtual void editContact(const QString &uid = QString::null) = 0;
 
     /**
-      Shows an edit dialog for the given distribution list 
+      Shows an edit dialog for the given distribution list
     */
-    virtual void editDistributionList( const QString &name ) = 0;
+    virtual void editDistributionList(const QString &name) = 0;
 
-  private:
+private:
     KXMLGUIClient *mGUIClient;
 };
 

@@ -57,8 +57,8 @@ class DW_EXPORT DwMailboxList : public DwFieldBody {
 public:
 
     DwMailboxList();
-    DwMailboxList(const DwMailboxList& aList);
-    DwMailboxList(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMailboxList(const DwMailboxList &aList);
+    DwMailboxList(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMailboxList} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -76,7 +76,7 @@ public:
 
     virtual ~DwMailboxList();
 
-    const DwMailboxList& operator = (const DwMailboxList& aList);
+    const DwMailboxList &operator = (const DwMailboxList &aList);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aList}.  The parent node of the {\tt DwMailboxList} object
     //. is not changed.
@@ -114,22 +114,22 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwMailboxList} on the free store that has the same
     //. value as this {\tt DwMailboxList} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    DwMailbox* FirstMailbox() const;
+    DwMailbox *FirstMailbox() const;
     //. Gets the first {\tt DwMailbox} object in the list.
     //. Use the member function {\tt DwMailbox::Next()} to iterate.
     //. Returns {\tt NULL} if the list is empty.
 
-    void Add(DwMailbox* aMailbox);
+    void Add(DwMailbox *aMailbox);
     //. Adds {\tt aMailbox} to the end of the list of {\tt DwMailbox} objects
     //. maintained by this {\tt DwMailboxList} object.
 
-    void Remove(DwMailbox* aMailbox);
+    void Remove(DwMailbox *aMailbox);
     //. Removes {\tt aMailbox} from the list of {\tt DwMailbox} objects
     //. maintained by this {\tt DwMailboxList} object.  The {\tt DwMailbox}
     //. object is not deleted by this member function.
@@ -138,8 +138,8 @@ public:
     //. Removes and deletes all {\tt DwMailbox} objects from the list
     //. maintained by this {\tt DwMailboxList} object.
 
-    static DwMailboxList* NewMailboxList(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwMailboxList *NewMailboxList(const DwString &aStr,
+                                         DwMessageComponent *aParent);
     //. Creates a new {\tt DwMailboxList} object on the free store.
     //. If the static data member {\tt sNewMailboxList} is {\tt NULL},
     //. this member function will create a new {\tt DwMailboxList}
@@ -149,18 +149,18 @@ public:
     //. {\tt DwMailboxList}, and return that object.
 
     //+ Var sNewMailboxList
-    static DwMailboxList* (*sNewMailboxList)(const DwString&,
-        DwMessageComponent*);
+    static DwMailboxList *(*sNewMailboxList)(const DwString &,
+            DwMessageComponent *);
     //. If {\tt sNewMailboxList} is not {\tt NULL}, it is assumed to point
     //. to a user-supplied function that returns an object from a class
     //. derived from {\tt DwMailboxList}.
 
 protected:
 
-    DwMailbox* mFirstMailbox;
+    DwMailbox *mFirstMailbox;
     //. Points to first {\tt DwMailbox} object in list.
 
-    void _AddMailbox(DwMailbox* aMailbox);
+    void _AddMailbox(DwMailbox *aMailbox);
     //. Adds a mailbox, but does not set the is-modified flag.
 
     void _DeleteAll();
@@ -170,13 +170,13 @@ protected:
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
-    void CopyList(const DwMailbox* aFirst);
+    void CopyList(const DwMailbox *aFirst);
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -194,26 +194,39 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 
 
 class DW_EXPORT DwMailboxListParser {
 public:
-    enum {
+    enum
+    {
         eMbError,
         eMbGroup,
         eMbMailbox,
         eMbNull,
         eMbEnd
     };
-    DwMailboxListParser(const DwString& aStr);
+    DwMailboxListParser(const DwString &aStr);
     virtual ~DwMailboxListParser();
-    const DwString& MbString() { return mMbString.Tokens(); }
-    int MbType() { return mMbType; }
-    int IsNull() { return (mMbType == eMbNull) ? 1 : 0; }
-    int IsEnd()  { return (mMbType == eMbEnd) ? 1 : 0; }
+    const DwString &MbString()
+    {
+        return mMbString.Tokens();
+    }
+    int MbType()
+    {
+        return mMbType;
+    }
+    int IsNull()
+    {
+        return (mMbType == eMbNull) ? 1 : 0;
+    }
+    int IsEnd()
+    {
+        return (mMbType == eMbEnd) ? 1 : 0;
+    }
     int Restart();
     int operator ++ (); // prefix increment operator
 protected:

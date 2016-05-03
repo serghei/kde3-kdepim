@@ -39,56 +39,60 @@
 struct NotePad;
 class NotepadActionThread;
 
-class NotepadConduit : public ConduitAction
-{
+class NotepadConduit : public ConduitAction {
 public:
-	NotepadConduit(KPilotLink *,
-		const char *name=0L,
-		const QStringList &args = QStringList());
-	virtual ~NotepadConduit();
-	virtual bool event(QEvent *e);
+    NotepadConduit(KPilotLink *,
+                   const char *name = 0L,
+                   const QStringList &args = QStringList());
+    virtual ~NotepadConduit();
+    virtual bool event(QEvent *e);
 
 protected:
-	virtual bool exec();           // From ConduitAction
+    virtual bool exec();           // From ConduitAction
 
 private:
-	NotepadActionThread *thread;
+    NotepadActionThread *thread;
 };
 
 
 /**
  * This class saves the notepads to disk
  */
-class NotepadActionThread : public QThread
-{
+class NotepadActionThread : public QThread {
 public:
-	NotepadActionThread(QObject *parent, KPilotLink *link);
+    NotepadActionThread(QObject *parent, KPilotLink *link);
 
-	virtual void run();
-	int	getFailed() { return notSaved; }
-	int getSaved() { return saved; }
+    virtual void run();
+    int	getFailed()
+    {
+        return notSaved;
+    }
+    int getSaved()
+    {
+        return saved;
+    }
 
 private:
-	QObject *fParent;
-	KPilotLink *fLink;
+    QObject *fParent;
+    KPilotLink *fLink;
 
-	/**
-	 * counts how many notepads couldn't be saved during the sync
-	 */
-	int notSaved;
-	/**
-	 * counts how many files a saved during the sync
-	 */
-	int saved;
+    /**
+     * counts how many notepads couldn't be saved during the sync
+     */
+    int notSaved;
+    /**
+     * counts how many files a saved during the sync
+     */
+    int saved;
 
-	int unpackNotePad(struct NotePad *a, unsigned char *buffer, int len);
+    int unpackNotePad(struct NotePad *a, unsigned char *buffer, int len);
 
-	/**
-	* Saves a single NotePad structure to disk, using the name in
-	* the Note @p n, or if no name is specified, using the
-	* timestamp in the note.
-	*/
-	void saveImage(struct NotePad *n);
+    /**
+    * Saves a single NotePad structure to disk, using the name in
+    * the Note @p n, or if no name is specified, using the
+    * timestamp in the note.
+    */
+    void saveImage(struct NotePad *n);
 };
 
 #endif

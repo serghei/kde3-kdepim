@@ -40,9 +40,9 @@
 namespace Akregator {
 
 AddFeedWidget::AddFeedWidget(QWidget *parent, const char *name)
-   : AddFeedWidgetBase(parent, name)
+    : AddFeedWidgetBase(parent, name)
 {
-    pixmapLabel1->setPixmap(kapp->iconLoader()->loadIcon( "package_network",KIcon::Desktop,KIcon::SizeHuge, KIcon::DefaultState, 0, true));
+    pixmapLabel1->setPixmap(kapp->iconLoader()->loadIcon("package_network", KIcon::Desktop, KIcon::SizeHuge, KIcon::DefaultState, 0, true));
     statusLabel->setText(QString::null);
 }
 
@@ -50,10 +50,10 @@ AddFeedWidget::~AddFeedWidget()
 {}
 
 AddFeedDialog::AddFeedDialog(QWidget *parent, const char *name)
-   : KDialogBase(KDialogBase::Swallow, Qt::WStyle_DialogBorder, parent, name, true, i18n("Add Feed"), KDialogBase::Ok|KDialogBase::Cancel)
+    : KDialogBase(KDialogBase::Swallow, Qt::WStyle_DialogBorder, parent, name, true, i18n("Add Feed"), KDialogBase::Ok | KDialogBase::Cancel)
 {
     widget = new AddFeedWidget(this);
-    connect(widget->urlEdit, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged(const QString&)));
+    connect(widget->urlEdit, SIGNAL(textChanged(const QString &)), this, SLOT(textChanged(const QString &)));
     enableButtonOK(false);
     setMainWidget(widget);
 }
@@ -61,36 +61,36 @@ AddFeedDialog::AddFeedDialog(QWidget *parent, const char *name)
 AddFeedDialog::~AddFeedDialog()
 {}
 
-void AddFeedDialog::setURL(const QString& t)
+void AddFeedDialog::setURL(const QString &t)
 {
     widget->urlEdit->setText(t);
 }
 
-void AddFeedDialog::slotOk( )
+void AddFeedDialog::slotOk()
 {
     enableButtonOK(false);
     feedURL = widget->urlEdit->text().stripWhiteSpace();
 
-    Feed *f=new Feed();
+    Feed *f = new Feed();
 
-    feed=f;
+    feed = f;
 
     // HACK: make weird wordpress links ("feed:http://foobar/rss") work
-    if (feedURL.startsWith("feed:"))
-        feedURL = feedURL.right( feedURL.length() - 5 );
+    if(feedURL.startsWith("feed:"))
+        feedURL = feedURL.right(feedURL.length() - 5);
 
-    if (feedURL.find(":/") == -1)
+    if(feedURL.find(":/") == -1)
         feedURL.prepend("http://");
     f->setXmlUrl(feedURL);
 
-    widget->statusLabel->setText( i18n("Downloading %1").arg(feedURL) );
+    widget->statusLabel->setText(i18n("Downloading %1").arg(feedURL));
 
-    connect( feed, SIGNAL(fetched(Feed* )),
-             this, SLOT(fetchCompleted(Feed *)) );
-    connect( feed, SIGNAL(fetchError(Feed* )),
-             this, SLOT(fetchError(Feed *)) );
-    connect( feed, SIGNAL(fetchDiscovery(Feed* )),
-             this, SLOT(fetchDiscovery(Feed *)) );
+    connect(feed, SIGNAL(fetched(Feed *)),
+            this, SLOT(fetchCompleted(Feed *)));
+    connect(feed, SIGNAL(fetchError(Feed *)),
+            this, SLOT(fetchError(Feed *)));
+    connect(feed, SIGNAL(fetchDiscovery(Feed *)),
+            this, SLOT(fetchDiscovery(Feed *)));
 
     f->fetch(true);
 }
@@ -108,11 +108,11 @@ void AddFeedDialog::fetchError(Feed *)
 
 void AddFeedDialog::fetchDiscovery(Feed *f)
 {
-    widget->statusLabel->setText( i18n("Feed found, downloading...") );
-    feedURL=f->xmlUrl();
+    widget->statusLabel->setText(i18n("Feed found, downloading..."));
+    feedURL = f->xmlUrl();
 }
 
-void AddFeedDialog::textChanged(const QString& text)
+void AddFeedDialog::textChanged(const QString &text)
 {
     enableButtonOK(!text.isEmpty());
 }

@@ -38,32 +38,51 @@ class CoreHelper;
 /**
   Base class of KOrganizer printer class.
 */
-class CalPrinterBase
-{
-  public:
-    enum PrintType { Incidence = 100, Day=200, Week=300, Month=400, Todolist=1000, Journallist=2000 };
+class CalPrinterBase {
+public:
+    enum PrintType { Incidence = 100, Day = 200, Week = 300, Month = 400, Todolist = 1000, Journallist = 2000 };
 };
 
 /**
   Base class for KOrganizer printing classes. Each sub class represents one
   calendar print format.
 */
-class PrintPlugin : public KOrg::Plugin
-{
-  public:
+class PrintPlugin : public KOrg::Plugin {
+public:
     PrintPlugin() : KOrg::Plugin(), mConfigWidget(0), mCoreHelper(0), mPrinter(0),
-         mCalendar(0), mConfig(0) {}
+        mCalendar(0), mConfig(0) {}
     virtual ~PrintPlugin() {}
 
     typedef QPtrList<PrintPlugin> List;
-    static int interfaceVersion() { return 2; }
-    static QString serviceType() { return "KOrganizer/PrintPlugin"; }
+    static int interfaceVersion()
+    {
+        return 2;
+    }
+    static QString serviceType()
+    {
+        return "KOrganizer/PrintPlugin";
+    }
 
-    virtual void setKOrgCoreHelper( KOrg::CoreHelper*helper ) { mCoreHelper = helper; }
-    virtual void setConfig( KConfig *cfg ) { mConfig = cfg; }
-    virtual void setCalendar( KCal::Calendar *cal ) { mCalendar = cal; }
-    virtual void setSelectedIncidences( KCal::Incidence::List inc ) { mSelectedIncidences = inc; }
-    virtual KCal::Incidence::List selectedIncidences() const { return mSelectedIncidences; }
+    virtual void setKOrgCoreHelper(KOrg::CoreHelper *helper)
+    {
+        mCoreHelper = helper;
+    }
+    virtual void setConfig(KConfig *cfg)
+    {
+        mConfig = cfg;
+    }
+    virtual void setCalendar(KCal::Calendar *cal)
+    {
+        mCalendar = cal;
+    }
+    virtual void setSelectedIncidences(KCal::Incidence::List inc)
+    {
+        mSelectedIncidences = inc;
+    }
+    virtual KCal::Incidence::List selectedIncidences() const
+    {
+        return mSelectedIncidences;
+    }
 
 
     /**
@@ -83,29 +102,36 @@ class PrintPlugin : public KOrg::Plugin
       (negative) ID will be automatically generated and thus the position of
       the plugin in the selection list is undefined.
     */
-    virtual int sortID() { return -1; }
+    virtual int sortID()
+    {
+        return -1;
+    }
 
     /**
       Returns true if the plugin should be enabled; false otherwise.
     */
-    virtual bool enabled() { return false; }
-
-    QWidget *configWidget( QWidget *w )
+    virtual bool enabled()
     {
-      if ( !mConfigWidget ) {
-        mConfigWidget = createConfigWidget( w );
-        setSettingsWidget();
-      }
-      return mConfigWidget;
+        return false;
+    }
+
+    QWidget *configWidget(QWidget *w)
+    {
+        if(!mConfigWidget)
+        {
+            mConfigWidget = createConfigWidget(w);
+            setSettingsWidget();
+        }
+        return mConfigWidget;
     }
     /* Create the config widget. setSettingsWidget will be automatically
        called on it */
-    virtual QWidget *createConfigWidget( QWidget * ) = 0;
+    virtual QWidget *createConfigWidget(QWidget *) = 0;
 
     /**
       Actually do the printing.
     */
-    virtual void doPrint( KPrinter *printer ) = 0;
+    virtual void doPrint(KPrinter *printer) = 0;
 
     /**
       Orientation of printout. Default is Portrait. If your plugin wants
@@ -113,7 +139,10 @@ class PrintPlugin : public KOrg::Plugin
       config settings), implement this function in your subclass and
       return the desired orientation.
     */
-    virtual KPrinter::Orientation defaultOrientation() { return KPrinter::Portrait; }
+    virtual KPrinter::Orientation defaultOrientation()
+    {
+        return KPrinter::Portrait;
+    }
 
     /**
       Load complete config.
@@ -125,7 +154,7 @@ class PrintPlugin : public KOrg::Plugin
     virtual void doSaveConfig() {};
 
 
-  public:
+public:
     /**
       Read settings from configuration widget and apply them to current object.
     */
@@ -138,17 +167,17 @@ class PrintPlugin : public KOrg::Plugin
     /**
       Set date range which should be printed.
     */
-    virtual void setDateRange( const QDate &from, const QDate &to )
+    virtual void setDateRange(const QDate &from, const QDate &to)
     {
-      mFromDate = from;
-      mToDate = to;
+        mFromDate = from;
+        mToDate = to;
     }
 
-  protected:
+protected:
     QDate mFromDate;
     QDate mToDate;
 
-  protected:
+protected:
     QWidget *mConfigWidget;
     KOrg::CoreHelper *mCoreHelper;
     /** The printer object. This will only be available in the doPrint method
@@ -159,9 +188,8 @@ class PrintPlugin : public KOrg::Plugin
     KConfig *mConfig;
 };
 
-class PrintPluginFactory : public PluginFactory
-{
-  public:
+class PrintPluginFactory : public PluginFactory {
+public:
     virtual PrintPlugin *create() = 0;
 };
 

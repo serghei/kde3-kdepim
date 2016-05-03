@@ -10,15 +10,15 @@
   reference to the DCOP interface of the new composer window, which provides the
   functions defined in the MailComposerIface.
 */
-class MailComposerIface : virtual public DCOPObject
-{
+class MailComposerIface : virtual public DCOPObject {
     K_DCOP
 
-    public: MailComposerIface() : DCOPObject("MailComposerIface") {}
+public:
+    MailComposerIface() : DCOPObject("MailComposerIface") {}
 
-  k_dcop:
+k_dcop:
     /**
-      Send message.      
+      Send message.
 
       @param how 0 for deafult method, 1 for sending now, 2 for sending later.
     */
@@ -26,11 +26,11 @@ class MailComposerIface : virtual public DCOPObject
     /**
       Add url as attachment with a user-defined comment.
     */
-    virtual void addAttachment(KURL url,QString comment) = 0;
+    virtual void addAttachment(KURL url, QString comment) = 0;
     /**
       Set message body.
     */
-    virtual void setBody (QString body) = 0;
+    virtual void setBody(QString body) = 0;
     /**
       Add attachment.
 
@@ -44,13 +44,13 @@ class MailComposerIface : virtual public DCOPObject
       @param contDisp Content disposition
     */
     virtual void addAttachment(const QString &name,
-                              const QCString &cte,
-                              const QByteArray &data,
-                              const QCString &type,
-                              const QCString &subType,
-                              const QCString &paramAttr,
-                              const QString &paramValue,
-                              const QCString &contDisp) = 0;
+                               const QCString &cte,
+                               const QByteArray &data,
+                               const QCString &type,
+                               const QCString &subType,
+                               const QCString &paramAttr,
+                               const QString &paramValue,
+                               const QCString &contDisp) = 0;
 };
 
 #endif

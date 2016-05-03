@@ -50,121 +50,120 @@
 // the modules are that make up a binary distribution.
 //
 //
-extern "C"
-{
-long version_record_conduit = Pilot::PLUGIN_API;
+extern "C" {
+    long version_record_conduit = Pilot::PLUGIN_API;
 }
 
 
 /* virtual */ bool RecordConduitBase::exec()
 {
-	FUNCTIONSETUP;
-	fState = Initialize;
+    FUNCTIONSETUP;
+    fState = Initialize;
 
-	setFirstSync(false);
+    setFirstSync(false);
 
-	bool retrieved = false;
-	if (!openDatabases( fDBName, &retrieved))
-	{
-		emit logError(i18n("Unable to open the %1 database on the handheld.").arg( fDBName ) );
-		return false;
-	}
-	if (retrieved) setFirstSync(true);
+    bool retrieved = false;
+    if(!openDatabases(fDBName, &retrieved))
+    {
+        emit logError(i18n("Unable to open the %1 database on the handheld.").arg(fDBName));
+        return false;
+    }
+    if(retrieved) setFirstSync(true);
 
-	if (isFirstSync()) fIDList=fDatabase->idList();
-	else fIDList=fDatabase->modifiedIDList();
-	fIDListIterator = fIDList.begin();
+    if(isFirstSync()) fIDList = fDatabase->idList();
+    else fIDList = fDatabase->modifiedIDList();
+    fIDListIterator = fIDList.begin();
 
-	fTimer = new QTimer(this);
-	connect(fTimer,SIGNAL(timeout()),this,SLOT(process()));
-	fTimer->start(0,false); // Fire as often as possible to prompt processing
-	return true;
+    fTimer = new QTimer(this);
+    connect(fTimer, SIGNAL(timeout()), this, SLOT(process()));
+    fTimer->start(0, false); // Fire as often as possible to prompt processing
+    return true;
 }
 
 /* virtual */ void RecordConduitBase::process()
 {
-	FUNCTIONSETUP;
-	SyncProgress p = Error;
+    FUNCTIONSETUP;
+    SyncProgress p = Error;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": From state " << name(fState) << endl;
+    DEBUGKPILOT << fname << ": From state " << name(fState) << endl;
 #endif
 
-	switch(fState)
-	{
-	case Initialize :
-		p = loadPC();
-		break;
-	case PalmToPC :
-		p = palmRecToPC();
-		break;
-	case PCToPalm :
-		p = pcRecToPalm();
-		break;
-	case Cleanup :
-		p = cleanup();
-		break;
-	}
+    switch(fState)
+    {
+        case Initialize :
+            p = loadPC();
+            break;
+        case PalmToPC :
+            p = palmRecToPC();
+            break;
+        case PCToPalm :
+            p = pcRecToPalm();
+            break;
+        case Cleanup :
+            p = cleanup();
+            break;
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Step returned " << name(p) << endl;
+    DEBUGKPILOT << fname << ": Step returned " << name(p) << endl;
 #endif
 
-	switch(p)
-	{
-	case Error :
-		fTimer->stop();
-		delayDone();
-		return;
-	case NotDone :
-		// Return so we get called again.
-		return;
-	case Done :
-		// Get on with it.
-		break;
-	}
+    switch(p)
+    {
+        case Error :
+            fTimer->stop();
+            delayDone();
+            return;
+        case NotDone :
+            // Return so we get called again.
+            return;
+        case Done :
+            // Get on with it.
+            break;
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Step is done, moving to next state." << endl;
+    DEBUGKPILOT << fname << ": Step is done, moving to next state." << endl;
 #endif
 
-	// Here the previous call was done.
-	switch(fState)
-	{
-	case Initialize :
-		switch (syncMode().mode())
-		{
-		case SyncMode::eRestore :
-		case SyncMode::eCopyPCToHH : /* These two don't copy Palm records to the PC */
-			fState = PCToPalm;
-			break;
-		default :
-			fState = PalmToPC;
-		}
-		break;
-	case PalmToPC :
-		switch (syncMode().mode())
-		{
-		case SyncMode::eBackup :
-		case SyncMode::eCopyHHToPC : /* These modes don't copy PC records back */
-			fState = Cleanup;
-			break;
-		default :
-			fState = PCToPalm;
-		}
-		break;
-	case PCToPalm :
-		fState = Cleanup;
-		break;
-	case Cleanup :
-		fTimer->stop();
-		delayDone();
-		// No change in state, timer stopped and we're done.
-		break;
-	}
+    // Here the previous call was done.
+    switch(fState)
+    {
+        case Initialize :
+            switch(syncMode().mode())
+            {
+                case SyncMode::eRestore :
+                case SyncMode::eCopyPCToHH : /* These two don't copy Palm records to the PC */
+                    fState = PCToPalm;
+                    break;
+                default :
+                    fState = PalmToPC;
+            }
+            break;
+        case PalmToPC :
+            switch(syncMode().mode())
+            {
+                case SyncMode::eBackup :
+                case SyncMode::eCopyHHToPC : /* These modes don't copy PC records back */
+                    fState = Cleanup;
+                    break;
+                default :
+                    fState = PCToPalm;
+            }
+            break;
+        case PCToPalm :
+            fState = Cleanup;
+            break;
+        case Cleanup :
+            fTimer->stop();
+            delayDone();
+            // No change in state, timer stopped and we're done.
+            break;
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Next state is " << name(fState) << endl;
+    DEBUGKPILOT << fname << ": Next state is " << name(fState) << endl;
 #endif
 
 }
@@ -172,71 +171,75 @@ long version_record_conduit = Pilot::PLUGIN_API;
 
 QString RecordConduitBase::name(RecordConduitBase::SyncProgress s)
 {
-	switch(s)
-	{
-	case RecordConduitBase::NotDone:
-		return CSL1("NotDone");
-	case RecordConduitBase::Done:
-		return CSL1("Done");
-	case RecordConduitBase::Error:
-		return CSL1("Error");
-	}
+    switch(s)
+    {
+        case RecordConduitBase::NotDone:
+            return CSL1("NotDone");
+        case RecordConduitBase::Done:
+            return CSL1("Done");
+        case RecordConduitBase::Error:
+            return CSL1("Error");
+    }
 }
 
 
 QString RecordConduitBase::name(RecordConduitBase::States s)
 {
-	switch(s)
-	{
-	case RecordConduitBase::Initialize:
-		return CSL1("Initialize");
-	case RecordConduitBase::PalmToPC:
-		return CSL1("Handheld-to-PC");
-	case RecordConduitBase::PCToPalm:
-		return CSL1("PC-to-Handheld");
-	case RecordConduitBase::Cleanup:
-		return CSL1("Cleanup");
-	}
+    switch(s)
+    {
+        case RecordConduitBase::Initialize:
+            return CSL1("Initialize");
+        case RecordConduitBase::PalmToPC:
+            return CSL1("Handheld-to-PC");
+        case RecordConduitBase::PCToPalm:
+            return CSL1("PC-to-Handheld");
+        case RecordConduitBase::Cleanup:
+            return CSL1("Cleanup");
+    }
 }
 
 
 #if 0
 /** make that entry on the pc archived (i.e. deleted on the handheld,
  *  while present on the pc, but not synced to the handheld */
-bool RecordConduit::PCData::makeArchived( RecordConduit::PCEntry *pcEntry )
+bool RecordConduit::PCData::makeArchived(RecordConduit::PCEntry *pcEntry)
 {
-	if ( pcEntry ) {
-		pcEntry->makeArchived();
-		setChanged( true );
-		return true;
-	} else return false;
+    if(pcEntry)
+    {
+        pcEntry->makeArchived();
+        setChanged(true);
+        return true;
+    }
+    else return false;
 }
 
 
 /* Builds the map which links record ids to uid's of PCEntry. This is the slow implementation,
  * that should always work. subclasses should reimplement it to speed things up.
 */
-bool RecordConduit::PCData::mapContactsToPilot( QMap<recordid_t,QString> &idContactMap )
+bool RecordConduit::PCData::mapContactsToPilot(QMap<recordid_t, QString> &idContactMap)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	idContactMap.clear();
+    idContactMap.clear();
 
-	Iterator it = begin();
-	PCEntry *ent;
-	while ( !atEnd( it ) ) {
-		ent = *it;
-		recordid_t id( ent->recid() );
-		if ( id != 0 ) {
-			idContactMap.insert( id, ent->uid() );
-		}
-		++it;
-	}
+    Iterator it = begin();
+    PCEntry *ent;
+    while(!atEnd(it))
+    {
+        ent = *it;
+        recordid_t id(ent->recid());
+        if(id != 0)
+        {
+            idContactMap.insert(id, ent->uid());
+        }
+        ++it;
+    }
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Loaded " << idContactMap.size() <<
-	    " Entries on the pc and mapped them to records on the handheld. " << endl;
+    DEBUGKPILOT << fname << ": Loaded " << idContactMap.size() <<
+                " Entries on the pc and mapped them to records on the handheld. " << endl;
 #endif
-	return true;
+    return true;
 }
 
 
@@ -249,20 +252,20 @@ bool RecordConduit::PCData::mapContactsToPilot( QMap<recordid_t,QString> &idCont
 
 bool RecordConduit::mArchiveDeleted = false;
 
-RecordConduit::RecordConduit(QString name, KPilotDeviceLink * o, const char *n, const QStringList & a):
-		ConduitAction(o, n, a),
-		mPCData(0), mPalmIndex(0),
-		mEntryMap(), mSyncedIds(), mAllIds()
+RecordConduit::RecordConduit(QString name, KPilotDeviceLink *o, const char *n, const QStringList &a):
+    ConduitAction(o, n, a),
+    mPCData(0), mPalmIndex(0),
+    mEntryMap(), mSyncedIds(), mAllIds()
 {
-	FUNCTIONSETUP;
-	fConduitName = name;
+    FUNCTIONSETUP;
+    fConduitName = name;
 }
 
 
 
 RecordConduit::~RecordConduit()
 {
-	if ( mPCData ) KPILOT_DELETE(mPCData);
+    if(mPCData) KPILOT_DELETE(mPCData);
 }
 
 
@@ -278,325 +281,325 @@ RecordConduit::~RecordConduit()
 
 /* virtual */ bool RecordConduit::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( !_prepare() ) return false;
+    if(!_prepare()) return false;
 
-	fFirstSync = false;
-	// Database names probably in latin1.
-	if( !openDatabases( dbName(), &fFirstSync ) )
-	{
-		emit logError(i18n("Unable to open the %1 database on the handheld.").arg( dbName() ) );
-		return false;
-	}
-	_getAppInfo();
-	if( !mPCData->loadData() )
-	{
-		emit logError( i18n("Unable to open %1.").arg( mPCData->description() ) );
-		return false;
-	}
-	// get the addresseMap which maps Pilot unique record(address) id's to
-	// a Abbrowser Addressee; allows for easy lookup and comparisons
-	if ( mPCData->isEmpty() )
-		fFirstSync = true;
-	else
-		mPCData->mapContactsToPilot( mEntryMap );
-	fFirstSync = fFirstSync || ( mPCData->isEmpty() );
+    fFirstSync = false;
+    // Database names probably in latin1.
+    if(!openDatabases(dbName(), &fFirstSync))
+    {
+        emit logError(i18n("Unable to open the %1 database on the handheld.").arg(dbName()));
+        return false;
+    }
+    _getAppInfo();
+    if(!mPCData->loadData())
+    {
+        emit logError(i18n("Unable to open %1.").arg(mPCData->description()));
+        return false;
+    }
+    // get the addresseMap which maps Pilot unique record(address) id's to
+    // a Abbrowser Addressee; allows for easy lookup and comparisons
+    if(mPCData->isEmpty())
+        fFirstSync = true;
+    else
+        mPCData->mapContactsToPilot(mEntryMap);
+    fFirstSync = fFirstSync || (mPCData->isEmpty());
 
-	// perform syncing from palm to abbrowser
-	// iterate through all records in palm pilot
-	mPalmIndex = 0;
+    // perform syncing from palm to abbrowser
+    // iterate through all records in palm pilot
+    mPalmIndex = 0;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": fullsync=" << isFullSync() << ", firstSync=" << isFirstSync() << endl;
-	DEBUGKPILOT << fname << ": "
-		<< "syncDirection=" << getSyncDirection() << ", "
-//		<< "archive = " << AbbrowserSettings::archiveDeleted()
-		<< endl;
-	DEBUGKPILOT << fname << ": conflictRes="<< getConflictResolution() << endl;
-//	DEBUGKPILOT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
+    DEBUGKPILOT << fname << ": fullsync=" << isFullSync() << ", firstSync=" << isFirstSync() << endl;
+    DEBUGKPILOT << fname << ": "
+                << "syncDirection=" << getSyncDirection() << ", "
+                //		<< "archive = " << AbbrowserSettings::archiveDeleted()
+                << endl;
+    DEBUGKPILOT << fname << ": conflictRes=" << getConflictResolution() << endl;
+    //	DEBUGKPILOT << fname << ": PilotStreetHome=" << AbbrowserSettings::pilotStreet() << ", PilotFaxHOme" << AbbrowserSettings::pilotFax() << endl;
 #endif
 
-	if ( !isFirstSync() )
-		mAllIds=fDatabase->idList();
+    if(!isFirstSync())
+        mAllIds = fDatabase->idList();
 
-	/* Note:
-	   if eCopyPCToHH or eCopyHHToPC, first sync everything, then lookup
-	   those entries on the receiving side that are not yet syncced and delete
-	   them. Use slotDeleteUnsyncedPCRecords and slotDeleteUnsyncedHHRecords
-	   for this, and no longer purge the whole addressbook before the sync to
-	   prevent data loss in case of connection loss. */
+    /* Note:
+       if eCopyPCToHH or eCopyHHToPC, first sync everything, then lookup
+       those entries on the receiving side that are not yet syncced and delete
+       them. Use slotDeleteUnsyncedPCRecords and slotDeleteUnsyncedHHRecords
+       for this, and no longer purge the whole addressbook before the sync to
+       prevent data loss in case of connection loss. */
 
-	QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
+    QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
 
-	return true;
+    return true;
 }
 
 
 
 void RecordConduit::slotPalmRecToPC()
 {
-	FUNCTIONSETUP;
-	PilotRecord *palmRec = 0L, *backupRec = 0L;
+    FUNCTIONSETUP;
+    PilotRecord *palmRec = 0L, *backupRec = 0L;
 
-	if ( getSyncDirection() == SyncAction::eCopyPCToHH )
-	{
-		mPCIter = mPCData->begin();
-		QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
-		return;
-	}
+    if(getSyncDirection() == SyncAction::eCopyPCToHH)
+    {
+        mPCIter = mPCData->begin();
+        QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
+        return;
+    }
 
-	if ( isFullSync() )
-		palmRec = fDatabase->readRecordByIndex( mPalmIndex++ );
-	else
-		palmRec = dynamic_cast <PilotSerialDatabase * >(fDatabase)->readNextModifiedRec();
+    if(isFullSync())
+        palmRec = fDatabase->readRecordByIndex(mPalmIndex++);
+    else
+        palmRec = dynamic_cast <PilotSerialDatabase * >(fDatabase)->readNextModifiedRec();
 
-	if ( !palmRec )
-	{
-		mPCIter = mPCData->begin();
-		QTimer::singleShot( 0, this, SLOT( slotPCRecToPalm() ) );
-		return;
-	}
+    if(!palmRec)
+    {
+        mPCIter = mPCData->begin();
+        QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
+        return;
+    }
 
-	// already synced, so skip:
-	if ( mSyncedIds.contains( palmRec->id() ) )
-	{
-		KPILOT_DELETE( palmRec );
-		QTimer::singleShot( 0, this, SLOT( slotPalmRecToPC() ) );
-		return;
-	}
+    // already synced, so skip:
+    if(mSyncedIds.contains(palmRec->id()))
+    {
+        KPILOT_DELETE(palmRec);
+        QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
+        return;
+    }
 
-	backupRec = fLocalDatabase->readRecordById( palmRec->id() );
-	PilotRecord *compareRec = backupRec ? backupRec : palmRec;
-	PilotAppCategory *compareEntry = createPalmEntry( compareRec );
-	PCEntry *pcEntry = findMatch( compareEntry );
-	KPILOT_DELETE( compareEntry );
+    backupRec = fLocalDatabase->readRecordById(palmRec->id());
+    PilotRecord *compareRec = backupRec ? backupRec : palmRec;
+    PilotAppCategory *compareEntry = createPalmEntry(compareRec);
+    PCEntry *pcEntry = findMatch(compareEntry);
+    KPILOT_DELETE(compareEntry);
 
-	PilotAppCategory *backupEntry=0L;
-	if ( backupRec )
-		backupEntry = createPalmEntry( backupRec );
-	PilotAppCategory *palmEntry=0L;
-	if ( palmRec )
-		palmEntry = createPalmEntry( palmRec );
+    PilotAppCategory *backupEntry = 0L;
+    if(backupRec)
+        backupEntry = createPalmEntry(backupRec);
+    PilotAppCategory *palmEntry = 0L;
+    if(palmRec)
+        palmEntry = createPalmEntry(palmRec);
 
-	syncEntry( pcEntry, backupEntry, palmEntry );
+    syncEntry(pcEntry, backupEntry, palmEntry);
 
-	mSyncedIds.append( palmRec->id() );
+    mSyncedIds.append(palmRec->id());
 
-	KPILOT_DELETE( pcEntry );
-	KPILOT_DELETE( palmEntry );
-	KPILOT_DELETE( backupEntry );
-	KPILOT_DELETE( palmRec );
-	KPILOT_DELETE( backupRec );
+    KPILOT_DELETE(pcEntry);
+    KPILOT_DELETE(palmEntry);
+    KPILOT_DELETE(backupEntry);
+    KPILOT_DELETE(palmRec);
+    KPILOT_DELETE(backupRec);
 
-	QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
+    QTimer::singleShot(0, this, SLOT(slotPalmRecToPC()));
 }
 
 
 
 void RecordConduit::slotPCRecToPalm()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( ( getSyncDirection()==SyncAction::eCopyHHToPC ) ||
-		mPCData->atEnd( mPCIter ) )
-	{
-		mPalmIndex = 0;
-		QTimer::singleShot( 0, this, SLOT( slotDeletedRecord() ) );
-		return;
-	}
+    if((getSyncDirection() == SyncAction::eCopyHHToPC) ||
+            mPCData->atEnd(mPCIter))
+    {
+        mPalmIndex = 0;
+        QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
+        return;
+    }
 
-	PilotRecord *backupRec=0L;
-	PCEntry *pcEntry = *mPCIter;
-	++mPCIter;
+    PilotRecord *backupRec = 0L;
+    PCEntry *pcEntry = *mPCIter;
+    ++mPCIter;
 
-	// If marked as archived, don't sync!
-	if ( isArchived( pcEntry ) )
-	{
+    // If marked as archived, don't sync!
+    if(isArchived(pcEntry))
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": address with id " << pcEntry->uid() <<
-			" marked archived, so don't sync." << endl;
+        DEBUGKPILOT << fname << ": address with id " << pcEntry->uid() <<
+                    " marked archived, so don't sync." << endl;
 #endif
-		KPILOT_DELETE( pcEntry );
-		QTimer::singleShot( 0, this, SLOT( slotPCRecToPalm() ) );
-		return;
-	}
+        KPILOT_DELETE(pcEntry);
+        QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
+        return;
+    }
 
-	recordid_t recID( pcEntry->recid() );
-	if ( recID == 0 )
-	{
-		// it's a new item(no record ID and not inserted by the Palm -> PC sync), so add it
-		syncEntry( pcEntry, 0L, 0L );
-		KPILOT_DELETE( pcEntry );
-		QTimer::singleShot( 0, this, SLOT( slotPCRecToPalm() ) );
-		return;
-	}
+    recordid_t recID(pcEntry->recid());
+    if(recID == 0)
+    {
+        // it's a new item(no record ID and not inserted by the Palm -> PC sync), so add it
+        syncEntry(pcEntry, 0L, 0L);
+        KPILOT_DELETE(pcEntry);
+        QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
+        return;
+    }
 
-	// look into the list of already synced record ids to see if the PCEntry hasn't already been synced
-	if ( mSyncedIds.contains( recID ) )
-	{
+    // look into the list of already synced record ids to see if the PCEntry hasn't already been synced
+    if(mSyncedIds.contains(recID))
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << ": address with id " << recID << " already synced." << endl;
+        DEBUGKPILOT << ": address with id " << recID << " already synced." << endl;
 #endif
-		KPILOT_DELETE( pcEntry );
-		QTimer::singleShot( 0, this, SLOT( slotPCRecToPalm() ) );
-		return;
-	}
+        KPILOT_DELETE(pcEntry);
+        QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
+        return;
+    }
 
 
-	backupRec = fLocalDatabase->readRecordById( recID );
-	// only update if no backup record or the backup record is not equal to the PCEntry
+    backupRec = fLocalDatabase->readRecordById(recID);
+    // only update if no backup record or the backup record is not equal to the PCEntry
 
-	PilotAppCategory*backupEntry=0L;
-	if ( backupRec )
-		backupEntry = createPalmEntry( backupRec );
-	if( !backupRec || isFirstSync() || !_equal( backupEntry, pcEntry ) )
-	{
-		PilotRecord *palmRec = fDatabase->readRecordById( recID );
-		PilotAppCategory *palmEntry=0L;
-		if (palmRec)
-			palmEntry = createPalmEntry( palmRec );
-		syncEntry( pcEntry, backupEntry, palmEntry );
-		// update the id just in case it changed
-		if ( palmRec )
-			recID = palmRec->id();
-		KPILOT_DELETE( palmRec );
-		KPILOT_DELETE( palmEntry );
-	}
+    PilotAppCategory *backupEntry = 0L;
+    if(backupRec)
+        backupEntry = createPalmEntry(backupRec);
+    if(!backupRec || isFirstSync() || !_equal(backupEntry, pcEntry))
+    {
+        PilotRecord *palmRec = fDatabase->readRecordById(recID);
+        PilotAppCategory *palmEntry = 0L;
+        if(palmRec)
+            palmEntry = createPalmEntry(palmRec);
+        syncEntry(pcEntry, backupEntry, palmEntry);
+        // update the id just in case it changed
+        if(palmRec)
+            recID = palmRec->id();
+        KPILOT_DELETE(palmRec);
+        KPILOT_DELETE(palmEntry);
+    }
 
-	KPILOT_DELETE( pcEntry );
-	KPILOT_DELETE( backupEntry );
-	KPILOT_DELETE( backupRec );
-	mSyncedIds.append( recID );
+    KPILOT_DELETE(pcEntry);
+    KPILOT_DELETE(backupEntry);
+    KPILOT_DELETE(backupRec);
+    mSyncedIds.append(recID);
 
-	// done with the sync process, go on with the next one:
-	QTimer::singleShot( 0, this, SLOT( slotPCRecToPalm() ) );
+    // done with the sync process, go on with the next one:
+    QTimer::singleShot(0, this, SLOT(slotPCRecToPalm()));
 }
 
 
 
 void RecordConduit::slotDeletedRecord()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	PilotRecord *backupRec = fLocalDatabase->readRecordByIndex( mPalmIndex++ );
-	if( !backupRec || isFirstSync() )
-	{
-		KPILOT_DELETE(backupRec);
-		QTimer::singleShot( 0, this, SLOT( slotDeleteUnsyncedPCRecords() ) );
-		return;
-	}
+    PilotRecord *backupRec = fLocalDatabase->readRecordByIndex(mPalmIndex++);
+    if(!backupRec || isFirstSync())
+    {
+        KPILOT_DELETE(backupRec);
+        QTimer::singleShot(0, this, SLOT(slotDeleteUnsyncedPCRecords()));
+        return;
+    }
 
-	// already synced, so skip this record:
-	if ( mSyncedIds.contains( backupRec->id() ) )
-	{
-		KPILOT_DELETE( backupRec );
-		QTimer::singleShot( 0, this, SLOT( slotDeletedRecord() ) );
-		return;
-	}
+    // already synced, so skip this record:
+    if(mSyncedIds.contains(backupRec->id()))
+    {
+        KPILOT_DELETE(backupRec);
+        QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
+        return;
+    }
 
-	QString uid = mEntryMap[ backupRec->id() ];
-	PCEntry *pcEntry = mPCData->findByUid( uid );
-	PilotRecord *palmRec = fDatabase->readRecordById( backupRec->id() );
-	PilotAppCategory *backupEntry = 0L;
-	if (backupRec)
-		backupEntry = createPalmEntry( backupRec );
-	PilotAppCategory*palmEntry=0L;
-	if (palmRec)
-		palmEntry = createPalmEntry( palmRec );
+    QString uid = mEntryMap[ backupRec->id() ];
+    PCEntry *pcEntry = mPCData->findByUid(uid);
+    PilotRecord *palmRec = fDatabase->readRecordById(backupRec->id());
+    PilotAppCategory *backupEntry = 0L;
+    if(backupRec)
+        backupEntry = createPalmEntry(backupRec);
+    PilotAppCategory *palmEntry = 0L;
+    if(palmRec)
+        palmEntry = createPalmEntry(palmRec);
 
-	mSyncedIds.append( backupRec->id() );
-	syncEntry( pcEntry, backupEntry, palmEntry );
+    mSyncedIds.append(backupRec->id());
+    syncEntry(pcEntry, backupEntry, palmEntry);
 
-	KPILOT_DELETE( pcEntry );
-	KPILOT_DELETE( palmEntry );
-	KPILOT_DELETE( backupEntry );
-	KPILOT_DELETE( palmRec );
-	KPILOT_DELETE( backupRec );
-	QTimer::singleShot( 0, this, SLOT( slotDeletedRecord() ) );
+    KPILOT_DELETE(pcEntry);
+    KPILOT_DELETE(palmEntry);
+    KPILOT_DELETE(backupEntry);
+    KPILOT_DELETE(palmRec);
+    KPILOT_DELETE(backupRec);
+    QTimer::singleShot(0, this, SLOT(slotDeletedRecord()));
 }
 
 
 
 void RecordConduit::slotDeleteUnsyncedPCRecords()
 {
-	FUNCTIONSETUP;
-	if ( getSyncDirection() == SyncAction::eCopyHHToPC )
-	{
-		QStringList uids;
-		RecordIDList::iterator it;
-		QString uid;
-		for ( it = mSyncedIds.begin(); it != mSyncedIds.end(); ++it)
-		{
-			uid = mEntryMap[ *it ];
-			if ( !uid.isEmpty() ) uids.append( uid );
-		}
-		// TODO: Does this speed up anything?
-		// qHeapSort( uids );
-		const QStringList alluids( mPCData->uids() );
-		QStringList::ConstIterator uidit;
-		for ( uidit = alluids.constBegin(); uidit != alluids.constEnd(); ++uidit )
-		{
-			if ( !uids.contains( *uidit ) )
-			{
+    FUNCTIONSETUP;
+    if(getSyncDirection() == SyncAction::eCopyHHToPC)
+    {
+        QStringList uids;
+        RecordIDList::iterator it;
+        QString uid;
+        for(it = mSyncedIds.begin(); it != mSyncedIds.end(); ++it)
+        {
+            uid = mEntryMap[ *it ];
+            if(!uid.isEmpty()) uids.append(uid);
+        }
+        // TODO: Does this speed up anything?
+        // qHeapSort( uids );
+        const QStringList alluids(mPCData->uids());
+        QStringList::ConstIterator uidit;
+        for(uidit = alluids.constBegin(); uidit != alluids.constEnd(); ++uidit)
+        {
+            if(!uids.contains(*uidit))
+            {
 #ifdef DEBUG
-				DEBUGKPILOT << "Deleting PCEntry with uid " << (*uidit) << " from PC (is not on HH, and syncing with HH->PC direction)" << endl;
+                DEBUGKPILOT << "Deleting PCEntry with uid " << (*uidit) << " from PC (is not on HH, and syncing with HH->PC direction)" << endl;
 #endif
-				mPCData->removeEntry( *uidit );
-			}
-		}
-	}
-	QTimer::singleShot(0, this, SLOT(slotDeleteUnsyncedHHRecords()));
+                mPCData->removeEntry(*uidit);
+            }
+        }
+    }
+    QTimer::singleShot(0, this, SLOT(slotDeleteUnsyncedHHRecords()));
 }
 
 
 
 void RecordConduit::slotDeleteUnsyncedHHRecords()
 {
-	FUNCTIONSETUP;
-	if ( getSyncDirection() == SyncAction::eCopyPCToHH )
-	{
-		RecordIDList ids = fDatabase->idList();
-		RecordIDList::iterator it;
-		for ( it = ids.begin(); it != ids.end(); ++it )
-		{
-			if ( !mSyncedIds.contains(*it) )
-			{
+    FUNCTIONSETUP;
+    if(getSyncDirection() == SyncAction::eCopyPCToHH)
+    {
+        RecordIDList ids = fDatabase->idList();
+        RecordIDList::iterator it;
+        for(it = ids.begin(); it != ids.end(); ++it)
+        {
+            if(!mSyncedIds.contains(*it))
+            {
 #ifdef DEBUG
-				DEBUGKPILOT << "Deleting record with ID " << *it << " from handheld (is not on PC, and syncing with PC->HH direction)" << endl;
+                DEBUGKPILOT << "Deleting record with ID " << *it << " from handheld (is not on PC, and syncing with PC->HH direction)" << endl;
 #endif
-				fDatabase->deleteRecord(*it);
-				fLocalDatabase->deleteRecord(*it);
-			}
-		}
-	}
-	QTimer::singleShot( 0, this, SLOT( slotCleanup() ) );
+                fDatabase->deleteRecord(*it);
+                fLocalDatabase->deleteRecord(*it);
+            }
+        }
+    }
+    QTimer::singleShot(0, this, SLOT(slotCleanup()));
 }
 
 
 void RecordConduit::slotCleanup()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	// Set the appInfoBlock, just in case the category labels changed
-	_setAppInfo();
-	doPostSync();
-	if(fDatabase)
-	{
-		fDatabase->resetSyncFlags();
-		fDatabase->cleanup();
-	}
-	if(fLocalDatabase)
-	{
-		fLocalDatabase->resetSyncFlags();
-		fLocalDatabase->cleanup();
-	}
-	KPILOT_DELETE( fDatabase );
-	KPILOT_DELETE( fLocalDatabase );
-	// TODO: do something if saving fails!
-	mPCData->saveData();
-	mPCData->cleanup();
-	emit syncDone(this);
+    // Set the appInfoBlock, just in case the category labels changed
+    _setAppInfo();
+    doPostSync();
+    if(fDatabase)
+    {
+        fDatabase->resetSyncFlags();
+        fDatabase->cleanup();
+    }
+    if(fLocalDatabase)
+    {
+        fLocalDatabase->resetSyncFlags();
+        fLocalDatabase->cleanup();
+    }
+    KPILOT_DELETE(fDatabase);
+    KPILOT_DELETE(fLocalDatabase);
+    // TODO: do something if saving fails!
+    mPCData->saveData();
+    mPCData->cleanup();
+    emit syncDone(this);
 }
 
 
@@ -604,35 +607,36 @@ void RecordConduit::slotCleanup()
  */
 const QStringList RecordConduit::categories() const
 {
-	QStringList cats;
-	for ( unsigned int j = 0; j < Pilot::CATEGORY_COUNT; j++ ) {
-		QString catName( category( j ) );
-		if ( !catName.isEmpty() ) cats << catName;
-	}
-	return cats;
+    QStringList cats;
+    for(unsigned int j = 0; j < Pilot::CATEGORY_COUNT; j++)
+    {
+        QString catName(category(j));
+        if(!catName.isEmpty()) cats << catName;
+    }
+    return cats;
 }
 int RecordConduit::findFlags() const
 {
-	return eqFlagsAlmostAll;
+    return eqFlagsAlmostAll;
 }
 
 
-bool RecordConduit::isDeleted( const PilotAppCategory *palmEntry )
+bool RecordConduit::isDeleted(const PilotAppCategory *palmEntry)
 {
-	if ( !palmEntry )
-		return true;
-	if ( palmEntry->isDeleted() && !palmEntry->isArchived() )
-		return true;
-	if ( palmEntry->isArchived() )
-		return !archiveDeleted();
-	return false;
+    if(!palmEntry)
+        return true;
+    if(palmEntry->isDeleted() && !palmEntry->isArchived())
+        return true;
+    if(palmEntry->isArchived())
+        return !archiveDeleted();
+    return false;
 }
-bool RecordConduit::isArchived( const PilotAppCategory *palmEntry )
+bool RecordConduit::isArchived(const PilotAppCategory *palmEntry)
 {
-	if ( palmEntry && palmEntry->isArchived() )
-		return archiveDeleted();
-	else
-		return false;
+    if(palmEntry && palmEntry->isArchived())
+        return archiveDeleted();
+    else
+        return false;
 }
 
 
@@ -646,51 +650,52 @@ bool RecordConduit::isArchived( const PilotAppCategory *palmEntry )
 
 bool RecordConduit::_prepare()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	readConfig();
-	mSyncedIds.clear();
-	mPCData = initializePCData();
+    readConfig();
+    mSyncedIds.clear();
+    mPCData = initializePCData();
 
-	return mPCData && doPrepare();
+    return mPCData && doPrepare();
 }
 
 
 void RecordConduit::_getAppInfo()
 {
-	FUNCTIONSETUP;
-	// get the address application header information
-	unsigned char *buffer = new unsigned char[Pilot::MAX_APPINFO_SIZE];
-	int appLen=fDatabase->readAppBlock(buffer, Pilot::MAX_APPINFO_SIZE);
+    FUNCTIONSETUP;
+    // get the address application header information
+    unsigned char *buffer = new unsigned char[Pilot::MAX_APPINFO_SIZE];
+    int appLen = fDatabase->readAppBlock(buffer, Pilot::MAX_APPINFO_SIZE);
 
-	doUnpackAppInfo( buffer, appLen );
-	delete[] buffer;
-	buffer = 0;
+    doUnpackAppInfo(buffer, appLen);
+    delete[] buffer;
+    buffer = 0;
 }
 
 void RecordConduit::_setAppInfo()
 {
-	FUNCTIONSETUP;
-	// get the address application header information
-	int appLen = 0;
-	unsigned char *buffer = doPackAppInfo( &appLen );
-	if ( buffer )
-	{	if (fDatabase)
-			fDatabase->writeAppBlock( buffer, appLen );
-		if (fLocalDatabase)
-			fLocalDatabase->writeAppBlock( buffer, appLen );
-		delete[] buffer;
-	}
+    FUNCTIONSETUP;
+    // get the address application header information
+    int appLen = 0;
+    unsigned char *buffer = doPackAppInfo(&appLen);
+    if(buffer)
+    {
+        if(fDatabase)
+            fDatabase->writeAppBlock(buffer, appLen);
+        if(fLocalDatabase)
+            fLocalDatabase->writeAppBlock(buffer, appLen);
+        delete[] buffer;
+    }
 }
 
 
-int RecordConduit::compareStr( const QString & str1, const QString & str2 )
+int RecordConduit::compareStr(const QString &str1, const QString &str2)
 {
-//	FUNCTIONSETUP;
-	if ( str1.isEmpty() && str2.isEmpty() )
-		return 0;
-	else
-		return str1.compare( str2 );
+    //	FUNCTIONSETUP;
+    if(str1.isEmpty() && str2.isEmpty())
+        return 0;
+    else
+        return str1.compare(str2);
 }
 
 
@@ -701,33 +706,33 @@ int RecordConduit::compareStr( const QString & str1, const QString & str2 )
  * Otherwise the first cat in the list that exists on the HH is returned
  * If none of the categories exists on the palm, QString::null is returned
  */
-QString RecordConduit::getCatForHH( const QStringList cats, const QString curr ) const
+QString RecordConduit::getCatForHH(const QStringList cats, const QString curr) const
 {
-	FUNCTIONSETUP;
-	if ( cats.size() < 1 )
-		return QString::null;
-	if ( cats.contains( curr ) )
-		return curr;
-	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it)
-	{
-		for ( unsigned int j = 0; j < Pilot::CATEGORY_COUNT; j++ )
-		{
-			QString catnm( category( j ) );
-			if ( !(*it).isEmpty() && ( (*it)==catnm ) )
-			{
-				return catnm;
-			}
-		}
-	}
-	// If we have a free label, return the first possible cat
-	QString lastCat( category( Pilot::CATEGORY_COUNT-1 ) );
-	return ( lastCat.isEmpty() ) ? ( cats.first() ) : ( QString::null );
+    FUNCTIONSETUP;
+    if(cats.size() < 1)
+        return QString::null;
+    if(cats.contains(curr))
+        return curr;
+    for(QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it)
+    {
+        for(unsigned int j = 0; j < Pilot::CATEGORY_COUNT; j++)
+        {
+            QString catnm(category(j));
+            if(!(*it).isEmpty() && ((*it) == catnm))
+            {
+                return catnm;
+            }
+        }
+    }
+    // If we have a free label, return the first possible cat
+    QString lastCat(category(Pilot::CATEGORY_COUNT - 1));
+    return (lastCat.isEmpty()) ? (cats.first()) : (QString::null);
 }
 
-void RecordConduit::setCategory(PCEntry * pcEntry, QString cat)
+void RecordConduit::setCategory(PCEntry *pcEntry, QString cat)
 {
-	if ( !cat.isEmpty() && cat!=category( 0 ) )
-		pcEntry->insertCategory(cat);
+    if(!cat.isEmpty() && cat != category(0))
+        pcEntry->insertCategory(cat);
 }
 
 
@@ -742,199 +747,199 @@ void RecordConduit::setCategory(PCEntry * pcEntry, QString cat)
 
 
 
-bool RecordConduit::syncEntry( PCEntry *pcEntry, PilotAppCategory*backupEntry,
-	PilotAppCategory*palmEntry)
+bool RecordConduit::syncEntry(PCEntry *pcEntry, PilotAppCategory *backupEntry,
+                              PilotAppCategory *palmEntry)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( getSyncDirection() == SyncAction::eCopyPCToHH )
-	{
-		if ( pcEntry->isEmpty() )
-		{
-			return pcDeleteEntry( pcEntry, backupEntry, palmEntry );
-		}
-		else
-		{
-			return pcCopyToPalm( pcEntry, backupEntry, palmEntry );
-		}
-	}
+    if(getSyncDirection() == SyncAction::eCopyPCToHH)
+    {
+        if(pcEntry->isEmpty())
+        {
+            return pcDeleteEntry(pcEntry, backupEntry, palmEntry);
+        }
+        else
+        {
+            return pcCopyToPalm(pcEntry, backupEntry, palmEntry);
+        }
+    }
 
-	if ( getSyncDirection() == SyncAction::eCopyHHToPC )
-	{
-		if (!palmEntry)
-			return pcDeleteEntry(pcEntry, backupEntry, palmEntry);
-		else
-			return palmCopyToPC(pcEntry, backupEntry, palmEntry);
-	}
+    if(getSyncDirection() == SyncAction::eCopyHHToPC)
+    {
+        if(!palmEntry)
+            return pcDeleteEntry(pcEntry, backupEntry, palmEntry);
+        else
+            return palmCopyToPC(pcEntry, backupEntry, palmEntry);
+    }
 
-	if ( !backupEntry || isFirstSync() )
-	{
-		/*
-		Resolution matrix (0..does not exist, E..exists, D..deleted flag set, A..archived):
-		  HH    PC  | Resolution
-		  ------------------------------------------------------------
-		   0     A  |  -
-		   0     E  |  PC -> HH, reset ID if not set correctly
-		   D     0  |  delete (error, should never occur!!!)
-		   D     E  |  CR (ERROR)
-		   E/A   0  |  HH -> PC
-		   E/A   E/A|  merge/CR
-		 */
-		if  ( !palmEntry && isArchived( pcEntry ) )
-		{
-			return true;
-		}
-		else if ( !palmEntry && !pcEntry->isEmpty() )
-		{
-			// PC->HH
-			bool res = pcCopyToPalm( pcEntry, 0L, 0L );
-			return res;
-		}
-		else if ( !palmEntry && pcEntry->isEmpty() )
-		{
-			// everything's empty -> ERROR
-			return false;
-		}
-		else if ( ( isDeleted( palmEntry ) || isArchived( palmEntry ) ) && pcEntry->isEmpty())
-		{
-			if ( isArchived( palmEntry ) )
-				return palmCopyToPC( pcEntry, 0L, palmEntry );
-			else
-				// this happens if you add a record on the handheld and delete it again before you do the next sync
-				return pcDeleteEntry( pcEntry, 0L, palmEntry );
-		}
-		else if ( ( isDeleted(palmEntry) || isArchived( palmEntry ) ) && !pcEntry->isEmpty() )
-		{
-			// CR (ERROR)
-			return smartMergeEntry( pcEntry, 0L, palmEntry );
-		}
-		else if ( pcEntry->isEmpty() )
-		{
-			// HH->PC
-			return palmCopyToPC( pcEntry, 0L, palmEntry );
-		}
-		else
-		{
-			// Conflict Resolution
-			return smartMergeEntry( pcEntry, 0L, palmEntry );
-		}
-	} // !backupEntry
-	else
-	{
-		/*
-		Resolution matrix:
-		  1) if HH.(empty| (deleted &! archived) ) -> { if (PC==B) -> delete, else -> CR }
-		     if HH.archived -> {if (PC==B) -> copyToPC, else -> CR }
-		     if PC.empty -> { if (HH==B) -> delete, else -> CR }
-		     if PC.archived -> {if (HH==B) -> delete on HH, else CR }
-		  2) if PC==HH -> { update B, update ID of PC if needed }
-		  3) if PC==B -> { HH!=PC, thus HH modified, so copy HH->PC }
-		     if HH==B -> { PC!=HH, thus PC modified, so copy PC->HH }
-		  4) else: all three PCEntrys are different -> CR
-		*/
+    if(!backupEntry || isFirstSync())
+    {
+        /*
+        Resolution matrix (0..does not exist, E..exists, D..deleted flag set, A..archived):
+          HH    PC  | Resolution
+          ------------------------------------------------------------
+           0     A  |  -
+           0     E  |  PC -> HH, reset ID if not set correctly
+           D     0  |  delete (error, should never occur!!!)
+           D     E  |  CR (ERROR)
+           E/A   0  |  HH -> PC
+           E/A   E/A|  merge/CR
+         */
+        if(!palmEntry && isArchived(pcEntry))
+        {
+            return true;
+        }
+        else if(!palmEntry && !pcEntry->isEmpty())
+        {
+            // PC->HH
+            bool res = pcCopyToPalm(pcEntry, 0L, 0L);
+            return res;
+        }
+        else if(!palmEntry && pcEntry->isEmpty())
+        {
+            // everything's empty -> ERROR
+            return false;
+        }
+        else if((isDeleted(palmEntry) || isArchived(palmEntry)) && pcEntry->isEmpty())
+        {
+            if(isArchived(palmEntry))
+                return palmCopyToPC(pcEntry, 0L, palmEntry);
+            else
+                // this happens if you add a record on the handheld and delete it again before you do the next sync
+                return pcDeleteEntry(pcEntry, 0L, palmEntry);
+        }
+        else if((isDeleted(palmEntry) || isArchived(palmEntry)) && !pcEntry->isEmpty())
+        {
+            // CR (ERROR)
+            return smartMergeEntry(pcEntry, 0L, palmEntry);
+        }
+        else if(pcEntry->isEmpty())
+        {
+            // HH->PC
+            return palmCopyToPC(pcEntry, 0L, palmEntry);
+        }
+        else
+        {
+            // Conflict Resolution
+            return smartMergeEntry(pcEntry, 0L, palmEntry);
+        }
+    } // !backupEntry
+    else
+    {
+        /*
+        Resolution matrix:
+          1) if HH.(empty| (deleted &! archived) ) -> { if (PC==B) -> delete, else -> CR }
+             if HH.archived -> {if (PC==B) -> copyToPC, else -> CR }
+             if PC.empty -> { if (HH==B) -> delete, else -> CR }
+             if PC.archived -> {if (HH==B) -> delete on HH, else CR }
+          2) if PC==HH -> { update B, update ID of PC if needed }
+          3) if PC==B -> { HH!=PC, thus HH modified, so copy HH->PC }
+             if HH==B -> { PC!=HH, thus PC modified, so copy PC->HH }
+          4) else: all three PCEntrys are different -> CR
+        */
 
-		if ( !palmEntry || isDeleted(palmEntry) )
-		{
-			if ( _equal( backupEntry, pcEntry ) || pcEntry->isEmpty() )
-			{
-				return pcDeleteEntry( pcEntry, backupEntry, 0L );
-			}
-			else
-			{
-				return smartMergeEntry( pcEntry, backupEntry, 0L );
-			}
-		}
-		else if ( pcEntry->isEmpty() )
-		{
-			if (*palmEntry == *backupEntry)
-			{
-				return pcDeleteEntry( pcEntry, backupEntry, palmEntry );
-			}
-			else
-			{
-				return smartMergeEntry( pcEntry, backupEntry, palmEntry );
-			}
-		}
-		else if ( _equal( palmEntry, pcEntry ) )
-		{
-			// update Backup, update ID of PC if neededd
-			return backupSaveEntry( palmEntry );
-		}
-		else if ( _equal( backupEntry, pcEntry ) )
-		{
+        if(!palmEntry || isDeleted(palmEntry))
+        {
+            if(_equal(backupEntry, pcEntry) || pcEntry->isEmpty())
+            {
+                return pcDeleteEntry(pcEntry, backupEntry, 0L);
+            }
+            else
+            {
+                return smartMergeEntry(pcEntry, backupEntry, 0L);
+            }
+        }
+        else if(pcEntry->isEmpty())
+        {
+            if(*palmEntry == *backupEntry)
+            {
+                return pcDeleteEntry(pcEntry, backupEntry, palmEntry);
+            }
+            else
+            {
+                return smartMergeEntry(pcEntry, backupEntry, palmEntry);
+            }
+        }
+        else if(_equal(palmEntry, pcEntry))
+        {
+            // update Backup, update ID of PC if neededd
+            return backupSaveEntry(palmEntry);
+        }
+        else if(_equal(backupEntry, pcEntry))
+        {
 #ifdef DEBUG
-			DEBUGKPILOT << "Flags: " << palmEntry->getAttrib() << ", isDeleted=" <<
-				isDeleted( palmEntry ) << ", isArchived=" << isArchived( palmEntry )
-				<< endl;
+            DEBUGKPILOT << "Flags: " << palmEntry->getAttrib() << ", isDeleted=" <<
+                        isDeleted(palmEntry) << ", isArchived=" << isArchived(palmEntry)
+                        << endl;
 #endif
-			if ( isDeleted( palmEntry ) )
-			{
-				return pcDeleteEntry( pcEntry, backupEntry, palmEntry );
-			}
-			else
-			{
-				return palmCopyToPC( pcEntry, backupEntry, palmEntry );
-			}
-		}
-		else if ( *palmEntry == *backupEntry )
-		{
-			return pcCopyToPalm( pcEntry, backupEntry, palmEntry );
-		}
-		else
-		{
-			// CR, since all are different
-			return smartMergeEntry( pcEntry, backupEntry, palmEntry );
-		}
-	} // backupEntry
-	return false;
+            if(isDeleted(palmEntry))
+            {
+                return pcDeleteEntry(pcEntry, backupEntry, palmEntry);
+            }
+            else
+            {
+                return palmCopyToPC(pcEntry, backupEntry, palmEntry);
+            }
+        }
+        else if(*palmEntry == *backupEntry)
+        {
+            return pcCopyToPalm(pcEntry, backupEntry, palmEntry);
+        }
+        else
+        {
+            // CR, since all are different
+            return smartMergeEntry(pcEntry, backupEntry, palmEntry);
+        }
+    } // backupEntry
+    return false;
 }
 
-bool RecordConduit::pcCopyToPalm( PCEntry *pcEntry, PilotAppCategory *backupEntry,
-		PilotAppCategory*palmEntry )
+bool RecordConduit::pcCopyToPalm(PCEntry *pcEntry, PilotAppCategory *backupEntry,
+                                 PilotAppCategory *palmEntry)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( pcEntry->isEmpty() ) return false;
-	PilotAppCategory *hhEntry = palmEntry;
-	bool hhEntryCreated = false;
-	if ( !hhEntry )
-	{
-		hhEntry = createPalmEntry( 0 );
-		hhEntryCreated=true;
-	}
-	_copy( hhEntry, pcEntry );
+    if(pcEntry->isEmpty()) return false;
+    PilotAppCategory *hhEntry = palmEntry;
+    bool hhEntryCreated = false;
+    if(!hhEntry)
+    {
+        hhEntry = createPalmEntry(0);
+        hhEntryCreated = true;
+    }
+    _copy(hhEntry, pcEntry);
 #ifdef DEBUG
-	DEBUGKPILOT << "palmEntry->id=" << hhEntry->id() << ", pcEntry.ID=" <<
-		pcEntry->uid() << endl;
+    DEBUGKPILOT << "palmEntry->id=" << hhEntry->id() << ", pcEntry.ID=" <<
+                pcEntry->uid() << endl;
 #endif
 
-	if( palmSaveEntry( hhEntry, pcEntry ) )
-	{
+    if(palmSaveEntry(hhEntry, pcEntry))
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << "Entry palmEntry->id=" <<
-		hhEntry->id() << "saved to palm, now updating pcEntry->uid()=" << pcEntry->uid() << endl;
+        DEBUGKPILOT << "Entry palmEntry->id=" <<
+                    hhEntry->id() << "saved to palm, now updating pcEntry->uid()=" << pcEntry->uid() << endl;
 #endif
-		pcSaveEntry( pcEntry, backupEntry, hhEntry );
-	}
-	if ( hhEntryCreated ) KPILOT_DELETE( hhEntry );
-	return true;
+        pcSaveEntry(pcEntry, backupEntry, hhEntry);
+    }
+    if(hhEntryCreated) KPILOT_DELETE(hhEntry);
+    return true;
 }
 
 
 
 
-bool RecordConduit::palmCopyToPC( PCEntry *pcEntry, PilotAppCategory *backupEntry,
-		PilotAppCategory *palmEntry )
+bool RecordConduit::palmCopyToPC(PCEntry *pcEntry, PilotAppCategory *backupEntry,
+                                 PilotAppCategory *palmEntry)
 {
-	FUNCTIONSETUP;
-	if ( !palmEntry )
-	{
-		return false;
-	}
-	_copy( pcEntry, palmEntry );
-	pcSaveEntry( pcEntry, backupEntry, palmEntry );
-	backupSaveEntry( palmEntry );
-	return true;
+    FUNCTIONSETUP;
+    if(!palmEntry)
+    {
+        return false;
+    }
+    _copy(pcEntry, palmEntry);
+    pcSaveEntry(pcEntry, backupEntry, palmEntry);
+    backupSaveEntry(palmEntry);
+    return true;
 }
 
 
@@ -946,124 +951,124 @@ bool RecordConduit::palmCopyToPC( PCEntry *pcEntry, PilotAppCategory *backupEntr
 
 
 
-bool RecordConduit::palmSaveEntry( PilotAppCategory *palmEntry, PCEntry *pcEntry )
+bool RecordConduit::palmSaveEntry(PilotAppCategory *palmEntry, PCEntry *pcEntry)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << "Saving to pilot " << palmEntry->id() << endl;
+    DEBUGKPILOT << "Saving to pilot " << palmEntry->id() << endl;
 #endif
 
-	PilotRecord *pilotRec = palmEntry->pack();
-	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
+    PilotRecord *pilotRec = palmEntry->pack();
+    recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 #ifdef DEBUG
-	DEBUGKPILOT << "PilotRec nach writeRecord (" << pilotId <<
-		": ID=" << pilotRec->id() << endl;
+    DEBUGKPILOT << "PilotRec nach writeRecord (" << pilotId <<
+                ": ID=" << pilotRec->id() << endl;
 #endif
-	fLocalDatabase->writeRecord( pilotRec );
-	KPILOT_DELETE( pilotRec );
+    fLocalDatabase->writeRecord(pilotRec);
+    KPILOT_DELETE(pilotRec);
 
-	// pilotId == 0 if using local db, so don't overwrite the valid id
-	if ( pilotId != 0 )
-	{
-		palmEntry->setID( pilotId );
-		if ( !mSyncedIds.contains( pilotId ) )
-		{
-			mSyncedIds.append( pilotId );
-		}
-	}
+    // pilotId == 0 if using local db, so don't overwrite the valid id
+    if(pilotId != 0)
+    {
+        palmEntry->setID(pilotId);
+        if(!mSyncedIds.contains(pilotId))
+        {
+            mSyncedIds.append(pilotId);
+        }
+    }
 
-	recordid_t hhId( pcEntry->recid() );
-	if ( hhId != pilotId )
-	{
-		pcEntry->setRecid( pilotId );
-		return true;
-	}
+    recordid_t hhId(pcEntry->recid());
+    if(hhId != pilotId)
+    {
+        pcEntry->setRecid(pilotId);
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 
 
-bool RecordConduit::backupSaveEntry( PilotAppCategory *backup )
+bool RecordConduit::backupSaveEntry(PilotAppCategory *backup)
 {
-	FUNCTIONSETUP;
-	if ( !backup ) return false;
+    FUNCTIONSETUP;
+    if(!backup) return false;
 
 
 #ifdef DEBUG
-//	showPilotAppCategory( backup );
+    //	showPilotAppCategory( backup );
 #endif
-	PilotRecord *pilotRec = backup->pack();
-	fLocalDatabase->writeRecord( pilotRec );
-	KPILOT_DELETE( pilotRec );
-	return true;
+    PilotRecord *pilotRec = backup->pack();
+    fLocalDatabase->writeRecord(pilotRec);
+    KPILOT_DELETE(pilotRec);
+    return true;
 }
 
 
 
-bool RecordConduit::pcSaveEntry( PCEntry *pcEntry, PilotAppCategory *,
-	PilotAppCategory * )
+bool RecordConduit::pcSaveEntry(PCEntry *pcEntry, PilotAppCategory *,
+                                PilotAppCategory *)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << "Before _savepcEntry, pcEntry->uid()=" <<
-		pcEntry->uid() << endl;
+    DEBUGKPILOT << "Before _savepcEntry, pcEntry->uid()=" <<
+                pcEntry->uid() << endl;
 #endif
-	if ( pcEntry->recid() != 0 )
-	{
-		mEntryMap.insert( pcEntry->recid(), pcEntry->uid() );
-	}
+    if(pcEntry->recid() != 0)
+    {
+        mEntryMap.insert(pcEntry->recid(), pcEntry->uid());
+    }
 
-	mPCData->updateEntry( pcEntry );
-	return true;
+    mPCData->updateEntry(pcEntry);
+    return true;
 }
 
 
 
-bool RecordConduit::pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEntry,
-	PilotAppCategory *palmEntry )
+bool RecordConduit::pcDeleteEntry(PCEntry *pcEntry, PilotAppCategory *backupEntry,
+                                  PilotAppCategory *palmEntry)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( palmEntry )
-	{
-		if ( !mSyncedIds.contains( palmEntry->id() ) )
-		{
-			mSyncedIds.append(palmEntry->id());
-		}
-		palmEntry->makeDeleted();
-		PilotRecord *pilotRec = palmEntry->pack();
-		pilotRec->setDeleted();
-		mPalmIndex--;
-		fDatabase->writeRecord( pilotRec );
-		fLocalDatabase->writeRecord( pilotRec );
-		mSyncedIds.append( pilotRec->id() );
-		KPILOT_DELETE( pilotRec );
-	}
-	else if ( backupEntry )
-	{
-		if ( !mSyncedIds.contains( backupEntry->id() ) )
-		{
-			mSyncedIds.append( backupEntry->id() );
-		}
-		backupEntry->makeDeleted();
-		PilotRecord *pilotRec = backupEntry->pack();
-		pilotRec->setDeleted();
-		mPalmIndex--;
-		fLocalDatabase->writeRecord( pilotRec );
-		mSyncedIds.append( pilotRec->id() );
-		KPILOT_DELETE( pilotRec );
-	}
-	if ( !pcEntry->isEmpty() )
-	{
+    if(palmEntry)
+    {
+        if(!mSyncedIds.contains(palmEntry->id()))
+        {
+            mSyncedIds.append(palmEntry->id());
+        }
+        palmEntry->makeDeleted();
+        PilotRecord *pilotRec = palmEntry->pack();
+        pilotRec->setDeleted();
+        mPalmIndex--;
+        fDatabase->writeRecord(pilotRec);
+        fLocalDatabase->writeRecord(pilotRec);
+        mSyncedIds.append(pilotRec->id());
+        KPILOT_DELETE(pilotRec);
+    }
+    else if(backupEntry)
+    {
+        if(!mSyncedIds.contains(backupEntry->id()))
+        {
+            mSyncedIds.append(backupEntry->id());
+        }
+        backupEntry->makeDeleted();
+        PilotRecord *pilotRec = backupEntry->pack();
+        pilotRec->setDeleted();
+        mPalmIndex--;
+        fLocalDatabase->writeRecord(pilotRec);
+        mSyncedIds.append(pilotRec->id());
+        KPILOT_DELETE(pilotRec);
+    }
+    if(!pcEntry->isEmpty())
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << fname << " removing " << pcEntry->uid() << endl;
+        DEBUGKPILOT << fname << " removing " << pcEntry->uid() << endl;
 #endif
-		mPCData->removeEntry( pcEntry );
-	}
-	return true;
+        mPCData->removeEntry(pcEntry);
+    }
+    return true;
 }
 
 
@@ -1086,54 +1091,54 @@ bool RecordConduit::pcDeleteEntry( PCEntry *pcEntry, PilotAppCategory *backupEnt
 // TODO: right now entries are equal if both first/last name and organization are
 //  equal. This rules out two entries for the same person(e.g. real home and weekend home)
 //  or two persons with the same name where you don't know the organization.!!!
-RecordConduit::PCEntry *RecordConduit::findMatch( PilotAppCategory *palmEntry ) const
+RecordConduit::PCEntry *RecordConduit::findMatch(PilotAppCategory *palmEntry) const
 {
-	FUNCTIONSETUP;
-	if ( !palmEntry )
-		return 0;
+    FUNCTIONSETUP;
+    if(!palmEntry)
+        return 0;
 
-	// TODO: also search with the pilotID
-	// first, use the pilotID to UID map to find the appropriate record
-	if( !isFirstSync() && ( palmEntry->id() > 0) )
-	{
-		QString id( mEntryMap[palmEntry->id()] );
+    // TODO: also search with the pilotID
+    // first, use the pilotID to UID map to find the appropriate record
+    if(!isFirstSync() && (palmEntry->id() > 0))
+    {
+        QString id(mEntryMap[palmEntry->id()]);
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": PilotRecord has id " << palmEntry->id() << ", mapped to " << id << endl;
+        DEBUGKPILOT << fname << ": PilotRecord has id " << palmEntry->id() << ", mapped to " << id << endl;
 #endif
-		if( !id.isEmpty() )
-		{
-			PCEntry *res = mPCData->findByUid( id );
-			if ( !res && !res->isEmpty() ) return res;
-			KPILOT_DELETE( res );
+        if(!id.isEmpty())
+        {
+            PCEntry *res = mPCData->findByUid(id);
+            if(!res && !res->isEmpty()) return res;
+            KPILOT_DELETE(res);
 #ifdef DEBUG
-			DEBUGKPILOT << fname << ": PilotRecord has id " << palmEntry->id() <<
-				", but could not be found on the PC side" << endl;
+            DEBUGKPILOT << fname << ": PilotRecord has id " << palmEntry->id() <<
+                        ", but could not be found on the PC side" << endl;
 #endif
-		}
-	}
+        }
+    }
 
-	for ( PCData::Iterator iter = mPCData->begin(); !mPCData->atEnd( iter ); ++iter )
-	{
-		PCEntry *abEntry = *iter;
-		recordid_t rid( abEntry->recid() );
-		if ( rid>0 )
-		{
-			if ( rid == palmEntry->id() )
-				return abEntry;// yes, we found it
-			// skip this PCEntry, as it has a different corresponding address on the handheld
-			//if ( mAllIds.contains( rid ) ) continue;
-		}
+    for(PCData::Iterator iter = mPCData->begin(); !mPCData->atEnd(iter); ++iter)
+    {
+        PCEntry *abEntry = *iter;
+        recordid_t rid(abEntry->recid());
+        if(rid > 0)
+        {
+            if(rid == palmEntry->id())
+                return abEntry;// yes, we found it
+            // skip this PCEntry, as it has a different corresponding address on the handheld
+            //if ( mAllIds.contains( rid ) ) continue;
+        }
 
-		if ( _equal( palmEntry, abEntry, eqFlagsAlmostAll ) )
-		{
-			return abEntry;
-		}
-		KPILOT_DELETE( abEntry );
-	}
+        if(_equal(palmEntry, abEntry, eqFlagsAlmostAll))
+        {
+            return abEntry;
+        }
+        KPILOT_DELETE(abEntry);
+    }
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Could not find any entry matching Palm record with id " << QString::number( palmEntry->id() ) << endl;
+    DEBUGKPILOT << fname << ": Could not find any entry matching Palm record with id " << QString::number(palmEntry->id()) << endl;
 #endif
-	return 0;
+    return 0;
 }
 
 #endif

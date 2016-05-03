@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
- * USA. 
+ * USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -38,50 +38,50 @@
 
 
 #ifndef HAVE_W32_SYSTEM
-pid_t 
-_assuan_waitpid (pid_t pid, int *status, int options)
+pid_t
+_assuan_waitpid(pid_t pid, int *status, int options)
 {
-  return waitpid (pid, status, options);
+    return waitpid(pid, status, options);
 }
 #endif
 
 
 ssize_t
-_assuan_simple_read (assuan_context_t ctx, void *buffer, size_t size)
+_assuan_simple_read(assuan_context_t ctx, void *buffer, size_t size)
 {
-  return read (ctx->inbound.fd, buffer, size);
+    return read(ctx->inbound.fd, buffer, size);
 }
 
 ssize_t
-_assuan_simple_write (assuan_context_t ctx, const void *buffer, size_t size)
+_assuan_simple_write(assuan_context_t ctx, const void *buffer, size_t size)
 {
-  return write (ctx->outbound.fd, buffer, size);
+    return write(ctx->outbound.fd, buffer, size);
 }
 
 
 ssize_t
-_assuan_simple_sendmsg (assuan_context_t ctx, struct msghdr *msg)
+_assuan_simple_sendmsg(assuan_context_t ctx, struct msghdr *msg)
 {
 #ifdef HAVE_W32_SYSTEM
-  return _assuan_error (ASSUAN_Not_Implemented);
+    return _assuan_error(ASSUAN_Not_Implemented);
 #else
-  int ret;
-  while ( (ret = sendmsg (ctx->outbound.fd, msg, 0)) == -1 && errno == EINTR)
-    ;
-  return ret;
+    int ret;
+    while((ret = sendmsg(ctx->outbound.fd, msg, 0)) == -1 && errno == EINTR)
+        ;
+    return ret;
 #endif
 }
 
 
 ssize_t
-_assuan_simple_recvmsg (assuan_context_t ctx, struct msghdr *msg)
+_assuan_simple_recvmsg(assuan_context_t ctx, struct msghdr *msg)
 {
 #ifdef HAVE_W32_SYSTEM
-  return _assuan_error (ASSUAN_Not_Implemented);
+    return _assuan_error(ASSUAN_Not_Implemented);
 #else
-  int ret;
-  while ( (ret = recvmsg (ctx->inbound.fd, msg, 0)) == -1 && errno == EINTR)
-    ;
-  return ret;
+    int ret;
+    while((ret = recvmsg(ctx->inbound.fd, msg, 0)) == -1 && errno == EINTR)
+        ;
+    return ret;
 #endif
 }

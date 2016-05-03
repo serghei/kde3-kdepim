@@ -92,8 +92,8 @@ class DW_EXPORT DwBody : public DwMessageComponent {
 public:
 
     DwBody();
-    DwBody(const DwBody& aBody);
-    DwBody(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwBody(const DwBody &aBody);
+    DwBody(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwBody} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -111,7 +111,7 @@ public:
 
     virtual ~DwBody();
 
-    const DwBody& operator = (const DwBody& aBody);
+    const DwBody &operator = (const DwBody &aBody);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aBody}.  The parent node of the {\tt DwBody} object
     //. is not changed.
@@ -160,38 +160,38 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwBody} on the free store that has the same
     //. value as this {\tt DwBody} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    DwBodyPart* FirstBodyPart() const;
+    DwBodyPart *FirstBodyPart() const;
     //. For a multipart {\tt DwBody}, this member function returns the
     //. first contained {\tt DwBodyPart} object.
     //. Use {\tt DwBodyPart::Next()} to iterate through the list of
     //. {\tt DwBodyPart}s.
 
-    void AddBodyPart(DwBodyPart* aPart);
+    void AddBodyPart(DwBodyPart *aPart);
     //. For a multipart {\tt DwBody}, this member function appends a
     //. {\tt DwBodyPart} object to the list.  Any {\tt DwBodyPart} objects
     //. added to a {\tt DwBody} object's list will be deleted by the
     //. {\tt DwBody} object's destructor.
 
-    void RemoveBodyPart(DwBodyPart* aPart);
+    void RemoveBodyPart(DwBodyPart *aPart);
     //. For a multipart {\tt DwBody}, this member function removes a
     //. {\tt DwBodyPart} object from the list. The caller is responsible
     //. for deleting the bodypart afterwards!
 
-    DwMessage* Message() const;
+    DwMessage *Message() const;
     //. For a {\tt DwBody} with content type of message, this member function
     //. returns the {\tt DwMessage} encapsulated in it.
 
-    void SetMessage(DwMessage* aMessage);
+    void SetMessage(DwMessage *aMessage);
     //. For a {\tt DwBody} with content type of message, this member function
     //. sets the {\tt DwMessage} object it contains.
 
-    static DwBody* NewBody(const DwString& aStr, DwMessageComponent* aParent);
+    static DwBody *NewBody(const DwString &aStr, DwMessageComponent *aParent);
     //. Creates a new {\tt DwBody} object on the free store.
     //. If the static data member {\tt sNewBody} is {\tt NULL},
     //. this member function will create a new {\tt DwBody}
@@ -201,7 +201,7 @@ public:
     //. {\tt DwBody}, and return that object.
 
     //+ Var sNewBody
-    static DwBody* (*sNewBody)(const DwString&, DwMessageComponent*);
+    static DwBody *(*sNewBody)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewBody} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class
     //. derived from {\tt DwBody}.
@@ -220,36 +220,36 @@ protected:
     //. Contains the epilogue -- the text following the last boundary --
     //. in a ``multipart/*'' media type.
 
-    DwBodyPart* mFirstBodyPart;
+    DwBodyPart *mFirstBodyPart;
     //. Points to the first body part in a ``multipart/*'' media type.
     //. Is {\tt NULL} if there are no body parts.
 
-    DwMessage*  mMessage;
+    DwMessage  *mMessage;
     //. Points to the contained message, in a ``message/*'' media type.
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
-    void _AddBodyPart(DwBodyPart*);
+    void _AddBodyPart(DwBodyPart *);
     //. Adds a body part to a multipart body.  This function differs
     //. from {\tt AddBodyPart} in that it does not set the is-modified
     //. flag.
 
-    void _RemoveBodyPart(DwBodyPart*);
+    void _RemoveBodyPart(DwBodyPart *);
     //. Removes a body part from a multipart body.  This function differs
     //. from {\tt RemoveBodyPart} in that it does not set the is-modified
     //. flag.
 
-    void _SetMessage(DwMessage*);
+    void _SetMessage(DwMessage *);
     //. Sets a message to a body.  This function differs from
     //. {\tt SetMessage()} in that it does not set the is-modified
     //. flag.
 
-    void CopyBodyParts(const DwBodyPart* aFirst);
+    void CopyBodyParts(const DwBodyPart *aFirst);
 
 public:
     void DeleteBodyParts();
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -267,7 +267,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

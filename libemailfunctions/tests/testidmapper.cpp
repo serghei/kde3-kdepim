@@ -23,32 +23,32 @@
 
 #include "idmapper.h"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
+    QApplication app(argc, argv);
 
-  KPIM::IdMapper mapper( "test.uidmap" ) ;
+    KPIM::IdMapper mapper("test.uidmap") ;
 
-  mapper.setRemoteId( "foo", "bar" );
-  mapper.setRemoteId( "yes", "klar" );
-  mapper.setRemoteId( "no", "nee" );
+    mapper.setRemoteId("foo", "bar");
+    mapper.setRemoteId("yes", "klar");
+    mapper.setRemoteId("no", "nee");
 
-  qDebug( "full:\n%s", mapper.asString().latin1() );
+    qDebug("full:\n%s", mapper.asString().latin1());
 
-  mapper.save();
+    mapper.save();
 
-  mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().latin1() );
+    mapper.clear();
+    qDebug("empty:\n%s", mapper.asString().latin1());
 
-  mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().latin1() );
+    mapper.load();
+    qDebug("full again:\n%s", mapper.asString().latin1());
 
-  mapper.save();
+    mapper.save();
 
-  mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().latin1() );
+    mapper.clear();
+    qDebug("empty:\n%s", mapper.asString().latin1());
 
-  mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().latin1() );
-  return 0;
+    mapper.load();
+    qDebug("full again:\n%s", mapper.asString().latin1());
+    return 0;
 }

@@ -23,6 +23,6 @@
 #include <kglobal.h>
 #else
 // define kasciistricmp to this kdepim symbol (renamed to avoid problems when upgrading kdelibs later)
-int kdepim_kasciistricmp( const char *str1, const char *str2 );
+int kdepim_kasciistricmp(const char *str1, const char *str2);
 #define kasciistricmp kdepim_kasciistricmp
 #endif

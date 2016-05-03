@@ -21,28 +21,51 @@
 
 #include "kio_proto.h"
 
-class Process_Protocol : public KIO_Protocol
-{
+class Process_Protocol : public KIO_Protocol {
 public:
-	Process_Protocol() { }
-	virtual ~Process_Protocol() { }
+    Process_Protocol() { }
+    virtual ~Process_Protocol() { }
 
-	virtual KIO_Protocol * clone() const { return new Process_Protocol; }
+    virtual KIO_Protocol *clone() const
+    {
+        return new Process_Protocol;
+    }
 
-	virtual QString protocol() const { return "process"; }
-	virtual QString configName() const { return "process"; }
+    virtual QString protocol() const
+    {
+        return "process";
+    }
+    virtual QString configName() const
+    {
+        return "process";
+    }
 
-	virtual bool canReadSubjects() const { return false; }
-	virtual bool canDeleteMail() const { return false; }
-	virtual bool canReadMail() const { return false; }
-	virtual bool fullMessage() const { return false; }
+    virtual bool canReadSubjects() const
+    {
+        return false;
+    }
+    virtual bool canDeleteMail() const
+    {
+        return false;
+    }
+    virtual bool canReadMail() const
+    {
+        return false;
+    }
+    virtual bool fullMessage() const
+    {
+        return false;
+    }
 
-	virtual QString mailboxName() const { return i18n("Program: "); }
+    virtual QString mailboxName() const
+    {
+        return i18n("Program: ");
+    }
 
-	virtual void configFillGroupBoxes( QStringList* ) const;
-	virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
-	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
-	virtual void writeEntries( QMap< QString, QString >* ) const;
+    virtual void configFillGroupBoxes(QStringList *) const;
+    virtual void configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *) const;
+    virtual void readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const;
+    virtual void writeEntries(QMap< QString, QString > *) const;
 };
 
 #endif

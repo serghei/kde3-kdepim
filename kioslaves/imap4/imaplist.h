@@ -30,108 +30,107 @@ class parseString;
 class imapParser;
 
 //the class handling the responses from list
-class imapList
-{
+class imapList {
 public:
 
-  imapList ();
-  imapList (const QString &, imapParser &);
-  imapList (const imapList &);
-    imapList & operator = (const imapList &);
+    imapList();
+    imapList(const QString &, imapParser &);
+    imapList(const imapList &);
+    imapList &operator = (const imapList &);
 
-  // process the attributes  
-  void parseAttributes( parseString & );  
+    // process the attributes
+    void parseAttributes(parseString &);
 
-  // return all atributes concatenated
-  QString attributesAsString() const 
-  { 
-    return attributes_.join(","); 
-  }
+    // return all atributes concatenated
+    QString attributesAsString() const
+    {
+        return attributes_.join(",");
+    }
 
-  QString hierarchyDelimiter () const
-  {
-    return hierarchyDelimiter_;
-  }
-  void setHierarchyDelimiter (const QString & _str)
-  {
-    hierarchyDelimiter_ = _str;
-  }
+    QString hierarchyDelimiter() const
+    {
+        return hierarchyDelimiter_;
+    }
+    void setHierarchyDelimiter(const QString &_str)
+    {
+        hierarchyDelimiter_ = _str;
+    }
 
-  QString name () const
-  {
-    return name_;
-  }
-  void setName (const QString & _str)
-  {
-    name_ = _str;
-  }
+    QString name() const
+    {
+        return name_;
+    }
+    void setName(const QString &_str)
+    {
+        name_ = _str;
+    }
 
-  bool noInferiors () const
-  {
-    return noInferiors_;
-  }
-  void setNoInferiors (bool _val)
-  {
-    noInferiors_ = _val;
-  }
+    bool noInferiors() const
+    {
+        return noInferiors_;
+    }
+    void setNoInferiors(bool _val)
+    {
+        noInferiors_ = _val;
+    }
 
-  bool noSelect () const
-  {
-    return noSelect_;
-  }
-  void setNoSelect (bool _val)
-  {
-    noSelect_ = _val;
-  }
+    bool noSelect() const
+    {
+        return noSelect_;
+    }
+    void setNoSelect(bool _val)
+    {
+        noSelect_ = _val;
+    }
 
-  bool hasChildren () const
-  {
-    return hasChildren_;
-  }
-  void setHasChildren (bool _val)
-  {
-    hasChildren_ = _val;
-  }
+    bool hasChildren() const
+    {
+        return hasChildren_;
+    }
+    void setHasChildren(bool _val)
+    {
+        hasChildren_ = _val;
+    }
 
-  bool hasNoChildren () const
-  {
-    return hasNoChildren_;
-  }
-  void setHasNoChildren (bool _val)
-  {
-    hasNoChildren_ = _val;
-  }
+    bool hasNoChildren() const
+    {
+        return hasNoChildren_;
+    }
+    void setHasNoChildren(bool _val)
+    {
+        hasNoChildren_ = _val;
+    }
 
-  bool marked () const
-  {
-    return marked_;
-  }
-  void setMarked (bool _val)
-  {
-    marked_ = _val;
-  }
+    bool marked() const
+    {
+        return marked_;
+    }
+    void setMarked(bool _val)
+    {
+        marked_ = _val;
+    }
 
-  bool unmarked () const
-  {
-    return unmarked_;
-  }
-  void setUnmarked (bool _val)
-  {
-    unmarked_ = _val;
-  }
+    bool unmarked() const
+    {
+        return unmarked_;
+    }
+    void setUnmarked(bool _val)
+    {
+        unmarked_ = _val;
+    }
 
 private:
 
-  imapParser* parser_;
-  QString hierarchyDelimiter_;
-  QString name_;
-  bool noInferiors_;
-  bool noSelect_;
-  bool marked_;
-  bool unmarked_;
-  bool hasChildren_;
-  bool hasNoChildren_;
-  QStringList attributes_;
+    imapParser *parser_;
+    QString hierarchyDelimiter_;
+    QString name_;
+    bool noInferiors_;
+    bool noSelect_;
+    bool marked_;
+    bool unmarked_;
+    bool hasChildren_;
+    bool hasNoChildren_;
+    QStringList attributes_;
 };
 
 #endif

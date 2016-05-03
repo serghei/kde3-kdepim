@@ -41,26 +41,26 @@ class QString;
 
 namespace KMail {
 
-  class FileHtmlWriter : public KMail::HtmlWriter {
-  public:
-    FileHtmlWriter( const QString & filename );
+class FileHtmlWriter : public KMail::HtmlWriter {
+public:
+    FileHtmlWriter(const QString &filename);
     virtual ~FileHtmlWriter();
 
-    void begin( const QString & cssDefs );
+    void begin(const QString &cssDefs);
     void end();
     void reset();
-    void write( const QString & str );
-    void queue( const QString & str );
+    void write(const QString &str);
+    void queue(const QString &str);
     void flush();
-    void embedPart( const QCString & contentId, const QString & url );
+    void embedPart(const QCString &contentId, const QString &url);
 
-  private:
+private:
     void openOrWarn();
 
-  private:
+private:
     QFile mFile;
     QTextStream mStream;
-  };
+};
 
 } // namespace KMail
 

@@ -46,10 +46,10 @@
 
 namespace KMail {
 
-LocalSubscriptionDialog::LocalSubscriptionDialog( QWidget *parent, const QString &caption,
-    ImapAccountBase *acct, QString startPath )
-  : SubscriptionDialog( parent, caption, acct, startPath ),
-    mAccount( acct )
+LocalSubscriptionDialog::LocalSubscriptionDialog(QWidget *parent, const QString &caption,
+        ImapAccountBase *acct, QString startPath)
+    : SubscriptionDialog(parent, caption, acct, startPath),
+      mAccount(acct)
 {
 }
 
@@ -61,86 +61,92 @@ LocalSubscriptionDialog::~LocalSubscriptionDialog()
 
 void LocalSubscriptionDialog::listAllAvailableAndCreateItems()
 {
-  if ( mAccount->onlySubscribedFolders() )
-    mSubscribed = true;
-  SubscriptionDialog::listAllAvailableAndCreateItems();
+    if(mAccount->onlySubscribedFolders())
+        mSubscribed = true;
+    SubscriptionDialog::listAllAvailableAndCreateItems();
 }
 
 /* virtual */
 void LocalSubscriptionDialog::processFolderListing()
 {
-  uint done = 0;
-  for (uint i = mCount; i < mFolderNames.count(); ++i)
-  {
-    // give the dialog a chance to repaint
-    if (done == 1000)
+    uint done = 0;
+    for(uint i = mCount; i < mFolderNames.count(); ++i)
     {
-      emit listChanged();
-      QTimer::singleShot(0, this, SLOT(processItems()));
-      return;
+        // give the dialog a chance to repaint
+        if(done == 1000)
+        {
+            emit listChanged();
+            QTimer::singleShot(0, this, SLOT(processItems()));
+            return;
+        }
+        ++mCount;
+        ++done;
+        createListViewItem(i);
     }
-    ++mCount;
-    ++done;
-    createListViewItem( i );
-  }
 
-  if ( mPrefixList.isEmpty() && !mSubscribed )
-    loadingComplete(); // no need to load subscribed folders
-  else
-    processNext();
+    if(mPrefixList.isEmpty() && !mSubscribed)
+        loadingComplete(); // no need to load subscribed folders
+    else
+        processNext();
 }
 
 void LocalSubscriptionDialog::setCheckedStateOfAllItems()
 {
-   // iterate over all items and check them, unless they are
-   // in the account's local subscription blacklist
-   QDictIterator<GroupItem> it( mItemDict );
-   for ( ; it.current(); ++it ) {
-     GroupItem *item = it.current();
-     QString path = it.currentKey();
-     item->setOn( mAccount->locallySubscribedTo( path ) );
-   }
+    // iterate over all items and check them, unless they are
+    // in the account's local subscription blacklist
+    QDictIterator<GroupItem> it(mItemDict);
+    for(; it.current(); ++it)
+    {
+        GroupItem *item = it.current();
+        QString path = it.currentKey();
+        item->setOn(mAccount->locallySubscribedTo(path));
+    }
 }
 
 /*virtual*/
 void LocalSubscriptionDialog::doSave()
 {
-  bool somethingHappened = false;
-  // subscribe
-  QListViewItemIterator it(subView);
-  for ( ; it.current(); ++it) {
-    static_cast<ImapAccountBase*>(account())->changeLocalSubscription(
-        static_cast<GroupItem*>(it.current())->info().path, true );
-    somethingHappened = true;
-  }
-
-  // unsubscribe
-  QListViewItemIterator it2(unsubView);
-  if ( unsubView->childCount() > 0 ) {
-    const QString message = i18n("Locally unsubscribing from folders will remove all "
-        "information that is present locally about those folders. The folders will "
-        "not be changed on the server. Press cancel now if you want to make sure "
-        "all local changes have been written to the server by checking mail first.");
-    const QString caption = i18n("Local changes will be lost when unsubscribing");
-    if ( KMessageBox::warningContinueCancel( this, message, caption )
-        != KMessageBox::Cancel ) {
-      somethingHappened = true;
-      for ( ; it2.current(); ++it2) {
-        static_cast<ImapAccountBase*>(account())->changeLocalSubscription(
-            static_cast<GroupItem*>(it2.current())->info().path, false );
-      }
-
+    bool somethingHappened = false;
+    // subscribe
+    QListViewItemIterator it(subView);
+    for(; it.current(); ++it)
+    {
+        static_cast<ImapAccountBase *>(account())->changeLocalSubscription(
+            static_cast<GroupItem *>(it.current())->info().path, true);
+        somethingHappened = true;
     }
-  }
-  if ( somethingHappened ) {
-    kmkernel->acctMgr()->singleCheckMail( mAccount, true);
-  }
+
+    // unsubscribe
+    QListViewItemIterator it2(unsubView);
+    if(unsubView->childCount() > 0)
+    {
+        const QString message = i18n("Locally unsubscribing from folders will remove all "
+                                     "information that is present locally about those folders. The folders will "
+                                     "not be changed on the server. Press cancel now if you want to make sure "
+                                     "all local changes have been written to the server by checking mail first.");
+        const QString caption = i18n("Local changes will be lost when unsubscribing");
+        if(KMessageBox::warningContinueCancel(this, message, caption)
+                != KMessageBox::Cancel)
+        {
+            somethingHappened = true;
+            for(; it2.current(); ++it2)
+            {
+                static_cast<ImapAccountBase *>(account())->changeLocalSubscription(
+                    static_cast<GroupItem *>(it2.current())->info().path, false);
+            }
+
+        }
+    }
+    if(somethingHappened)
+    {
+        kmkernel->acctMgr()->singleCheckMail(mAccount, true);
+    }
 }
 
 void LocalSubscriptionDialog::loadingComplete()
 {
-  setCheckedStateOfAllItems();
-  SubscriptionDialog::loadingComplete();
+    setCheckedStateOfAllItems();
+    SubscriptionDialog::loadingComplete();
 }
 
 } // namespace

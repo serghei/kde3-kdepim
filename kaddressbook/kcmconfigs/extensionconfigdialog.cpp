@@ -29,18 +29,18 @@
 #include "extensionconfigdialog.h"
 #include "extensionwidget.h"
 
-ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
-                                              QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Extension Settings" ), Ok | Cancel, Ok, parent,
-                 name, true, true ), mWidget( 0 ), mConfig( config )
+ExtensionConfigDialog::ExtensionConfigDialog(KAB::ExtensionFactory *factory, KConfig *config,
+        QWidget *parent, const char *name)
+    : KDialogBase(Plain, i18n("Extension Settings"), Ok | Cancel, Ok, parent,
+                  name, true, true), mWidget(0), mConfig(config)
 {
-  QFrame *page = plainPage();
-  QGridLayout *layout = new QGridLayout( page, 1, 1, marginHint(), spacingHint() );
+    QFrame *page = plainPage();
+    QGridLayout *layout = new QGridLayout(page, 1, 1, marginHint(), spacingHint());
 
-  mWidget = factory->configureWidget( page, "ExtensionConfigWidget" );
-  layout->addWidget( mWidget, 0, 0 );
+    mWidget = factory->configureWidget(page, "ExtensionConfigWidget");
+    layout->addWidget(mWidget, 0, 0);
 
-  mWidget->restoreSettings( mConfig );
+    mWidget->restoreSettings(mConfig);
 }
 
 ExtensionConfigDialog::~ExtensionConfigDialog()
@@ -49,9 +49,9 @@ ExtensionConfigDialog::~ExtensionConfigDialog()
 
 void ExtensionConfigDialog::slotOk()
 {
-  mWidget->saveSettings( mConfig );
+    mWidget->saveSettings(mConfig);
 
-  KDialogBase::slotOk();
+    KDialogBase::slotOk();
 }
 
 #include "extensionconfigdialog.moc"

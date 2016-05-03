@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -31,7 +31,7 @@ BasicMessage::BasicMessage()
 }
 
 
-BasicMessage::BasicMessage(DwMessage* aMsg)
+BasicMessage::BasicMessage(DwMessage *aMsg)
 {
     mMessage = aMsg;
 }
@@ -39,17 +39,19 @@ BasicMessage::BasicMessage(DwMessage* aMsg)
 
 BasicMessage::~BasicMessage()
 {
-    if (mMessage != 0) {
+    if(mMessage != 0)
+    {
         delete mMessage;
     }
 }
 
 
-void BasicMessage::TakeMessage(DwMessage* aMsg)
+void BasicMessage::TakeMessage(DwMessage *aMsg)
 {
     // Delete the old DwMessage
 
-    if (mMessage) {
+    if(mMessage)
+    {
         delete mMessage;
     }
 
@@ -59,12 +61,12 @@ void BasicMessage::TakeMessage(DwMessage* aMsg)
 }
 
 
-const DwString& BasicMessage::AsString()
+const DwString &BasicMessage::AsString()
 {
     // Assemble the DwMessage
 
     mMessage->Assemble();
-    
+
     // Return its string contents
 
     return mMessage->AsString();
@@ -73,21 +75,23 @@ const DwString& BasicMessage::AsString()
 
 void BasicMessage::SetAutomaticFields()
 {
-    DwHeaders& headers = mMessage->Headers();
+    DwHeaders &headers = mMessage->Headers();
     headers.MimeVersion().FromString("1.0");
     headers.MessageId().CreateDefault();
 }
 
 
-const DwString& BasicMessage::DateStr() const
+const DwString &BasicMessage::DateStr() const
 {
     // Access the 'Date' header field and return its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasDate()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasDate())
+    {
         return headers.Date().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
@@ -98,12 +102,14 @@ DwUint32 BasicMessage::Date() const
     // Access the 'Date' header field and return its contents as a UNIX
     // time (i.e. POSIX time)
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasDate()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasDate())
+    {
         return headers.Date().AsUnixTime();
     }
-    else {
-        return (DwUint32) -1;
+    else
+    {
+        return (DwUint32) - 1;
     }
 }
 
@@ -117,21 +123,23 @@ void BasicMessage::SetDate(DwUint32 aUnixTime)
 }
 
 
-const DwString& BasicMessage::To() const
+const DwString &BasicMessage::To() const
 {
     // Access the 'To' header field and return its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasTo()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasTo())
+    {
         return headers.To().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
 
 
-void BasicMessage::SetTo(const DwString& aStr)
+void BasicMessage::SetTo(const DwString &aStr)
 {
     // Access the 'To' header field and set its contents from a string
 
@@ -139,21 +147,23 @@ void BasicMessage::SetTo(const DwString& aStr)
 }
 
 
-const DwString& BasicMessage::Cc() const
+const DwString &BasicMessage::Cc() const
 {
     // Access the 'Cc' header field and return its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasCc()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasCc())
+    {
         return headers.Cc().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
 
 
-void BasicMessage::SetCc(const DwString& aStr)
+void BasicMessage::SetCc(const DwString &aStr)
 {
     // Access the 'Cc' header field and set its contents from a string
 
@@ -161,21 +171,23 @@ void BasicMessage::SetCc(const DwString& aStr)
 }
 
 
-const DwString& BasicMessage::Bcc() const
+const DwString &BasicMessage::Bcc() const
 {
     // Access the 'Bcc' header field and return its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasBcc()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasBcc())
+    {
         return headers.Bcc().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
 
 
-void BasicMessage::SetBcc(const DwString& aStr)
+void BasicMessage::SetBcc(const DwString &aStr)
 {
     // Access the 'Bcc' header field and set its contents from a string
 
@@ -183,21 +195,23 @@ void BasicMessage::SetBcc(const DwString& aStr)
 }
 
 
-const DwString& BasicMessage::From() const
+const DwString &BasicMessage::From() const
 {
     // Access the 'From' header field and return its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasFrom()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasFrom())
+    {
         return headers.From().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
 
 
-void BasicMessage::SetFrom(const DwString& aStr)
+void BasicMessage::SetFrom(const DwString &aStr)
 {
     // Access the 'From' header field and set its contents from a string
 
@@ -205,21 +219,23 @@ void BasicMessage::SetFrom(const DwString& aStr)
 }
 
 
-const DwString& BasicMessage::Subject() const
+const DwString &BasicMessage::Subject() const
 {
     // Access the 'Subject' header field and return its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasSubject()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasSubject())
+    {
         return headers.Subject().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
 
 
-void BasicMessage::SetSubject(const DwString& aStr)
+void BasicMessage::SetSubject(const DwString &aStr)
 {
     // Access the 'Subject' header field and set its contents from a string
 
@@ -227,16 +243,18 @@ void BasicMessage::SetSubject(const DwString& aStr)
 }
 
 
-const DwString& BasicMessage::TypeStr() const
+const DwString &BasicMessage::TypeStr() const
 {
     // Access the 'Content-Type' header field and return its 'type'
     // as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentType()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentType())
+    {
         return headers.ContentType().TypeStr();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
@@ -247,17 +265,19 @@ int BasicMessage::Type() const
     // Access the 'Content-Type' header field and return its 'type'
     // as an enumerated type
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentType()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentType())
+    {
         return headers.ContentType().Type();
     }
-    else {
+    else
+    {
         return DwMime::kTypeNull;
     }
 }
 
 
-void BasicMessage::SetTypeStr(const DwString& aStr)
+void BasicMessage::SetTypeStr(const DwString &aStr)
 {
     // Access the 'Content-Type' header field and set its 'type'
     // from a string
@@ -275,16 +295,18 @@ void BasicMessage::SetType(int aType)
 }
 
 
-const DwString& BasicMessage::SubtypeStr() const
+const DwString &BasicMessage::SubtypeStr() const
 {
     // Access the 'Content-Type' header field and return its 'subtype'
     // as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentType()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentType())
+    {
         return headers.ContentType().SubtypeStr();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
@@ -295,17 +317,19 @@ int BasicMessage::Subtype() const
     // Access the 'Content-Type' header field and return its 'subtype'
     // as an enumerated type
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentType()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentType())
+    {
         return headers.ContentType().Subtype();
     }
-    else {
+    else
+    {
         return DwMime::kSubtypeNull;
     }
 }
 
 
-void BasicMessage::SetSubtypeStr(const DwString& aStr)
+void BasicMessage::SetSubtypeStr(const DwString &aStr)
 {
     // Access the 'Content-Type' header field and set its 'subtype'
     // from a string
@@ -323,16 +347,18 @@ void BasicMessage::SetSubtype(int aSubtype)
 }
 
 
-const DwString& BasicMessage::ContentTransferEncodingStr() const
+const DwString &BasicMessage::ContentTransferEncodingStr() const
 {
     // Access the 'Content-Transfer-Encoding' header field and return
     // its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentTransferEncoding()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentTransferEncoding())
+    {
         return headers.ContentTransferEncoding().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
@@ -343,17 +369,19 @@ int BasicMessage::ContentTransferEncoding() const
     // Access the 'Content-Transfer-Encoding' header field and return
     // its contents as an enumerated type
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentTransferEncoding()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentTransferEncoding())
+    {
         return headers.ContentTransferEncoding().AsEnum();
     }
-    else {
+    else
+    {
         return DwMime::kCteNull;
     }
 }
 
 
-void BasicMessage::SetContentTransferEncodingStr(const DwString& aStr)
+void BasicMessage::SetContentTransferEncodingStr(const DwString &aStr)
 {
     // Access the 'Content-Transfer-Encoding' header field and set
     // its contents from a string
@@ -371,16 +399,18 @@ void BasicMessage::SetContentTransferEncoding(int aCte)
 }
 
 
-const DwString& BasicMessage::CteStr() const
+const DwString &BasicMessage::CteStr() const
 {
     // Access the 'Content-Transfer-Encoding' header field and return
     // its contents as a string
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentTransferEncoding()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentTransferEncoding())
+    {
         return headers.ContentTransferEncoding().AsString();
     }
-    else {
+    else
+    {
         return mEmptyString;
     }
 }
@@ -391,17 +421,19 @@ int BasicMessage::Cte() const
     // Access the 'Content-Transfer-Encoding' header field and return
     // its contents as an enumerated type
 
-    DwHeaders& headers = mMessage->Headers();
-    if (headers.HasContentTransferEncoding()) {
+    DwHeaders &headers = mMessage->Headers();
+    if(headers.HasContentTransferEncoding())
+    {
         return headers.ContentTransferEncoding().AsEnum();
     }
-    else {
+    else
+    {
         return DwMime::kCteNull;
     }
 }
 
 
-void BasicMessage::SetCteStr(const DwString& aStr)
+void BasicMessage::SetCteStr(const DwString &aStr)
 {
     // Access the 'Content-Transfer-Encoding' header field and set
     // its contents from a string
@@ -419,16 +451,16 @@ void BasicMessage::SetCte(int aCte)
 }
 
 
-const DwString& BasicMessage::Body() const
+const DwString &BasicMessage::Body() const
 {
     // Access the message body and return its contents as a string
 
-    const DwString& body = mMessage->Body().AsString();
+    const DwString &body = mMessage->Body().AsString();
     return body;
 }
 
 
-void BasicMessage::SetBody(const DwString& aStr)
+void BasicMessage::SetBody(const DwString &aStr)
 {
     // Access the message body and set its contents from a string
 

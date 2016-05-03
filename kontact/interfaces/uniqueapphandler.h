@@ -26,8 +26,7 @@
 #include <plugin.h>
 #include <kdepimmacros.h>
 
-namespace Kontact
-{
+namespace Kontact {
 
 /**
  * DCOP Object that has the name of the standalone application (e.g. "kmail")
@@ -36,12 +35,11 @@ namespace Kontact
  * By default this means simply bringing the main window to the front,
  * but newInstance can be reimplemented.
  */
-class KDE_EXPORT UniqueAppHandler : public DCOPObject
-{
-  K_DCOP
+class KDE_EXPORT UniqueAppHandler : public DCOPObject {
+    K_DCOP
 
-  public:
-    UniqueAppHandler( Plugin* plugin ) : DCOPObject( plugin->name() ), mPlugin( plugin ) {}
+public:
+    UniqueAppHandler(Plugin *plugin) : DCOPObject(plugin->name()), mPlugin(plugin) {}
 
     /// This must be reimplemented so that app-specific command line options can be parsed
     virtual void loadCommandLineOptions() = 0;
@@ -50,20 +48,22 @@ class KDE_EXPORT UniqueAppHandler : public DCOPObject
     /// to newInstance can't be expressed in terms of normal data types.
     virtual int newInstance();
 
-    Plugin* plugin() const { return mPlugin; }
+    Plugin *plugin() const
+    {
+        return mPlugin;
+    }
 
     /// Load the kontact command line options.
     static void loadKontactCommandLineOptions();
 
-  private:
-    Plugin* mPlugin;
+private:
+    Plugin *mPlugin;
 };
 
 /// Base class for UniqueAppHandler
-class UniqueAppHandlerFactoryBase
-{
-  public:
-    virtual UniqueAppHandler* createHandler( Plugin* ) = 0;
+class UniqueAppHandlerFactoryBase {
+public:
+    virtual UniqueAppHandler *createHandler(Plugin *) = 0;
 };
 
 /**
@@ -72,12 +72,12 @@ class UniqueAppHandlerFactoryBase
  * The template argument is the UniqueAppHandler-derived class.
  * This allows to remove the need to subclass UniqueAppWatcher.
  */
-template <class T> class UniqueAppHandlerFactory : public UniqueAppHandlerFactoryBase
-{
-  public:
-    virtual UniqueAppHandler* createHandler( Plugin* plugin ) {
+template <class T> class UniqueAppHandlerFactory : public UniqueAppHandlerFactoryBase {
+public:
+    virtual UniqueAppHandler *createHandler(Plugin *plugin)
+    {
         (void)plugin->dcopClient(); // ensure that we take over the DCOP name
-        return new T( plugin );
+        return new T(plugin);
     }
 };
 
@@ -89,11 +89,10 @@ template <class T> class UniqueAppHandlerFactory : public UniqueAppHandlerFactor
  * Kontact takes over from there.
  *
  */
-class KDE_EXPORT UniqueAppWatcher : public QObject
-{
-  Q_OBJECT
+class KDE_EXPORT UniqueAppWatcher : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Create an instance of UniqueAppWatcher, which does everything necessary
      * for the "unique application" behavior: create the UniqueAppHandler as soon
@@ -103,19 +102,22 @@ class KDE_EXPORT UniqueAppWatcher : public QObject
      * ...   Note that the watcher takes ownership of the factory.
      * @param plugin is the plugin application
      */
-    UniqueAppWatcher( UniqueAppHandlerFactoryBase* factory, Plugin* plugin );
+    UniqueAppWatcher(UniqueAppHandlerFactoryBase *factory, Plugin *plugin);
 
     virtual ~UniqueAppWatcher();
 
-    bool isRunningStandalone() const { return mRunningStandalone; }
+    bool isRunningStandalone() const
+    {
+        return mRunningStandalone;
+    }
 
-  protected slots:
-    void unregisteredFromDCOP( const QCString& appId );
+protected slots:
+    void unregisteredFromDCOP(const QCString &appId);
 
-  private:
+private:
     bool mRunningStandalone;
-    UniqueAppHandlerFactoryBase* mFactory;
-    Plugin* mPlugin;
+    UniqueAppHandlerFactoryBase *mFactory;
+    Plugin *mPlugin;
 };
 
 } // namespace

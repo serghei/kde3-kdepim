@@ -92,12 +92,12 @@
 namespace Akregator {
 
 typedef KParts::GenericFactory<Part> AkregatorFactory;
-K_EXPORT_COMPONENT_FACTORY( libakregatorpart, AkregatorFactory )
+K_EXPORT_COMPONENT_FACTORY(libakregatorpart, AkregatorFactory)
 
 BrowserExtension::BrowserExtension(Part *p, const char *name)
-	    : KParts::BrowserExtension( p, name )
+    : KParts::BrowserExtension(p, name)
 {
-    m_part=p;
+    m_part = p;
 }
 
 void BrowserExtension::saveSettings()
@@ -105,30 +105,29 @@ void BrowserExtension::saveSettings()
     m_part->saveSettings();
 }
 
-class Part::ApplyFiltersInterceptor : public ArticleInterceptor
-{
-    public:
-    virtual void processArticle(Article& article)
+class Part::ApplyFiltersInterceptor : public ArticleInterceptor {
+public:
+    virtual void processArticle(Article &article)
     {
         Filters::ArticleFilterList list = Kernel::self()->articleFilterList();
-        for (Filters::ArticleFilterList::ConstIterator it = list.begin(); it != list.end(); ++it)
+        for(Filters::ArticleFilterList::ConstIterator it = list.begin(); it != list.end(); ++it)
             (*it).applyTo(article);
     }
 };
 
-Part::Part( QWidget *parentWidget, const char * /*widgetName*/,
-                              QObject *parent, const char *name, const QStringList& )
+Part::Part(QWidget *parentWidget, const char * /*widgetName*/,
+           QObject *parent, const char *name, const QStringList &)
     : DCOPObject("AkregatorIface")
-       , MyBasePart(parent, name)
-       , m_standardListLoaded(false)
-       , m_shuttingDown(false)
-       , m_mergedPart(0)
-       , m_view(0)
-       , m_backedUpList(false)
-       , m_storage(0)
+    , MyBasePart(parent, name)
+    , m_standardListLoaded(false)
+    , m_shuttingDown(false)
+    , m_mergedPart(0)
+    , m_view(0)
+    , m_backedUpList(false)
+    , m_storage(0)
 {
     // we need an instance
-    setInstance( AkregatorFactory::instance() );
+    setInstance(AkregatorFactory::instance());
 
     // start knotifyclient if not already started. makes it work for people who doesn't use full kde, according to kmail devels
     KNotifyClient::startDaemon();
@@ -137,38 +136,39 @@ Part::Part( QWidget *parentWidget, const char * /*widgetName*/,
 
     m_tagSetPath = KGlobal::dirs()->saveLocation("data", "akregator/data") + "/tagset.xml";
 
-    Backend::StorageFactoryDummyImpl* dummyFactory = new Backend::StorageFactoryDummyImpl();
+    Backend::StorageFactoryDummyImpl *dummyFactory = new Backend::StorageFactoryDummyImpl();
     Backend::StorageFactoryRegistry::self()->registerFactory(dummyFactory, dummyFactory->key());
     loadPlugins(); // FIXME: also unload them!
 
     m_storage = 0;
-    Backend::StorageFactory* factory = Backend::StorageFactoryRegistry::self()->getFactory(Settings::archiveBackend());
-   
+    Backend::StorageFactory *factory = Backend::StorageFactoryRegistry::self()->getFactory(Settings::archiveBackend());
+
     QStringList storageParams;
-    
+
     storageParams.append(QString("taggingEnabled=%1").arg(Settings::showTaggingGUI() ? "true" : "false"));
-    
-    if (factory != 0)
+
+    if(factory != 0)
     {
-        if (factory->allowsMultipleWriteAccess())
+        if(factory->allowsMultipleWriteAccess())
         {
             m_storage = factory->createStorage(storageParams);
-        } 
+        }
         else
         {
-            if (tryToLock(factory->name()))
+            if(tryToLock(factory->name()))
                 m_storage = factory->createStorage(storageParams);
-            else 
+            else
                 m_storage = dummyFactory->createStorage(storageParams);
         }
     }
-    
 
-    if (!m_storage) // Houston, we have a problem
+
+    if(!m_storage)  // Houston, we have a problem
     {
         m_storage = Backend::StorageFactoryRegistry::self()->getFactory("dummy")->createStorage(storageParams);
 
-        KMessageBox::error(parentWidget, i18n("Unable to load storage backend plugin \"%1\". No feeds are archived.").arg(Settings::archiveBackend()), i18n("Plugin error") );
+        KMessageBox::error(parentWidget, i18n("Unable to load storage backend plugin \"%1\". No feeds are archived.").arg(Settings::archiveBackend()),
+                           i18n("Plugin error"));
     }
 
     Filters::ArticleFilterList list;
@@ -193,23 +193,23 @@ Part::Part( QWidget *parentWidget, const char * /*widgetName*/,
 
     m_extension = new BrowserExtension(this, "ak_extension");
 
-    connect(m_view, SIGNAL(setWindowCaption(const QString&)), this, SIGNAL(setWindowCaption(const QString&)));
-    connect(m_view, SIGNAL(setStatusBarText(const QString&)), this, SIGNAL(setStatusBarText(const QString&)));
+    connect(m_view, SIGNAL(setWindowCaption(const QString &)), this, SIGNAL(setWindowCaption(const QString &)));
+    connect(m_view, SIGNAL(setStatusBarText(const QString &)), this, SIGNAL(setStatusBarText(const QString &)));
     connect(m_view, SIGNAL(setProgress(int)), m_extension, SIGNAL(loadingProgress(int)));
-    connect(m_view, SIGNAL(signalCanceled(const QString&)), this, SIGNAL(canceled(const QString&)));
-    connect(m_view, SIGNAL(signalStarted(KIO::Job*)), this, SIGNAL(started(KIO::Job*)));
+    connect(m_view, SIGNAL(signalCanceled(const QString &)), this, SIGNAL(canceled(const QString &)));
+    connect(m_view, SIGNAL(signalStarted(KIO::Job *)), this, SIGNAL(started(KIO::Job *)));
     connect(m_view, SIGNAL(signalCompleted()), this, SIGNAL(completed()));
 
     // notify the part that this is our internal widget
     setWidget(m_view);
 
-    TrayIcon* trayIcon = new TrayIcon( getMainWindow() );
+    TrayIcon *trayIcon = new TrayIcon(getMainWindow());
     TrayIcon::setInstance(trayIcon);
     m_actionManager->initTrayIcon(trayIcon);
 
     connect(trayIcon, SIGNAL(showPart()), this, SIGNAL(showPart()));
 
-    if ( isTrayIconEnabled() )
+    if(isTrayIconEnabled())
     {
         trayIcon->show();
         NotificationManager::self()->setWidget(trayIcon, instance());
@@ -217,16 +217,16 @@ Part::Part( QWidget *parentWidget, const char * /*widgetName*/,
     else
         NotificationManager::self()->setWidget(getMainWindow(), instance());
 
-    connect( trayIcon, SIGNAL(quitSelected()),
+    connect(trayIcon, SIGNAL(quitSelected()),
             kapp, SLOT(quit())) ;
 
-    connect( m_view, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)) );
+    connect(m_view, SIGNAL(signalUnreadCountChanged(int)), trayIcon, SLOT(slotSetUnread(int)));
 
     connect(kapp, SIGNAL(shutDown()), this, SLOT(slotOnShutdown()));
 
     m_autosaveTimer = new QTimer(this);
     connect(m_autosaveTimer, SIGNAL(timeout()), this, SLOT(slotSaveFeedList()));
-    m_autosaveTimer->start(5*60*1000); // 5 minutes
+    m_autosaveTimer->start(5 * 60 * 1000); // 5 minutes
 
     setXMLFile("akregator_part.rc", true);
 
@@ -240,10 +240,10 @@ void Part::loadPlugins()
     // "[X-KDE-akregator-plugintype] == 'storage'"
     KTrader::OfferList offers = PluginManager::query();
 
-    for( KTrader::OfferList::ConstIterator it = offers.begin(), end = offers.end(); it != end; ++it )
+    for(KTrader::OfferList::ConstIterator it = offers.begin(), end = offers.end(); it != end; ++it)
     {
-        Akregator::Plugin* plugin = PluginManager::createFromService(*it);
-        if (plugin)
+        Akregator::Plugin *plugin = PluginManager::createFromService(*it);
+        if(plugin)
             plugin->init();
     }
 }
@@ -251,7 +251,7 @@ void Part::loadPlugins()
 void Part::slotOnShutdown()
 {
     m_shuttingDown = true;
-    
+
     const QString lockLocation = locateLocal("data", "akregator/lock");
     KSimpleConfig config(lockLocation);
     config.writeEntry("pid", -1);
@@ -286,7 +286,7 @@ void Part::slotSettingsChanged()
     fonts.append("0");
     Settings::setFonts(fonts);
 
-    if (Settings::minimumFontSize() > Settings::mediumFontSize())
+    if(Settings::minimumFontSize() > Settings::mediumFontSize())
         Settings::setMediumFontSize(Settings::minimumFontSize());
     saveSettings();
     m_view->slotSettingsChanged();
@@ -301,14 +301,14 @@ void Part::saveSettings()
 Part::~Part()
 {
     kdDebug() << "Part::~Part() enter" << endl;
-    if (!m_shuttingDown)
+    if(!m_shuttingDown)
         slotOnShutdown();
     kdDebug() << "Part::~Part(): leaving" << endl;
     ArticleInterceptorManager::self()->removeInterceptor(m_applyFiltersInterceptor);
     delete m_applyFiltersInterceptor;
 }
 
-void Part::readProperties(KConfig* config)
+void Part::readProperties(KConfig *config)
 {
     m_backedUpList = false;
     openStandardFeedList();
@@ -317,16 +317,16 @@ void Part::readProperties(KConfig* config)
         m_view->readProperties(config);
 }
 
-void Part::saveProperties(KConfig* config)
+void Part::saveProperties(KConfig *config)
 {
-    if (m_view)
+    if(m_view)
     {
         slotSaveFeedList();
         m_view->saveProperties(config);
     }
 }
 
-bool Part::openURL(const KURL& url)
+bool Part::openURL(const KURL &url)
 {
     m_file = url.path();
     return openFile();
@@ -334,62 +334,62 @@ bool Part::openURL(const KURL& url)
 
 void Part::openStandardFeedList()
 {
-    if ( !m_standardFeedList.isEmpty() && openURL(m_standardFeedList) )
+    if(!m_standardFeedList.isEmpty() && openURL(m_standardFeedList))
         m_standardListLoaded = true;
 }
 
 QDomDocument Part::createDefaultFeedList()
 {
     QDomDocument doc;
-    QDomProcessingInstruction z = doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
-    doc.appendChild( z );
+    QDomProcessingInstruction z = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+    doc.appendChild(z);
 
-    QDomElement root = doc.createElement( "opml" );
-    root.setAttribute("version","1.0");
-    doc.appendChild( root );
+    QDomElement root = doc.createElement("opml");
+    root.setAttribute("version", "1.0");
+    doc.appendChild(root);
 
-    QDomElement head = doc.createElement( "head" );
+    QDomElement head = doc.createElement("head");
     root.appendChild(head);
 
-    QDomElement text = doc.createElement( "text" );
+    QDomElement text = doc.createElement("text");
     text.appendChild(doc.createTextNode(i18n("Feeds")));
     head.appendChild(text);
 
-    QDomElement body = doc.createElement( "body" );
+    QDomElement body = doc.createElement("body");
     root.appendChild(body);
 
-    QDomElement mainFolder = doc.createElement( "outline" );
-    mainFolder.setAttribute("text","KDE");
+    QDomElement mainFolder = doc.createElement("outline");
+    mainFolder.setAttribute("text", "KDE");
     body.appendChild(mainFolder);
 
-    QDomElement ak = doc.createElement( "outline" );
-    ak.setAttribute("text",i18n("Akregator News"));
-    ak.setAttribute("xmlUrl","http://akregator.sf.net/rss2.php");
+    QDomElement ak = doc.createElement("outline");
+    ak.setAttribute("text", i18n("Akregator News"));
+    ak.setAttribute("xmlUrl", "http://akregator.sf.net/rss2.php");
     mainFolder.appendChild(ak);
 
-    QDomElement akb = doc.createElement( "outline" );
-    akb.setAttribute("text",i18n("Akregator Blog"));
-    akb.setAttribute("xmlUrl","http://akregator.pwsp.net/blog/?feed=rss2");
+    QDomElement akb = doc.createElement("outline");
+    akb.setAttribute("text", i18n("Akregator Blog"));
+    akb.setAttribute("xmlUrl", "http://akregator.pwsp.net/blog/?feed=rss2");
     mainFolder.appendChild(akb);
 
-    QDomElement dot = doc.createElement( "outline" );
-    dot.setAttribute("text",i18n("KDE Dot News"));
-    dot.setAttribute("xmlUrl","http://www.kde.org/dotkdeorg.rdf");
+    QDomElement dot = doc.createElement("outline");
+    dot.setAttribute("text", i18n("KDE Dot News"));
+    dot.setAttribute("xmlUrl", "http://www.kde.org/dotkdeorg.rdf");
     mainFolder.appendChild(dot);
 
-    QDomElement plan = doc.createElement( "outline" );
-    plan.setAttribute("text",i18n("Planet KDE"));
-    plan.setAttribute("xmlUrl","http://planetkde.org/rss20.xml");
+    QDomElement plan = doc.createElement("outline");
+    plan.setAttribute("text", i18n("Planet KDE"));
+    plan.setAttribute("xmlUrl", "http://planetkde.org/rss20.xml");
     mainFolder.appendChild(plan);
 
-    QDomElement apps = doc.createElement( "outline" );
-    apps.setAttribute("text",i18n("KDE Apps"));
-    apps.setAttribute("xmlUrl","http://www.kde.org/dot/kde-apps-content.rdf");
+    QDomElement apps = doc.createElement("outline");
+    apps.setAttribute("text", i18n("KDE Apps"));
+    apps.setAttribute("xmlUrl", "http://www.kde.org/dot/kde-apps-content.rdf");
     mainFolder.appendChild(apps);
 
-    QDomElement look = doc.createElement( "outline" );
-    look.setAttribute("text",i18n("KDE Look"));
-    look.setAttribute("xmlUrl","http://www.kde.org/kde-look-content.rdf");
+    QDomElement look = doc.createElement("outline");
+    look.setAttribute("text", i18n("KDE Look"));
+    look.setAttribute("xmlUrl", "http://www.kde.org/kde-look-content.rdf");
     mainFolder.appendChild(look);
 
     return doc;
@@ -397,7 +397,7 @@ QDomDocument Part::createDefaultFeedList()
 
 bool Part::openFile()
 {
-    emit setStatusBarText(i18n("Opening Feed List...") );
+    emit setStatusBarText(i18n("Opening Feed List..."));
 
     QString str;
     // m_file is always local so we can use QFile on it
@@ -405,16 +405,16 @@ bool Part::openFile()
 
     bool fileExists = file.exists();
     QString listBackup = m_storage->restoreFeedList();
-     
+
     QDomDocument doc;
 
-    if (!fileExists)
+    if(!fileExists)
     {
         doc = createDefaultFeedList();
     }
-    else 
+    else
     {
-        if (file.open(IO_ReadOnly))
+        if(file.open(IO_ReadOnly))
         {
             // Read OPML feeds list and build QDom tree.
             QTextStream stream(&file);
@@ -423,43 +423,45 @@ bool Part::openFile()
             file.close();
         }
 
-        if (!doc.setContent(str))
+        if(!doc.setContent(str))
         {
 
-            if (file.size() > 0) // don't backup empty files 
+            if(file.size() > 0)  // don't backup empty files
             {
                 QString backup = m_file + "-backup." +  QString::number(QDateTime::currentDateTime().toTime_t());
-        
+
                 copyFile(backup);
-        
-                KMessageBox::error(m_view, i18n("<qt>The standard feed list is corrupted (invalid XML). A backup was created:<p><b>%2</b></p></qt>").arg(backup), i18n("XML Parsing Error") );
+
+                KMessageBox::error(m_view, i18n("<qt>The standard feed list is corrupted (invalid XML). A backup was created:<p><b>%2</b></p></qt>").arg(backup),
+                                   i18n("XML Parsing Error"));
             }
 
-            if (!doc.setContent(listBackup))
+            if(!doc.setContent(listBackup))
                 doc = createDefaultFeedList();
         }
     }
 
-    if (!m_view->loadFeeds(doc))
+    if(!m_view->loadFeeds(doc))
     {
-        if (file.size() > 0) // don't backup empty files 
+        if(file.size() > 0)  // don't backup empty files
         {
             QString backup = m_file + "-backup." +  QString::number(QDateTime::currentDateTime().toTime_t());
             copyFile(backup);
 
-            KMessageBox::error(m_view, i18n("<qt>The standard feed list is corrupted (no valid OPML). A backup was created:<p><b>%2</b></p></qt>").arg(backup), i18n("OPML Parsing Error") );
+            KMessageBox::error(m_view, i18n("<qt>The standard feed list is corrupted (no valid OPML). A backup was created:<p><b>%2</b></p></qt>").arg(backup),
+                               i18n("OPML Parsing Error"));
         }
         m_view->loadFeeds(createDefaultFeedList());
     }
 
     emit setStatusBarText(QString::null);
-    
 
-    if( Settings::markAllFeedsReadOnStartup() )
+
+    if(Settings::markAllFeedsReadOnStartup())
         m_view->slotMarkAllFeedsRead();
 
-    if (Settings::fetchOnStartup())
-            m_view->slotFetchAllFeeds();
+    if(Settings::fetchOnStartup())
+        m_view->slotFetchAllFeeds();
 
     return true;
 }
@@ -467,15 +469,15 @@ bool Part::openFile()
 void Part::slotSaveFeedList()
 {
     // don't save to the standard feed list, when it wasn't completely loaded before
-    if (!m_standardListLoaded)
+    if(!m_standardListLoaded)
         return;
 
     // the first time we overwrite the feed list, we create a backup
-    if (!m_backedUpList)
+    if(!m_backedUpList)
     {
         QString backup = m_file + "~";
 
-        if (copyFile(backup))
+        if(copyFile(backup))
             m_backedUpList = true;
     }
 
@@ -483,10 +485,10 @@ void Part::slotSaveFeedList()
     m_storage->storeFeedList(xmlStr);
 
     QFile file(m_file);
-    if (file.open(IO_WriteOnly) == false)
+    if(file.open(IO_WriteOnly) == false)
     {
         //FIXME: allow to save the feedlist into different location -tpr 20041118
-        KMessageBox::error(m_view, i18n("Access denied: cannot save feed list (%1)").arg(m_file), i18n("Write error") );
+        KMessageBox::error(m_view, i18n("Access denied: cannot save feed list (%1)").arg(m_file), i18n("Write error"));
         return;
     }
 
@@ -507,26 +509,27 @@ bool Part::isTrayIconEnabled() const
     return Settings::showTrayIcon();
 }
 
-bool Part::mergePart(KParts::Part* part)
+bool Part::mergePart(KParts::Part *part)
 {
-    if (part != m_mergedPart)
+    if(part != m_mergedPart)
     {
-        if (!factory())
+        if(!factory())
         {
-          if (m_mergedPart)
-            removeChildClient(m_mergedPart);
-          else
-            insertChildClient(part);
+            if(m_mergedPart)
+                removeChildClient(m_mergedPart);
+            else
+                insertChildClient(part);
         }
         else
         {
-          if (m_mergedPart) {
-            factory()->removeClient(m_mergedPart);
-            if (childClients()->containsRef(m_mergedPart))
-              removeChildClient(m_mergedPart);
-          }
-          if (part)
-            factory()->addClient(part);
+            if(m_mergedPart)
+            {
+                factory()->removeClient(m_mergedPart);
+                if(childClients()->containsRef(m_mergedPart))
+                    removeChildClient(m_mergedPart);
+            }
+            if(part)
+                factory()->addClient(part);
         }
 
         m_mergedPart = part;
@@ -534,31 +537,31 @@ bool Part::mergePart(KParts::Part* part)
     return true;
 }
 
-QWidget* Part::getMainWindow()
+QWidget *Part::getMainWindow()
 {
     // this is a dirty fix to get the main window used for the tray icon
-    
+
     QWidgetList *l = kapp->topLevelWidgets();
-    QWidgetListIt it( *l );
+    QWidgetListIt it(*l);
     QWidget *wid;
 
     // check if there is an akregator main window
-    while ( (wid = it.current()) != 0 )
+    while((wid = it.current()) != 0)
     {
         ++it;
         //kdDebug() << "win name: " << wid->name() << endl;
-        if (QString(wid->name()) == "akregator_mainwindow")
+        if(QString(wid->name()) == "akregator_mainwindow")
         {
             delete l;
             return wid;
         }
     }
     // if not, check for kontact main window
-    QWidgetListIt it2( *l );
-    while ( (wid = it2.current()) != 0 )
+    QWidgetListIt it2(*l);
+    while((wid = it2.current()) != 0)
     {
         ++it2;
-        if (QString(wid->name()).startsWith("kontact-mainwindow"))
+        if(QString(wid->name()).startsWith("kontact-mainwindow"))
         {
             delete l;
             return wid;
@@ -568,23 +571,23 @@ QWidget* Part::getMainWindow()
     return 0;
 }
 
-void Part::loadTagSet(const QString& path)
+void Part::loadTagSet(const QString &path)
 {
     QDomDocument doc;
 
     QFile file(path);
-    if (file.open(IO_ReadOnly))
+    if(file.open(IO_ReadOnly))
     {
         doc.setContent(file.readAll());
         file.close();
     }
     // if we can't load the tagset from the xml file, check for the backup in the backend
-    if (doc.isNull())
+    if(doc.isNull())
     {
         doc.setContent(m_storage->restoreTagSet());
     }
 
-    if (!doc.isNull())
+    if(!doc.isNull())
     {
         Kernel::self()->tagSet()->readFromXML(doc);
     }
@@ -594,15 +597,15 @@ void Part::loadTagSet(const QString& path)
     }
 }
 
-void Part::saveTagSet(const QString& path)
+void Part::saveTagSet(const QString &path)
 {
     QString xmlStr = Kernel::self()->tagSet()->toXML().toString();
 
     m_storage->storeTagSet(xmlStr);
-    
+
     QFile file(path);
-    
-    if ( file.open(IO_WriteOnly) )
+
+    if(file.open(IO_WriteOnly))
     {
 
         QTextStream stream(&file);
@@ -612,59 +615,60 @@ void Part::saveTagSet(const QString& path)
     }
 }
 
-void Part::importFile(const KURL& url)
+void Part::importFile(const KURL &url)
 {
     QString filename;
 
     bool isRemote = false;
 
-    if (url.isLocalFile())
+    if(url.isLocalFile())
         filename = url.path();
     else
     {
         isRemote = true;
 
-        if (!KIO::NetAccess::download(url, filename, m_view) )
+        if(!KIO::NetAccess::download(url, filename, m_view))
         {
-            KMessageBox::error(m_view, KIO::NetAccess::lastErrorString() );
+            KMessageBox::error(m_view, KIO::NetAccess::lastErrorString());
             return;
         }
     }
 
     QFile file(filename);
-    if (file.open(IO_ReadOnly))
+    if(file.open(IO_ReadOnly))
     {
         // Read OPML feeds list and build QDom tree.
         QDomDocument doc;
-        if (doc.setContent(file.readAll()))
+        if(doc.setContent(file.readAll()))
             m_view->importFeeds(doc);
         else
-            KMessageBox::error(m_view, i18n("Could not import the file %1 (no valid OPML)").arg(filename), i18n("OPML Parsing Error") );
+            KMessageBox::error(m_view, i18n("Could not import the file %1 (no valid OPML)").arg(filename), i18n("OPML Parsing Error"));
     }
     else
-        KMessageBox::error(m_view, i18n("The file %1 could not be read, check if it exists or if it is readable for the current user.").arg(filename), i18n("Read Error"));
+        KMessageBox::error(m_view, i18n("The file %1 could not be read, check if it exists or if it is readable for the current user.").arg(filename),
+                           i18n("Read Error"));
 
-    if (isRemote)
+    if(isRemote)
         KIO::NetAccess::removeTempFile(filename);
 }
 
-void Part::exportFile(const KURL& url)
+void Part::exportFile(const KURL &url)
 {
-    if (url.isLocalFile())
+    if(url.isLocalFile())
     {
         QFile file(url.path());
 
-        if ( file.exists() &&
+        if(file.exists() &&
                 KMessageBox::questionYesNo(m_view,
-            i18n("The file %1 already exists; do you want to overwrite it?").arg(file.name()),
-            i18n("Export"),
-            i18n("Overwrite"),
-            KStdGuiItem::cancel()) == KMessageBox::No )
+                                           i18n("The file %1 already exists; do you want to overwrite it?").arg(file.name()),
+                                           i18n("Export"),
+                                           i18n("Overwrite"),
+                                           KStdGuiItem::cancel()) == KMessageBox::No)
             return;
 
-        if ( !file.open(IO_WriteOnly) )
+        if(!file.open(IO_WriteOnly))
         {
-            KMessageBox::error(m_view, i18n("Access denied: cannot write to file %1").arg(file.name()), i18n("Write Error") );
+            KMessageBox::error(m_view, i18n("Access denied: cannot write to file %1").arg(file.name()), i18n("Write Error"));
             return;
         }
 
@@ -685,28 +689,28 @@ void Part::exportFile(const KURL& url)
         stream << m_view->feedListToOPML().toString() << "\n";
         tmpfile.close();
 
-        if (!KIO::NetAccess::upload(tmpfile.name(), url, m_view))
-            KMessageBox::error(m_view, KIO::NetAccess::lastErrorString() );
+        if(!KIO::NetAccess::upload(tmpfile.name(), url, m_view))
+            KMessageBox::error(m_view, KIO::NetAccess::lastErrorString());
     }
 }
 
 void Part::fileImport()
 {
-    KURL url = KFileDialog::getOpenURL( QString::null,
-                        "*.opml *.xml|" + i18n("OPML Outlines (*.opml, *.xml)")
-                        +"\n*|" + i18n("All Files") );
+    KURL url = KFileDialog::getOpenURL(QString::null,
+                                       "*.opml *.xml|" + i18n("OPML Outlines (*.opml, *.xml)")
+                                       + "\n*|" + i18n("All Files"));
 
-    if (!url.isEmpty())
+    if(!url.isEmpty())
         importFile(url);
 }
 
-    void Part::fileExport()
+void Part::fileExport()
 {
-    KURL url= KFileDialog::getSaveURL( QString::null,
-                        "*.opml *.xml|" + i18n("OPML Outlines (*.opml, *.xml)")
-                        +"\n*|" + i18n("All Files") );
+    KURL url = KFileDialog::getSaveURL(QString::null,
+                                       "*.opml *.xml|" + i18n("OPML Outlines (*.opml, *.xml)")
+                                       + "\n*|" + i18n("All Files"));
 
-    if ( !url.isEmpty() )
+    if(!url.isEmpty())
         exportFile(url);
 }
 
@@ -714,7 +718,7 @@ void Part::fileGetFeeds()
 {
     /*GetFeeds *gf = new GetFeeds();
     gf->show();*/
-     //KNS::DownloadDialog::open("akregator/feeds", i18n("Get New Feeds"));
+    //KNS::DownloadDialog::open("akregator/feeds", i18n("Get New Feeds"));
 }
 
 void Part::fileSendArticle(bool attach)
@@ -728,7 +732,8 @@ void Part::fileSendArticle(bool attach)
 
     title = m_view->currentFrame()->title();
 
-    if(attach) {
+    if(attach)
+    {
         kapp->invokeMailer("",
                            "",
                            "",
@@ -737,7 +742,8 @@ void Part::fileSendArticle(bool attach)
                            "",
                            text);
     }
-    else {
+    else
+    {
         kapp->invokeMailer("",
                            "",
                            "",
@@ -751,14 +757,14 @@ void Part::fetchAllFeeds()
     m_view->slotFetchAllFeeds();
 }
 
-void Part::fetchFeedUrl(const QString&s)
+void Part::fetchFeedUrl(const QString &s)
 {
     kdDebug() << "fetchFeedURL==" << s << endl;
 }
 
-void Part::addFeedsToGroup(const QStringList& urls, const QString& group)
+void Part::addFeedsToGroup(const QStringList &urls, const QString &group)
 {
-    for (QStringList::ConstIterator it = urls.begin(); it != urls.end(); ++it)
+    for(QStringList::ConstIterator it = urls.begin(); it != urls.end(); ++it)
     {
         kdDebug() << "Akregator::Part::addFeedToGroup adding feed with URL " << *it << " to group " << group << endl;
         m_view->addFeedToGroup(*it, group);
@@ -778,31 +784,31 @@ KAboutData *Part::createAboutData()
 
 void Part::showKNotifyOptions()
 {
-    KAboutData* about = new Akregator::AboutData;
+    KAboutData *about = new Akregator::AboutData;
     KNotifyDialog::configure(m_view, "akregator_knotify_config", about);
     delete about;
 }
 
 void Part::showOptions()
 {
-    if ( KConfigDialog::showDialog( "settings" ) )
+    if(KConfigDialog::showDialog("settings"))
         return;
 
-    KConfigDialog* dialog = new ConfigDialog( m_view, "settings", Settings::self() );
+    KConfigDialog *dialog = new ConfigDialog(m_view, "settings", Settings::self());
 
-    connect( dialog, SIGNAL(settingsChanged()),
-             this, SLOT(slotSettingsChanged()) );
-    connect( dialog, SIGNAL(settingsChanged()),
-             TrayIcon::getInstance(), SLOT(settingsChanged()) );
+    connect(dialog, SIGNAL(settingsChanged()),
+            this, SLOT(slotSettingsChanged()));
+    connect(dialog, SIGNAL(settingsChanged()),
+            TrayIcon::getInstance(), SLOT(settingsChanged()));
 
     dialog->show();
 }
 
-void Part::partActivateEvent(KParts::PartActivateEvent* event)
+void Part::partActivateEvent(KParts::PartActivateEvent *event)
 {
-    if (factory() && m_mergedPart)
+    if(factory() && m_mergedPart)
     {
-        if (event->activated())
+        if(event->activated())
             factory()->addClient(m_mergedPart);
         else
             factory()->removeClient(m_mergedPart);
@@ -811,23 +817,29 @@ void Part::partActivateEvent(KParts::PartActivateEvent* event)
     MyBasePart::partActivateEvent(event);
 }
 
-KParts::Part* Part::hitTest(QWidget *widget, const QPoint &globalPos)
+KParts::Part *Part::hitTest(QWidget *widget, const QPoint &globalPos)
 {
     bool child = false;
     QWidget *me = this->widget();
-    while (widget) {
-        if (widget == me) {
+    while(widget)
+    {
+        if(widget == me)
+        {
             child = true;
             break;
         }
-        if (!widget) {
+        if(!widget)
+        {
             break;
         }
         widget = widget->parentWidget();
     }
-    if (m_view && m_view->currentFrame() && child) {
+    if(m_view && m_view->currentFrame() && child)
+    {
         return m_view->currentFrame()->part();
-    } else {
+    }
+    else
+    {
         return MyBasePart::hitTest(widget, globalPos);
     }
 }
@@ -835,7 +847,7 @@ KParts::Part* Part::hitTest(QWidget *widget, const QPoint &globalPos)
 void Part::initFonts()
 {
     QStringList fonts = Settings::fonts();
-    if (fonts.isEmpty())
+    if(fonts.isEmpty())
     {
         fonts.append(KGlobalSettings::generalFont().family());
         fonts.append(KGlobalSettings::fixedFont().family());
@@ -844,25 +856,25 @@ void Part::initFonts()
         fonts.append("0");
     }
     Settings::setFonts(fonts);
-    if (Settings::standardFont().isEmpty())
+    if(Settings::standardFont().isEmpty())
         Settings::setStandardFont(fonts[0]);
-    if (Settings::fixedFont().isEmpty())
+    if(Settings::fixedFont().isEmpty())
         Settings::setFixedFont(fonts[1]);
-    if (Settings::sansSerifFont().isEmpty())
+    if(Settings::sansSerifFont().isEmpty())
         Settings::setSansSerifFont(fonts[2]);
-    if (Settings::serifFont().isEmpty())
+    if(Settings::serifFont().isEmpty())
         Settings::setSerifFont(fonts[3]);
 
-    KConfig* conf = Settings::self()->config();
+    KConfig *conf = Settings::self()->config();
     conf->setGroup("HTML Settings");
 
     KConfig konq("konquerorrc", true, false);
     konq.setGroup("HTML Settings");
 
-    if (!conf->hasKey("MinimumFontSize"))
+    if(!conf->hasKey("MinimumFontSize"))
     {
         int minfs;
-        if (konq.hasKey("MinimumFontSize"))
+        if(konq.hasKey("MinimumFontSize"))
             minfs = konq.readNumEntry("MinimumFontSize");
         else
             minfs = KGlobalSettings::generalFont().pointSize();
@@ -870,10 +882,10 @@ void Part::initFonts()
         Settings::setMinimumFontSize(minfs);
     }
 
-    if (!conf->hasKey("MediumFontSize"))
+    if(!conf->hasKey("MediumFontSize"))
     {
         int medfs;
-        if (konq.hasKey("MediumFontSize"))
+        if(konq.hasKey("MediumFontSize"))
             medfs = konq.readNumEntry("MediumFontSize");
         else
             medfs = KGlobalSettings::generalFont().pointSize();
@@ -881,10 +893,10 @@ void Part::initFonts()
         Settings::setMediumFontSize(medfs);
     }
 
-    if (!conf->hasKey("UnderlineLinks"))
+    if(!conf->hasKey("UnderlineLinks"))
     {
         bool underline = true;
-        if (konq.hasKey("UnderlineLinks"))
+        if(konq.hasKey("UnderlineLinks"))
             underline = konq.readBoolEntry("UnderlineLinks");
 
         kdDebug() << "Part::initFonts(): set UnderlineLinks to " << underline << endl;
@@ -893,18 +905,18 @@ void Part::initFonts()
 
 }
 
-bool Part::copyFile(const QString& backup)
+bool Part::copyFile(const QString &backup)
 {
     QFile file(m_file);
 
-    if (file.open(IO_ReadOnly))
+    if(file.open(IO_ReadOnly))
     {
         QFile backupFile(backup);
-        if (backupFile.open(IO_WriteOnly))
+        if(backupFile.open(IO_WriteOnly))
         {
             QTextStream in(&file);
             QTextStream out(&backupFile);
-            while (!in.atEnd())
+            while(!in.atEnd())
                 out << in.readLine();
             backupFile.close();
             file.close();
@@ -931,101 +943,102 @@ static QString getMyHostName()
 }
 
 // taken from KMail
-bool Part::tryToLock(const QString& backendName)
+bool Part::tryToLock(const QString &backendName)
 {
-// Check and create a lock file to prevent concurrent access to metakit archive
+    // Check and create a lock file to prevent concurrent access to metakit archive
     QString appName = kapp->instanceName();
-    if ( appName.isEmpty() )
+    if(appName.isEmpty())
         appName = "akregator";
 
     QString programName;
     const KAboutData *about = kapp->aboutData();
-    if ( about )
+    if(about)
         programName = about->programName();
-    if ( programName.isEmpty() )
+    if(programName.isEmpty())
         programName = i18n("Akregator");
 
     QString lockLocation = locateLocal("data", "akregator/lock");
     KSimpleConfig config(lockLocation);
     int oldPid = config.readNumEntry("pid", -1);
     const QString oldHostName = config.readEntry("hostname");
-    const QString oldAppName = config.readEntry( "appName", appName );
-    const QString oldProgramName = config.readEntry( "programName", programName );
+    const QString oldAppName = config.readEntry("appName", appName);
+    const QString oldProgramName = config.readEntry("programName", programName);
     const QString hostName = getMyHostName();
     bool first_instance = false;
-    if ( oldPid == -1 )
+    if(oldPid == -1)
         first_instance = true;
-  // check if the lock file is stale by trying to see if
-  // the other pid is currently running.
-  // Not 100% correct but better safe than sorry
-    else if (hostName == oldHostName && oldPid != getpid()) {
-        if ( kill(oldPid, 0) == -1 )
-            first_instance = ( errno == ESRCH );
+    // check if the lock file is stale by trying to see if
+    // the other pid is currently running.
+    // Not 100% correct but better safe than sorry
+    else if(hostName == oldHostName && oldPid != getpid())
+    {
+        if(kill(oldPid, 0) == -1)
+            first_instance = (errno == ESRCH);
     }
 
-    if ( !first_instance )
+    if(!first_instance)
     {
         QString msg;
-        if ( oldHostName == hostName ) 
+        if(oldHostName == hostName)
         {
             // this can only happen if the user is running this application on
             // different displays on the same machine. All other cases will be
             // taken care of by KUniqueApplication()
-            if ( oldAppName == appName )
+            if(oldAppName == appName)
                 msg = i18n("<qt>%1 already seems to be running on another display on "
-                        "this machine. <b>Running %2 more than once is not supported "
-                        "by the %3 backend and "
-                        "can cause the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that %2 is not already running.</qt>")
-                        .arg( programName, programName, backendName );
-              // QString::arg( st ) only replaces the first occurrence of %1
-              // with st while QString::arg( s1, s2 ) replacess all occurrences
-              // of %1 with s1 and all occurrences of %2 with s2. So don't
-              // even think about changing the above to .arg( programName ).
+                           "this machine. <b>Running %2 more than once is not supported "
+                           "by the %3 backend and "
+                           "can cause the loss of archived articles and crashes at startup.</b> "
+                           "You should disable the archive for now "
+                           "unless you are sure that %2 is not already running.</qt>")
+                      .arg(programName, programName, backendName);
+            // QString::arg( st ) only replaces the first occurrence of %1
+            // with st while QString::arg( s1, s2 ) replacess all occurrences
+            // of %1 with s1 and all occurrences of %2 with s2. So don't
+            // even think about changing the above to .arg( programName ).
             else
                 msg = i18n("<qt>%1 seems to be running on another display on this "
-                        "machine. <b>Running %1 and %2 at the same "
-                        "time is not supported by the %3 backend and can cause "
-                        "the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that %2 is not already running.</qt>")
-                        .arg( oldProgramName, programName, backendName );
+                           "machine. <b>Running %1 and %2 at the same "
+                           "time is not supported by the %3 backend and can cause "
+                           "the loss of archived articles and crashes at startup.</b> "
+                           "You should disable the archive for now "
+                           "unless you are sure that %2 is not already running.</qt>")
+                      .arg(oldProgramName, programName, backendName);
         }
         else
         {
-            if ( oldAppName == appName )
+            if(oldAppName == appName)
                 msg = i18n("<qt>%1 already seems to be running on %2. <b>Running %1 more "
-                        "than once is not supported by the %3 backend and can cause "
-                        "the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that it is "
-                        "not already running on %2.</qt>")
-                        .arg( programName, oldHostName, backendName );
+                           "than once is not supported by the %3 backend and can cause "
+                           "the loss of archived articles and crashes at startup.</b> "
+                           "You should disable the archive for now "
+                           "unless you are sure that it is "
+                           "not already running on %2.</qt>")
+                      .arg(programName, oldHostName, backendName);
             else
                 msg = i18n("<qt>%1 seems to be running on %3. <b>Running %1 and %2 at the "
-                        "same time is not supported by the %4 backend and can cause "
-                        "the loss of archived articles and crashes at startup.</b> "
-                        "You should disable the archive for now "
-                        "unless you are sure that %1 is "
-                        "not running on %3.</qt>")
-                        .arg( oldProgramName, programName, oldHostName, backendName );
+                           "same time is not supported by the %4 backend and can cause "
+                           "the loss of archived articles and crashes at startup.</b> "
+                           "You should disable the archive for now "
+                           "unless you are sure that %1 is "
+                           "not running on %3.</qt>")
+                      .arg(oldProgramName, programName, oldHostName, backendName);
         }
 
-        KCursorSaver idle( KBusyPtr::idle() );
-        if ( KMessageBox::No ==
-             KMessageBox::warningYesNo( 0, msg, QString::null,
-                                        i18n("Force Access"),
-                                        i18n("Disable Archive")) )
-                                        {
-                                            return false;
-                                        }
+        KCursorSaver idle(KBusyPtr::idle());
+        if(KMessageBox::No ==
+                KMessageBox::warningYesNo(0, msg, QString::null,
+                                          i18n("Force Access"),
+                                          i18n("Disable Archive")))
+        {
+            return false;
+        }
     }
 
     config.writeEntry("pid", getpid());
     config.writeEntry("hostname", hostName);
-    config.writeEntry( "appName", appName );
-    config.writeEntry( "programName", programName );
+    config.writeEntry("appName", appName);
+    config.writeEntry("programName", programName);
     config.sync();
     return true;
 }

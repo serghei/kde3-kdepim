@@ -38,31 +38,30 @@ class ViewFactory;
   the view as well as the type. Someday it would be nice for this to be a
   wizard.
  */
-class AddViewDialog : public KDialogBase
-{
-  Q_OBJECT
+class AddViewDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    AddViewDialog( QDict<ViewFactory> *viewFactoryDict, QWidget *parent,
-                   const char *name = 0 );
+public:
+    AddViewDialog(QDict<ViewFactory> *viewFactoryDict, QWidget *parent,
+                  const char *name = 0);
     ~AddViewDialog();
 
     QString viewName()const;
 
     QString viewType()const ;
 
-  protected slots:
+protected slots:
     /**
       Called when the user selects a type radio button.
      */
-    void clicked( int id );
+    void clicked(int id);
 
     /**
       Called when the user changes the text in the name of the view.
      */
-    void textChanged( const QString &text );
+    void textChanged(const QString &text);
 
-  private:
+private:
     QDict<ViewFactory> *mViewFactoryDict;
     QLineEdit *mViewNameEdit;
     QButtonGroup *mTypeGroup;

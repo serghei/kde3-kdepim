@@ -1,6 +1,6 @@
 #ifndef _KGANTT_H_
 #define _KGANTT_H_
- 
+
 /*
 
     This library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@
 
 
 #include <qwidget.h>
-#include <qsplitter.h> 
+#include <qsplitter.h>
 
 #include <kpopupmenu.h>
 #include <kdepimmacros.h>
@@ -55,7 +55,7 @@
  *  This example shows how to use the gantt module:
  *  \code
  *  #include "kgantt/KGantt.h"
- *  
+ *
  *  int main(int args, char* argv[])
  *  {
        ...
@@ -64,8 +64,8 @@
 
        KGanttItem* toplevel = gantt->getToplevelItem();
 
-       KGanttItem* t1 = new KGanttItem(toplevel, 
-                                       "task 1, no subtasks", 
+       KGanttItem* t1 = new KGanttItem(toplevel,
+                                       "task 1, no subtasks",
                 	               QDateTime::currentDateTime().addDays(10),
                                        QDateTime::currentDateTime().addDays(20) );
 
@@ -91,226 +91,250 @@ class KDE_EXPORT KGantt : public QWidget
 ////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
 
-public:  
+public:
 
 
-  ///  Constructor.
-  /*!
-   *
-   */
-  KGantt(KGanttItem* toplevelitem = 0,
-	 QWidget* parent = 0, const char * name=0, WFlags f=0 );
+    ///  Constructor.
+    /*!
+     *
+     */
+    KGantt(KGanttItem *toplevelitem = 0,
+           QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
 
-  ///  Destructor.
-  /*!
-   *
-   */
-  ~KGantt();
-
-
-
-  ///  Set toplevel item.
-  /*!
-   *   If no toplevel item was specified at construction of this widget a
-   *   toplevel item was created. This will be deleted by setting a new
-   *   toplevel item. A toplevel item that was passed to the constructor will
-   *   not be deleted.
-   */
-  void setToplevelItem(KGanttItem* item) {
-    if(_deleteItem)
-      delete _toplevelitem;
-    _toplevelitem = item; 
-  }
+    ///  Destructor.
+    /*!
+     *
+     */
+    ~KGantt();
 
 
 
-  ///  Get toplevel item.
-  /*!
-   *
-   */
-  KGanttItem* getToplevelItem() { 
-    return _toplevelitem; 
-  }
+    ///  Set toplevel item.
+    /*!
+     *   If no toplevel item was specified at construction of this widget a
+     *   toplevel item was created. This will be deleted by setting a new
+     *   toplevel item. A toplevel item that was passed to the constructor will
+     *   not be deleted.
+     */
+    void setToplevelItem(KGanttItem *item)
+    {
+        if(_deleteItem)
+            delete _toplevelitem;
+        _toplevelitem = item;
+    }
 
 
 
-  ///  Get bar view of items.
-  /*!
-   *
-   */
-  xQGanttBarView* barView() {
-    return _ganttbar;
-  }
+    ///  Get toplevel item.
+    /*!
+     *
+     */
+    KGanttItem *getToplevelItem()
+    {
+        return _toplevelitem;
+    }
 
 
 
-  ///  Get list view of items.
-  /*!
-   *
-   */
-  xQGanttListView* listView() {
-    return _ganttlist;
-  }
+    ///  Get bar view of items.
+    /*!
+     *
+     */
+    xQGanttBarView *barView()
+    {
+        return _ganttbar;
+    }
 
 
 
-  QSplitter* splitter() {
-    return _splitter;
-  }
-
-
-  
-  ///
-  /*!
-   *
-   */
-  void zoom(double factor) {
-    barView()->viewport()->zoom(factor);
-  }
+    ///  Get list view of items.
+    /*!
+     *
+     */
+    xQGanttListView *listView()
+    {
+        return _ganttlist;
+    }
 
 
 
-  ///  Get popup menu.
-  /*!
-   *
-   */
-  KPopupMenu* menu() {
-    return _ganttbar->viewport()->menu();
-  }
+    QSplitter *splitter()
+    {
+        return _splitter;
+    }
 
 
 
-  ///  Add gantt toolbar to main window.
-  /*!
-   *   If you want to embed a toolbar with specific actions
-   *   like zooming or configuring the gantt, you can add a toolbar
-   *   automatically by invoking this method. You have to pass your
-   *   mainwindow as a parameter if you call this method the first
-   *   time because teh toolbar will be created then. If you
-   *   you want to access the pointer to a already created toolbar you
-   *   can invoke this method without any parameter.
-   */
-  KToolBar* toolbar(QMainWindow* mw = 0) {
-    return _ganttbar->viewport()->toolbar(mw);
-  }
+    ///
+    /*!
+     *
+     */
+    void zoom(double factor)
+    {
+        barView()->viewport()->zoom(factor);
+    }
 
 
 
-  ///  Print to stdout.
-  /*
-   *
-   */
-  void dumpItems();
+    ///  Get popup menu.
+    /*!
+     *
+     */
+    KPopupMenu *menu()
+    {
+        return _ganttbar->viewport()->menu();
+    }
 
 
 
-  ///  Get all selected items.
-  /*!
-   *   All selected KGanttItems will be added to the passed list. 
-   */
-  void getSelectedItems(QPtrList<KGanttItem>& list) {
-    _ganttbar->viewport()->getSelectedItems(list);
-  }
+    ///  Add gantt toolbar to main window.
+    /*!
+     *   If you want to embed a toolbar with specific actions
+     *   like zooming or configuring the gantt, you can add a toolbar
+     *   automatically by invoking this method. You have to pass your
+     *   mainwindow as a parameter if you call this method the first
+     *   time because teh toolbar will be created then. If you
+     *   you want to access the pointer to a already created toolbar you
+     *   can invoke this method without any parameter.
+     */
+    KToolBar *toolbar(QMainWindow *mw = 0)
+    {
+        return _ganttbar->viewport()->toolbar(mw);
+    }
 
 
 
-  void addHoliday(int y, int m, int d) {
-    _ganttbar->viewport()->addHoliday(y,m,d);
-  }
+    ///  Print to stdout.
+    /*
+     *
+     */
+    void dumpItems();
 
 
 
-  void removeHoliday(int y, int m, int d) {
-    _ganttbar->viewport()->addHoliday(y,m,d);
-  }
+    ///  Get all selected items.
+    /*!
+     *   All selected KGanttItems will be added to the passed list.
+     */
+    void getSelectedItems(QPtrList<KGanttItem> &list)
+    {
+        _ganttbar->viewport()->getSelectedItems(list);
+    }
+
+
+
+    void addHoliday(int y, int m, int d)
+    {
+        _ganttbar->viewport()->addHoliday(y, m, d);
+    }
+
+
+
+    void removeHoliday(int y, int m, int d)
+    {
+        _ganttbar->viewport()->addHoliday(y, m, d);
+    }
 
 
 
 public slots:
 
 
-  void setSelect() {
-    _ganttbar->viewport()->setSelect();
-  }
+    void setSelect()
+    {
+        _ganttbar->viewport()->setSelect();
+    }
 
-  void setZoom() {
-    _ganttbar->viewport()->setZoom();
-  }
+    void setZoom()
+    {
+        _ganttbar->viewport()->setZoom();
+    }
 
-  void setMove() {
-    _ganttbar->viewport()->setMove();
-  }
-
-
-  void zoomIn() {
-    _ganttbar->viewport()->zoomIn();
-  }
-
-  void zoomOut() {
-    _ganttbar->viewport()->zoomOut();
-  }
-
-  void zoomAll() {
-    _ganttbar->viewport()->zoomAll();
-  }
-
-  void selectAll() {
-    _ganttbar->viewport()->selectAll();
-  }
-
-  void unselectAll() {
-    _ganttbar->viewport()->unselectAll();
-  }
-
-  void deleteSelectedItems() {
-    _ganttbar->viewport()->deleteSelectedItems();
-  }
-
-  void insertIntoSelectedItem() {
-    _ganttbar->viewport()->insertIntoSelectedItem();
-  }
+    void setMove()
+    {
+        _ganttbar->viewport()->setMove();
+    }
 
 
-  ///  Show list view.
-  /*!
-   *
-   */
-  void showList() {
-    _ganttlist->show();
-  }
+    void zoomIn()
+    {
+        _ganttbar->viewport()->zoomIn();
+    }
+
+    void zoomOut()
+    {
+        _ganttbar->viewport()->zoomOut();
+    }
+
+    void zoomAll()
+    {
+        _ganttbar->viewport()->zoomAll();
+    }
+
+    void selectAll()
+    {
+        _ganttbar->viewport()->selectAll();
+    }
+
+    void unselectAll()
+    {
+        _ganttbar->viewport()->unselectAll();
+    }
+
+    void deleteSelectedItems()
+    {
+        _ganttbar->viewport()->deleteSelectedItems();
+    }
+
+    void insertIntoSelectedItem()
+    {
+        _ganttbar->viewport()->insertIntoSelectedItem();
+    }
 
 
-  ///  Hide list view.
-  /*
-   *
-   */
-  void hideList() {
-    _ganttlist->hide();
-  }
+    ///  Show list view.
+    /*!
+     *
+     */
+    void showList()
+    {
+        _ganttlist->show();
+    }
+
+
+    ///  Hide list view.
+    /*
+     *
+     */
+    void hideList()
+    {
+        _ganttlist->hide();
+    }
 
 
 protected:
 
 
-  void resizeEvent(QResizeEvent* /*e*/) {
-    _splitter->resize(width(),height());
-  };
+    void resizeEvent(QResizeEvent * /*e*/)
+    {
+        _splitter->resize(width(), height());
+    };
 
 
 private:
 
-  KGanttItem* _toplevelitem;
+    KGanttItem *_toplevelitem;
 
-  QSplitter *_splitter;
+    QSplitter *_splitter;
 
-  xQGanttBarView* _ganttbar;
-  xQGanttListView* _ganttlist;
+    xQGanttBarView *_ganttbar;
+    xQGanttListView *_ganttlist;
 
-  bool _deleteItem;
+    bool _deleteItem;
 
 };
 

@@ -11,6 +11,6 @@
  * Otherwise the format is hh:mi.
  *
  */
-QString formatTime( long minutes, bool decimal=false );
+QString formatTime(long minutes, bool decimal = false);
 
 #endif

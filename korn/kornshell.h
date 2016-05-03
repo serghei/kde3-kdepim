@@ -29,29 +29,29 @@ class KConfig;
 /**
  * This is a rewritten KornShell class. It is rewritten because the depending classes changed.
  */
-class KornShell : public QWidget
-{ Q_OBJECT
+class KornShell : public QWidget {
+    Q_OBJECT
 public:
-	KornShell( QWidget * parent = 0, const char * name = 0 );
-	~KornShell();
+    KornShell(QWidget *parent = 0, const char *name = 0);
+    ~KornShell();
 
-	void show();	
+    void show();
 public slots:
-	/**
-	 * This function shows the configuration-dialog
-	 */
-	void optionDlg();
-	
+    /**
+     * This function shows the configuration-dialog
+     */
+    void optionDlg();
+
 private slots:
-	void slotDialogClosed();
-	void slotApply();
-	void readConfig();
-	
+    void slotDialogClosed();
+    void slotApply();
+    void readConfig();
+
 private:
-	KConfig *_config;
-	BoxContainer *_box;
-	KDialogBase *_configDialog;
-	bool _show;
+    KConfig *_config;
+    BoxContainer *_box;
+    KDialogBase *_configDialog;
+    bool _show;
 };
 
 #endif //MK_KORNSHELL_H

@@ -29,43 +29,48 @@ class KAEvent;
 class MainWindow;
 class TrayTooltip;
 
-class TrayWindow : public KSystemTray
-{
-		Q_OBJECT
-	public:
-		TrayWindow(MainWindow* parent, const char* name = 0);
-		~TrayWindow();
-		void         removeWindow(MainWindow*);
-		MainWindow*  assocMainWindow() const               { return mAssocMainWindow; }
-		void         setAssocMainWindow(MainWindow* win)   { mAssocMainWindow = win; }
-		bool         inSystemTray() const;
-		void         tooltipAlarmText(QString& text) const;
+class TrayWindow : public KSystemTray {
+    Q_OBJECT
+public:
+    TrayWindow(MainWindow *parent, const char *name = 0);
+    ~TrayWindow();
+    void         removeWindow(MainWindow *);
+    MainWindow  *assocMainWindow() const
+    {
+        return mAssocMainWindow;
+    }
+    void         setAssocMainWindow(MainWindow *win)
+    {
+        mAssocMainWindow = win;
+    }
+    bool         inSystemTray() const;
+    void         tooltipAlarmText(QString &text) const;
 
-	public slots:
-		void         slotQuit();
+public slots:
+    void         slotQuit();
 
-	signals:
-		void         deleted();
+signals:
+    void         deleted();
 
-	protected:
-		virtual void contextMenuAboutToShow(KPopupMenu*);
-		virtual void mousePressEvent(QMouseEvent*);
-		virtual void mouseReleaseEvent(QMouseEvent*);
-		virtual void dragEnterEvent(QDragEnterEvent*);
-		virtual void dropEvent(QDropEvent*);
+protected:
+    virtual void contextMenuAboutToShow(KPopupMenu *);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
 
-	private slots:
-		void         slotNewAlarm();
-		void         slotNewFromTemplate(const KAEvent&);
-		void         slotPreferences();
-		void         setEnabledStatus(bool status);
+private slots:
+    void         slotNewAlarm();
+    void         slotNewFromTemplate(const KAEvent &);
+    void         slotPreferences();
+    void         setEnabledStatus(bool status);
 
-	private:
-		friend class TrayTooltip;
+private:
+    friend class TrayTooltip;
 
-		MainWindow*  mAssocMainWindow;     // main window associated with this, or null
-		QPixmap      mPixmapEnabled, mPixmapDisabled;
-		TrayTooltip* mTooltip;
+    MainWindow  *mAssocMainWindow;     // main window associated with this, or null
+    QPixmap      mPixmapEnabled, mPixmapDisabled;
+    TrayTooltip *mTooltip;
 };
 
 #endif // TRAYWINDOW_H

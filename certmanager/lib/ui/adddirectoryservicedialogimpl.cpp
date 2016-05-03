@@ -46,10 +46,10 @@
  *  The dialog will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal dialog.
  */
-AddDirectoryServiceDialogImpl::AddDirectoryServiceDialogImpl( QWidget* parent,  const char* name, bool modal, WFlags fl )
-    : AddDirectoryServiceDialog( parent, name, modal, fl )
+AddDirectoryServiceDialogImpl::AddDirectoryServiceDialogImpl(QWidget *parent,  const char *name, bool modal, WFlags fl)
+    : AddDirectoryServiceDialog(parent, name, modal, fl)
 {
-    portED->setValidator( new QIntValidator( 0, 65535, portED ) );
+    portED->setValidator(new QIntValidator(0, 65535, portED));
 }
 
 /*

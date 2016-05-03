@@ -32,13 +32,13 @@
 
 
 /* This is a loaded library, which is initialized with the line below */
-K_EXPORT_COMPONENT_FACTORY( libkmobile_skeleton, KMobileSkeleton() )
+K_EXPORT_COMPONENT_FACTORY(libkmobile_skeleton, KMobileSkeleton())
 
 /* createObject needs to be reimplemented by every KMobileDevice driver */
-QObject *KMobileSkeleton::createObject( QObject *parent, const char *name,
-        const char *, const QStringList &args )
+QObject *KMobileSkeleton::createObject(QObject *parent, const char *name,
+                                       const char *, const QStringList &args)
 {
-  return new KMobileSkeleton( parent, name, args );
+    return new KMobileSkeleton(parent, name, args);
 }
 
 
@@ -46,14 +46,14 @@ QObject *KMobileSkeleton::createObject( QObject *parent, const char *name,
  *  The KDE skeleton mobile device driver.
  */
 
-KMobileSkeleton::KMobileSkeleton(QObject *obj, const char *name, const QStringList &args )
-	: KMobileDevice(obj, name, args)
+KMobileSkeleton::KMobileSkeleton(QObject *obj, const char *name, const QStringList &args)
+    : KMobileDevice(obj, name, args)
 {
-  // set initial device info
-  setClassType( Phone );
-  m_deviceName = i18n("LX-50-Moohoo Addressbook (Skeleton)");
-  m_deviceRevision = "0.1";
-  setCapabilities( hasAddressBook | hasNotes );
+    // set initial device info
+    setClassType(Phone);
+    m_deviceName = i18n("LX-50-Moohoo Addressbook (Skeleton)");
+    m_deviceRevision = "0.1";
+    setCapabilities(hasAddressBook | hasNotes);
 }
 
 KMobileSkeleton::~KMobileSkeleton()
@@ -63,38 +63,38 @@ KMobileSkeleton::~KMobileSkeleton()
 // connect the device and ask user to turn device on (if necessary)
 bool KMobileSkeleton::connectDevice(QWidget *parent)
 {
-  if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parent,
-	i18n("Please turn on your %1 on now and press continue to proceed.").arg(m_deviceName),
-	m_deviceClassName ) )
-	return false;
-  // connect it now...
-  m_connected = true;
-  return m_connected;
+    if(KMessageBox::Continue != KMessageBox::warningContinueCancel(parent,
+            i18n("Please turn on your %1 on now and press continue to proceed.").arg(m_deviceName),
+            m_deviceClassName))
+        return false;
+    // connect it now...
+    m_connected = true;
+    return m_connected;
 }
 
 // disconnect the device and return true, if sucessful
 bool KMobileSkeleton::disconnectDevice(QWidget *)
 {
-  m_connected = true;
-  return true;
+    m_connected = true;
+    return true;
 }
 
 // returns true, if this device is read-only (default: false)
 bool KMobileSkeleton::isReadOnly() const
 {
-  return true;
+    return true;
 }
 
 // return a unique ID, e.g. the IMEI number of phones, or a serial number
 // this String is used to have a unique identification for syncronisation.
 QString KMobileSkeleton::deviceUniqueID()
-{ 
-  return QString::fromLocal8Bit("SkElEtOn-123456789");
+{
+    return QString::fromLocal8Bit("SkElEtOn-123456789");
 }
 
 QString KMobileSkeleton::iconFileName() const
 {
-  return "mobile_unknown"; /* KMOBILE_ICON_UNKNOWN */
+    return "mobile_unknown"; /* KMOBILE_ICON_UNKNOWN */
 }
 
 /*
@@ -102,38 +102,38 @@ QString KMobileSkeleton::iconFileName() const
  */
 int KMobileSkeleton::numAddresses()
 {
-  return 10; /* number of addresses we simulate */
+    return 10; /* number of addresses we simulate */
 }
 
-int KMobileSkeleton::readAddress( int index, KABC::Addressee &addr )
+int KMobileSkeleton::readAddress(int index, KABC::Addressee &addr)
 {
-  // index is zero-based
-  if (index<0 || index>=numAddresses())
-    return KIO::ERR_DOES_NOT_EXIST;
+    // index is zero-based
+    if(index < 0 || index >= numAddresses())
+        return KIO::ERR_DOES_NOT_EXIST;
 
-  // now build our own sample name
-  addr.setFamilyName(QString("Meyer_%1").arg(index+1));  
-  addr.setGivenName("Peter");
-  addr.setFormattedName("Peter "+addr.familyName());
-  addr.setNickName("PeterM");
-  addr.setBirthday(QDateTime(QDate(1970,7,22)));
-  addr.setRole("KDE Software Developer");
-  addr.setOrganization("KDE.ORG");
-  addr.setNote("the best KDE developer ever");
-  addr.setUrl(KURL("www.kde.org"));
-  addr.insertEmail("peterm@kde.org");
-  addr.insertPhoneNumber(KABC::PhoneNumber("+49 6110 12345"));
+    // now build our own sample name
+    addr.setFamilyName(QString("Meyer_%1").arg(index + 1));
+    addr.setGivenName("Peter");
+    addr.setFormattedName("Peter " + addr.familyName());
+    addr.setNickName("PeterM");
+    addr.setBirthday(QDateTime(QDate(1970, 7, 22)));
+    addr.setRole("KDE Software Developer");
+    addr.setOrganization("KDE.ORG");
+    addr.setNote("the best KDE developer ever");
+    addr.setUrl(KURL("www.kde.org"));
+    addr.insertEmail("peterm@kde.org");
+    addr.insertPhoneNumber(KABC::PhoneNumber("+49 6110 12345"));
 
-  // the Revision might be important for syncronisations
-  addr.setRevision(QDateTime(QDate(2003,1,1)));
+    // the Revision might be important for syncronisations
+    addr.setRevision(QDateTime(QDate(2003, 1, 1)));
 
-  return 0;
+    return 0;
 }
 
-int KMobileSkeleton::storeAddress( int, const KABC::Addressee &, bool )
+int KMobileSkeleton::storeAddress(int, const KABC::Addressee &, bool)
 {
-  /* this is a read-only device */
-  return KIO::ERR_WRITE_ACCESS_DENIED;
+    /* this is a read-only device */
+    return KIO::ERR_WRITE_ACCESS_DENIED;
 }
 
 /*
@@ -141,24 +141,24 @@ int KMobileSkeleton::storeAddress( int, const KABC::Addressee &, bool )
  */
 int KMobileSkeleton::numNotes()
 {
-  return 100;
+    return 100;
 }
 
-int KMobileSkeleton::readNote( int index, QString &note )
+int KMobileSkeleton::readNote(int index, QString &note)
 {
-  // index is zero-based, and we only have one simulated note
-  if (index<0 || index>=numNotes())
-    return KIO::ERR_DOES_NOT_EXIST;
+    // index is zero-based, and we only have one simulated note
+    if(index < 0 || index >= numNotes())
+        return KIO::ERR_DOES_NOT_EXIST;
 
-  note = QString("NOTE #%1\n"
-		 "--------\n"
-	"This is a sample note #%2\n\n"
-	"DeviceClassName: %3\n"
-	"Device Driver  : %4\n"
-	"Device Revision: %5\n")
-	.arg(index).arg(index)
-	.arg(deviceClassName()).arg(deviceName()).arg(revision()); 
-  return 0;
+    note = QString("NOTE #%1\n"
+                   "--------\n"
+                   "This is a sample note #%2\n\n"
+                   "DeviceClassName: %3\n"
+                   "Device Driver  : %4\n"
+                   "Device Revision: %5\n")
+           .arg(index).arg(index)
+           .arg(deviceClassName()).arg(deviceName()).arg(revision());
+    return 0;
 }
 
 #include "skeleton.moc"

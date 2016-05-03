@@ -42,44 +42,46 @@ using namespace KCal;
 */
 
 
-BloggingUploadItem::BloggingUploadItem( KBlog::APIBlog *api, CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type )
-    : GroupwareUploadItem( type ), mPosting( 0 ), mAPI( 0 )
+BloggingUploadItem::BloggingUploadItem(KBlog::APIBlog *api, CalendarAdaptor *adaptor, KCal::Incidence *incidence,
+                                       KPIM::GroupwareUploadItem::UploadType type)
+    : GroupwareUploadItem(type), mPosting(0), mAPI(0)
 {
-  Journal* j = dynamic_cast<Journal*>( incidence );
-  if ( api && j && adaptor ) {
-    mItemType = KPIM::FolderLister::Journal;
+    Journal *j = dynamic_cast<Journal *>(incidence);
+    if(api && j && adaptor)
+    {
+        mItemType = KPIM::FolderLister::Journal;
 
-    setUrl( j->customProperty( adaptor->identifier(), "storagelocation" ) );
-    setUid( j->uid() );
+        setUrl(j->customProperty(adaptor->identifier(), "storagelocation"));
+        setUid(j->uid());
 
-    mPosting = api->postingFromJournal( j );
-    mAPI = api;
-  }
+        mPosting = api->postingFromJournal(j);
+        mAPI = api;
+    }
 }
 
 BloggingUploadItem::~BloggingUploadItem()
 {
-  delete mPosting;
+    delete mPosting;
 }
 
-KIO::TransferJob *BloggingUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *BloggingUploadItem::createUploadJob(KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl)
 {
-kdDebug()<<"BloggingUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseurl.url()<<endl;
-  Q_ASSERT( adaptor );
-  if ( !adaptor || !mAPI ) return 0;
-  kdDebug() << "Uploading to: " << url().prettyURL() << endl;
-  mAPI->setURL( baseurl );
-  return mAPI->createUploadJob( url(), mPosting );
+    kdDebug() << "BloggingUploadItem::createUploadJob, adaptor=" << adaptor << ", URL=" << baseurl.url() << endl;
+    Q_ASSERT(adaptor);
+    if(!adaptor || !mAPI) return 0;
+    kdDebug() << "Uploading to: " << url().prettyURL() << endl;
+    mAPI->setURL(baseurl);
+    return mAPI->createUploadJob(url(), mPosting);
 }
 
-KIO::TransferJob *BloggingUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *BloggingUploadItem::createUploadNewJob(KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl)
 {
-kdDebug()<<"BloggingUploadItem::createUploadNewJob"<<endl;
-  Q_ASSERT( adaptor );
-  if ( !adaptor || !mAPI ) return 0;
-  kdDebug() << "Uploading new item to: " << baseurl.prettyURL() << endl;
-  mAPI->setURL( baseurl );
-  return mAPI->createUploadNewJob( mPosting );
+    kdDebug() << "BloggingUploadItem::createUploadNewJob" << endl;
+    Q_ASSERT(adaptor);
+    if(!adaptor || !mAPI) return 0;
+    kdDebug() << "Uploading new item to: " << baseurl.prettyURL() << endl;
+    mAPI->setURL(baseurl);
+    return mAPI->createUploadNewJob(mPosting);
 }
 
 
@@ -87,173 +89,195 @@ kdDebug()<<"BloggingUploadItem::createUploadNewJob"<<endl;
 
 
 
-BloggingCalendarAdaptor::BloggingCalendarAdaptor() : mAPI( 0 ), mAuthenticated( false )
+BloggingCalendarAdaptor::BloggingCalendarAdaptor() : mAPI(0), mAuthenticated(false)
 {
 }
 
 
 KBlog::APIBlog *BloggingCalendarAdaptor::api() const
 {
-  return mAPI;
+    return mAPI;
 }
 
-void BloggingCalendarAdaptor::setAPI( KBlog::APIBlog *api )
+void BloggingCalendarAdaptor::setAPI(KBlog::APIBlog *api)
 {
-  delete mAPI;
-  mAPI = api;
-  mAuthenticated = false;
-  connect( api, SIGNAL( userInfoRetrieved( const QString &, const QString &,
-                                           const QString & ) ),
-           SLOT( slotUserInfoRetrieved( const QString &, const QString &,
-                                    const QString & ) ) );
-  connect( api, SIGNAL( folderInfoRetrieved( const QString &, const QString & ) ),
-           SLOT( slotFolderInfoRetrieved( const QString&, const QString & ) ) );
-  connect( api, SIGNAL( itemOnServer( const KURL & ) ),
-           SIGNAL( itemOnServer( const KURL & ) ) );
-  connect( api, SIGNAL( itemDownloaded( KCal::Incidence *, const QString &,
-                                        const KURL &, const QString &, const QString & ) ),
-           SLOT( calendarItemDownloaded( KCal::Incidence *, const QString &,
-                                         const KURL &, const QString &, const QString & ) ) );
-
-}
-
-KPIM::GroupwareUploadItem *BloggingCalendarAdaptor::newUploadItem( KCal::Incidence*it,
-           KPIM::GroupwareUploadItem::UploadType type )
-{
-  return new BloggingUploadItem( mAPI, this, it, type );
-}
-
-
-
-void BloggingCalendarAdaptor::slotFolderInfoRetrieved( const QString &id, const QString &name )
-{
-  emit folderInfoRetrieved( KURL(id), name, KPIM::FolderLister::Journal );
-}
-
-void BloggingCalendarAdaptor::slotUserInfoRetrieved( const QString &/*nick*/,
-       const QString &/*user*/, const QString &/*email*/ )
-{
-kdDebug() << "BloggingCalendarAdaptor::slotUserInfoRetrieved"<<endl;
-  mAuthenticated = true;
-}
-
-void BloggingCalendarAdaptor::setBaseURL( const KURL &url )
-{
-  if ( mAPI ) {
-    mAPI->setURL( url );
-  }
-}
-
-void BloggingCalendarAdaptor::setUser( const QString &user )
-{
-  CalendarAdaptor::setUser( user );
-  if ( mAPI ) {
-    mAPI->setUsername( user );
-  }
-}
-
-void BloggingCalendarAdaptor::setPassword( const QString &password )
-{
-  CalendarAdaptor::setPassword( password );
-  if ( mAPI ) {
-    mAPI->setPassword( password );
-  }
-}
-
-void BloggingCalendarAdaptor::setUserPassword( KURL & )
-{
-  kdDebug(5800) << "BloggingCalendarAdaptor::setUserPassword" << endl;
-}
-
-
-
-KIO::Job *BloggingCalendarAdaptor::createLoginJob( const KURL &url,
-                                                   const QString &user,
-                                                   const QString &password )
-{
-  if ( mAPI ) {
-    mAPI->setURL( url );
-    mAPI->setUsername( user );
-    mAPI->setPassword( password );
-    return mAPI->createUserInfoJob();
-  } else return 0;
-}
-
-KIO::Job *BloggingCalendarAdaptor::createListFoldersJob( const KURL &/*url*/ )
-{
-  if ( mAPI ) {
-    return mAPI->createListFoldersJob();
-  } else return 0;
-}
-
-KIO::TransferJob *BloggingCalendarAdaptor::createListItemsJob( const KURL &url )
-{
-  if ( mAPI ) {
-    return mAPI->createListItemsJob( url );
-  } else return 0;
-}
-
-KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KURL &url,
-                                     KPIM::FolderLister::ContentType ctype )
-{
-  if ( mAPI && (ctype & KPIM::FolderLister::Journal) ) {
-    return mAPI->createDownloadJob( url );
-  } else return 0;
-}
-
-KIO::Job *BloggingCalendarAdaptor::createRemoveJob( const KURL &url,
-                         KPIM::GroupwareUploadItem *deleteItem )
-{
-kdDebug()<<"BloggingCalendarAdaptor::createRemoveJob( " << url.url() << ", ..)" << endl;
-  if ( mAPI && deleteItem ) {
-    return mAPI->createRemoveJob( url, deleteItem->url().url() );
-  } else return 0;
-}
-
-
-
-
-bool BloggingCalendarAdaptor::interpretLoginJob( KIO::Job *job )
-{
-kdDebug()<<"BloggingCalendarAdaptor::interpretLoginJob"<<endl;
-  if ( mAPI && job ) {
-kdDebug()<<"We have an API and a job"<<endl;
+    delete mAPI;
+    mAPI = api;
     mAuthenticated = false;
-    mAPI->interpretUserInfoJob( job );
-kdDebug() << "authenticated=" << mAuthenticated << endl;
-    return mAuthenticated;
-  } else return false;
+    connect(api, SIGNAL(userInfoRetrieved(const QString &, const QString &,
+                                          const QString &)),
+            SLOT(slotUserInfoRetrieved(const QString &, const QString &,
+                                       const QString &)));
+    connect(api, SIGNAL(folderInfoRetrieved(const QString &, const QString &)),
+            SLOT(slotFolderInfoRetrieved(const QString &, const QString &)));
+    connect(api, SIGNAL(itemOnServer(const KURL &)),
+            SIGNAL(itemOnServer(const KURL &)));
+    connect(api, SIGNAL(itemDownloaded(KCal::Incidence *, const QString &,
+                                       const KURL &, const QString &, const QString &)),
+            SLOT(calendarItemDownloaded(KCal::Incidence *, const QString &,
+                                        const KURL &, const QString &, const QString &)));
+
+}
+
+KPIM::GroupwareUploadItem *BloggingCalendarAdaptor::newUploadItem(KCal::Incidence *it,
+        KPIM::GroupwareUploadItem::UploadType type)
+{
+    return new BloggingUploadItem(mAPI, this, it, type);
 }
 
 
-void BloggingCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * )
+
+void BloggingCalendarAdaptor::slotFolderInfoRetrieved(const QString &id, const QString &name)
 {
-kdDebug() << "BloggingCalendarAdaptor::interpretListFoldersJob" << endl;
-  if ( mAPI && job ) {
-    mAPI->interpretListFoldersJob( job );
-  }
+    emit folderInfoRetrieved(KURL(id), name, KPIM::FolderLister::Journal);
+}
+
+void BloggingCalendarAdaptor::slotUserInfoRetrieved(const QString &/*nick*/,
+        const QString &/*user*/, const QString &/*email*/)
+{
+    kdDebug() << "BloggingCalendarAdaptor::slotUserInfoRetrieved" << endl;
+    mAuthenticated = true;
+}
+
+void BloggingCalendarAdaptor::setBaseURL(const KURL &url)
+{
+    if(mAPI)
+    {
+        mAPI->setURL(url);
+    }
+}
+
+void BloggingCalendarAdaptor::setUser(const QString &user)
+{
+    CalendarAdaptor::setUser(user);
+    if(mAPI)
+    {
+        mAPI->setUsername(user);
+    }
+}
+
+void BloggingCalendarAdaptor::setPassword(const QString &password)
+{
+    CalendarAdaptor::setPassword(password);
+    if(mAPI)
+    {
+        mAPI->setPassword(password);
+    }
+}
+
+void BloggingCalendarAdaptor::setUserPassword(KURL &)
+{
+    kdDebug(5800) << "BloggingCalendarAdaptor::setUserPassword" << endl;
 }
 
 
-bool BloggingCalendarAdaptor::interpretListItemsJob( KIO::Job *job,
-                                                    const QString &/*jobData*/ )
+
+KIO::Job *BloggingCalendarAdaptor::createLoginJob(const KURL &url,
+        const QString &user,
+        const QString &password)
 {
-  if ( mAPI ) {
-    return mAPI->interpretListItemsJob( job );
-  } else {
-    return false;
-  }
+    if(mAPI)
+    {
+        mAPI->setURL(url);
+        mAPI->setUsername(user);
+        mAPI->setPassword(password);
+        return mAPI->createUserInfoJob();
+    }
+    else return 0;
+}
+
+KIO::Job *BloggingCalendarAdaptor::createListFoldersJob(const KURL &/*url*/)
+{
+    if(mAPI)
+    {
+        return mAPI->createListFoldersJob();
+    }
+    else return 0;
+}
+
+KIO::TransferJob *BloggingCalendarAdaptor::createListItemsJob(const KURL &url)
+{
+    if(mAPI)
+    {
+        return mAPI->createListItemsJob(url);
+    }
+    else return 0;
+}
+
+KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob(const KURL &url,
+        KPIM::FolderLister::ContentType ctype)
+{
+    if(mAPI && (ctype & KPIM::FolderLister::Journal))
+    {
+        return mAPI->createDownloadJob(url);
+    }
+    else return 0;
+}
+
+KIO::Job *BloggingCalendarAdaptor::createRemoveJob(const KURL &url,
+        KPIM::GroupwareUploadItem *deleteItem)
+{
+    kdDebug() << "BloggingCalendarAdaptor::createRemoveJob( " << url.url() << ", ..)" << endl;
+    if(mAPI && deleteItem)
+    {
+        return mAPI->createRemoveJob(url, deleteItem->url().url());
+    }
+    else return 0;
 }
 
 
-bool BloggingCalendarAdaptor::interpretDownloadItemsJob( KIO::Job *job,
-                                                    const QString &/*jobData*/ )
+
+
+bool BloggingCalendarAdaptor::interpretLoginJob(KIO::Job *job)
 {
-  if ( mAPI ) {
-    return mAPI->interpretDownloadItemsJob( job );
-  } else {
-    return false;
-  }
+    kdDebug() << "BloggingCalendarAdaptor::interpretLoginJob" << endl;
+    if(mAPI && job)
+    {
+        kdDebug() << "We have an API and a job" << endl;
+        mAuthenticated = false;
+        mAPI->interpretUserInfoJob(job);
+        kdDebug() << "authenticated=" << mAuthenticated << endl;
+        return mAuthenticated;
+    }
+    else return false;
+}
+
+
+void BloggingCalendarAdaptor::interpretListFoldersJob(KIO::Job *job, KPIM::FolderLister *)
+{
+    kdDebug() << "BloggingCalendarAdaptor::interpretListFoldersJob" << endl;
+    if(mAPI && job)
+    {
+        mAPI->interpretListFoldersJob(job);
+    }
+}
+
+
+bool BloggingCalendarAdaptor::interpretListItemsJob(KIO::Job *job,
+        const QString &/*jobData*/)
+{
+    if(mAPI)
+    {
+        return mAPI->interpretListItemsJob(job);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+bool BloggingCalendarAdaptor::interpretDownloadItemsJob(KIO::Job *job,
+        const QString &/*jobData*/)
+{
+    if(mAPI)
+    {
+        return mAPI->interpretDownloadItemsJob(job);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 #include "bloggingcalendaradaptor.moc"

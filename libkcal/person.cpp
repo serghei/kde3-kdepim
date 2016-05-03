@@ -31,66 +31,74 @@
 
 using namespace KCal;
 
-Person::Person( const QString &fullName )
+Person::Person(const QString &fullName)
 {
-  QString name, email;
-  KPIM::getNameAndMail( fullName, name, email );
-  setName( name );
-  setEmail( email );
+    QString name, email;
+    KPIM::getNameAndMail(fullName, name, email);
+    setName(name);
+    setEmail(email);
 }
 
-Person::Person( const QString &name, const QString &email )
+Person::Person(const QString &name, const QString &email)
 {
-  setName( name );
-  setEmail( email );
+    setName(name);
+    setEmail(email);
 }
 
 
-bool KCal::operator==( const Person& p1, const Person& p2 )
+bool KCal::operator==(const Person &p1, const Person &p2)
 {
-    return ( p1.name() == p2.name() &&
-             p1.email() == p2.email() );
+    return (p1.name() == p2.name() &&
+            p1.email() == p2.email());
 }
 
 
 QString Person::fullName() const
 {
-  if( mName.isEmpty() ) {
-    return mEmail;
-  } else {
-    if( mEmail.isEmpty() )
-      return mName;
-    else {
-      // Taken from KABC::Addressee::fullEmail
-      QString name = mName;
-      QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
-      bool weNeedToQuote = name.find( needQuotes ) != -1;
-      if ( weNeedToQuote ) {
-          if ( name[0] != '"' )
-              name.prepend( '"' );
-          if ( name[ name.length()-1 ] != '"' )
-              name.append( '"' );
-      }
-      return name + " <" + mEmail + ">";
+    if(mName.isEmpty())
+    {
+        return mEmail;
     }
-  }
+    else
+    {
+        if(mEmail.isEmpty())
+            return mName;
+        else
+        {
+            // Taken from KABC::Addressee::fullEmail
+            QString name = mName;
+            QRegExp needQuotes("[^ 0-9A-Za-z\\x0080-\\xFFFF]");
+            bool weNeedToQuote = name.find(needQuotes) != -1;
+            if(weNeedToQuote)
+            {
+                if(name[0] != '"')
+                    name.prepend('"');
+                if(name[ name.length() - 1 ] != '"')
+                    name.append('"');
+            }
+            return name + " <" + mEmail + ">";
+        }
+    }
 }
 
 bool Person::isEmpty() const
 {
-  return mEmail.isEmpty() && mName.isEmpty();
+    return mEmail.isEmpty() && mName.isEmpty();
 }
 
 void Person::setName(const QString &name)
 {
-  mName = name;
+    mName = name;
 }
 
 void Person::setEmail(const QString &email)
 {
-  if ( email.startsWith( "mailto:", false ) ) {
-    mEmail = email.mid(7);
-  } else {
-    mEmail = email;
-  }
+    if(email.startsWith("mailto:", false))
+    {
+        mEmail = email.mid(7);
+    }
+    else
+    {
+        mEmail = email;
+    }
 }

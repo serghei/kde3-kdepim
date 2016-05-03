@@ -46,14 +46,14 @@ using KPIM::MailListDrag;
 
 namespace KMail {
 
-AttachmentListView::AttachmentListView( KMail::Composer * composer,
-                                        QWidget* parent,
-                                        const char* name )
-  : KListView( parent, name ),
-    mComposer( composer )
+AttachmentListView::AttachmentListView(KMail::Composer *composer,
+                                       QWidget *parent,
+                                       const char *name)
+    : KListView(parent, name),
+      mComposer(composer)
 {
-  setAcceptDrops( true );
-  setDragEnabled( true );
+    setAcceptDrops(true);
+    setDragEnabled(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -64,75 +64,82 @@ AttachmentListView::~AttachmentListView()
 
 //-----------------------------------------------------------------------------
 
-void AttachmentListView::contentsDragEnterEvent( QDragEnterEvent* e )
+void AttachmentListView::contentsDragEnterEvent(QDragEnterEvent *e)
 {
-  if( e->provides( MailListDrag::format() ) || KURLDrag::canDecode( e ) )
-    e->accept( true );
-  else
-    KListView::dragEnterEvent( e );
+    if(e->provides(MailListDrag::format()) || KURLDrag::canDecode(e))
+        e->accept(true);
+    else
+        KListView::dragEnterEvent(e);
 }
 
 //-----------------------------------------------------------------------------
 
-void AttachmentListView::contentsDragMoveEvent( QDragMoveEvent* e )
+void AttachmentListView::contentsDragMoveEvent(QDragMoveEvent *e)
 {
-  if( e->provides( MailListDrag::format() ) || KURLDrag::canDecode( e ) )
-    e->accept( true );
-  else
-    KListView::dragMoveEvent( e );
+    if(e->provides(MailListDrag::format()) || KURLDrag::canDecode(e))
+        e->accept(true);
+    else
+        KListView::dragMoveEvent(e);
 }
 
 //-----------------------------------------------------------------------------
 
-void AttachmentListView::contentsDropEvent( QDropEvent* e )
+void AttachmentListView::contentsDropEvent(QDropEvent *e)
 {
-  if( e->provides( MailListDrag::format() ) ) {
-    // Decode the list of serial numbers stored as the drag data
-    QByteArray serNums;
-    MailListDrag::decode( e, serNums );
-    QBuffer serNumBuffer( serNums );
-    serNumBuffer.open( IO_ReadOnly );
-    QDataStream serNumStream( &serNumBuffer );
-    Q_UINT32 serNum;
-    KMFolder *folder = 0;
-    int idx;
-    QPtrList<KMMsgBase> messageList;
-    while( !serNumStream.atEnd() ) {
-      KMMsgBase *msgBase = 0;
-      serNumStream >> serNum;
-      KMMsgDict::instance()->getLocation( serNum, &folder, &idx );
-      if( folder )
-        msgBase = folder->getMsgBase( idx );
-      if( msgBase )
-        messageList.append( msgBase );
+    if(e->provides(MailListDrag::format()))
+    {
+        // Decode the list of serial numbers stored as the drag data
+        QByteArray serNums;
+        MailListDrag::decode(e, serNums);
+        QBuffer serNumBuffer(serNums);
+        serNumBuffer.open(IO_ReadOnly);
+        QDataStream serNumStream(&serNumBuffer);
+        Q_UINT32 serNum;
+        KMFolder *folder = 0;
+        int idx;
+        QPtrList<KMMsgBase> messageList;
+        while(!serNumStream.atEnd())
+        {
+            KMMsgBase *msgBase = 0;
+            serNumStream >> serNum;
+            KMMsgDict::instance()->getLocation(serNum, &folder, &idx);
+            if(folder)
+                msgBase = folder->getMsgBase(idx);
+            if(msgBase)
+                messageList.append(msgBase);
+        }
+        serNumBuffer.close();
+        uint identity = folder ? folder->identity() : 0;
+        KMCommand *command = new KMForwardAttachedCommand(mComposer, messageList,
+                identity, mComposer);
+        command->start();
     }
-    serNumBuffer.close();
-    uint identity = folder ? folder->identity() : 0;
-    KMCommand *command = new KMForwardAttachedCommand( mComposer, messageList,
-                                                       identity, mComposer );
-    command->start();
-  }
-  else if( KURLDrag::canDecode( e ) ) {
-    KURL::List urlList;
-    if( KURLDrag::decode( e, urlList ) ) {
-      for( KURL::List::Iterator it = urlList.begin();
-           it != urlList.end(); ++it ) {
-        mComposer->addAttach( *it );
-      }
+    else if(KURLDrag::canDecode(e))
+    {
+        KURL::List urlList;
+        if(KURLDrag::decode(e, urlList))
+        {
+            for(KURL::List::Iterator it = urlList.begin();
+                    it != urlList.end(); ++it)
+            {
+                mComposer->addAttach(*it);
+            }
+        }
     }
-  }
-  else {
-    KListView::dropEvent( e );
-  }
+    else
+    {
+        KListView::dropEvent(e);
+    }
 }
 
 //-----------------------------------------------------------------------------
 
-void AttachmentListView::keyPressEvent( QKeyEvent * e )
+void AttachmentListView::keyPressEvent(QKeyEvent *e)
 {
-  if ( e->key() == Key_Delete ) {
-    emit attachmentDeleted();
-  }
+    if(e->key() == Key_Delete)
+    {
+        emit attachmentDeleted();
+    }
 }
 
 /*virtual*/

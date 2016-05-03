@@ -39,20 +39,19 @@ namespace KMail {
  * WARNING: this widget is hardcoded to only display disconnected imap
  * accounts, in this branch.
  */
-class AccountComboBox : public QComboBox
-{
-  Q_OBJECT
+class AccountComboBox : public QComboBox {
+    Q_OBJECT
 
 public:
-  AccountComboBox( QWidget* parent, const char* name = 0 );
+    AccountComboBox(QWidget *parent, const char *name = 0);
 
-  void setCurrentAccount( KMAccount* account );
-  KMAccount* currentAccount() const;
+    void setCurrentAccount(KMAccount *account);
+    KMAccount *currentAccount() const;
 
 private slots:
-  void slotRefreshAccounts();
+    void slotRefreshAccounts();
 private:
-  QValueList<KMAccount *> applicableAccounts() const;
+    QValueList<KMAccount *> applicableAccounts() const;
 };
 
 

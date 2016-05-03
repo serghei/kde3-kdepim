@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -24,55 +24,57 @@
 
 using namespace Schema;
 
-QualifiedName::QualifiedName( const QString &name )
+QualifiedName::QualifiedName(const QString &name)
 {
-  parse( name );
+    parse(name);
 }
 
 QualifiedName::QualifiedName()
 {
 }
 
-void QualifiedName::operator=( const QString &name )
+void QualifiedName::operator=(const QString &name)
 {
-  parse( name );
+    parse(name);
 }
 
 QString QualifiedName::localName() const
 {
-  return mLocalName;
+    return mLocalName;
 }
 
 QString QualifiedName::prefix() const
 {
-  return mPrefix;
+    return mPrefix;
 }
 
-void QualifiedName::setNameSpace( const QString &nameSpace )
+void QualifiedName::setNameSpace(const QString &nameSpace)
 {
-  mNameSpace = nameSpace;
+    mNameSpace = nameSpace;
 }
 
 QString QualifiedName::nameSpace() const
 {
-  return mNameSpace;
+    return mNameSpace;
 }
 
-bool QualifiedName::operator==( const QualifiedName &qn ) const
+bool QualifiedName::operator==(const QualifiedName &qn) const
 {
-  return (qn.nameSpace() == mNameSpace && qn.localName() == mLocalName );
+    return (qn.nameSpace() == mNameSpace && qn.localName() == mLocalName);
 }
 
-void QualifiedName::parse( const QString &str )
+void QualifiedName::parse(const QString &str)
 {
-  int pos = str.find( ':' );
-  if ( pos != -1 ) {
-    mPrefix = str.left( pos );
-    mLocalName = str.mid( pos + 1 );
-  } else
-    mLocalName = str;
+    int pos = str.find(':');
+    if(pos != -1)
+    {
+        mPrefix = str.left(pos);
+        mLocalName = str.mid(pos + 1);
+    }
+    else
+        mLocalName = str;
 
-  if ( mLocalName.endsWith( "[]" ) )
-    mLocalName.truncate( mLocalName.length() - 2 );
+    if(mLocalName.endsWith("[]"))
+        mLocalName.truncate(mLocalName.length() - 2);
 }
 

@@ -28,14 +28,13 @@ class ADCalendar;
 class ClientInfo;
 
 
-class ADConfigData
-{
-	public:
-		static void readConfig();
-		static void writeClient(const QCString& appName, const ClientInfo*);
-		static void removeClient(const QCString& appName);
-		static void setCalendar(const QCString& appName, ADCalendar*);
-		static void enableAutoStart(bool);
+class ADConfigData {
+public:
+    static void readConfig();
+    static void writeClient(const QCString &appName, const ClientInfo *);
+    static void removeClient(const QCString &appName);
+    static void setCalendar(const QCString &appName, ADCalendar *);
+    static void enableAutoStart(bool);
 };
 
 #endif // ADCONFIGDATA_H

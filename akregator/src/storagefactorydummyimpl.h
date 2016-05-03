@@ -37,15 +37,20 @@ namespace Backend {
 
 class Storage;
 
-class KDE_EXPORT StorageFactoryDummyImpl : public StorageFactory
-{
-    public:
+class KDE_EXPORT StorageFactoryDummyImpl : public StorageFactory {
+public:
     virtual QString key() const;
     virtual QString name() const;
     virtual void configure();
-    virtual bool isConfigurable() const { return false; }
-    virtual bool allowsMultipleWriteAccess() const { return true; }
-    virtual Storage* createStorage(const QStringList& params) const;
+    virtual bool isConfigurable() const
+    {
+        return false;
+    }
+    virtual bool allowsMultipleWriteAccess() const
+    {
+        return true;
+    }
+    virtual Storage *createStorage(const QStringList &params) const;
 };
 
 }

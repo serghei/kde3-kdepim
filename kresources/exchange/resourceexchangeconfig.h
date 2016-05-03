@@ -34,32 +34,31 @@
 
 namespace KCal {
 
-class ResourceExchangeConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class ResourceExchangeConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
 public:
-  ResourceExchangeConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceExchangeConfig(QWidget *parent = 0, const char *name = 0);
 
 public slots:
-  virtual void loadSettings( KRES::Resource *resource);
-  virtual void saveSettings( KRES::Resource *resource );
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
 protected slots:
-  void slotToggleAuto( bool on );
-  void slotUserChanged( const QString& text );
-  void slotFindClicked();
-  void slotCacheEditChanged( int value );
+    void slotToggleAuto(bool on);
+    void slotUserChanged(const QString &text);
+    void slotFindClicked();
+    void slotCacheEditChanged(int value);
 
 private:
-  KLineEdit* mHostEdit;
-  KLineEdit* mPortEdit;
-  KLineEdit* mAccountEdit;
-  KLineEdit* mPasswordEdit;
-  QCheckBox *mAutoMailbox;
-  KLineEdit* mMailboxEdit;
-  QPushButton* mTryFindMailbox;
-  KIntNumInput* mCacheEdit;
+    KLineEdit *mHostEdit;
+    KLineEdit *mPortEdit;
+    KLineEdit *mAccountEdit;
+    KLineEdit *mPasswordEdit;
+    QCheckBox *mAutoMailbox;
+    KLineEdit *mMailboxEdit;
+    QPushButton *mTryFindMailbox;
+    KIntNumInput *mCacheEdit;
 };
 
 }

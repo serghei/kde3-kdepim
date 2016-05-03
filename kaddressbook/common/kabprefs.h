@@ -30,9 +30,8 @@
 
 class KConfig;
 
-class KDE_EXPORT KABPrefs : public KABPrefsBase
-{
-  public:
+class KDE_EXPORT KABPrefs : public KABPrefsBase {
+public:
     virtual ~KABPrefs();
 
     static KABPrefs *instance();
@@ -40,41 +39,41 @@ class KDE_EXPORT KABPrefs : public KABPrefsBase
     void usrReadConfig();
     void usrWriteConfig();
 
-    void setLocationMapURL( const QString &locationMapURL )
+    void setLocationMapURL(const QString &locationMapURL)
     {
-      if ( !isImmutable( QString::fromLatin1( "LocationMapURL" ) ) )
-        mLocationMapURL = locationMapURL;
+        if(!isImmutable(QString::fromLatin1("LocationMapURL")))
+            mLocationMapURL = locationMapURL;
     }
 
     QString locationMapURL() const
     {
-      return mLocationMapURL;
+        return mLocationMapURL;
     }
 
-    void setLocationMapURLs( const QStringList &locationMapURLs )
+    void setLocationMapURLs(const QStringList &locationMapURLs)
     {
-      if ( !isImmutable( QString::fromLatin1( "LocationMapURLs" ) ) )
-        mLocationMapURLs = locationMapURLs;
+        if(!isImmutable(QString::fromLatin1("LocationMapURLs")))
+            mLocationMapURLs = locationMapURLs;
     }
 
     QStringList locationMapURLs() const
     {
-      return mLocationMapURLs;
+        return mLocationMapURLs;
     }
 
     QStringList customCategories() const
     {
-      return mCustomCategories;
+        return mCustomCategories;
     }
 
-    void setCustomCategories(const QStringList & s)
+    void setCustomCategories(const QStringList &s)
     {
-      mCustomCategories = s;
+        mCustomCategories = s;
     }
 
     void setCategoryDefaults();
 
-  private:
+private:
     KABPrefs();
 
     static KABPrefs *mInstance;

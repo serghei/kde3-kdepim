@@ -36,11 +36,11 @@ class KMSearchPattern;
 class KURL;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 namespace KPIM {
-  class ProgressItem;
+class ProgressItem;
 }
 
 namespace KMail {
@@ -50,83 +50,82 @@ class ImapAccountBase;
 /**
  * Search job
  */
-class SearchJob : public FolderJob
-{
-  Q_OBJECT
+class SearchJob : public FolderJob {
+    Q_OBJECT
 public:
-  /**
-   * Creates a new job
-   * @param folder the folder that should be searched
-   * @param account the ImapAccountBase of the folder
-   * @param pattern the search pattern
-   * @param serNum if you specify the serNum only this is checked
-   */
-  SearchJob( KMFolderImap* folder, ImapAccountBase* account,
-             const KMSearchPattern* pattern, Q_UINT32 serNum = 0 );
+    /**
+     * Creates a new job
+     * @param folder the folder that should be searched
+     * @param account the ImapAccountBase of the folder
+     * @param pattern the search pattern
+     * @param serNum if you specify the serNum only this is checked
+     */
+    SearchJob(KMFolderImap *folder, ImapAccountBase *account,
+              const KMSearchPattern *pattern, Q_UINT32 serNum = 0);
 
-  virtual ~SearchJob();
+    virtual ~SearchJob();
 
-  // Execute
-  virtual void execute();
+    // Execute
+    virtual void execute();
 
 protected:
-  // searches the complete folder with the pattern
-  void searchCompleteFolder();
+    // searches the complete folder with the pattern
+    void searchCompleteFolder();
 
-  // checks a single message with the pattern
-  void searchSingleMessage();
+    // checks a single message with the pattern
+    void searchSingleMessage();
 
-  // creates an imap search command
-  QString searchStringFromPattern( const KMSearchPattern* );
+    // creates an imap search command
+    QString searchStringFromPattern(const KMSearchPattern *);
 
-  // returns true if all uids can be mapped to sernums
-  bool canMapAllUIDs();
+    // returns true if all uids can be mapped to sernums
+    bool canMapAllUIDs();
 
-  // if we need to download messages
-  bool needsDownload();
+    // if we need to download messages
+    bool needsDownload();
 
 protected slots:
-  // search the folder
-  // is called when all uids can be mapped to sernums
-  void slotSearchFolder();
+    // search the folder
+    // is called when all uids can be mapped to sernums
+    void slotSearchFolder();
 
-  // processes the server answer
-  void slotSearchData( KIO::Job* job, const QString& data );
+    // processes the server answer
+    void slotSearchData(KIO::Job *job, const QString &data);
 
-  // message is downloaded and searched
-  void slotSearchMessageArrived( KMMessage* msg );
+    // message is downloaded and searched
+    void slotSearchMessageArrived(KMMessage *msg);
 
-  // error handling for all cases
-  void slotSearchResult( KIO::Job *job );
+    // error handling for all cases
+    void slotSearchResult(KIO::Job *job);
 
-  // imap search result from a single message
-  void slotSearchDataSingleMessage( KIO::Job* job, const QString& data );
+    // imap search result from a single message
+    void slotSearchDataSingleMessage(KIO::Job *job, const QString &data);
 
-  // the user cancelled the search progress
-  void slotAbortSearch( KPIM::ProgressItem* item );
+    // the user cancelled the search progress
+    void slotAbortSearch(KPIM::ProgressItem *item);
 
 signals:
-  // emitted when a list of matching serial numbers was found
-  void searchDone( QValueList<Q_UINT32>, const KMSearchPattern*, bool complete );
+    // emitted when a list of matching serial numbers was found
+    void searchDone(QValueList<Q_UINT32>, const KMSearchPattern *, bool complete);
 
-  // emitted when a single message (identified by the serial number) was checked
-  void searchDone( Q_UINT32, const KMSearchPattern*, bool matches );
+    // emitted when a single message (identified by the serial number) was checked
+    void searchDone(Q_UINT32, const KMSearchPattern *, bool matches);
 
 protected:
-  KMFolderImap* mFolder;
-  ImapAccountBase* mAccount;
-  const KMSearchPattern* mSearchPattern;
-  KMSearchPattern* mLocalSearchPattern;
-  Q_UINT32 mSerNum;
+    KMFolderImap *mFolder;
+    ImapAccountBase *mAccount;
+    const KMSearchPattern *mSearchPattern;
+    KMSearchPattern *mLocalSearchPattern;
+    Q_UINT32 mSerNum;
     // saves the results of the imap search
-  QStringList mImapSearchHits;
-  // collects the serial numbers from imap and local search
-  QValueList<Q_UINT32> mSearchSerNums;
-  // the remaining messages that have to be downloaded for local search
-  uint mRemainingMsgs;
-  // progress item for local searches
-  KPIM::ProgressItem *mProgress;
-  bool mUngetCurrentMsg;
+    QStringList mImapSearchHits;
+    // collects the serial numbers from imap and local search
+    QValueList<Q_UINT32> mSearchSerNums;
+    // the remaining messages that have to be downloaded for local search
+    uint mRemainingMsgs;
+    // progress item for local searches
+    KPIM::ProgressItem *mProgress;
+    bool mUngetCurrentMsg;
 
 };
 

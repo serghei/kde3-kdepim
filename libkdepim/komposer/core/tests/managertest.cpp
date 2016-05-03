@@ -23,20 +23,20 @@
 #include "pluginmanager.h"
 using namespace Komposer;
 
-ManagerTest::ManagerTest( QObject* parent )
-    : QObject( parent )
+ManagerTest::ManagerTest(QObject *parent)
+    : QObject(parent)
 {
-    m_manager = new PluginManager( this );
+    m_manager = new PluginManager(this);
 }
 
 
 void ManagerTest::allTests()
 {
-    CHECK( m_manager->availablePlugins().isEmpty(), true );
-    CHECK( m_manager->loadedPlugins().empty(), true );
-    CHECK( m_manager->plugin( "non-existing" ), ( Plugin* )0 );
+    CHECK(m_manager->availablePlugins().isEmpty(), true);
+    CHECK(m_manager->loadedPlugins().empty(), true);
+    CHECK(m_manager->plugin("non-existing"), (Plugin *)0);
     m_manager->loadAllPlugins();
-    CHECK( m_manager->loadedPlugins().empty(), true );
+    CHECK(m_manager->loadedPlugins().empty(), true);
     m_manager->shutdown();
 }
 

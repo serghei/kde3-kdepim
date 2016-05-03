@@ -23,12 +23,11 @@
 
 #include "configgui.h"
 
-class ConfigGuiBlank : public ConfigGui
-{
-  public:
-    ConfigGuiBlank( const QSync::Member &member, QWidget *parent = 0 );
+class ConfigGuiBlank : public ConfigGui {
+public:
+    ConfigGuiBlank(const QSync::Member &member, QWidget *parent = 0);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 };
 

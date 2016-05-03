@@ -44,82 +44,89 @@ class partNode;
 class KMReaderWin;
 class KMMimePartTreeItem;
 
-class KMMimePartTree : public KListView
-{
-  Q_OBJECT
-  friend class ::KMReaderWin;
+class KMMimePartTree : public KListView {
+    Q_OBJECT
+    friend class ::KMReaderWin;
 
 public:
-  KMMimePartTree( KMReaderWin* readerWin,
-                  QWidget* parent,
-                  const char* name = 0 );
-  virtual ~KMMimePartTree();
+    KMMimePartTree(KMReaderWin *readerWin,
+                   QWidget *parent,
+                   const char *name = 0);
+    virtual ~KMMimePartTree();
 
-  void correctSize( QListViewItem * item );
+    void correctSize(QListViewItem *item);
 
 protected slots:
-  void itemClicked( QListViewItem* );
-  void itemRightClicked( QListViewItem*, const QPoint& );
-  void slotSaveAs();
-  void slotSaveAsEncoded();
-  void slotSaveAll();
-  void slotDelete();
-  void slotEdit();
-  void slotOpen();
-  void slotOpenWith();
-  void slotView();
-  void slotProperties();
-  void slotCopy();
+    void itemClicked(QListViewItem *);
+    void itemRightClicked(QListViewItem *, const QPoint &);
+    void slotSaveAs();
+    void slotSaveAsEncoded();
+    void slotSaveAll();
+    void slotDelete();
+    void slotEdit();
+    void slotOpen();
+    void slotOpenWith();
+    void slotView();
+    void slotProperties();
+    void slotCopy();
 
 protected:
-  /** reimplemented in order to update the frame width in case of a changed
-      GUI style */
-  void styleChange( QStyle& oldStyle );
+    /** reimplemented in order to update the frame width in case of a changed
+        GUI style */
+    void styleChange(QStyle &oldStyle);
 
-  /** Set the width of the frame to a reasonable value for the current GUI
-      style */
-  void setStyleDependantFrameWidth();
+    /** Set the width of the frame to a reasonable value for the current GUI
+        style */
+    void setStyleDependantFrameWidth();
 
-  void saveSelectedBodyParts( bool encoded );
-  void restoreLayoutIfPresent();
+    void saveSelectedBodyParts(bool encoded);
+    void restoreLayoutIfPresent();
 
-  /* reimpl */
-  void startDrag();
+    /* reimpl */
+    void startDrag();
 
-  void startHandleAttachmentCommand( int type );
+    void startHandleAttachmentCommand(int type);
 
 protected:
-  KMReaderWin* mReaderWin;
-  KMMimePartTreeItem* mCurrentContextMenuItem;
-  int mSizeColumn;
+    KMReaderWin *mReaderWin;
+    KMMimePartTreeItem *mCurrentContextMenuItem;
+    int mSizeColumn;
 };
 
-class KMMimePartTreeItem :public QListViewItem
-{
+class KMMimePartTreeItem : public QListViewItem {
 public:
-  KMMimePartTreeItem( KMMimePartTree * parent,
-                      partNode* node,
-                      const QString & labelDescr,
-                      const QString & labelCntType  = QString::null,
-                      const QString & labelEncoding = QString::null,
-                      KIO::filesize_t size=0 );
-  KMMimePartTreeItem( KMMimePartTreeItem * parent,
-                      partNode* node,
-                      const QString & labelDescr,
-                      const QString & labelCntType  = QString::null,
-                      const QString & labelEncoding = QString::null,
-                      KIO::filesize_t size=0,
-                      bool revertOrder = false );
-  partNode* node() const { return mPartNode; }
+    KMMimePartTreeItem(KMMimePartTree *parent,
+                       partNode *node,
+                       const QString &labelDescr,
+                       const QString &labelCntType  = QString::null,
+                       const QString &labelEncoding = QString::null,
+                       KIO::filesize_t size = 0);
+    KMMimePartTreeItem(KMMimePartTreeItem *parent,
+                       partNode *node,
+                       const QString &labelDescr,
+                       const QString &labelCntType  = QString::null,
+                       const QString &labelEncoding = QString::null,
+                       KIO::filesize_t size = 0,
+                       bool revertOrder = false);
+    partNode *node() const
+    {
+        return mPartNode;
+    }
 
-  KIO::filesize_t origSize() const { return mOrigSize; }
-  void setOrigSize( KIO::filesize_t size ) { mOrigSize = size; }
+    KIO::filesize_t origSize() const
+    {
+        return mOrigSize;
+    }
+    void setOrigSize(KIO::filesize_t size)
+    {
+        mOrigSize = size;
+    }
 
 private:
-  void setIconAndTextForType( const QString & mimetype );
+    void setIconAndTextForType(const QString &mimetype);
 
-  partNode* mPartNode;
-  KIO::filesize_t mOrigSize;
+    partNode *mPartNode;
+    KIO::filesize_t mOrigSize;
 };
 
 #endif // KMMIMEPARTTREE_H

@@ -30,36 +30,36 @@
 
 using namespace KPIM;
 
-MailSummary::MailSummary( Q_UINT32 serialNumber, QString messageId, 
-			  QString subject, QString from, QString to, 
-			  time_t date )
-    : mSerialNumber( serialNumber ), mMessageId( messageId ),
-      mSubject( subject ), mFrom( from ), mTo( to ), mDate( date )
+MailSummary::MailSummary(Q_UINT32 serialNumber, QString messageId,
+                         QString subject, QString from, QString to,
+                         time_t date)
+    : mSerialNumber(serialNumber), mMessageId(messageId),
+      mSubject(subject), mFrom(from), mTo(to), mDate(date)
 {}
 
-Q_UINT32 MailSummary::serialNumber() const 
-{ 
-    return mSerialNumber; 
+Q_UINT32 MailSummary::serialNumber() const
+{
+    return mSerialNumber;
 }
 
-QString MailSummary::messageId() 
-{ 
-    return mMessageId; 
+QString MailSummary::messageId()
+{
+    return mMessageId;
 }
 
-QString MailSummary::subject() 
-{ 
-    return mSubject; 
+QString MailSummary::subject()
+{
+    return mSubject;
 }
 
-QString MailSummary::from() 
-{ 
-    return mFrom; 
+QString MailSummary::from()
+{
+    return mFrom;
 }
 
-QString MailSummary::to() 
-{ 
-    return mTo; 
+QString MailSummary::to()
+{
+    return mTo;
 }
 
 time_t MailSummary::date()
@@ -67,8 +67,8 @@ time_t MailSummary::date()
     return mDate;
 }
 
-void MailSummary::set( Q_UINT32 serialNumber, QString messageId, 
-		       QString subject, QString from, QString to, time_t date )
+void MailSummary::set(Q_UINT32 serialNumber, QString messageId,
+                      QString subject, QString from, QString to, time_t date)
 {
     mSerialNumber = serialNumber;
     mMessageId = messageId;
@@ -78,10 +78,10 @@ void MailSummary::set( Q_UINT32 serialNumber, QString messageId,
     mDate = date;
 }
 
-MailListDrag::MailListDrag( MailList mailList, QWidget * parent, MailTextSource *src )
-    : QStoredDrag( MailListDrag::format(), parent ), _src(src)
+MailListDrag::MailListDrag(MailList mailList, QWidget *parent, MailTextSource *src)
+    : QStoredDrag(MailListDrag::format(), parent), _src(src)
 {
-    setMailList( mailList );
+    setMailList(mailList);
 }
 
 MailListDrag::~MailListDrag()
@@ -90,18 +90,18 @@ MailListDrag::~MailListDrag()
     _src = 0;
 }
 
-const char* MailListDrag::format()
+const char *MailListDrag::format()
 {
     return "x-kmail-drag/message-list";
 }
 
-bool MailListDrag::canDecode( QMimeSource *e )
+bool MailListDrag::canDecode(QMimeSource *e)
 {
-    return e->provides( MailListDrag::format() );
+    return e->provides(MailListDrag::format());
 }
 
 // Have to define before use
-QDataStream& operator<< ( QDataStream &s, MailSummary &d )
+QDataStream &operator<< (QDataStream &s, MailSummary &d)
 {
     s << d.serialNumber();
     s << d.messageId();
@@ -112,7 +112,7 @@ QDataStream& operator<< ( QDataStream &s, MailSummary &d )
     return s;
 }
 
-QDataStream& operator>> ( QDataStream &s, MailSummary &d )
+QDataStream &operator>> (QDataStream &s, MailSummary &d)
 {
     Q_UINT32 serialNumber;
     QString messageId, subject, from, to;
@@ -123,88 +123,98 @@ QDataStream& operator>> ( QDataStream &s, MailSummary &d )
     s >> from;
     s >> to;
     s >> date;
-    d.set( serialNumber, messageId, subject, from, to, date );
+    d.set(serialNumber, messageId, subject, from, to, date);
     return s;
 }
 
-QDataStream& operator<< ( QDataStream &s, MailList &mailList )
+QDataStream &operator<< (QDataStream &s, MailList &mailList)
 {
     MailList::iterator it;
-    for (it = mailList.begin(); it != mailList.end(); ++it) {
-	MailSummary mailDrag = *it;
-	s << mailDrag;
+    for(it = mailList.begin(); it != mailList.end(); ++it)
+    {
+        MailSummary mailDrag = *it;
+        s << mailDrag;
     }
     return s;
 }
 
-QDataStream& operator>> ( QDataStream &s, MailList &mailList )
+QDataStream &operator>> (QDataStream &s, MailList &mailList)
 {
     mailList.clear();
     MailSummary mailDrag;
-    while (!s.atEnd()) {
-	s >> mailDrag;
-	mailList.append( mailDrag );
+    while(!s.atEnd())
+    {
+        s >> mailDrag;
+        mailList.append(mailDrag);
     }
     return s;
 }
 
-bool MailListDrag::decode( QDropEvent* e, MailList& mailList )
+bool MailListDrag::decode(QDropEvent *e, MailList &mailList)
 {
-    QByteArray payload = e->encodedData( MailListDrag::format() );
-    QDataStream buffer( payload, IO_ReadOnly );
-    if ( payload.size() ) {
-	e->accept();
-	buffer >> mailList;
-	return TRUE;
+    QByteArray payload = e->encodedData(MailListDrag::format());
+    QDataStream buffer(payload, IO_ReadOnly);
+    if(payload.size())
+    {
+        e->accept();
+        buffer >> mailList;
+        return TRUE;
     }
     return FALSE;
 }
 
-bool MailListDrag::decode( QByteArray& payload, MailList& mailList )
+bool MailListDrag::decode(QByteArray &payload, MailList &mailList)
 {
-    QDataStream stream( payload, IO_ReadOnly );
-    if ( payload.size() ) {
-	stream >> mailList;
-	return TRUE;
+    QDataStream stream(payload, IO_ReadOnly);
+    if(payload.size())
+    {
+        stream >> mailList;
+        return TRUE;
     }
     return FALSE;
 }
 
-bool MailListDrag::decode( QDropEvent* e, QByteArray &a )
+bool MailListDrag::decode(QDropEvent *e, QByteArray &a)
 {
     MailList mailList;
-    if (decode( e, mailList )) {
-	MailList::iterator it;
-	QBuffer buffer( a );
-	buffer.open( IO_WriteOnly );
-	QDataStream stream( &buffer );
-	for (it = mailList.begin(); it != mailList.end(); ++it) {
-	    MailSummary mailDrag = *it;
-	    stream << mailDrag.serialNumber();
-	}
-	buffer.close();
-	return TRUE;
+    if(decode(e, mailList))
+    {
+        MailList::iterator it;
+        QBuffer buffer(a);
+        buffer.open(IO_WriteOnly);
+        QDataStream stream(&buffer);
+        for(it = mailList.begin(); it != mailList.end(); ++it)
+        {
+            MailSummary mailDrag = *it;
+            stream << mailDrag.serialNumber();
+        }
+        buffer.close();
+        return TRUE;
     }
     return FALSE;
 }
 
-void MailListDrag::setMailList( MailList mailList )
+void MailListDrag::setMailList(MailList mailList)
 {
     QByteArray array;
-    QBuffer buffer( array );
-    buffer.open( IO_WriteOnly);
-    QDataStream stream( array, IO_WriteOnly );
+    QBuffer buffer(array);
+    buffer.open(IO_WriteOnly);
+    QDataStream stream(array, IO_WriteOnly);
     stream << mailList;
     buffer.close();
-    setEncodedData( array );
+    setEncodedData(array);
 }
 
 const char *MailListDrag::format(int i) const
 {
-    if (_src) {
-        if (i == 0) {
+    if(_src)
+    {
+        if(i == 0)
+        {
             return "message/rfc822";
-        } else {
+        }
+        else
+        {
             return QStoredDrag::format(i - 1);
         }
     }
@@ -214,7 +224,8 @@ const char *MailListDrag::format(int i) const
 
 bool MailListDrag::provides(const char *mimeType) const
 {
-    if (_src && QCString(mimeType) == "message/rfc822") {
+    if(_src && QCString(mimeType) == "message/rfc822")
+    {
         return true;
     }
 
@@ -223,12 +234,14 @@ bool MailListDrag::provides(const char *mimeType) const
 
 QByteArray MailListDrag::encodedData(const char *mimeType) const
 {
-    if (QCString(mimeType) != "message/rfc822") {
+    if(QCString(mimeType) != "message/rfc822")
+    {
         return QStoredDrag::encodedData(mimeType);
     }
 
-    QByteArray rc; 
-    if (_src) {
+    QByteArray rc;
+    if(_src)
+    {
         MailList ml;
         QByteArray enc = QStoredDrag::encodedData(format());
         decode(enc, ml);
@@ -241,10 +254,12 @@ QByteArray MailListDrag::encodedData(const char *mimeType) const
         dlg->show();
 
         QTextStream *ts = new QTextStream(rc, IO_WriteOnly);
-        for (MailList::ConstIterator it = ml.begin(); it != ml.end(); ++it) {
+        for(MailList::ConstIterator it = ml.begin(); it != ml.end(); ++it)
+        {
             MailSummary mailDrag = *it;
             *ts << _src->text(mailDrag.serialNumber());
-            if (dlg->wasCancelled()) {
+            if(dlg->wasCancelled())
+            {
                 break;
             }
             dlg->progressBar()->setValue(++i);

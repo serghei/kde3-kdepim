@@ -50,9 +50,9 @@ using namespace KMail;
 // And wait this number of milliseconds before calling it again
 #define COMPACTIONJOB_TIMERINTERVAL 100
 
-MboxCompactionJob::MboxCompactionJob( KMFolder* folder, bool immediate )
- : ScheduledJob( folder, immediate ), mTimer( this, "mTimer" ), mTmpFile( 0 ),
-   mCurrentIndex( 0 ), mFolderOpen( false ), mSilent( false )
+MboxCompactionJob::MboxCompactionJob(KMFolder *folder, bool immediate)
+    : ScheduledJob(folder, immediate), mTimer(this, "mTimer"), mTmpFile(0),
+      mCurrentIndex(0), mFolderOpen(false), mSilent(false)
 {
 }
 
@@ -62,140 +62,149 @@ MboxCompactionJob::~MboxCompactionJob()
 
 void MboxCompactionJob::kill()
 {
-  Q_ASSERT( mCancellable );
-  // We must close the folder if we opened it and got interrupted
-  if ( mFolderOpen && mSrcFolder && mSrcFolder->storage() )
-    mSrcFolder->storage()->close("mboxcompact");
+    Q_ASSERT(mCancellable);
+    // We must close the folder if we opened it and got interrupted
+    if(mFolderOpen && mSrcFolder && mSrcFolder->storage())
+        mSrcFolder->storage()->close("mboxcompact");
 
-  if ( mTmpFile )
-    fclose( mTmpFile );
-  mTmpFile = 0;
-  if ( !mTempName.isEmpty() )
-    QFile::remove( mTempName );
-  FolderJob::kill();
+    if(mTmpFile)
+        fclose(mTmpFile);
+    mTmpFile = 0;
+    if(!mTempName.isEmpty())
+        QFile::remove(mTempName);
+    FolderJob::kill();
 }
 
 QString MboxCompactionJob::realLocation() const
 {
-  QString location = mSrcFolder->location();
-  QFileInfo inf( location );
-  if (inf.isSymLink()) {
-    KURL u; u.setPath( location );
-    // follow (and resolve) symlinks so that the final ::rename() always works
-    // KURL gives us support for absolute and relative links transparently.
-    return KURL( u, inf.readLink() ).path();
-  }
-  return location;
+    QString location = mSrcFolder->location();
+    QFileInfo inf(location);
+    if(inf.isSymLink())
+    {
+        KURL u;
+        u.setPath(location);
+        // follow (and resolve) symlinks so that the final ::rename() always works
+        // KURL gives us support for absolute and relative links transparently.
+        return KURL(u, inf.readLink()).path();
+    }
+    return location;
 }
 
-int MboxCompactionJob::executeNow( bool silent )
+int MboxCompactionJob::executeNow(bool silent)
 {
-  mSilent = silent;
-  FolderStorage* storage = mSrcFolder->storage();
-  KMFolderMbox* mbox = static_cast<KMFolderMbox *>( storage );
-  if (!storage->compactable()) {
-    kdDebug(5006) << storage->location() << " compaction skipped." << endl;
-    if ( !mSilent ) {
-      QString str = i18n( "For safety reasons, compaction has been disabled for %1" ).arg( mbox->label() );
-      BroadcastStatus::instance()->setStatusMsg( str );
+    mSilent = silent;
+    FolderStorage *storage = mSrcFolder->storage();
+    KMFolderMbox *mbox = static_cast<KMFolderMbox *>(storage);
+    if(!storage->compactable())
+    {
+        kdDebug(5006) << storage->location() << " compaction skipped." << endl;
+        if(!mSilent)
+        {
+            QString str = i18n("For safety reasons, compaction has been disabled for %1").arg(mbox->label());
+            BroadcastStatus::instance()->setStatusMsg(str);
+        }
+        return 0;
     }
-    return 0;
-  }
-  kdDebug(5006) << "Compacting " << mSrcFolder->idString() << endl;
+    kdDebug(5006) << "Compacting " << mSrcFolder->idString() << endl;
 
-  if (KMFolderIndex::IndexOk != mbox->indexStatus()) {
-      kdDebug(5006) << "Critical error: " << storage->location() <<
-          " has been modified by an external application while KMail was running." << endl;
-      //      exit(1); backed out due to broken nfs
-  }
+    if(KMFolderIndex::IndexOk != mbox->indexStatus())
+    {
+        kdDebug(5006) << "Critical error: " << storage->location() <<
+                      " has been modified by an external application while KMail was running." << endl;
+        //      exit(1); backed out due to broken nfs
+    }
 
-  const QFileInfo pathInfo( realLocation() );
-  // Use /dir/.mailboxname.compacted so that it's hidden, and doesn't show up after restarting kmail
-  // (e.g. due to an unfortunate crash while compaction is happening)
-  mTempName = pathInfo.dirPath() + "/." + pathInfo.fileName() + ".compacted";
+    const QFileInfo pathInfo(realLocation());
+    // Use /dir/.mailboxname.compacted so that it's hidden, and doesn't show up after restarting kmail
+    // (e.g. due to an unfortunate crash while compaction is happening)
+    mTempName = pathInfo.dirPath() + "/." + pathInfo.fileName() + ".compacted";
 
-  mode_t old_umask = umask(077);
-  mTmpFile = fopen(QFile::encodeName(mTempName), "w");
-  umask(old_umask);
-  if (!mTmpFile) {
-    kdWarning(5006) << "Couldn't start compacting " << mSrcFolder->label()
-                    << " : " << strerror( errno )
-                    << " while creating " << mTempName << endl;
-    return errno;
-  }
-  mOpeningFolder = true; // Ignore open-notifications while opening the folder
-  storage->open("mboxcompact");
-  mOpeningFolder = false;
-  mFolderOpen = true;
-  mOffset = 0;
-  mCurrentIndex = 0;
+    mode_t old_umask = umask(077);
+    mTmpFile = fopen(QFile::encodeName(mTempName), "w");
+    umask(old_umask);
+    if(!mTmpFile)
+    {
+        kdWarning(5006) << "Couldn't start compacting " << mSrcFolder->label()
+                        << " : " << strerror(errno)
+                        << " while creating " << mTempName << endl;
+        return errno;
+    }
+    mOpeningFolder = true; // Ignore open-notifications while opening the folder
+    storage->open("mboxcompact");
+    mOpeningFolder = false;
+    mFolderOpen = true;
+    mOffset = 0;
+    mCurrentIndex = 0;
 
-  kdDebug(5006) << "MboxCompactionJob: starting to compact folder " << mSrcFolder->location() << " into " << mTempName << endl;
-  connect( &mTimer, SIGNAL( timeout() ), SLOT( slotDoWork() ) );
-  if ( !mImmediate )
-    mTimer.start( COMPACTIONJOB_TIMERINTERVAL );
-  slotDoWork();
-  return mErrorCode;
+    kdDebug(5006) << "MboxCompactionJob: starting to compact folder " << mSrcFolder->location() << " into " << mTempName << endl;
+    connect(&mTimer, SIGNAL(timeout()), SLOT(slotDoWork()));
+    if(!mImmediate)
+        mTimer.start(COMPACTIONJOB_TIMERINTERVAL);
+    slotDoWork();
+    return mErrorCode;
 }
 
 void MboxCompactionJob::slotDoWork()
 {
-  // No need to worry about mSrcFolder==0 here. The FolderStorage deletes the jobs on destruction.
-  KMFolderMbox* mbox = static_cast<KMFolderMbox *>( mSrcFolder->storage() );
-  bool bDone = false;
-  int nbMessages = mImmediate ? -1 /*all*/ : COMPACTIONJOB_NRMESSAGES;
-  int rc = mbox->compact( mCurrentIndex, nbMessages,
-                          mTmpFile, mOffset /*in-out*/, bDone /*out*/ );
-  if ( !mImmediate )
-    mCurrentIndex += COMPACTIONJOB_NRMESSAGES;
-  if ( rc || bDone ) // error, or finished
-    done( rc );
+    // No need to worry about mSrcFolder==0 here. The FolderStorage deletes the jobs on destruction.
+    KMFolderMbox *mbox = static_cast<KMFolderMbox *>(mSrcFolder->storage());
+    bool bDone = false;
+    int nbMessages = mImmediate ? -1 /*all*/ : COMPACTIONJOB_NRMESSAGES;
+    int rc = mbox->compact(mCurrentIndex, nbMessages,
+                           mTmpFile, mOffset /*in-out*/, bDone /*out*/);
+    if(!mImmediate)
+        mCurrentIndex += COMPACTIONJOB_NRMESSAGES;
+    if(rc || bDone)    // error, or finished
+        done(rc);
 }
 
-void MboxCompactionJob::done( int rc )
+void MboxCompactionJob::done(int rc)
 {
-  mTimer.stop();
-  mCancellable = false;
-  KMFolderMbox* mbox = static_cast<KMFolderMbox *>( mSrcFolder->storage() );
-  if (!rc)
-      rc = fflush(mTmpFile);
-  if (!rc)
-      rc = fsync(fileno(mTmpFile));
-  rc |= fclose(mTmpFile);
-  QString str;
-  if (!rc) {
-    bool autoCreate = mbox->autoCreateIndex();
-    QString box( realLocation() );
-    ::rename(QFile::encodeName(mTempName), QFile::encodeName(box));
-    mbox->writeIndex();
-    mbox->writeConfig();
-    mbox->setAutoCreateIndex( false );
-    mbox->close("mboxcompact", true);
-    mbox->setAutoCreateIndex( autoCreate );
-    mbox->setNeedsCompacting( false );            // We are clean now
-    str = i18n( "Folder \"%1\" successfully compacted" ).arg( mSrcFolder->label() );
-    kdDebug(5006) << str << endl;
-  } else {
-    mbox->close("mboxcompact");
-    str = i18n( "Error occurred while compacting \"%1\". Compaction aborted." ).arg( mSrcFolder->label() );
-    kdDebug(5006) << "Error occurred while compacting " << mbox->location() << endl;
-    kdDebug(5006) << "Compaction aborted." << endl;
-    QFile::remove( mTempName );
-  }
-  mErrorCode = rc;
+    mTimer.stop();
+    mCancellable = false;
+    KMFolderMbox *mbox = static_cast<KMFolderMbox *>(mSrcFolder->storage());
+    if(!rc)
+        rc = fflush(mTmpFile);
+    if(!rc)
+        rc = fsync(fileno(mTmpFile));
+    rc |= fclose(mTmpFile);
+    QString str;
+    if(!rc)
+    {
+        bool autoCreate = mbox->autoCreateIndex();
+        QString box(realLocation());
+        ::rename(QFile::encodeName(mTempName), QFile::encodeName(box));
+        mbox->writeIndex();
+        mbox->writeConfig();
+        mbox->setAutoCreateIndex(false);
+        mbox->close("mboxcompact", true);
+        mbox->setAutoCreateIndex(autoCreate);
+        mbox->setNeedsCompacting(false);              // We are clean now
+        str = i18n("Folder \"%1\" successfully compacted").arg(mSrcFolder->label());
+        kdDebug(5006) << str << endl;
+    }
+    else
+    {
+        mbox->close("mboxcompact");
+        str = i18n("Error occurred while compacting \"%1\". Compaction aborted.").arg(mSrcFolder->label());
+        kdDebug(5006) << "Error occurred while compacting " << mbox->location() << endl;
+        kdDebug(5006) << "Compaction aborted." << endl;
+        QFile::remove(mTempName);
+    }
+    mErrorCode = rc;
 
-  if ( !mSilent )
-    BroadcastStatus::instance()->setStatusMsg( str );
+    if(!mSilent)
+        BroadcastStatus::instance()->setStatusMsg(str);
 
-  mFolderOpen = false;
-  deleteLater(); // later, because of the "return mErrorCode"
+    mFolderOpen = false;
+    deleteLater(); // later, because of the "return mErrorCode"
 }
 
 ////
 
-MaildirCompactionJob::MaildirCompactionJob( KMFolder* folder, bool immediate )
- : ScheduledJob( folder, immediate ), mTimer( this, "mTimer" ),
-   mCurrentIndex( 0 ), mFolderOpen( false ), mSilent( false )
+MaildirCompactionJob::MaildirCompactionJob(KMFolder *folder, bool immediate)
+    : ScheduledJob(folder, immediate), mTimer(this, "mTimer"),
+      mCurrentIndex(0), mFolderOpen(false), mSilent(false)
 {
 }
 
@@ -205,88 +214,92 @@ MaildirCompactionJob::~MaildirCompactionJob()
 
 void MaildirCompactionJob::kill()
 {
-  Q_ASSERT( mCancellable );
-  // We must close the folder if we opened it and got interrupted
-  if ( mFolderOpen && mSrcFolder && mSrcFolder->storage() )
-    mSrcFolder->storage()->close("maildircompact");
+    Q_ASSERT(mCancellable);
+    // We must close the folder if we opened it and got interrupted
+    if(mFolderOpen && mSrcFolder && mSrcFolder->storage())
+        mSrcFolder->storage()->close("maildircompact");
 
-  FolderJob::kill();
+    FolderJob::kill();
 }
 
-int MaildirCompactionJob::executeNow( bool silent )
+int MaildirCompactionJob::executeNow(bool silent)
 {
-  mSilent = silent;
-  KMFolderMaildir* storage = static_cast<KMFolderMaildir *>( mSrcFolder->storage() );
-  kdDebug(5006) << "Compacting " << mSrcFolder->idString() << endl;
+    mSilent = silent;
+    KMFolderMaildir *storage = static_cast<KMFolderMaildir *>(mSrcFolder->storage());
+    kdDebug(5006) << "Compacting " << mSrcFolder->idString() << endl;
 
-  mOpeningFolder = true; // Ignore open-notifications while opening the folder
-  storage->open("maildircompact");
-  mOpeningFolder = false;
-  mFolderOpen = true;
-  QString subdirNew(storage->location() + "/new/");
-  QDir d(subdirNew);
-  mEntryList = d.entryList();
-  mCurrentIndex = 0;
+    mOpeningFolder = true; // Ignore open-notifications while opening the folder
+    storage->open("maildircompact");
+    mOpeningFolder = false;
+    mFolderOpen = true;
+    QString subdirNew(storage->location() + "/new/");
+    QDir d(subdirNew);
+    mEntryList = d.entryList();
+    mCurrentIndex = 0;
 
-  kdDebug(5006) << "MaildirCompactionJob: starting to compact in folder " << mSrcFolder->location() << endl;
-  connect( &mTimer, SIGNAL( timeout() ), SLOT( slotDoWork() ) );
-  if ( !mImmediate )
-    mTimer.start( COMPACTIONJOB_TIMERINTERVAL );
-  slotDoWork();
-  return mErrorCode;
+    kdDebug(5006) << "MaildirCompactionJob: starting to compact in folder " << mSrcFolder->location() << endl;
+    connect(&mTimer, SIGNAL(timeout()), SLOT(slotDoWork()));
+    if(!mImmediate)
+        mTimer.start(COMPACTIONJOB_TIMERINTERVAL);
+    slotDoWork();
+    return mErrorCode;
 }
 
 void MaildirCompactionJob::slotDoWork()
 {
-  // No need to worry about mSrcFolder==0 here. The FolderStorage deletes the jobs on destruction.
-  KMFolderMaildir* storage = static_cast<KMFolderMaildir *>( mSrcFolder->storage() );
-  bool bDone = false;
-  int nbMessages = mImmediate ? -1 /*all*/ : COMPACTIONJOB_NRMESSAGES;
-  int rc = storage->compact( mCurrentIndex, nbMessages, mEntryList, bDone /*out*/ );
-  if ( !mImmediate )
-    mCurrentIndex += COMPACTIONJOB_NRMESSAGES;
-  if ( rc || bDone ) // error, or finished
-    done( rc );
+    // No need to worry about mSrcFolder==0 here. The FolderStorage deletes the jobs on destruction.
+    KMFolderMaildir *storage = static_cast<KMFolderMaildir *>(mSrcFolder->storage());
+    bool bDone = false;
+    int nbMessages = mImmediate ? -1 /*all*/ : COMPACTIONJOB_NRMESSAGES;
+    int rc = storage->compact(mCurrentIndex, nbMessages, mEntryList, bDone /*out*/);
+    if(!mImmediate)
+        mCurrentIndex += COMPACTIONJOB_NRMESSAGES;
+    if(rc || bDone)    // error, or finished
+        done(rc);
 }
 
-void MaildirCompactionJob::done( int rc )
+void MaildirCompactionJob::done(int rc)
 {
-  KMFolderMaildir* storage = static_cast<KMFolderMaildir *>( mSrcFolder->storage() );
-  mTimer.stop();
-  mCancellable = false;
-  QString str;
-  if ( !rc ) {
-    str = i18n( "Folder \"%1\" successfully compacted" ).arg( mSrcFolder->label() );
-  } else {
-    str = i18n( "Error occurred while compacting \"%1\". Compaction aborted." ).arg( mSrcFolder->label() );
-  }
-  mErrorCode = rc;
-  storage->setNeedsCompacting( false );
-  storage->close("maildircompact");
-  if ( storage->isOpened() )
-    storage->updateIndex();
-  if ( !mSilent )
-    BroadcastStatus::instance()->setStatusMsg( str );
+    KMFolderMaildir *storage = static_cast<KMFolderMaildir *>(mSrcFolder->storage());
+    mTimer.stop();
+    mCancellable = false;
+    QString str;
+    if(!rc)
+    {
+        str = i18n("Folder \"%1\" successfully compacted").arg(mSrcFolder->label());
+    }
+    else
+    {
+        str = i18n("Error occurred while compacting \"%1\". Compaction aborted.").arg(mSrcFolder->label());
+    }
+    mErrorCode = rc;
+    storage->setNeedsCompacting(false);
+    storage->close("maildircompact");
+    if(storage->isOpened())
+        storage->updateIndex();
+    if(!mSilent)
+        BroadcastStatus::instance()->setStatusMsg(str);
 
-  mFolderOpen = false;
-  deleteLater(); // later, because of the "return mErrorCode"
+    mFolderOpen = false;
+    deleteLater(); // later, because of the "return mErrorCode"
 }
 
 ////
 
-ScheduledJob* ScheduledCompactionTask::run()
+ScheduledJob *ScheduledCompactionTask::run()
 {
-  if ( !folder() || !folder()->needsCompacting() )
-    return 0;
-  switch( folder()->storage()->folderType() ) {
-  case KMFolderTypeMbox:
-    return new MboxCompactionJob( folder(), isImmediate() );
-  case KMFolderTypeCachedImap:
-  case KMFolderTypeMaildir:
-    return new MaildirCompactionJob( folder(), isImmediate() );
-  default: // imap, search, unknown...
-    return 0;
-  }
+    if(!folder() || !folder()->needsCompacting())
+        return 0;
+    switch(folder()->storage()->folderType())
+    {
+        case KMFolderTypeMbox:
+            return new MboxCompactionJob(folder(), isImmediate());
+        case KMFolderTypeCachedImap:
+        case KMFolderTypeMaildir:
+            return new MaildirCompactionJob(folder(), isImmediate());
+        default: // imap, search, unknown...
+            return 0;
+    }
 }
 
 #include "compactionjob.moc"

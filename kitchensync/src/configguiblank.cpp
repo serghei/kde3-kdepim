@@ -26,19 +26,19 @@
 #include <qlabel.h>
 #include <qlayout.h>
 
-ConfigGuiBlank::ConfigGuiBlank( const QSync::Member &member, QWidget *parent )
-  : ConfigGui( member, parent )
+ConfigGuiBlank::ConfigGuiBlank(const QSync::Member &member, QWidget *parent)
+    : ConfigGui(member, parent)
 {
-  QLabel *label = new QLabel( i18n( "This member/plugin needs no configuration." ), this );
-  topLayout()->addWidget( label );
+    QLabel *label = new QLabel(i18n("This member/plugin needs no configuration."), this);
+    topLayout()->addWidget(label);
 }
 
-void ConfigGuiBlank::load( const QString& )
+void ConfigGuiBlank::load(const QString &)
 {
 }
 
 QString ConfigGuiBlank::save() const
 {
-  QString xml = "<config></config>";
-  return xml;
+    QString xml = "<config></config>";
+    return xml;
 }

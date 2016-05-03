@@ -29,13 +29,13 @@ class QWidget;
 
 class KabcBridge {
 public:
-  static QStringList addresses();
-  static void addresses(QStringList& result);
-  static QString expandNickName( const QString& nickName );
-   /**
-    	Returns all categories found in the addressbook.
-	@return A list of the categories
-   */
+    static QStringList addresses();
+    static void addresses(QStringList &result);
+    static QString expandNickName(const QString &nickName);
+    /**
+     	Returns all categories found in the addressbook.
+    @return A list of the categories
+    */
     static QStringList categories();
 };
 

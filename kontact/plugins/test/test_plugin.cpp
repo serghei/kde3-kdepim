@@ -32,16 +32,16 @@
 #include "test_part.h"
 
 typedef KGenericFactory< TestPlugin, Kontact::Core > TestPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkptestplugin, TestPluginFactory( "kptestplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkptestplugin, TestPluginFactory("kptestplugin"))
 
 TestPlugin::TestPlugin(Kontact::Core *_core, const char *name, const QStringList &)
-  : Kontact::Plugin(_core, _core, name)
+    : Kontact::Plugin(_core, _core, name)
 {
-  setInstance(TestPluginFactory::instance());
+    setInstance(TestPluginFactory::instance());
 
-  insertNewAction(new KAction("Test", 0, this, SLOT(slotTestMenu()), actionCollection(), "edit_test"));
+    insertNewAction(new KAction("Test", 0, this, SLOT(slotTestMenu()), actionCollection(), "edit_test"));
 
-  setXMLFile("kptestplugin.rc");
+    setXMLFile("kptestplugin.rc");
 }
 
 TestPlugin::~TestPlugin()
@@ -50,12 +50,12 @@ TestPlugin::~TestPlugin()
 
 void TestPlugin::slotTestMenu()
 {
-  core()->statusBar()->message("Test menu activated");
+    core()->statusBar()->message("Test menu activated");
 }
 
-KParts::Part* TestPlugin::createPart()
+KParts::Part *TestPlugin::createPart()
 {
-  return new TestPart(this, "testpart");
+    return new TestPart(this, "testpart");
 }
 
 #include "test_plugin.moc"

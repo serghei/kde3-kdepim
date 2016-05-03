@@ -28,22 +28,21 @@
 
 class ATCommand;
 
-class CmdPropertiesDialog : public CmdPropertiesDialog_base
-{ 
+class CmdPropertiesDialog : public CmdPropertiesDialog_base {
     Q_OBJECT
-  public:
-    CmdPropertiesDialog(ATCommand *cmd,QWidget* parent=0,const char* name=0,
-                        bool modal=false,WFlags fl=0);
+public:
+    CmdPropertiesDialog(ATCommand *cmd, QWidget *parent = 0, const char *name = 0,
+                        bool modal = false, WFlags fl = 0);
     ~CmdPropertiesDialog();
 
-  protected slots:
+protected slots:
     void editParameterName(QListViewItem *);
     void slotAccept();
 
-  private:
+private:
     void readCommand();
     void writeCommand();
-        
+
     ATCommand *mCmd;
 };
 

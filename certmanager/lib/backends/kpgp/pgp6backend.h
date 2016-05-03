@@ -40,11 +40,11 @@ class QString;
 
 namespace Kleo {
 
-  class PGP6Backend : public KpgpBackendBase {
-  public:
+class PGP6Backend : public KpgpBackendBase {
+public:
     QString name() const;
     QString displayName() const;
-  };
+};
 
 }
 

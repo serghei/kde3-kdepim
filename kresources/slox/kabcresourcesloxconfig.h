@@ -32,21 +32,20 @@ class SloxBase;
 
 namespace KABC {
 
-class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
-{
-  Q_OBJECT
+class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceSloxConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceSloxConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  private slots:
+private slots:
     void selectAddressFolder();
 
-  private:
+private:
     KURLRequester *mURL;
     KLineEdit *mUser;
     KLineEdit *mPassword;

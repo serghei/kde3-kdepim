@@ -38,29 +38,27 @@ class KPushButton;
 class QColor;
 class QListView;
 
-class KDE_EXPORT KOPrefsDialogMain : public KPrefsModule
-{
+class KDE_EXPORT KOPrefsDialogMain : public KPrefsModule {
     Q_OBJECT
-  public:
-    KOPrefsDialogMain( QWidget *parent, const char *name );
+public:
+    KOPrefsDialogMain(QWidget *parent, const char *name);
 
-  protected slots:
-    void toggleEmailSettings( bool on );
-  private:
+protected slots:
+    void toggleEmailSettings(bool on);
+private:
     QWidget *mUserEmailSettings;
 };
 
-class KDE_EXPORT KOPrefsDialogColors : public KPrefsModule
-{
+class KDE_EXPORT KOPrefsDialogColors : public KPrefsModule {
     Q_OBJECT
-  public:
-    KOPrefsDialogColors( QWidget *parent, const char *name );
+public:
+    KOPrefsDialogColors(QWidget *parent, const char *name);
 
-  protected:
+protected:
     void usrWriteConfig();
     void usrReadConfig();
 
-  protected slots:
+protected slots:
     void updateCategories();
     void setCategoryColor();
     void updateCategoryColor();
@@ -68,7 +66,7 @@ class KDE_EXPORT KOPrefsDialogColors : public KPrefsModule
     void updateResources();
     void setResourceColor();
     void updateResourceColor();
-  private:
+private:
     QComboBox     *mCategoryCombo;
     KColorButton  *mCategoryButton;
     QDict<QColor> mCategoryDict;
@@ -80,71 +78,67 @@ class KDE_EXPORT KOPrefsDialogColors : public KPrefsModule
     QStringList mResourceIdentifier;
 };
 
-class KDE_EXPORT KOPrefsDialogGroupScheduling : public KPrefsModule
-{
+class KDE_EXPORT KOPrefsDialogGroupScheduling : public KPrefsModule {
     Q_OBJECT
-  public:
-    KOPrefsDialogGroupScheduling( QWidget *parent, const char *name );
+public:
+    KOPrefsDialogGroupScheduling(QWidget *parent, const char *name);
 
-  protected:
+protected:
     void usrReadConfig();
     void usrWriteConfig();
 
-  protected slots:
+protected slots:
     void addItem();
     void removeItem();
     void updateItem();
     void updateInput();
 
-  private:
+private:
     QListView *mAMails;
     QLineEdit *aEmailsEdit;
 };
 
 class KOGroupwarePrefsPage;
 
-class KDE_EXPORT KOPrefsDialogGroupwareScheduling : public KPrefsModule
-{
+class KDE_EXPORT KOPrefsDialogGroupwareScheduling : public KPrefsModule {
     Q_OBJECT
-  public:
-    KOPrefsDialogGroupwareScheduling( QWidget *parent, const char *name );
+public:
+    KOPrefsDialogGroupwareScheduling(QWidget *parent, const char *name);
 
-  protected:
+protected:
     void usrReadConfig();
     void usrWriteConfig();
 
-  private:
-    KOGroupwarePrefsPage* mGroupwarePage;
+private:
+    KOGroupwarePrefsPage *mGroupwarePage;
 };
 
-class KDE_EXPORT KOPrefsDialogPlugins : public KPrefsModule
-{
+class KDE_EXPORT KOPrefsDialogPlugins : public KPrefsModule {
     Q_OBJECT
-  public:
-    KOPrefsDialogPlugins( QWidget *parent, const char *name );
+public:
+    KOPrefsDialogPlugins(QWidget *parent, const char *name);
 
-  protected slots:
+protected slots:
     void usrReadConfig();
     void usrWriteConfig();
     void configure();
-    void selectionChanged( QListViewItem* );
+    void selectionChanged(QListViewItem *);
 
-  private:
+private:
     void buildList();
     QListView *mListView;
     QLabel *mDescription;
     KPushButton *mConfigureButton;
 };
 
-class KDE_EXPORT KOPrefsDesignerFields : public KPIM::KCMDesignerFields
-{
-  public:
-    KOPrefsDesignerFields( QWidget *parent = 0, const char *name = 0 );
+class KDE_EXPORT KOPrefsDesignerFields : public KPIM::KCMDesignerFields {
+public:
+    KOPrefsDesignerFields(QWidget *parent = 0, const char *name = 0);
 
-  protected:
+protected:
     QString localUiDir();
     QString uiPath();
-    void writeActivePages( const QStringList & );
+    void writeActivePages(const QStringList &);
     QStringList readActivePages();
     QString applicationName();
 };

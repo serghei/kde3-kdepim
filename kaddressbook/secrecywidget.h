@@ -26,26 +26,27 @@
 
 #include <qwidget.h>
 
-namespace KABC { class Secrecy; }
+namespace KABC {
+class Secrecy;
+}
 class KComboBox;
 
-class SecrecyWidget : public QWidget
-{
-  Q_OBJECT
+class SecrecyWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    SecrecyWidget( QWidget *parent, const char *name = 0 );
+public:
+    SecrecyWidget(QWidget *parent, const char *name = 0);
     ~SecrecyWidget();
 
-    void setSecrecy( const KABC::Secrecy &secrecy );
+    void setSecrecy(const KABC::Secrecy &secrecy);
     KABC::Secrecy secrecy() const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     KComboBox *mSecrecyCombo;
 };
 

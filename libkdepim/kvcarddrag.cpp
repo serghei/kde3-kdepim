@@ -25,42 +25,44 @@
 
 static const char vcard_mime_string[] = "text/x-vcard";
 
-KVCardDrag::KVCardDrag( const QString &content, QWidget *dragsource,
-                        const char *name )
-  : QStoredDrag( vcard_mime_string, dragsource, name )
+KVCardDrag::KVCardDrag(const QString &content, QWidget *dragsource,
+                       const char *name)
+    : QStoredDrag(vcard_mime_string, dragsource, name)
 {
-  setVCard( content );
+    setVCard(content);
 }
 
-KVCardDrag::KVCardDrag( QWidget *dragsource, const char *name )
-  : QStoredDrag( vcard_mime_string, dragsource, name )
+KVCardDrag::KVCardDrag(QWidget *dragsource, const char *name)
+    : QStoredDrag(vcard_mime_string, dragsource, name)
 {
-  setVCard( QString::null );
+    setVCard(QString::null);
 }
 
-void KVCardDrag::setVCard( const QString &content )
+void KVCardDrag::setVCard(const QString &content)
 {
-  setEncodedData( content.utf8() );
+    setEncodedData(content.utf8());
 }
 
-bool KVCardDrag::canDecode( QMimeSource *e )
+bool KVCardDrag::canDecode(QMimeSource *e)
 {
-  return e->provides( vcard_mime_string );
+    return e->provides(vcard_mime_string);
 }
 
-bool KVCardDrag::decode( QMimeSource *e, QString &content )
+bool KVCardDrag::decode(QMimeSource *e, QString &content)
 {
-  content = QString::fromUtf8( e->encodedData( vcard_mime_string ) );
-  return true;
+    content = QString::fromUtf8(e->encodedData(vcard_mime_string));
+    return true;
 }
 
-bool KVCardDrag::decode( QMimeSource *e, KABC::Addressee::List& addressees )
+bool KVCardDrag::decode(QMimeSource *e, KABC::Addressee::List &addressees)
 {
-  addressees = KABC::VCardConverter().parseVCards( e->encodedData( vcard_mime_string ) );
-  return true;
+    addressees = KABC::VCardConverter().parseVCards(e->encodedData(vcard_mime_string));
+    return true;
 }
 
-void KVCardDrag::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KVCardDrag::virtual_hook(int, void *)
+{
+    /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kvcarddrag.moc"

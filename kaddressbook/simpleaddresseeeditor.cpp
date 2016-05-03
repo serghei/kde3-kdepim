@@ -30,100 +30,100 @@
 
 #include "simpleaddresseeeditor.h"
 
-SimpleAddresseeEditor::SimpleAddresseeEditor( QWidget *parent, const char *name )
-  : AddresseeEditorBase( parent, name ),
-    mDirty( false ),
-    mBlockModified( false )
+SimpleAddresseeEditor::SimpleAddresseeEditor(QWidget *parent, const char *name)
+    : AddresseeEditorBase(parent, name),
+      mDirty(false),
+      mBlockModified(false)
 {
-  kdDebug(5720) << "SimpleAddresseeEditor()" << endl;
+    kdDebug(5720) << "SimpleAddresseeEditor()" << endl;
 
-  initGui();
+    initGui();
 }
 
 SimpleAddresseeEditor::~SimpleAddresseeEditor()
 {
-  kdDebug(5720) << "~SimpleAddresseeEditor()" << endl;
+    kdDebug(5720) << "~SimpleAddresseeEditor()" << endl;
 }
 
-void SimpleAddresseeEditor::setAddressee( const KABC::Addressee &addr )
+void SimpleAddresseeEditor::setAddressee(const KABC::Addressee &addr)
 {
-  mAddressee = addr;
+    mAddressee = addr;
 
-  load();
+    load();
 }
 
 const KABC::Addressee &SimpleAddresseeEditor::addressee()
 {
-  return mAddressee;
+    return mAddressee;
 }
 
 void SimpleAddresseeEditor::setInitialFocus()
 {
-  mNameEdit->setFocus();
+    mNameEdit->setFocus();
 }
 
 void SimpleAddresseeEditor::initGui()
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(this, 2, 2, KDialog::marginHint(),
+            KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Name:" ), this );
-  topLayout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel(i18n("Name:"), this);
+    topLayout->addWidget(label, 0, 0);
 
-  mNameEdit = new KLineEdit( this );
-  topLayout->addWidget( mNameEdit, 0, 1 );
-  connect( mNameEdit, SIGNAL( textChanged( const QString & ) ),
-           SLOT( emitModified() ) );
+    mNameEdit = new KLineEdit(this);
+    topLayout->addWidget(mNameEdit, 0, 1);
+    connect(mNameEdit, SIGNAL(textChanged(const QString &)),
+            SLOT(emitModified()));
 
-  label = new QLabel( i18n( "Email:" ), this );
-  topLayout->addWidget( label, 1, 0 );
+    label = new QLabel(i18n("Email:"), this);
+    topLayout->addWidget(label, 1, 0);
 
-  mEmailEdit = new KLineEdit( this );
-  topLayout->addWidget( mEmailEdit, 1, 1 );
-  connect( mEmailEdit, SIGNAL( textChanged( const QString & ) ),
-           SLOT( emitModified() ) );
+    mEmailEdit = new KLineEdit(this);
+    topLayout->addWidget(mEmailEdit, 1, 1);
+    connect(mEmailEdit, SIGNAL(textChanged(const QString &)),
+            SLOT(emitModified()));
 }
 
 void SimpleAddresseeEditor::load()
 {
-  kdDebug(5720) << "SimpleAddresseeEditor::load()" << endl;
+    kdDebug(5720) << "SimpleAddresseeEditor::load()" << endl;
 
-  kdDebug(5720) << "ASSEMBLED NAME: " << mAddressee.assembledName() << endl;
-  kdDebug(5720) << "EMAIL NAME: " << mAddressee.preferredEmail() << endl;
+    kdDebug(5720) << "ASSEMBLED NAME: " << mAddressee.assembledName() << endl;
+    kdDebug(5720) << "EMAIL NAME: " << mAddressee.preferredEmail() << endl;
 
-  mBlockModified = true;
+    mBlockModified = true;
 
-  mNameEdit->setText( mAddressee.assembledName() );
-  mEmailEdit->setText( mAddressee.preferredEmail() );
+    mNameEdit->setText(mAddressee.assembledName());
+    mEmailEdit->setText(mAddressee.preferredEmail());
 
-  mBlockModified = false;
+    mBlockModified = false;
 
-  mDirty = false;
+    mDirty = false;
 }
 
 void SimpleAddresseeEditor::save()
 {
-  if ( !mDirty ) return;
+    if(!mDirty) return;
 
-  mAddressee.setNameFromString( mNameEdit->text() );
-  mAddressee.insertEmail( mEmailEdit->text(), true );
+    mAddressee.setNameFromString(mNameEdit->text());
+    mAddressee.insertEmail(mEmailEdit->text(), true);
 
-  mDirty = false;
+    mDirty = false;
 }
 
 bool SimpleAddresseeEditor::dirty()
 {
-  return mDirty;
+    return mDirty;
 }
 
 void SimpleAddresseeEditor::emitModified()
 {
-  if ( mBlockModified )
-    return;
+    if(mBlockModified)
+        return;
 
-  mDirty = true;
+    mDirty = true;
 
-  emit modified();
+    emit modified();
 }
 
 #include "simpleaddresseeeditor.moc"

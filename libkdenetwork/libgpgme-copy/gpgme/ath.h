@@ -2,17 +2,17 @@
    Copyright (C) 2002, 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
- 
+
    GPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as
    published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
-   
+
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
-   
+
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -22,9 +22,12 @@
 #define ATH_H
 
 #ifdef HAVE_W32_SYSTEM
-  /* fixme: Check how we did it in libgcrypt.  */
-  struct msghdr { int dummy; };
-  typedef int socklen_t;
+/* fixme: Check how we did it in libgcrypt.  */
+struct msghdr
+{
+    int dummy;
+};
+typedef int socklen_t;
 # include <windows.h>
 # include <io.h>
 
@@ -69,21 +72,21 @@ typedef void *ath_mutex_t;
 #define ATH_MUTEX_INITIALIZER 0;
 
 /* Functions for mutual exclusion.  */
-int ath_mutex_init (ath_mutex_t *mutex);
-int ath_mutex_destroy (ath_mutex_t *mutex);
-int ath_mutex_lock (ath_mutex_t *mutex);
-int ath_mutex_unlock (ath_mutex_t *mutex);
+int ath_mutex_init(ath_mutex_t *mutex);
+int ath_mutex_destroy(ath_mutex_t *mutex);
+int ath_mutex_lock(ath_mutex_t *mutex);
+int ath_mutex_unlock(ath_mutex_t *mutex);
 
 /* Replacement for the POSIX functions, which can be used to allow
    other (user-level) threads to run.  */
-ssize_t ath_read (int fd, void *buf, size_t nbytes);
-ssize_t ath_write (int fd, const void *buf, size_t nbytes);
-ssize_t ath_select (int nfd, fd_set *rset, fd_set *wset, fd_set *eset,
-		    struct timeval *timeout);
-ssize_t ath_waitpid (pid_t pid, int *status, int options);
-int ath_accept (int s, struct sockaddr *addr, socklen_t *length_ptr);
-int ath_connect (int s, const struct sockaddr *addr, socklen_t length);
-int ath_sendmsg (int s, const struct msghdr *msg, int flags);
-int ath_recvmsg (int s, struct msghdr *msg, int flags);
+ssize_t ath_read(int fd, void *buf, size_t nbytes);
+ssize_t ath_write(int fd, const void *buf, size_t nbytes);
+ssize_t ath_select(int nfd, fd_set *rset, fd_set *wset, fd_set *eset,
+                   struct timeval *timeout);
+ssize_t ath_waitpid(pid_t pid, int *status, int options);
+int ath_accept(int s, struct sockaddr *addr, socklen_t *length_ptr);
+int ath_connect(int s, const struct sockaddr *addr, socklen_t length);
+int ath_sendmsg(int s, const struct msghdr *msg, int flags);
+int ath_recvmsg(int s, struct msghdr *msg, int flags);
 
 #endif	/* ATH_H */

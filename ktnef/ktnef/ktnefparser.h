@@ -27,32 +27,31 @@ class KTNEFAttach;
 class KTNEFMessage;
 class KTNEFProperty;
 
-class KDE_EXPORT KTNEFParser
-{
+class KDE_EXPORT KTNEFParser {
 public:
-	KTNEFParser();
-	~KTNEFParser();
+    KTNEFParser();
+    ~KTNEFParser();
 
-	bool openFile(const QString& filename);
-	bool openDevice( QIODevice *device );
-	bool extractFile(const QString& filename);
-	bool extractFileTo(const QString& filename, const QString& dirname);
-	bool extractAll();
-	void setDefaultExtractDir(const QString& dirname);
-	KTNEFMessage* message() const;
-
-private:
-	bool decodeAttachment();
-	bool decodeMessage();
-	bool extractAttachmentTo(KTNEFAttach *att, const QString& dirname);
-	bool parseDevice();
-	void checkCurrent(int state);
-	bool readMAPIProperties(QMap<int,KTNEFProperty*>& pros, KTNEFAttach *attach = 0);
-	void deleteDevice();
+    bool openFile(const QString &filename);
+    bool openDevice(QIODevice *device);
+    bool extractFile(const QString &filename);
+    bool extractFileTo(const QString &filename, const QString &dirname);
+    bool extractAll();
+    void setDefaultExtractDir(const QString &dirname);
+    KTNEFMessage *message() const;
 
 private:
-	class ParserPrivate;
-	ParserPrivate *d;
+    bool decodeAttachment();
+    bool decodeMessage();
+    bool extractAttachmentTo(KTNEFAttach *att, const QString &dirname);
+    bool parseDevice();
+    void checkCurrent(int state);
+    bool readMAPIProperties(QMap<int, KTNEFProperty *> &pros, KTNEFAttach *attach = 0);
+    void deleteDevice();
+
+private:
+    class ParserPrivate;
+    ParserPrivate *d;
 };
 
 #endif

@@ -2,12 +2,12 @@
    Copyright (C) 2004 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -27,27 +27,27 @@
 
 namespace GpgME {
 
-  class Error;
+class Error;
 
-  class KDE_EXPORT DecryptionResult : public Result {
-  public:
-    DecryptionResult( gpgme_ctx_t ctx=0, int error=0 );
-    explicit DecryptionResult( const Error & err );
-    DecryptionResult( const DecryptionResult & other );
+class KDE_EXPORT DecryptionResult : public Result {
+public:
+    DecryptionResult(gpgme_ctx_t ctx = 0, int error = 0);
+    explicit DecryptionResult(const Error &err);
+    DecryptionResult(const DecryptionResult &other);
     ~DecryptionResult();
 
-    const DecryptionResult & operator=( const DecryptionResult & other );
+    const DecryptionResult &operator=(const DecryptionResult &other);
 
     bool isNull() const;
 
-    const char * unsupportedAlgortihm() const;
+    const char *unsupportedAlgortihm() const;
 
     bool wrongKeyUsage() const;
 
-  private:
+private:
     class Private;
-    Private * d;
-  };
+    Private *d;
+};
 
 }
 

@@ -61,27 +61,27 @@ class KConfigBase;
 class QGpgMECryptoConfig;
 
 namespace GpgME {
-  class ImportResult;
-  class KeyGenerationResult;
+class ImportResult;
+class KeyGenerationResult;
 }
 
 namespace Kleo {
-  class KeyListJob;
-  class EncryptJob;
-  class DecryptJob;
-  class SignJob;
-  class VerifyDetachedJob;
-  class VerifyOpaqueJob;
-  class KeyGenerationJob;
-  class ImportJob;
-  class ExportJob;
-  class DownloadJob;
-  class DeleteJob;
-  class SignEncryptJob;
-  class DecryptVerifyJob;
-  class CryptoConfig;
-  class RefreshKeysJob;
-  class SpecialJob;
+class KeyListJob;
+class EncryptJob;
+class DecryptJob;
+class SignJob;
+class VerifyDetachedJob;
+class VerifyOpaqueJob;
+class KeyGenerationJob;
+class ImportJob;
+class ExportJob;
+class DownloadJob;
+class DeleteJob;
+class SignEncryptJob;
+class DecryptVerifyJob;
+class CryptoConfig;
+class RefreshKeysJob;
+class SpecialJob;
 }
 
 /*! \file cryptplugwrapper.h
@@ -434,15 +434,15 @@ class CryptPlugWrapper;
 */
 class StructuringInfoWrapper {
 public:
-  StructuringInfoWrapper( CryptPlugWrapper* wrapper );
-  ~StructuringInfoWrapper();
-  void reset();
-  CryptPlug::StructuringInfo data;
+    StructuringInfoWrapper(CryptPlugWrapper *wrapper);
+    ~StructuringInfoWrapper();
+    void reset();
+    CryptPlug::StructuringInfo data;
 private:
-  void initMe();
-  void freeMe();
-  bool _initDone;
-  CryptPlugWrapper* _wrapper;
+    void initMe();
+    void freeMe();
+    bool _initDone;
+    CryptPlugWrapper *_wrapper;
 };
 
 
@@ -452,7 +452,7 @@ private:
 */
 class KDE_EXPORT CryptPlugWrapper : public Kleo::CryptoBackend::Protocol {
 public:
-    static QString errorIdToText( int errId, bool & isPassphraseError );
+    static QString errorIdToText(int errId, bool &isPassphraseError);
 
     /*! \ingroup groupGeneral
 
@@ -464,7 +464,8 @@ public:
 
         \sa initStatus, initialize
     */
-    typedef enum {
+    typedef enum
+    {
         InitStatus_undef         = 0,
 
         InitStatus_Ok            = 1,
@@ -498,7 +499,8 @@ public:
         will only be shown the respective code number and have to look
         into your PlugIn's manual to learn about it's meaning...
     */
-    enum {
+    enum
+    {
         SigStatus_UNKNOWN     = 0x0000,
         SigStatus_VALID       = SigStat_VALID,
         SigStatus_GREEN       = SigStat_GREEN,
@@ -517,7 +519,8 @@ public:
     typedef unsigned long SigStatusFlags;
 
 
-    enum {
+    enum
+    {
         CertStatus_EXPIRES_NEVER = CRYPTPLUG_CERT_DOES_NEVER_EXPIRE
     };
 
@@ -545,10 +548,10 @@ public:
         \sa ~CryptPlugWrapper, setActive, active, initialize, deinitialize
         \sa initStatus
     */
-    CryptPlugWrapper( const QString& name=QString::null,
-                      const QString& libName=QString::null,
-                      const QString& update=QString::null,
-                      bool           active = false );
+    CryptPlugWrapper(const QString &name = QString::null,
+                     const QString &libName = QString::null,
+                     const QString &update = QString::null,
+                     bool           active = false);
 
     /*! \ingroup groupAdmin
         \brief Destructor of CRYPTPLUG wrapper class.
@@ -563,8 +566,9 @@ public:
 
     QString protocol() const;
 
-    QString name() const {
-      return protocol();
+    QString name() const
+    {
+        return protocol();
     }
 
     /*! \ingroup groupAdmin
@@ -592,7 +596,7 @@ public:
         \sa active, CryptPlugWrapper(), ~CryptPlugWrapper
         \sa deinitialize, initialize, initStatus
     */
-    void setActive( bool active );
+    void setActive(bool active);
 
     /*! \ingroup groupAdmin
         \brief Returns this CRYPTPLUG wrapper's internal \c active flag.
@@ -628,7 +632,7 @@ public:
         \sa libName, CryptPlugWrapper(), ~CryptPlugWrapper
         \sa deinitialize, initialize, initStatus
     */
-    bool setLibName( const QString& libName );
+    bool setLibName(const QString &libName);
 
     /*! \ingroup groupAdmin
         \brief Returns the CRYPTPLUG library name.
@@ -645,7 +649,7 @@ public:
       \brief Specifies the external name that is visible in lists,
              messages, etc.
     */
-    void setDisplayName( const QString& name );
+    void setDisplayName(const QString &name);
 
 
     /*! \ingroup groupAdmin
@@ -672,7 +676,7 @@ private:
         \sa initStatus, deinitialize, CryptPlugWrapper(), ~CryptPlugWrapper
         \sa setActive, active
     */
-    bool initialize( InitStatus* initStatus, QString* errorMsg );
+    bool initialize(InitStatus *initStatus, QString *errorMsg);
 
 public:
     /*! \ingroup groupGeneral
@@ -701,7 +705,7 @@ public:
         \sa initialize, deinitialize, CryptPlugWrapper(), ~CryptPlugWrapper
         \sa setActive, active
     */
-    InitStatus initStatus( QString* errorMsg ) const;
+    InitStatus initStatus(QString *errorMsg) const;
 
 
     /*! \ingroup groupGeneral
@@ -718,7 +722,7 @@ public:
 
         \return  whether the relative feature is implemented or not
     */
-    bool hasFeature( ::Feature );
+    bool hasFeature(::Feature);
 
 
     /* \ingroup groupSignAct
@@ -726,7 +730,7 @@ public:
      * signature meta data struct itself as this could be allocated on
      * the stack.
      */
-    void freeSignatureMetaData( CryptPlug::SignatureMetaData* );
+    void freeSignatureMetaData(CryptPlug::SignatureMetaData *);
 
     /*! \ingroup groupSignAct
       \brief Checks whether the signature of a message is
@@ -749,11 +753,11 @@ public:
               contain meta information about the signature after the
               function call.
     */
-    bool checkMessageSignature( char** cleartext,
-                                const char* signaturetext,
-                                bool signatureIsBinary,
-                                int signatureLen,
-                                CryptPlug::SignatureMetaData* sigmeta );
+    bool checkMessageSignature(char **cleartext,
+                               const char *signaturetext,
+                               bool signatureIsBinary,
+                               int signatureLen,
+                               CryptPlug::SignatureMetaData *sigmeta);
 
     /*! \ingroup groupCryptAct
     \brief Tries to decrypt an email message
@@ -765,13 +769,13 @@ public:
             \c true, otherwise
             \c false.
     */
-    bool decryptMessage( const char* ciphertext,
-                         bool        cipherIsBinary,
-                         int         cipherLen,
-                         char**      cleartext,
-                         const char* certificate,
-                         int* errId,
-                         char** errTxt );
+    bool decryptMessage(const char *ciphertext,
+                        bool        cipherIsBinary,
+                        int         cipherLen,
+                        char      **cleartext,
+                        const char *certificate,
+                        int *errId,
+                        char **errTxt);
 
     /*! \ingroup groupCryptAct
     \brief Combines the functionality of
@@ -785,39 +789,45 @@ public:
             contain meta information about the signature after the
             function call.
     */
-    bool decryptAndCheckMessage( const char*  ciphertext,
-                                 bool         cipherIsBinary,
-                                 int          cipherLen,
-                                 char**       cleartext,
-                                 const char*  certificate,
-                                 bool*        signatureFound,
-                                 CryptPlug::SignatureMetaData* sigmeta,
-                                 int*   errId,
-                                 char** errTxt );
+    bool decryptAndCheckMessage(const char  *ciphertext,
+                                bool         cipherIsBinary,
+                                int          cipherLen,
+                                char       **cleartext,
+                                const char  *certificate,
+                                bool        *signatureFound,
+                                CryptPlug::SignatureMetaData *sigmeta,
+                                int   *errId,
+                                char **errTxt);
 
-    Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false, bool validate=true ) const;
-    Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
-    Kleo::DecryptJob * decryptJob() const;
-    Kleo::SignJob * signJob( bool armor=false, bool textMode=false ) const;
-    Kleo::VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const;
-    Kleo::VerifyOpaqueJob * verifyOpaqueJob( bool textmode=false ) const;
-    Kleo::KeyGenerationJob * keyGenerationJob() const;
+    Kleo::KeyListJob *keyListJob(bool remote = false, bool includeSigs = false, bool validate = true) const;
+    Kleo::EncryptJob *encryptJob(bool armor = false, bool textmode = false) const;
+    Kleo::DecryptJob *decryptJob() const;
+    Kleo::SignJob *signJob(bool armor = false, bool textMode = false) const;
+    Kleo::VerifyDetachedJob *verifyDetachedJob(bool textmode = false) const;
+    Kleo::VerifyOpaqueJob *verifyOpaqueJob(bool textmode = false) const;
+    Kleo::KeyGenerationJob *keyGenerationJob() const;
 
-    Kleo::ImportJob * importJob() const;
-    Kleo::ExportJob * publicKeyExportJob( bool armor=false ) const;
-    Kleo::ExportJob * secretKeyExportJob( bool armor=false, const QString& charset = QString::null ) const;
-    Kleo::DownloadJob * downloadJob( bool armor=false ) const;
-    Kleo::DeleteJob * deleteJob() const;
+    Kleo::ImportJob *importJob() const;
+    Kleo::ExportJob *publicKeyExportJob(bool armor = false) const;
+    Kleo::ExportJob *secretKeyExportJob(bool armor = false, const QString &charset = QString::null) const;
+    Kleo::DownloadJob *downloadJob(bool armor = false) const;
+    Kleo::DeleteJob *deleteJob() const;
 
-    Kleo::SignEncryptJob * signEncryptJob( bool armor=false, bool textmode=false ) const;
-    Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
-    Kleo::RefreshKeysJob * refreshKeysJob() const;
+    Kleo::SignEncryptJob *signEncryptJob(bool armor = false, bool textmode = false) const;
+    Kleo::DecryptVerifyJob *decryptVerifyJob(bool textmode = false) const;
+    Kleo::RefreshKeysJob *refreshKeysJob() const;
 
-    Kleo::SpecialJob * specialJob( const char *, const QMap<QString,QVariant> & ) const { return 0; }
+    Kleo::SpecialJob *specialJob(const char *, const QMap<QString, QVariant> &) const
+    {
+        return 0;
+    }
 
-    GpgME::ImportResult importCertificate( const char* data, size_t length );
+    GpgME::ImportResult importCertificate(const char *data, size_t length);
 
-    CryptPlug * cryptPlug() const { return _cp; }
+    CryptPlug *cryptPlug() const
+    {
+        return _cp;
+    }
 
 private:
     QString    _name;
@@ -826,12 +836,12 @@ private:
     bool       _active;
     InitStatus _initStatus;
     QString    _lastError;
-    CryptPlug* _cp;
+    CryptPlug *_cp;
     // local parameters without representation in cryptplug.h
     bool mAlwaysEncryptToSelf;
     class Config;
-    Config * _config;
-    QGpgMECryptoConfig * _cryptoConfig;
+    Config *_config;
+    QGpgMECryptoConfig *_cryptoConfig;
 };
 
 #endif // !LIBKLEOPATRA_NO_COMPAT

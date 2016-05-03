@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -28,19 +28,18 @@
 
 namespace Schema {
 
-class Types
-{
-  public:
-    void setSimpleTypes( const SimpleType::List &simpleTypes );
+class Types {
+public:
+    void setSimpleTypes(const SimpleType::List &simpleTypes);
     SimpleType::List simpleTypes() const;
 
-    void setComplexTypes( const ComplexType::List &complexTypes );
+    void setComplexTypes(const ComplexType::List &complexTypes);
     ComplexType::List complexTypes() const;
 
-    void setElements( const Element::List &elements );
+    void setElements(const Element::List &elements);
     Element::List elements() const;
 
-  private:
+private:
     SimpleType::List mSimpleTypes;
     ComplexType::List mComplexTypes;
     Element::List mElements;

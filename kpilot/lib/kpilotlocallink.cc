@@ -68,301 +68,300 @@
 typedef QPair<QString, struct DBInfo> DatabaseDescriptor;
 typedef QValueList<DatabaseDescriptor> DatabaseDescriptorList;
 
-class KPilotLocalLink::Private
-{
+class KPilotLocalLink::Private {
 public:
-	DatabaseDescriptorList fDBs;
+    DatabaseDescriptorList fDBs;
 } ;
 
-unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &info, const QString &path )
+unsigned int KPilotLocalLink::findAvailableDatabases(KPilotLocalLink::Private &info, const QString &path)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	info.fDBs.clear();
+    info.fDBs.clear();
 
-	QDir d(path);
-	if (!d.exists())
-	{
-		// Perhaps return an error?
-		return 0;
-	}
+    QDir d(path);
+    if(!d.exists())
+    {
+        // Perhaps return an error?
+        return 0;
+    }
 
-	// Use this to fake indexes in the list of DBInfo structs
-	unsigned int counter = 0;
+    // Use this to fake indexes in the list of DBInfo structs
+    unsigned int counter = 0;
 
-	QStringList dbs = d.entryList( CSL1("*.pdb"), QDir::Files | QDir::NoSymLinks | QDir::Readable );
-	for ( QStringList::ConstIterator i = dbs.begin(); i != dbs.end() ; ++i)
-	{
-		struct DBInfo dbi;
+    QStringList dbs = d.entryList(CSL1("*.pdb"), QDir::Files | QDir::NoSymLinks | QDir::Readable);
+    for(QStringList::ConstIterator i = dbs.begin(); i != dbs.end() ; ++i)
+    {
+        struct DBInfo dbi;
 
-		// Remove the trailing 4 characters
-		QString dbname = (*i);
-		dbname.remove(dbname.length()-4,4);
+        // Remove the trailing 4 characters
+        QString dbname = (*i);
+        dbname.remove(dbname.length() - 4, 4);
 
-		QString dbnamecheck = (*i).left((*i).findRev(CSL1(".pdb")));
-		Q_ASSERT(dbname == dbnamecheck);
+        QString dbnamecheck = (*i).left((*i).findRev(CSL1(".pdb")));
+        Q_ASSERT(dbname == dbnamecheck);
 
-		if (PilotLocalDatabase::infoFromFile( path + CSL1("/") + (*i), &dbi))
-		{
-			DEBUGKPILOT << fname << ": Loaded "
-				<< dbname << endl;
-			dbi.index = counter;
-			info.fDBs.append( DatabaseDescriptor(dbname,dbi) );
-			++counter;
-		}
-	}
+        if(PilotLocalDatabase::infoFromFile(path + CSL1("/") + (*i), &dbi))
+        {
+            DEBUGKPILOT << fname << ": Loaded "
+                        << dbname << endl;
+            dbi.index = counter;
+            info.fDBs.append(DatabaseDescriptor(dbname, dbi));
+            ++counter;
+        }
+    }
 
-	DEBUGKPILOT << fname << ": Total " << info.fDBs.count()
-		<< " databases." << endl;
-	return info.fDBs.count();
+    DEBUGKPILOT << fname << ": Total " << info.fDBs.count()
+                << " databases." << endl;
+    return info.fDBs.count();
 }
 
 
-KPilotLocalLink::KPilotLocalLink( QObject *parent, const char *name ) :
-	KPilotLink(parent,name),
-	fReady(false),
-	d( new Private )
+KPilotLocalLink::KPilotLocalLink(QObject *parent, const char *name) :
+    KPilotLink(parent, name),
+    fReady(false),
+    d(new Private)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 KPilotLocalLink::~KPilotLocalLink()
 {
-	FUNCTIONSETUP;
-	KPILOT_DELETE(d);
+    FUNCTIONSETUP;
+    KPILOT_DELETE(d);
 }
 
 /* virtual */ QString KPilotLocalLink::statusString() const
 {
-	return fReady ? CSL1("Ready") : CSL1("Waiting") ;
+    return fReady ? CSL1("Ready") : CSL1("Waiting") ;
 }
 
 /* virtual */ bool KPilotLocalLink::isConnected() const
 {
-	return fReady;
+    return fReady;
 }
 
-/* virtual */ void KPilotLocalLink::reset( const QString &p )
+/* virtual */ void KPilotLocalLink::reset(const QString &p)
 {
-	FUNCTIONSETUP;
-	fPath = p;
-	reset();
+    FUNCTIONSETUP;
+    fPath = p;
+    reset();
 }
 
 /* virtual */ void KPilotLocalLink::reset()
 {
-	FUNCTIONSETUP;
-	QFileInfo info( fPath );
-	fReady = !fPath.isEmpty() && info.exists() && info.isDir() ;
-	if (fReady)
-	{
-		findAvailableDatabases(*d, fPath);
-		QTimer::singleShot(500,this,SLOT(ready()));
-	}
-	else
-	{
-		WARNINGKPILOT << "The local link path <"
-			<< fPath
-			<< "> does not exist or is not a directory. No sync can be done."
-			<< endl;
-	}
+    FUNCTIONSETUP;
+    QFileInfo info(fPath);
+    fReady = !fPath.isEmpty() && info.exists() && info.isDir() ;
+    if(fReady)
+    {
+        findAvailableDatabases(*d, fPath);
+        QTimer::singleShot(500, this, SLOT(ready()));
+    }
+    else
+    {
+        WARNINGKPILOT << "The local link path <"
+                      << fPath
+                      << "> does not exist or is not a directory. No sync can be done."
+                      << endl;
+    }
 }
 
 /* virtual */ void KPilotLocalLink::close()
 {
-	fReady = false;
+    fReady = false;
 }
 
 /* virtual */ bool KPilotLocalLink::tickle()
 {
-	return true;
+    return true;
 }
 
 /* virtual */ const KPilotCard *KPilotLocalLink::getCardInfo(int)
 {
-	return 0;
+    return 0;
 }
 
-/* virtual */ void KPilotLocalLink::endSync( EndOfSyncFlags f )
+/* virtual */ void KPilotLocalLink::endSync(EndOfSyncFlags f)
 {
-	Q_UNUSED(f);
-	fReady = false;
+    Q_UNUSED(f);
+    fReady = false;
 }
 
 /* virtual */ int KPilotLocalLink::openConduit()
 {
-	FUNCTIONSETUP;
-	return 0;
+    FUNCTIONSETUP;
+    return 0;
 }
 
 
-/* virtual */ int KPilotLocalLink::getNextDatabase( int index, struct DBInfo *info )
+/* virtual */ int KPilotLocalLink::getNextDatabase(int index, struct DBInfo *info)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( (index<0) || (index>=(int)d->fDBs.count()) )
-	{
-		WARNINGKPILOT << "Index out of range." << endl;
-		return -1;
-	}
+    if((index < 0) || (index >= (int)d->fDBs.count()))
+    {
+        WARNINGKPILOT << "Index out of range." << endl;
+        return -1;
+    }
 
-	DatabaseDescriptor dd = d->fDBs[index];
+    DatabaseDescriptor dd = d->fDBs[index];
 
-	DEBUGKPILOT << fname << ": Getting database " << dd.first << endl;
+    DEBUGKPILOT << fname << ": Getting database " << dd.first << endl;
 
-	if (info)
-	{
-		*info = dd.second;
-	}
+    if(info)
+    {
+        *info = dd.second;
+    }
 
-	return index+1;
+    return index + 1;
 }
 
-/* virtual */ int KPilotLocalLink::findDatabase(const char *name, struct DBInfo*info,
-		int index, unsigned long type, unsigned long creator)
+/* virtual */ int KPilotLocalLink::findDatabase(const char *name, struct DBInfo *info,
+        int index, unsigned long type, unsigned long creator)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if ( (index<0) || (index>=(int)d->fDBs.count()) )
-	{
-		WARNINGKPILOT << "Index out of range." << endl;
-		return -1;
-	}
+    if((index < 0) || (index >= (int)d->fDBs.count()))
+    {
+        WARNINGKPILOT << "Index out of range." << endl;
+        return -1;
+    }
 
-	if (!name)
-	{
-		WARNINGKPILOT << "NULL name." << endl;
-		return -1;
-	}
+    if(!name)
+    {
+        WARNINGKPILOT << "NULL name." << endl;
+        return -1;
+    }
 
-	QString desiredName = Pilot::fromPilot(name);
-	DEBUGKPILOT << fname << ": Looking for DB " << desiredName << endl;
-	for ( DatabaseDescriptorList::ConstIterator i = d->fDBs.at(index);
-		i != d->fDBs.end(); ++i)
-	{
-		const DatabaseDescriptor &dd = *i;
-		if (dd.first == desiredName)
-		{
-			if ( (!type || (type == dd.second.type)) &&
-				(!creator || (creator == dd.second.creator)) )
-			{
-				if (info)
-				{
-					*info = dd.second;
-				}
-				return index;
-			}
-		}
+    QString desiredName = Pilot::fromPilot(name);
+    DEBUGKPILOT << fname << ": Looking for DB " << desiredName << endl;
+    for(DatabaseDescriptorList::ConstIterator i = d->fDBs.at(index);
+            i != d->fDBs.end(); ++i)
+    {
+        const DatabaseDescriptor &dd = *i;
+        if(dd.first == desiredName)
+        {
+            if((!type || (type == dd.second.type)) &&
+                    (!creator || (creator == dd.second.creator)))
+            {
+                if(info)
+                {
+                    *info = dd.second;
+                }
+                return index;
+            }
+        }
 
-		++index;
-	}
+        ++index;
+    }
 
-	return -1;
+    return -1;
 }
 
 /* virtual */ void KPilotLocalLink::addSyncLogEntryImpl(QString const &s)
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << ": " << s << endl ;
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname << ": " << s << endl ;
 }
 
 /* virtual */ bool KPilotLocalLink::installFile(QString const &path, bool deletefile)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QFileInfo srcInfo(path);
-	QString canonicalSrcPath = srcInfo.dir().canonicalPath() + CSL1("/") + srcInfo.fileName() ;
-	QString canonicalDstPath = fPath + CSL1("/") + srcInfo.fileName();
+    QFileInfo srcInfo(path);
+    QString canonicalSrcPath = srcInfo.dir().canonicalPath() + CSL1("/") + srcInfo.fileName() ;
+    QString canonicalDstPath = fPath + CSL1("/") + srcInfo.fileName();
 
-	if (canonicalSrcPath == canonicalDstPath)
-	{
-		// That's a cheap copy operation
-		return true;
-	}
+    if(canonicalSrcPath == canonicalDstPath)
+    {
+        // That's a cheap copy operation
+        return true;
+    }
 
-	KURL src = KURL::fromPathOrURL( canonicalSrcPath );
-	KURL dst = KURL::fromPathOrURL( canonicalDstPath );
+    KURL src = KURL::fromPathOrURL(canonicalSrcPath);
+    KURL dst = KURL::fromPathOrURL(canonicalDstPath);
 
-	KIO::NetAccess::file_copy(src,dst,-1,true);
+    KIO::NetAccess::file_copy(src, dst, -1, true);
 
-	if (deletefile)
-	{
-		KIO::NetAccess::del(src, 0L);
-	}
+    if(deletefile)
+    {
+        KIO::NetAccess::del(src, 0L);
+    }
 
-	return true;
+    return true;
 }
 
-/* virtual */ bool KPilotLocalLink::retrieveDatabase( const QString &path, struct DBInfo *db )
+/* virtual */ bool KPilotLocalLink::retrieveDatabase(const QString &path, struct DBInfo *db)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QString dbname = Pilot::fromPilot(db->name) + CSL1(".pdb") ;
-	QString sourcefile = fPath + CSL1("/") + dbname ;
-	QString destfile = path ;
+    QString dbname = Pilot::fromPilot(db->name) + CSL1(".pdb") ;
+    QString sourcefile = fPath + CSL1("/") + dbname ;
+    QString destfile = path ;
 
-	DEBUGKPILOT << fname << ": src=" << sourcefile << endl;
-	DEBUGKPILOT << fname << ": dst=" << destfile << endl;
+    DEBUGKPILOT << fname << ": src=" << sourcefile << endl;
+    DEBUGKPILOT << fname << ": dst=" << destfile << endl;
 
-	QFile in( sourcefile );
-	if ( !in.exists() )
-	{
-		WARNINGKPILOT << "Source file " << sourcefile << " doesn't exist." << endl;
-		return false;
-	}
-	if ( !in.open( IO_ReadOnly | IO_Raw ) )
-	{
-		WARNINGKPILOT << "Can't read source file " << sourcefile << endl;
-		return false;
-	}
+    QFile in(sourcefile);
+    if(!in.exists())
+    {
+        WARNINGKPILOT << "Source file " << sourcefile << " doesn't exist." << endl;
+        return false;
+    }
+    if(!in.open(IO_ReadOnly | IO_Raw))
+    {
+        WARNINGKPILOT << "Can't read source file " << sourcefile << endl;
+        return false;
+    }
 
-	QFile out( destfile );
-	if ( !out.open( IO_WriteOnly | IO_Truncate | IO_Raw ) )
-	{
-		WARNINGKPILOT << "Can't write destination file " << destfile << endl;
-		return false;
-	}
+    QFile out(destfile);
+    if(!out.open(IO_WriteOnly | IO_Truncate | IO_Raw))
+    {
+        WARNINGKPILOT << "Can't write destination file " << destfile << endl;
+        return false;
+    }
 
-	const Q_ULONG BUF_SIZ = 8192 ;
-	char buf[BUF_SIZ];
-	Q_LONG r;
+    const Q_ULONG BUF_SIZ = 8192 ;
+    char buf[BUF_SIZ];
+    Q_LONG r;
 
-	while ( (r=in.readBlock(buf,BUF_SIZ))>0 )
-	{
-		out.writeBlock(buf,r);
-	}
-	out.flush();
-	in.close();
+    while((r = in.readBlock(buf, BUF_SIZ)) > 0)
+    {
+        out.writeBlock(buf, r);
+    }
+    out.flush();
+    in.close();
 
-	return out.exists();
+    return out.exists();
 }
 
-KPilotLink::DBInfoList KPilotLocalLink::getDBList( int, int )
+KPilotLink::DBInfoList KPilotLocalLink::getDBList(int, int)
 {
-	FUNCTIONSETUP;
-	DBInfoList l;
-	for ( DatabaseDescriptorList::ConstIterator i=d->fDBs.begin();
-		i != d->fDBs.end(); ++i)
-	{
-		l.append( (*i).second );
-	}
-	return l;
+    FUNCTIONSETUP;
+    DBInfoList l;
+    for(DatabaseDescriptorList::ConstIterator i = d->fDBs.begin();
+            i != d->fDBs.end(); ++i)
+    {
+        l.append((*i).second);
+    }
+    return l;
 }
 
 
-/* virtual */ PilotDatabase *KPilotLocalLink::database( const QString &name )
+/* virtual */ PilotDatabase *KPilotLocalLink::database(const QString &name)
 {
-	FUNCTIONSETUP;
-	return new PilotLocalDatabase( fPath, name );
+    FUNCTIONSETUP;
+    return new PilotLocalDatabase(fPath, name);
 }
 
 
 
 /* slot */ void KPilotLocalLink::ready()
 {
-	if (fReady)
-	{
-		emit deviceReady(this);
-	}
+    if(fReady)
+    {
+        emit deviceReady(this);
+    }
 }
 

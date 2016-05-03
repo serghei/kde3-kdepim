@@ -39,7 +39,7 @@
 namespace Akregator {
 
 FeedPropertiesWidget::FeedPropertiesWidget(QWidget *parent, const char *name)
-        : FeedPropertiesWidgetBase(parent, name)
+    : FeedPropertiesWidgetBase(parent, name)
 {
 }
 
@@ -47,18 +47,18 @@ FeedPropertiesWidget::~FeedPropertiesWidget()
 {}
 
 
-void FeedPropertiesWidget::slotUpdateComboBoxActivated( int index )
+void FeedPropertiesWidget::slotUpdateComboBoxActivated(int index)
 {
-    if ( index == 3 ) // "never"
+    if(index == 3)    // "never"
         updateSpinBox->setEnabled(false);
     else
         updateSpinBox->setEnabled(true);
 }
 
 
-void FeedPropertiesWidget::slotUpdateCheckBoxToggled( bool enabled )
+void FeedPropertiesWidget::slotUpdateCheckBoxToggled(bool enabled)
 {
-    if (enabled && updateComboBox->currentItem() != 3 ) // "never"
+    if(enabled && updateComboBox->currentItem() != 3)   // "never"
         updateSpinBox->setEnabled(true);
     else
         updateSpinBox->setEnabled(false);
@@ -66,13 +66,13 @@ void FeedPropertiesWidget::slotUpdateCheckBoxToggled( bool enabled )
 
 
 FeedPropertiesDialog::FeedPropertiesDialog(QWidget *parent, const char *name)
-        : KDialogBase(KDialogBase::Swallow, Qt::WStyle_DialogBorder, parent, name, true, i18n("Feed Properties"), KDialogBase::Ok|KDialogBase::Cancel)
+    : KDialogBase(KDialogBase::Swallow, Qt::WStyle_DialogBorder, parent, name, true, i18n("Feed Properties"), KDialogBase::Ok | KDialogBase::Cancel)
 {
-    widget=new FeedPropertiesWidget(this);
+    widget = new FeedPropertiesWidget(this);
     setMainWidget(widget);
     widget->feedNameEdit->setFocus();
 
-    connect(widget->feedNameEdit, SIGNAL(textChanged(const QString&)), this, SLOT(slotSetCaption(const QString&)));
+    connect(widget->feedNameEdit, SIGNAL(textChanged(const QString &)), this, SLOT(slotSetCaption(const QString &)));
 }
 
 FeedPropertiesDialog::~FeedPropertiesDialog()
@@ -80,24 +80,24 @@ FeedPropertiesDialog::~FeedPropertiesDialog()
 
 void FeedPropertiesDialog::slotOk()
 {
-     m_feed->setNotificationMode(false);
-     m_feed->setTitle( feedName() );
-     m_feed->setXmlUrl( url() );
-     m_feed->setCustomFetchIntervalEnabled(autoFetch());
-     if (autoFetch())
+    m_feed->setNotificationMode(false);
+    m_feed->setTitle(feedName());
+    m_feed->setXmlUrl(url());
+    m_feed->setCustomFetchIntervalEnabled(autoFetch());
+    if(autoFetch())
         m_feed->setFetchInterval(fetchInterval());
-     m_feed->setArchiveMode(archiveMode());
-     m_feed->setMaxArticleAge(maxArticleAge());
-     m_feed->setMaxArticleNumber(maxArticleNumber());
-     m_feed->setMarkImmediatelyAsRead(markImmediatelyAsRead());
-     m_feed->setUseNotification(useNotification());
-     m_feed->setLoadLinkedWebsite(loadLinkedWebsite());
-     m_feed->setNotificationMode(true, true);
+    m_feed->setArchiveMode(archiveMode());
+    m_feed->setMaxArticleAge(maxArticleAge());
+    m_feed->setMaxArticleNumber(maxArticleNumber());
+    m_feed->setMarkImmediatelyAsRead(markImmediatelyAsRead());
+    m_feed->setUseNotification(useNotification());
+    m_feed->setLoadLinkedWebsite(loadLinkedWebsite());
+    m_feed->setNotificationMode(true, true);
 
-     KDialogBase::slotOk();
+    KDialogBase::slotOk();
 }
 
-void FeedPropertiesDialog::slotSetCaption(const QString& c)
+void FeedPropertiesDialog::slotSetCaption(const QString &c)
 {
     if(c.isEmpty())
         setCaption(i18n("Feed Properties"));
@@ -106,16 +106,16 @@ void FeedPropertiesDialog::slotSetCaption(const QString& c)
 
 }
 
-void FeedPropertiesDialog::setFeed(Feed* feed)
+void FeedPropertiesDialog::setFeed(Feed *feed)
 {
     m_feed = feed;
-    if (!feed)
+    if(!feed)
         return;
 
-    setFeedName( feed->title() );
-    setUrl( feed->xmlUrl() );
+    setFeedName(feed->title());
+    setUrl(feed->xmlUrl());
     setAutoFetch(feed->useCustomFetchInterval());
-    if (feed->useCustomFetchInterval())
+    if(feed->useCustomFetchInterval())
         setFetchInterval(feed->fetchInterval());
     else
         setFetchInterval(Settings::autoFetchInterval());
@@ -131,29 +131,29 @@ void FeedPropertiesDialog::setFeed(Feed* feed)
 
 const QString FeedPropertiesDialog::feedName() const
 {
-   return widget->feedNameEdit->text();
+    return widget->feedNameEdit->text();
 }
 
 const QString FeedPropertiesDialog::url() const
 {
-   return widget->urlEdit->text();
+    return widget->urlEdit->text();
 }
 
 bool FeedPropertiesDialog::autoFetch() const
 {
-   return widget->upChkbox->isChecked();
+    return widget->upChkbox->isChecked();
 }
 
 int FeedPropertiesDialog::fetchInterval() const
 {
-    switch (widget->updateComboBox->currentItem() )
+    switch(widget->updateComboBox->currentItem())
     {
         case 0: // minutes
             return widget->updateSpinBox->value();
         case 1: // hours
-            return widget->updateSpinBox->value()*60;
+            return widget->updateSpinBox->value() * 60;
         case 2: // days
-            return widget->updateSpinBox->value()*60*24;
+            return widget->updateSpinBox->value() * 60 * 24;
         default:
             return -1; // never
     }
@@ -162,19 +162,19 @@ int FeedPropertiesDialog::fetchInterval() const
 Feed::ArchiveMode FeedPropertiesDialog::archiveMode() const
 {
     // i could check the button group's int, but order could change...
-    if ( widget->rb_globalDefault->isChecked() )
+    if(widget->rb_globalDefault->isChecked())
         return Feed::globalDefault;
 
-   if ( widget->rb_keepAllArticles->isChecked() )
+    if(widget->rb_keepAllArticles->isChecked())
         return Feed::keepAllArticles;
 
-   if ( widget->rb_limitArticleAge->isChecked() )
+    if(widget->rb_limitArticleAge->isChecked())
         return Feed::limitArticleAge;
 
-   if ( widget->rb_limitArticleNumber->isChecked() )
+    if(widget->rb_limitArticleNumber->isChecked())
         return Feed::limitArticleNumber;
 
-   if ( widget->rb_disableArchiving->isChecked() )
+    if(widget->rb_disableArchiving->isChecked())
         return Feed::disableArchiving;
 
     // in a perfect world, this is never reached
@@ -194,33 +194,33 @@ int FeedPropertiesDialog::maxArticleNumber() const
 }
 
 void FeedPropertiesDialog::setArchiveMode(Feed::ArchiveMode mode)
- {
-    switch (mode)
+{
+    switch(mode)
     {
-         case Feed::globalDefault:
+        case Feed::globalDefault:
             widget->rb_globalDefault->setChecked(true);
             break;
-         case Feed::keepAllArticles:
+        case Feed::keepAllArticles:
             widget->rb_keepAllArticles->setChecked(true);
             break;
-         case Feed::disableArchiving:
+        case Feed::disableArchiving:
             widget->rb_disableArchiving->setChecked(true);
             break;
-         case Feed::limitArticleAge:
+        case Feed::limitArticleAge:
             widget->rb_limitArticleAge->setChecked(true);
             break;
-         case Feed::limitArticleNumber:
+        case Feed::limitArticleNumber:
             widget->rb_limitArticleNumber->setChecked(true);
     }
 }
-void FeedPropertiesDialog::setFeedName(const QString& title)
+void FeedPropertiesDialog::setFeedName(const QString &title)
 {
-   widget->feedNameEdit->setText(title);
+    widget->feedNameEdit->setText(title);
 }
 
-void FeedPropertiesDialog::setUrl(const QString& url)
+void FeedPropertiesDialog::setUrl(const QString &url)
 {
-   widget->urlEdit->setText(url);
+    widget->urlEdit->setText(url);
 }
 
 void FeedPropertiesDialog::setAutoFetch(bool customFetchEnabled)
@@ -228,7 +228,7 @@ void FeedPropertiesDialog::setAutoFetch(bool customFetchEnabled)
     widget->upChkbox->setChecked(customFetchEnabled);
     widget->updateComboBox->setEnabled(customFetchEnabled);
 
-    if (widget->updateSpinBox->value() > -1)
+    if(widget->updateSpinBox->value() > -1)
         widget->updateSpinBox->setEnabled(customFetchEnabled);
     else
         widget->updateSpinBox->setEnabled(false);
@@ -236,7 +236,7 @@ void FeedPropertiesDialog::setAutoFetch(bool customFetchEnabled)
 
 void FeedPropertiesDialog::setFetchInterval(int interval)
 {
-    if (interval == -1) // never update
+    if(interval == -1)  // never update
     {
         widget->updateSpinBox->setValue(0);
         widget->updateSpinBox->setDisabled(true);
@@ -244,7 +244,7 @@ void FeedPropertiesDialog::setFetchInterval(int interval)
         return;
     }
 
-    if (interval == 0)
+    if(interval == 0)
     {
         widget->updateSpinBox->setValue(0);
         widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
@@ -252,29 +252,29 @@ void FeedPropertiesDialog::setFetchInterval(int interval)
         return;
     }
 
-   if (interval % (60*24) == 0)
-   {
-       widget->updateSpinBox->setValue(interval / (60*24) );
-       widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
-       widget->updateComboBox->setCurrentItem(2); // days
-       return;
-   }
+    if(interval % (60 * 24) == 0)
+    {
+        widget->updateSpinBox->setValue(interval / (60 * 24));
+        widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
+        widget->updateComboBox->setCurrentItem(2); // days
+        return;
+    }
 
-   if (interval % 60 == 0)
-   {
-       widget->updateSpinBox->setValue(interval / 60 );
-       widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
-       widget->updateComboBox->setCurrentItem(1); // hours
-       return;
-   }
+    if(interval % 60 == 0)
+    {
+        widget->updateSpinBox->setValue(interval / 60);
+        widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
+        widget->updateComboBox->setCurrentItem(1); // hours
+        return;
+    }
 
-   widget->updateSpinBox->setValue(interval);
-   widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
-   widget->updateComboBox->setCurrentItem(0); // minutes
+    widget->updateSpinBox->setValue(interval);
+    widget->updateSpinBox->setEnabled(widget->upChkbox->isChecked());
+    widget->updateComboBox->setCurrentItem(0); // minutes
 }
 
 void FeedPropertiesDialog::setMaxArticleAge(int age)
- {
+{
     widget->sb_maxArticleAge->setValue(age);
 }
 
@@ -315,7 +315,7 @@ void FeedPropertiesDialog::setLoadLinkedWebsite(bool enabled)
 
 void FeedPropertiesDialog::selectFeedName()
 {
-   widget->feedNameEdit->selectAll();
+    widget->feedNameEdit->selectAll();
 }
 
 } // namespace Akregator

@@ -29,12 +29,11 @@ using namespace KCal;
 typedef KRES::PluginFactory< ResourceTVAnytime, ResourceTVAnytimeConfig > TVAnytimeFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_tvanytime, TVAnytimeFactory ); here
 // Problem: How do I insert the catalogue???
-extern "C"
-{
-  void *init_kcal_tvanytime()
-  {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kres_tvanytime" );
-    return new TVAnytimeFactory;
-  }
+extern "C" {
+    void *init_kcal_tvanytime()
+    {
+        KGlobal::locale()->insertCatalogue("libkcal");
+        KGlobal::locale()->insertCatalogue("kres_tvanytime");
+        return new TVAnytimeFactory;
+    }
 }

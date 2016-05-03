@@ -27,8 +27,8 @@ Message::Part::Part()
 {
 }
 
-Message::Part::Part( const QString &name, const QString &type )
- : mName( name ), mType( type )
+Message::Part::Part(const QString &name, const QString &type)
+    : mName(name), mType(type)
 {
 }
 
@@ -36,37 +36,37 @@ Message::Message()
 {
 }
 
-Message::Message( const QString &name )
-  : mName( name )
+Message::Message(const QString &name)
+    : mName(name)
 {
 }
 
-void Message::setName( const QString &name )
+void Message::setName(const QString &name)
 {
-  mName = name;
+    mName = name;
 }
 
 QString Message::name() const
 {
-  return mName;
+    return mName;
 }
 
-void Message::addPart( const Part &part )
+void Message::addPart(const Part &part)
 {
-  mParts.append( part );
+    mParts.append(part);
 }
 
-Message::Part Message::part( const QString &name ) const
+Message::Part Message::part(const QString &name) const
 {
-  Part::List::ConstIterator it;
-  for ( it = mParts.begin(); it != mParts.end(); ++it )
-    if ( (*it).name() == name )
-      return *it;
+    Part::List::ConstIterator it;
+    for(it = mParts.begin(); it != mParts.end(); ++it)
+        if((*it).name() == name)
+            return *it;
 
-  return Part();
+    return Part();
 }
 
 Message::Part::List Message::parts() const
 {
-  return mParts;
+    return mParts;
 }

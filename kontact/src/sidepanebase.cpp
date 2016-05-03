@@ -25,8 +25,8 @@
 
 using namespace Kontact;
 
-SidePaneBase::SidePaneBase( Core *core, QWidget *parent, const char *name )
-  : QVBox( parent, name ), mCore( core )
+SidePaneBase::SidePaneBase(Core *core, QWidget *parent, const char *name)
+    : QVBox(parent, name), mCore(core)
 {
 }
 
@@ -34,19 +34,19 @@ SidePaneBase::~SidePaneBase()
 {
 }
 
-Core* SidePaneBase::core() const
+Core *SidePaneBase::core() const
 {
-  return mCore;
+    return mCore;
 }
 
-void SidePaneBase::setActionCollection( KActionCollection *actionCollection )
+void SidePaneBase::setActionCollection(KActionCollection *actionCollection)
 {
-  mActionCollection = actionCollection;
+    mActionCollection = actionCollection;
 }
 
 KActionCollection *SidePaneBase::actionCollection() const
 {
-  return mActionCollection;
+    return mActionCollection;
 }
 
 #include "sidepanebase.moc"

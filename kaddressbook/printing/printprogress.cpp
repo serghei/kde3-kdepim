@@ -34,50 +34,50 @@
 
 using namespace KABPrinting;
 
-PrintProgress::PrintProgress( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+PrintProgress::PrintProgress(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  setCaption( i18n( "Printing: Progress" ) );
+    setCaption(i18n("Printing: Progress"));
 
-  QGridLayout *topLayout = new QGridLayout( this, 1, 1, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(this, 1, 1, KDialog::marginHint(),
+            KDialog::spacingHint());
 
-  mLogBrowser = new QTextBrowser( this );
-  topLayout->addWidget( mLogBrowser, 0, 0 );
+    mLogBrowser = new QTextBrowser(this);
+    topLayout->addWidget(mLogBrowser, 0, 0);
 
-  mProgressBar = new QProgressBar( this );
-  mProgressBar->setProgress( 0 );
-  topLayout->addWidget( mProgressBar, 1, 0 );
+    mProgressBar = new QProgressBar(this);
+    mProgressBar->setProgress(0);
+    topLayout->addWidget(mProgressBar, 1, 0);
 
-  resize( QSize( 370, 220 ).expandedTo( minimumSizeHint() ) );
+    resize(QSize(370, 220).expandedTo(minimumSizeHint()));
 }
 
 PrintProgress::~PrintProgress()
 {
 }
 
-void PrintProgress::addMessage( const QString &msg )
+void PrintProgress::addMessage(const QString &msg)
 {
-  mMessages.append( msg );
+    mMessages.append(msg);
 
-  QString head = QString( "<qt><b>" ) + i18n( "Progress" ) +
-                 QString( ":</b><ul>" );
+    QString head = QString("<qt><b>") + i18n("Progress") +
+                   QString(":</b><ul>");
 
-  QString foot = QString( "</ul></qt>" );
+    QString foot = QString("</ul></qt>");
 
-  QString body;
-  QStringList::ConstIterator it;
-  for ( it = mMessages.begin(); it != mMessages.end(); ++it )
-    body.append( QString( "<li>" ) + (*it) + QString( "</li>" ) );
+    QString body;
+    QStringList::ConstIterator it;
+    for(it = mMessages.begin(); it != mMessages.end(); ++it)
+        body.append(QString("<li>") + (*it) + QString("</li>"));
 
-  mLogBrowser->setText( head + body + foot );
-  kapp->processEvents();
+    mLogBrowser->setText(head + body + foot);
+    kapp->processEvents();
 }
 
-void PrintProgress::setProgress( int step )
+void PrintProgress::setProgress(int step)
 {
-  mProgressBar->setProgress( step );
-  kapp->processEvents();
+    mProgressBar->setProgress(step);
+    kapp->processEvents();
 }
 
 #include "printprogress.moc"

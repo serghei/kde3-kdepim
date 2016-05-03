@@ -46,61 +46,61 @@
 
 #include <iostream>
 
-class Creator
-{
-  public:
+class Creator {
+public:
     enum XmlParserType { XmlParserDom, XmlParserDomExternal,
-                         XmlParserCustomExternal };
+                         XmlParserCustomExternal
+                       };
     enum XmlWriterType { XmlWriterCustom, XmlWriterCustomExternal };
 
-    Creator( XmlParserType p = XmlParserDom,
-             XmlWriterType w = XmlWriterCustom );
+    Creator(XmlParserType p = XmlParserDom,
+            XmlWriterType w = XmlWriterCustom);
 
-    void setExternalClassPrefix( const QString & );
+    void setExternalClassPrefix(const QString &);
 
     bool externalParser() const;
     bool externalWriter() const;
 
     KODE::File &file();
 
-    QString upperFirst( const QString &str );
-    QString lowerFirst( const QString &str );
-    
-    void createProperty( KODE::Class &c, const QString &type,
-                         const QString &name );
-    void createElementFunctions( KODE::Class &c, Element *e );
-    void createClass( Element *element );
+    QString upperFirst(const QString &str);
+    QString lowerFirst(const QString &str);
 
-    void registerListTypedef( const QString &type );
+    void createProperty(KODE::Class &c, const QString &type,
+                        const QString &name);
+    void createElementFunctions(KODE::Class &c, Element *e);
+    void createClass(Element *element);
+
+    void registerListTypedef(const QString &type);
 
     void createListTypedefs();
 
-    void createFileParser( Element *element );
+    void createFileParser(Element *element);
 
-    void createFileWriter( Element *element, const QString &dtd );
+    void createFileWriter(Element *element, const QString &dtd);
 
-    void printFiles( KODE::Printer & );
+    void printFiles(KODE::Printer &);
 
-  protected:
+protected:
     void setExternalClassNames();
 
-    void createFileParserDom( Element *element );
-    void createFileParserCustom( Element *element );
+    void createFileParserDom(Element *element);
+    void createFileParserCustom(Element *element);
 
-    void createElementParser( KODE::Class &c, Element *e );
+    void createElementParser(KODE::Class &c, Element *e);
 
-    void createElementParserDom( KODE::Class &c, Element *e );
+    void createElementParserDom(KODE::Class &c, Element *e);
 
-    void createElementParserCustom( KODE::Class &c, Element *e );
-    void createTextElementParserCustom( KODE::Class &c, Element *e );
-    KODE::Code createAttributeScanner( Attribute *a, bool firstAttribute );
-    void createFoundTextFunction( const QString &text );
+    void createElementParserCustom(KODE::Class &c, Element *e);
+    void createTextElementParserCustom(KODE::Class &c, Element *e);
+    KODE::Code createAttributeScanner(Attribute *a, bool firstAttribute);
+    void createFoundTextFunction(const QString &text);
 
-    void createElementWriter( KODE::Class &c, Element *e );
+    void createElementWriter(KODE::Class &c, Element *e);
 
-    void createIndenter( KODE::File & );
+    void createIndenter(KODE::File &);
 
-  private:
+private:
     XmlParserType mXmlParserType;
     XmlWriterType mXmlWriterType;
     QString mExternalClassPrefix;

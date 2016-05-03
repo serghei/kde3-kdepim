@@ -30,9 +30,9 @@
 #include <groupwaredataadaptor.h>
 
 namespace KIO {
-  class Job;
-  class TransferJob;
-  class DeleteJob;
+class Job;
+class TransferJob;
+class DeleteJob;
 }
 
 namespace KPIM {
@@ -44,67 +44,66 @@ class ProgressItem;
   This class provides a resource for accessing a Groupware kioslave-based
   calendar.
 */
-class GroupwareUploadJob : public GroupwareJob
-{
+class GroupwareUploadJob : public GroupwareJob {
     Q_OBJECT
-  public:
-    GroupwareUploadJob( GroupwareDataAdaptor *adaptor );
+public:
+    GroupwareUploadJob(GroupwareDataAdaptor *adaptor);
 
     KPIM::GroupwareUploadItem::List addedItems() const
     {
-      return mAddedItems;
+        return mAddedItems;
     }
-    void setAddedItems( const KPIM::GroupwareUploadItem::List &items )
+    void setAddedItems(const KPIM::GroupwareUploadItem::List &items)
     {
-      mAddedItems = items;
+        mAddedItems = items;
     }
     KPIM::GroupwareUploadItem::List changedItems() const
     {
-      return mChangedItems;
+        return mChangedItems;
     }
-    void setChangedItems( const KPIM::GroupwareUploadItem::List &items )
+    void setChangedItems(const KPIM::GroupwareUploadItem::List &items)
     {
-      mChangedItems = items;
+        mChangedItems = items;
     }
     KPIM::GroupwareUploadItem::List deletedItems() const
     {
-      return mDeletedItems;
+        return mDeletedItems;
     }
-    void setDeletedItems( const KPIM::GroupwareUploadItem::List &items )
+    void setDeletedItems(const KPIM::GroupwareUploadItem::List &items)
     {
-      mDeletedItems = items;
+        mDeletedItems = items;
     }
 
     void kill();
 
-  protected slots:
+protected slots:
     void deleteItem();
     void uploadItem();
     void uploadNewItem();
 
-  protected slots:
+protected slots:
     void run();
 
     void cancelSave();
 
-    void slotDeletionJobResult( KIO::Job *job );
-    void slotDeletionJobData( KIO::Job *, const QByteArray & );
-    void slotUploadJobResult( KIO::Job *job );
-    void slotUploadJobData( KIO::Job *, const QByteArray & );
-    void slotUploadNewJobResult( KIO::Job *job );
-    void slotUploadNewJobData( KIO::Job *, const QByteArray & );
+    void slotDeletionJobResult(KIO::Job *job);
+    void slotDeletionJobData(KIO::Job *, const QByteArray &);
+    void slotUploadJobResult(KIO::Job *job);
+    void slotUploadJobData(KIO::Job *, const QByteArray &);
+    void slotUploadNewJobResult(KIO::Job *job);
+    void slotUploadNewJobData(KIO::Job *, const QByteArray &);
 
-    void slotItemDeleted( const QString &localID, const KURL &remoteURL );
-    void slotItemUploaded( const QString &localID, const KURL &remoteURL );
-    void slotItemUploadedNew( const QString &localID, const KURL &remoteURL );
+    void slotItemDeleted(const QString &localID, const KURL &remoteURL);
+    void slotItemUploaded(const QString &localID, const KURL &remoteURL);
+    void slotItemUploadedNew(const QString &localID, const KURL &remoteURL);
 
-    void slotItemDeleteError( const KURL &remoteURL, const QString &error );
-    void slotItemUploadError( const KURL &remoteURL, const QString &error  );
-    void slotItemUploadNewError( const QString &localID, const QString &error );
+    void slotItemDeleteError(const KURL &remoteURL, const QString &error);
+    void slotItemUploadError(const KURL &remoteURL, const QString &error);
+    void slotItemUploadNewError(const QString &localID, const QString &error);
 
     void uploadCompleted();
 
-  private:
+private:
     KPIM::GroupwareUploadItem::List mAddedItems;
     KPIM::GroupwareUploadItem::List mChangedItems;
     KPIM::GroupwareUploadItem::List mDeletedItems;

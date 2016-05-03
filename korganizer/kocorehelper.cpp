@@ -26,19 +26,19 @@
 #include "koglobals.h"
 
 
-QColor KOCoreHelper::categoryColor( const QStringList &categories ) 
+QColor KOCoreHelper::categoryColor(const QStringList &categories)
 {
-  // FIXME: Correctly treat events with multiple categories
-  QString cat = categories.first();
-  QColor bgColor;
-  if (cat.isEmpty())
-    bgColor = defaultEventColor();
-  else
-    bgColor = *( KOPrefs::instance()->categoryColor( cat ) );
-  return bgColor;
+    // FIXME: Correctly treat events with multiple categories
+    QString cat = categories.first();
+    QColor bgColor;
+    if(cat.isEmpty())
+        bgColor = defaultEventColor();
+    else
+        bgColor = *(KOPrefs::instance()->categoryColor(cat));
+    return bgColor;
 }
 
-QString KOCoreHelper::holidayString( const QDate &dt )
+QString KOCoreHelper::holidayString(const QDate &dt)
 {
-  return KOGlobals::self()->holiday( dt ).join( i18n("delimiter for joining holiday names", ", " ) );
+    return KOGlobals::self()->holiday(dt).join(i18n("delimiter for joining holiday names", ", "));
 }

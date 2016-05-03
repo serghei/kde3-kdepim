@@ -51,180 +51,192 @@
 #include "korg_uniqueapp.h"
 
 typedef KGenericFactory< TodoPlugin, Kontact::Core > TodoPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_todoplugin,
-                            TodoPluginFactory( "kontact_todoplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_todoplugin,
+                           TodoPluginFactory("kontact_todoplugin"))
 
-TodoPlugin::TodoPlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "korganizer" ),
-    mIface( 0 )
+TodoPlugin::TodoPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "korganizer"),
+      mIface(0)
 {
-  setInstance( TodoPluginFactory::instance() );
-  instance()->iconLoader()->addAppDir("kdepim");
+    setInstance(TodoPluginFactory::instance());
+    instance()->iconLoader()->addAppDir("kdepim");
 
-  insertNewAction( new KAction( i18n( "New To-do..." ), "newtodo",
-                   CTRL+SHIFT+Key_T, this, SLOT( slotNewTodo() ), actionCollection(),
-                   "new_todo" ) );
+    insertNewAction(new KAction(i18n("New To-do..."), "newtodo",
+                                CTRL + SHIFT + Key_T, this, SLOT(slotNewTodo()), actionCollection(),
+                                "new_todo"));
 
-  insertSyncAction( new KAction( i18n( "Synchronize To-do List" ), "reload",
-                   0, this, SLOT( slotSyncTodos() ), actionCollection(),
-                   "todo_sync" ) );
+    insertSyncAction(new KAction(i18n("Synchronize To-do List"), "reload",
+                                 0, this, SLOT(slotSyncTodos()), actionCollection(),
+                                 "todo_sync"));
 
-  mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
-      new Kontact::UniqueAppHandlerFactory<KOrganizerUniqueAppHandler>(), this );
+    mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
+        new Kontact::UniqueAppHandlerFactory<KOrganizerUniqueAppHandler>(), this);
 }
 
 TodoPlugin::~TodoPlugin()
 {
 }
 
-Kontact::Summary *TodoPlugin::createSummaryWidget( QWidget *parent )
+Kontact::Summary *TodoPlugin::createSummaryWidget(QWidget *parent)
 {
-  return new TodoSummaryWidget( this, parent );
+    return new TodoSummaryWidget(this, parent);
 }
 
 KParts::ReadOnlyPart *TodoPlugin::createPart()
 {
-  KParts::ReadOnlyPart *part = loadPart();
+    KParts::ReadOnlyPart *part = loadPart();
 
-  if ( !part )
-    return 0;
+    if(!part)
+        return 0;
 
-  dcopClient(); // ensure that we register to DCOP as "korganizer"
-  mIface = new KCalendarIface_stub( dcopClient(), "kontact", "CalendarIface" );
+    dcopClient(); // ensure that we register to DCOP as "korganizer"
+    mIface = new KCalendarIface_stub(dcopClient(), "kontact", "CalendarIface");
 
-  return part;
+    return part;
 }
 
 void TodoPlugin::select()
 {
-  interface()->showTodoView();
+    interface()->showTodoView();
 }
 
 QStringList TodoPlugin::invisibleToolbarActions() const
 {
-  QStringList invisible;
-  invisible += "new_event";
-  invisible += "new_todo";
-  invisible += "new_journal";
+    QStringList invisible;
+    invisible += "new_event";
+    invisible += "new_todo";
+    invisible += "new_journal";
 
-  invisible += "view_day";
-  invisible += "view_list";
-  invisible += "view_workweek";
-  invisible += "view_week";
-  invisible += "view_nextx";
-  invisible += "view_month";
-  invisible += "view_journal";
-  return invisible;
+    invisible += "view_day";
+    invisible += "view_list";
+    invisible += "view_workweek";
+    invisible += "view_week";
+    invisible += "view_nextx";
+    invisible += "view_month";
+    invisible += "view_journal";
+    return invisible;
 }
 
 KCalendarIface_stub *TodoPlugin::interface()
 {
-  if ( !mIface ) {
-    part();
-  }
-  Q_ASSERT( mIface );
-  return mIface;
+    if(!mIface)
+    {
+        part();
+    }
+    Q_ASSERT(mIface);
+    return mIface;
 }
 
 void TodoPlugin::slotNewTodo()
 {
-  interface()->openTodoEditor( "" );
+    interface()->openTodoEditor("");
 }
 
 void TodoPlugin::slotSyncTodos()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", QString("Todo") );
+    DCOPRef ref("kmail", "KMailICalIface");
+    ref.send("triggerSync", QString("Todo"));
 }
 
-bool TodoPlugin::createDCOPInterface( const QString& serviceType )
+bool TodoPlugin::createDCOPInterface(const QString &serviceType)
 {
-  kdDebug(5602) << k_funcinfo << serviceType << endl;
-  if ( serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar" ) {
-    if ( part() )
-      return true;
-  }
+    kdDebug(5602) << k_funcinfo << serviceType << endl;
+    if(serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar")
+    {
+        if(part())
+            return true;
+    }
 
-  return false;
+    return false;
 }
 
-bool TodoPlugin::canDecodeDrag( QMimeSource *mimeSource )
+bool TodoPlugin::canDecodeDrag(QMimeSource *mimeSource)
 {
-  return QTextDrag::canDecode( mimeSource ) ||
-         KPIM::MailListDrag::canDecode( mimeSource );
+    return QTextDrag::canDecode(mimeSource) ||
+           KPIM::MailListDrag::canDecode(mimeSource);
 }
 
 bool TodoPlugin::isRunningStandalone()
 {
-  return mUniqueAppWatcher->isRunningStandalone();
+    return mUniqueAppWatcher->isRunningStandalone();
 }
 
-void TodoPlugin::processDropEvent( QDropEvent *event )
+void TodoPlugin::processDropEvent(QDropEvent *event)
 {
-  QString text;
+    QString text;
 
-  KABC::VCardConverter converter;
-  if ( KVCardDrag::canDecode( event ) && KVCardDrag::decode( event, text ) ) {
-    KABC::Addressee::List contacts = converter.parseVCards( text );
-    KABC::Addressee::List::Iterator it;
+    KABC::VCardConverter converter;
+    if(KVCardDrag::canDecode(event) && KVCardDrag::decode(event, text))
+    {
+        KABC::Addressee::List contacts = converter.parseVCards(text);
+        KABC::Addressee::List::Iterator it;
 
-    QStringList attendees;
-    for ( it = contacts.begin(); it != contacts.end(); ++it ) {
-      QString email = (*it).fullEmail();
-      if ( email.isEmpty() )
-        attendees.append( (*it).realName() + "<>" );
-      else
-        attendees.append( email );
-    }
+        QStringList attendees;
+        for(it = contacts.begin(); it != contacts.end(); ++it)
+        {
+            QString email = (*it).fullEmail();
+            if(email.isEmpty())
+                attendees.append((*it).realName() + "<>");
+            else
+                attendees.append(email);
+        }
 
-    interface()->openTodoEditor( i18n( "Meeting" ), QString::null, QString::null,
-                                 attendees );
-    return;
-  }
-
-  if ( KCal::ICalDrag::canDecode( event) ) {
-    KCal::CalendarLocal cal( KPimPrefs::timezone() );
-    if ( KCal::ICalDrag::decode( event, &cal ) ) {
-      KCal::Journal::List journals = cal.journals();
-      if ( !journals.isEmpty() ) {
-        event->accept();
-        KCal::Journal *j = journals.first();
-        interface()->openTodoEditor( i18n("Note: %1").arg( j->summary() ), j->description(), QString() );
+        interface()->openTodoEditor(i18n("Meeting"), QString::null, QString::null,
+                                    attendees);
         return;
-      }
-      // else fall through to text decoding
     }
-  }
 
-  if ( QTextDrag::decode( event, text ) ) {
-    interface()->openTodoEditor( text );
-    return;
-  }
-
-  KPIM::MailList mails;
-  if ( KPIM::MailListDrag::decode( event, mails ) ) {
-    if ( mails.count() != 1 ) {
-      KMessageBox::sorry( core(),
-                          i18n("Drops of multiple mails are not supported." ) );
-    } else {
-      KPIM::MailSummary mail = mails.first();
-      QString txt = i18n("From: %1\nTo: %2\nSubject: %3").arg( mail.from() )
-                    .arg( mail.to() ).arg( mail.subject() );
-
-      KTempFile tf;
-      tf.setAutoDelete( true );
-      QString uri = "kmail:" + QString::number( mail.serialNumber() ) + "/" +
-                    mail.messageId();
-      tf.file()->writeBlock( event->encodedData( "message/rfc822" ) );
-      tf.close();
-      interface()->openTodoEditor( i18n("Mail: %1").arg( mail.subject() ), txt,
-                                   uri, tf.name(), QStringList(), "message/rfc822" );
+    if(KCal::ICalDrag::canDecode(event))
+    {
+        KCal::CalendarLocal cal(KPimPrefs::timezone());
+        if(KCal::ICalDrag::decode(event, &cal))
+        {
+            KCal::Journal::List journals = cal.journals();
+            if(!journals.isEmpty())
+            {
+                event->accept();
+                KCal::Journal *j = journals.first();
+                interface()->openTodoEditor(i18n("Note: %1").arg(j->summary()), j->description(), QString());
+                return;
+            }
+            // else fall through to text decoding
+        }
     }
-    return;
-  }
 
-  KMessageBox::sorry( core(), i18n("Cannot handle drop events of type '%1'.")
-                              .arg( event->format() ) );
+    if(QTextDrag::decode(event, text))
+    {
+        interface()->openTodoEditor(text);
+        return;
+    }
+
+    KPIM::MailList mails;
+    if(KPIM::MailListDrag::decode(event, mails))
+    {
+        if(mails.count() != 1)
+        {
+            KMessageBox::sorry(core(),
+                               i18n("Drops of multiple mails are not supported."));
+        }
+        else
+        {
+            KPIM::MailSummary mail = mails.first();
+            QString txt = i18n("From: %1\nTo: %2\nSubject: %3").arg(mail.from())
+                          .arg(mail.to()).arg(mail.subject());
+
+            KTempFile tf;
+            tf.setAutoDelete(true);
+            QString uri = "kmail:" + QString::number(mail.serialNumber()) + "/" +
+                          mail.messageId();
+            tf.file()->writeBlock(event->encodedData("message/rfc822"));
+            tf.close();
+            interface()->openTodoEditor(i18n("Mail: %1").arg(mail.subject()), txt,
+                                        uri, tf.name(), QStringList(), "message/rfc822");
+        }
+        return;
+    }
+
+    KMessageBox::sorry(core(), i18n("Cannot handle drop events of type '%1'.")
+                       .arg(event->format()));
 }
 
 #include "todoplugin.moc"

@@ -8,17 +8,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -39,33 +39,37 @@
 #include <assert.h>
 
 class mmap_manager : public memory_manager {
-	public:
-		explicit mmap_manager( std::string );
-		~mmap_manager();
-		const unsigned char* ronly_base( unsigned offset ) const {
-			assert( offset <= size() ); // allow 1-past-the-end but not more
-			return reinterpret_cast<unsigned char*>( base_ ) + offset;
-		}
-		unsigned char* rw_base( unsigned offset ) const {
-			assert( offset <= size() ); // as above
-			return reinterpret_cast<unsigned char*>( base_ ) + offset;
-		}
-		unsigned size() const {
-			return size_;
-		}
-		void resize( unsigned );
+public:
+    explicit mmap_manager(std::string);
+    ~mmap_manager();
+    const unsigned char *ronly_base(unsigned offset) const
+    {
+        assert(offset <= size());   // allow 1-past-the-end but not more
+        return reinterpret_cast<unsigned char *>(base_) + offset;
+    }
+    unsigned char *rw_base(unsigned offset) const
+    {
+        assert(offset <= size());   // as above
+        return reinterpret_cast<unsigned char *>(base_) + offset;
+    }
+    unsigned size() const
+    {
+        return size_;
+    }
+    void resize(unsigned);
 
-		static void remove( std::string fname ) {
-			::unlink( fname.c_str() );
-		}
-	private:
-		void unmap();
-		void map( unsigned );
-		std::string filename_;
-		const unsigned pagesize_;
-		int fd_;
-		void* base_;
-		unsigned size_;
+    static void remove(std::string fname)
+    {
+        ::unlink(fname.c_str());
+    }
+private:
+    void unmap();
+    void map(unsigned);
+    std::string filename_;
+    const unsigned pagesize_;
+    int fd_;
+    void *base_;
+    unsigned size_;
 };
 
 

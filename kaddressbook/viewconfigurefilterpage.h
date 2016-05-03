@@ -31,21 +31,20 @@ class QButtonGroup;
 class KComboBox;
 class KConfig;
 
-class ViewConfigureFilterPage : public QWidget
-{
-  Q_OBJECT
+class ViewConfigureFilterPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    ViewConfigureFilterPage( QWidget *parent, const char *name = 0 );
+public:
+    ViewConfigureFilterPage(QWidget *parent, const char *name = 0);
     ~ViewConfigureFilterPage();
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings(KConfig *);
+    void saveSettings(KConfig *);
 
-  protected slots:
-    void buttonClicked( int id );
+protected slots:
+    void buttonClicked(int id);
 
-  private:
+private:
     KComboBox *mFilterCombo;
     QButtonGroup *mFilterGroup;
 };

@@ -25,20 +25,19 @@
 
 using namespace KOrg;
 
-class Hebrew:public CalendarDecoration
-{
+class Hebrew: public CalendarDecoration {
 public:
-  Hebrew()
-  {
-  }
-  ~Hebrew()
-  {
-  }
-  void configure(QWidget * parent);
-  QString shortText(const QDate &);
+    Hebrew()
+    {
+    }
+    ~Hebrew()
+    {
+    }
+    void configure(QWidget *parent);
+    QString shortText(const QDate &);
 
-  QString info();
-  static bool IsraelP;
+    QString info();
+    static bool IsraelP;
 
 private:
 

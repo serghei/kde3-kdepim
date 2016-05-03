@@ -29,61 +29,61 @@ IDMapping::IDMapping()
 {
 }
 
-IDMapping::IDMapping( const QString &conduit )
+IDMapping::IDMapping(const QString &conduit)
 {
-	fConduit = conduit;
-	fPid = 0;
+    fConduit = conduit;
+    fPid = 0;
 }
 
-IDMapping::IDMapping( const IDMapping &m )
+IDMapping::IDMapping(const IDMapping &m)
 {
-	fConduit = m.fConduit;
-	fUid = m.fUid;
-	fPid = m.fPid;
-	fLastSync = m.fLastSync;
+    fConduit = m.fConduit;
+    fUid = m.fUid;
+    fPid = m.fPid;
+    fLastSync = m.fLastSync;
 }
 
-IDMapping IDMapping::operator=( const IDMapping &m )
+IDMapping IDMapping::operator=(const IDMapping &m)
 {
-	IDMapping local( m.fConduit );
-	local.fUid = m.fUid;
-	local.fPid = m.fPid;
-	local.fLastSync = m.fLastSync;
-	
-	return local;
+    IDMapping local(m.fConduit);
+    local.fUid = m.fUid;
+    local.fPid = m.fPid;
+    local.fLastSync = m.fLastSync;
+
+    return local;
 }
 
-void IDMapping::setUid( const QString &uid )
+void IDMapping::setUid(const QString &uid)
 {
-	fUid = uid;
+    fUid = uid;
 }
 
-void IDMapping::setPid( recordid_t pid )
+void IDMapping::setPid(recordid_t pid)
 {
-	fPid = pid;
+    fPid = pid;
 }
 
-void IDMapping::setLastSyncTime( const QDateTime &datetime )
+void IDMapping::setLastSyncTime(const QDateTime &datetime)
 {
-	fLastSync = datetime;
+    fLastSync = datetime;
 }
 
 QString IDMapping::conduit() const
 {
-	return fConduit;
+    return fConduit;
 }
 
 QString IDMapping::uid() const
 {
-	return fUid;
+    return fUid;
 }
 
 recordid_t IDMapping::pid() const
 {
-	return fPid;
+    return fPid;
 }
 
 QDateTime IDMapping::lastSyncTime() const
 {
-	return fLastSync;
+    return fLastSync;
 }

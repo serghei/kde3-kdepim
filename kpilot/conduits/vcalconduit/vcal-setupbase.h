@@ -34,18 +34,17 @@
 class VCalWidget;
 class VCalConduitSettings;
 
-class VCalWidgetSetupBase : public ConduitConfigBase
-{
+class VCalWidgetSetupBase : public ConduitConfigBase {
 public:
-	VCalWidgetSetupBase(QWidget *, const char *);
-	virtual ~VCalWidgetSetupBase();
+    VCalWidgetSetupBase(QWidget *, const char *);
+    virtual ~VCalWidgetSetupBase();
 
-	virtual void load();
-	virtual void commit();
+    virtual void load();
+    virtual void commit();
 
 protected:
-	virtual VCalConduitSettings*config()=0;
-	VCalWidget *fConfigWidget;
+    virtual VCalConduitSettings *config() = 0;
+    VCalWidget *fConfigWidget;
 } ;
 
 #endif

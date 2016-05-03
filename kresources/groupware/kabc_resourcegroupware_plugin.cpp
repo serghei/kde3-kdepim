@@ -28,12 +28,11 @@ using namespace KABC;
 
 typedef KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> GroupwareFactory;
 
-extern "C"
-{
-  void *init_kabc_groupware()
-  {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kres_groupware" );
-    return new ResourceGroupware;
-  }
+extern "C" {
+    void *init_kabc_groupware()
+    {
+        KGlobal::locale()->insertCatalogue("libkcal");
+        KGlobal::locale()->insertCatalogue("kres_groupware");
+        return new ResourceGroupware;
+    }
 }

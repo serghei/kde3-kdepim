@@ -28,25 +28,24 @@
 #include <kdepimmacros.h>
 
 namespace KCal {
-  class Calendar;
-  class Incidence;
+class Calendar;
+class Incidence;
 }
 
-class KDE_EXPORT KOHelper
-{
-  public:
+class KDE_EXPORT KOHelper {
+public:
     /**
       This method returns the proper resource / subresource color for the
       view.
       @return The resource color for the incidence. If the incidence belongs
       to a subresource, the color for the subresource is returned (if set).
     */
-    static QColor resourceColor( KCal::Calendar*calendar, KCal::Incidence*incidence );
+    static QColor resourceColor(KCal::Calendar *calendar, KCal::Incidence *incidence);
 
     /**
       Returns the resource label the given incidence belongs to.
     */
-    static QString resourceLabel( KCal::Calendar *calendar, KCal::Incidence *incidence );
+    static QString resourceLabel(KCal::Calendar *calendar, KCal::Incidence *incidence);
 
 };
 

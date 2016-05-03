@@ -22,10 +22,9 @@
 
 namespace KMail {
 
-namespace KorgHelper
-{
-  /** ensure that korganizer is running standalone or in Kontact */
-  void ensureRunning();
+namespace KorgHelper {
+/** ensure that korganizer is running standalone or in Kontact */
+void ensureRunning();
 }
 }
 

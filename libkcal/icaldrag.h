@@ -32,25 +32,24 @@ namespace KCal {
 /**
   iCalendar drag&drop class.
 */
-class LIBKCAL_EXPORT ICalDrag : public QStoredDrag
-{
-  public:
+class LIBKCAL_EXPORT ICalDrag : public QStoredDrag {
+public:
     /**
       Create a drag&drop object for iCalendar component \a ical.
     */
-    ICalDrag( Calendar *cal, QWidget *parent = 0, const char *name = 0 );
+    ICalDrag(Calendar *cal, QWidget *parent = 0, const char *name = 0);
     ~ICalDrag() {};
 
     /**
       Return, if drag&drop object can be decode to iCalendar.
     */
-    static bool canDecode( QMimeSource * );
+    static bool canDecode(QMimeSource *);
     /**
       Decode drag&drop object to iCalendar component \a cal.
     */
-    static bool decode( QMimeSource *e, Calendar *cal );
+    static bool decode(QMimeSource *e, Calendar *cal);
 
-  private:
+private:
     class Private;
     Private *d;
 };

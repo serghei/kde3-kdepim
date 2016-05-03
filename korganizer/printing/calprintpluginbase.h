@@ -59,15 +59,15 @@ using namespace KCal;
   Base class for KOrganizer printing classes. Each sub class represents one
   calendar print format.
 */
-class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
-{
-  public:
-    enum DisplayFlags {
-      Text=0x0001,
-      TimeBoxes=0x0002
+class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin {
+public:
+    enum DisplayFlags
+    {
+        Text = 0x0001,
+        TimeBoxes = 0x0002
     };
 
-  public:
+public:
     /**
       Constructor
     */
@@ -77,7 +77,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     /**
       Returns widget for configuring the print format.
     */
-    virtual QWidget *createConfigWidget( QWidget * );
+    virtual QWidget *createConfigWidget(QWidget *);
 
     /**
       Actually do the printing.
@@ -86,11 +86,11 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param width Width of printable area
       \param height Height of printable area
     */
-    virtual void print( QPainter &p, int width, int height ) = 0;
+    virtual void print(QPainter &p, int width, int height) = 0;
     /**
       Start printing.
     */
-    virtual void doPrint( KPrinter *printer );
+    virtual void doPrint(KPrinter *printer);
 
     /**
       Load print format configuration from config file.
@@ -110,65 +110,65 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     */
     void doSaveConfig();
 
-  /** HELPER FUNCTIONS */
-  public:
-    void setKOrgCoreHelper( KOrg::CoreHelper*helper );
+    /** HELPER FUNCTIONS */
+public:
+    void setKOrgCoreHelper(KOrg::CoreHelper *helper);
     bool useColors() const;
-    void setUseColors( bool useColors );
-    
+    void setUseColors(bool useColors);
+
     /** Helper functions to hide the KOrg::CoreHelper */
-    QColor categoryBgColor( Incidence *incidence );
-    QColor textColor( const QColor &color );
+    QColor categoryBgColor(Incidence *incidence);
+    QColor textColor(const QColor &color);
     QTime dayStart();
-    bool isWorkingDay( const QDate &dt );
-    QString holidayString( const QDate &dt );
-    Event *holiday( const QDate &dt );
-    
+    bool isWorkingDay(const QDate &dt);
+    QString holidayString(const QDate &dt);
+    Event *holiday(const QDate &dt);
+
     /**
       Determines the column of the given weekday ( 1=Monday, 7=Sunday ), taking the
       start of the week setting into account as given in kcontrol.
       \param weekday Index of the weekday
     */
-    static int weekdayColumn( int weekday );
-    void setCategoryColors( QPainter &p, Incidence *incidence );
+    static int weekdayColumn(int weekday);
+    void setCategoryColors(QPainter &p, Incidence *incidence);
 
     KPrinter::Orientation orientation() const;
 
     /** Returns the height of the page header. If the height was explicitly
-        set using setHeaderHeight, that value is returned, otherwise a 
+        set using setHeaderHeight, that value is returned, otherwise a
         default value based on the printer orientation.
         \return height of the page header of the printout
     */
     int headerHeight() const;
-    void setHeaderHeight( const int height );
+    void setHeaderHeight(const int height);
 
     int subHeaderHeight() const;
-    void setSubHeaderHeight( const int height );
+    void setSubHeaderHeight(const int height);
 
     int margin() const;
-    void setMargin( const int margin );
-    
+    void setMargin(const int margin);
+
     int padding() const;
-    void setPadding( const int margin );
-    
+    void setPadding(const int margin);
+
     int borderWidth() const;
-    void setBorderWidth( const int border );
+    void setBorderWidth(const int border);
 
     const KCalendarSystem *calendarSystem() const;
-    void setCalendarSystem( const KCalendarSystem *calsys );
+    void setCalendarSystem(const KCalendarSystem *calsys);
 
 
-  /*****************************************************************
-   **               PRINTING HELPER FUNCTIONS                     **
-   *****************************************************************/
-  public: 
+    /*****************************************************************
+     **               PRINTING HELPER FUNCTIONS                     **
+     *****************************************************************/
+public:
     /**
       Draw a box with given width at the given coordinates.
       \param p The printer to be used
       \param linewidth The border width of the box
       \param rect The rectangle of the box
     */
-    static void drawBox( QPainter &p, int linewidth, const QRect &rect );
+    static void drawBox(QPainter &p, int linewidth, const QRect &rect);
     /**
       Draw a shaded box with given width at the given coordinates.
       \param p The printer to be used
@@ -176,8 +176,8 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param brush The brush to fill the box
       \param rect The rectangle of the box
     */
-    static void drawShadedBox( QPainter &p, int linewidth, const QBrush &brush, const QRect &rect );
-  
+    static void drawShadedBox(QPainter &p, int linewidth, const QBrush &brush, const QRect &rect);
+
     /**
       Print the given string (event summary) in the given rectangle. Margins
       and justification (centered or not) are automatically adjusted.
@@ -185,7 +185,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param box Coordinates of the surrounding event box
       \param str The text to be printed in the box
     */
-    void printEventString( QPainter &p, const QRect &box, const QString &str, int flags = -1 );
+    void printEventString(QPainter &p, const QRect &box, const QString &str, int flags = -1);
 
     /**
       Print the box for the given event with the given string.
@@ -195,26 +195,26 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
                        color will be deduced, if applicable.
       \param str The string to print inside the box
     */
-    void showEventBox( QPainter &p, const QRect &box, Incidence *incidence, const QString &str, int flags = -1 );
-    
-    /** 
+    void showEventBox(QPainter &p, const QRect &box, Incidence *incidence, const QString &str, int flags = -1);
+
+    /**
       Draw a subheader box with a shaded background and the given string
       \param p QPainter of the printout
       \param str Text to be printed inside the box
       \param box Coordinates of the box
     */
-    void drawSubHeaderBox(QPainter &p, const QString &str, const QRect &box );
-    
+    void drawSubHeaderBox(QPainter &p, const QString &str, const QRect &box);
+
     /**
       Draw an event box with vertical text.
       \param p QPainter of the printout
       \param box Coordinates of the box
       \param str ext to be printed inside the box
     */
-    void drawVerticalBox( QPainter &p, const QRect &box, const QString &str );
-    
+    void drawVerticalBox(QPainter &p, const QRect &box, const QString &str);
+
     /**
-      Draw a component box with a heading (printed in bold). 
+      Draw a component box with a heading (printed in bold).
       \param p QPainter of the printout
       \param box Coordinates of the box
       \param caption Caption string to be printed inside the box
@@ -222,7 +222,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
                       then no text will be printed, only the caption.
       \param sameLine Whether the contents should start on the same line as
                       the caption (the space below the caption text will be
-                      used as indentation in the subsequent lines) or on the 
+                      used as indentation in the subsequent lines) or on the
                       next line (no indentation of the contents)
       \param expand Whether to expand the box vertically to fit the
                     whole text in it.
@@ -233,9 +233,9 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
               the contents, use the return value as the top-value of your
               custom contents in that case.
     */
-    int drawBoxWithCaption( QPainter &p, const QRect &box, const QString &caption,
-                            const QString &contents, 
-                            bool sameLine, bool expand, const QFont &captionFont, const QFont &textFont );
+    int drawBoxWithCaption(QPainter &p, const QRect &box, const QString &caption,
+                           const QString &contents,
+                           bool sameLine, bool expand, const QFont &captionFont, const QFont &textFont);
 
     /**
       Draw the gray header bar of the printout to the QPainter.
@@ -260,13 +260,13 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param box coordinates of the title bar
       \param expand Whether to expand the box vertically to fit the
                     whole title in it.
-      \return The bottom of the printed box. If expand==false, this 
+      \return The bottom of the printed box. If expand==false, this
               is box.bottom, otherwise it is larger than box.bottom
               and matches the y-coordinate of the surrounding rectangle.
     */
-    int drawHeader( QPainter &p, QString title,
-                     const QDate &month1, const QDate &month2,
-                     const QRect &box, bool expand = false );
+    int drawHeader(QPainter &p, QString title,
+                   const QDate &month1, const QDate &month2,
+                   const QRect &box, bool expand = false);
     /**
       Draw a small calendar with the days of a month into the given area.
       Used for example in the title bar of the sheet.
@@ -274,7 +274,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param qd Arbitrary Date within the month to be printed.
       \param box coordinates of the small calendar
     */
-    void drawSmallMonth( QPainter &p, const QDate &qd, const QRect &box );
+    void drawSmallMonth(QPainter &p, const QDate &qd, const QRect &box);
 
     /**
       Draw a horizontal bar with the weekday names of the given date range
@@ -285,9 +285,9 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param toDate Last date of the printed dates
       \param box coordinates of the box for the days of the week
     */
-    void drawDaysOfWeek( QPainter &p,
-                         const QDate &fromDate, const QDate &toDate,
-                         const QRect &box );
+    void drawDaysOfWeek(QPainter &p,
+                        const QDate &fromDate, const QDate &toDate,
+                        const QRect &box);
     /**
       Draw a single weekday name in a box inside the given area of the painter.
       This is called in a loop by drawDaysOfWeek.
@@ -295,7 +295,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param qd Date of the printed day
       \param box coordinates of the weekbox
     */
-    void drawDaysOfWeekBox( QPainter &p, const QDate &qd, const QRect &box );
+    void drawDaysOfWeekBox(QPainter &p, const QDate &qd, const QRect &box);
     /**
       Draw a (vertical) time scale from time fromTime to toTime inside the given area of the painter.
       Every hour will have a one-pixel line over the whole width, every
@@ -306,10 +306,10 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param toTime End time of the time range to display
       \param box coordinates of the timeline
     */
-    void drawTimeLine( QPainter &p,
-                       const QTime &fromTime, const QTime &toTime,
-                       const QRect &box );
-  
+    void drawTimeLine(QPainter &p,
+                      const QTime &fromTime, const QTime &toTime,
+                      const QRect &box);
+
     /**
       Draw the all-day box for the agenda print view (the box on top which
       doesn't have a time on the time scale associated). If expandable is set,
@@ -328,9 +328,9 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param box coordinates of the all day box.
       \return The height used for the all-day box.
     */
-    int drawAllDayBox( QPainter &p, Event::List &eventList,
-                        const QDate &qd, bool expandable,
-                        const QRect &box );
+    int drawAllDayBox(QPainter &p, Event::List &eventList,
+                      const QDate &qd, bool expandable,
+                      const QRect &box);
     /**
       Draw the agenda box for the day print style (the box showing all events of that day).
       Also draws a grid with half-hour spacing of the grid lines.
@@ -350,16 +350,16 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
                    to include all events if expandable==true
       \param box coordinates of the agenda day box.
     */
-    void drawAgendaDayBox( QPainter &p, Event::List &eventList,
-                           const QDate &qd, bool expandable,
-                           QTime &fromTime, QTime &toTime,
-                           const QRect &box );
+    void drawAgendaDayBox(QPainter &p, Event::List &eventList,
+                          const QDate &qd, bool expandable,
+                          QTime &fromTime, QTime &toTime,
+                          const QRect &box);
 
-    void drawAgendaItem( PrintCellItem *item, QPainter &p,
-                         const QDateTime &startPrintDate,
-                         const QDateTime &endPrintDate,
-                         float minlen, const QRect &box );
-  
+    void drawAgendaItem(PrintCellItem *item, QPainter &p,
+                        const QDateTime &startPrintDate,
+                        const QDateTime &endPrintDate,
+                        float minlen, const QRect &box);
+
     /**
       Draw the box containing a list of all events of the given day (with their times,
       of course). Used in the Filofax and the month print style.
@@ -372,10 +372,10 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param printRecurDaily Whether daily recurring incidences should be printed.
       \param printRecurWeekly Whether weekly recurring incidences should be printed.
     */
-    void drawDayBox( QPainter &p, const QDate &qd,
-                     const QRect &box,
-                     bool fullDate = false, bool printRecurDaily = true,
-                     bool printRecurWeekly = true );
+    void drawDayBox(QPainter &p, const QDate &qd,
+                    const QRect &box,
+                    bool fullDate = false, bool printRecurDaily = true,
+                    bool printRecurWeekly = true);
     /**
       Draw the week (filofax) table of the week containing the date qd. The first
       three days of the week will be shown in the first column (using drawDayBox),
@@ -385,8 +385,8 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param qd Arbitrary date within the week to be printed.
       \param box coordinates of the week box.
     */
-    void drawWeek( QPainter &p, const QDate &qd,
-                   const QRect &box );
+    void drawWeek(QPainter &p, const QDate &qd,
+                  const QRect &box);
     /**
       Draw the timetable view of the given time range from fromDate to toDate.
       On the left side the time scale is printed (using drawTimeLine), then each
@@ -402,9 +402,9 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param toTime End time of the displayed time range
       \param box coordinates of the time table.
     */
-    void drawTimeTable( QPainter &p, const QDate &fromDate, const QDate &toDate,
-                        QTime &fromTime, QTime &toTime,
-                        const QRect &box );
+    void drawTimeTable(QPainter &p, const QDate &fromDate, const QDate &toDate,
+                       QTime &fromTime, QTime &toTime,
+                       const QRect &box);
 
     /**
       Draw the month table of the month containing the date qd. Each day gets one
@@ -419,9 +419,9 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param weeknumbers Whether the week numbers are printed left of each row of the matrix
       \param box coordinates of the month.
     */
-    void drawMonthTable( QPainter &p, const QDate &qd, bool weeknumbers,
-                    bool recurDaily, bool recurWeekly,
-                    const QRect &box );
+    void drawMonthTable(QPainter &p, const QDate &qd, bool weeknumbers,
+                        bool recurDaily, bool recurWeekly,
+                        const QRect &box);
     /**
       Draw a vertical representation of the month containing the date dt. Each
       day gets one line.
@@ -429,15 +429,15 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param dt Arbitrary date within the month to be printed
       \param box coordinates of the box reserved for the month
       \param maxdays Days to print. If a value of -1 is given, the number of days
-                     is deduced from the month. If maxdays is larger than the 
-                     number of days in the month, the remaining boxes are 
+                     is deduced from the month. If maxdays is larger than the
+                     number of days in the month, the remaining boxes are
                      shaded to indicate they are not days of the month.
       \param subDailyFlags Bitfield consisting of DisplayFlags flags to determine
                            how events that do not cross midnight should be printed.
       \param holidaysFlags Bitfield consisting of DisplayFlags flags to determine
                            how holidays should be printed.
     */
-    void drawMonth( QPainter &p, const QDate &dt, const QRect &box, int maxdays = -1, int subDailyFlags = TimeBoxes, int holidaysFlags = Text );
+    void drawMonth(QPainter &p, const QDate &dt, const QRect &box, int maxdays = -1, int subDailyFlags = TimeBoxes, int holidaysFlags = Text);
 
     /**
       Internal class representing the start of a todo.
@@ -466,13 +466,13 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param todoList Contains a list of sub-todos for the specified @p todo .
       \param r Internal (used when printing sub-to-dos to give information about its parent)
     */
-    void drawTodo( int &count, Todo *todo, QPainter &p,
-                   TodoSortField sortField, SortDirection sortDir,
-                   bool connectSubTodos, bool strikeoutCompleted, bool desc,
-                   int posPriority, int posSummary, int posDueDt,
-                   int posPercentComplete, int level, int x, int &y,
-                   int width, int pageHeight,
-                   const Todo::List &todoList, TodoParentStart *r = 0 );
+    void drawTodo(int &count, Todo *todo, QPainter &p,
+                  TodoSortField sortField, SortDirection sortDir,
+                  bool connectSubTodos, bool strikeoutCompleted, bool desc,
+                  int posPriority, int posSummary, int posDueDt,
+                  int posPercentComplete, int level, int x, int &y,
+                  int width, int pageHeight,
+                  const Todo::List &todoList, TodoParentStart *r = 0);
 
     /**
       Draws single journal item.
@@ -484,20 +484,20 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       \param pageHeight Total height allowed for the list on a page. If an item
                    would be below that line, a new page is started.
     */
-    void drawJournal( Journal * journal, QPainter &p, int x, int &y,
-                      int width, int pageHeight );
-    void drawJournalField( QPainter &p, QString field, QString text,
-                           int x, int &y, int width, int pageHeight );
+    void drawJournal(Journal *journal, QPainter &p, int x, int &y,
+                     int width, int pageHeight);
+    void drawJournalField(QPainter &p, QString field, QString text,
+                          int x, int &y, int width, int pageHeight);
 
-    void drawSplitHeaderRight( QPainter &p, const QDate &fd, const QDate &td,
-                               const QDate &cd, int width, int height );
+    void drawSplitHeaderRight(QPainter &p, const QDate &fd, const QDate &td,
+                              const QDate &cd, int width, int height);
 
 
-  protected:
-    void drawIncidence( QPainter &p, const QRect &dayBox, const QString &time,
-                        const QString &summary, int &textY );
+protected:
+    void drawIncidence(QPainter &p, const QRect &dayBox, const QString &time,
+                       const QString &summary, int &textY);
 
-  protected:
+protected:
     bool mUseColors;
     int mHeaderHeight;
     int mSubHeaderHeight;
@@ -506,7 +506,7 @@ class KDE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     int mBorder;
     const KCalendarSystem *mCalSys;
 
-  public:
+public:
 };
 
 #endif

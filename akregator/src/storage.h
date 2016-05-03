@@ -38,83 +38,82 @@ namespace Backend {
 class FeedStorage;
 
 /** \brief Storage is the main interface to the article archive. It creates and manages FeedStorage objects handling the article list for a feed.
-    
+
     An archive implementation must implement Storage, FeedStorage and StorageFactory. See mk4storage for an example.
 */
-class AKREGATOR_EXPORT Storage : public QObject
-{
-    public:
+class AKREGATOR_EXPORT Storage : public QObject {
+public:
 
-        static Storage* getInstance();
-        static void setInstance(Storage* instance);
+    static Storage *getInstance();
+    static void setInstance(Storage *instance);
 
-        virtual ~Storage() {}
+    virtual ~Storage() {}
 
-        /** initializes the storage object with given parameters */
-        
-        virtual void initialize(const QStringList& params) = 0;
-        
-        /**
-         * Open storage and prepare it for work.
-         * @return true on success.
-         */
-        virtual bool open(bool autoCommit = false) = 0;
+    /** initializes the storage object with given parameters */
 
-        /**
-         * Commit changes made in feeds and articles, making them persistent.
-         * @return true on success.
-         */
-        virtual bool commit() = 0;
+    virtual void initialize(const QStringList &params) = 0;
 
-        /**
-         * Rollback changes made in feeds and articles, reverting to last committed values.
-         * @returns true on success.
-         */
-        virtual bool rollback() = 0;
+    /**
+     * Open storage and prepare it for work.
+     * @return true on success.
+     */
+    virtual bool open(bool autoCommit = false) = 0;
 
-        /**
-         * Closes storage, freeing all allocated resources. Called from destructor, so you don't need to call it directly.
-         * @return true on success.
-         */
-        virtual bool close() = 0;
+    /**
+     * Commit changes made in feeds and articles, making them persistent.
+     * @return true on success.
+     */
+    virtual bool commit() = 0;
 
-        /**
-         * @return Article archive for feed at given url.
-         */
-        virtual FeedStorage* archiveFor(const QString &url) = 0;
-        virtual bool autoCommit() const  = 0;
-        virtual int unreadFor(const QString &url) = 0;
-        virtual void setUnreadFor(const QString &url, int unread) = 0;
-        virtual int totalCountFor(const QString &url) = 0;
-        virtual void setTotalCountFor(const QString &url, int total) = 0;
-        virtual int lastFetchFor(const QString& url) = 0;
-        virtual void setLastFetchFor(const QString& url, int lastFetch) = 0;
+    /**
+     * Rollback changes made in feeds and articles, reverting to last committed values.
+     * @returns true on success.
+     */
+    virtual bool rollback() = 0;
 
-        /** stores the feed list in the storage backend. This is a fallback for the case that the 
-            feeds.opml file gets corrupted 
-            @param opmlStr the feed list in OPML format
-         */
-        virtual void storeFeedList(const QString& opmlStr) = 0;
-        virtual QString restoreFeedList() const = 0;
+    /**
+     * Closes storage, freeing all allocated resources. Called from destructor, so you don't need to call it directly.
+     * @return true on success.
+     */
+    virtual bool close() = 0;
 
-        virtual void storeTagSet(const QString& xmlStr) = 0;
-        virtual QString restoreTagSet() const = 0;
+    /**
+     * @return Article archive for feed at given url.
+     */
+    virtual FeedStorage *archiveFor(const QString &url) = 0;
+    virtual bool autoCommit() const  = 0;
+    virtual int unreadFor(const QString &url) = 0;
+    virtual void setUnreadFor(const QString &url, int unread) = 0;
+    virtual int totalCountFor(const QString &url) = 0;
+    virtual void setTotalCountFor(const QString &url, int total) = 0;
+    virtual int lastFetchFor(const QString &url) = 0;
+    virtual void setLastFetchFor(const QString &url, int lastFetch) = 0;
 
-        /** returns a list of all feeds (URLs) stored in this archive */
-        
-        virtual QStringList feeds() const = 0;
+    /** stores the feed list in the storage backend. This is a fallback for the case that the
+        feeds.opml file gets corrupted
+        @param opmlStr the feed list in OPML format
+     */
+    virtual void storeFeedList(const QString &opmlStr) = 0;
+    virtual QString restoreFeedList() const = 0;
 
-        /** adds all feed storages from a source to this storage
-            existing articles are replaced
-        */
-        virtual void add(Storage* source) = 0;
-        
-        /** deletes all feed storages in this archive */
-        virtual void clear() = 0;
-        
-     private:
-        
-        static Storage *m_instance;
+    virtual void storeTagSet(const QString &xmlStr) = 0;
+    virtual QString restoreTagSet() const = 0;
+
+    /** returns a list of all feeds (URLs) stored in this archive */
+
+    virtual QStringList feeds() const = 0;
+
+    /** adds all feed storages from a source to this storage
+        existing articles are replaced
+    */
+    virtual void add(Storage *source) = 0;
+
+    /** deletes all feed storages in this archive */
+    virtual void clear() = 0;
+
+private:
+
+    static Storage *m_instance;
 };
 
 }

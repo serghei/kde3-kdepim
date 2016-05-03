@@ -29,20 +29,19 @@ class CalFormat;
 /**
   This class provides a calendar storage as a local file.
 */
-class LIBKCAL_EXPORT FileStorage : public CalStorage
-{
-  public:
-    FileStorage( Calendar *, const QString &fileName = QString::null,
-                  CalFormat *format = 0 );
+class LIBKCAL_EXPORT FileStorage : public CalStorage {
+public:
+    FileStorage(Calendar *, const QString &fileName = QString::null,
+                CalFormat *format = 0);
     virtual ~FileStorage();
 
-    void setFileName( const QString &mFileName );
+    void setFileName(const QString &mFileName);
     QString fileName() const;
 
     /**
       FileStorage takes ownership of format object.
     */
-    void setSaveFormat( CalFormat * );
+    void setSaveFormat(CalFormat *);
     CalFormat *saveFormat() const;
 
     bool open();
@@ -50,7 +49,7 @@ class LIBKCAL_EXPORT FileStorage : public CalStorage
     bool save();
     bool close();
 
-  private:
+private:
     QString mFileName;
     CalFormat *mSaveFormat;
 

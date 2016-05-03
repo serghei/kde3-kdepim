@@ -20,7 +20,7 @@
 
 #include <qstring.h>
 
-QString mapiTagString( int key );
-QString mapiNamedTagString( int key, int tag = -1 );
+QString mapiTagString(int key);
+QString mapiNamedTagString(int key, int tag = -1);
 
 #endif

@@ -1,6 +1,6 @@
 #ifndef _KGANTTITEM_H_
 #define _KGANTTITEM_H_
- 
+
 /*
 
     This library is free software; you can redistribute it and/or
@@ -33,9 +33,9 @@
 
 
 #include <qobject.h>
-#include <qdatetime.h> 
-#include <qtextstream.h> 
-#include <qptrlist.h> 
+#include <qdatetime.h>
+#include <qtextstream.h>
+#include <qptrlist.h>
 #include <qpainter.h>
 
 #include <kdepimmacros.h>
@@ -55,493 +55,513 @@ class KDE_EXPORT KGanttItem : public QObject
 //////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
 
 public:
-  
-  enum Change { 
-    NoChange        = 0,
-    StartChanged    = 1,
-    EndChanged      = 2,
-    
-    ///  Height for this item has changed. The
-    ///  height doesn't include the subitems.
-    HeightChanged   = 4,
-    
-    ///  Total height has changed. This 
-    ///  happens if the item was opened, closed
-    ///  or subitems has been added or removed while
-    ///  item is open.
-    TotalHeightChanged = 8,
-    
-    ///  Style for drawing has changed.
-    StyleChanged    = 16,
-    TextChanged     = 32,
-    ModeChanged     = 64,
-    MinChanged      = 128,
-    MaxChanged      = 256,
-    
-    /// Draw item including subitems.
-    Opened          = 512,
-    
-    /// Draw item without subitems.
-    Closed          = 1024,
-    
-    ///  Item has been selected.
-    Selected        = 2048,
-    
-    ///  Item has been unselected.
-    Unselected      = 4096,
-    
-    ///  Changes may occurred but the types are unknown
-    Unknown         = 8192,
-
-    ///  Relation between two subitems has been added
-    RelationAdded   = 16384,
-
-    /// Relation between two subitems has been removed
-    RelationRemoved = 32768
-
-  };
-
-
-
-  enum Style {
-    /// Set item invisible
-    DrawNothing     = 0,
-    
-    /// Draw border.
-    DrawBorder      = 1, 
-    
-    //  Fill item with brush.
-    DrawFilled      = 2, 
-    DrawText        = 4,
-    
-    //  Draw handlke for opening/closing item.
-    DrawHandle      = 16,
-    
-    /// Draw handle only if item contains subitems
-    DrawHandleWSubitems = 32,
-    
-    DrawAll         = 255 
-  };
-
-
-  enum Mode { 
-    Normal, 
-    Rubberband 
-  };
-
-
-  ///  Constructor.
-  /*!
-   * 
-   */
-  KGanttItem(KGanttItem* parentItem, const QString& text, 
-	 const QDateTime& start, const QDateTime& end);
-
-
-
-  ///  Constructor.
-  /*!
-   * 
-   */
-  KGanttItem(KGanttItem* parentItem, const QString& text, 
-	 const QDateTime& start, long durationMin);
-
-
-
-  ///   Destructor.
-  /*
-   *    Emits signal destroyed(KGanttItem* this).
-   */
-  ~KGanttItem();
-
-
-
-  ///   Add relation between two subitems.
-  /*
-   *
-   */
-  KGanttRelation* addRelation(KGanttItem* from, KGanttItem* to,
-			      const QString& text);
 
+    enum Change
+    {
+        NoChange        = 0,
+        StartChanged    = 1,
+        EndChanged      = 2,
 
+        ///  Height for this item has changed. The
+        ///  height doesn't include the subitems.
+        HeightChanged   = 4,
 
- 
-  ///  Returns true if item is open (subitems has to be drawn)
-  /*!
-   *
-   */
-  bool isOpen() {
-    return _open;
-  }
+        ///  Total height has changed. This
+        ///  happens if the item was opened, closed
+        ///  or subitems has been added or removed while
+        ///  item is open.
+        TotalHeightChanged = 8,
 
+        ///  Style for drawing has changed.
+        StyleChanged    = 16,
+        TextChanged     = 32,
+        ModeChanged     = 64,
+        MinChanged      = 128,
+        MaxChanged      = 256,
 
+        /// Draw item including subitems.
+        Opened          = 512,
 
-  ///  Open / Close item
-  /*!
-   *   Draw/don't draw subitems.
-   */
-  void open(bool f);
+        /// Draw item without subitems.
+        Closed          = 1024,
 
+        ///  Item has been selected.
+        Selected        = 2048,
 
+        ///  Item has been unselected.
+        Unselected      = 4096,
 
-  ///  Set item editable or not.
-  /*!
-   *   If item is not editable these methods have no effect :
-   *   setStart(), setEnd(), setText(), select(), setMode(), setStyle(), 
-   *   setHeight(),
-   *   
-   */
-  void setEditable(bool f) {
-    _editable = f;
-  }
+        ///  Changes may occurred but the types are unknown
+        Unknown         = 8192,
 
+        ///  Relation between two subitems has been added
+        RelationAdded   = 16384,
 
+        /// Relation between two subitems has been removed
+        RelationRemoved = 32768
 
-  ///  Returns if item is editable.
-  /*!
-   *   See also setEditable().
-   */
-  bool isEditable() {
-    return _editable;
-  }
+    };
 
 
 
-  ///  Returns true if item is selected.
-  /*!
-   *
-   */
-  bool isSelected() {
-    return _selected;
-  }
+    enum Style
+    {
+        /// Set item invisible
+        DrawNothing     = 0,
 
+        /// Draw border.
+        DrawBorder      = 1,
 
+        //  Fill item with brush.
+        DrawFilled      = 2,
+        DrawText        = 4,
 
-  ///  Select/unselect item.
-  /*!
-   *
-   */
-  void select(bool f);
+        //  Draw handlke for opening/closing item.
+        DrawHandle      = 16,
 
+        /// Draw handle only if item contains subitems
+        DrawHandleWSubitems = 32,
 
+        DrawAll         = 255
+    };
 
-  ///  Set mode.
-  /*!
-   *   If mode is 'Rubberband' and the number of subtaks is greater than 0,
-   *   the start and end of the item is determined by the start and end of the
-   *   earliest/latest subitem. <br>
-   *   Default is 'Normal'.
-   */
-  void setMode(Mode flag);
 
+    enum Mode
+    {
+        Normal,
+        Rubberband
+    };
 
 
-  ///  Set drawing style.
-  /*!  
-   *   
-   */
-  void setStyle(int flag, bool includeSubitems = false);
+    ///  Constructor.
+    /*!
+     *
+     */
+    KGanttItem(KGanttItem *parentItem, const QString &text,
+               const QDateTime &start, const QDateTime &end);
 
 
 
-  ///  Get drawing style.
-  /*!
-   *
-   */
-  int getStyle() {
-    return _style;
-  }
+    ///  Constructor.
+    /*!
+     *
+     */
+    KGanttItem(KGanttItem *parentItem, const QString &text,
+               const QDateTime &start, long durationMin);
 
 
 
-  ///  Set brush for filling
-  /*!
-   *
-   */
-  void setBrush(const QBrush& brush);
+    ///   Destructor.
+    /*
+     *    Emits signal destroyed(KGanttItem* this).
+     */
+    ~KGanttItem();
 
 
 
-  ///  Get brush that is used for filling the item.
-  /*!
-   *
-   */
-  QBrush& getBrush() {
-    return _brush;
-  }
+    ///   Add relation between two subitems.
+    /*
+     *
+     */
+    KGanttRelation *addRelation(KGanttItem *from, KGanttItem *to,
+                                const QString &text);
 
 
 
-  ///  Get brush which has to be used for drawing this item as selected.
-  /*!
-   *
-   */
-  QBrush& getSelectBrush() {
-    return _selectBrush;
-  }
 
+    ///  Returns true if item is open (subitems has to be drawn)
+    /*!
+     *
+     */
+    bool isOpen()
+    {
+        return _open;
+    }
 
 
-  ///  Set pen for border.
-  /*!
-   *
-   */
-  void setPen(const QPen& pen);
 
+    ///  Open / Close item
+    /*!
+     *   Draw/don't draw subitems.
+     */
+    void open(bool f);
 
 
-  ///
-  /*!
-   *
-   */
-  QPen& getPen() {
-    return _pen;
-  }
 
+    ///  Set item editable or not.
+    /*!
+     *   If item is not editable these methods have no effect :
+     *   setStart(), setEnd(), setText(), select(), setMode(), setStyle(),
+     *   setHeight(),
+     *
+     */
+    void setEditable(bool f)
+    {
+        _editable = f;
+    }
 
 
-  ///
-  /*!
-   *
-   */
-  void setTextPen(const QPen& pen) {
-    _textPen = pen;
-  }
 
+    ///  Returns if item is editable.
+    /*!
+     *   See also setEditable().
+     */
+    bool isEditable()
+    {
+        return _editable;
+    }
 
 
-  ///
-  /*!
-   *
-   */
-  QPen& getTextPen() {
-    return _textPen;
-  }
 
+    ///  Returns true if item is selected.
+    /*!
+     *
+     */
+    bool isSelected()
+    {
+        return _selected;
+    }
 
 
-  ///  Set text.
-  /*!
-   *
-   */
-  void setText(const QString& text);
 
+    ///  Select/unselect item.
+    /*!
+     *
+     */
+    void select(bool f);
 
 
-  ///  Get text.
-  /*!
-   *
-   */
-  QString getText() { return _text; }
-  
 
+    ///  Set mode.
+    /*!
+     *   If mode is 'Rubberband' and the number of subtaks is greater than 0,
+     *   the start and end of the item is determined by the start and end of the
+     *   earliest/latest subitem. <br>
+     *   Default is 'Normal'.
+     */
+    void setMode(Mode flag);
 
-  ///  Get date of starting.
-  /*!
-   *   If mode == ´Rubberband´ and this item contains
-   *   subitems, start of the item is determined by the start of the
-   *   earliest subitem. <br>
-   */
-  QDateTime getStart();
 
 
+    ///  Set drawing style.
+    /*!
+     *
+     */
+    void setStyle(int flag, bool includeSubitems = false);
 
-  ///  Get date of ending.
-  /*!
-   *
-   */
-  QDateTime getEnd();
 
 
+    ///  Get drawing style.
+    /*!
+     *
+     */
+    int getStyle()
+    {
+        return _style;
+    }
 
-  ///  Set time/date of start.
-  /*!
-   *
-   */
-  void setStart(const QDateTime& start);
 
 
+    ///  Set brush for filling
+    /*!
+     *
+     */
+    void setBrush(const QBrush &brush);
 
-  ///  Set time/date of end.
-  /*!
-   *
-   */
-  void setEnd(const QDateTime& end);
 
 
+    ///  Get brush that is used for filling the item.
+    /*!
+     *
+     */
+    QBrush &getBrush()
+    {
+        return _brush;
+    }
 
-  ///  Set height.
-  /*!
-   *   Set height in pixel. These are scaled when this item is drawn
-   *   by the barview.
-   */
-  void setHeight(int h);
 
 
+    ///  Get brush which has to be used for drawing this item as selected.
+    /*!
+     *
+     */
+    QBrush &getSelectBrush()
+    {
+        return _selectBrush;
+    }
 
-  ///  Get height.
-  /*!
-   *  Returns the height in pixel of this item. This does not include the height 
-   *  of any subitems; getTotalHeight() returns that if the subitems have
-   *  to be drawn.
-   */
-  int getHeight() {
-    return _height;
-  }
 
 
+    ///  Set pen for border.
+    /*!
+     *
+     */
+    void setPen(const QPen &pen);
 
-  ///  Get total height.
-  /*!
-   *   Returns the total height of this object in pixel, including any 
-   *   visible subitems. Notice, that the pixels are no screen pixel since
-   *   the barview scales the height of a item.
-   */
-  int getTotalHeight();
 
-  
 
-  ///  Get width in minutes.
-  /*!
-   *   
-   */
-  int getWidth();
+    ///
+    /*!
+     *
+     */
+    QPen &getPen()
+    {
+        return _pen;
+    }
 
 
 
-  ///  Get list of subitems.
-  /*!
-   *
-   */
-  QPtrList<KGanttItem>& getSubItems() {
-    return _subitems;
-  }
+    ///
+    /*!
+     *
+     */
+    void setTextPen(const QPen &pen)
+    {
+        _textPen = pen;
+    }
 
 
 
-  ///  Get list of relations.
-  /*!
-   *
-   */
-  QPtrList<KGanttRelation>& getRelations() {
-    return _relations;
-  }
+    ///
+    /*!
+     *
+     */
+    QPen &getTextPen()
+    {
+        return _textPen;
+    }
 
 
 
-  ///  Start a transaction.
-  /*!
-   *   If you want to add a lot of subitems -> block signals
-   */
-  void startTransaction(){
-    blockSignals(true);
-  }
+    ///  Set text.
+    /*!
+     *
+     */
+    void setText(const QString &text);
 
 
 
-  ///  End a transaction.
-  /*!
-   *   If you started a transaction and all signals have been blocked
-   *   by method startTransaction(), invoke endTransaction() to unblock signals.<br>
-   *   Signal changed(this,Unknown) is emitted.
-   */
-  void endTransaction();
+    ///  Get text.
+    /*!
+     *
+     */
+    QString getText()
+    {
+        return _text;
+    }
 
 
 
-  ///  Return a given change as a string.
-  /*!
-   *
-   */
-  static QString ChangeAsString(Change c);
+    ///  Get date of starting.
+    /*!
+     *   If mode == ´Rubberband´ and this item contains
+     *   subitems, start of the item is determined by the start of the
+     *   earliest subitem. <br>
+     */
+    QDateTime getStart();
 
 
 
+    ///  Get date of ending.
+    /*!
+     *
+     */
+    QDateTime getEnd();
 
-  ///  Dump to cout.
-  /*!
-   *
-   */
-  void dump(QTextOStream& cout, const QString& pre);
+
+
+    ///  Set time/date of start.
+    /*!
+     *
+     */
+    void setStart(const QDateTime &start);
+
+
+
+    ///  Set time/date of end.
+    /*!
+     *
+     */
+    void setEnd(const QDateTime &end);
+
+
+
+    ///  Set height.
+    /*!
+     *   Set height in pixel. These are scaled when this item is drawn
+     *   by the barview.
+     */
+    void setHeight(int h);
+
+
+
+    ///  Get height.
+    /*!
+     *  Returns the height in pixel of this item. This does not include the height
+     *  of any subitems; getTotalHeight() returns that if the subitems have
+     *  to be drawn.
+     */
+    int getHeight()
+    {
+        return _height;
+    }
+
+
+
+    ///  Get total height.
+    /*!
+     *   Returns the total height of this object in pixel, including any
+     *   visible subitems. Notice, that the pixels are no screen pixel since
+     *   the barview scales the height of a item.
+     */
+    int getTotalHeight();
+
+
+
+    ///  Get width in minutes.
+    /*!
+     *
+     */
+    int getWidth();
+
+
+
+    ///  Get list of subitems.
+    /*!
+     *
+     */
+    QPtrList<KGanttItem> &getSubItems()
+    {
+        return _subitems;
+    }
+
+
+
+    ///  Get list of relations.
+    /*!
+     *
+     */
+    QPtrList<KGanttRelation> &getRelations()
+    {
+        return _relations;
+    }
+
+
+
+    ///  Start a transaction.
+    /*!
+     *   If you want to add a lot of subitems -> block signals
+     */
+    void startTransaction()
+    {
+        blockSignals(true);
+    }
+
+
+
+    ///  End a transaction.
+    /*!
+     *   If you started a transaction and all signals have been blocked
+     *   by method startTransaction(), invoke endTransaction() to unblock signals.<br>
+     *   Signal changed(this,Unknown) is emitted.
+     */
+    void endTransaction();
+
+
+
+    ///  Return a given change as a string.
+    /*!
+     *
+     */
+    static QString ChangeAsString(Change c);
+
+
+
+
+    ///  Dump to cout.
+    /*!
+     *
+     */
+    void dump(QTextOStream &cout, const QString &pre);
 
 
 signals:
 
-  ///  Item has changed.
-  /*!
-   *   This signal is emitted if any of the items
-   *   properties have been changed.
-   */
-  void changed(KGanttItem*, KGanttItem::Change);
+    ///  Item has changed.
+    /*!
+     *   This signal is emitted if any of the items
+     *   properties have been changed.
+     */
+    void changed(KGanttItem *, KGanttItem::Change);
 
 
 
-  ///  Item will be deleted.
-  /*!
-   *   This signal will be emitted immediately before
-   *   the object will be deleted.
-   */
-  void destroyed(KGanttItem*);
+    ///  Item will be deleted.
+    /*!
+     *   This signal will be emitted immediately before
+     *   the object will be deleted.
+     */
+    void destroyed(KGanttItem *);
 
 
 
 private slots:
- 
-  void subItemChanged(KGanttItem*, KGanttItem::Change);
 
-  void removeRelation(KGanttRelation* rel);
+    void subItemChanged(KGanttItem *, KGanttItem::Change);
+
+    void removeRelation(KGanttRelation *rel);
 
 
 private:
 
-  void registerItem(KGanttItem* item);
-  void unregisterItem(KGanttItem* item);
+    void registerItem(KGanttItem *item);
+    void unregisterItem(KGanttItem *item);
 
-  void init(KGanttItem* parentItem, const QString& text,
-	    const QDateTime& start, const QDateTime& end);
-
-
-  //  set min/max date and time according to subitems
-  Change adjustMinMax();
-
-  /*  if min < start set start to _min,
-      if max > end set end to max */      
-  Change adjustStartEnd();
+    void init(KGanttItem *parentItem, const QString &text,
+              const QDateTime &start, const QDateTime &end);
 
 
-  // is item open/closed
-  bool _open;
-  bool _selected;
+    //  set min/max date and time according to subitems
+    Change adjustMinMax();
+
+    /*  if min < start set start to _min,
+        if max > end set end to max */
+    Change adjustStartEnd();
 
 
-  // is this item editable by the user, if it is false, invoking
-  // of some methods has no effect
-  bool _editable;
-
-  int _height, _style, _mode;
+    // is item open/closed
+    bool _open;
+    bool _selected;
 
 
-  KGanttItem*            _parentItem;
-  QPtrList<KGanttItem>      _subitems;  
-  QPtrList<KGanttRelation>  _relations;
+    // is this item editable by the user, if it is false, invoking
+    // of some methods has no effect
+    bool _editable;
+
+    int _height, _style, _mode;
 
 
-  // start/end date. 
-  // start must always be earlier then _minDateTime
-  // end must always be later then _maxDateTime
-  QDateTime _start, _end, _minDateTime, _maxDateTime;
-  
-  QString _text;
+    KGanttItem            *_parentItem;
+    QPtrList<KGanttItem>      _subitems;
+    QPtrList<KGanttRelation>  _relations;
 
-  QBrush _brush;
-  QPen _pen, _textPen;
 
-  static QBrush _selectBrush;
- 
+    // start/end date.
+    // start must always be earlier then _minDateTime
+    // end must always be later then _maxDateTime
+    QDateTime _start, _end, _minDateTime, _maxDateTime;
+
+    QString _text;
+
+    QBrush _brush;
+    QPen _pen, _textPen;
+
+    static QBrush _selectBrush;
+
 
 };
 

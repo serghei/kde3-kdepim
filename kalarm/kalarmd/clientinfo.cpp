@@ -21,72 +21,72 @@
 #include "adcalendar.h"
 #include "clientinfo.h"
 
-QMap<QCString, ClientInfo*> ClientInfo::mClients;
+QMap<QCString, ClientInfo *> ClientInfo::mClients;
 
 
-ClientInfo::ClientInfo(const QCString& appName, const QString& title,
-                       const QCString& dcopObj, const QString& calendar, bool startClient)
-	: mAppName(appName),
-	  mTitle(title),
-	  mDcopObject(dcopObj),
-	  mCalendar(new ADCalendar(calendar, appName)),
-	  mStartClient(startClient)
+ClientInfo::ClientInfo(const QCString &appName, const QString &title,
+                       const QCString &dcopObj, const QString &calendar, bool startClient)
+    : mAppName(appName),
+      mTitle(title),
+      mDcopObject(dcopObj),
+      mCalendar(new ADCalendar(calendar, appName)),
+      mStartClient(startClient)
 {
-	mClients[mAppName] = this;
+    mClients[mAppName] = this;
 }
 
-ClientInfo::ClientInfo(const QCString& appName, const QString& title,
-                       const QCString& dcopObj, ADCalendar* calendar, bool startClient)
-	: mAppName(appName),
-	  mTitle(title),
-	  mDcopObject(dcopObj),
-	  mCalendar(calendar),
-	  mStartClient(startClient)
+ClientInfo::ClientInfo(const QCString &appName, const QString &title,
+                       const QCString &dcopObj, ADCalendar *calendar, bool startClient)
+    : mAppName(appName),
+      mTitle(title),
+      mDcopObject(dcopObj),
+      mCalendar(calendar),
+      mStartClient(startClient)
 {
-	mClients[mAppName] = this;
+    mClients[mAppName] = this;
 }
 
 ClientInfo::~ClientInfo()
 {
-	delete mCalendar;
-	mClients.remove(mAppName);
+    delete mCalendar;
+    mClients.remove(mAppName);
 }
 
 /******************************************************************************
 * Set a new calendar for the specified client application.
 */
-ADCalendar* ClientInfo::setCalendar(const QString& url)
+ADCalendar *ClientInfo::setCalendar(const QString &url)
 {
-	if (url != mCalendar->urlString())
-	{
-		delete mCalendar;
-		mCalendar = new ADCalendar(url, mAppName);
-	}
-	return mCalendar;
+    if(url != mCalendar->urlString())
+    {
+        delete mCalendar;
+        mCalendar = new ADCalendar(url, mAppName);
+    }
+    return mCalendar;
 }
 
 /******************************************************************************
 * Return the ClientInfo object for the specified client application.
 */
-ClientInfo* ClientInfo::get(const QCString& appName)
+ClientInfo *ClientInfo::get(const QCString &appName)
 {
-	if (appName.isEmpty())
-		return 0;
-	QMap<QCString, ClientInfo*>::ConstIterator it = mClients.find(appName);
-	if (it == mClients.end())
-		return 0;
-	return it.data();
+    if(appName.isEmpty())
+        return 0;
+    QMap<QCString, ClientInfo *>::ConstIterator it = mClients.find(appName);
+    if(it == mClients.end())
+        return 0;
+    return it.data();
 }
 
 /******************************************************************************
 * Return the ClientInfo object for client which owns the specified calendar.
 */
-ClientInfo* ClientInfo::get(const ADCalendar* cal)
+ClientInfo *ClientInfo::get(const ADCalendar *cal)
 {
-	for (ClientInfo::ConstIterator it = ClientInfo::begin();  it != ClientInfo::end();  ++it)
-		if (it.data()->calendar() == cal)
-			return it.data();
-	return 0;
+    for(ClientInfo::ConstIterator it = ClientInfo::begin();  it != ClientInfo::end();  ++it)
+        if(it.data()->calendar() == cal)
+            return it.data();
+    return 0;
 }
 
 /******************************************************************************
@@ -94,17 +94,17 @@ ClientInfo* ClientInfo::get(const ADCalendar* cal)
 */
 void ClientInfo::clear()
 {
-	QMap<QCString, ClientInfo*>::Iterator it;
-	while ((it = mClients.begin()) != mClients.end())
-		delete it.data();
+    QMap<QCString, ClientInfo *>::Iterator it;
+    while((it = mClients.begin()) != mClients.end())
+        delete it.data();
 }
 
 /******************************************************************************
 * Delete the client with the specified name.
 */
-void ClientInfo::remove(const QCString& appName)
+void ClientInfo::remove(const QCString &appName)
 {
-	QMap<QCString, ClientInfo*>::Iterator it = mClients.find(appName);
-	if (it != mClients.end())
-		delete it.data();
+    QMap<QCString, ClientInfo *>::Iterator it = mClients.find(appName);
+    if(it != mClients.end())
+        delete it.data();
 }

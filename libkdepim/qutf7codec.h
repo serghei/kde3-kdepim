@@ -53,16 +53,16 @@ public:
     QUtf7Codec() : QTextCodec() {}
 
     int mibEnum() const;
-    const char* name() const;
-    const char* mimeName() const;
+    const char *name() const;
+    const char *mimeName() const;
 
-    QTextDecoder* makeDecoder() const;
-    QTextEncoder* makeEncoder() const;
+    QTextDecoder *makeDecoder() const;
+    QTextEncoder *makeEncoder() const;
 
-    bool canEncode( QChar ) const;
-    bool canEncode( const QString& ) const;
+    bool canEncode(QChar) const;
+    bool canEncode(const QString &) const;
 
-    int heuristicContentMatch( const char* chars, int len ) const;
+    int heuristicContentMatch(const char *chars, int len) const;
 };
 
 /** This is a version of @ref QUtf7Codec, which should only be used in
@@ -85,12 +85,12 @@ public:
     @author Marc Mutz <mutz@kde.org> */
 class KDE_EXPORT QStrictUtf7Codec : public QUtf7Codec {
 public:
-  QStrictUtf7Codec() : QUtf7Codec() {}
+    QStrictUtf7Codec() : QUtf7Codec() {}
 
-  const char* name() const;
-  int mibEnum() const;
+    const char *name() const;
+    int mibEnum() const;
 
-  QTextEncoder* makeEncoder() const;
+    QTextEncoder *makeEncoder() const;
 };
 
 #endif // QT_NO_TEXTCODEC

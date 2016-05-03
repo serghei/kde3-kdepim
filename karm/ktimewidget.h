@@ -10,14 +10,13 @@ class KarmLineEdit;
  * Widget used for entering minutes and seconds with validation.
  */
 
-class KArmTimeWidget : public QWidget 
-{
-  public:
-    KArmTimeWidget( QWidget* parent = 0, const char* name = 0 );
-    void setTime( long minutes );
+class KArmTimeWidget : public QWidget {
+public:
+    KArmTimeWidget(QWidget *parent = 0, const char *name = 0);
+    void setTime(long minutes);
     long time() const;
 
-  private:
+private:
     QLineEdit *_hourLE;
     KarmLineEdit *_minuteLE;
 };

@@ -38,28 +38,27 @@
 
 namespace KWSDL {
 
-class Converter
-{
-  public:
+class Converter {
+public:
     Converter();
 
-    void setWSDL( const WSDL &wsdl );
+    void setWSDL(const WSDL &wsdl);
 
     void convert();
 
     KODE::Class::List classes() const;
 
-  private:
-    void convertTypes( const Schema::Types& );
-    void convertSimpleType( const Schema::SimpleType* );
-    void convertComplexType( const Schema::ComplexType* );
+private:
+    void convertTypes(const Schema::Types &);
+    void convertSimpleType(const Schema::SimpleType *);
+    void convertComplexType(const Schema::ComplexType *);
 
-    void createSimpleTypeSerializer( const Schema::SimpleType* );
-    void createComplexTypeSerializer( const Schema::ComplexType* );
+    void createSimpleTypeSerializer(const Schema::SimpleType *);
+    void createComplexTypeSerializer(const Schema::ComplexType *);
 
-    void convertService( const Service& );
-    void convertInputMessage( const Port&, const Message&, KODE::Class& );
-    void convertOutputMessage( const Port&, const Message&, KODE::Class& );
+    void convertService(const Service &);
+    void convertInputMessage(const Port &, const Message &, KODE::Class &);
+    void convertOutputMessage(const Port &, const Message &, KODE::Class &);
     void createUtilClasses();
     void createTransportClass();
 

@@ -40,45 +40,44 @@
 #include <kurl.h>
 
 namespace GpgME {
-  class KeyGenerationResult;
+class KeyGenerationResult;
 }
 namespace KIO {
-  class Job;
+class Job;
 }
 
-class CertificateWizardImpl : public CertificateWizard
-{
+class CertificateWizardImpl : public CertificateWizard {
     Q_OBJECT
 
 public:
-    CertificateWizardImpl( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+    CertificateWizardImpl(QWidget *parent = 0, const char *name = 0, bool modal = FALSE, WFlags fl = 0);
     ~CertificateWizardImpl();
 
     bool sendToCA() const;
     QString caEMailAddress() const;
     KURL saveFileUrl() const;
 
-    typedef QPair<QString, QLineEdit*> StringLEPair;
+    typedef QPair<QString, QLineEdit *> StringLEPair;
     typedef QValueVector< StringLEPair > AttrPairList;
 
 public:
-    virtual void showPage( QWidget * page );
+    virtual void showPage(QWidget *page);
     virtual void accept();
 
 private slots:
     void slotGenerateCertificate();
-    void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
+    void slotResult(const GpgME::KeyGenerationResult &res, const QByteArray &keyData);
     void slotSetValuesFromWhoAmI();
     void slotEnablePersonalDataPageExit();
-    void slotURLSelected( const QString& );
+    void slotURLSelected(const QString &);
 
     void slotHelpClicked();
 
-    void slotUploadResult( KIO::Job* );
+    void slotUploadResult(KIO::Job *);
 
 private:
     void createPersonalDataPage();
-    void sendCertificate( const QString& email, const QByteArray& certificateData );
+    void sendCertificate(const QString &email, const QByteArray &certificateData);
 
 private:
     AttrPairList _attrPairList;

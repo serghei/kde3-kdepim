@@ -22,37 +22,78 @@
 #include "kio_proto.h"
 #include <kurl.h>
 
-class Pop3_Protocol : public KIO_Protocol
-{
+class Pop3_Protocol : public KIO_Protocol {
 public:
-	Pop3_Protocol()  {}
-	virtual ~Pop3_Protocol() {}
+    Pop3_Protocol()  {}
+    virtual ~Pop3_Protocol() {}
 
-	virtual KIO_Protocol * clone() const { return new Pop3_Protocol; }
+    virtual KIO_Protocol *clone() const
+    {
+        return new Pop3_Protocol;
+    }
 
-	virtual bool connectionBased() const { return true; }
-	
-	virtual QString protocol( bool ssl ) const { return ssl ? "pop3s" : "pop3"; }
-	virtual QString configName() const { return "pop3"; }
-	virtual bool canReadSubjects() const { return true; }
-	virtual bool canDeleteMail() const { return true; }
-	virtual bool canReadMail() const { return true; }
+    virtual bool connectionBased() const
+    {
+        return true;
+    }
 
-	virtual unsigned short defaultPort( bool ssl ) const { return ssl?995:110; }
+    virtual QString protocol(bool ssl) const
+    {
+        return ssl ? "pop3s" : "pop3";
+    }
+    virtual QString configName() const
+    {
+        return "pop3";
+    }
+    virtual bool canReadSubjects() const
+    {
+        return true;
+    }
+    virtual bool canDeleteMail() const
+    {
+        return true;
+    }
+    virtual bool canReadMail() const
+    {
+        return true;
+    }
 
-	virtual DeleteTypeEnum deleteFunction() const { return get; }
+    virtual unsigned short defaultPort(bool ssl) const
+    {
+        return ssl ? 995 : 110;
+    }
 
-	virtual QStringList authList() const { return QStringList::split( '|', "Plain|APOP", false ); }
-	
-	virtual void readSubjectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path().replace( "/download/", "/headers/" ) ); }
-	virtual void deleteMailKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path().replace( "/download/", "/remove/" ) ); }
-	virtual bool commitDelete () const { return true; }
-	virtual void deleteCommitKURL(KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "commit" ); }
+    virtual DeleteTypeEnum deleteFunction() const
+    {
+        return get;
+    }
 
-	virtual void configFillGroupBoxes( QStringList* ) const;
-        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
-        virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
-        virtual void writeEntries( QMap< QString, QString >* ) const;
+    virtual QStringList authList() const
+    {
+        return QStringList::split('|', "Plain|APOP", false);
+    }
+
+    virtual void readSubjectKURL(KURL &kurl, KIO::MetaData &) const
+    {
+        kurl.setPath(kurl.path().replace("/download/", "/headers/"));
+    }
+    virtual void deleteMailKURL(KURL &kurl, KIO::MetaData &) const
+    {
+        kurl.setPath(kurl.path().replace("/download/", "/remove/"));
+    }
+    virtual bool commitDelete() const
+    {
+        return true;
+    }
+    virtual void deleteCommitKURL(KURL &kurl, KIO::MetaData &) const
+    {
+        kurl.setPath("commit");
+    }
+
+    virtual void configFillGroupBoxes(QStringList *) const;
+    virtual void configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *) const;
+    virtual void readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const;
+    virtual void writeEntries(QMap< QString, QString > *) const;
 };
 
 #endif

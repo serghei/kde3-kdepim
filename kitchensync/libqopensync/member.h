@@ -30,13 +30,12 @@ class OSyncMember;
 
 namespace QSync {
 
-class Member
-{
-  friend class Group;
-  friend class SyncChange;
-  friend class SyncMemberUpdate;
+class Member {
+    friend class Group;
+    friend class SyncChange;
+    friend class SyncMemberUpdate;
 
-  public:
+public:
     Member();
     ~Member();
 
@@ -68,7 +67,7 @@ class Member
     /**
       Sets the name of this member.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
       Returns the name of this member.
@@ -79,7 +78,7 @@ class Member
       Sets the configuration data as byte array. The developer has to decide the
       type of the data ( e.g. xml, plain text, binary ).
      */
-    void setConfiguration( const QByteArray &configurationData );
+    void setConfiguration(const QByteArray &configurationData);
 
     /**
       Gets the configuration data as byte array. The developer has to decide the
@@ -91,8 +90,8 @@ class Member
 
       @returns The result of this operation.
      */
-    Result configuration( QByteArray &configurationData,
-      bool useDefault = true );
+    Result configuration(QByteArray &configurationData,
+                         bool useDefault = true);
 
     /**
       Saves the changes to the configuration to hard disc.
@@ -102,24 +101,24 @@ class Member
     /**
       Make this member an instance of the given plugin.
     */
-    Result instance( const Plugin & );
+    Result instance(const Plugin &);
 
-    bool operator==( const Member& ) const;
+    bool operator==(const Member &) const;
 
     /**
       This method can be used to query the plugin for scanning devices.
       The @param query is a plugin specific xml document as well as
       the return value.
      */
-    QString scanDevices( const QString &query );
+    QString scanDevices(const QString &query);
 
     /**
       This method can be used to test whether the plugin can connect
       to the device with the given configuration.
      */
-    bool testConnection( const QString &configuration );
+    bool testConnection(const QString &configuration);
 
-  private:
+private:
     OSyncMember *mMember;
 };
 

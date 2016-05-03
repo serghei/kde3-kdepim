@@ -1,7 +1,7 @@
 /*
     This file is part of libkdepim.
     Copyright (c) 2004 Daniel Molkentin <molkentin@kde.org>
-    based on code by Cornelius Schumacher <schumacher@kde.org> 
+    based on code by Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,60 +26,61 @@
 
 using namespace KPIM;
 
-ClickLineEdit::ClickLineEdit(QWidget *parent, const QString &msg, const char* name) :
-  KLineEdit(parent, name) 
+ClickLineEdit::ClickLineEdit(QWidget *parent, const QString &msg, const char *name) :
+    KLineEdit(parent, name)
 {
-  mDrawClickMsg = true;
-  setClickMessage( msg ); 
+    mDrawClickMsg = true;
+    setClickMessage(msg);
 }
 
 ClickLineEdit::~ClickLineEdit() {}
 
 
-void ClickLineEdit::setClickMessage( const QString &msg )
+void ClickLineEdit::setClickMessage(const QString &msg)
 {
-  mClickMessage = msg;
-  repaint();
-}
-
-void ClickLineEdit::setText( const QString &txt )
-{
-  mDrawClickMsg = txt.isEmpty();
-  repaint();
-  KLineEdit::setText( txt );
-}
-
-void ClickLineEdit::drawContents( QPainter *p )
-{
-  KLineEdit::drawContents( p );
-
-  if ( mDrawClickMsg == true && !hasFocus() ) {
-    QPen tmp = p->pen();
-    p->setPen( palette().color( QPalette::Disabled, QColorGroup::Text ) );
-    QRect cr = contentsRect();
-    p->drawText( cr, AlignAuto|AlignVCenter, mClickMessage );
-    p->setPen( tmp );
-  }
-}
-
-void ClickLineEdit::focusInEvent( QFocusEvent *ev )
-{
-  if ( mDrawClickMsg == true ) 
-  { 
-    mDrawClickMsg = false;
+    mClickMessage = msg;
     repaint();
-  }
-  QLineEdit::focusInEvent( ev );
 }
 
-void ClickLineEdit::focusOutEvent( QFocusEvent *ev )
+void ClickLineEdit::setText(const QString &txt)
 {
-  if ( text().isEmpty() )
-  {
-    mDrawClickMsg = true;
+    mDrawClickMsg = txt.isEmpty();
     repaint();
-  }
-  QLineEdit::focusOutEvent( ev );
+    KLineEdit::setText(txt);
+}
+
+void ClickLineEdit::drawContents(QPainter *p)
+{
+    KLineEdit::drawContents(p);
+
+    if(mDrawClickMsg == true && !hasFocus())
+    {
+        QPen tmp = p->pen();
+        p->setPen(palette().color(QPalette::Disabled, QColorGroup::Text));
+        QRect cr = contentsRect();
+        p->drawText(cr, AlignAuto | AlignVCenter, mClickMessage);
+        p->setPen(tmp);
+    }
+}
+
+void ClickLineEdit::focusInEvent(QFocusEvent *ev)
+{
+    if(mDrawClickMsg == true)
+    {
+        mDrawClickMsg = false;
+        repaint();
+    }
+    QLineEdit::focusInEvent(ev);
+}
+
+void ClickLineEdit::focusOutEvent(QFocusEvent *ev)
+{
+    if(text().isEmpty())
+    {
+        mDrawClickMsg = true;
+        repaint();
+    }
+    QLineEdit::focusOutEvent(ev);
 }
 
 #include "clicklineedit.moc"

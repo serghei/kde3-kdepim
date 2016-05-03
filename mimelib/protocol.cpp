@@ -63,7 +63,7 @@
 extern int h_errno;
 #endif
 static int translate_h_errno(int herrno);
-static const char* get_error_text(int aErrorCode);
+static const char *get_error_text(int aErrorCode);
 
 
 DwProtocolClient::DwProtocolClient()
@@ -84,47 +84,53 @@ DwProtocolClient::DwProtocolClient()
 
 DwProtocolClient::~DwProtocolClient()
 {
-    if (mIsOpen) {
+    if(mIsOpen)
+    {
         Close();
     }
-    if (mServerName) {
+    if(mServerName)
+    {
         delete [] mServerName;
         mServerName = 0;
     }
 }
 
 
-int DwProtocolClient::Open(const char* aServer, DwUint16 aPort)
+int DwProtocolClient::Open(const char *aServer, DwUint16 aPort)
 {
     mFailureCode = kFailNoFailure;
     mFailureStr  = "";
     mErrorCode   = kErrNoError;
     mErrorStr    = get_error_text(mErrorCode);
 
-    if (mIsOpen) {
+    if(mIsOpen)
+    {
         // error!
         mErrorCode = kErrBadUsage;
         mErrorStr = get_error_text(mErrorCode);
         return -1;
     }
-    if (aServer == 0 || aServer[0] == 0) {
+    if(aServer == 0 || aServer[0] == 0)
+    {
         // error!
         mErrorCode = kErrBadParameter;
         mErrorStr = get_error_text(mErrorCode);
         return -1;
     }
-    if (mServerName) {
+    if(mServerName)
+    {
         delete [] mServerName;
         mServerName = 0;
     }
-    mServerName = new char[strlen(aServer)+1];
+    mServerName = new char[strlen(aServer) + 1];
     strcpy(mServerName, aServer);
     mPort = aPort;
 
     // Open the socket
 
     mSocket = socket(PF_INET, SOCK_STREAM, 0);
-    if (mSocket == -1) {
+    if(mSocket == -1)
+    {
         // error!
         int err = errno;
         HandleError(err, ksocket);
@@ -140,17 +146,20 @@ int DwProtocolClient::Open(const char* aServer, DwUint16 aPort)
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(mPort);
     serverAddr.sin_addr.s_addr = inet_addr(mServerName);
-    if (serverAddr.sin_addr.s_addr != INADDR_NONE) {
+    if(serverAddr.sin_addr.s_addr != INADDR_NONE)
+    {
         DBG_PROTO_STMT(cout << "Trying connection to " << mServerName << endl;)
-        err = connect(mSocket, (struct sockaddr*)&serverAddr,
-            sizeof(struct sockaddr_in));
+        err = connect(mSocket, (struct sockaddr *)&serverAddr,
+                      sizeof(struct sockaddr_in));
     }
 
     // Otherwise, do a host name lookup.
 
-    else {
-        struct hostent* hostentp = gethostbyname(mServerName);
-        if (hostentp == NULL) {
+    else
+    {
+        struct hostent *hostentp = gethostbyname(mServerName);
+        if(hostentp == NULL)
+        {
             // error!
             int err = h_errno;
             close(mSocket);
@@ -162,22 +171,25 @@ int DwProtocolClient::Open(const char* aServer, DwUint16 aPort)
 
         // Connect to the server.  Try each IP number until one succeeds.
 
-        char** addr_list = hostentp->h_addr_list;
-        while (*addr_list) {
-            struct in_addr* in_addrp = (struct in_addr*)*addr_list;
+        char **addr_list = hostentp->h_addr_list;
+        while(*addr_list)
+        {
+            struct in_addr *in_addrp = (struct in_addr *)*addr_list;
             memcpy(&serverAddr.sin_addr.s_addr, in_addrp, sizeof(struct in_addr));
             DBG_PROTO_STMT(cout << "Trying connection to " << mServerName;)
             DBG_PROTO_STMT(cout << " (" << inet_ntoa(*in_addrp) << ')' << endl;)
-            err = connect(mSocket, (struct sockaddr*)&serverAddr,
-                sizeof(struct sockaddr_in));
-            if (err != -1) {
+            err = connect(mSocket, (struct sockaddr *)&serverAddr,
+                          sizeof(struct sockaddr_in));
+            if(err != -1)
+            {
                 break;
             }
             ++addr_list;
         }
     }
 
-    if (err == -1) {
+    if(err == -1)
+    {
         // error!
         mErrorCode = errno;
         close(mSocket);
@@ -204,14 +216,16 @@ int DwProtocolClient::Close()
     mErrorCode   = kErrNoError;
     mErrorStr    = get_error_text(mErrorCode);
 
-    if (! mIsOpen) {
+    if(! mIsOpen)
+    {
         // error!
         mErrorCode = kErrBadUsage;
         mErrorStr = get_error_text(mErrorCode);
         return -1;
     }
     int err = close(mSocket);
-    if (err < 0) {
+    if(err < 0)
+    {
         // error!
         int err = errno;
         HandleError(err, kclose);
@@ -241,7 +255,7 @@ int DwProtocolClient::LastFailure() const
 }
 
 
-const char* DwProtocolClient::LastFailureStr() const
+const char *DwProtocolClient::LastFailureStr() const
 {
     return mFailureStr;
 }
@@ -253,20 +267,21 @@ int DwProtocolClient::LastError() const
 }
 
 
-const char* DwProtocolClient::LastErrorStr() const
+const char *DwProtocolClient::LastErrorStr() const
 {
     return mErrorStr;
 }
 
 
-int DwProtocolClient::PSend(const char* aBuf, int aBufLen)
+int DwProtocolClient::PSend(const char *aBuf, int aBufLen)
 {
     mFailureCode = kFailNoFailure;
     mFailureStr  = "";
     mErrorCode   = kErrNoError;
     mErrorStr    = get_error_text(mErrorCode);
 
-    if (! mIsOpen) {
+    if(! mIsOpen)
+    {
         // error!
         mErrorCode = kErrBadUsage;
         mErrorStr = get_error_text(mErrorCode);
@@ -275,15 +290,18 @@ int DwProtocolClient::PSend(const char* aBuf, int aBufLen)
     int ret;
     int numToSend = aBufLen;
     int numSent = 0;
-    while (numToSend > 0) {
+    while(numToSend > 0)
+    {
         ret = send(mSocket, &aBuf[numSent], numToSend, 0);
-        if (ret == -1) {
+        if(ret == -1)
+        {
             // error!
             int err = errno;
             HandleError(err, ksend);
             break;
         }
-        else {
+        else
+        {
             numSent += ret;
             numToSend -= ret;
         }
@@ -292,14 +310,15 @@ int DwProtocolClient::PSend(const char* aBuf, int aBufLen)
 }
 
 
-int DwProtocolClient::PReceive(char* aBuf, int aBufSize)
+int DwProtocolClient::PReceive(char *aBuf, int aBufSize)
 {
     mFailureCode = kFailNoFailure;
     mFailureStr  = "";
     mErrorCode   = kErrNoError;
     mErrorStr    = get_error_text(mErrorCode);
 
-    if (! mIsOpen) {
+    if(! mIsOpen)
+    {
         // error!
         mErrorCode = kErrBadUsage;
         mErrorStr = get_error_text(mErrorCode);
@@ -314,12 +333,13 @@ int DwProtocolClient::PReceive(char* aBuf, int aBufSize)
     struct timeval timeout;
     timeout.tv_sec = mReceiveTimeout;
     timeout.tv_usec = 0;
-    int numFds = select(mSocket+1, &readfds, 0, 0, &timeout);
+    int numFds = select(mSocket + 1, &readfds, 0, 0, &timeout);
     int numReceived = 0;
 
     // If an error occurred, deal with it
 
-    if (numFds == -1) {
+    if(numFds == -1)
+    {
         int err = errno;
         HandleError(err, kselect);
         numReceived = 0;
@@ -327,22 +347,26 @@ int DwProtocolClient::PReceive(char* aBuf, int aBufSize)
 
     // Read the input, if available
 
-    else if (numFds == 1) {
+    else if(numFds == 1)
+    {
         int ret = recv(mSocket, aBuf, aBufSize, 0);
-        if (ret == -1) {
+        if(ret == -1)
+        {
             // error!
             int err = errno;
             HandleError(err, krecv);
             numReceived = 0;
         }
-        else /* if (ret != -1) */ {
+        else /* if (ret != -1) */
+        {
             numReceived = ret;
         }
     }
 
     // Otherwise, there was a timeout
 
-    else if (numFds == 0) {
+    else if(numFds == 0)
+    {
         DBG_PROTO_STMT(cout << "Receive timed out" << endl;)
         int err = ETIMEDOUT;
         HandleError(err, kselect);
@@ -357,110 +381,118 @@ void DwProtocolClient::HandleError(int aErrorCode, int aSystemCall)
 {
     mErrorCode = aErrorCode;
     mErrorStr = get_error_text(mErrorCode);
-    switch (aSystemCall) {
-    case ksocket:
-        switch (mErrorCode) {
-        case EMFILE:
-        case ENFILE:
-        case ENOBUFS:
-            mFailureCode = kFailNoResources;
-            mFailureStr = "Cannot get required system resources";
+    switch(aSystemCall)
+    {
+        case ksocket:
+            switch(mErrorCode)
+            {
+                case EMFILE:
+                case ENFILE:
+                case ENOBUFS:
+                    mFailureCode = kFailNoResources;
+                    mFailureStr = "Cannot get required system resources";
+                    break;
+                case EPROTONOSUPPORT:
+                case EACCES:
+                    break;
+            }
             break;
-        case EPROTONOSUPPORT:
-        case EACCES:
+        case kgethostbyname:
+            switch(mErrorCode)
+            {
+                case kErrHostNotFound:
+                case kErrTryAgain:
+                case kErrNoRecovery:
+                case kErrNoData:
+                    mFailureCode = kFailHostNotFound;
+                    mFailureStr = "The server was not found";
+                    break;
+                default:
+                    break;
+            }
             break;
-        }
-        break;
-    case kgethostbyname:
-        switch (mErrorCode) {
-        case kErrHostNotFound:
-        case kErrTryAgain:
-        case kErrNoRecovery:
-        case kErrNoData:
-            mFailureCode = kFailHostNotFound;
-            mFailureStr = "The server was not found";
+        case ksetsockopt:
+            break;
+        case kconnect:
+            switch(aErrorCode)
+            {
+                case ETIMEDOUT:
+                    mFailureCode = kFailTimedOut;
+                    mFailureStr = "The connection attempt to the server timed out";
+                    break;
+                case ECONNREFUSED:
+                    mFailureCode = kFailConnRefused;
+                    mFailureStr = "The connection was refused by the server";
+                    break;
+                case ENETUNREACH:
+                    mFailureCode = kFailNetUnreachable;
+                    mFailureStr = "The network is unreachable";
+                    break;
+                case EBADF:
+                case ENOTSOCK:
+                case EADDRNOTAVAIL:
+                case EAFNOSUPPORT:
+                case EISCONN:
+                case EADDRINUSE:
+                case EFAULT:
+                case EINPROGRESS:
+                case EALREADY:
+                    break;
+            }
+            break;
+        case ksend:
+            switch(aErrorCode)
+            {
+                case ENOBUFS:
+                    mFailureCode = kFailNoResources;
+                    mFailureStr = "Cannot get required system resources";
+                    break;
+                case EBADF:
+                case ENOTSOCK:
+                case EFAULT:
+                case EMSGSIZE:
+                case EWOULDBLOCK:
+                case ECONNREFUSED:
+                case EISCONN:
+                case EACCES:
+                    break;
+            }
+            break;
+        case krecv:
+            switch(aErrorCode)
+            {
+                case EBADF:
+                case ENOTSOCK:
+                case EWOULDBLOCK:
+                case EINTR:
+                case EFAULT:
+                    break;
+            }
+            break;
+        case kclose:
+            switch(aErrorCode)
+            {
+                case EBADF:
+                case EINTR:
+                case ETIMEDOUT:
+                    break;
+            }
+            break;
+        case kselect:
+            switch(aErrorCode)
+            {
+                case ETIMEDOUT:
+                    mFailureCode = kFailTimedOut;
+                    mFailureStr = "Timed out while waiting for the server";
+                    break;
+                case EBADF:
+                case EINTR:
+                case EINVAL:
+                    break;
+            }
             break;
         default:
             break;
-        }
-        break;
-    case ksetsockopt:
-        break;
-    case kconnect:
-        switch (aErrorCode) {
-        case ETIMEDOUT:
-            mFailureCode = kFailTimedOut;
-            mFailureStr = "The connection attempt to the server timed out";
-            break;
-        case ECONNREFUSED:
-            mFailureCode = kFailConnRefused;
-            mFailureStr = "The connection was refused by the server";
-            break;
-        case ENETUNREACH:
-            mFailureCode = kFailNetUnreachable;
-            mFailureStr = "The network is unreachable";
-            break;
-        case EBADF:
-        case ENOTSOCK:
-        case EADDRNOTAVAIL:
-        case EAFNOSUPPORT:
-        case EISCONN:
-        case EADDRINUSE:
-        case EFAULT:
-        case EINPROGRESS:
-        case EALREADY:
-            break;
-        }
-        break;
-    case ksend:
-        switch(aErrorCode) {
-        case ENOBUFS:
-            mFailureCode = kFailNoResources;
-            mFailureStr = "Cannot get required system resources";
-            break;
-        case EBADF:
-        case ENOTSOCK:
-        case EFAULT:
-        case EMSGSIZE:
-        case EWOULDBLOCK:
-        case ECONNREFUSED:
-        case EISCONN:
-        case EACCES:
-            break;
-        }
-        break;
-    case krecv:
-        switch(aErrorCode) {
-        case EBADF:
-        case ENOTSOCK:
-        case EWOULDBLOCK:
-        case EINTR:
-        case EFAULT:
-            break;
-        }
-        break;
-    case kclose:
-        switch (aErrorCode) {
-        case EBADF:
-        case EINTR:
-        case ETIMEDOUT:
-            break;
-        }
-        break;
-    case kselect:
-        switch (aErrorCode) {
-        case ETIMEDOUT:
-            mFailureCode = kFailTimedOut;
-            mFailureStr = "Timed out while waiting for the server";
-            break;
-        case EBADF:
-        case EINTR:
-        case EINVAL:
-            break;
-        }
-        break;
-    default:
-        break;
     }
 }
 
@@ -468,64 +500,66 @@ void DwProtocolClient::HandleError(int aErrorCode, int aSystemCall)
 static int translate_h_errno(int herrno)
 {
     int err = 0;
-    switch (herrno) {
-    case HOST_NOT_FOUND:
-        err = DwProtocolClient::kErrHostNotFound;
-        break;
-    case TRY_AGAIN:
-        err = DwProtocolClient::kErrTryAgain;
-        break;
-    case NO_RECOVERY:
-        err = DwProtocolClient::kErrNoRecovery;
-        break;
-    case NO_DATA:
-        err = DwProtocolClient::kErrNoData;
-        break;
-    default:
-        err = DwProtocolClient::kErrUnknownError;
-        break;
+    switch(herrno)
+    {
+        case HOST_NOT_FOUND:
+            err = DwProtocolClient::kErrHostNotFound;
+            break;
+        case TRY_AGAIN:
+            err = DwProtocolClient::kErrTryAgain;
+            break;
+        case NO_RECOVERY:
+            err = DwProtocolClient::kErrNoRecovery;
+            break;
+        case NO_DATA:
+            err = DwProtocolClient::kErrNoData;
+            break;
+        default:
+            err = DwProtocolClient::kErrUnknownError;
+            break;
     }
     return err;
 }
 
 
-static const char* get_error_text(int aErrorCode)
+static const char *get_error_text(int aErrorCode)
 {
-    const char* msg = "";
-    switch (aErrorCode) {
-    case DwProtocolClient::kErrNoError:
-        msg = "No error";
-        break;
-    case DwProtocolClient::kErrUnknownError:
-        msg = "Unknown error";
-        break;
-    case DwProtocolClient::kErrBadParameter:
-        msg = "(MIME++) bad parameter passed to function";
-        break;
-    case DwProtocolClient::kErrBadUsage:
-        msg = "(MIME++) bad library usage";
-        break;
-    case DwProtocolClient::kErrNoWinsock:
-        msg = "(MIME++) incompatible Winsock version";
-        break;
-    case DwProtocolClient::kErrHostNotFound:
-        msg = "Host not found";
-        break;
-    case DwProtocolClient::kErrTryAgain:
-        msg = "Nonauthoritative host not found";
-        break;
-    case DwProtocolClient::kErrNoRecovery:
-        msg = "Nonrecoverable errors: FORMERR, REFUSED, NOTIMP";
-        break;
-    case DwProtocolClient::kErrNoData:
-        msg = "Valid name, no data record of requested type";
-        break;
-    case DwProtocolClient::kErrNoAddress:
-        msg = "No address, look for MX record";
-        break;
-	default:
-        msg = strerror(aErrorCode);
-        break;
+    const char *msg = "";
+    switch(aErrorCode)
+    {
+        case DwProtocolClient::kErrNoError:
+            msg = "No error";
+            break;
+        case DwProtocolClient::kErrUnknownError:
+            msg = "Unknown error";
+            break;
+        case DwProtocolClient::kErrBadParameter:
+            msg = "(MIME++) bad parameter passed to function";
+            break;
+        case DwProtocolClient::kErrBadUsage:
+            msg = "(MIME++) bad library usage";
+            break;
+        case DwProtocolClient::kErrNoWinsock:
+            msg = "(MIME++) incompatible Winsock version";
+            break;
+        case DwProtocolClient::kErrHostNotFound:
+            msg = "Host not found";
+            break;
+        case DwProtocolClient::kErrTryAgain:
+            msg = "Nonauthoritative host not found";
+            break;
+        case DwProtocolClient::kErrNoRecovery:
+            msg = "Nonrecoverable errors: FORMERR, REFUSED, NOTIMP";
+            break;
+        case DwProtocolClient::kErrNoData:
+            msg = "Valid name, no data record of requested type";
+            break;
+        case DwProtocolClient::kErrNoAddress:
+            msg = "No address, look for MX record";
+            break;
+        default:
+            msg = strerror(aErrorCode);
+            break;
     }
     return msg;
 }

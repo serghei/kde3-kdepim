@@ -32,11 +32,11 @@
 namespace Akregator {
 namespace Backend {
 
-Storage* StorageFactoryDummyImpl::createStorage(const QStringList& params) const
+Storage *StorageFactoryDummyImpl::createStorage(const QStringList &params) const
 {
- 	Storage* storage = new StorageDummyImpl;
-	storage->initialize(params);
-	return storage;
+    Storage *storage = new StorageDummyImpl;
+    storage->initialize(params);
+    return storage;
 }
 
 QString StorageFactoryDummyImpl::key() const
@@ -46,7 +46,7 @@ QString StorageFactoryDummyImpl::key() const
 
 QString StorageFactoryDummyImpl::name() const
 {
-   return i18n("No Archive");
+    return i18n("No Archive");
 }
 
 void StorageFactoryDummyImpl::configure()

@@ -26,16 +26,15 @@ using namespace KCal;
 
 class QComboBox;
 
-class StatusDialog : public KDialog
-{
+class StatusDialog : public KDialog {
     Q_OBJECT
-  public:
-    StatusDialog(QWidget* parent=0,const char* name=0);
+public:
+    StatusDialog(QWidget *parent = 0, const char *name = 0);
     ~StatusDialog();
 
     Attendee::PartStat status();
 
-  private:
+private:
     QComboBox *mStatus;
 };
 

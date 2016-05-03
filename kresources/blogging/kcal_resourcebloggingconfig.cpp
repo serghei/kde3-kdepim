@@ -25,17 +25,20 @@
 
 using namespace KCal;
 
-ResourceBloggingConfig::ResourceBloggingConfig( QWidget *parent, const char *name ) : ResourceGroupwareBaseConfig( parent, name )
+ResourceBloggingConfig::ResourceBloggingConfig(QWidget *parent, const char *name) : ResourceGroupwareBaseConfig(parent, name)
 {
 }
 
-void ResourceBloggingConfig::saveSettings( KRES::Resource *resource )
+void ResourceBloggingConfig::saveSettings(KRES::Resource *resource)
 {
-  if ( resource && !resource->readOnly() ) {
-    KMessageBox::information( this, i18n("Currently, the blogging resource is only read-only. You will not be able to add journals to this resource or upload any changes to the server."), i18n("Read-Only"), "AutoSetReadOnly");
-    resource->setReadOnly( true );
-  }
-  ResourceGroupwareBaseConfig::saveSettings( resource );
+    if(resource && !resource->readOnly())
+    {
+        KMessageBox::information(this,
+                                 i18n("Currently, the blogging resource is only read-only. You will not be able to add journals to this resource or upload any changes to the server."),
+                                 i18n("Read-Only"), "AutoSetReadOnly");
+        resource->setReadOnly(true);
+    }
+    ResourceGroupwareBaseConfig::saveSettings(resource);
 }
 
 #include "kcal_resourcebloggingconfig.moc"

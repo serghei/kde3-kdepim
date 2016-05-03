@@ -27,20 +27,19 @@ class QString;
 class KNoteConfig;
 
 
-class KDE_EXPORT KNoteConfigDlg : public KConfigDialog
-{
+class KDE_EXPORT KNoteConfigDlg : public KConfigDialog {
     Q_OBJECT
 public:
-    KNoteConfigDlg( KNoteConfig *config, const QString &title,
-                    QWidget *parent=0, const char *name=0 );
+    KNoteConfigDlg(KNoteConfig *config, const QString &title,
+                   QWidget *parent = 0, const char *name = 0);
     ~KNoteConfigDlg();
 
 public slots:
     void slotUpdateCaption();
 
 protected:
-    QWidget *makeDisplayPage( bool );
-    QWidget *makeEditorPage( bool );
+    QWidget *makeDisplayPage(bool);
+    QWidget *makeEditorPage(bool);
 
     QWidget *makeDefaultsPage();
     QWidget *makeActionsPage();

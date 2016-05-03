@@ -41,9 +41,9 @@
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendarDelete::KonsoleKalendarDelete( KonsoleKalendarVariables *vars )
+KonsoleKalendarDelete::KonsoleKalendarDelete(KonsoleKalendarVariables *vars)
 {
-  m_variables = vars;
+    m_variables = vars;
 }
 
 KonsoleKalendarDelete::~KonsoleKalendarDelete()
@@ -52,67 +52,72 @@ KonsoleKalendarDelete::~KonsoleKalendarDelete()
 
 bool KonsoleKalendarDelete::deleteEvent()
 {
-  bool status = false;
+    bool status = false;
 
-  kdDebug() << "konsolekalendardelete.cpp::deleteEvent()" << endl;
+    kdDebug() << "konsolekalendardelete.cpp::deleteEvent()" << endl;
 
-  /*
-   * Retrieve event on the basis of the unique string ID
-   */
-  Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
-  if ( event ) {
-    if ( m_variables->isDryRun() ) {
-      cout << i18n( "Delete Event <Dry Run>:" ).local8Bit()
-           << endl;
-      printSpecs( event );
-    } else {
-      kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : "
-                << m_variables->getUID().local8Bit()
-                << endl;
+    /*
+     * Retrieve event on the basis of the unique string ID
+     */
+    Event *event = m_variables->getCalendar()->event(m_variables->getUID());
+    if(event)
+    {
+        if(m_variables->isDryRun())
+        {
+            cout << i18n("Delete Event <Dry Run>:").local8Bit()
+                 << endl;
+            printSpecs(event);
+        }
+        else
+        {
+            kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : "
+                      << m_variables->getUID().local8Bit()
+                      << endl;
 
-      if ( m_variables->isVerbose() ) {
-	cout << i18n( "Delete Event <Verbose>:" ).local8Bit()
-             << endl;
-	printSpecs( event );
-      }
+            if(m_variables->isVerbose())
+            {
+                cout << i18n("Delete Event <Verbose>:").local8Bit()
+                     << endl;
+                printSpecs(event);
+            }
 
-      m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n( "Success: \"%1\" deleted" )
-        .arg( event->summary() ).local8Bit()
-           << endl;
+            m_variables->getCalendar()->deleteEvent(event);
+            cout << i18n("Success: \"%1\" deleted")
+                 .arg(event->summary()).local8Bit()
+                 << endl;
 
-      m_variables->getCalendar()->save();
-      status = true;
+            m_variables->getCalendar()->save();
+            status = true;
+        }
     }
-  }
 
-  kdDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done " << endl;
-  return status;
+    kdDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done " << endl;
+    return status;
 }
 
-void KonsoleKalendarDelete::printSpecs( Event *event )
+void KonsoleKalendarDelete::printSpecs(Event *event)
 {
-  cout << i18n( "  UID:   %1" ).
-    arg( m_variables->getUID() ).local8Bit()
-       << endl;
+    cout << i18n("  UID:   %1").
+         arg(m_variables->getUID()).local8Bit()
+         << endl;
 
-  cout << i18n( "  What:  %1" ).
-    arg( event->summary() ).local8Bit()
-       << endl;
+    cout << i18n("  What:  %1").
+         arg(event->summary()).local8Bit()
+         << endl;
 
-  cout << i18n( "  Begin: %1" ).
-    arg( event->dtStart().toString( Qt::TextDate ) ).local8Bit()
-       << endl;
+    cout << i18n("  Begin: %1").
+         arg(event->dtStart().toString(Qt::TextDate)).local8Bit()
+         << endl;
 
-  cout << i18n( "  End:   %1" ).
-    arg( event->dtEnd().toString( Qt::TextDate ) ).local8Bit()
-       << endl;
+    cout << i18n("  End:   %1").
+         arg(event->dtEnd().toString(Qt::TextDate)).local8Bit()
+         << endl;
 
-  cout << i18n( "  Desc:  %1" ).
-    arg( event->description() ).local8Bit()
-       << endl;
+    cout << i18n("  Desc:  %1").
+         arg(event->description()).local8Bit()
+         << endl;
 
-  cout << i18n( "  Location:  %1" ).
-    arg( event->location() ).local8Bit()
-       << endl;
+    cout << i18n("  Location:  %1").
+         arg(event->location()).local8Bit()
+         << endl;
 }

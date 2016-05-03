@@ -33,27 +33,27 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
-  : KMainWindow( 0 )
+    : KMainWindow(0)
 {
-  KJanusWidget *wdg = new KJanusWidget( this, "", KJanusWidget::IconList );
+    KJanusWidget *wdg = new KJanusWidget(this, "", KJanusWidget::IconList);
 
-  QPixmap icon = KGlobal::iconLoader()->loadIcon( "folder_yellow", KIcon::Desktop );
-  QVBox *page = wdg->addVBoxPage( i18n( "Other Accounts" ), i18n( "Register other accounts" ), icon );
-  new OtherUserPage( page );
+    QPixmap icon = KGlobal::iconLoader()->loadIcon("folder_yellow", KIcon::Desktop);
+    QVBox *page = wdg->addVBoxPage(i18n("Other Accounts"), i18n("Register other accounts"), icon);
+    new OtherUserPage(page);
 
-  icon = KGlobal::iconLoader()->loadIcon( "edu_languages", KIcon::Desktop );
-  page = wdg->addVBoxPage( i18n( "Delegates" ), i18n( "Setup delegates for my account" ), icon );
-  new DelegatePage( page );
+    icon = KGlobal::iconLoader()->loadIcon("edu_languages", KIcon::Desktop);
+    page = wdg->addVBoxPage(i18n("Delegates"), i18n("Setup delegates for my account"), icon);
+    new DelegatePage(page);
 
-  icon = KGlobal::iconLoader()->loadIcon( "kontact_summary_green", KIcon::Desktop );
-  page = wdg->addVBoxPage( i18n( "Out of Office..." ), i18n( "Setup Out of Office Message" ), icon );
-  new OutOfOfficePage( page );
+    icon = KGlobal::iconLoader()->loadIcon("kontact_summary_green", KIcon::Desktop);
+    page = wdg->addVBoxPage(i18n("Out of Office..."), i18n("Setup Out of Office Message"), icon);
+    new OutOfOfficePage(page);
 
-  icon = KGlobal::iconLoader()->loadIcon( "password", KIcon::Desktop );
-  page = wdg->addVBoxPage( i18n( "Password" ), i18n( "Change the password" ), icon );
-  new PasswordPage( page );
+    icon = KGlobal::iconLoader()->loadIcon("password", KIcon::Desktop);
+    page = wdg->addVBoxPage(i18n("Password"), i18n("Change the password"), icon);
+    new PasswordPage(page);
 
-  setCentralWidget( wdg );
+    setCentralWidget(wdg);
 
-  resize( 540, 450 );
+    resize(540, 450);
 }

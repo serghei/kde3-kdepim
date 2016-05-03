@@ -24,23 +24,22 @@
 #include <qobject.h>
 #include <qstringlist.h>
 
-class OtherUserManager : public QObject
-{
-  Q_OBJECT
+class OtherUserManager : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     OtherUserManager();
     ~OtherUserManager();
 
-    void addOtherUser( const QString &email );
+    void addOtherUser(const QString &email);
     void clear();
 
     QStringList otherUsers() const;
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     QStringList mOtherUsers;
 };
 

@@ -32,76 +32,78 @@
 #include "csvexportdialog.h"
 #include "reportcriteria.h"
 
-CSVExportDialog::CSVExportDialog( ReportCriteria::REPORTTYPE rt,
-                                  QWidget *parent, 
-                                  const char *name
-                                  ) 
-  : CSVExportDialogBase( parent, name )
+CSVExportDialog::CSVExportDialog(ReportCriteria::REPORTTYPE rt,
+                                 QWidget *parent,
+                                 const char *name
+                                )
+    : CSVExportDialogBase(parent, name)
 {
-  switch ( rt ) {
-    case ReportCriteria::CSVTotalsExport:
-      grpDateRange->setEnabled( false );
-      grpDateRange->hide();
-      rc.reportType = rt;
-      break;
-    case ReportCriteria::CSVHistoryExport:
-      grpDateRange->setEnabled( true );
-      rc.reportType = rt;
-      break;
-    default:
-      break;
+    switch(rt)
+    {
+        case ReportCriteria::CSVTotalsExport:
+            grpDateRange->setEnabled(false);
+            grpDateRange->hide();
+            rc.reportType = rt;
+            break;
+        case ReportCriteria::CSVHistoryExport:
+            grpDateRange->setEnabled(true);
+            rc.reportType = rt;
+            break;
+        default:
+            break;
 
-  }
+    }
 
-  // If decimal symbol is a comma, then default field seperator to semi-colon.
-  // In France and Germany, one-and-a-half is written as 1,5 not 1.5
-  QString d = KGlobal::locale()->decimalSymbol();
-  if ( "," == d ) CSVExportDialogBase::radioSemicolon->setChecked(true);
-  else CSVExportDialogBase::radioComma->setChecked(true);
+    // If decimal symbol is a comma, then default field seperator to semi-colon.
+    // In France and Germany, one-and-a-half is written as 1,5 not 1.5
+    QString d = KGlobal::locale()->decimalSymbol();
+    if("," == d) CSVExportDialogBase::radioSemicolon->setChecked(true);
+    else CSVExportDialogBase::radioComma->setChecked(true);
 
 }
 
 void CSVExportDialog::enableExportButton()
 {
-  btnExport->setEnabled( !urlExportTo->lineEdit()->text().isEmpty() );
+    btnExport->setEnabled(!urlExportTo->lineEdit()->text().isEmpty());
 }
 
 void CSVExportDialog::enableTasksToExportQuestion()
 {
-  return;
-  //grpTasksToExport->setEnabled( true );      
+    return;
+    //grpTasksToExport->setEnabled( true );
 }
 
 ReportCriteria CSVExportDialog::reportCriteria()
 {
-  rc.url = urlExportTo->url();
-  rc.from = dtFrom->date();
-  rc.to = dtTo->date();
+    rc.url = urlExportTo->url();
+    rc.from = dtFrom->date();
+    rc.to = dtTo->date();
 
-  // Hard code to true for now as the CSV export of totals does not support
-  // this choice currenly and I'm trying to minimize pre-3.3 hacking at the
-  // moment.
-  rc.allTasks = true;
+    // Hard code to true for now as the CSV export of totals does not support
+    // this choice currenly and I'm trying to minimize pre-3.3 hacking at the
+    // moment.
+    rc.allTasks = true;
 
-  QString t = grpTimeFormat->selected()->name(); 
-  rc.decimalMinutes = ( t == i18n( "radioDecimal" ) );
+    QString t = grpTimeFormat->selected()->name();
+    rc.decimalMinutes = (t == i18n("radioDecimal"));
 
-  QString d = grpDelimiter->selected()->name(); 
-  if      ( d == "radioComma" )     rc.delimiter = ",";
-  else if ( d == "radioTab" )       rc.delimiter = "\t";
-  else if ( d == "radioSemicolon" ) rc.delimiter = ";";
-  else if ( d == "radioSpace" )     rc.delimiter = " ";
-  else if ( d == "radioOther" )     rc.delimiter = txtOther->text();
-  else {
-    kdDebug(5970) 
-      << "*** CSVExportDialog::reportCriteria: Unexpected delimiter choice '" 
-      << d << "'--defaulting to a tab" << endl;
-    rc.delimiter = "\t";
-  }
+    QString d = grpDelimiter->selected()->name();
+    if(d == "radioComma")     rc.delimiter = ",";
+    else if(d == "radioTab")       rc.delimiter = "\t";
+    else if(d == "radioSemicolon") rc.delimiter = ";";
+    else if(d == "radioSpace")     rc.delimiter = " ";
+    else if(d == "radioOther")     rc.delimiter = txtOther->text();
+    else
+    {
+        kdDebug(5970)
+                << "*** CSVExportDialog::reportCriteria: Unexpected delimiter choice '"
+                << d << "'--defaulting to a tab" << endl;
+        rc.delimiter = "\t";
+    }
 
-  rc.quote = cboQuote->currentText();
+    rc.quote = cboQuote->currentText();
 
-  return rc;
+    return rc;
 }
 
 #include "csvexportdialog.moc"

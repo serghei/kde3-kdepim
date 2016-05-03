@@ -53,32 +53,35 @@ DwPopClient::DwPopClient()
 
 DwPopClient::~DwPopClient()
 {
-    if (mRecvBuffer) {
+    if(mRecvBuffer)
+    {
         delete [] mRecvBuffer;
         mRecvBuffer = 0;
     }
-    if (mSendBuffer) {
+    if(mSendBuffer)
+    {
         delete [] mSendBuffer;
         mSendBuffer = 0;
     }
 }
 
 
-int DwPopClient::Open(const char* aServer, DwUint16 aPort)
+int DwPopClient::Open(const char *aServer, DwUint16 aPort)
 {
     mStatusCode = 0;
     mSingleLineResponse = mMultiLineResponse = "";
     int err = DwProtocolClient::Open(aServer, aPort);
-    if (! err) {
+    if(! err)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
 }
 
 
-DwObserver* DwPopClient::SetObserver(DwObserver* aObserver)
+DwObserver *DwPopClient::SetObserver(DwObserver *aObserver)
 {
-    DwObserver* obs = mObserver;
+    DwObserver *obs = mObserver;
     mObserver = aObserver;
     return obs;
 }
@@ -90,19 +93,19 @@ int DwPopClient::StatusCode() const
 }
 
 
-const DwString& DwPopClient::SingleLineResponse() const
+const DwString &DwPopClient::SingleLineResponse() const
 {
     return mSingleLineResponse;
 }
 
 
-const DwString& DwPopClient::MultiLineResponse() const
+const DwString &DwPopClient::MultiLineResponse() const
 {
     return mMultiLineResponse;
 }
 
 
-int DwPopClient::User(const char* aName)
+int DwPopClient::User(const char *aName)
 {
     mStatusCode = 0;
     mSingleLineResponse = mMultiLineResponse = "";
@@ -111,14 +114,15 @@ int DwPopClient::User(const char* aName)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
 }
 
 
-int DwPopClient::Pass(const char* aPasswd)
+int DwPopClient::Pass(const char *aPasswd)
 {
     mStatusCode = 0;
     mSingleLineResponse = mMultiLineResponse = "";
@@ -127,7 +131,8 @@ int DwPopClient::Pass(const char* aPasswd)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -143,7 +148,8 @@ int DwPopClient::Quit()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -159,7 +165,8 @@ int DwPopClient::Stat()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -175,9 +182,11 @@ int DwPopClient::List()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
-        if (mStatusCode == '+') {
+        if(mStatusCode == '+')
+        {
             PGetMultiLineResponse();
         }
     }
@@ -194,7 +203,8 @@ int DwPopClient::List(int aMsg)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -210,9 +220,11 @@ int DwPopClient::Retr(int aMsg)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
-        if (mStatusCode == '+') {
+        if(mStatusCode == '+')
+        {
             PGetMultiLineResponse();
         }
     }
@@ -229,7 +241,8 @@ int DwPopClient::Dele(int aMsg)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -245,7 +258,8 @@ int DwPopClient::Noop()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -261,7 +275,8 @@ int DwPopClient::Rset()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -277,14 +292,15 @@ int DwPopClient::Last()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
 }
 
 
-int DwPopClient::Apop(const char* aName, const char* aDigest)
+int DwPopClient::Apop(const char *aName, const char *aDigest)
 {
     mStatusCode = 0;
     mSingleLineResponse = mMultiLineResponse = "";
@@ -293,7 +309,8 @@ int DwPopClient::Apop(const char* aName, const char* aDigest)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
     }
     return mStatusCode;
@@ -309,9 +326,11 @@ int DwPopClient::Top(int aMsg, int aNumLines)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
-        if (mStatusCode == '+') {
+        if(mStatusCode == '+')
+        {
             PGetMultiLineResponse();
         }
     }
@@ -328,9 +347,11 @@ int DwPopClient::Uidl()
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush;)
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
-        if (mStatusCode == '+') {
+        if(mStatusCode == '+')
+        {
             PGetMultiLineResponse();
         }
     }
@@ -347,9 +368,11 @@ int DwPopClient::Uidl(int aMsg)
     DBG_POP_STMT(cout << "C: " << mSendBuffer << flush);
     int bufferLen = strlen(mSendBuffer);
     int numSent = PSend(mSendBuffer, bufferLen);
-    if (numSent == bufferLen) {
+    if(numSent == bufferLen)
+    {
         PGetSingleLineResponse();
-        if (mStatusCode == '+') {
+        if(mStatusCode == '+')
+        {
             PGetMultiLineResponse();
         }
     }
@@ -361,10 +384,11 @@ void DwPopClient::PGetSingleLineResponse()
 {
     mStatusCode = 0;
     mSingleLineResponse = "";
-    char* ptr;
+    char *ptr;
     int len;
     int err = PGetLine(&ptr, &len);
-    if (! err) {
+    if(! err)
+    {
         mStatusCode = ptr[0];
         mSingleLineResponse.assign(ptr, len);
         DBG_POP_STMT(char buffer[256];)
@@ -381,14 +405,16 @@ void DwPopClient::PGetMultiLineResponse()
 
     // Get a line at a time until we get CR LF . CR LF
 
-    while (1) {
-        char* ptr;
+    while(1)
+    {
+        char *ptr;
         int len;
         int err = PGetLine(&ptr, &len);
 
         // Check for an error
 
-        if (err) {
+        if(err)
+        {
             mStatusCode = 0;
             return;
         }
@@ -396,31 +422,34 @@ void DwPopClient::PGetMultiLineResponse()
         // Check for '.' on a line by itself, which indicates end of multiline
         // response
 
-        if (len >= 3 && ptr[0] == '.' && ptr[1] == '\r' && ptr[2] == '\n') {
+        if(len >= 3 && ptr[0] == '.' && ptr[1] == '\r' && ptr[2] == '\n')
+        {
             break;
         }
 
         // Remove '.' at beginning of line
 
-        if (*ptr == '.') ++ptr;
+        if(*ptr == '.') ++ptr;
 
         // If an observer is assigned, notify it.
         // Implementation note: An observer is assumed to fetch the multiline
         // response one line at a time, therefore we assign to the string,
         // rather than append to it.
 
-        if (mObserver) {
+        if(mObserver)
+        {
             mMultiLineResponse.assign(ptr, len);
             mObserver->Notify();
         }
-        else {
+        else
+        {
             mMultiLineResponse.append(ptr, len);
         }
     }
 }
 
 
-int DwPopClient::PGetLine(char** aPtr, int* aLen)
+int DwPopClient::PGetLine(char **aPtr, int *aLen)
 {
     // Restore the saved state
 
@@ -432,13 +461,16 @@ int DwPopClient::PGetLine(char** aPtr, int* aLen)
     // determine that the connection has been closed
 
     int isEndOfLineFound = 0;
-    while (1) {
+    while(1)
+    {
 
         // Search buffer for end of line chars. Stop when we find them or when
         // we exhaust the buffer.
 
-        while (pos < mNumRecvBufferChars) {
-            if (lastChar == '\r' && mRecvBuffer[pos] == '\n') {
+        while(pos < mNumRecvBufferChars)
+        {
+            if(lastChar == '\r' && mRecvBuffer[pos] == '\n')
+            {
                 isEndOfLineFound = 1;
                 ++pos;
                 break;
@@ -446,7 +478,8 @@ int DwPopClient::PGetLine(char** aPtr, int* aLen)
             lastChar = mRecvBuffer[pos];
             ++pos;
         }
-        if (isEndOfLineFound) {
+        if(isEndOfLineFound)
+        {
             *aPtr = &mRecvBuffer[startPos];
             *aLen = pos - startPos;
             mRecvBufferPos = pos;
@@ -463,19 +496,21 @@ int DwPopClient::PGetLine(char** aPtr, int* aLen)
         // will start where this call left off.  In essence, we have
         // *forced* a line break, but without putting in CR LF characters.
 
-        if (startPos == 0 && pos == RECV_BUFFER_SIZE) {
+        if(startPos == 0 && pos == RECV_BUFFER_SIZE)
+        {
             *aPtr = mRecvBuffer;
             *aLen = RECV_BUFFER_SIZE;
             mRecvBufferPos = pos;
             return 0;
         }
         memmove(mRecvBuffer, &mRecvBuffer[startPos],
-            mNumRecvBufferChars-startPos);
+                mNumRecvBufferChars - startPos);
         mNumRecvBufferChars -= startPos;
         mRecvBufferPos = mNumRecvBufferChars;
         int bufFreeSpace = RECV_BUFFER_SIZE - mRecvBufferPos;
         int n = PReceive(&mRecvBuffer[mRecvBufferPos], bufFreeSpace);
-        if (n == 0) {
+        if(n == 0)
+        {
             // The connection has been closed or an error occurred
             return -1;
         }

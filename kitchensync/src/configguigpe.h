@@ -29,21 +29,20 @@ class QSpinBox;
 class KComboBox;
 class KLineEdit;
 
-class ConfigGuiGpe : public ConfigGui
-{
-  public:
-    ConfigGuiGpe( const QSync::Member &, QWidget *parent );
+class ConfigGuiGpe : public ConfigGui {
+public:
+    ConfigGuiGpe(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     void initGUI();
 
     KComboBox *mConnectionMode;
 
     KLineEdit *mIP;
-		QSpinBox *mPort;
+    QSpinBox *mPort;
     KLineEdit *mUser;
 };
 

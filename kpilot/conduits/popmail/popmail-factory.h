@@ -29,9 +29,8 @@
 */
 
 
-extern "C"
-{
-void *init_conduit_popmail();
+extern "C" {
+    void *init_conduit_popmail();
 }
 
 #endif

@@ -25,96 +25,133 @@
 
 #include "simplebaseinputfield.h"
 
-SimpleBaseInputField::SimpleBaseInputField( const QString &name, const Schema::SimpleType *type )
-  : SimpleInputField( name, type )
+SimpleBaseInputField::SimpleBaseInputField(const QString &name, const Schema::SimpleType *type)
+    : SimpleInputField(name, type)
 {
-  if ( type->subType() == Schema::SimpleType::TypeRestriction ) {
-    InputField *field = InputFieldFactory::self()->createBasicField( name, type->baseTypeName(), type );
-    if ( !field ) {
-      qDebug( "SimpleBaseInputField: Unable to create field of type %s", type->baseTypeName().latin1() );
-    } else {
-      appendChild( field );
+    if(type->subType() == Schema::SimpleType::TypeRestriction)
+    {
+        InputField *field = InputFieldFactory::self()->createBasicField(name, type->baseTypeName(), type);
+        if(!field)
+        {
+            qDebug("SimpleBaseInputField: Unable to create field of type %s", type->baseTypeName().latin1());
+        }
+        else
+        {
+            appendChild(field);
+        }
     }
-  } else {
-    qDebug( "SimpleBaseInputField: Unsupported subtype" );
-  }
+    else
+    {
+        qDebug("SimpleBaseInputField: Unsupported subtype");
+    }
 }
 
-void SimpleBaseInputField::setXMLData( const QDomElement &element )
+void SimpleBaseInputField::setXMLData(const QDomElement &element)
 {
-  if ( mName != element.tagName() ) {
-    qDebug( "SimpleBaseInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1() );
-    return;
-  }
-
-  if ( mType->subType() == Schema::SimpleType::TypeRestriction ) {
-    InputField *field = childField( element.tagName() );
-    if ( !field ) {
-      qDebug( "SimpleBaseInputField: Child field %s does not exists", element.tagName().latin1() );
-    } else {
-      field->setXMLData( element );
+    if(mName != element.tagName())
+    {
+        qDebug("SimpleBaseInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1());
+        return;
     }
-  } else {
-    qDebug( "SimpleBaseInputField: Unsupported subtype" );
-  }
+
+    if(mType->subType() == Schema::SimpleType::TypeRestriction)
+    {
+        InputField *field = childField(element.tagName());
+        if(!field)
+        {
+            qDebug("SimpleBaseInputField: Child field %s does not exists", element.tagName().latin1());
+        }
+        else
+        {
+            field->setXMLData(element);
+        }
+    }
+    else
+    {
+        qDebug("SimpleBaseInputField: Unsupported subtype");
+    }
 }
 
-void SimpleBaseInputField::xmlData( QDomDocument &document, QDomElement &parent )
+void SimpleBaseInputField::xmlData(QDomDocument &document, QDomElement &parent)
 {
-  if ( mType->subType() == Schema::SimpleType::TypeRestriction ) {
-    InputField *field = mFields.first();
-    if ( !field ) {
-      qDebug( "SimpleBaseInputField: No child found" );
-    } else {
-      field->xmlData( document, parent );
+    if(mType->subType() == Schema::SimpleType::TypeRestriction)
+    {
+        InputField *field = mFields.first();
+        if(!field)
+        {
+            qDebug("SimpleBaseInputField: No child found");
+        }
+        else
+        {
+            field->xmlData(document, parent);
+        }
     }
-  } else {
-    qDebug( "SimpleBaseInputField: Unsupported subtype" );
-  }
+    else
+    {
+        qDebug("SimpleBaseInputField: Unsupported subtype");
+    }
 }
 
-void SimpleBaseInputField::setData( const QString &data )
+void SimpleBaseInputField::setData(const QString &data)
 {
-  if ( mType->subType() == Schema::SimpleType::TypeRestriction ) {
-    InputField *field = mFields.first();
-    if ( !field ) {
-      qDebug( "SimpleBaseInputField: No child found" );
-    } else {
-      field->setData( data );
+    if(mType->subType() == Schema::SimpleType::TypeRestriction)
+    {
+        InputField *field = mFields.first();
+        if(!field)
+        {
+            qDebug("SimpleBaseInputField: No child found");
+        }
+        else
+        {
+            field->setData(data);
+        }
     }
-  } else {
-    qDebug( "SimpleBaseInputField: Unsupported subtype" );
-  }
+    else
+    {
+        qDebug("SimpleBaseInputField: Unsupported subtype");
+    }
 }
 
 QString SimpleBaseInputField::data() const
 {
-  if ( mType->subType() == Schema::SimpleType::TypeRestriction ) {
-    InputField *field = mFields.first();
-    if ( !field ) {
-      qDebug( "SimpleBaseInputField: No child found" );
-    } else {
-      field->data();
+    if(mType->subType() == Schema::SimpleType::TypeRestriction)
+    {
+        InputField *field = mFields.first();
+        if(!field)
+        {
+            qDebug("SimpleBaseInputField: No child found");
+        }
+        else
+        {
+            field->data();
+        }
     }
-  } else {
-    qDebug( "SimpleBaseInputField: Unsupported subtype" );
-  }
+    else
+    {
+        qDebug("SimpleBaseInputField: Unsupported subtype");
+    }
 
-  return QString();
+    return QString();
 }
 
-QWidget *SimpleBaseInputField::createWidget( QWidget *parent )
+QWidget *SimpleBaseInputField::createWidget(QWidget *parent)
 {
-  if ( mType->subType() == Schema::SimpleType::TypeRestriction ) {
-    InputField *field = mFields.first();
-    if ( !field ) {
-      qDebug( "SimpleBaseInputField: No child found" );
-      return 0;
-    } else {
-      return field->createWidget( parent );
+    if(mType->subType() == Schema::SimpleType::TypeRestriction)
+    {
+        InputField *field = mFields.first();
+        if(!field)
+        {
+            qDebug("SimpleBaseInputField: No child found");
+            return 0;
+        }
+        else
+        {
+            return field->createWidget(parent);
+        }
     }
-  } else {
-    qDebug( "SimpleBaseInputField: Unsupported subtype" );
-    return 0;
-  }
+    else
+    {
+        qDebug("SimpleBaseInputField: Unsupported subtype");
+        return 0;
+    }
 }

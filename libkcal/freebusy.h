@@ -33,43 +33,48 @@
 
 namespace KCal {
 
-  typedef QValueList<Period> PeriodList;
+typedef QValueList<Period> PeriodList;
 /**
   This class provides information about free/busy time of a calendar user.
 */
-class LIBKCAL_EXPORT FreeBusy : public IncidenceBase
-{
-  public:
+class LIBKCAL_EXPORT FreeBusy : public IncidenceBase {
+public:
     FreeBusy();
-    FreeBusy( const QDateTime &start, const QDateTime &end );
-    FreeBusy( Calendar *calendar, const QDateTime &start,
-              const QDateTime &end );
-    FreeBusy( PeriodList busyPeriods );
+    FreeBusy(const QDateTime &start, const QDateTime &end);
+    FreeBusy(Calendar *calendar, const QDateTime &start,
+             const QDateTime &end);
+    FreeBusy(PeriodList busyPeriods);
 
     ~FreeBusy();
-    
-    QCString type() const { return "FreeBusy"; }
+
+    QCString type() const
+    {
+        return "FreeBusy";
+    }
 
     virtual QDateTime dtEnd() const;
-    bool setDtEnd( const QDateTime &end );
+    bool setDtEnd(const QDateTime &end);
 
     PeriodList busyPeriods() const;
 
     /** Adds a period to the freebusy list and sorts the list.  */
-    void addPeriod( const QDateTime &start, const QDateTime &end );
-    void addPeriod( const QDateTime &start, const Duration &dur );
+    void addPeriod(const QDateTime &start, const QDateTime &end);
+    void addPeriod(const QDateTime &start, const Duration &dur);
     /** Adds a list of periods to the freebusy object and then sorts
      * that list. Use this if you are adding many items, instead of the
      * addPeriod method, to avoid sorting repeatedly.  */
-    void addPeriods( const PeriodList & );
+    void addPeriods(const PeriodList &);
     void sortList();
 
-    void merge( FreeBusy *freebusy );
-    
-  private:
-    bool accept( Visitor &v ) { return v.visit( this ); }
+    void merge(FreeBusy *freebusy);
+
+private:
+    bool accept(Visitor &v)
+    {
+        return v.visit(this);
+    }
     //This is used for creating a freebusy object for the current user
-    bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
+    bool addLocalPeriod(const QDateTime &start, const QDateTime &end);
 
     QDateTime mDtEnd;
     PeriodList mBusyPeriods;

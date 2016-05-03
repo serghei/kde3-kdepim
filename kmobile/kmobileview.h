@@ -20,8 +20,7 @@ class KMobileItem;
  * @author Helge Deller <deller@kde.org>
  * @version 0.1
  */
-class KDE_EXPORT KMobileView : public QIconView, public kmobileIface
-{
+class KDE_EXPORT KMobileView : public QIconView, public kmobileIface {
     Q_OBJECT
 public:
     KMobileView(QWidget *parent, KConfig *_config);
@@ -35,32 +34,32 @@ public:
      */
     QStringList deviceNames();
 
-    void removeDevice( QString deviceName );
-    void configDevice( QString deviceName );
+    void removeDevice(QString deviceName);
+    void configDevice(QString deviceName);
 
-    bool connectDevice( QString deviceName );
-    bool disconnectDevice( QString deviceName );
-    bool connected( QString deviceName );
+    bool connectDevice(QString deviceName);
+    bool disconnectDevice(QString deviceName);
+    bool connected(QString deviceName);
 
-    QString deviceClassName( QString deviceName );
-    QString deviceName( QString deviceName );
-    QString revision( QString deviceName );
-    int classType( QString deviceName );
+    QString deviceClassName(QString deviceName);
+    QString deviceName(QString deviceName);
+    QString revision(QString deviceName);
+    int classType(QString deviceName);
 
-    int capabilities( QString deviceName );
-    QString nameForCap( QString deviceName, int cap );
+    int capabilities(QString deviceName);
+    QString nameForCap(QString deviceName, int cap);
 
-    QString iconFileName( QString deviceName );
+    QString iconFileName(QString deviceName);
 
-    int     numAddresses( QString deviceName );
-    QString readAddress( QString deviceName, int index );
-    bool    storeAddress( QString deviceName, int index, QString vcard, bool append );
+    int     numAddresses(QString deviceName);
+    QString readAddress(QString deviceName, int index);
+    bool    storeAddress(QString deviceName, int index, QString vcard, bool append);
 
-    int numCalendarEntries( QString deviceName );
+    int numCalendarEntries(QString deviceName);
 
-    int numNotes( QString deviceName );
-    QString readNote( QString deviceName, int index );
-    bool storeNote( QString deviceName, int index, QString note );
+    int numNotes(QString deviceName);
+    QString readNote(QString deviceName, int index);
+    bool storeNote(QString deviceName, int index, QString note);
 
     /* devices kioslave support: */
     QStringList kio_devices_deviceInfo(QString deviceName);
@@ -70,16 +69,16 @@ public:
     void restoreAll();
 
 protected:
-    KMobileItem * findDevice( const QString &deviceName ) const;
+    KMobileItem *findDevice(const QString &deviceName) const;
 
 protected slots:
-    void slotDoubleClicked( QIconViewItem * item );
+    void slotDoubleClicked(QIconViewItem *item);
 
 signals:
     /**
      * Use this signal to change the content of the statusbar
      */
-    void signalChangeStatusbar(const QString& text);
+    void signalChangeStatusbar(const QString &text);
 
 private:
     KConfig *m_config;

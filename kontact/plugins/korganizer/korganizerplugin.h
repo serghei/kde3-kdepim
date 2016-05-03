@@ -32,22 +32,24 @@
 #include "plugin.h"
 #include "uniqueapphandler.h"
 
-class KOrganizerPlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KOrganizerPlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KOrganizerPlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    KOrganizerPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~KOrganizerPlugin();
 
-    virtual bool createDCOPInterface( const QString& serviceType );
+    virtual bool createDCOPInterface(const QString &serviceType);
     virtual bool isRunningStandalone();
-    int weight() const { return 400; }
+    int weight() const
+    {
+        return 400;
+    }
 
-    bool canDecodeDrag( QMimeSource * );
-    void processDropEvent( QDropEvent * );
+    bool canDecodeDrag(QMimeSource *);
+    void processDropEvent(QDropEvent *);
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parent );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parent);
 
     virtual QString tipFile() const;
     virtual QStringList invisibleToolbarActions() const;
@@ -57,17 +59,17 @@ class KOrganizerPlugin : public Kontact::Plugin
     KCalendarIface_stub *interface();
 
 
-    void loadProfile( const QString& path );
-    void saveToProfile( const QString& path ) const;
+    void loadProfile(const QString &path);
+    void saveToProfile(const QString &path) const;
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
 
-  private slots:
+private slots:
     void slotNewEvent();
     void slotSyncEvents();
 
-  private:
+private:
     KCalendarIface_stub *mIface;
     Kontact::UniqueAppWatcher *mUniqueAppWatcher;
 };

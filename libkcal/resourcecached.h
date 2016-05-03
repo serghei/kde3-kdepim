@@ -43,10 +43,9 @@ namespace KCal {
   cache the calendar data.
 */
 class KDE_EXPORT ResourceCached : public ResourceCalendar,
-                       public KCal::Calendar::Observer
-{
+    public KCal::Calendar::Observer {
     Q_OBJECT
-  public:
+public:
     /**
       Reload policy.
 
@@ -60,11 +59,11 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     */
     enum { SaveNever, SaveOnExit, SaveInterval, SaveDelayed, SaveAlways };
 
-    ResourceCached( const KConfig * );
+    ResourceCached(const KConfig *);
     virtual ~ResourceCached();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig(const KConfig *config);
+    void writeConfig(KConfig *config);
 
     /**
       Set reload policy. This controls when the cache is refreshed.
@@ -73,7 +72,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       ReloadOnStartup reload when resource is started
       ReloadInterval  reload regularly after given interval
     */
-    void setReloadPolicy( int policy );
+    void setReloadPolicy(int policy);
     /**
       Return reload policy.
 
@@ -85,7 +84,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       Set reload interval in minutes which is used when reload policy is
       ReloadInterval.
     */
-    void setReloadInterval( int minutes );
+    void setReloadInterval(int minutes);
 
     /**
       Return reload interval in minutes.
@@ -101,7 +100,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       SaveDelayed   save after small delay
       SaveAlways    save on every change
     */
-    void setSavePolicy( int policy );
+    void setSavePolicy(int policy);
     /**
       Return save policy.
 
@@ -113,7 +112,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       Set save interval in minutes which is used when save policy is
       SaveInterval.
     */
-    void setSaveInterval( int minutes );
+    void setSaveInterval(int minutes);
 
     /**
       Return save interval in minutes.
@@ -150,80 +149,80 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Return unfiltered list of all events in calendar.
     */
-    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEvents(EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEventsForDate(const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
 
     /**
       Get unfiltered events for date \a qdt.
     */
-    Event::List rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate(const QDateTime &qdt);
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
     */
-    Event::List rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false );
+    Event::List rawEvents(const QDate &start, const QDate &end,
+                          bool inclusive = false);
 
     /**
       Add a todo to the todolist.
     */
-    bool addTodo( Todo *todo );
+    bool addTodo(Todo *todo);
     /**
       Remove a todo from the todolist.
     */
-    bool deleteTodo( Todo * );
+    bool deleteTodo(Todo *);
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
     */
-    Todo *todo( const QString &uid );
+    Todo *todo(const QString &uid);
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Todo::List rawTodos(TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
     /**
       Returns list of todos due on the specified date.
     */
-    Todo::List rawTodosForDate( const QDate &date );
+    Todo::List rawTodosForDate(const QDate &date);
     /**
       Add a Journal entry to calendar
     */
-    virtual bool addJournal( Journal * );
+    virtual bool addJournal(Journal *);
     /**
       Remove a Journal from the calendar
     */
-    virtual bool deleteJournal( Journal * );
+    virtual bool deleteJournal(Journal *);
     /**
       Return Journal with given unique id.
     */
-    virtual Journal *journal( const QString &uid );
+    virtual Journal *journal(const QString &uid);
     /**
       Return list of all journals.
     */
-    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,SortDirection sortDirection = SortDirectionAscending );
+    Journal::List rawJournals(JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
     /**
       Return list of journals for the given date.
     */
-    Journal::List rawJournalsForDate( const QDate &date );
+    Journal::List rawJournalsForDate(const QDate &date);
 
     /**
       Return all alarms, which ocur in the given time interval.
     */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+    Alarm::List alarms(const QDateTime &from, const QDateTime &to);
 
     /**
       Return all alarms, which ocur before given date.
     */
-    Alarm::List alarmsTo( const QDateTime &to );
+    Alarm::List alarmsTo(const QDateTime &to);
 
     /**
       Set id of timezone, e.g. "Europe/Berlin"
     */
-    void setTimeZoneId( const QString &timeZoneId );
+    void setTimeZoneId(const QString &timeZoneId);
 
     QString timeZoneId() const;
 
@@ -234,13 +233,13 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Set the owner of the calendar. Should be owner's full name.
     */
-    void setOwner( const Person &owner );
+    void setOwner(const Person &owner);
 
     void enableChangeNotification();
     void disableChangeNotification();
 
-    void clearChange( Incidence * );
-    void clearChange( const QString &uid );
+    void clearChange(Incidence *);
+    void clearChange(const QString &uid);
 
     void clearChanges();
 
@@ -267,19 +266,19 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     */
     void clearCache();
 
-    void cleanUpEventCache( const KCal::Event::List &eventList );
-    void cleanUpTodoCache( const KCal::Todo::List &todoList );
+    void cleanUpEventCache(const KCal::Event::List &eventList);
+    void cleanUpTodoCache(const KCal::Todo::List &todoList);
 
     /**
       Returns a reference to the id mapper.
      */
-    KPIM::IdMapper& idMapper();
+    KPIM::IdMapper &idMapper();
 
-  protected:
+protected:
     // From Calendar::Observer
-    void calendarIncidenceAdded( KCal::Incidence *incidence );
-    void calendarIncidenceChanged( KCal::Incidence *incidence );
-    void calendarIncidenceDeleted( KCal::Incidence *incidence );
+    void calendarIncidenceAdded(KCal::Incidence *incidence);
+    void calendarIncidenceChanged(KCal::Incidence *incidence);
+    void calendarIncidenceDeleted(KCal::Incidence *incidence);
 
     CalendarLocal mCalendar;
 
@@ -304,7 +303,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
 
     void checkForAutomaticSave();
 
-    void addInfoText( QString & ) const;
+    void addInfoText(QString &) const;
 
     void setupSaveTimer();
     void setupReloadTimer();
@@ -318,19 +317,19 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Functions for keeping the changes persistent.
      */
-    virtual QString changesCacheFile( const QString& ) const;
-    void loadChangesCache( QMap<Incidence*, bool>&, const QString& );
+    virtual QString changesCacheFile(const QString &) const;
+    void loadChangesCache(QMap<Incidence *, bool> &, const QString &);
     void loadChangesCache();
-    void saveChangesCache( const QMap<Incidence*, bool>&, const QString& );
+    void saveChangesCache(const QMap<Incidence *, bool> &, const QString &);
     void saveChangesCache();
 
-  protected slots:
+protected slots:
     void slotReload();
     void slotSave();
 
     void setIdMapperIdentifier();
 
-  private:
+private:
     int mReloadPolicy;
     int mReloadInterval;
     QTimer mReloadTimer;
@@ -343,9 +342,9 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     QDateTime mLastLoad;
     QDateTime mLastSave;
 
-    QMap<KCal::Incidence *,bool> mAddedIncidences;
-    QMap<KCal::Incidence *,bool> mChangedIncidences;
-    QMap<KCal::Incidence *,bool> mDeletedIncidences;
+    QMap<KCal::Incidence *, bool> mAddedIncidences;
+    QMap<KCal::Incidence *, bool> mChangedIncidences;
+    QMap<KCal::Incidence *, bool> mDeletedIncidences;
 
     KPIM::IdMapper mIdMapper;
 

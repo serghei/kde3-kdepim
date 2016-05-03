@@ -27,21 +27,21 @@
 
 #include "account_input.h"
 
-void Process_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
+void Process_Protocol::configFillGroupBoxes(QStringList *groupBoxes) const
 {
-	groupBoxes->append( "Process" );
+    groupBoxes->append("Process");
 }
 
-void Process_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > *result ) const
+void Process_Protocol::configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *result) const
 {
-	result->append( new URLInput( (QWidget*)vector->at( 0 ), i18n( "Program:" ), "", "mailbox" ) );
+    result->append(new URLInput((QWidget *)vector->at(0), i18n("Program:"), "", "mailbox"));
 }
 
-void Process_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const
+void Process_Protocol::readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const
 {
 }
 
-void Process_Protocol::writeEntries( QMap< QString, QString >* map ) const
+void Process_Protocol::writeEntries(QMap< QString, QString > *map) const
 {
-	clearFields( map, (KIO_Protocol::Fields)( server | port | username | password | save_password | metadata ) );
+    clearFields(map, (KIO_Protocol::Fields)(server | port | username | password | save_password | metadata));
 }

@@ -7,7 +7,7 @@
 ** This file defines the widget and behavior for the config dialog
 ** of the mal conduit.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 ** Specific permission is granted for this code to be linked to libmal
 ** (this is necessary because the libmal license is not GPL-compatible).
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -37,17 +37,16 @@
 
 class MALWidget;
 
-class MALWidgetSetup : public ConduitConfigBase
-{
-Q_OBJECT
+class MALWidgetSetup : public ConduitConfigBase {
+    Q_OBJECT
 public:
-	MALWidgetSetup(QWidget *,const char *);
-	virtual ~MALWidgetSetup();
-	virtual void load();
-	virtual void commit();
-	static ConduitConfigBase *create(QWidget *, const char *);
+    MALWidgetSetup(QWidget *, const char *);
+    virtual ~MALWidgetSetup();
+    virtual void load();
+    virtual void commit();
+    static ConduitConfigBase *create(QWidget *, const char *);
 private:
-	MALWidget *fConfigWidget;
+    MALWidget *fConfigWidget;
 } ;
 
 

@@ -25,8 +25,7 @@
 
 #include <qtooltip.h>
 
-namespace KCal
-{
+namespace KCal {
 class Incidence;
 }
 using namespace KCal;
@@ -36,22 +35,21 @@ class KOAgendaItem;
 /**
 @author Reinhold Kainhofer
 */
-class KOIncidenceToolTip : public QToolTip
-{
-  public:
-    KOIncidenceToolTip(QWidget * widget, QToolTipGroup * group = 0 ):QToolTip (widget, group) {}
-/*    ~KOIncidenceToolTip();*/
+class KOIncidenceToolTip : public QToolTip {
+public:
+    KOIncidenceToolTip(QWidget *widget, QToolTipGroup *group = 0): QToolTip(widget, group) {}
+    /*    ~KOIncidenceToolTip();*/
 
-  public:
-    static void add ( QWidget * widget, Incidence *incidence,
-        QToolTipGroup * group = 0, const QString & longText = "" );
-    static void add( KOAgendaItem *item, Incidence *incidence = 0,
-                     QToolTipGroup *group = 0 );
+public:
+    static void add(QWidget *widget, Incidence *incidence,
+                    QToolTipGroup *group = 0, const QString &longText = "");
+    static void add(KOAgendaItem *item, Incidence *incidence = 0,
+                    QToolTipGroup *group = 0);
 
     /* reimplmented from QToolTip */
-    void maybeTip( const QPoint &pos );
+    void maybeTip(const QPoint &pos);
 
-  private:
+private:
     QString mText;
 };
 

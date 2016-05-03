@@ -31,19 +31,17 @@
 
 class PilotDateEntry;
 
-namespace KCal
-{
-	class Event;
+namespace KCal {
+class Event;
 }
 
-namespace KCalSync
-{
-	bool setEvent( KCal::Event *e,
-		const PilotDateEntry *de,
-		const CategoryAppInfo &info);
-	bool setDateEntry(PilotDateEntry *de,
-		const KCal::Event *e,
-		const CategoryAppInfo &info);
+namespace KCalSync {
+bool setEvent(KCal::Event *e,
+              const PilotDateEntry *de,
+              const CategoryAppInfo &info);
+bool setDateEntry(PilotDateEntry *de,
+                  const KCal::Event *e,
+                  const CategoryAppInfo &info);
 }
 
 #endif

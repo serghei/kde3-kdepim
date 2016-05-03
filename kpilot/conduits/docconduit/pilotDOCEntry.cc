@@ -34,42 +34,42 @@
 const int PilotDOCEntry::TEXT_SIZE = 4096;
 
 
-PilotDOCEntry::PilotDOCEntry():PilotRecordBase()
+PilotDOCEntry::PilotDOCEntry(): PilotRecordBase()
 {
-	FUNCTIONSETUP;
-	compress = false;
+    FUNCTIONSETUP;
+    compress = false;
 }
 
 
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDOCEntry()
 */
-PilotDOCEntry::PilotDOCEntry(PilotRecord * rec, bool compressed):PilotRecordBase(rec)
+PilotDOCEntry::PilotDOCEntry(PilotRecord *rec, bool compressed): PilotRecordBase(rec)
 {
-	if (rec) fText.setText((unsigned char *) rec->data(), rec->size(), compressed);
-	compress = compressed;
+    if(rec) fText.setText((unsigned char *) rec->data(), rec->size(), compressed);
+    compress = compressed;
 }
 
 
 
-PilotDOCEntry::PilotDOCEntry(const PilotDOCEntry & e):PilotRecordBase(e)
+PilotDOCEntry::PilotDOCEntry(const PilotDOCEntry &e): PilotRecordBase(e)
 {
-	FUNCTIONSETUP;
-	// See PilotDateEntry::operator = for details
-	fText.setText(e.fText.text(), e.fText.Len(), e.fText.compressed());
-	compress = e.compress;
+    FUNCTIONSETUP;
+    // See PilotDateEntry::operator = for details
+    fText.setText(e.fText.text(), e.fText.Len(), e.fText.compressed());
+    compress = e.compress;
 }
 
 
 
-PilotDOCEntry & PilotDOCEntry::operator =(const PilotDOCEntry & e)
+PilotDOCEntry &PilotDOCEntry::operator =(const PilotDOCEntry &e)
 {
-	if (this != &e)
-	{
-		fText.setText(e.fText.text(), e.fText.Len(), e.fText.compressed());
-		compress = e.compress;
-	}
-	return *this;
+    if(this != &e)
+    {
+        fText.setText(e.fText.text(), e.fText.Len(), e.fText.compressed());
+        compress = e.compress;
+    }
+    return *this;
 }
 
 
@@ -77,16 +77,16 @@ PilotDOCEntry & PilotDOCEntry::operator =(const PilotDOCEntry & e)
 
 PilotRecord *PilotDOCEntry::pack()
 {
-	int len = compress ? fText.Compress() : fText.Decompress();
+    int len = compress ? fText.Compress() : fText.Decompress();
 
-	if (len<0)
-	{
-		return 0L;
-	}
+    if(len < 0)
+    {
+        return 0L;
+    }
 
-	pi_buffer_t *b = pi_buffer_new( len + 4 ); // +4 for safety
-	memcpy( b->data, (const char *) fText.text(), len );
-	b->used = len;
-	PilotRecord* rec =  new PilotRecord(b, this);
-	return rec;
+    pi_buffer_t *b = pi_buffer_new(len + 4);   // +4 for safety
+    memcpy(b->data, (const char *) fText.text(), len);
+    b->used = len;
+    PilotRecord *rec =  new PilotRecord(b, this);
+    return rec;
 }

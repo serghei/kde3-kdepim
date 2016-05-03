@@ -42,15 +42,14 @@
 * It is added automatically to a ActionQueue by queueInit() in order
 * to inform the user of the sync.
 */
-KDE_EXPORT class WelcomeAction : public SyncAction
-{
+KDE_EXPORT class WelcomeAction : public SyncAction {
 public:
-	/** Constructor. */
-	WelcomeAction(KPilotLink *);
+    /** Constructor. */
+    WelcomeAction(KPilotLink *);
 
 protected:
-	/** Reimplemented from SyncAction. */
-	virtual bool exec();
+    /** Reimplemented from SyncAction. */
+    virtual bool exec();
 } ;
 
 /**
@@ -58,23 +57,22 @@ protected:
 * in cases when the hotsync starts while KPilot is busy configuring
 * something and can't be interrupted.
 */
-KDE_EXPORT class SorryAction : public SyncAction
-{
+KDE_EXPORT class SorryAction : public SyncAction {
 public:
-	/**
-	* Constructor. The action will be executed on the given
-	* link @p device . If the given string @p s is non-empty,
-	* print that message (it must be i18n()ed already) instead of
-	* the standard message.
-	*/
-	SorryAction(KPilotLink *device, const QString &s=QString::null);
+    /**
+    * Constructor. The action will be executed on the given
+    * link @p device . If the given string @p s is non-empty,
+    * print that message (it must be i18n()ed already) instead of
+    * the standard message.
+    */
+    SorryAction(KPilotLink *device, const QString &s = QString::null);
 
 protected:
-	/** Reimplemented from SyncAction. */
-	virtual bool exec();
+    /** Reimplemented from SyncAction. */
+    virtual bool exec();
 
-	/** Message to print to the sync log. */
-	QString fMessage;
+    /** Message to print to the sync log. */
+    QString fMessage;
 } ;
 
 /**
@@ -84,15 +82,14 @@ protected:
 * device that the HotSync is over, it should be the last
 * action executed.
 */
-KDE_EXPORT class CleanupAction : public SyncAction
-{
+KDE_EXPORT class CleanupAction : public SyncAction {
 public:
-	/** Constructor. */
-	CleanupAction(KPilotLink *device);
+    /** Constructor. */
+    CleanupAction(KPilotLink *device);
 
 protected:
-	/** Reimplemented from SyncAction. */
-	virtual bool exec();
+    /** Reimplemented from SyncAction. */
+    virtual bool exec();
 } ;
 
 /**
@@ -100,15 +97,14 @@ protected:
 * and not do anything spectacular. It lists all the databases
 * on the handheld in the sync log.
 */
-KDE_EXPORT class TestLink : public SyncAction
-{
+KDE_EXPORT class TestLink : public SyncAction {
 public:
-	/** Constructor. */
-	TestLink(KPilotLink *device);
+    /** Constructor. */
+    TestLink(KPilotLink *device);
 
 protected:
-	/** Reimplemented from SyncAction. */
-	virtual bool exec();
+    /** Reimplemented from SyncAction. */
+    virtual bool exec();
 } ;
 
 

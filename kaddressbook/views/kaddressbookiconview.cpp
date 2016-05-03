@@ -39,122 +39,131 @@
 
 #include "kaddressbookiconview.h"
 
-class IconViewFactory : public ViewFactory
-{
-  public:
-    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
+class IconViewFactory : public ViewFactory {
+public:
+    KAddressBookView *view(KAB::Core *core, QWidget *parent, const char *name)
     {
-      return new KAddressBookIconView( core, parent, name );
+        return new KAddressBookIconView(core, parent, name);
     }
 
-    QString type() const { return I18N_NOOP( "Icon" ); }
+    QString type() const
+    {
+        return I18N_NOOP("Icon");
+    }
 
-    QString description() const { return i18n( "Icons represent contacts. Very simple view." ); }
+    QString description() const
+    {
+        return i18n("Icons represent contacts. Very simple view.");
+    }
 };
 
 extern "C" {
-  void *init_libkaddrbk_iconview()
-  {
-    return ( new IconViewFactory );
-  }
+    void *init_libkaddrbk_iconview()
+    {
+        return (new IconViewFactory);
+    }
 }
 
-AddresseeIconView::AddresseeIconView( QWidget *parent, const char *name )
-  : KIconView( parent, name )
+AddresseeIconView::AddresseeIconView(QWidget *parent, const char *name)
+    : KIconView(parent, name)
 {
-  setSelectionMode( QIconView::Extended );
-  setResizeMode( QIconView::Adjust );
-  setWordWrapIconText( true );
-  setGridX( 100 );
-  setItemsMovable( false );
-  setSorting( true, true );
-  setMode( KIconView::Select );
+    setSelectionMode(QIconView::Extended);
+    setResizeMode(QIconView::Adjust);
+    setWordWrapIconText(true);
+    setGridX(100);
+    setItemsMovable(false);
+    setSorting(true, true);
+    setMode(KIconView::Select);
 
-  connect( this, SIGNAL( dropped( QDropEvent*, const QValueList<QIconDragItem>& ) ),
-           this, SLOT( itemDropped( QDropEvent*, const QValueList<QIconDragItem>& ) ) );
+    connect(this, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
+            this, SLOT(itemDropped(QDropEvent *, const QValueList<QIconDragItem> &)));
 }
 
 AddresseeIconView::~AddresseeIconView()
 {
 }
 
-void AddresseeIconView::itemDropped( QDropEvent *event, const QValueList<QIconDragItem>& )
+void AddresseeIconView::itemDropped(QDropEvent *event, const QValueList<QIconDragItem> &)
 {
-  emit addresseeDropped( event );
+    emit addresseeDropped(event);
 }
 
 QDragObject *AddresseeIconView::dragObject()
 {
-  emit startAddresseeDrag();
+    emit startAddresseeDrag();
 
-  // We never want IconView to start the drag
-  return 0;
+    // We never want IconView to start the drag
+    return 0;
 }
 
 
-class AddresseeIconViewItem : public KIconViewItem
-{
-  public:
-    AddresseeIconViewItem( const KABC::Field::List&, KABC::AddressBook *doc,
-                           const KABC::Addressee &addr, QIconView *parent )
-      : KIconViewItem( parent ), mDocument( doc ), mAddressee( addr )
-      {
+class AddresseeIconViewItem : public KIconViewItem {
+public:
+    AddresseeIconViewItem(const KABC::Field::List &, KABC::AddressBook *doc,
+                          const KABC::Addressee &addr, QIconView *parent)
+        : KIconViewItem(parent), mDocument(doc), mAddressee(addr)
+    {
         refresh();
-      }
+    }
 
-    const KABC::Addressee &addressee() const { return mAddressee; }
+    const KABC::Addressee &addressee() const
+    {
+        return mAddressee;
+    }
 
     void refresh()
     {
-      mAddressee = mDocument->findByUid( mAddressee.uid() );
+        mAddressee = mDocument->findByUid(mAddressee.uid());
 
-      if ( !mAddressee.isEmpty() )
-        setText( mAddressee.givenName() + " " + mAddressee.familyName() );
+        if(!mAddressee.isEmpty())
+            setText(mAddressee.givenName() + " " + mAddressee.familyName());
 
-      QPixmap icon;
-      QPixmap defaultIcon( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
-      KABC::Picture pic = mAddressee.photo();
-      if ( pic.data().isNull() )
-        pic = mAddressee.logo();
+        QPixmap icon;
+        QPixmap defaultIcon(KGlobal::iconLoader()->loadIcon("vcard", KIcon::Desktop));
+        KABC::Picture pic = mAddressee.photo();
+        if(pic.data().isNull())
+            pic = mAddressee.logo();
 
-      if ( pic.isIntern() && !pic.data().isNull() ) {
-        QImage img = pic.data();
-        if ( img.width() > img.height() )
-          icon = img.scaleWidth( 32 );
+        if(pic.isIntern() && !pic.data().isNull())
+        {
+            QImage img = pic.data();
+            if(img.width() > img.height())
+                icon = img.scaleWidth(32);
+            else
+                icon = img.scaleHeight(32);
+        }
         else
-          icon = img.scaleHeight( 32 );
-      } else
-        icon = defaultIcon;
+            icon = defaultIcon;
 
-      setPixmap( icon );
+        setPixmap(icon);
     }
 
-  private:
+private:
     KABC::AddressBook *mDocument;
     KABC::Addressee mAddressee;
 };
 
 
-KAddressBookIconView::KAddressBookIconView( KAB::Core *core,
-                                            QWidget *parent, const char *name)
-  : KAddressBookView( core, parent, name )
+KAddressBookIconView::KAddressBookIconView(KAB::Core *core,
+        QWidget *parent, const char *name)
+    : KAddressBookView(core, parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( viewWidget() );
+    QVBoxLayout *layout = new QVBoxLayout(viewWidget());
 
-  mIconView = new AddresseeIconView( viewWidget(), "mIconView" );
-  layout->addWidget( mIconView );
+    mIconView = new AddresseeIconView(viewWidget(), "mIconView");
+    layout->addWidget(mIconView);
 
-  // Connect up the signals
-  connect( mIconView, SIGNAL( executed( QIconViewItem* ) ),
-           this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
-  connect( mIconView, SIGNAL( selectionChanged() ),
-           this, SLOT( addresseeSelected() ) );
-  connect( mIconView, SIGNAL( addresseeDropped( QDropEvent* ) ),
-           this, SIGNAL( dropped( QDropEvent* ) ) );
-  connect( mIconView, SIGNAL( startAddresseeDrag() ),
-           this, SIGNAL( startDrag() ) );
-  connect( mIconView, SIGNAL( contextMenuRequested( QIconViewItem*, const QPoint& ) ),
-           this, SLOT( rmbClicked( QIconViewItem*, const QPoint& ) ) );
+    // Connect up the signals
+    connect(mIconView, SIGNAL(executed(QIconViewItem *)),
+            this, SLOT(addresseeExecuted(QIconViewItem *)));
+    connect(mIconView, SIGNAL(selectionChanged()),
+            this, SLOT(addresseeSelected()));
+    connect(mIconView, SIGNAL(addresseeDropped(QDropEvent *)),
+            this, SIGNAL(dropped(QDropEvent *)));
+    connect(mIconView, SIGNAL(startAddresseeDrag()),
+            this, SIGNAL(startDrag()));
+    connect(mIconView, SIGNAL(contextMenuRequested(QIconViewItem *, const QPoint &)),
+            this, SLOT(rmbClicked(QIconViewItem *, const QPoint &)));
 }
 
 KAddressBookIconView::~KAddressBookIconView()
@@ -163,150 +172,167 @@ KAddressBookIconView::~KAddressBookIconView()
 
 KABC::Field *KAddressBookIconView::sortField() const
 {
-  // we have hardcoded sorting, so we have to return a hardcoded field :(
-  return KABC::Field::allFields()[ 2 ];
+    // we have hardcoded sorting, so we have to return a hardcoded field :(
+    return KABC::Field::allFields()[ 2 ];
 }
 
-void KAddressBookIconView::readConfig( KConfig *config )
+void KAddressBookIconView::readConfig(KConfig *config)
 {
-  KAddressBookView::readConfig( config );
+    KAddressBookView::readConfig(config);
 
-  disconnect( mIconView, SIGNAL( executed( QIconViewItem* ) ),
-              this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
+    disconnect(mIconView, SIGNAL(executed(QIconViewItem *)),
+               this, SLOT(addresseeExecuted(QIconViewItem *)));
 
-  if ( KABPrefs::instance()->honorSingleClick() )
-    connect( mIconView, SIGNAL( executed( QIconViewItem* ) ),
-             this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
-  else
-    connect( mIconView, SIGNAL( doubleClicked( QIconViewItem* ) ),
-             this, SLOT( addresseeExecuted( QIconViewItem* ) ) );
+    if(KABPrefs::instance()->honorSingleClick())
+        connect(mIconView, SIGNAL(executed(QIconViewItem *)),
+                this, SLOT(addresseeExecuted(QIconViewItem *)));
+    else
+        connect(mIconView, SIGNAL(doubleClicked(QIconViewItem *)),
+                this, SLOT(addresseeExecuted(QIconViewItem *)));
 }
 
 QStringList KAddressBookIconView::selectedUids()
 {
-  QStringList uidList;
-  QIconViewItem *item;
-  AddresseeIconViewItem *aItem;
+    QStringList uidList;
+    QIconViewItem *item;
+    AddresseeIconViewItem *aItem;
 
-  for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
-    if ( item->isSelected() ) {
-      aItem = dynamic_cast<AddresseeIconViewItem*>( item );
-      if ( aItem )
-        uidList << aItem->addressee().uid();
-    }
-  }
-
-  return uidList;
-}
-
-void KAddressBookIconView::refresh( const QString &uid )
-{
-  QIconViewItem *item;
-  AddresseeIconViewItem *aItem;
-
-  if ( uid.isEmpty() ) {
-    // Rebuild the view
-    mIconView->clear();
-    mIconList.clear();
-
-    const KABC::Addressee::List addresseeList( addressees() );
-    KABC::Addressee::List::ConstIterator it( addresseeList.begin() );
-    const KABC::Addressee::List::ConstIterator endIt( addresseeList.end() );
-    for ( ; it != endIt; ++it )
-      aItem = new AddresseeIconViewItem( fields(), core()->addressBook(), *it, mIconView );
-
-    mIconView->arrangeItemsInGrid( true );
-
-    for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
-      AddresseeIconViewItem* aivi = dynamic_cast<AddresseeIconViewItem*>( item );
-      mIconList.append( aivi );
+    for(item = mIconView->firstItem(); item; item = item->nextItem())
+    {
+        if(item->isSelected())
+        {
+            aItem = dynamic_cast<AddresseeIconViewItem *>(item);
+            if(aItem)
+                uidList << aItem->addressee().uid();
+        }
     }
 
-  } else {
-    // Try to find the one to refresh
-    for ( item = mIconView->firstItem(); item; item = item->nextItem() ) {
-      aItem = dynamic_cast<AddresseeIconViewItem*>( item );
-      if ( aItem && (aItem->addressee().uid() == uid) ) {
-        aItem->refresh();
-        mIconView->arrangeItemsInGrid( true );
-        return;
-      }
+    return uidList;
+}
+
+void KAddressBookIconView::refresh(const QString &uid)
+{
+    QIconViewItem *item;
+    AddresseeIconViewItem *aItem;
+
+    if(uid.isEmpty())
+    {
+        // Rebuild the view
+        mIconView->clear();
+        mIconList.clear();
+
+        const KABC::Addressee::List addresseeList(addressees());
+        KABC::Addressee::List::ConstIterator it(addresseeList.begin());
+        const KABC::Addressee::List::ConstIterator endIt(addresseeList.end());
+        for(; it != endIt; ++it)
+            aItem = new AddresseeIconViewItem(fields(), core()->addressBook(), *it, mIconView);
+
+        mIconView->arrangeItemsInGrid(true);
+
+        for(item = mIconView->firstItem(); item; item = item->nextItem())
+        {
+            AddresseeIconViewItem *aivi = dynamic_cast<AddresseeIconViewItem *>(item);
+            mIconList.append(aivi);
+        }
+
     }
+    else
+    {
+        // Try to find the one to refresh
+        for(item = mIconView->firstItem(); item; item = item->nextItem())
+        {
+            aItem = dynamic_cast<AddresseeIconViewItem *>(item);
+            if(aItem && (aItem->addressee().uid() == uid))
+            {
+                aItem->refresh();
+                mIconView->arrangeItemsInGrid(true);
+                return;
+            }
+        }
 
-    refresh( QString::null );
-  }
-}
-
-void KAddressBookIconView::setSelected( const QString &uid, bool selected )
-{
-  QIconViewItem *item;
-  AddresseeIconViewItem *aItem;
-
-  if ( uid.isEmpty() ) {
-    mIconView->selectAll( selected );
-  } else {
-    bool found = false;
-    for ( item = mIconView->firstItem(); item && !found; item = item->nextItem() ) {
-
-      aItem = dynamic_cast<AddresseeIconViewItem*>( item );
-      if ( aItem && (aItem->addressee().uid() == uid) ) {
-        mIconView->setSelected( aItem, selected );
-        mIconView->ensureItemVisible( aItem );
-        found = true;
-      }
+        refresh(QString::null);
     }
-  }
 }
 
-void KAddressBookIconView::setFirstSelected( bool selected )
+void KAddressBookIconView::setSelected(const QString &uid, bool selected)
 {
-  if ( mIconView->firstItem() ) {
-    mIconView->setSelected( mIconView->firstItem(), selected );
-    mIconView->ensureItemVisible( mIconView->firstItem() );
-  }
+    QIconViewItem *item;
+    AddresseeIconViewItem *aItem;
+
+    if(uid.isEmpty())
+    {
+        mIconView->selectAll(selected);
+    }
+    else
+    {
+        bool found = false;
+        for(item = mIconView->firstItem(); item && !found; item = item->nextItem())
+        {
+
+            aItem = dynamic_cast<AddresseeIconViewItem *>(item);
+            if(aItem && (aItem->addressee().uid() == uid))
+            {
+                mIconView->setSelected(aItem, selected);
+                mIconView->ensureItemVisible(aItem);
+                found = true;
+            }
+        }
+    }
 }
 
-void KAddressBookIconView::addresseeExecuted( QIconViewItem *item )
+void KAddressBookIconView::setFirstSelected(bool selected)
 {
-  AddresseeIconViewItem *aItem = dynamic_cast<AddresseeIconViewItem*>( item );
+    if(mIconView->firstItem())
+    {
+        mIconView->setSelected(mIconView->firstItem(), selected);
+        mIconView->ensureItemVisible(mIconView->firstItem());
+    }
+}
 
-  if ( aItem )
-    emit executed( aItem->addressee().uid() );
+void KAddressBookIconView::addresseeExecuted(QIconViewItem *item)
+{
+    AddresseeIconViewItem *aItem = dynamic_cast<AddresseeIconViewItem *>(item);
+
+    if(aItem)
+        emit executed(aItem->addressee().uid());
 }
 
 void KAddressBookIconView::addresseeSelected()
 {
-  QIconViewItem *item;
-  AddresseeIconViewItem *aItem;
+    QIconViewItem *item;
+    AddresseeIconViewItem *aItem;
 
-  bool found = false;
-  for ( item = mIconView->firstItem(); item && !found; item = item->nextItem() ) {
-    if ( item->isSelected() ) {
-      aItem = dynamic_cast<AddresseeIconViewItem*>( item );
-      if ( aItem ) {
-        emit selected( aItem->addressee().uid() );
-        found = true;
-      }
+    bool found = false;
+    for(item = mIconView->firstItem(); item && !found; item = item->nextItem())
+    {
+        if(item->isSelected())
+        {
+            aItem = dynamic_cast<AddresseeIconViewItem *>(item);
+            if(aItem)
+            {
+                emit selected(aItem->addressee().uid());
+                found = true;
+            }
+        }
     }
-  }
 
-  if ( !found )
-    emit selected( QString::null );
+    if(!found)
+        emit selected(QString::null);
 }
 
-void KAddressBookIconView::rmbClicked( QIconViewItem*, const QPoint &point )
+void KAddressBookIconView::rmbClicked(QIconViewItem *, const QPoint &point)
 {
-  popup( point );
+    popup(point);
 }
 
 void KAddressBookIconView::scrollUp()
 {
-  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+    QApplication::postEvent(mIconView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Up, 0, 0));
 }
 
 void KAddressBookIconView::scrollDown()
 {
-  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
+    QApplication::postEvent(mIconView, new QKeyEvent(QEvent::KeyPress, Qt::Key_Down, 0, 0));
 }
 
 #include "kaddressbookiconview.moc"

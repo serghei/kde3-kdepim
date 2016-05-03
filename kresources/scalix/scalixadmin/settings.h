@@ -25,12 +25,11 @@
 #include <kio/global.h>
 #include <kio/slave.h>
 
-class Settings
-{
-  public:
+class Settings {
+public:
     ~Settings();
 
-    static Settings* self();
+    static Settings *self();
 
     KIO::MetaData accountData() const;
     KURL accountUrl() const;
@@ -46,11 +45,11 @@ class Settings
     QString ldapBindDn() const;
     QString ldapPassword() const;
 
-  private:
+private:
     Settings();
     KIO::Slave *mSlave;
 
-    static Settings* mSelf;
+    static Settings *mSelf;
 };
 
 #endif

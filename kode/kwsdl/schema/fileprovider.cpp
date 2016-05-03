@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -33,73 +33,77 @@
 using namespace Schema;
 
 FileProvider::FileProvider()
-  : QObject( 0 ), mBlocked( false )
+    : QObject(0), mBlocked(false)
 {
 }
 
-bool FileProvider::get( const QString &url, QString &target )
+bool FileProvider::get(const QString &url, QString &target)
 {
-  if ( !mFileName.isEmpty() )
-    cleanUp();
+    if(!mFileName.isEmpty())
+        cleanUp();
 
-  if ( target.isEmpty() ) {
-    KTempFile tmpFile;
-    target = tmpFile.name();
-    mFileName = target;
-  }
+    if(target.isEmpty())
+    {
+        KTempFile tmpFile;
+        target = tmpFile.name();
+        mFileName = target;
+    }
 
-  mData.truncate( 0 );
+    mData.truncate(0);
 
-  qDebug( "Downloading external schema '%s'", url.latin1() );
+    qDebug("Downloading external schema '%s'", url.latin1());
 
-  KIO::TransferJob* job = KIO::get( KURL( url ), false, false );
-  connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
-           this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
-  connect( job, SIGNAL( result( KIO::Job* ) ),
-           this, SLOT( slotResult( KIO::Job* ) ) );
+    KIO::TransferJob *job = KIO::get(KURL(url), false, false);
+    connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)),
+            this, SLOT(slotData(KIO::Job *, const QByteArray &)));
+    connect(job, SIGNAL(result(KIO::Job *)),
+            this, SLOT(slotResult(KIO::Job *)));
 
-  mBlocked = true;
-  while ( mBlocked ) {
-    qApp->eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
-    usleep( 500 );
-  }
+    mBlocked = true;
+    while(mBlocked)
+    {
+        qApp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
+        usleep(500);
+    }
 
-  return true;
+    return true;
 }
 
 void FileProvider::cleanUp()
 {
-  ::unlink( QFile::encodeName( mFileName ) );
-  mFileName = QString();
+    ::unlink(QFile::encodeName(mFileName));
+    mFileName = QString();
 }
 
-void FileProvider::slotData( KIO::Job*, const QByteArray &data )
+void FileProvider::slotData(KIO::Job *, const QByteArray &data)
 {
-  unsigned int oldSize = mData.size();
-  mData.resize( oldSize + data.size() );
-  memcpy( mData.data() + oldSize, data.data(), data.size() );
+    unsigned int oldSize = mData.size();
+    mData.resize(oldSize + data.size());
+    memcpy(mData.data() + oldSize, data.data(), data.size());
 }
 
-void FileProvider::slotResult( KIO::Job *job )
+void FileProvider::slotResult(KIO::Job *job)
 {
-  if ( job->error() ) {
-    qDebug( "%s", job->errorText().latin1() );
-    return;
-  }
+    if(job->error())
+    {
+        qDebug("%s", job->errorText().latin1());
+        return;
+    }
 
-  QFile file( mFileName );
-  if ( !file.open( IO_WriteOnly ) ) {
-    qDebug( "Unable to create temporary file" );
-    return;
-  }
+    QFile file(mFileName);
+    if(!file.open(IO_WriteOnly))
+    {
+        qDebug("Unable to create temporary file");
+        return;
+    }
 
-  qDebug( "Download successful" );
-  file.writeBlock( mData );
-  file.close();
+    qDebug("Download successful");
+    file.writeBlock(mData);
+    file.close();
 
-  mData.truncate( 0 );
+    mData.truncate(0);
 
-  mBlocked = false;
+    mBlocked = false;
 }
 
 #include "fileprovider.moc"

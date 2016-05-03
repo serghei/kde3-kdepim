@@ -47,49 +47,48 @@ class View;
 class TabWidget;
 
 /** Akregator-specific implementation of the ActionManager interface */
-class ActionManagerImpl : public ActionManager
-{
+class ActionManagerImpl : public ActionManager {
     Q_OBJECT
 
-    public:
-        ActionManagerImpl(Part* part, QObject* parent=0, const char* name=0);
-        virtual ~ActionManagerImpl();
+public:
+    ActionManagerImpl(Part *part, QObject *parent = 0, const char *name = 0);
+    virtual ~ActionManagerImpl();
 
-        virtual KAction* action(const char* name, const char* classname=0);
-        virtual QWidget* container(const char* name);
+    virtual KAction *action(const char *name, const char *classname = 0);
+    virtual QWidget *container(const char *name);
 
-        void initView(View* view);
-        void initTrayIcon(TrayIcon* trayIcon);
-        void initArticleViewer(ArticleViewer* articleViewer);
-        void initArticleListView(ArticleListView* articleList);
-        void initListTabWidget(ListTabWidget* listTabWidget);
-        void initTabWidget(TabWidget* tabWidget);
-        void setTagSet(TagSet* tagSet);
+    void initView(View *view);
+    void initTrayIcon(TrayIcon *trayIcon);
+    void initArticleViewer(ArticleViewer *articleViewer);
+    void initArticleListView(ArticleListView *articleList);
+    void initListTabWidget(ListTabWidget *listTabWidget);
+    void initTabWidget(TabWidget *tabWidget);
+    void setTagSet(TagSet *tagSet);
 
-    public slots:
+public slots:
 
-        /** fills the remove tag menu with the given tags
-            enables/disables tag menu action according to @c enabled */
-        void slotUpdateTagActions(bool enabled, const QStringList& tagIds);
-        
-        void slotNodeSelected(TreeNode* node);
-        
-        void slotTagAdded(const Tag& tag);
-        void slotTagRemoved(const Tag& tag);
-        
-    protected:
-    
-        KActionCollection* actionCollection();
-        
-    private:
+    /** fills the remove tag menu with the given tags
+        enables/disables tag menu action according to @c enabled */
+    void slotUpdateTagActions(bool enabled, const QStringList &tagIds);
 
-        void initPart();
+    void slotNodeSelected(TreeNode *node);
 
-        friend class NodeSelectVisitor;
-        class NodeSelectVisitor;
-        
-        class ActionManagerImplPrivate;
-        ActionManagerImplPrivate* d;
+    void slotTagAdded(const Tag &tag);
+    void slotTagRemoved(const Tag &tag);
+
+protected:
+
+    KActionCollection *actionCollection();
+
+private:
+
+    void initPart();
+
+    friend class NodeSelectVisitor;
+    class NodeSelectVisitor;
+
+    class ActionManagerImplPrivate;
+    ActionManagerImplPrivate *d;
 };
 
 } // namespace Akregator

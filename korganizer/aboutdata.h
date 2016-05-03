@@ -29,9 +29,8 @@
 
 namespace KOrg {
 
-class KDE_EXPORT AboutData : public KAboutData
-{
-  public:
+class KDE_EXPORT AboutData : public KAboutData {
+public:
     AboutData();
 };
 

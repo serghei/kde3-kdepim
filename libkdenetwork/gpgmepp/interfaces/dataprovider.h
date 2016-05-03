@@ -2,12 +2,12 @@
    Copyright (C) 2003 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -27,21 +27,22 @@
 
 namespace GpgME {
 
-  class KDE_EXPORT DataProvider {
-  public:
+class KDE_EXPORT DataProvider {
+public:
     virtual ~DataProvider() {}
 
-    enum Operation {
-      Read, Write, Seek, Release
+    enum Operation
+    {
+        Read, Write, Seek, Release
     };
-    virtual bool isSupported( Operation op ) const = 0;
+    virtual bool isSupported(Operation op) const = 0;
 
 
-    virtual ssize_t read( void  * buffer, size_t bufSize ) = 0;
-    virtual ssize_t write( const void * buffer, size_t bufSize ) = 0;
-    virtual off_t seek( off_t offset, int whence ) = 0;
+    virtual ssize_t read(void   *buffer, size_t bufSize) = 0;
+    virtual ssize_t write(const void *buffer, size_t bufSize) = 0;
+    virtual off_t seek(off_t offset, int whence) = 0;
     virtual void release() = 0;
-  };
+};
 
 } // namespace GpgME
 

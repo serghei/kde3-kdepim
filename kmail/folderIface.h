@@ -39,16 +39,15 @@ class KMMainWidget;
 
 namespace KMail {
 
-  class FolderIface : public QObject,
-                      public DCOPObject
-  {
+class FolderIface : public QObject,
+    public DCOPObject {
     Q_OBJECT
     K_DCOP
 
-  public:
-    FolderIface( const QString& vpath );
+public:
+    FolderIface(const QString &vpath);
 
-  k_dcop:
+k_dcop:
     virtual QString path() const;
     virtual QString displayName() const;
     virtual QString displayPath() const;
@@ -61,10 +60,10 @@ namespace KMail {
 
     //not yet
     //virtual QValueList<DCOPRef> messageRefs();
-  protected:
-    KMFolder* mFolder;
+protected:
+    KMFolder *mFolder;
     QString   mPath;
-  };
+};
 
 }
 

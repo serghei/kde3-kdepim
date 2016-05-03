@@ -33,15 +33,14 @@
 
 class SysInfoWidget;
 
-class SysInfoWidgetConfig : public ConduitConfigBase
-{
+class SysInfoWidgetConfig : public ConduitConfigBase {
 public:
-	SysInfoWidgetConfig(QWidget *parent, const char *);
-	virtual void commit();
-	virtual void load();
-	virtual bool isModified() const;
+    SysInfoWidgetConfig(QWidget *parent, const char *);
+    virtual void commit();
+    virtual void load();
+    virtual bool isModified() const;
 protected:
-	SysInfoWidget *fConfigWidget;
+    SysInfoWidget *fConfigWidget;
 } ;
 
 #endif

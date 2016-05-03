@@ -31,26 +31,25 @@
 
 namespace KWSDL {
 
-class Parser
-{
-  public:
+class Parser {
+public:
     Parser();
 
-    void parse( const QDomElement &element );
+    void parse(const QDomElement &element);
     void reset();
 
-    void setSchemaBaseUrl( const QString& );
+    void setSchemaBaseUrl(const QString &);
 
     WSDL wsdl() const;
 
-  private:
-    void parseTypes( const QDomElement& );
-    void parseMessage( const QDomElement&, Message& );
-    void parsePortType( const QDomElement&, Port& );
-    void parseBinding( const QDomElement& );
-    void parseService( const QDomElement& );
+private:
+    void parseTypes(const QDomElement &);
+    void parseMessage(const QDomElement &, Message &);
+    void parsePortType(const QDomElement &, Port &);
+    void parseBinding(const QDomElement &);
+    void parseService(const QDomElement &);
 
-    void parseSchema( const QDomElement& );
+    void parseSchema(const QDomElement &);
 
     Binding::List mBindings;
     Message::List mMessages;

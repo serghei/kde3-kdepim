@@ -27,45 +27,46 @@
 using namespace KWSDL;
 
 Creator::Creator()
-  : mOutputDirectory( "output/" )
+    : mOutputDirectory("output/")
 {
 }
 
-void Creator::create( const KODE::Class::List &list )
+void Creator::create(const KODE::Class::List &list)
 {
-  KODE::Printer printer;
-  printer.setOutputDirectory( mOutputDirectory );
+    KODE::Printer printer;
+    printer.setOutputDirectory(mOutputDirectory);
 
-  QStringList cppFiles;
+    QStringList cppFiles;
 
-  KODE::Class::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    KODE::File file;
+    KODE::Class::List::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        KODE::File file;
 
-    if ( !mNameSpace.isEmpty() )
-      file.setNameSpace( mNameSpace );
+        if(!mNameSpace.isEmpty())
+            file.setNameSpace(mNameSpace);
 
-    file.setFilename( (*it).name().lower() );
-    file.addCopyright( 2005, "Tobias Koenig", "tokoe@kde.org" );
-    file.setLicense( KODE::License( KODE::License::GPL ) );
+        file.setFilename((*it).name().lower());
+        file.addCopyright(2005, "Tobias Koenig", "tokoe@kde.org");
+        file.setLicense(KODE::License(KODE::License::GPL));
 
-    file.insertClass( *it );
+        file.insertClass(*it);
 
-    printer.printHeader( file );
-    printer.printImplementation( file );
+        printer.printHeader(file);
+        printer.printImplementation(file);
 
-    cppFiles.append( file.filename() + ".cpp" );
-  }
+        cppFiles.append(file.filename() + ".cpp");
+    }
 
-  KODE::AutoMakefile::Target libTarget( "bin_PROGRAMS", "kwsdl" );
-  libTarget.setSources( "main.cc " + cppFiles.join( " " ) );
-  libTarget.setLdFlags( "$(all_libraries) $(KDE_RPATH)" );
-  libTarget.setLdAdd( "-lkdecore -lkio" );
+    KODE::AutoMakefile::Target libTarget("bin_PROGRAMS", "kwsdl");
+    libTarget.setSources("main.cc " + cppFiles.join(" "));
+    libTarget.setLdFlags("$(all_libraries) $(KDE_RPATH)");
+    libTarget.setLdAdd("-lkdecore -lkio");
 
-  KODE::AutoMakefile makefile;
-  makefile.addTarget( libTarget );
-  makefile.addEntry( "INCLUDES", "-I$(top_srcdir) -I$(top_srcdir)/libkdepim $(all_includes)" );
-  makefile.addEntry( "METASOURCES", "AUTO" );
+    KODE::AutoMakefile makefile;
+    makefile.addTarget(libTarget);
+    makefile.addEntry("INCLUDES", "-I$(top_srcdir) -I$(top_srcdir)/libkdepim $(all_includes)");
+    makefile.addEntry("METASOURCES", "AUTO");
 
-  printer.printAutoMakefile( makefile );
+    printer.printAutoMakefile(makefile);
 }

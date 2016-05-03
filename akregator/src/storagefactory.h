@@ -35,21 +35,20 @@ namespace Backend {
 
 class Storage;
 
-class AKREGATOR_EXPORT StorageFactory
-{
-    public:
-    
+class AKREGATOR_EXPORT StorageFactory {
+public:
+
     /** identifier of the storage type, like "metakit", "postgres" etc. For use in
         configuration files. Must not contain spaces or special characters.
      */
     virtual QString key() const = 0;
-    
+
     /** returns the (i18n'd) name of the storage type. */
     virtual QString name() const = 0;
 
     /** true if the plugin is configurable via a config dialog */
     virtual bool isConfigurable() const = 0;
-    
+
     /** shows the plugin's configuration dialog */
     virtual void configure() = 0;
 
@@ -59,11 +58,11 @@ class AKREGATOR_EXPORT StorageFactory
      * write access.
      */
     virtual bool allowsMultipleWriteAccess() const = 0;
-    
+
     /** creates a storage object with given parameters
         @param params list of implementation-specific parameters
      */
-	virtual Storage* createStorage(const QStringList& params) const = 0;
+    virtual Storage *createStorage(const QStringList &params) const = 0;
 };
 
 }

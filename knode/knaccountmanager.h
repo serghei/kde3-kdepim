@@ -19,7 +19,7 @@
 #include <qvaluelist.h>
 
 namespace KWallet {
-  class Wallet;
+class Wallet;
 }
 
 class KNGroupManager;
@@ -27,12 +27,11 @@ class KNNntpAccount;
 class KNServerInfo;
 
 
-class KNAccountManager : public QObject
-{
-  Q_OBJECT
+class KNAccountManager : public QObject {
+    Q_OBJECT
 
-  public:
-    KNAccountManager(KNGroupManager *gm, QObject * parent=0, const char * name=0);
+public:
+    KNAccountManager(KNGroupManager *gm, QObject *parent = 0, const char *name = 0);
     ~KNAccountManager();
 
     void prepareShutdown();
@@ -40,19 +39,34 @@ class KNAccountManager : public QObject
     void setCurrentAccount(KNNntpAccount *a);
 
     bool newAccount(KNNntpAccount *a);       // a is new account allocated and configured by the caller
-    bool removeAccount(KNNntpAccount *a=0);  // a==0: remove current account
-    void editProperties(KNNntpAccount *a=0);
-    void accountRenamed(KNNntpAccount *a=0);
+    bool removeAccount(KNNntpAccount *a = 0); // a==0: remove current account
+    void editProperties(KNNntpAccount *a = 0);
+    void accountRenamed(KNNntpAccount *a = 0);
 
-    bool hasCurrentAccount() const             { return (c_urrentAccount!=0); }
-    KNNntpAccount* currentAccount() const       { return c_urrentAccount; }
-    KNServerInfo* smtp() const                 { return s_mtp; }
+    bool hasCurrentAccount() const
+    {
+        return (c_urrentAccount != 0);
+    }
+    KNNntpAccount *currentAccount() const
+    {
+        return c_urrentAccount;
+    }
+    KNServerInfo *smtp() const
+    {
+        return s_mtp;
+    }
     /** Returns the account with the given id. */
-    KNNntpAccount* account( int id );
-    QValueList<KNNntpAccount*>::Iterator begin() { return mAccounts.begin(); }
-    QValueList<KNNntpAccount*>::Iterator end()  { return mAccounts.end(); }
+    KNNntpAccount *account(int id);
+    QValueList<KNNntpAccount *>::Iterator begin()
+    {
+        return mAccounts.begin();
+    }
+    QValueList<KNNntpAccount *>::Iterator end()
+    {
+        return mAccounts.end();
+    }
     /** Returns the first account (used as fallback sometimes). */
-    KNNntpAccount* first() const;
+    KNNntpAccount *first() const;
 
     /** Loads the passwords of all accounts, allows on-demand wallet opening */
     void loadPasswords();
@@ -60,30 +74,30 @@ class KNAccountManager : public QObject
     void loadPasswordsAsync();
 
     /** Returns a pointer to an open wallet if available, 0 otherwise */
-    static KWallet::Wallet* wallet();
+    static KWallet::Wallet *wallet();
 
-  protected:
+protected:
     void loadAccounts();
     KNGroupManager *gManager;
     KNNntpAccount *c_urrentAccount;
     KNServerInfo *s_mtp;
 
-  signals:
+signals:
     void accountAdded(KNNntpAccount *a);
     void accountRemoved(KNNntpAccount *a);   // don't do anything with a, it will be deleted soon
     void accountModified(KNNntpAccount *a);
     /** Emitted if passwords have been loaded from the wallet */
     void passwordsChanged();
 
-  private slots:
-    void slotWalletOpened( bool success );
+private slots:
+    void slotWalletOpened(bool success);
 
-  private:
+private:
     /** set/create wallet-folder */
     static void prepareWallet();
 
-  private:
-    QValueList<KNNntpAccount*> mAccounts;
+private:
+    QValueList<KNNntpAccount *> mAccounts;
     static KWallet::Wallet *mWallet;
     static bool mWalletOpenFailed;
     bool mAsyncOpening;

@@ -35,32 +35,31 @@
 #include "subscriptiondialog.h"
 
 namespace KMail {
-  class ImapAccountBase;
+class ImapAccountBase;
 
-  class LocalSubscriptionDialog: public SubscriptionDialog
-  {
+class LocalSubscriptionDialog: public SubscriptionDialog {
     Q_OBJECT
 
-    public:
-      LocalSubscriptionDialog( QWidget *parent, const QString &caption,
-                               ImapAccountBase* acct,
-                               QString startPath = QString::null );
-      virtual ~LocalSubscriptionDialog();
+public:
+    LocalSubscriptionDialog(QWidget *parent, const QString &caption,
+                            ImapAccountBase *acct,
+                            QString startPath = QString::null);
+    virtual ~LocalSubscriptionDialog();
 
-    protected:
-      /** reimpl */
-      virtual void listAllAvailableAndCreateItems();
-      /** reimpl */
-      virtual void processFolderListing();
-      /**  reimpl */
-      virtual void doSave();
-      virtual void loadingComplete();
+protected:
+    /** reimpl */
+    virtual void listAllAvailableAndCreateItems();
+    /** reimpl */
+    virtual void processFolderListing();
+    /**  reimpl */
+    virtual void doSave();
+    virtual void loadingComplete();
 
-    private:
-      void setCheckedStateOfAllItems();
+private:
+    void setCheckedStateOfAllItems();
 
-      ImapAccountBase* mAccount;
-  };
+    ImapAccountBase *mAccount;
+};
 
 } // namespace KMail
 

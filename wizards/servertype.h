@@ -27,12 +27,10 @@
 
 #include <qobject.h>
 
-class ServerType : public QObject
-{
-  public:
-    class ConnectionInfo
-    {
-      public:
+class ServerType : public QObject {
+public:
+    class ConnectionInfo {
+    public:
         /**
           The unique identifier
          */
@@ -55,7 +53,7 @@ class ServerType : public QObject
      */
     typedef QValueList<ConnectionInfo> ConnectionInfoList;
 
-    ServerType( QObject *parent, const char *name ):QObject(parent, name) {}
+    ServerType(QObject *parent, const char *name): QObject(parent, name) {}
     virtual ~ServerType() {}
 
     /**
@@ -75,7 +73,7 @@ class ServerType : public QObject
 
       @param uid The uid of the resource.
      */
-    virtual void editConnection( const QString& uid ) = 0;
+    virtual void editConnection(const QString &uid) = 0;
 
     /**
       This method is called whenever the user wants to remove an existing
@@ -83,7 +81,7 @@ class ServerType : public QObject
 
       @param uid The uid of the resource.
      */
-    virtual void deleteConnection( const QString& uid ) = 0;
+    virtual void deleteConnection(const QString &uid) = 0;
 
     /**
       This method is called whenever the user marks an existing
@@ -92,7 +90,7 @@ class ServerType : public QObject
       @param uid The uid of the resource.
       @param active Whether the connection shall be set active or not.
      */
-    virtual void activateConnection( const QString& uid, bool active ) = 0;
+    virtual void activateConnection(const QString &uid, bool active) = 0;
 
     virtual KConfigPropagator::Change::List changes() = 0;
 };
@@ -101,10 +99,9 @@ class ServerType : public QObject
 /**
   A factory class which loads/creates ServerType objects for us.
  */
-class ServerTypeFactory : public KLibFactory
-{
-  public:
-    virtual ServerType *serverType( QObject *parent, const char *name = 0 ) = 0;
+class ServerTypeFactory : public KLibFactory {
+public:
+    virtual ServerType *serverType(QObject *parent, const char *name = 0) = 0;
 
     /**
       Returns the identifier.
@@ -116,10 +113,12 @@ class ServerTypeFactory : public KLibFactory
      */
     virtual QString title() const = 0;
 
-  protected:
-    virtual QObject* createObject( QObject*, const char*,
-                                   const char*, const QStringList & )
-    { return 0; }
+protected:
+    virtual QObject *createObject(QObject *, const char *,
+                                  const char *, const QStringList &)
+    {
+        return 0;
+    }
 };
 
 #endif

@@ -29,13 +29,13 @@ class KNFolder;
 
 class KNArticleFilter {
 
-  friend class KNFilterManager;
-  friend class KNFilterDialog;
-  friend class KNSearchDialog;
+    friend class KNFilterManager;
+    friend class KNFilterDialog;
+    friend class KNSearchDialog;
 
-  public:
-    KNArticleFilter(int id=-1);
-    KNArticleFilter(const KNArticleFilter& org);   // constructs a copy of org
+public:
+    KNArticleFilter(int id = -1);
+    KNArticleFilter(const KNArticleFilter &org);   // constructs a copy of org
     ~KNArticleFilter();
 
     bool loadInfo();
@@ -44,26 +44,65 @@ class KNArticleFilter {
 
     void doFilter(KNGroup *g);
     void doFilter(KNFolder *f);
-    int count()const                     { return c_ount; }
-    int id()const                        { return i_d; }
-    int applyOn()                   { return static_cast<int>(apon); }
-    const QString& name()           { return n_ame; }
+    int count()const
+    {
+        return c_ount;
+    }
+    int id()const
+    {
+        return i_d;
+    }
+    int applyOn()
+    {
+        return static_cast<int>(apon);
+    }
+    const QString &name()
+    {
+        return n_ame;
+    }
     QString translatedName();        // *tries* to translate the name
-    bool isEnabled()const                { return e_nabled; }
-    bool loaded()const                   { return l_oaded; }
-    bool isSearchFilter()const           { return s_earchFilter; }
+    bool isEnabled()const
+    {
+        return e_nabled;
+    }
+    bool loaded()const
+    {
+        return l_oaded;
+    }
+    bool isSearchFilter()const
+    {
+        return s_earchFilter;
+    }
 
-    void setId(int i)               { i_d=i; }
-    void setApplyOn(int i)          { apon=(ApOn)i; }
-    void setLoaded(bool l)          { l_oaded=l; }
-    void setName(const QString &s)  { n_ame=s; }
+    void setId(int i)
+    {
+        i_d = i;
+    }
+    void setApplyOn(int i)
+    {
+        apon = (ApOn)i;
+    }
+    void setLoaded(bool l)
+    {
+        l_oaded = l;
+    }
+    void setName(const QString &s)
+    {
+        n_ame = s;
+    }
     void setTranslatedName(const QString &s);     // *tries* to retranslate the name to english
-    void setEnabled(bool l)         { e_nabled=l; }
-    void setSearchFilter(bool b)    { s_earchFilter = b; }
+    void setEnabled(bool l)
+    {
+        e_nabled = l;
+    }
+    void setSearchFilter(bool b)
+    {
+        s_earchFilter = b;
+    }
 
-  protected:
+protected:
 
-    enum ApOn { articles=0 , threads=1 };
+    enum ApOn { articles = 0 , threads = 1 };
     bool applyFilter(KNRemoteArticle *a);
     bool applyFilter(KNLocalArticle *a);
 

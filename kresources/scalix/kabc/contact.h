@@ -25,11 +25,10 @@
 
 namespace Scalix {
 
-class Contact
-{
-  public:
-    static QString toXml( const KABC::Addressee &addr );
-    static KABC::Addressee fromXml( const QString &xml );
+class Contact {
+public:
+    static QString toXml(const KABC::Addressee &addr);
+    static KABC::Addressee fromXml(const QString &xml);
 };
 
 }

@@ -37,7 +37,7 @@ namespace Backend {
 
 MK4ConfWidget::MK4ConfWidget() : MK4ConfWidgetBase()
 {
-    if (MK4Config::archivePath() == StorageMK4Impl::defaultArchivePath() || MK4Config::archivePath().isEmpty())
+    if(MK4Config::archivePath() == StorageMK4Impl::defaultArchivePath() || MK4Config::archivePath().isEmpty())
     {
         filereq->setURL(StorageMK4Impl::defaultArchivePath());
         MK4Config::setArchivePath(StorageMK4Impl::defaultArchivePath());
@@ -53,14 +53,14 @@ MK4ConfWidget::MK4ConfWidget() : MK4ConfWidgetBase()
     }
     filereq->setURL(MK4Config::archivePath());
     connect(cbUseDefault, SIGNAL(toggled(bool)), this, SLOT(slotChkBoxUseDefault(bool)));
-    
+
 }
 
 void MK4ConfWidget::accept()
 {
 
     QString path = cbUseDefault->isChecked() ? StorageMK4Impl::defaultArchivePath() : filereq->url();
-    if (path != MK4Config::archivePath())
+    if(path != MK4Config::archivePath())
     {
         // TODO: if the user changed the archive location, inform him that
         // the archive is not migrated automatically, but that he has to
@@ -74,7 +74,7 @@ void MK4ConfWidget::accept()
 
 void MK4ConfWidget::slotChkBoxUseDefault(bool checked)
 {
-    if (checked)
+    if(checked)
     {
         filereq->setURL(StorageMK4Impl::defaultArchivePath());
         filereq->setEnabled(false);

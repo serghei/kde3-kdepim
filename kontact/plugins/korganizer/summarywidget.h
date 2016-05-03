@@ -36,30 +36,36 @@ class QLabel;
 
 class KOrganizerPlugin;
 
-class SummaryWidget : public Kontact::Summary
-{
-  Q_OBJECT
+class SummaryWidget : public Kontact::Summary {
+    Q_OBJECT
 
-  public:
-    SummaryWidget( KOrganizerPlugin *plugin, QWidget *parent,
-                   const char *name = 0 );
+public:
+    SummaryWidget(KOrganizerPlugin *plugin, QWidget *parent,
+                  const char *name = 0);
     ~SummaryWidget();
 
-    int summaryHeight() const { return 3; }
+    int summaryHeight() const
+    {
+        return 3;
+    }
     QStringList configModules() const;
-  public slots:
-    void updateSummary( bool force = false ) { Q_UNUSED( force ); updateView(); }
+public slots:
+    void updateSummary(bool force = false)
+    {
+        Q_UNUSED(force);
+        updateView();
+    }
 
-  protected:
-    virtual bool eventFilter( QObject *obj, QEvent* e );
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *e);
 
-  private slots:
+private slots:
     void updateView();
-    void popupMenu( const QString &uid );
-    void viewEvent( const QString &uid );
-    void removeEvent( const QString &uid );
+    void popupMenu(const QString &uid);
+    void viewEvent(const QString &uid);
+    void removeEvent(const QString &uid);
 
-  private:
+private:
     KOrganizerPlugin *mPlugin;
     QGridLayout *mLayout;
 

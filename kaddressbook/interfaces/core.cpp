@@ -25,8 +25,8 @@
 
 using namespace KAB;
 
-Core::Core( KXMLGUIClient *client, QObject *parent, const char *name )
-  : QObject( parent, name ), mGUIClient( client )
+Core::Core(KXMLGUIClient *client, QObject *parent, const char *name)
+    : QObject(parent, name), mGUIClient(client)
 {
 }
 

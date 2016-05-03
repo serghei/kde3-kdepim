@@ -45,9 +45,8 @@ class KOTodoView;
   @author Cornelius Schumacher <schumacher@kde.org>
   @see KOTodoView
 */
-class KOTodoViewItem : public QCheckListItem
-{
-  public:
+class KOTodoViewItem : public QCheckListItem {
+public:
     /**
       Constructor.
 
@@ -61,25 +60,28 @@ class KOTodoViewItem : public QCheckListItem
 
     void construct();
 
-    Todo *todo() const { return mTodo; }
+    Todo *todo() const
+    {
+        return mTodo;
+    }
 
     bool isAlternate();
-    int compare( QListViewItem *i, int col, bool ascending ) const;
+    int compare(QListViewItem *i, int col, bool ascending) const;
     virtual void paintCell(QPainter *p, const QColorGroup &cg,
-      int column, int width, int alignment);
+                           int column, int width, int alignment);
 
-  protected:
+protected:
 #if QT_VERSION >= 300
-    void paintBranches(QPainter *p,const QColorGroup & cg,int w,int y,int h);
+    void paintBranches(QPainter *p, const QColorGroup &cg, int w, int y, int h);
 #else
 #endif
-  virtual void stateChange(bool);
+    virtual void stateChange(bool);
 
-  private:
+private:
     Todo *mTodo;
     KOTodoView *mTodoView;
     QDateTime mEffectiveDueDate;
-    int compareDueDates( const KOTodoViewItem *b ) const;
+    int compareDueDates(const KOTodoViewItem *b) const;
 
     uint m_odd : 1;
     uint m_known : 1;

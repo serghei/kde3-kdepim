@@ -33,8 +33,8 @@ IdMapper::IdMapper()
 {
 }
 
-IdMapper::IdMapper( const QString &path, const QString &identifier )
-  : mPath( path ), mIdentifier( identifier )
+IdMapper::IdMapper(const QString &path, const QString &identifier)
+    : mPath(path), mIdentifier(identifier)
 {
 }
 
@@ -42,150 +42,157 @@ IdMapper::~IdMapper()
 {
 }
 
-void IdMapper::setPath( const QString &path )
+void IdMapper::setPath(const QString &path)
 {
-  mPath = path;
+    mPath = path;
 }
 
-void IdMapper::setIdentifier( const QString &identifier )
+void IdMapper::setIdentifier(const QString &identifier)
 {
-  mIdentifier = identifier;
+    mIdentifier = identifier;
 }
 
 QString IdMapper::filename()
 {
-  QString file = mPath;
-  if ( !file.endsWith( "/" ) ) file += "/";
-  file += mIdentifier;
+    QString file = mPath;
+    if(!file.endsWith("/")) file += "/";
+    file += mIdentifier;
 
-  return locateLocal( "data", file );
+    return locateLocal("data", file);
 }
 
 bool IdMapper::load()
 {
-  QFile file( filename() );
-  if ( !file.open( IO_ReadOnly ) ) {
-    kdError(5800) << "Can't read uid map file '" << filename() << "'" << endl;
-    return false;
-  }
+    QFile file(filename());
+    if(!file.open(IO_ReadOnly))
+    {
+        kdError(5800) << "Can't read uid map file '" << filename() << "'" << endl;
+        return false;
+    }
 
-  clear();
+    clear();
 
-  QString line;
-  while ( file.readLine( line, 1024 ) != -1 ) {
-    line.truncate( line.length() - 2 ); // strip newline
+    QString line;
+    while(file.readLine(line, 1024) != -1)
+    {
+        line.truncate(line.length() - 2);   // strip newline
 
-    QStringList parts = QStringList::split( "\x02\x02", line, true );
-    mIdMap.insert( parts[ 0 ], parts[ 1 ] );
-    mFingerprintMap.insert( parts[ 0 ], parts[ 2 ] );
-  }
+        QStringList parts = QStringList::split("\x02\x02", line, true);
+        mIdMap.insert(parts[ 0 ], parts[ 1 ]);
+        mFingerprintMap.insert(parts[ 0 ], parts[ 2 ]);
+    }
 
-  file.close();
+    file.close();
 
-  return true;
+    return true;
 }
 
 bool IdMapper::save()
 {
-  QFile file( filename() );
-  if ( !file.open( IO_WriteOnly ) ) {
-    kdError(5800) << "Can't write uid map file '" << filename() << "'" << endl;
-    return false;
-  }
+    QFile file(filename());
+    if(!file.open(IO_WriteOnly))
+    {
+        kdError(5800) << "Can't write uid map file '" << filename() << "'" << endl;
+        return false;
+    }
 
-  QString content;
+    QString content;
 
-  QMap<QString, QVariant>::Iterator it;
-  for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    QString fingerprint( "" );
-    if ( mFingerprintMap.contains( it.key() ) )
-      fingerprint = mFingerprintMap[ it.key() ];
-    content += it.key() + "\x02\x02" + it.data().toString() + "\x02\x02" + fingerprint + "\r\n";
-  }
+    QMap<QString, QVariant>::Iterator it;
+    for(it = mIdMap.begin(); it != mIdMap.end(); ++it)
+    {
+        QString fingerprint("");
+        if(mFingerprintMap.contains(it.key()))
+            fingerprint = mFingerprintMap[ it.key() ];
+        content += it.key() + "\x02\x02" + it.data().toString() + "\x02\x02" + fingerprint + "\r\n";
+    }
 
-  file.writeBlock( content.latin1(), qstrlen( content.latin1() ) );
-  file.close();
+    file.writeBlock(content.latin1(), qstrlen(content.latin1()));
+    file.close();
 
-  return true;
+    return true;
 }
 
 void IdMapper::clear()
 {
-  mIdMap.clear();
-  mFingerprintMap.clear();
+    mIdMap.clear();
+    mFingerprintMap.clear();
 }
 
-void IdMapper::setRemoteId( const QString &localId, const QString &remoteId )
+void IdMapper::setRemoteId(const QString &localId, const QString &remoteId)
 {
-  mIdMap.replace( localId, remoteId );
+    mIdMap.replace(localId, remoteId);
 }
 
-void IdMapper::removeRemoteId( const QString &remoteId )
+void IdMapper::removeRemoteId(const QString &remoteId)
 {
-  QMap<QString, QVariant>::Iterator it;
-  for ( it = mIdMap.begin(); it != mIdMap.end(); ++it )
-    if ( it.data().toString() == remoteId ) {
-      mIdMap.remove( it );
-      mFingerprintMap.remove( it.key() );
-      return;
-    }
+    QMap<QString, QVariant>::Iterator it;
+    for(it = mIdMap.begin(); it != mIdMap.end(); ++it)
+        if(it.data().toString() == remoteId)
+        {
+            mIdMap.remove(it);
+            mFingerprintMap.remove(it.key());
+            return;
+        }
 }
 
-QString IdMapper::remoteId( const QString &localId ) const
+QString IdMapper::remoteId(const QString &localId) const
 {
-  QMap<QString, QVariant>::ConstIterator it;
-  it = mIdMap.find( localId );
+    QMap<QString, QVariant>::ConstIterator it;
+    it = mIdMap.find(localId);
 
-  if ( it != mIdMap.end() )
-    return it.data().toString();
-  else
+    if(it != mIdMap.end())
+        return it.data().toString();
+    else
+        return QString::null;
+}
+
+QString IdMapper::localId(const QString &remoteId) const
+{
+    QMap<QString, QVariant>::ConstIterator it;
+    for(it = mIdMap.begin(); it != mIdMap.end(); ++it)
+        if(it.data().toString() == remoteId)
+            return it.key();
+
     return QString::null;
-}
-
-QString IdMapper::localId( const QString &remoteId ) const
-{
-  QMap<QString, QVariant>::ConstIterator it;
-  for ( it = mIdMap.begin(); it != mIdMap.end(); ++it )
-    if ( it.data().toString() == remoteId )
-      return it.key();
-
-  return QString::null;
 }
 
 QString IdMapper::asString() const
 {
-  QString content;
+    QString content;
 
-  QMap<QString, QVariant>::ConstIterator it;
-  for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    QString fp;
-    if ( mFingerprintMap.contains( it.key() ) )
-      fp = mFingerprintMap[ it.key() ];
-    content += it.key() + "\t" + it.data().toString() + "\t" + fp + "\r\n";
-  }
+    QMap<QString, QVariant>::ConstIterator it;
+    for(it = mIdMap.begin(); it != mIdMap.end(); ++it)
+    {
+        QString fp;
+        if(mFingerprintMap.contains(it.key()))
+            fp = mFingerprintMap[ it.key() ];
+        content += it.key() + "\t" + it.data().toString() + "\t" + fp + "\r\n";
+    }
 
-  return content;
+    return content;
 }
 
-void IdMapper::setFingerprint( const QString &localId, const QString &fingerprint )
+void IdMapper::setFingerprint(const QString &localId, const QString &fingerprint)
 {
-  mFingerprintMap.insert( localId, fingerprint );
+    mFingerprintMap.insert(localId, fingerprint);
 }
 
-const QString& IdMapper::fingerprint( const QString &localId ) const
+const QString &IdMapper::fingerprint(const QString &localId) const
 {
-  if ( mFingerprintMap.contains( localId ) )
-    return mFingerprintMap[ localId ];
-  else 
-    return QString::null;
+    if(mFingerprintMap.contains(localId))
+        return mFingerprintMap[ localId ];
+    else
+        return QString::null;
 }
 
 QMap<QString, QString> IdMapper::remoteIdMap() const
 {
-  QMap<QString, QString> reverseMap;
-  QMap<QString, QVariant>::ConstIterator it;
-  for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    reverseMap.insert( it.data().toString(), it.key() );
-  }
-  return reverseMap;
+    QMap<QString, QString> reverseMap;
+    QMap<QString, QVariant>::ConstIterator it;
+    for(it = mIdMap.begin(); it != mIdMap.end(); ++it)
+    {
+        reverseMap.insert(it.data().toString(), it.key());
+    }
+    return reverseMap;
 }

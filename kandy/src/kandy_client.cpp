@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     // do a 'send' for now
     QByteArray data;
     QDataStream ds(data, IO_WriteOnly);
-    if (argc > 1)
+    if(argc > 1)
         ds << QString(argv[1]);
     else
         ds << QString("http://www.kde.org");

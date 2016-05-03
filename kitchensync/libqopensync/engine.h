@@ -28,15 +28,14 @@ class OSyncEngine;
 
 namespace QSync {
 
-class Engine
-{
-  friend class CallbackHandler;
+class Engine {
+    friend class CallbackHandler;
 
-  public:
+public:
     /**
       Constructs an engine .
      */
-    Engine( const Group &group );
+    Engine(const Group &group);
 
     /**
       Destroys the engine.
@@ -63,7 +62,7 @@ class Engine
      */
     void abort();
 
-  private:
+private:
     OSyncEngine *mEngine;
 };
 

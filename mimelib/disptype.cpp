@@ -31,20 +31,22 @@
 #include <mimelib/enum.h>
 
 
-const char* const DwDispositionType::sClassName = "DwDispositionType";
+const char *const DwDispositionType::sClassName = "DwDispositionType";
 
 
-DwDispositionType* (*DwDispositionType::sNewDispositionType)(
-    const DwString&, DwMessageComponent*) = 0;
+DwDispositionType *(*DwDispositionType::sNewDispositionType)(
+    const DwString &, DwMessageComponent *) = 0;
 
 
-DwDispositionType* DwDispositionType::NewDispositionType(
-    const DwString& aStr, DwMessageComponent* aParent)
+DwDispositionType *DwDispositionType::NewDispositionType(
+    const DwString &aStr, DwMessageComponent *aParent)
 {
-    if (sNewDispositionType) {
+    if(sNewDispositionType)
+    {
         return sNewDispositionType(aStr, aParent);
     }
-    else {
+    else
+    {
         return new DwDispositionType(aStr, aParent);
     }
 }
@@ -59,14 +61,15 @@ DwDispositionType::DwDispositionType()
 }
 
 
-DwDispositionType::DwDispositionType(const DwDispositionType& aDispType)
-  : DwFieldBody(aDispType),
-    mDispositionTypeStr(aDispType.mDispositionTypeStr),
-    mFilenameStr(aDispType.mFilenameStr)
+DwDispositionType::DwDispositionType(const DwDispositionType &aDispType)
+    : DwFieldBody(aDispType),
+      mDispositionTypeStr(aDispType.mDispositionTypeStr),
+      mFilenameStr(aDispType.mFilenameStr)
 {
     mFirstParameter = 0;
     mDispositionType = aDispType.mDispositionType;
-    if (aDispType.mFirstParameter) {
+    if(aDispType.mFirstParameter)
+    {
         CopyParameterList(aDispType.mFirstParameter);
     }
     mClassId = kCidDispositionType;
@@ -74,9 +77,9 @@ DwDispositionType::DwDispositionType(const DwDispositionType& aDispType)
 }
 
 
-DwDispositionType::DwDispositionType(const DwString& aStr,
-    DwMessageComponent* aParent)
-  : DwFieldBody(aStr, aParent)
+DwDispositionType::DwDispositionType(const DwString &aStr,
+                                     DwMessageComponent *aParent)
+    : DwFieldBody(aStr, aParent)
 {
     mDispositionType = DwMime::kDispTypeNull;
     mFirstParameter = 0;
@@ -87,28 +90,32 @@ DwDispositionType::DwDispositionType(const DwString& aStr,
 
 DwDispositionType::~DwDispositionType()
 {
-    if (mFirstParameter) {
+    if(mFirstParameter)
+    {
         DeleteParameterList();
     }
 }
 
 
-const DwDispositionType& DwDispositionType::operator = (
-    const DwDispositionType& aDispType)
+const DwDispositionType &DwDispositionType::operator = (
+    const DwDispositionType &aDispType)
 {
-    if (this == &aDispType) return *this;
+    if(this == &aDispType) return *this;
     mDispositionType    = aDispType.mDispositionType;
     mDispositionTypeStr = aDispType.mDispositionTypeStr;
     mFilenameStr        = aDispType.mFilenameStr;
 
-    if (mFirstParameter) {
+    if(mFirstParameter)
+    {
         DeleteParameterList();
     }
-    if (aDispType.mFirstParameter) {
+    if(aDispType.mFirstParameter)
+    {
         CopyParameterList(aDispType.mFirstParameter);
     }
 
-    if (mParent) {
+    if(mParent)
+    {
         mParent->SetModified();
     }
 
@@ -130,13 +137,13 @@ void DwDispositionType::SetDispositionType(int aType)
 }
 
 
-const DwString& DwDispositionType::DispositionTypeStr() const
+const DwString &DwDispositionType::DispositionTypeStr() const
 {
     return mDispositionTypeStr;
 }
 
 
-void DwDispositionType::SetDispositionTypeStr(const DwString& aStr)
+void DwDispositionType::SetDispositionTypeStr(const DwString &aStr)
 {
     mDispositionTypeStr = aStr;
     StrToEnum();
@@ -144,17 +151,19 @@ void DwDispositionType::SetDispositionTypeStr(const DwString& aStr)
 }
 
 
-const DwString& DwDispositionType::Filename() const
+const DwString &DwDispositionType::Filename() const
 {
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        if (DwStrcasecmp(param->Attribute(), "filename") == 0) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        if(DwStrcasecmp(param->Attribute(), "filename") == 0)
+        {
             // Filename parameter found. Return its value.
             // Implementation note: this member function is const, which
             // forbids us from assigning to mFilenameStr.  The following
             // trick gets around this.  (ANSI implementations could use the
             // "mutable" declaration).
-            DwDispositionType* _this = (DwDispositionType*) this;
+            DwDispositionType *_this = (DwDispositionType *) this;
             _this->mFilenameStr = param->Value();
             break;
         }
@@ -164,14 +173,16 @@ const DwString& DwDispositionType::Filename() const
 }
 
 
-void DwDispositionType::SetFilename(const DwString& aStr)
+void DwDispositionType::SetFilename(const DwString &aStr)
 {
     mFilenameStr = aStr;
     // Search for filename parameter in parameter list.  If found, set its
     // value.
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        if (DwStrcasecmp(param->Attribute(), "filename") == 0) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        if(DwStrcasecmp(param->Attribute(), "filename") == 0)
+        {
             param->SetValue(mFilenameStr);
             return;
         }
@@ -185,29 +196,33 @@ void DwDispositionType::SetFilename(const DwString& aStr)
 }
 
 
-DwParameter* DwDispositionType::FirstParameter() const
+DwParameter *DwDispositionType::FirstParameter() const
 {
     return mFirstParameter;
 }
 
 
-void DwDispositionType::AddParameter(DwParameter* aParam)
+void DwDispositionType::AddParameter(DwParameter *aParam)
 {
     _AddParameter(aParam);
     SetModified();
 }
 
 
-void DwDispositionType::_AddParameter(DwParameter* aParam)
+void DwDispositionType::_AddParameter(DwParameter *aParam)
 {
-    if (!mFirstParameter) {
+    if(!mFirstParameter)
+    {
         mFirstParameter = aParam;
     }
-    else {
-        DwParameter* cur = mFirstParameter;
-        if( cur ) {
-            DwParameter* next = cur->Next();
-            while (next) {
+    else
+    {
+        DwParameter *cur = mFirstParameter;
+        if(cur)
+        {
+            DwParameter *next = cur->Next();
+            while(next)
+            {
                 cur = next;
                 next = cur->Next();
             }
@@ -223,14 +238,17 @@ void DwDispositionType::Parse()
     mIsModified = 0;
     mDispositionType = DwMime::kDispTypeNull;
     mDispositionTypeStr = "";
-    if (mFirstParameter) {
+    if(mFirstParameter)
+    {
         DeleteParameterList();
     }
-    if (mString.length() == 0) return;
+    if(mString.length() == 0) return;
     DwRfc1521Tokenizer tokenizer(mString);
     int found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkToken) {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkToken)
+        {
             mDispositionTypeStr = tokenizer.Token();
             found = 1;
         }
@@ -238,17 +256,21 @@ void DwDispositionType::Parse()
     }
     // Get parameters
     DwTokenString tokenStr(mString);
-    while (1) {
+    while(1)
+    {
         // Get ';'
         found = 0;
-        while (!found && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkTspecial
-                && tokenizer.Token()[0] == ';') {
+        while(!found && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkTspecial
+                    && tokenizer.Token()[0] == ';')
+            {
                 found = 1;
             }
             ++tokenizer;
         }
-        if (tokenizer.Type() == eTkNull) {
+        if(tokenizer.Type() == eTkNull)
+        {
             // No more parameters
             break;
         }
@@ -256,8 +278,10 @@ void DwDispositionType::Parse()
         // Get attribute
         DwString attrib;
         int attribFound = 0;
-        while (!attribFound && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkToken) {
+        while(!attribFound && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkToken)
+            {
                 attrib = tokenizer.Token();
                 attribFound = 1;
             }
@@ -265,25 +289,30 @@ void DwDispositionType::Parse()
         }
         // Get '='
         found = 0;
-        while (!found && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkTspecial
-                && tokenizer.Token()[0] == '=') {
+        while(!found && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkTspecial
+                    && tokenizer.Token()[0] == '=')
+            {
                 found = 1;
             }
             ++tokenizer;
         }
         // Get value
         int valueFound = 0;
-        while (!valueFound && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkToken
-                || tokenizer.Type() == eTkQuotedString) {
+        while(!valueFound && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkToken
+                    || tokenizer.Type() == eTkQuotedString)
+            {
                 valueFound = 1;
             }
             ++tokenizer;
         }
-        if (attribFound && valueFound) {
+        if(attribFound && valueFound)
+        {
             tokenStr.ExtendTo(tokenizer);
-            DwParameter* param =
+            DwParameter *param =
                 DwParameter::NewParameter(tokenStr.Tokens(), this);
             param->Parse();
             _AddParameter(param);
@@ -295,18 +324,21 @@ void DwDispositionType::Parse()
 
 void DwDispositionType::Assemble()
 {
-    if (!mIsModified) return;
+    if(!mIsModified) return;
     mString = "";
-    if (mDispositionTypeStr.length() == 0)
+    if(mDispositionTypeStr.length() == 0)
         return;
     mString += mDispositionTypeStr;
-    DwParameter* param = FirstParameter();
-    while (param) {
+    DwParameter *param = FirstParameter();
+    while(param)
+    {
         param->Assemble();
-        if (IsFolding()) {
+        if(IsFolding())
+        {
             mString += ";" DW_EOL "  ";
         }
-        else {
+        else
+        {
             mString += "; ";
         }
         mString += param->AsString();
@@ -316,7 +348,7 @@ void DwDispositionType::Assemble()
 }
 
 
-DwMessageComponent* DwDispositionType::Clone() const
+DwMessageComponent *DwDispositionType::Clone() const
 {
     return new DwDispositionType(*this);
 }
@@ -324,45 +356,52 @@ DwMessageComponent* DwDispositionType::Clone() const
 
 void DwDispositionType::EnumToStr()
 {
-    switch (mDispositionType) {
-    case DwMime::kDispTypeInline:
-        mDispositionTypeStr = "inline";
-        break;
-    case DwMime::kDispTypeAttachment:
-        mDispositionTypeStr = "attachment";
-        break;
+    switch(mDispositionType)
+    {
+        case DwMime::kDispTypeInline:
+            mDispositionTypeStr = "inline";
+            break;
+        case DwMime::kDispTypeAttachment:
+            mDispositionTypeStr = "attachment";
+            break;
     }
 }
 
 
 void DwDispositionType::StrToEnum()
 {
-    switch (mDispositionTypeStr[0]) {
-    case 'i':
-        if (DwStrcasecmp(mDispositionTypeStr, "inline") == 0) {
-            mDispositionType = DwMime::kDispTypeInline;
-        }
-        else {
-            mDispositionType = DwMime::kDispTypeUnknown;
-        }
-        break;
-    case 'a':
-        if (DwStrcasecmp(mDispositionTypeStr, "attachment") == 0) {
-            mDispositionType = DwMime::kDispTypeAttachment;
-        }
-        else {
-            mDispositionType = DwMime::kDispTypeUnknown;
-        }
-        break;
+    switch(mDispositionTypeStr[0])
+    {
+        case 'i':
+            if(DwStrcasecmp(mDispositionTypeStr, "inline") == 0)
+            {
+                mDispositionType = DwMime::kDispTypeInline;
+            }
+            else
+            {
+                mDispositionType = DwMime::kDispTypeUnknown;
+            }
+            break;
+        case 'a':
+            if(DwStrcasecmp(mDispositionTypeStr, "attachment") == 0)
+            {
+                mDispositionType = DwMime::kDispTypeAttachment;
+            }
+            else
+            {
+                mDispositionType = DwMime::kDispTypeUnknown;
+            }
+            break;
     }
 }
 
 
 void DwDispositionType::DeleteParameterList()
 {
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        DwParameter* nextParam = param->Next();
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        DwParameter *nextParam = param->Next();
         delete param;
         param = nextParam;
     }
@@ -371,11 +410,12 @@ void DwDispositionType::DeleteParameterList()
 }
 
 
-void DwDispositionType::CopyParameterList(DwParameter* aFirst)
+void DwDispositionType::CopyParameterList(DwParameter *aFirst)
 {
-    DwParameter* param = aFirst;
-    while (param) {
-        DwParameter* newParam = (DwParameter*) param->Clone();
+    DwParameter *param = aFirst;
+    while(param)
+    {
+        DwParameter *newParam = (DwParameter *) param->Clone();
         AddParameter(newParam);
         param = param->Next();
     }
@@ -383,51 +423,56 @@ void DwDispositionType::CopyParameterList(DwParameter* aFirst)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwDispositionType::PrintDebugInfo(std::ostream& aStrm, int aDepth) const
+void DwDispositionType::PrintDebugInfo(std::ostream &aStrm, int aDepth) const
 {
     aStrm <<
-    "------------ Debug info for DwDispositionType class ------------\n";
+          "------------ Debug info for DwDispositionType class ------------\n";
     _PrintDebugInfo(aStrm);
     int depth = aDepth - 1;
     depth = (depth >= 0) ? depth : 0;
-    if (aDepth == 0 || depth > 0) {
-        DwParameter* param = mFirstParameter;
-        while (param) {
+    if(aDepth == 0 || depth > 0)
+    {
+        DwParameter *param = mFirstParameter;
+        while(param)
+        {
             param->PrintDebugInfo(aStrm, depth);
             param = param->Next();
         }
     }
 }
 #else
-void DwDispositionType::PrintDebugInfo(std::ostream&, int) const {}
+void DwDispositionType::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwDispositionType::_PrintDebugInfo(std::ostream& aStrm) const
+void DwDispositionType::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwFieldBody::_PrintDebugInfo(aStrm);
     aStrm << "Disposition Type: " << mDispositionTypeStr
-        << " (" << mDispositionType    << ")\n";
+          << " (" << mDispositionType    << ")\n";
     aStrm << "Filename:         " << mFilenameStr << "\n";
     aStrm << "Parameters:       ";
-    DwParameter* param = mFirstParameter;
-    if (param) {
+    DwParameter *param = mFirstParameter;
+    if(param)
+    {
         int count = 0;
-        while (param) {
-            if (count) aStrm << ' ';
+        while(param)
+        {
+            if(count) aStrm << ' ';
             aStrm << param->ObjectId();
             param = param->Next();
             ++count;
         }
         aStrm << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
 }
 #else
-void DwDispositionType::_PrintDebugInfo(std::ostream& ) const {}
+void DwDispositionType::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
@@ -436,10 +481,11 @@ void DwDispositionType::CheckInvariants() const
 #if defined(DW_DEBUG_VERSION)
     mDispositionTypeStr.CheckInvariants();
     mFilenameStr.CheckInvariants();
-    DwParameter* param = mFirstParameter;
-    while (param) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
         param->CheckInvariants();
-        assert((DwMessageComponent*) this == param->Parent());
+        assert((DwMessageComponent *) this == param->Parent());
         param = param->Next();
     }
 #endif // defined(DW_DEBUG_VERSION)

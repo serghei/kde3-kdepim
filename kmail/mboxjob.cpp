@@ -46,15 +46,15 @@ namespace KMail {
 
 
 //-----------------------------------------------------------------------------
-MboxJob::MboxJob( KMMessage *msg, JobType jt , KMFolder *folder  )
-  : FolderJob( msg, jt, folder )
+MboxJob::MboxJob(KMMessage *msg, JobType jt , KMFolder *folder)
+    : FolderJob(msg, jt, folder)
 {
 }
 
 //-----------------------------------------------------------------------------
-MboxJob::MboxJob( QPtrList<KMMessage>& msgList, const QString& sets,
-                  JobType jt, KMFolder *folder  )
-  : FolderJob( msgList, sets, jt, folder )
+MboxJob::MboxJob(QPtrList<KMMessage> &msgList, const QString &sets,
+                 JobType jt, KMFolder *folder)
+    : FolderJob(msgList, sets, jt, folder)
 {
 }
 
@@ -67,56 +67,57 @@ MboxJob::~MboxJob()
 void
 MboxJob::execute()
 {
-  QTimer::singleShot( 0, this, SLOT(startJob()) );
+    QTimer::singleShot(0, this, SLOT(startJob()));
 }
 
 //-----------------------------------------------------------------------------
 void
-MboxJob::setParent( const KMFolderMbox *parent )
+MboxJob::setParent(const KMFolderMbox *parent)
 {
-  mParent = const_cast<KMFolderMbox*>( parent );
+    mParent = const_cast<KMFolderMbox *>(parent);
 }
 
 //-----------------------------------------------------------------------------
 void
 MboxJob::startJob()
 {
-  KMMessage *msg = mMsgList.first();
-  assert( (msg && ( mParent || msg->parent() )) );
-  switch( mType ) {
-  case tGetMessage:
+    KMMessage *msg = mMsgList.first();
+    assert((msg && (mParent || msg->parent())));
+    switch(mType)
     {
-      kdDebug(5006)<<msg<<endl;
-      kdDebug(5006)<<this<<endl;
-      kdDebug(5006)<<"Done"<<endl;
-      //KMMessage* msg = mParent->getMsg( mParent->find( mMsgList.first() ) );
-      msg->setComplete( true );
-      emit messageRetrieved( msg );
+        case tGetMessage:
+        {
+            kdDebug(5006) << msg << endl;
+            kdDebug(5006) << this << endl;
+            kdDebug(5006) << "Done" << endl;
+            //KMMessage* msg = mParent->getMsg( mParent->find( mMsgList.first() ) );
+            msg->setComplete(true);
+            emit messageRetrieved(msg);
+        }
+        break;
+        case tDeleteMessage:
+        {
+            mParent->removeMsg(mMsgList);
+        }
+        break;
+        case tPutMessage:
+        {
+            mParent->addMsg(mMsgList.first());
+            emit messageStored(mMsgList.first());
+        }
+        break;
+        case tCopyMessage:
+        case tCreateFolder:
+        case tGetFolder:
+        case tListMessages:
+            kdDebug(5006) << k_funcinfo << "### Serious problem! " << endl;
+            break;
+        default:
+            break;
     }
-    break;
-  case tDeleteMessage:
-    {
-      mParent->removeMsg( mMsgList );
-    }
-    break;
-  case tPutMessage:
-    {
-      mParent->addMsg(  mMsgList.first() );
-      emit messageStored( mMsgList.first() );
-    }
-    break;
-  case tCopyMessage:
-  case tCreateFolder:
-  case tGetFolder:
-  case tListMessages:
-    kdDebug(5006)<<k_funcinfo<<"### Serious problem! "<<endl;
-    break;
-  default:
-    break;
-  }
-  //OK, we're done
-  //delete this;
-  deleteLater();
+    //OK, we're done
+    //delete this;
+    deleteLater();
 }
 
 }

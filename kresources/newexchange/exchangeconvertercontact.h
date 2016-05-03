@@ -28,24 +28,23 @@
 
 namespace KABC {
 
-class ExchangeConverterContact
-{
-  public:
+class ExchangeConverterContact {
+public:
 
     ExchangeConverterContact();
 
-    static void createRequest( QDomDocument &doc, QDomElement &root );
+    static void createRequest(QDomDocument &doc, QDomElement &root);
 
-    QDomDocument createWebDAV( Addressee addr );
+    QDomDocument createWebDAV(Addressee addr);
 
-    Addressee::List parseWebDAV( const QDomDocument& davdata );
-    bool readAddressee( const QDomElement &node, Addressee &addressee );
+    Addressee::List parseWebDAV(const QDomDocument &davdata);
+    bool readAddressee(const QDomElement &node, Addressee &addressee);
 
-  protected:
-    bool extractAddress( const QDomElement &node, Addressee &addressee, int type,
-      const QString &street, const QString &pobox, const QString &location, 
-      const QString &postalcode, const QString &state, const QString &country, 
-      const QString &countycode );
+protected:
+    bool extractAddress(const QDomElement &node, Addressee &addressee, int type,
+                        const QString &street, const QString &pobox, const QString &location,
+                        const QString &postalcode, const QString &state, const QString &country,
+                        const QString &countycode);
 };
 
 }

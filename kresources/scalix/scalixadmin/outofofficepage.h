@@ -28,23 +28,22 @@ class QPushButton;
 class QRadioButton;
 class QTextEdit;
 
-class OutOfOfficePage : public QWidget
-{
-  Q_OBJECT
+class OutOfOfficePage : public QWidget {
+    Q_OBJECT
 
-  public:
-    OutOfOfficePage( QWidget *parent = 0 );
+public:
+    OutOfOfficePage(QWidget *parent = 0);
     ~OutOfOfficePage();
 
-  private slots:
+private slots:
     void load();
-    void loaded( KIO::Job* );
+    void loaded(KIO::Job *);
     void store();
-    void stored( KIO::Job* );
+    void stored(KIO::Job *);
     void statusChanged();
     void changed();
 
-  private:
+private:
     QRadioButton *mEnabled;
     QRadioButton *mDisabled;
     QLabel *mLabel;

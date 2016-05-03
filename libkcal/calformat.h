@@ -40,9 +40,8 @@ class Calendar;
 
   @short Class providing in interface to a calendar format
 */
-class LIBKCAL_EXPORT CalFormat
-{
-  public:
+class LIBKCAL_EXPORT CalFormat {
+public:
     /** Constructs a new format. */
     CalFormat();
     /** Destruct calendar format. */
@@ -63,7 +62,7 @@ class LIBKCAL_EXPORT CalFormat
     /**
       Parse string and populate calendar with that information.
     */
-    virtual bool fromString(Calendar *, const QString & ) = 0;
+    virtual bool fromString(Calendar *, const QString &) = 0;
     /**
       Return calendar information as string.
     */
@@ -80,13 +79,22 @@ class LIBKCAL_EXPORT CalFormat
     /** Set the application name for use in unique IDs and error messages,
      *  and product ID for incidence PRODID property
      */
-    static void setApplication(const QString& app, const QString& productID);
+    static void setApplication(const QString &app, const QString &productID);
     /** Return the application name used in unique IDs and error messages */
-    static const QString& application()  { return mApplication; }
+    static const QString &application()
+    {
+        return mApplication;
+    }
     /** Return the PRODID string to write into calendar files */
-    static const QString& productId()  { return mProductId; }
+    static const QString &productId()
+    {
+        return mProductId;
+    }
     /** Return the PRODID string loaded from calendar file */
-    const QString &loadedProductId()  { return mLoadedProductId; }
+    const QString &loadedProductId()
+    {
+        return mLoadedProductId;
+    }
 
     /** Create a unique id string. */
     static QString createUniqueId();
@@ -97,10 +105,10 @@ class LIBKCAL_EXPORT CalFormat
     */
     void setException(ErrorFormat *error);
 
-  protected:
+protected:
     QString mLoadedProductId;         // PRODID string loaded from calendar file
 
-  private:
+private:
     ErrorFormat *mException;
 
     static QString mApplication;      // name of application for unique ID strings

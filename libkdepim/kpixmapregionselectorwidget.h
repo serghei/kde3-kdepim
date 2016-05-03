@@ -44,130 +44,132 @@ namespace KPIM {
  * @author Antonio Larrosa <larrosa@kde.org>
  * @since 3.4
  */
-class KPixmapRegionSelectorWidget : public QWidget
-{
-   Q_OBJECT
+class KPixmapRegionSelectorWidget : public QWidget {
+    Q_OBJECT
 
 public:
-   /**
-    * Constructor for a KPixmapRegionSelectorWidget.
-    */
-   KPixmapRegionSelectorWidget( QWidget *parent = 0L, const char *name=0L);
+    /**
+     * Constructor for a KPixmapRegionSelectorWidget.
+     */
+    KPixmapRegionSelectorWidget(QWidget *parent = 0L, const char *name = 0L);
 
-   /**
-    * Destructor for a KPixmapRegionSelectorWidget
-    */
-   ~KPixmapRegionSelectorWidget();
+    /**
+     * Destructor for a KPixmapRegionSelectorWidget
+     */
+    ~KPixmapRegionSelectorWidget();
 
-   /**
-    * Sets the pixmap which will be shown for the user to select a region from.
-    * @param pixmap The pixmap.  Must be non-null.
-    */
-   void setPixmap( const QPixmap &pixmap );
+    /**
+     * Sets the pixmap which will be shown for the user to select a region from.
+     * @param pixmap The pixmap.  Must be non-null.
+     */
+    void setPixmap(const QPixmap &pixmap);
 
-   /**
-    * @return the original whole pixmap that we're using in this widget as the
-    * pixmap the user is selecting a region from.
-    */
-   QPixmap pixmap() const { return m_unzoomedPixmap; }
+    /**
+     * @return the original whole pixmap that we're using in this widget as the
+     * pixmap the user is selecting a region from.
+     */
+    QPixmap pixmap() const
+    {
+        return m_unzoomedPixmap;
+    }
 
-   /**
-    * Sets the selected region to be @p rect (in zoomed pixmap coordinates)
-    */
-   void setSelectedRegion(const QRect &rect);
+    /**
+     * Sets the selected region to be @p rect (in zoomed pixmap coordinates)
+     */
+    void setSelectedRegion(const QRect &rect);
 
-   /**
-    * Returns the selected region ( in zoomed pixmap coordinates )
-    */
-   QRect selectedRegion() const;
+    /**
+     * Returns the selected region ( in zoomed pixmap coordinates )
+     */
+    QRect selectedRegion() const;
 
-   /**
-    * Returns the selected region ( in unzoomed, original pixmap coordinates )
-    */
-   QRect unzoomedSelectedRegion() const;
+    /**
+     * Returns the selected region ( in unzoomed, original pixmap coordinates )
+     */
+    QRect unzoomedSelectedRegion() const;
 
-   /**
-    * Resets the selection to use the whole image
-    */
-   void resetSelection();
+    /**
+     * Resets the selection to use the whole image
+     */
+    void resetSelection();
 
-   /**
-    * @returns a QImage object with just the region the user selected from the
-    * image
-    */
-   QImage selectedImage() const;
+    /**
+     * @returns a QImage object with just the region the user selected from the
+     * image
+     */
+    QImage selectedImage() const;
 
-   /**
-    * Sets the aspect ration that the selected subimage should have. The way to
-    * select it, is specifying an example valid @p width and @p height.
-    * @see setFreeSelectionAspectRatio()
-    */
-   void setSelectionAspectRatio(int width, int height);
+    /**
+     * Sets the aspect ration that the selected subimage should have. The way to
+     * select it, is specifying an example valid @p width and @p height.
+     * @see setFreeSelectionAspectRatio()
+     */
+    void setSelectionAspectRatio(int width, int height);
 
-   /**
-    * Allows the user to do a selection which has any aspect ratio. This is
-    * the default.
-    * @see setSelectionAspectRatio()
-    */
-   void setFreeSelectionAspectRatio();
+    /**
+     * Allows the user to do a selection which has any aspect ratio. This is
+     * the default.
+     * @see setSelectionAspectRatio()
+     */
+    void setFreeSelectionAspectRatio();
 
-   /**
-    * Sets the maximum size for the widget. If the image is larger than this
-    * (either horizontally or vertically), it's scaled to adjust to the maximum
-    * size (preserving the aspect ratio)
-    */
-   void setMaximumWidgetSize( int width, int height );
+    /**
+     * Sets the maximum size for the widget. If the image is larger than this
+     * (either horizontally or vertically), it's scaled to adjust to the maximum
+     * size (preserving the aspect ratio)
+     */
+    void setMaximumWidgetSize(int width, int height);
 
-   /**
-    * Rotates the image as specified by the @p direction parameter, also tries
-    * to rotate the selected region so that it doesn't change, as long as the
-    * forced aspect ratio setting is respected, in other case, the selected region
-    * is resetted.
-    */
-   void rotate(KImageEffect::RotateDirection direction);
+    /**
+     * Rotates the image as specified by the @p direction parameter, also tries
+     * to rotate the selected region so that it doesn't change, as long as the
+     * forced aspect ratio setting is respected, in other case, the selected region
+     * is resetted.
+     */
+    void rotate(KImageEffect::RotateDirection direction);
 
 public slots:
-   /**
-    * Rotates the current image 90º clockwise
-    */
-   void rotateClockwise();
-   /**
-    * Rotates the current image 90º counterclockwise
-    */
-   void rotateCounterclockwise();
+    /**
+     * Rotates the current image 90º clockwise
+     */
+    void rotateClockwise();
+    /**
+     * Rotates the current image 90º counterclockwise
+     */
+    void rotateCounterclockwise();
 
 protected:
-   /**
-    * Creates a KPopupMenu with the menu that appears when clicking with the right button on the label
-    */
-   virtual KPopupMenu *createPopupMenu();
+    /**
+     * Creates a KPopupMenu with the menu that appears when clicking with the right button on the label
+     */
+    virtual KPopupMenu *createPopupMenu();
 
 
 private:
-   bool eventFilter(QObject *obj, QEvent *ev);
+    bool eventFilter(QObject *obj, QEvent *ev);
 
-   /**
-    * Recalculates the pixmap that is shown based on the current selected area,
-    * the original image, etc.
-    */
-   void updatePixmap();
+    /**
+     * Recalculates the pixmap that is shown based on the current selected area,
+     * the original image, etc.
+     */
+    void updatePixmap();
 
-   QRect calcSelectionRectangle( const QPoint &startPoint, const QPoint & endPoint );
+    QRect calcSelectionRectangle(const QPoint &startPoint, const QPoint &endPoint);
 
-   enum CursorState { None=0, Resizing, Moving };
-   CursorState m_state;
+    enum CursorState { None = 0, Resizing, Moving };
+    CursorState m_state;
 
-   QPixmap m_unzoomedPixmap;
-   QPixmap m_originalPixmap;
-   QPixmap m_linedPixmap;
-   QRect   m_selectedRegion;
-   QLabel *m_label;
+    QPixmap m_unzoomedPixmap;
+    QPixmap m_originalPixmap;
+    QPixmap m_linedPixmap;
+    QRect   m_selectedRegion;
+    QLabel *m_label;
 
-   QPoint m_tempFirstClick;
-   double m_forcedAspectRatio;
+    QPoint m_tempFirstClick;
+    double m_forcedAspectRatio;
 
-   int m_maxWidth, m_maxHeight;
-   double m_zoomFactor;
+    int m_maxWidth, m_maxHeight;
+    double m_zoomFactor;
 };
 
 } // for namespace

@@ -27,164 +27,164 @@
   *@author Sven Carstens
   */
 
-class mailHeader:public mimeHeader
-{
+class mailHeader: public mimeHeader {
 public:
-  mailHeader ();
-  ~mailHeader ();
+    mailHeader();
+    ~mailHeader();
 
-  virtual void addHdrLine (mimeHdrLine *);
-  virtual void outputHeader (mimeIO &);
+    virtual void addHdrLine(mimeHdrLine *);
+    virtual void outputHeader(mimeIO &);
 
-  void addTo (const mailAddress & _adr)
-  {
-    toAdr.append (new mailAddress (_adr));
-  }
-  void addCC (const mailAddress & _adr)
-  {
-    ccAdr.append (new mailAddress (_adr));
-  }
-  void addBCC (const mailAddress & _adr)
-  {
-    bccAdr.append (new mailAddress (_adr));
-  }
+    void addTo(const mailAddress &_adr)
+    {
+        toAdr.append(new mailAddress(_adr));
+    }
+    void addCC(const mailAddress &_adr)
+    {
+        ccAdr.append(new mailAddress(_adr));
+    }
+    void addBCC(const mailAddress &_adr)
+    {
+        bccAdr.append(new mailAddress(_adr));
+    }
 
-  void setFrom (const mailAddress & _adr)
-  {
-    fromAdr = _adr;
-  }
-  void setSender (const mailAddress & _adr)
-  {
-    senderAdr = _adr;
-  }
-  void setReturnPath (const mailAddress & _adr)
-  {
-    returnpathAdr = _adr;
-  }
-  void setReplyTo (const mailAddress & _adr)
-  {
-    replytoAdr = _adr;
-  }
+    void setFrom(const mailAddress &_adr)
+    {
+        fromAdr = _adr;
+    }
+    void setSender(const mailAddress &_adr)
+    {
+        senderAdr = _adr;
+    }
+    void setReturnPath(const mailAddress &_adr)
+    {
+        returnpathAdr = _adr;
+    }
+    void setReplyTo(const mailAddress &_adr)
+    {
+        replytoAdr = _adr;
+    }
 
-  const QCString& getMessageId ()
-  {
-    return messageID;
-  }
-  void setMessageId (const QCString & _str)
-  {
-    messageID = _str;
-  }
+    const QCString &getMessageId()
+    {
+        return messageID;
+    }
+    void setMessageId(const QCString &_str)
+    {
+        messageID = _str;
+    }
 
-  const QCString& getInReplyTo ()
-  {
-    return inReplyTo;
-  }
-  void setInReplyTo (const QCString & _str)
-  {
-    inReplyTo = _str;
-  }
+    const QCString &getInReplyTo()
+    {
+        return inReplyTo;
+    }
+    void setInReplyTo(const QCString &_str)
+    {
+        inReplyTo = _str;
+    }
 
-  const QCString& getReferences ()
-  {
-    return references;
-  }
-  void setReferences (const QCString & _str)
-  {
-    references = _str;
-  }
+    const QCString &getReferences()
+    {
+        return references;
+    }
+    void setReferences(const QCString &_str)
+    {
+        references = _str;
+    }
 
-  /**
-   * set a unicode subject
-   */
-  void setSubject (const QString & _str)
-  {
-    _subject = rfcDecoder::encodeRFC2047String(_str).latin1();
-  }
-  /** 
-   * set a encoded subject
-   */
-  void setSubjectEncoded (const QCString & _str)
-  {
-    _subject = _str.simplifyWhiteSpace();
-  }
+    /**
+     * set a unicode subject
+     */
+    void setSubject(const QString &_str)
+    {
+        _subject = rfcDecoder::encodeRFC2047String(_str).latin1();
+    }
+    /**
+     * set a encoded subject
+     */
+    void setSubjectEncoded(const QCString &_str)
+    {
+        _subject = _str.simplifyWhiteSpace();
+    }
 
-  /** 
-   * get the unicode subject
-   */
-  const QString getSubject ()
-  {
-    return rfcDecoder::decodeRFC2047String(_subject);
-  }
-  /**
-   * get the encoded subject
-   */
-  const QCString& getSubjectEncoded ()
-  {
-    return _subject;
-  }
+    /**
+     * get the unicode subject
+     */
+    const QString getSubject()
+    {
+        return rfcDecoder::decodeRFC2047String(_subject);
+    }
+    /**
+     * get the encoded subject
+     */
+    const QCString &getSubjectEncoded()
+    {
+        return _subject;
+    }
 
-  /**
-   * set the date
-   */
-  void setDate (const QCString & _str)
-  {
-    mDate = _str;
-  }
+    /**
+     * set the date
+     */
+    void setDate(const QCString &_str)
+    {
+        mDate = _str;
+    }
 
-  /**
-   * get the date
-   */
-  const QCString& date ()
-  {
-    return mDate;
-  }
+    /**
+     * get the date
+     */
+    const QCString &date()
+    {
+        return mDate;
+    }
 
-  static int parseAddressList (const char *, QPtrList < mailAddress > *);
-  static QCString getAddressStr (QPtrList < mailAddress > *);
-  QPtrList < mailAddress > &to ()
-  {
-    return toAdr;
-  }
-  QPtrList < mailAddress > &cc ()
-  {
-    return ccAdr;
-  }
-  QPtrList < mailAddress > &bcc ()
-  {
-    return bccAdr;
-  }
+    static int parseAddressList(const char *, QPtrList < mailAddress > *);
+    static QCString getAddressStr(QPtrList < mailAddress > *);
+    QPtrList < mailAddress > &to()
+    {
+        return toAdr;
+    }
+    QPtrList < mailAddress > &cc()
+    {
+        return ccAdr;
+    }
+    QPtrList < mailAddress > &bcc()
+    {
+        return bccAdr;
+    }
 #ifdef KMAIL_COMPATIBLE
-  QString subject ()
-  {
-    return getSubject ();
-  }
-  const mailAddress & from ()
-  {
-    return fromAdr;
-  }
-  const mailAddress & replyTo ()
-  {
-    return replytoAdr;
-  }
-  void readConfig (void)
-  {;
-  }
+    QString subject()
+    {
+        return getSubject();
+    }
+    const mailAddress &from()
+    {
+        return fromAdr;
+    }
+    const mailAddress &replyTo()
+    {
+        return replytoAdr;
+    }
+    void readConfig(void)
+    {
+        ;
+    }
 #endif
 
 private:
-  QPtrList < mailAddress > toAdr;
-  QPtrList < mailAddress > ccAdr;
-  QPtrList < mailAddress > bccAdr;
-  mailAddress fromAdr;
-  mailAddress senderAdr;
-  mailAddress returnpathAdr;
-  mailAddress replytoAdr;
-  QCString _subject;
-  QCString mDate;
-  int gmt_offset;
-  QCString messageID;
-  QCString inReplyTo;
-  QCString references;
+    QPtrList < mailAddress > toAdr;
+    QPtrList < mailAddress > ccAdr;
+    QPtrList < mailAddress > bccAdr;
+    mailAddress fromAdr;
+    mailAddress senderAdr;
+    mailAddress returnpathAdr;
+    mailAddress replytoAdr;
+    QCString _subject;
+    QCString mDate;
+    int gmt_offset;
+    QCString messageID;
+    QCString inReplyTo;
+    QCString references;
 };
 
 #endif

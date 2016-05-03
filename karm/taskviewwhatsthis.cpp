@@ -1,7 +1,7 @@
 //
 // C++ Implementation: taskviewwhatsthis
 //
-// Description: 
+// Description:
 // This is a subclass of QWhatsThis, specially adapted for karm's taskview.
 //
 // Author: Thorsten Staerk <thorsten@staerk.de>, (C) 2005
@@ -14,28 +14,28 @@
 #include <klistview.h>
 #include <klocale.h>
 
-TaskViewWhatsThis::TaskViewWhatsThis( QWidget* qw )
- : QWhatsThis( qw )
+TaskViewWhatsThis::TaskViewWhatsThis(QWidget *qw)
+    : QWhatsThis(qw)
 {
-  _listView=(KListView *) qw;
+    _listView = (KListView *) qw;
 }
 
 TaskViewWhatsThis::~TaskViewWhatsThis()
 {
 }
 
-QString TaskViewWhatsThis::text ( const QPoint & pos )
+QString TaskViewWhatsThis::text(const QPoint &pos)
 {
-  QString desc = QString::null;
-  kdDebug(5970) << "entering TaskViewWhatsThis::text" << endl;
-  kdDebug(5970) << "x-pos:" << pos.x() << endl;
-  if ( pos.x() < _listView->columnWidth( 0 ) ) 
-  {
-    desc=i18n("Task Name shows the name of a task or subtask you are working on.");
-  }
-  else
-  {
-    desc=i18n("Session time: Time for this task since you chose \"Start New Session\".\nTotal Session time: Time for this task and all its subtasks since you chose \"Start New Session\".\nTime: Overall time for this task.\nTotal Time: Overall time for this task and all its subtasks.");
-  }
-  return desc;
+    QString desc = QString::null;
+    kdDebug(5970) << "entering TaskViewWhatsThis::text" << endl;
+    kdDebug(5970) << "x-pos:" << pos.x() << endl;
+    if(pos.x() < _listView->columnWidth(0))
+    {
+        desc = i18n("Task Name shows the name of a task or subtask you are working on.");
+    }
+    else
+    {
+        desc = i18n("Session time: Time for this task since you chose \"Start New Session\".\nTotal Session time: Time for this task and all its subtasks since you chose \"Start New Session\".\nTime: Overall time for this task.\nTotal Time: Overall time for this task and all its subtasks.");
+    }
+    return desc;
 }

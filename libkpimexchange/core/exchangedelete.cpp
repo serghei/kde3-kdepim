@@ -44,78 +44,81 @@ using namespace KPIM;
 // Delete:
 // - Find URL for uid
 // - Delete URL
-// - Can there be multipe URLs, for instance when dealing with 
+// - Can there be multipe URLs, for instance when dealing with
 // recurrent appointments? Maybe, so we just look for Master or Single
 // instancetypes
 
-ExchangeDelete::ExchangeDelete( KCal::Event* event, ExchangeAccount* account, QWidget* window ) :
-  mWindow( window )
+ExchangeDelete::ExchangeDelete(KCal::Event *event, ExchangeAccount *account, QWidget *window) :
+    mWindow(window)
 {
-  kdDebug() << "Created ExchangeDelete" << endl;
+    kdDebug() << "Created ExchangeDelete" << endl;
 
-  mAccount = account;
+    mAccount = account;
 
-  findUidSingleMaster( event->uid() );
+    findUidSingleMaster(event->uid());
 }
 
 ExchangeDelete::~ExchangeDelete()
 {
-  kdDebug() << "ExchangeDelete destructor" << endl;
+    kdDebug() << "ExchangeDelete destructor" << endl;
 }
 
-void ExchangeDelete::findUidSingleMaster( QString const& uid )
+void ExchangeDelete::findUidSingleMaster(QString const &uid)
 {
-  QString query = 
+    QString query =
         "SELECT \"DAV:href\", \"urn:schemas:calendar:uid\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:uid\" = '" + uid + "'\r\n"
-	" AND (\"urn:schemas:calendar:instancetype\" = 0\r\n"
-	"      OR \"urn:schemas:calendar:instancetype\" = 1)\r\n";
+        " AND (\"urn:schemas:calendar:instancetype\" = 0\r\n"
+        "      OR \"urn:schemas:calendar:instancetype\" = 1)\r\n";
 
-  KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
-  job->setWindow( mWindow );
-  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotFindUidResult(KIO::Job *)));
+    KIO::DavJob *job = KIO::davSearch(mAccount->calendarURL(), "DAV:", "sql", query, false);
+    job->setWindow(mWindow);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotFindUidResult(KIO::Job *)));
 }
 
-void ExchangeDelete::slotFindUidResult( KIO::Job * job )
+void ExchangeDelete::slotFindUidResult(KIO::Job *job)
 {
-  if ( job->error() ) {
-    job->showErrorDialog( 0L );
-    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
-    return;
-  }
-  QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
+    if(job->error())
+    {
+        job->showErrorDialog(0L);
+        emit finished(this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString());
+        return;
+    }
+    QDomDocument &response = static_cast<KIO::DavJob *>(job)->response();
 
-  QDomElement item = response.documentElement().firstChild().toElement();
-  QDomElement hrefElement = item.namedItem( "href" ).toElement();
-  if ( item.isNull() || hrefElement.isNull() ) {
-    // Not found
-    emit finished( this, ExchangeClient::DeleteUnknownEventError, "UID of event to be deleted not found on server\n"+response.toString() );
-    return;
-  }
-  // Found the appointment's URL
-  QString href = hrefElement.text();
-  KURL url(href);
+    QDomElement item = response.documentElement().firstChild().toElement();
+    QDomElement hrefElement = item.namedItem("href").toElement();
+    if(item.isNull() || hrefElement.isNull())
+    {
+        // Not found
+        emit finished(this, ExchangeClient::DeleteUnknownEventError, "UID of event to be deleted not found on server\n" + response.toString());
+        return;
+    }
+    // Found the appointment's URL
+    QString href = hrefElement.text();
+    KURL url(href);
 
-  startDelete( toDAV( url ) );  
-}  
-
-void ExchangeDelete::startDelete( const KURL& url )
-{
-  KIO::SimpleJob* job = KIO::file_delete( url, false ); // no GUI
-  job->setWindow( mWindow );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotDeleteResult( KIO::Job * ) ) );
+    startDelete(toDAV(url));
 }
 
-void ExchangeDelete::slotDeleteResult( KIO::Job* job )
+void ExchangeDelete::startDelete(const KURL &url)
 {
-  kdDebug() << "Finished Delete" << endl;
-  if ( job->error() ) {
-    job->showErrorDialog( 0L );
-    emit finished( this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString() );
-    return;
-  }
-  emit finished( this, ExchangeClient::ResultOK, QString::null );
+    KIO::SimpleJob *job = KIO::file_delete(url, false);   // no GUI
+    job->setWindow(mWindow);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotDeleteResult(KIO::Job *)));
+}
+
+void ExchangeDelete::slotDeleteResult(KIO::Job *job)
+{
+    kdDebug() << "Finished Delete" << endl;
+    if(job->error())
+    {
+        job->showErrorDialog(0L);
+        emit finished(this, ExchangeClient::CommunicationError, "IO Error: " + QString::number(job->error()) + ":" + job->errorString());
+        return;
+    }
+    emit finished(this, ExchangeClient::ResultOK, QString::null);
 }
 
 #include "exchangedelete.moc"

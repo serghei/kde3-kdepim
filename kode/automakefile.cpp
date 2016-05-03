@@ -7,12 +7,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-    
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-    
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -23,8 +23,8 @@
 
 using namespace KODE;
 
-AutoMakefile::Target::Target( const QString &type, const QString &name )
-  : mType( type ), mName( name )
+AutoMakefile::Target::Target(const QString &type, const QString &name)
+    : mType(type), mName(name)
 {
 }
 
@@ -32,84 +32,97 @@ AutoMakefile::AutoMakefile()
 {
 }
 
-void AutoMakefile::addTarget( const Target &t )
+void AutoMakefile::addTarget(const Target &t)
 {
-  mTargets.append( t );
-  if ( mTargetTypes.find( t.type() ) == mTargetTypes.end() ) {
-    mTargetTypes.append( t.type() );
-  }
+    mTargets.append(t);
+    if(mTargetTypes.find(t.type()) == mTargetTypes.end())
+    {
+        mTargetTypes.append(t.type());
+    }
 }
 
-void AutoMakefile::addEntry( const QString &variable, const QString &value )
+void AutoMakefile::addEntry(const QString &variable, const QString &value)
 {
-  if ( variable.isEmpty() ) {
-    mEntries.append( variable );
-    return;
-  }
-  
-  QStringList::ConstIterator it = mEntries.find( variable );
-  if ( it == mEntries.end() ) {
-    mEntries.append( variable );
-    QMap<QString,QString>::Iterator it = mValues.find( variable );
-    if ( it == mValues.end() ) {
-      mValues.insert( variable, value );
-    } else {
-      mValues[ variable ].append( " " + value );
+    if(variable.isEmpty())
+    {
+        mEntries.append(variable);
+        return;
     }
-  }
+
+    QStringList::ConstIterator it = mEntries.find(variable);
+    if(it == mEntries.end())
+    {
+        mEntries.append(variable);
+        QMap<QString, QString>::Iterator it = mValues.find(variable);
+        if(it == mValues.end())
+        {
+            mValues.insert(variable, value);
+        }
+        else
+        {
+            mValues[ variable ].append(" " + value);
+        }
+    }
 }
 
 void AutoMakefile::newLine()
 {
-  addEntry( "" );
+    addEntry("");
 }
 
 QString AutoMakefile::text() const
 {
-  QString out;
+    QString out;
 
-  QStringList::ConstIterator it;
-  for( it = mEntries.begin(); it != mEntries.end(); ++it ) {
-    QString variable = *it;
-    if ( variable.isEmpty() ) {
-      out += '\n';
-    } else {
-      out += variable + " = " + mValues[ variable ] + '\n';
-    }
-  }
-  out += '\n';
-  
-  for( it = mTargetTypes.begin(); it != mTargetTypes.end(); ++it ) {
-    QString targetType = *it;
-    
-    out += targetType + " = ";
-
-    Target::List::ConstIterator it2;
-    for( it2 = mTargets.begin(); it2 != mTargets.end(); ++it2 ) {
-      Target t = *it2;
-      if ( t.type() != targetType ) continue;
-      
-      out += " " + t.name();
-    }
-    out += "\n\n";
-  
-    for( it2 = mTargets.begin(); it2 != mTargets.end(); ++it2 ) {
-      Target t = *it2;
-      if ( t.type() != targetType ) continue;
-
-      QString name = t.name();
-      name.replace( '.', '_' );
-      
-      out += name + "_SOURCES = " + t.sources() + '\n';
-      if ( !t.libAdd().isEmpty() )
-        out += name + "_LIBADD = " + t.libAdd() + '\n';
-      else
-        out += name + "_LDADD = " + t.ldAdd() + '\n';
-      out += name + "_LDFLAGS = " + t.ldFlags() + '\n';
+    QStringList::ConstIterator it;
+    for(it = mEntries.begin(); it != mEntries.end(); ++it)
+    {
+        QString variable = *it;
+        if(variable.isEmpty())
+        {
+            out += '\n';
+        }
+        else
+        {
+            out += variable + " = " + mValues[ variable ] + '\n';
+        }
     }
     out += '\n';
-  
-  }
 
-  return out;
+    for(it = mTargetTypes.begin(); it != mTargetTypes.end(); ++it)
+    {
+        QString targetType = *it;
+
+        out += targetType + " = ";
+
+        Target::List::ConstIterator it2;
+        for(it2 = mTargets.begin(); it2 != mTargets.end(); ++it2)
+        {
+            Target t = *it2;
+            if(t.type() != targetType) continue;
+
+            out += " " + t.name();
+        }
+        out += "\n\n";
+
+        for(it2 = mTargets.begin(); it2 != mTargets.end(); ++it2)
+        {
+            Target t = *it2;
+            if(t.type() != targetType) continue;
+
+            QString name = t.name();
+            name.replace('.', '_');
+
+            out += name + "_SOURCES = " + t.sources() + '\n';
+            if(!t.libAdd().isEmpty())
+                out += name + "_LIBADD = " + t.libAdd() + '\n';
+            else
+                out += name + "_LDADD = " + t.ldAdd() + '\n';
+            out += name + "_LDFLAGS = " + t.ldFlags() + '\n';
+        }
+        out += '\n';
+
+    }
+
+    return out;
 }

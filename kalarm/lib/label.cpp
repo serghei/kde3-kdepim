@@ -23,22 +23,22 @@
 #include "label.moc"
 
 
-Label::Label(QWidget* parent, const char* name, WFlags f)
-	: QLabel(parent, name, f),
-	  mRadioButton(0),
-	  mFocusWidget(0)
+Label::Label(QWidget *parent, const char *name, WFlags f)
+    : QLabel(parent, name, f),
+      mRadioButton(0),
+      mFocusWidget(0)
 { }
 
-Label::Label(const QString& text, QWidget* parent, const char* name, WFlags f)
-	: QLabel(text, parent, name, f),
-	  mRadioButton(0),
-	  mFocusWidget(0)
+Label::Label(const QString &text, QWidget *parent, const char *name, WFlags f)
+    : QLabel(text, parent, name, f),
+      mRadioButton(0),
+      mFocusWidget(0)
 { }
 
-Label::Label(QWidget* buddy, const QString& text, QWidget* parent, const char* name, WFlags f)
-	: QLabel(buddy, text, parent, name, f),
-	  mRadioButton(0),
-	  mFocusWidget(0)
+Label::Label(QWidget *buddy, const QString &text, QWidget *parent, const char *name, WFlags f)
+    : QLabel(buddy, text, parent, name, f),
+      mRadioButton(0),
+      mFocusWidget(0)
 { }
 
 /******************************************************************************
@@ -47,42 +47,42 @@ Label::Label(QWidget* buddy, const QString& text, QWidget* parent, const char* n
 * When the accelerator key is pressed, the focus widget then receives focus.
 * That event triggers the selection of the radio button.
 */
-void Label::setBuddy(QWidget* bud)
+void Label::setBuddy(QWidget *bud)
 {
-	if (mRadioButton)
-		disconnect(mRadioButton, SIGNAL(destroyed()), this, SLOT(buddyDead()));
-	QWidget* w = bud;
-	if (w)
-	{
-		while (w->focusProxy())
-			w = w->focusProxy();
-		if (!w->inherits("QRadioButton"))
-			w = 0;
-	}
-	if (!w)
-	{
-		// The buddy widget isn't a radio button
-		QLabel::setBuddy(bud);
-		delete mFocusWidget;
-		mFocusWidget = 0;
-		mRadioButton = 0;
-	}
-	else
-	{
-		// The buddy widget is a radio button, so set a different buddy
-		if (!mFocusWidget)
-			mFocusWidget = new LabelFocusWidget(this);
-		QLabel::setBuddy(mFocusWidget);
-		mRadioButton = (QRadioButton*)bud;
-		connect(mRadioButton, SIGNAL(destroyed()), this, SLOT(buddyDead()));
-	}
+    if(mRadioButton)
+        disconnect(mRadioButton, SIGNAL(destroyed()), this, SLOT(buddyDead()));
+    QWidget *w = bud;
+    if(w)
+    {
+        while(w->focusProxy())
+            w = w->focusProxy();
+        if(!w->inherits("QRadioButton"))
+            w = 0;
+    }
+    if(!w)
+    {
+        // The buddy widget isn't a radio button
+        QLabel::setBuddy(bud);
+        delete mFocusWidget;
+        mFocusWidget = 0;
+        mRadioButton = 0;
+    }
+    else
+    {
+        // The buddy widget is a radio button, so set a different buddy
+        if(!mFocusWidget)
+            mFocusWidget = new LabelFocusWidget(this);
+        QLabel::setBuddy(mFocusWidget);
+        mRadioButton = (QRadioButton *)bud;
+        connect(mRadioButton, SIGNAL(destroyed()), this, SLOT(buddyDead()));
+    }
 }
 
 void Label::buddyDead()
 {
-	delete mFocusWidget;
-	mFocusWidget = 0;
-	mRadioButton = 0;
+    delete mFocusWidget;
+    mFocusWidget = 0;
+    mRadioButton = 0;
 }
 
 /******************************************************************************
@@ -91,11 +91,11 @@ void Label::buddyDead()
 */
 void Label::activated()
 {
-	if (mFocusWidget  &&  mRadioButton)
-	{
-		mRadioButton->setFocus();
-		mRadioButton->setChecked(true);
-	}
+    if(mFocusWidget  &&  mRadioButton)
+    {
+        mRadioButton->setFocus();
+        mRadioButton->setChecked(true);
+    }
 }
 
 
@@ -103,16 +103,16 @@ void Label::activated()
 * Class: LabelFocusWidget
 =============================================================================*/
 
-LabelFocusWidget::LabelFocusWidget(QWidget* parent, const char* name)
-	: QWidget(parent, name)
+LabelFocusWidget::LabelFocusWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-	setFocusPolicy(ClickFocus);
-	setFixedSize(QSize(1,1));
+    setFocusPolicy(ClickFocus);
+    setFixedSize(QSize(1, 1));
 }
 
-void LabelFocusWidget::focusInEvent(QFocusEvent*)
+void LabelFocusWidget::focusInEvent(QFocusEvent *)
 {
-	Label* parent = (Label*)parentWidget();
-	parent->activated();
+    Label *parent = (Label *)parentWidget();
+    parent->activated();
 
 }

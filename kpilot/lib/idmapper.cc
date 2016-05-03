@@ -33,215 +33,214 @@
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
-class IDMapperPrivate
-{
+class IDMapperPrivate {
 public:
-	IDMapperPrivate()
-	{
-		fXmlSource = 0L;
-	}
-	
-	~IDMapperPrivate()
-	{
-		FUNCTIONSETUP;
-		
-		KPILOT_DELETE(fXmlSource);
-	}
-	
-	IDMapperXml *fXmlSource;
+    IDMapperPrivate()
+    {
+        fXmlSource = 0L;
+    }
+
+    ~IDMapperPrivate()
+    {
+        FUNCTIONSETUP;
+
+        KPILOT_DELETE(fXmlSource);
+    }
+
+    IDMapperXml *fXmlSource;
 };
 
 IDMapper::IDMapper()
 {
-	FUNCTIONSETUP;
-	
-	fP = new IDMapperPrivate();
-	
-	QString dbPath = KGlobal::dirs()->
-		saveLocation("data", CSL1("kpilot/") );
-	QString dbFile = dbPath + CSL1("mapping.xml");
-	
-	if( !openDatasource( dbFile ) )
-	{
-		DEBUGKPILOT << fname << "Could not open or create xml file." << endl;
-	}
+    FUNCTIONSETUP;
+
+    fP = new IDMapperPrivate();
+
+    QString dbPath = KGlobal::dirs()->
+                     saveLocation("data", CSL1("kpilot/"));
+    QString dbFile = dbPath + CSL1("mapping.xml");
+
+    if(!openDatasource(dbFile))
+    {
+        DEBUGKPILOT << fname << "Could not open or create xml file." << endl;
+    }
 }
 
-IDMapper::IDMapper( const QString &file)
+IDMapper::IDMapper(const QString &file)
 {
-	FUNCTIONSETUP;
-	
-	fP = new IDMapperPrivate();
-	
-	if( !openDatasource( file ) )
-	{
-		DEBUGKPILOT << fname << "Could not open or create xml file." << endl;
-	}
+    FUNCTIONSETUP;
+
+    fP = new IDMapperPrivate();
+
+    if(!openDatasource(file))
+    {
+        DEBUGKPILOT << fname << "Could not open or create xml file." << endl;
+    }
 }
 
 IDMapper::~IDMapper()
 {
-	KPILOT_DELETE(fP);
+    KPILOT_DELETE(fP);
 }
 
-bool IDMapper::openDatasource( const QString &file )
+bool IDMapper::openDatasource(const QString &file)
 {
-	FUNCTIONSETUP;
-	
-	fP->fXmlSource = new IDMapperXml( file );
-	return fP->fXmlSource->open();
+    FUNCTIONSETUP;
+
+    fP->fXmlSource = new IDMapperXml(file);
+    return fP->fXmlSource->open();
 }
 
-void IDMapper::registerPCObjectId( const QString &conduit, const QString &uid )
+void IDMapper::registerPCObjectId(const QString &conduit, const QString &uid)
 {
-	FUNCTIONSETUP;
-	
-	IDMapping mapping = IDMapping( conduit );
-	mapping.setUid( uid );
-	
-	fP->fXmlSource->addMapping( mapping );
-	fP->fXmlSource->save();
+    FUNCTIONSETUP;
+
+    IDMapping mapping = IDMapping(conduit);
+    mapping.setUid(uid);
+
+    fP->fXmlSource->addMapping(mapping);
+    fP->fXmlSource->save();
 }
 
-void IDMapper::registerHHObjectId( const QString &conduit, recordid_t pid )
+void IDMapper::registerHHObjectId(const QString &conduit, recordid_t pid)
 {
-	FUNCTIONSETUP;
-	
-	IDMapping mapping = IDMapping( conduit );
-	mapping.setPid( pid );
-	
-	fP->fXmlSource->addMapping( mapping );
-	fP->fXmlSource->save();
+    FUNCTIONSETUP;
+
+    IDMapping mapping = IDMapping(conduit);
+    mapping.setPid(pid);
+
+    fP->fXmlSource->addMapping(mapping);
+    fP->fXmlSource->save();
 }
 
-QValueList<QString> IDMapper::getPCObjectIds( const QString &conduit )
+QValueList<QString> IDMapper::getPCObjectIds(const QString &conduit)
 {
-	FUNCTIONSETUP;
-	
-	QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
-	QValueList<IDMapping>::iterator it;
-	QValueList<QString> uids;
-	
-	DEBUGKPILOT << fname << ": total " << mappings.count() << endl;
-	
-	for ( it = mappings.begin(); it != mappings.end(); ++it )
-	{
-		IDMapping &mapping = (*it);
-		
-		DEBUGKPILOT << fname << ": mapping.conduit() = " << mapping.conduit() << endl;
-		DEBUGKPILOT << fname << ": conduit = " << conduit << endl;
-		
-		if( (mapping.conduit() == conduit) && !mapping.uid().isNull() )
-		{
-			DEBUGKPILOT << fname << ": mapping.conduit() == conduit" << endl;
-			uids.append( mapping.uid() );
-		}
-	}
-	
-	return uids;
+    FUNCTIONSETUP;
+
+    QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
+    QValueList<IDMapping>::iterator it;
+    QValueList<QString> uids;
+
+    DEBUGKPILOT << fname << ": total " << mappings.count() << endl;
+
+    for(it = mappings.begin(); it != mappings.end(); ++it)
+    {
+        IDMapping &mapping = (*it);
+
+        DEBUGKPILOT << fname << ": mapping.conduit() = " << mapping.conduit() << endl;
+        DEBUGKPILOT << fname << ": conduit = " << conduit << endl;
+
+        if((mapping.conduit() == conduit) && !mapping.uid().isNull())
+        {
+            DEBUGKPILOT << fname << ": mapping.conduit() == conduit" << endl;
+            uids.append(mapping.uid());
+        }
+    }
+
+    return uids;
 }
 
-QValueList<recordid_t> IDMapper::getHHObjectIds( const QString &conduit )
+QValueList<recordid_t> IDMapper::getHHObjectIds(const QString &conduit)
 {
-	FUNCTIONSETUP;
-	
-	QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
-	QValueList<IDMapping>::iterator it;
-	QValueList<recordid_t> pids;
-	
-	for ( it = mappings.begin(); it != mappings.end(); ++it )
-	{
-		IDMapping &mapping = *it;
-		DEBUGKPILOT << fname << ": mapping.conduit() = " << mapping.conduit() << endl;
-		DEBUGKPILOT << fname << ": " << mapping.pid() << endl;
-		if( mapping.conduit() == conduit && mapping.pid() != 0 )
-		{
-			DEBUGKPILOT << fname << ": mapping.conduit() == conduit" << endl;
-			pids.append( mapping.pid() );
-		}
-	}
-	
-	return pids;
+    FUNCTIONSETUP;
+
+    QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
+    QValueList<IDMapping>::iterator it;
+    QValueList<recordid_t> pids;
+
+    for(it = mappings.begin(); it != mappings.end(); ++it)
+    {
+        IDMapping &mapping = *it;
+        DEBUGKPILOT << fname << ": mapping.conduit() = " << mapping.conduit() << endl;
+        DEBUGKPILOT << fname << ": " << mapping.pid() << endl;
+        if(mapping.conduit() == conduit && mapping.pid() != 0)
+        {
+            DEBUGKPILOT << fname << ": mapping.conduit() == conduit" << endl;
+            pids.append(mapping.pid());
+        }
+    }
+
+    return pids;
 }
 
-bool IDMapper::hasPCId( const QString &conduit, recordid_t pid )
+bool IDMapper::hasPCId(const QString &conduit, recordid_t pid)
 {
-	FUNCTIONSETUP;
-	
-	QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
-	QValueList<IDMapping>::iterator it;
-	
-	for ( it = mappings.begin(); it != mappings.end(); ++it )
-	{
-		IDMapping &mapping = *it;
-		if( mapping.conduit() == conduit && mapping.pid() == pid )
-		{
-			return !mapping.uid().isNull();
-		}
-	}
-	
-	return false;
+    FUNCTIONSETUP;
+
+    QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
+    QValueList<IDMapping>::iterator it;
+
+    for(it = mappings.begin(); it != mappings.end(); ++it)
+    {
+        IDMapping &mapping = *it;
+        if(mapping.conduit() == conduit && mapping.pid() == pid)
+        {
+            return !mapping.uid().isNull();
+        }
+    }
+
+    return false;
 }
 
-bool IDMapper::hasHHId( const QString &conduit, const QString &uid )
+bool IDMapper::hasHHId(const QString &conduit, const QString &uid)
 {
-	FUNCTIONSETUP;
-	
-	QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
-	QValueList<IDMapping>::iterator it;
-	
-	for ( it = mappings.begin(); it != mappings.end(); ++it )
-	{
-		IDMapping &mapping = *it;
-		if( mapping.conduit() == conduit && mapping.uid() == uid )
-		{
-			return mapping.pid() != 0;
-		}
-	}
-	
-	return false;
+    FUNCTIONSETUP;
+
+    QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
+    QValueList<IDMapping>::iterator it;
+
+    for(it = mappings.begin(); it != mappings.end(); ++it)
+    {
+        IDMapping &mapping = *it;
+        if(mapping.conduit() == conduit && mapping.uid() == uid)
+        {
+            return mapping.pid() != 0;
+        }
+    }
+
+    return false;
 }
 
-void IDMapper::setHHObjectId( const QString &conduit, const QString &uid
-		, recordid_t pid )
+void IDMapper::setHHObjectId(const QString &conduit, const QString &uid
+                             , recordid_t pid)
 {
-	FUNCTIONSETUP;
-	
-	bool modified = false;
-	
-	QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
-	QValueList<IDMapping>::iterator it;
-	
-	for ( it = mappings.begin(); it != mappings.end(); ++it )
-	{
-		IDMapping &mapping = *it;
-		if( mapping.conduit() == conduit && mapping.uid() == uid )
-		{
-			mapping.setPid( pid );
-			fP->fXmlSource->save();
-			modified = true;
-		}
-	}
+    FUNCTIONSETUP;
+
+    bool modified = false;
+
+    QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
+    QValueList<IDMapping>::iterator it;
+
+    for(it = mappings.begin(); it != mappings.end(); ++it)
+    {
+        IDMapping &mapping = *it;
+        if(mapping.conduit() == conduit && mapping.uid() == uid)
+        {
+            mapping.setPid(pid);
+            fP->fXmlSource->save();
+            modified = true;
+        }
+    }
 }
 
-void IDMapper::setPCObjectId( const QString &conduit, recordid_t pid
-	, const QString &uid )
+void IDMapper::setPCObjectId(const QString &conduit, recordid_t pid
+                             , const QString &uid)
 {
-	FUNCTIONSETUP;
-	
-	bool modified = false;
-	
-	QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
-	QValueList<IDMapping>::iterator it;
-	
-	for ( it = mappings.begin(); it != mappings.end(); ++it )
-	{
-		IDMapping &mapping = *it;
-		if( mapping.conduit() == conduit && mapping.pid() == pid )
-		{
-			mapping.setUid( uid );
-			fP->fXmlSource->save();
-			modified = true;
-		}
-	}
+    FUNCTIONSETUP;
+
+    bool modified = false;
+
+    QValueList<IDMapping> &mappings = fP->fXmlSource->mappings();
+    QValueList<IDMapping>::iterator it;
+
+    for(it = mappings.begin(); it != mappings.end(); ++it)
+    {
+        IDMapping &mapping = *it;
+        if(mapping.conduit() == conduit && mapping.pid() == pid)
+        {
+            mapping.setUid(uid);
+            fP->fXmlSource->save();
+            modified = true;
+        }
+    }
 }

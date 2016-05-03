@@ -35,23 +35,22 @@ namespace KCal {
 
 /**
   Configuration widget for birtday/anniversaries resource.
-  
+
   @see ResourceKABC
 */
-class ResourceKABCConfig : public KRES::ConfigWidget
-{
+class ResourceKABCConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    ResourceKABCConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceKABCConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource);
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  private slots:
+private slots:
     void alarmClicked();
 
-  private:
+private:
     QCheckBox *mAlarm;
     KRestrictedLine *mAlarmTimeEdit;
     QLabel *mALabel;

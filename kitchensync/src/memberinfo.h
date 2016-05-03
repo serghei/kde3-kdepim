@@ -26,10 +26,9 @@
 #include <qstring.h>
 #include <qpixmap.h>
 
-class MemberInfo
-{
-  public:
-    MemberInfo( const QSync::Member &member );
+class MemberInfo {
+public:
+    MemberInfo(const QSync::Member &member);
 
     QPixmap smallIcon() const;
     QPixmap desktopIcon() const;
@@ -38,9 +37,9 @@ class MemberInfo
 
     QString name() const;
 
-    static QString pluginIconName( const QString &pluginName );
+    static QString pluginIconName(const QString &pluginName);
 
-  private:
+private:
     QSync::Member mMember;
 };
 

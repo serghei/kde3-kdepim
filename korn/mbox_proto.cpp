@@ -27,21 +27,21 @@
 
 #include "account_input.h"
 
-void MBox_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
+void MBox_Protocol::configFillGroupBoxes(QStringList *groupBoxes) const
 {
-	groupBoxes->append( "mbox" );
+    groupBoxes->append("mbox");
 }
 
-void MBox_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > *result ) const
+void MBox_Protocol::configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *result) const
 {
-	result->append( new URLInput( (QWidget*)vector->at( 0 ), i18n( "File:" ), "", "mailbox" ) );
+    result->append(new URLInput((QWidget *)vector->at(0), i18n("File:"), "", "mailbox"));
 }
 
-void MBox_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const
+void MBox_Protocol::readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const
 {
 }
 
-void MBox_Protocol::writeEntries( QMap< QString, QString >* map ) const
+void MBox_Protocol::writeEntries(QMap< QString, QString > *map) const
 {
-	clearFields( map, (KIO_Protocol::Fields)( server | port | username | password | save_password | metadata ) );
+    clearFields(map, (KIO_Protocol::Fields)(server | port | username | password | save_password | metadata));
 }

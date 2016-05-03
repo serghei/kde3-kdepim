@@ -8,7 +8,7 @@
  (C) COPYRIGHT 2001, Ximian, Inc.
 
  This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
+ it under the terms of either:
 
     The LGPL as published by the Free Software Foundation, version
     2.1, available at: http://www.fsf.org/copyleft/lesser.html
@@ -25,14 +25,15 @@
 #ifndef ICALARRAY_H
 #define ICALARRAY_H
 
-/** @file icalarray.h 
+/** @file icalarray.h
  *
  *  @brief An array of arbitrarily-sized elements which grows
- *  dynamically as elements are added. 
+ *  dynamically as elements are added.
  */
 
 typedef struct _icalarray icalarray;
-struct _icalarray {
+struct _icalarray
+{
     unsigned int	 element_size;
     unsigned int	 increment_size;
     unsigned int	 num_elements;
@@ -42,20 +43,20 @@ struct _icalarray {
 
 
 
-icalarray *icalarray_new		(int		 element_size,
-					 int		 increment_size);
-void	   icalarray_free		(icalarray	*array);
+icalarray *icalarray_new(int		 element_size,
+                         int		 increment_size);
+void	   icalarray_free(icalarray	*array);
 
-void	   icalarray_append		(icalarray	*array,
-					 const void		*element);
-void	   icalarray_remove_element_at	(icalarray	*array,
-					 int		 position);
+void	   icalarray_append(icalarray	*array,
+                            const void		*element);
+void	   icalarray_remove_element_at(icalarray	*array,
+                                       int		 position);
 
-void	  *icalarray_element_at		(icalarray	*array,
-					 int		 position);
+void	  *icalarray_element_at(icalarray	*array,
+                                int		 position);
 
-void	   icalarray_sort		(icalarray	*array,
-					 int	       (*compare) (const void *, const void *));
+void	   icalarray_sort(icalarray	*array,
+                          int (*compare)(const void *, const void *));
 
 
 #endif /* ICALARRAY_H */

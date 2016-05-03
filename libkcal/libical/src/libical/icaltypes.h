@@ -8,7 +8,7 @@
      http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
+ it under the terms of either:
 
     The LGPL as published by the Free Software Foundation, version
     2.1, available at: http://www.fsf.org/copyleft/lesser.html
@@ -32,28 +32,28 @@
 #include "icalperiod.h"
 
 
-struct icalgeotype 
+struct icalgeotype
 {
-	float lat;
-	float lon;
+    float lat;
+    float lon;
 };
 
 
-struct icaldatetimeperiodtype 
+struct icaldatetimeperiodtype
 {
-	struct icaltimetype time;
-	struct icalperiodtype period;
+    struct icaltimetype time;
+    struct icalperiodtype period;
 };
 
 
-struct icaltriggertype 
+struct icaltriggertype
 {
-	struct icaltimetype time; 
-	struct icaldurationtype duration;
+    struct icaltimetype time;
+    struct icaldurationtype duration;
 };
 
 struct icaltriggertype icaltriggertype_from_int(const int reltime);
-struct icaltriggertype icaltriggertype_from_string(const char* str);
+struct icaltriggertype icaltriggertype_from_string(const char *str);
 
 int icaltriggertype_is_null_trigger(struct icaltriggertype tr);
 int icaltriggertype_is_bad_trigger(struct icaltriggertype tr);
@@ -69,35 +69,38 @@ BTW, you would get that original string from
 *icalproperty_get_requeststatus() or icalvalue_get_text(), when
 operating on a the value of a request_status property. */
 
-struct icalreqstattype {
+struct icalreqstattype
+{
 
-	icalrequeststatus code;
-	const char* desc;
-	const char* debug;
+    icalrequeststatus code;
+    const char *desc;
+    const char *debug;
 };
 
-struct icalreqstattype icalreqstattype_from_string(const char* str);
-const char* icalreqstattype_as_string(struct icalreqstattype);
+struct icalreqstattype icalreqstattype_from_string(const char *str);
+const char *icalreqstattype_as_string(struct icalreqstattype);
 
 
 
-struct icaltimezonephase {
-    const char* tzname;
+struct icaltimezonephase
+{
+    const char *tzname;
     int is_stdandard; /* 1 = standard tme, 0 = daylight savings time */
     struct icaltimetype dtstart;
     int offsetto;
     int tzoffsetfrom;
-    const char* comment;
+    const char *comment;
     struct icaldatetimeperiodtype rdate;
-    const char* rrule;    
+    const char *rrule;
 };
 
 
-struct icaltimezonetype {
-    const char* tzid;
+struct icaltimezonetype
+{
+    const char *tzid;
     struct icaltimetype last_mod;
-    const char* tzurl;
-    
+    const char *tzurl;
+
     /* Array of phases. The end of the array is a phase with tzname == 0 */
     struct icaltimezonephase *phases;
 };

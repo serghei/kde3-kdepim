@@ -25,27 +25,28 @@
 #include <kdepimmacros.h>
 #include <kurl.h>
 
-namespace KParts { class ReadOnlyPart; }
+namespace KParts {
+class ReadOnlyPart;
+}
 
 namespace KPIM {
 
-class KDE_EXPORT EmbeddedURLPage : public QWidget
-{
+class KDE_EXPORT EmbeddedURLPage : public QWidget {
     Q_OBJECT
-  public:
-    EmbeddedURLPage( const QString &url, const QString &mimetype,
-                     QWidget *parent, const char *name = 0 );
+public:
+    EmbeddedURLPage(const QString &url, const QString &mimetype,
+                    QWidget *parent, const char *name = 0);
 
-  public slots:
+public slots:
     void loadContents();
-  signals:
-    void openURL( const KURL &url );
-  private:
-    void initGUI( const QString &url, const QString &mimetype );
+signals:
+    void openURL(const KURL &url);
+private:
+    void initGUI(const QString &url, const QString &mimetype);
 
     QString mUri;
     QString mMimeType;
-    KParts::ReadOnlyPart* mPart;
+    KParts::ReadOnlyPart *mPart;
 };
 
 }

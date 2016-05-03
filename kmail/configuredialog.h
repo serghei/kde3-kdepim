@@ -28,46 +28,45 @@
 class KConfig;
 class ProfileDialog;
 namespace KMail {
-    class ImapAccountBase;
+class ImapAccountBase;
 }
 
-class ConfigureDialog : public KCMultiDialog
-{
-  Q_OBJECT
+class ConfigureDialog : public KCMultiDialog {
+    Q_OBJECT
 
 public:
-  ConfigureDialog( QWidget *parent=0, const char *name=0, bool modal=true );
-  ~ConfigureDialog();
+    ConfigureDialog(QWidget *parent = 0, const char *name = 0, bool modal = true);
+    ~ConfigureDialog();
 
 signals:
-  /** Installs a new profile (in the dislog's widgets; to apply, the
-      user has to hit the apply button). Profiles are normal kmail
-      config files which have an additonal group "KMail Profile"
-      containing keys "Name" and "Comment" for the name and description,
-      resp. Only keys that this profile is supposed to alter should be
-      included in the file.
-  */
-  void installProfile( KConfig *profile );
+    /** Installs a new profile (in the dislog's widgets; to apply, the
+        user has to hit the apply button). Profiles are normal kmail
+        config files which have an additonal group "KMail Profile"
+        containing keys "Name" and "Comment" for the name and description,
+        resp. Only keys that this profile is supposed to alter should be
+        included in the file.
+    */
+    void installProfile(KConfig *profile);
 protected:
-  void hideEvent( QHideEvent *i );
+    void hideEvent(QHideEvent *i);
 protected slots:
-  /** @reimplemented
-   * Saves the GlobalSettings stuff before passing on to KCMultiDialog.
-   */
-  void slotApply();
+    /** @reimplemented
+     * Saves the GlobalSettings stuff before passing on to KCMultiDialog.
+     */
+    void slotApply();
 
-  /** @reimplemented
-   * Saves the GlobalSettings stuff before passing on to KCMultiDialog.
-   */
-  void slotOk();
+    /** @reimplemented
+     * Saves the GlobalSettings stuff before passing on to KCMultiDialog.
+     */
+    void slotOk();
 
-  /** @reimplemented
-   * Brings up the profile loading/editing dialog. We can't use User1, as
-   * KCMultiDialog uses that for "Reset". */
-  void slotUser2();
+    /** @reimplemented
+     * Brings up the profile loading/editing dialog. We can't use User1, as
+     * KCMultiDialog uses that for "Reset". */
+    void slotUser2();
 
 private:
-  QGuardedPtr<ProfileDialog>  mProfileDialog;
+    QGuardedPtr<ProfileDialog>  mProfileDialog;
 };
 
 /**
@@ -76,13 +75,13 @@ private:
  * takes care of that.
  */
 class AccountUpdater : public QObject {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     AccountUpdater(KMail::ImapAccountBase *account);
     void update();
-  public slots:
+public slots:
     void namespacesFetched();
-  private:
+private:
     KMail::ImapAccountBase *mAccount;
 };
 

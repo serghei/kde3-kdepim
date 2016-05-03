@@ -27,35 +27,33 @@
 
 #include "treenodeitem.h"
 
-namespace Akregator 
-{
+namespace Akregator {
 
 class Feed;
 class FolderItem;
-        
+
 /**
 * the item class corresponding to a Feed
 */
-class FeedItem : public TreeNodeItem 
-{
- public:
-    
-    FeedItem(FolderItem* parent, Feed* node);
-    FeedItem(FolderItem* parent, TreeNodeItem* after, Feed* node);
-    FeedItem(KListView* parent, Feed* node);
-    FeedItem(KListView* parent, TreeNodeItem* after, Feed* node);
+class FeedItem : public TreeNodeItem {
+public:
+
+    FeedItem(FolderItem *parent, Feed *node);
+    FeedItem(FolderItem *parent, TreeNodeItem *after, Feed *node);
+    FeedItem(KListView *parent, Feed *node);
+    FeedItem(KListView *parent, TreeNodeItem *after, Feed *node);
 
     virtual ~FeedItem();
-    virtual Feed* node();
+    virtual Feed *node();
     virtual void nodeChanged();
-    virtual void showContextMenu(const QPoint& p);
+    virtual void showContextMenu(const QPoint &p);
 
     static QPixmap errorPixmap();
     static QPixmap defaultPixmap();
 
 private:
-    void initialize(Feed* node);
-    
+    void initialize(Feed *node);
+
 };
 
 }

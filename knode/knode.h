@@ -29,9 +29,9 @@
 
 class KURL;
 
-namespace KPIM { 
-  class StatusbarProgressWidget; 
-  class ProgressDialog; 
+namespace KPIM {
+class StatusbarProgressWidget;
+class ProgressDialog;
 }
 using KPIM::StatusbarProgressWidget;
 using KPIM::ProgressDialog;
@@ -41,30 +41,32 @@ class KNMainWidget;
 class KNHeaderView;
 
 
-class KNMainWindow : public KMainWindow
-{
-  Q_OBJECT
+class KNMainWindow : public KMainWindow {
+    Q_OBJECT
 
 public:
-  KNMainWindow( QWidget* parentWidget=0 );
-  ~KNMainWindow();
-  void openURL( const KURL& );
-  KNMainWidget *mainWidget() { return m_mainWidget; }
+    KNMainWindow(QWidget *parentWidget = 0);
+    ~KNMainWindow();
+    void openURL(const KURL &);
+    KNMainWidget *mainWidget()
+    {
+        return m_mainWidget;
+    }
 
 public slots:
-  void slotConfToolbar();
-  void slotNewToolbarConfig();
-  void slotConfKeys();
+    void slotConfToolbar();
+    void slotNewToolbarConfig();
+    void slotConfKeys();
 protected:
-  bool queryClose();
+    bool queryClose();
 private:
-  void setupStatusBar();
-  KNMainWidget *m_mainWidget;
-  StatusbarProgressWidget *mLittleProgress;
-  ProgressDialog *mProgressDialog;
-  KRSqueezedTextLabel *mStatusMsgLabel;
+    void setupStatusBar();
+    KNMainWidget *m_mainWidget;
+    StatusbarProgressWidget *mLittleProgress;
+    ProgressDialog *mProgressDialog;
+    KRSqueezedTextLabel *mStatusMsgLabel;
 private slots:
-  void slotShowStatusMsg( const QString& );
+    void slotShowStatusMsg(const QString &);
 };
 
 #endif // KNODE_H

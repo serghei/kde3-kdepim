@@ -1,5 +1,5 @@
 /*
- *	Copyright (c) 1986-2000, Hiram Clawson 
+ *	Copyright (c) 1986-2000, Hiram Clawson
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or
@@ -18,7 +18,7 @@
  *		Neither name of The Museum of Hiram nor the names of
  *		its contributors may be used to endorse or promote products
  *		derived from this software without specific prior
- *		written permission. 
+ *		written permission.
  *
  *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
  *	CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -31,7 +31,7 @@
  *	HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
  *	STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
  *	IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- *	THE POSSIBILITY OF SUCH DAMAGE. 
+ *	THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -42,24 +42,25 @@
 #ifndef	_astime_h_
 #define _astime_h_
 
-typedef struct ut_instant {
-	double	j_date; /**< julian decimal date, 0 = 01 Jan 4713 BC 12 HR UT */
-	long year;      /**< year, valid range [-4,713, +2,147,483,647] */
-	int	month;	/**<	[1-12]	*/
-	int	day;	/**<	[1-31]	*/
-	int	i_hour;	/**<	[0-23]	*/
-	int	i_minute;	/**<	[0-59]	*/
-	int	i_second;	/**<	[0-59]	*/
-	double	d_hour;		/**< [0.0-23.9999] includes minute and second */
-	double	d_minute;	/**<	[0.0-59.9999] includes second	*/
-	double	d_second;	/**<	[0.0-59.9999]	*/
-	int	weekday;	/**<	[0-6]	*/
-	int	day_of_year;	/**<	[1-366]	*/
+typedef struct ut_instant
+{
+    double	j_date; /**< julian decimal date, 0 = 01 Jan 4713 BC 12 HR UT */
+    long year;      /**< year, valid range [-4,713, +2,147,483,647] */
+    int	month;	/**<	[1-12]	*/
+    int	day;	/**<	[1-31]	*/
+    int	i_hour;	/**<	[0-23]	*/
+    int	i_minute;	/**<	[0-59]	*/
+    int	i_second;	/**<	[0-59]	*/
+    double	d_hour;		/**< [0.0-23.9999] includes minute and second */
+    double	d_minute;	/**<	[0.0-59.9999] includes second	*/
+    double	d_second;	/**<	[0.0-59.9999]	*/
+    int	weekday;	/**<	[0-6]	*/
+    int	day_of_year;	/**<	[1-366]	*/
 } UTinstant, * UTinstantPtr;
 
 /*	Functions in caldate.c	*/
 
-long caldat( UTinstantPtr );	/** converts julian date to year,mo,da */
-double juldat( UTinstantPtr );	/** returns julian day from year,mo,da */
+long caldat(UTinstantPtr);	/** converts julian date to year,mo,da */
+double juldat(UTinstantPtr);	/** returns julian day from year,mo,da */
 
 #endif	/*	_astime_h_	*/

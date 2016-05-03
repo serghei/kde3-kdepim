@@ -28,21 +28,19 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-namespace KCal
-{
-	class Todo;
+namespace KCal {
+class Todo;
 }
 
 class PilotTodoEntry;
 
-namespace KCalSync
-{
-	bool setTodo(KCal::Todo *e,
-		const PilotTodoEntry *de,
-		const CategoryAppInfo &info);
-	bool setTodoEntry(PilotTodoEntry *de,
-		const KCal::Todo *e,
-		const CategoryAppInfo &info);
+namespace KCalSync {
+bool setTodo(KCal::Todo *e,
+             const PilotTodoEntry *de,
+             const CategoryAppInfo &info);
+bool setTodoEntry(PilotTodoEntry *de,
+                  const KCal::Todo *e,
+                  const CategoryAppInfo &info);
 }
 
 #endif

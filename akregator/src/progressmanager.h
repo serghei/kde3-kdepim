@@ -25,61 +25,58 @@
 #ifndef AKREGATOR_PROGRESSMANAGER_H
 #define AKREGATOR_PROGRESSMANAGER_H
 
-namespace Akregator
-{
+namespace Akregator {
 
 class Feed;
 class TreeNode;
 class ProgressItemHandler;
 /** This class manages the progress items for all feeds */
 
-class ProgressManager : public QObject
-{
+class ProgressManager : public QObject {
     Q_OBJECT
-    public:
-        
-        static ProgressManager* self();
+public:
 
-        ProgressManager();
-        virtual ~ProgressManager();
+    static ProgressManager *self();
 
-        /** sets the feed list to be managed */
-        void setFeedList(FeedList* feedList);
+    ProgressManager();
+    virtual ~ProgressManager();
 
-    protected slots:
+    /** sets the feed list to be managed */
+    void setFeedList(FeedList *feedList);
 
-        void slotNodeAdded(TreeNode* node);
-        void slotNodeRemoved(TreeNode* node);
-        void slotNodeDestroyed(TreeNode* node);
+protected slots:
 
-    private:
+    void slotNodeAdded(TreeNode *node);
+    void slotNodeRemoved(TreeNode *node);
+    void slotNodeDestroyed(TreeNode *node);
 
-        static ProgressManager* m_self;
+private:
 
-        class ProgressManagerPrivate; 
-        ProgressManagerPrivate* d;
+    static ProgressManager *m_self;
+
+    class ProgressManagerPrivate;
+    ProgressManagerPrivate *d;
 };
 
 /** this class handles the creation and deletion of progress items for one feed.
     This is an internal class intended to be used in ProgressManager only */
 
-class ProgressItemHandler : public QObject
-{
+class ProgressItemHandler : public QObject {
     Q_OBJECT
-    public:
-        ProgressItemHandler(Feed* feed);
-        virtual ~ProgressItemHandler();
+public:
+    ProgressItemHandler(Feed *feed);
+    virtual ~ProgressItemHandler();
 
-    public slots:
+public slots:
 
-        void slotFetchStarted();
-        void slotFetchCompleted();
-        void slotFetchAborted();
-        void slotFetchError();
-        
-    private:
-        class ProgressItemHandlerPrivate;
-        ProgressItemHandlerPrivate* d;
+    void slotFetchStarted();
+    void slotFetchCompleted();
+    void slotFetchAborted();
+    void slotFetchError();
+
+private:
+    class ProgressItemHandlerPrivate;
+    ProgressItemHandlerPrivate *d;
 };
 
 } // namespace Akregator

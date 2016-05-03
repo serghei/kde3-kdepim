@@ -34,51 +34,51 @@
 
 const int PilotDOCHead::textRecordSize = 4096;
 
-PilotDOCHead::PilotDOCHead():PilotRecordBase(),
-version(0),
-spare(0), storyLen(0), numRecords(0), recordSize(textRecordSize), position(0)
+PilotDOCHead::PilotDOCHead(): PilotRecordBase(),
+    version(0),
+    spare(0), storyLen(0), numRecords(0), recordSize(textRecordSize), position(0)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDOCHead()
 */
-PilotDOCHead::PilotDOCHead(PilotRecord * rec):PilotRecordBase(rec)
+PilotDOCHead::PilotDOCHead(PilotRecord *rec): PilotRecordBase(rec)
 {
-	const unsigned char *b = (const unsigned char *) rec->data();
-	unsigned int offset = 0;
+    const unsigned char *b = (const unsigned char *) rec->data();
+    unsigned int offset = 0;
 
-	version = Pilot::dlp<short>::read(b,offset);
-	spare = Pilot::dlp<short>::read(b,offset);
-	storyLen = Pilot::dlp<long>::read(b,offset);
-	numRecords = Pilot::dlp<short>::read(b,offset);
-	recordSize = Pilot::dlp<short>::read(b,offset);
-	position = Pilot::dlp<long>::read(b,offset);
+    version = Pilot::dlp<short>::read(b, offset);
+    spare = Pilot::dlp<short>::read(b, offset);
+    storyLen = Pilot::dlp<long>::read(b, offset);
+    numRecords = Pilot::dlp<short>::read(b, offset);
+    recordSize = Pilot::dlp<short>::read(b, offset);
+    position = Pilot::dlp<long>::read(b, offset);
 }
 
 
-PilotDOCHead::PilotDOCHead(const PilotDOCHead & e):PilotRecordBase(e)
+PilotDOCHead::PilotDOCHead(const PilotDOCHead &e): PilotRecordBase(e)
 {
-	FUNCTIONSETUP;
-	*this = e;
+    FUNCTIONSETUP;
+    *this = e;
 }
 
 
 
-PilotDOCHead & PilotDOCHead::operator =(const PilotDOCHead & e)
+PilotDOCHead &PilotDOCHead::operator =(const PilotDOCHead &e)
 {
-	if (this != &e)
-	{
-		version = e.version;
-		spare = e.spare;
-		storyLen = e.storyLen;
-		numRecords = e.numRecords;
-		recordSize = e.recordSize;
-		position = e.position;
-	}
-	return *this;
+    if(this != &e)
+    {
+        version = e.version;
+        spare = e.spare;
+        storyLen = e.storyLen;
+        numRecords = e.numRecords;
+        recordSize = e.recordSize;
+        position = e.position;
+    }
+    return *this;
 }
 
 
@@ -86,16 +86,16 @@ PilotDOCHead & PilotDOCHead::operator =(const PilotDOCHead & e)
 
 PilotRecord *PilotDOCHead::pack() const
 {
-	pi_buffer_t *b = pi_buffer_new(16);
+    pi_buffer_t *b = pi_buffer_new(16);
 
-	Pilot::dlp<short>::append(b,version);
-	Pilot::dlp<short>::append(b,spare);
-	Pilot::dlp<long>::append(b,storyLen);
-	Pilot::dlp<short>::append(b,numRecords);
-	Pilot::dlp<short>::append(b,recordSize);
-	Pilot::dlp<long>::append(b,position);
+    Pilot::dlp<short>::append(b, version);
+    Pilot::dlp<short>::append(b, spare);
+    Pilot::dlp<long>::append(b, storyLen);
+    Pilot::dlp<short>::append(b, numRecords);
+    Pilot::dlp<short>::append(b, recordSize);
+    Pilot::dlp<long>::append(b, position);
 
-	PilotRecord *rec =  new PilotRecord(b, this);
-	return rec;
+    PilotRecord *rec =  new PilotRecord(b, this);
+    return rec;
 }
 

@@ -31,26 +31,25 @@ class KOEditorAlarms_base;
 
 class AlarmListViewItem;
 
-class KOEditorAlarms : public KDialogBase
-{
+class KOEditorAlarms : public KDialogBase {
     Q_OBJECT
-  public:
-    KOEditorAlarms( KCal::Alarm::List *alarms, QWidget *parent = 0,
-                    const char *name = 0 );
+public:
+    KOEditorAlarms(KCal::Alarm::List *alarms, QWidget *parent = 0,
+                   const char *name = 0);
     ~KOEditorAlarms();
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotAdd();
     void slotDuplicate();
     void slotRemove();
     void changed();
-    void selectionChanged( QListViewItem *listviewitem );
-  protected:
+    void selectionChanged(QListViewItem *listviewitem);
+protected:
     void init();
-    void readAlarm( KCal::Alarm *alarm );
-    void writeAlarm( KCal::Alarm *alarm );
-  private:
+    void readAlarm(KCal::Alarm *alarm);
+    void writeAlarm(KCal::Alarm *alarm);
+private:
     KCal::Alarm::List *mAlarms;
     KOEditorAlarms_base *mWidget;
     bool mInitializing;

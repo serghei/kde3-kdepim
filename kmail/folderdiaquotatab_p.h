@@ -44,16 +44,16 @@ namespace KMail {
 
 class QuotaWidget : public QWidget {
 
- Q_OBJECT
+    Q_OBJECT
 public:
-    QuotaWidget( QWidget* parent, const char* name = 0 );
+    QuotaWidget(QWidget *parent, const char *name = 0);
     virtual ~QuotaWidget() { }
-    void setQuotaInfo( const KMail::QuotaInfo& info );
+    void setQuotaInfo(const KMail::QuotaInfo &info);
 
 private:
-    QLabel* mInfoLabel;
-    QLabel* mRootLabel;
-    QProgressBar* mProgressBar;
+    QLabel *mInfoLabel;
+    QLabel *mRootLabel;
+    QProgressBar *mProgressBar;
     QString mUnits;
     int mFactor;
 };

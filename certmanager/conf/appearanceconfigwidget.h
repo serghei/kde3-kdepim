@@ -40,34 +40,34 @@ class KConfig;
 
 namespace Kleo {
 
-  class AppearanceConfigWidget : public AppearanceConfigWidgetBase {
+class AppearanceConfigWidget : public AppearanceConfigWidgetBase {
     Q_OBJECT
 
-  public:
+public:
     AppearanceConfigWidget(
-      QWidget * parent=0, const char * name=0, WFlags f=0 );
+        QWidget *parent = 0, const char *name = 0, WFlags f = 0);
     ~AppearanceConfigWidget();
 
     void load();
     void save();
 
-  public slots:
+public slots:
     void defaults();
 
-  signals:
+signals:
     void changed();
 
-  protected slots:
+protected slots:
     // reimplemented from the base class
     virtual void slotDefaultClicked();
-    virtual void slotSelectionChanged( QListViewItem * );
+    virtual void slotSelectionChanged(QListViewItem *);
     virtual void slotForegroundClicked();
     virtual void slotBackgroundClicked();
     virtual void slotFontClicked();
     virtual void slotItalicClicked();
     virtual void slotBoldClicked();
     virtual void slotStrikeoutClicked();
-  };
+};
 }
 
 #endif // APPEARANCECONFIGWIDGET_H

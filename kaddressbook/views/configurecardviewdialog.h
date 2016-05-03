@@ -36,7 +36,9 @@ class QCheckBox;
 class QLabel;
 class KConfig;
 
-namespace KABC { class AddressBook; }
+namespace KABC {
+class AddressBook;
+}
 
 class CardViewLookAndFeelPage;
 
@@ -45,16 +47,15 @@ class CardViewLookAndFeelPage;
   standard view dialog in order to add a custom page for the card
   view.
  */
-class ConfigureCardViewWidget : public ViewConfigureWidget
-{
-  public:
-    ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
+class ConfigureCardViewWidget : public ViewConfigureWidget {
+public:
+    ConfigureCardViewWidget(KABC::AddressBook *ab, QWidget *parent, const char *name);
     virtual ~ConfigureCardViewWidget();
 
-    virtual void restoreSettings( KConfig* );
-    virtual void saveSettings( KConfig* );
+    virtual void restoreSettings(KConfig *);
+    virtual void saveSettings(KConfig *);
 
-  private:
+private:
     class CardViewLookNFeelPage *mAdvancedPage;
 };
 
@@ -79,24 +80,24 @@ class ConfigureCardViewWidget : public ViewConfigureWidget
 
 class CardViewLookNFeelPage : public QVBox {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    CardViewLookNFeelPage( QWidget *parent=0, const char *name=0 );
+public:
+    CardViewLookNFeelPage(QWidget *parent = 0, const char *name = 0);
     ~CardViewLookNFeelPage();
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings(KConfig *);
+    void saveSettings(KConfig *);
 
-  private slots:
+private slots:
     void setTextFont();
     void setHeaderFont();
     void enableFonts();
     void enableColors();
 
-  private:
+private:
     void initGUI();
-    void updateFontLabel( QFont, QLabel * );
+    void updateFontLabel(QFont, QLabel *);
 
     QCheckBox *cbEnableCustomFonts,
               *cbEnableCustomColors,

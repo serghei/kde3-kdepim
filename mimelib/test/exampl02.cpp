@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -39,19 +39,21 @@ int main()
     DwString messageStr = "";
     DwString line;
     std::ifstream istrm("exampl02.txt");
-    while (DwTrue) {
+    while(DwTrue)
+    {
         getline(istrm, line);
-        if (istrm.eof()) {
+        if(istrm.eof())
+        {
             break;
         }
         messageStr += line + DW_EOL;
     }
     istrm.close();
-    
+
     // Create a DwMessage and parse it.  The DwMessage should be created on
     // the free store, since it will be added to the BasicMessage.
 
-    DwMessage* msg = DwMessage::NewMessage(messageStr, 0);
+    DwMessage *msg = DwMessage::NewMessage(messageStr, 0);
     msg->Parse();
 
     // Create a Message and add the DwMessage to it

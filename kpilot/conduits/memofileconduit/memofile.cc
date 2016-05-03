@@ -27,213 +27,227 @@
 
 #include "memofile.h"
 
-Memofile::Memofile(PilotMemo * memo, QString categoryName, QString fileName, QString baseDirectory) :
-		PilotMemo(memo,memo->text()), _categoryName(categoryName), _filename(fileName),  _baseDirectory(baseDirectory)
+Memofile::Memofile(PilotMemo *memo, QString categoryName, QString fileName, QString baseDirectory) :
+    PilotMemo(memo, memo->text()), _categoryName(categoryName), _filename(fileName),  _baseDirectory(baseDirectory)
 {
-	_lastModified = 0;
-	_size = 0;
-	_modified = _modifiedByPalm = false;
+    _lastModified = 0;
+    _size = 0;
+    _modified = _modifiedByPalm = false;
 }
 
 Memofile::Memofile(recordid_t id, int category, uint lastModifiedTime, uint size,
                    QString categoryName, QString fileName, QString baseDirectory) :
-		PilotMemo(),  _categoryName(categoryName),
-		_filename(fileName),_baseDirectory(baseDirectory)
+    PilotMemo(),  _categoryName(categoryName),
+    _filename(fileName), _baseDirectory(baseDirectory)
 {
-	setID(id);
-	PilotRecordBase::setCategory(category);
-	_lastModified = lastModifiedTime;
-	_size = size;
-	_modified = _modifiedByPalm = false;
+    setID(id);
+    PilotRecordBase::setCategory(category);
+    _lastModified = lastModifiedTime;
+    _size = size;
+    _modified = _modifiedByPalm = false;
 }
 
 Memofile::Memofile(int category, QString categoryName, QString fileName, QString baseDirectory) :
-		PilotMemo(),
-		_categoryName(categoryName), _filename(fileName), _baseDirectory(baseDirectory)
+    PilotMemo(),
+    _categoryName(categoryName), _filename(fileName), _baseDirectory(baseDirectory)
 {
-	setID(0);
-	_new = true;
-	PilotRecordBase::setCategory(category);
-	_modified = true;
-	_modifiedByPalm = false;
-	_lastModified = 0;
-	_size = 0;
+    setID(0);
+    _new = true;
+    PilotRecordBase::setCategory(category);
+    _modified = true;
+    _modifiedByPalm = false;
+    _lastModified = 0;
+    _size = 0;
 }
 
 bool Memofile::load()
 {
-	FUNCTIONSETUP;
-	if (filename().isEmpty()) {
-		DEBUGKPILOT << fname
-		<< ": I was asked to load, but have no filename to load.  "
-		<< endl;
-		return false;
-	}
+    FUNCTIONSETUP;
+    if(filename().isEmpty())
+    {
+        DEBUGKPILOT << fname
+                    << ": I was asked to load, but have no filename to load.  "
+                    << endl;
+        return false;
+    }
 
-	QFile f( filenameAbs() );
-	if ( !f.open( IO_ReadOnly ) ) {
-		DEBUGKPILOT << fname
-		<< ": Couldn't open file: [" << filenameAbs() << "] to read.  "
-		<< endl;
-		return false;
-	}
+    QFile f(filenameAbs());
+    if(!f.open(IO_ReadOnly))
+    {
+        DEBUGKPILOT << fname
+                    << ": Couldn't open file: [" << filenameAbs() << "] to read.  "
+                    << endl;
+        return false;
+    }
 
-	QTextStream ts( &f );
+    QTextStream ts(&f);
 
-	QString text,title,body;
-	title = filename();
-	body = ts.read();
+    QString text, title, body;
+    title = filename();
+    body = ts.read();
 
-	// funky magic.  we want the text of the memofile to have the filename
-	// as the first line....
-	if (body.startsWith(title)) {
-		text = body;
-	} else {
-		DEBUGKPILOT << fname
-		<< ": text of your memofile: [" << filename()
- 		<< "] didn't include the filename as the first line.  fixing it..." << endl;
-		text = title + CSL1("\n") + body;
-	}
-	
-	// check length of text.  if it's over the allowable length, warn user.
-	// NOTE: We don't need to truncate this here, since PilotMemo::setText()
-	// does it for us.
-	int _len = text.length();
-	int _maxlen = PilotMemo::MAX_MEMO_LEN;
-	if (_len > _maxlen) {
-		DEBUGKPILOT << fname << ": memofile: [" << filename()
-		 			<< "] length: [" << _len << "] is over maximum: ["
-		 			<< _maxlen << "] and will be truncated to fit." << endl;
-	}
+    // funky magic.  we want the text of the memofile to have the filename
+    // as the first line....
+    if(body.startsWith(title))
+    {
+        text = body;
+    }
+    else
+    {
+        DEBUGKPILOT << fname
+                    << ": text of your memofile: [" << filename()
+                    << "] didn't include the filename as the first line.  fixing it..." << endl;
+        text = title + CSL1("\n") + body;
+    }
 
-	setText(text);
-	f.close();
+    // check length of text.  if it's over the allowable length, warn user.
+    // NOTE: We don't need to truncate this here, since PilotMemo::setText()
+    // does it for us.
+    int _len = text.length();
+    int _maxlen = PilotMemo::MAX_MEMO_LEN;
+    if(_len > _maxlen)
+    {
+        DEBUGKPILOT << fname << ": memofile: [" << filename()
+                    << "] length: [" << _len << "] is over maximum: ["
+                    << _maxlen << "] and will be truncated to fit." << endl;
+    }
 
-	return true;
+    setText(text);
+    f.close();
+
+    return true;
 }
 
 void Memofile::setID(recordid_t i)
 {
-	if (i != id())
-		_modifiedByPalm = true;
+    if(i != id())
+        _modifiedByPalm = true;
 
-	PilotMemo::setID(i);
+    PilotMemo::setID(i);
 }
 
 bool Memofile::save()
 {
-	bool result = true;
+    bool result = true;
 
-	if ((isModified() && isLoaded()) || _modifiedByPalm) {
-		result = saveFile();
-	}
+    if((isModified() && isLoaded()) || _modifiedByPalm)
+    {
+        result = saveFile();
+    }
 
-	return result;
+    return result;
 }
 
 bool Memofile::deleteFile()
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-	<< ": deleting file: [" << filenameAbs() << "]." << endl;
-	return QFile::remove(filenameAbs());
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname
+                << ": deleting file: [" << filenameAbs() << "]." << endl;
+    return QFile::remove(filenameAbs());
 
 }
 
 bool Memofile::saveFile()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (filename().isEmpty()) {
-		DEBUGKPILOT << fname
-		<< ": I was asked to save, but have no filename to save to.  "
-		<< endl;
-		return false;
-	}
+    if(filename().isEmpty())
+    {
+        DEBUGKPILOT << fname
+                    << ": I was asked to save, but have no filename to save to.  "
+                    << endl;
+        return false;
+    }
 
-	DEBUGKPILOT << fname
-	<< ": saving memo to file: ["
-	<< filenameAbs() << "]" << endl;
+    DEBUGKPILOT << fname
+                << ": saving memo to file: ["
+                << filenameAbs() << "]" << endl;
 
 
-	QFile f( filenameAbs() );
-	if ( !f.open( IO_WriteOnly ) ) {
-		DEBUGKPILOT << fname
-		<< ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "
-		<< "This won't end well." << endl;
-		return false;
-	}
+    QFile f(filenameAbs());
+    if(!f.open(IO_WriteOnly))
+    {
+        DEBUGKPILOT << fname
+                    << ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "
+                    << "This won't end well." << endl;
+        return false;
+    }
 
-	QTextStream stream(&f);
-	stream  << text() << endl;
-	f.close();
+    QTextStream stream(&f);
+    stream  << text() << endl;
+    f.close();
 
-	_lastModified = getFileLastModified();
-	_size = getFileSize();
+    _lastModified = getFileLastModified();
+    _size = getFileSize();
 
-	return true;
+    return true;
 
 }
 
 bool Memofile::isModified(void)
 {
-	// first, check to see if this file is deleted....
-	if (!fileExists()) {
-		return true;
-	}
+    // first, check to see if this file is deleted....
+    if(!fileExists())
+    {
+        return true;
+    }
 
-	bool modByTimestamp = false;
-	bool modBySize = false;
+    bool modByTimestamp = false;
+    bool modBySize = false;
 
-	if (_lastModified > 0)
-		modByTimestamp = isModifiedByTimestamp();
+    if(_lastModified > 0)
+        modByTimestamp = isModifiedByTimestamp();
 
-	if (_size > 0)
-		modBySize = isModifiedBySize();
+    if(_size > 0)
+        modBySize = isModifiedBySize();
 
-	bool ret = _modified || modByTimestamp || modBySize;
+    bool ret = _modified || modByTimestamp || modBySize;
 
-	return ret;
+    return ret;
 }
 
 bool Memofile::isModifiedByTimestamp()
 {
-	if (_lastModified <=0) {
-		return true;
-	}
+    if(_lastModified <= 0)
+    {
+        return true;
+    }
 
-	uint lastModifiedTime = getFileLastModified();
-	if ( lastModifiedTime != _lastModified) {
-		return true;
-	}
+    uint lastModifiedTime = getFileLastModified();
+    if(lastModifiedTime != _lastModified)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool Memofile::isModifiedBySize()
 {
-	if (_size <=0) {
-		return true;
-	}
+    if(_size <= 0)
+    {
+        return true;
+    }
 
-	uint size = getFileSize();
-	if ( size != _size) {
-		return true;
-	}
+    uint size = getFileSize();
+    if(size != _size)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 uint Memofile::getFileLastModified()
 {
-	QFileInfo f = QFileInfo(filenameAbs());
-	uint lastModifiedTime = f.lastModified().toTime_t();
-	return lastModifiedTime;
+    QFileInfo f = QFileInfo(filenameAbs());
+    uint lastModifiedTime = f.lastModified().toTime_t();
+    return lastModifiedTime;
 }
 
 uint Memofile::getFileSize()
 {
-	QFileInfo f = QFileInfo(filenameAbs());
-	uint size = f.size();
-	return size;
+    QFileInfo f = QFileInfo(filenameAbs());
+    uint size = f.size();
+    return size;
 }

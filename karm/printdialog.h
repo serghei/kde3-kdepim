@@ -28,11 +28,10 @@
 class QCheckBox;
 class KDateEdit;
 
-class PrintDialog : public KDialogBase
-{
-  Q_OBJECT
+class PrintDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     PrintDialog();
 
     /* Return the from date entered.  */

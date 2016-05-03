@@ -27,17 +27,18 @@ namespace Komposer {
 
 class Editor::Private {
 public:
-  QString id;
+    QString id;
 };
 
-Editor::Editor( QObject *parent, const char *name, const QStringList &args )
-  : Plugin( parent, name, args ), d( new Private )
+Editor::Editor(QObject *parent, const char *name, const QStringList &args)
+    : Plugin(parent, name, args), d(new Private)
 {
 }
 
 Editor::~Editor()
 {
-  delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
 void

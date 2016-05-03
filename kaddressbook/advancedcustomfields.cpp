@@ -45,104 +45,110 @@
 
 #include "advancedcustomfields.h"
 
-class KABCStorage : public KPIM::DesignerFields::Storage
-{
-  public:
-    KABCStorage( KABC::Addressee *a, const QString &ns )
-      : mAddressee( a ), mNs( ns )
+class KABCStorage : public KPIM::DesignerFields::Storage {
+public:
+    KABCStorage(KABC::Addressee *a, const QString &ns)
+        : mAddressee(a), mNs(ns)
     {
     }
 
     QStringList keys()
     {
-      QStringList keys;
+        QStringList keys;
 
-      const QStringList customs = mAddressee->customs();
-      QStringList::ConstIterator it;
-      for ( it = customs.begin(); it != customs.end(); ++it ) {
-        QString app, name, value;
-        splitField( *it, app, name, value );
-        if ( app == mNs ) keys.append( name );
-      }
+        const QStringList customs = mAddressee->customs();
+        QStringList::ConstIterator it;
+        for(it = customs.begin(); it != customs.end(); ++it)
+        {
+            QString app, name, value;
+            splitField(*it, app, name, value);
+            if(app == mNs) keys.append(name);
+        }
 
-      return keys;
+        return keys;
     }
 
-    QString read( const QString &key )
+    QString read(const QString &key)
     {
-      return mAddressee->custom( mNs, key );
+        return mAddressee->custom(mNs, key);
     }
 
-    void write( const QString &key, const QString &value )
+    void write(const QString &key, const QString &value)
     {
-      mAddressee->insertCustom( mNs, key, value );
+        mAddressee->insertCustom(mNs, key, value);
     }
 
-  private:
+private:
     KABC::Addressee *mAddressee;
     QString mNs;
 };
 
 
-AdvancedCustomFields::AdvancedCustomFields( const QString &uiFile, KABC::AddressBook *ab,
-                                            QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+AdvancedCustomFields::AdvancedCustomFields(const QString &uiFile, KABC::AddressBook *ab,
+        QWidget *parent, const char *name)
+    : KAB::ContactEditorWidget(ab, parent, name)
 {
-  initGUI( uiFile );
+    initGUI(uiFile);
 }
 
-void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
+void AdvancedCustomFields::loadContact(KABC::Addressee *addr)
 {
-  QString ns;
-  if ( mFields->identifier().upper() == "KADDRESSBOOK" ||
-    QRegExp( "^Form\\d\\d?$" ).search( mFields->identifier() ) >= 0 ) {
-    ns = "KADDRESSBOOK";
-  } else {
-    ns = mFields->identifier();
-  }
+    QString ns;
+    if(mFields->identifier().upper() == "KADDRESSBOOK" ||
+            QRegExp("^Form\\d\\d?$").search(mFields->identifier()) >= 0)
+    {
+        ns = "KADDRESSBOOK";
+    }
+    else
+    {
+        ns = mFields->identifier();
+    }
 
-  KABCStorage storage( addr, ns );
-  mFields->load( &storage );
+    KABCStorage storage(addr, ns);
+    mFields->load(&storage);
 }
 
-void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
+void AdvancedCustomFields::storeContact(KABC::Addressee *addr)
 {
-  QString ns;
-  if ( mFields->identifier().upper() == "KADDRESSBOOK" ||
-    QRegExp( "^Form\\d\\d?$" ).search( mFields->identifier() ) >= 0 ) {
-    ns = "KADDRESSBOOK";
-  } else {
-    ns = mFields->identifier();
-  }
+    QString ns;
+    if(mFields->identifier().upper() == "KADDRESSBOOK" ||
+            QRegExp("^Form\\d\\d?$").search(mFields->identifier()) >= 0)
+    {
+        ns = "KADDRESSBOOK";
+    }
+    else
+    {
+        ns = mFields->identifier();
+    }
 
-  KABCStorage storage( addr, ns );
-  mFields->save( &storage );
+    KABCStorage storage(addr, ns);
+    mFields->save(&storage);
 }
 
-void AdvancedCustomFields::setReadOnly( bool readOnly )
+void AdvancedCustomFields::setReadOnly(bool readOnly)
 {
-  mFields->setReadOnly( readOnly );
+    mFields->setReadOnly(readOnly);
 }
 
-void AdvancedCustomFields::initGUI( const QString &uiFile )
+void AdvancedCustomFields::initGUI(const QString &uiFile)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+    QVBoxLayout *layout = new QVBoxLayout(this, KDialog::marginHint(),
+                                          KDialog::spacingHint());
 
-  mFields = new KPIM::DesignerFields( uiFile, this );
-  layout->addWidget( mFields );
+    mFields = new KPIM::DesignerFields(uiFile, this);
+    layout->addWidget(mFields);
 
-  connect( mFields, SIGNAL( modified() ), SLOT( setModified() ) );
+    connect(mFields, SIGNAL(modified()), SLOT(setModified()));
 }
 
 QString AdvancedCustomFields::pageIdentifier() const
 {
-  return mFields->identifier();
+    return mFields->identifier();
 }
 
 QString AdvancedCustomFields::pageTitle() const
 {
-  return mFields->title();
+    return mFields->title();
 }
 
 #include "advancedcustomfields.moc"

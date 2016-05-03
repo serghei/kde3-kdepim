@@ -34,123 +34,134 @@
 using namespace KCal;
 using namespace KOrg;
 
-History::History( KCal::Calendar *calendar )
-  : mCalendar( calendar ), mCurrentMultiEntry( 0 ), 
-    mUndoEntry( mEntries ), mRedoEntry( mEntries )
+History::History(KCal::Calendar *calendar)
+    : mCalendar(calendar), mCurrentMultiEntry(0),
+      mUndoEntry(mEntries), mRedoEntry(mEntries)
 {
-  mEntries.setAutoDelete( true );
+    mEntries.setAutoDelete(true);
 }
 
 void History::undo()
 {
-  if ( mCurrentMultiEntry ) mCurrentMultiEntry = 0;
-  Entry *entry = mUndoEntry.current();
-  if ( !entry ) return;
+    if(mCurrentMultiEntry) mCurrentMultiEntry = 0;
+    Entry *entry = mUndoEntry.current();
+    if(!entry) return;
 
-  entry->undo();
-  emit undone();
+    entry->undo();
+    emit undone();
 
-  emit redoAvailable( entry->text() );
+    emit redoAvailable(entry->text());
 
-  mRedoEntry = mUndoEntry;
-  --mUndoEntry;
+    mRedoEntry = mUndoEntry;
+    --mUndoEntry;
 
-  entry = mUndoEntry.current();
-  if ( entry ) emit undoAvailable( entry->text() );
-  else emit undoAvailable( QString::null );
+    entry = mUndoEntry.current();
+    if(entry) emit undoAvailable(entry->text());
+    else emit undoAvailable(QString::null);
 }
 
 void History::redo()
 {
-  if ( mCurrentMultiEntry ) mCurrentMultiEntry = 0;
-  Entry *entry = mRedoEntry.current();
-  if ( !entry ) return;
+    if(mCurrentMultiEntry) mCurrentMultiEntry = 0;
+    Entry *entry = mRedoEntry.current();
+    if(!entry) return;
 
-  emit undoAvailable( entry->text() );
+    emit undoAvailable(entry->text());
 
-  entry->redo();
-  emit redone();
+    entry->redo();
+    emit redone();
 
-  mUndoEntry = mRedoEntry;
-  ++mRedoEntry;
+    mUndoEntry = mRedoEntry;
+    ++mRedoEntry;
 
-  entry = mRedoEntry.current();
-  if ( entry ) emit redoAvailable( entry->text() );
-  else emit redoAvailable( QString::null );
+    entry = mRedoEntry.current();
+    if(entry) emit redoAvailable(entry->text());
+    else emit redoAvailable(QString::null);
 }
 
 void History::truncate()
 {
-  while ( mUndoEntry.current() != mEntries.last() ) {
-    mEntries.removeLast();
-  }
-  mRedoEntry = QPtrList<Entry>( mEntries );
-  emit redoAvailable( QString::null );
+    while(mUndoEntry.current() != mEntries.last())
+    {
+        mEntries.removeLast();
+    }
+    mRedoEntry = QPtrList<Entry>(mEntries);
+    emit redoAvailable(QString::null);
 }
 
-void History::recordDelete( Incidence *incidence )
+void History::recordDelete(Incidence *incidence)
 {
-  Entry *entry = new EntryDelete( mCalendar, incidence );
-  if (mCurrentMultiEntry) {
-    mCurrentMultiEntry->appendEntry( entry );
-  } else {
+    Entry *entry = new EntryDelete(mCalendar, incidence);
+    if(mCurrentMultiEntry)
+    {
+        mCurrentMultiEntry->appendEntry(entry);
+    }
+    else
+    {
+        truncate();
+        mEntries.append(entry);
+        mUndoEntry.toLast();
+        mRedoEntry = QPtrList<Entry>(mEntries);
+        emit undoAvailable(entry->text());
+    }
+}
+
+void History::recordAdd(Incidence *incidence)
+{
+    Entry *entry = new EntryAdd(mCalendar, incidence);
+    if(mCurrentMultiEntry)
+    {
+        mCurrentMultiEntry->appendEntry(entry);
+    }
+    else
+    {
+        truncate();
+        mEntries.append(entry);
+        mUndoEntry.toLast();
+        mRedoEntry = QPtrList<Entry>(mEntries);
+        emit undoAvailable(entry->text());
+    }
+}
+
+void History::recordEdit(Incidence *oldIncidence, Incidence *newIncidence)
+{
+    Entry *entry = new EntryEdit(mCalendar, oldIncidence, newIncidence);
+    if(mCurrentMultiEntry)
+    {
+        mCurrentMultiEntry->appendEntry(entry);
+    }
+    else
+    {
+        truncate();
+        mEntries.append(entry);
+        mUndoEntry.toLast();
+        mRedoEntry = QPtrList<Entry>(mEntries);
+        emit undoAvailable(entry->text());
+    }
+}
+
+void History::startMultiModify(const QString &description)
+{
+    if(mCurrentMultiEntry)
+    {
+        endMultiModify();
+    }
+    mCurrentMultiEntry = new MultiEntry(mCalendar, description);
     truncate();
-    mEntries.append( entry );
+    mEntries.append(mCurrentMultiEntry);
     mUndoEntry.toLast();
-    mRedoEntry = QPtrList<Entry>( mEntries );
-    emit undoAvailable( entry->text() );
-  }
-}
-
-void History::recordAdd( Incidence *incidence )
-{
-  Entry *entry = new EntryAdd( mCalendar, incidence );
-  if (mCurrentMultiEntry) {
-    mCurrentMultiEntry->appendEntry( entry );
-  } else {
-    truncate();
-    mEntries.append( entry );
-    mUndoEntry.toLast();
-    mRedoEntry = QPtrList<Entry>( mEntries );
-    emit undoAvailable( entry->text() );
-  }
-}
-
-void History::recordEdit( Incidence *oldIncidence, Incidence *newIncidence )
-{
-  Entry *entry = new EntryEdit( mCalendar, oldIncidence, newIncidence );
-  if (mCurrentMultiEntry) {
-    mCurrentMultiEntry->appendEntry( entry );
-  } else {
-    truncate();
-    mEntries.append( entry );
-    mUndoEntry.toLast();
-    mRedoEntry = QPtrList<Entry>( mEntries );
-    emit undoAvailable( entry->text() );
-  }
-}
-
-void History::startMultiModify( const QString &description )
-{
-  if ( mCurrentMultiEntry ) {
-    endMultiModify();
-  }
-  mCurrentMultiEntry = new MultiEntry( mCalendar, description );
-  truncate();
-  mEntries.append( mCurrentMultiEntry );
-  mUndoEntry.toLast();
-  mRedoEntry = QPtrList<Entry>( mEntries );
-  emit undoAvailable( mCurrentMultiEntry->text() );
+    mRedoEntry = QPtrList<Entry>(mEntries);
+    emit undoAvailable(mCurrentMultiEntry->text());
 }
 
 void History::endMultiModify()
 {
-  mCurrentMultiEntry = 0;
+    mCurrentMultiEntry = 0;
 }
 
 
-History::Entry::Entry( KCal::Calendar *calendar )
-  : mCalendar( calendar )
+History::Entry::Entry(KCal::Calendar *calendar)
+    : mCalendar(calendar)
 {
 }
 
@@ -158,138 +169,140 @@ History::Entry::~Entry()
 {
 }
 
-History::EntryDelete::EntryDelete( Calendar *calendar, Incidence *incidence )
-  : Entry( calendar ), mIncidence( incidence->clone() )
+History::EntryDelete::EntryDelete(Calendar *calendar, Incidence *incidence)
+    : Entry(calendar), mIncidence(incidence->clone())
 {
 }
 
 History::EntryDelete::~EntryDelete()
 {
-  delete mIncidence;
+    delete mIncidence;
 }
 
 void History::EntryDelete::undo()
 {
-  // TODO: Use the proper resource instead of asking!
-  mCalendar->addIncidence( mIncidence->clone() );
+    // TODO: Use the proper resource instead of asking!
+    mCalendar->addIncidence(mIncidence->clone());
 }
 
 void History::EntryDelete::redo()
 {
-  Incidence *incidence = mCalendar->incidence( mIncidence->uid() );
-  mCalendar->deleteIncidence( incidence );
+    Incidence *incidence = mCalendar->incidence(mIncidence->uid());
+    mCalendar->deleteIncidence(incidence);
 }
 
 QString History::EntryDelete::text()
 {
-  return i18n("Delete %1").arg(mIncidence->type());
+    return i18n("Delete %1").arg(mIncidence->type());
 }
 
 
-History::EntryAdd::EntryAdd( Calendar *calendar, Incidence *incidence )
-  : Entry( calendar ), mIncidence( incidence->clone() )
+History::EntryAdd::EntryAdd(Calendar *calendar, Incidence *incidence)
+    : Entry(calendar), mIncidence(incidence->clone())
 {
 }
 
 History::EntryAdd::~EntryAdd()
 {
-  delete mIncidence;
+    delete mIncidence;
 }
 
 void History::EntryAdd::undo()
 {
-  Incidence *incidence = mCalendar->incidence( mIncidence->uid() );
-  if ( incidence )
-    mCalendar->deleteIncidence( incidence );
+    Incidence *incidence = mCalendar->incidence(mIncidence->uid());
+    if(incidence)
+        mCalendar->deleteIncidence(incidence);
 }
 
 void History::EntryAdd::redo()
 {
-  // TODO: User the proper resource instead of asking again
-  mCalendar->addIncidence( mIncidence->clone() );
+    // TODO: User the proper resource instead of asking again
+    mCalendar->addIncidence(mIncidence->clone());
 }
 
 QString History::EntryAdd::text()
 {
-  return i18n("Add %1").arg(mIncidence->type());
+    return i18n("Add %1").arg(mIncidence->type());
 }
 
 
-History::EntryEdit::EntryEdit( Calendar *calendar, Incidence *oldIncidence,
-                               Incidence *newIncidence )
-  : Entry( calendar ), mOldIncidence( oldIncidence->clone() ),
-    mNewIncidence( newIncidence->clone() )
+History::EntryEdit::EntryEdit(Calendar *calendar, Incidence *oldIncidence,
+                              Incidence *newIncidence)
+    : Entry(calendar), mOldIncidence(oldIncidence->clone()),
+      mNewIncidence(newIncidence->clone())
 {
 }
 
 History::EntryEdit::~EntryEdit()
 {
-  delete mOldIncidence;
-  delete mNewIncidence;
+    delete mOldIncidence;
+    delete mNewIncidence;
 }
 
 void History::EntryEdit::undo()
 {
-  Incidence *incidence = mCalendar->incidence( mNewIncidence->uid() );
-  if ( incidence )
-      mCalendar->deleteIncidence( incidence );
-  // TODO: Use the proper resource instead of asking again
-  mCalendar->addIncidence( mOldIncidence->clone() );
+    Incidence *incidence = mCalendar->incidence(mNewIncidence->uid());
+    if(incidence)
+        mCalendar->deleteIncidence(incidence);
+    // TODO: Use the proper resource instead of asking again
+    mCalendar->addIncidence(mOldIncidence->clone());
 }
 
 void History::EntryEdit::redo()
 {
-  Incidence *incidence = mCalendar->incidence( mOldIncidence->uid() );
-  if ( incidence )
-      mCalendar->deleteIncidence( incidence );
-  // TODO: Use the proper resource instead of asking again
-  mCalendar->addIncidence( mNewIncidence->clone() );
+    Incidence *incidence = mCalendar->incidence(mOldIncidence->uid());
+    if(incidence)
+        mCalendar->deleteIncidence(incidence);
+    // TODO: Use the proper resource instead of asking again
+    mCalendar->addIncidence(mNewIncidence->clone());
 }
 
 QString History::EntryEdit::text()
 {
-  return i18n("Edit %1").arg(mNewIncidence->type());
+    return i18n("Edit %1").arg(mNewIncidence->type());
 }
 
-History::MultiEntry::MultiEntry( Calendar *calendar, const QString &text )
-  : Entry( calendar ), mText( text )
+History::MultiEntry::MultiEntry(Calendar *calendar, const QString &text)
+    : Entry(calendar), mText(text)
 {
-  mEntries.setAutoDelete( true );
+    mEntries.setAutoDelete(true);
 }
 
 History::MultiEntry::~MultiEntry()
 {
 }
 
-void History::MultiEntry::appendEntry( Entry* entry )
+void History::MultiEntry::appendEntry(Entry *entry)
 {
-  mEntries.append( entry );
+    mEntries.append(entry);
 }
 
 void History::MultiEntry::undo()
 {
-  QPtrListIterator<Entry> it( mEntries );
-  it.toLast();
-  Entry *entry;
-  while ( (entry = it.current()) != 0 ) {
-    --it;
-    entry->undo();
-  }
+    QPtrListIterator<Entry> it(mEntries);
+    it.toLast();
+    Entry *entry;
+    while((entry = it.current()) != 0)
+    {
+        --it;
+        entry->undo();
+    }
 }
 
 void History::MultiEntry::redo()
 {
-  QPtrListIterator<Entry> it( mEntries );
-  Entry *entry;
-  while ( (entry = it.current()) != 0 ) {
-    ++it;
-    entry->redo();
-  }
+    QPtrListIterator<Entry> it(mEntries);
+    Entry *entry;
+    while((entry = it.current()) != 0)
+    {
+        ++it;
+        entry->redo();
+    }
 }
 
 QString History::MultiEntry::text()
 {
-  return mText;
+    return mText;
 }
 
 #include "history.moc"

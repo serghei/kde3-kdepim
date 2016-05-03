@@ -29,27 +29,26 @@
 
 using namespace KABC;
 
-class AddresseeConfig
-{
-  public:
+class AddresseeConfig {
+public:
     AddresseeConfig();
-    AddresseeConfig( const Addressee &addr );
+    AddresseeConfig(const Addressee &addr);
 
-    void setAddressee( const Addressee &addr );
+    void setAddressee(const Addressee &addr);
     Addressee addressee();
 
-    void setAutomaticNameParsing( bool value );
+    void setAutomaticNameParsing(bool value);
     bool automaticNameParsing();
 
-    void setNoDefaultAddrTypes( const QValueList<int> &types );
+    void setNoDefaultAddrTypes(const QValueList<int> &types);
     QValueList<int> noDefaultAddrTypes() const;
 
-    void setCustomFields( const QStringList &fields );
+    void setCustomFields(const QStringList &fields);
     QStringList customFields() const;
 
     void remove();
 
-  private:
+private:
     Addressee mAddressee;
 };
 

@@ -38,38 +38,41 @@
 #include <kdepimmacros.h>
 
 namespace Kleo {
-  class CryptoBackendFactory;
+class CryptoBackendFactory;
 }
 
 class QListViewItem;
 
 namespace Kleo {
 
-  class KDE_EXPORT BackendConfigWidget : public QWidget {
+class KDE_EXPORT BackendConfigWidget : public QWidget {
     Q_OBJECT
-  public:
-    BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent=0, const char * name=0, WFlags f=0 );
+public:
+    BackendConfigWidget(CryptoBackendFactory *factory, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
     ~BackendConfigWidget();
 
     void load();
     void save() const;
 
-    void emitChanged( bool b ) { emit changed( b ); }
+    void emitChanged(bool b)
+    {
+        emit changed(b);
+    }
 
-  signals:
-    void changed( bool );
+signals:
+    void changed(bool);
 
-  private slots:
-    void slotSelectionChanged( QListViewItem * );
+private slots:
+    void slotSelectionChanged(QListViewItem *);
     void slotRescanButtonClicked();
     void slotConfigureButtonClicked();
 
-  private:
+private:
     class Private;
-    Private * d;
-  protected:
-    virtual void virtual_hook( int, void* );
-  };
+    Private *d;
+protected:
+    virtual void virtual_hook(int, void *);
+};
 
 }
 

@@ -46,145 +46,145 @@
 
 #include "pilotComponent.moc"
 
-PilotComponent::PilotComponent(QWidget * parent,
-	const char *id,
-	const QString & path) :
-	QWidget(parent, id),
-	fDBPath(path),
-	shown(false)
+PilotComponent::PilotComponent(QWidget *parent,
+                               const char *id,
+                               const QString &path) :
+    QWidget(parent, id),
+    fDBPath(path),
+    shown(false)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (parent)
-	{
-		resize(parent->geometry().width(),
-			parent->geometry().height());
-	}
+    if(parent)
+    {
+        resize(parent->geometry().width(),
+               parent->geometry().height());
+    }
 
 }
 
 
 
-int PilotComponent::findSelectedCategory(QComboBox * fCatList,
-	struct CategoryAppInfo *info, bool AllIsUnfiled)
+int PilotComponent::findSelectedCategory(QComboBox *fCatList,
+        struct CategoryAppInfo *info, bool AllIsUnfiled)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	// Semantics of currentCatID are:
-	//
-	// >=0          is a specific category based on the text ->
-	//              category number mapping defined by the Pilot,
-	// ==-1         means "All" category selected when
-	//              AllIsUnfiled is true.
-	// == 0         == Unfiled means "All" category selected when
-	//              AllIsUnfiled is false.
-	//
-	//
-	int currentCatID = 0;
+    // Semantics of currentCatID are:
+    //
+    // >=0          is a specific category based on the text ->
+    //              category number mapping defined by the Pilot,
+    // ==-1         means "All" category selected when
+    //              AllIsUnfiled is true.
+    // == 0         == Unfiled means "All" category selected when
+    //              AllIsUnfiled is false.
+    //
+    //
+    int currentCatID = 0;
 
-	// If a category is deleted after others have been added, none of the
-	// category numbers are changed.  So we need to find the category number
-	// for this category (this category is represented by the selected
-	// *text*).
-	//
-	//
-	// The top entry in the list is "All", so if the top item is
-	// selected we can indicate that we are using the "All" category.
-	//
-	//
-	if (fCatList->currentItem() == 0)
-	{
-		currentCatID = (-1);
+    // If a category is deleted after others have been added, none of the
+    // category numbers are changed.  So we need to find the category number
+    // for this category (this category is represented by the selected
+    // *text*).
+    //
+    //
+    // The top entry in the list is "All", so if the top item is
+    // selected we can indicate that we are using the "All" category.
+    //
+    //
+    if(fCatList->currentItem() == 0)
+    {
+        currentCatID = (-1);
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Category 'All' selected.\n";
+        DEBUGKPILOT << fname << ": Category 'All' selected.\n";
 #endif
-	}
-	else
-	{
-		QString selectedCategory =
-			fCatList->text(fCatList->currentItem());
-		currentCatID = Pilot::findCategory(info, selectedCategory, AllIsUnfiled);
-	}
+    }
+    else
+    {
+        QString selectedCategory =
+            fCatList->text(fCatList->currentItem());
+        currentCatID = Pilot::findCategory(info, selectedCategory, AllIsUnfiled);
+    }
 
-	if ((currentCatID == -1) && AllIsUnfiled)
-		currentCatID = 0;
-	return currentCatID;
+    if((currentCatID == -1) && AllIsUnfiled)
+        currentCatID = 0;
+    return currentCatID;
 }
 
 
-void PilotComponent::populateCategories(QComboBox * c,
-	struct CategoryAppInfo *info)
+void PilotComponent::populateCategories(QComboBox *c,
+                                        struct CategoryAppInfo *info)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Combo box @"
-		<< (long) c << " and info @" << (long) info << endl;
+    DEBUGKPILOT << fname
+                << ": Combo box @"
+                << (long) c << " and info @" << (long) info << endl;
 #endif
 
-	c->clear();
+    c->clear();
 
-	if (!info)
-		goto CategoryAll;
+    if(!info)
+        goto CategoryAll;
 
-	// Fill up the categories list box with
-	// the categories defined by the user.
-	// These presumably are in the language
-	// the user uses, so no translation is necessary.
-	//
-	//
-	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
-	{
-		if (info->name[i][0])
-		{
+    // Fill up the categories list box with
+    // the categories defined by the user.
+    // These presumably are in the language
+    // the user uses, so no translation is necessary.
+    //
+    //
+    for(unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
+    {
+        if(info->name[i][0])
+        {
 #ifdef DEBUG
-			DEBUGKPILOT << fname
-				<< ": Adding category: "
-				<< info->name[i]
-				<< " with ID: " << (int) info->ID[i] << endl;
+            DEBUGKPILOT << fname
+                        << ": Adding category: "
+                        << info->name[i]
+                        << " with ID: " << (int) info->ID[i] << endl;
 #endif
 
-			c->insertItem(Pilot::fromPilot(info->name[i]));
-		}
-	}
+            c->insertItem(Pilot::fromPilot(info->name[i]));
+        }
+    }
 
 CategoryAll:
-	c->insertItem(i18n("All"), 0);
+    c->insertItem(i18n("All"), 0);
 }
 
 
 void PilotComponent::slotShowComponent()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Showing component @" << (long) this << endl;
+    DEBUGKPILOT << fname << ": Showing component @" << (long) this << endl;
 #endif
 
-	emit showComponent(this);
+    emit showComponent(this);
 }
 
 /* virtual */ bool PilotComponent::preHotSync(QString &)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	return true;
+    return true;
 }
 
 void PilotComponent::markDBDirty(const QString db)
 {
-	FUNCTIONSETUP;
-	KPilotConfig::addDirtyDatabase(db);
-	KPilotConfig::sync();
+    FUNCTIONSETUP;
+    KPilotConfig::addDirtyDatabase(db);
+    KPilotConfig::sync();
 }
 
-void PilotComponent::showKPilotComponent( bool toShow )
+void PilotComponent::showKPilotComponent(bool toShow)
 {
-	if ( toShow != shown )
-	{
-		shown = toShow;
-		if (shown) showComponent();
-		else hideComponent();
-	}
+    if(toShow != shown)
+    {
+        shown = toShow;
+        if(shown) showComponent();
+        else hideComponent();
+    }
 }

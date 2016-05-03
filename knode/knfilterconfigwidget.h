@@ -26,20 +26,20 @@ class KNRangeFilterWidget;
 
 class KNFilterConfigWidget : public QTabWidget  {
 
-  Q_OBJECT
-  
-  friend class KNFilterDialog;
-  friend class KNSearchDialog;
+    Q_OBJECT
 
-  public:
-    KNFilterConfigWidget(QWidget *parent=0, const char *name=0);
+    friend class KNFilterDialog;
+    friend class KNSearchDialog;
+
+public:
+    KNFilterConfigWidget(QWidget *parent = 0, const char *name = 0);
     ~KNFilterConfigWidget();
-    
+
     void reset();
 
     void setStartFocus();      // useablity hack for the search dialog
-        
-  protected:
+
+protected:
     KNStatusFilterWidget *status;
     KNStringFilterWidget *subject;
     KNStringFilterWidget *from;

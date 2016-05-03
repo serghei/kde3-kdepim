@@ -36,33 +36,33 @@
 #include <qobject.h>
 #include <kdepimmacros.h>
 namespace GpgME {
-  class Key;
+class Key;
 }
 
 namespace Kleo {
-  class KeyFilter;
+class KeyFilter;
 }
 
 namespace Kleo {
 
-  class KDE_EXPORT KeyFilterManager : public QObject {
+class KDE_EXPORT KeyFilterManager : public QObject {
     Q_OBJECT
-  protected:
-    KeyFilterManager( QObject * parent=0, const char * name=0 );
+protected:
+    KeyFilterManager(QObject *parent = 0, const char *name = 0);
     ~KeyFilterManager();
 
-  public:
-    static KeyFilterManager * instance();
+public:
+    static KeyFilterManager *instance();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    const KeyFilter *filterMatching(const GpgME::Key &key) const;
 
     void reload();
 
-  private:
+private:
     class Private;
-    Private * d;
-    static KeyFilterManager * mSelf;
-  };
+    Private *d;
+    static KeyFilterManager *mSelf;
+};
 
 }
 

@@ -21,12 +21,14 @@
 
 #include "kimportpage.h"
 
-KImportPage::KImportPage(QWidget *parent, const char *name ) : KImportPageDlg(parent,name) {
+KImportPage::KImportPage(QWidget *parent, const char *name) : KImportPageDlg(parent, name)
+{
 
-	mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
+    mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
 }
 
-KImportPage::~KImportPage() {
+KImportPage::~KImportPage()
+{
 }
 
 #include "kimportpage.moc"

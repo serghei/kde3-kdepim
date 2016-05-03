@@ -34,7 +34,7 @@
 #define __KLEO_KEYFILTER_H__
 
 namespace GpgME {
-  class Key;
+class Key;
 }
 
 class QFont;
@@ -43,14 +43,14 @@ class QString;
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class key filters
+/**
+   @short An abstract base class key filters
 
-  */
-  class KeyFilter {
-  public:
+*/
+class KeyFilter {
+public:
     virtual ~KeyFilter() {}
-    virtual bool matches( const GpgME::Key & key ) const = 0;
+    virtual bool matches(const GpgME::Key &key) const = 0;
 
     virtual unsigned int specificity() const = 0;
 
@@ -58,10 +58,10 @@ namespace Kleo {
     // the easiest way:
     virtual QColor fgColor() const = 0;
     virtual QColor bgColor() const = 0;
-    virtual QFont  font( const QFont & ) const = 0;
+    virtual QFont  font(const QFont &) const = 0;
     virtual QString name() const = 0;
     virtual QString icon() const = 0;
-  };
+};
 
 }
 

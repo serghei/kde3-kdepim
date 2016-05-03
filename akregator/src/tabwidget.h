@@ -30,59 +30,57 @@
 
 class QString;
 
-namespace Akregator
-{
+namespace Akregator {
 
 class Frame;
 
-class TabWidget : public KTabWidget
-{
+class TabWidget : public KTabWidget {
     Q_OBJECT
 
-    public:
-        TabWidget(QWidget * parent = 0, const char *name = 0);
-        virtual ~TabWidget();
+public:
+    TabWidget(QWidget *parent = 0, const char *name = 0);
+    virtual ~TabWidget();
 
-        void addFrame(Frame *f);
-        Frame* currentFrame();
-        void removeFrame(Frame *f);
-        QPtrList<Frame> frames() const;
+    void addFrame(Frame *f);
+    Frame *currentFrame();
+    void removeFrame(Frame *f);
+    QPtrList<Frame> frames() const;
 
-    public slots:
+public slots:
 
-        void slotSetTitle(Frame* frame, const QString& title);
-        void slotSettingsChanged();
-        void slotNextTab();
-        void slotPreviousTab();
-        void slotRemoveCurrentFrame();
+    void slotSetTitle(Frame *frame, const QString &title);
+    void slotSettingsChanged();
+    void slotNextTab();
+    void slotPreviousTab();
+    void slotRemoveCurrentFrame();
 
-    signals:
-        
-        void currentFrameChanged(Frame *);
-        
-    protected slots:
+signals:
 
-        virtual void initiateDrag(int tab);
-        
-    private: // methods
-        
-        uint tabBarWidthForMaxChars( uint maxLength );
-        void setTitle( const QString &title , QWidget* sender);
+    void currentFrameChanged(Frame *);
+
+protected slots:
+
+    virtual void initiateDrag(int tab);
+
+private: // methods
+
+    uint tabBarWidthForMaxChars(uint maxLength);
+    void setTitle(const QString &title , QWidget *sender);
 
 
-    private slots:
-        
-        void slotDetachTab();
-        void slotCopyLinkAddress();
-        void slotCloseTab();
-        void slotCloseRequest(QWidget* widget);
-        void contextMenu (int item, const QPoint &p);
-        void slotTabChanged(QWidget *w);
-        
-   private:
+private slots:
 
-       class TabWidgetPrivate;
-       TabWidgetPrivate* d;
+    void slotDetachTab();
+    void slotCopyLinkAddress();
+    void slotCloseTab();
+    void slotCloseRequest(QWidget *widget);
+    void contextMenu(int item, const QPoint &p);
+    void slotTabChanged(QWidget *w);
+
+private:
+
+    class TabWidgetPrivate;
+    TabWidgetPrivate *d;
 };
 
 }

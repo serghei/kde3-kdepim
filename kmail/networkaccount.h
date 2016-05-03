@@ -37,32 +37,35 @@ class AccountManager;
 class KConfig/*Base*/;
 class KURL;
 namespace KIO {
-  class Slave;
-  class MetaData;
+class Slave;
+class MetaData;
 }
 
 namespace KMail {
 
-  class NetworkAccount : public KMAccount {
+class NetworkAccount : public KMAccount {
     Q_OBJECT
-  protected:
-    NetworkAccount( AccountManager * parent, const QString & name, uint id );
-  public:
+protected:
+    NetworkAccount(AccountManager *parent, const QString &name, uint id);
+public:
     virtual ~NetworkAccount();
 
     /** Set the config options to a decent state */
     virtual void init();
 
     /** A weak assignment operator */
-    virtual void pseudoAssign( const KMAccount * a );
+    virtual void pseudoAssign(const KMAccount *a);
 
     /** User login name */
-    QString login() const { return mLogin; }
-    virtual void setLogin( const QString & login );
+    QString login() const
+    {
+        return mLogin;
+    }
+    virtual void setLogin(const QString &login);
 
     /** User password */
     QString passwd() const;
-    virtual void setPasswd( const QString & passwd, bool storeInConfig=false );
+    virtual void setPasswd(const QString &passwd, bool storeInConfig = false);
 
     /**
      * Set the password to "" (empty string)
@@ -70,62 +73,86 @@ namespace KMail {
     virtual void clearPasswd();
 
     /** authentication method */
-    QString auth() const { return mAuth; }
-    virtual void setAuth( const QString & auth );
+    QString auth() const
+    {
+        return mAuth;
+    }
+    virtual void setAuth(const QString &auth);
 
     /** @return whether to store the password in the config file */
-    bool storePasswd() const { return mStorePasswd; }
-    virtual void setStorePasswd( bool store );
+    bool storePasswd() const
+    {
+        return mStorePasswd;
+    }
+    virtual void setStorePasswd(bool store);
 
     /** Server hostname */
-    QString host() const { return mHost; }
-    virtual void setHost( const QString & host );
+    QString host() const
+    {
+        return mHost;
+    }
+    virtual void setHost(const QString &host);
 
     /** Server port number */
-    unsigned short int port() const { return mPort; }
-    virtual void setPort( unsigned short int port );
+    unsigned short int port() const
+    {
+        return mPort;
+    }
+    virtual void setPort(unsigned short int port);
 
     /** @return whether to use SSL */
-    bool useSSL() const { return mUseSSL; }
-    virtual void setUseSSL( bool use );
+    bool useSSL() const
+    {
+        return mUseSSL;
+    }
+    virtual void setUseSSL(bool use);
 
     /** @return whether to use TLS */
-    bool useTLS() const { return mUseTLS; }
-    virtual void setUseTLS( bool use );
+    bool useTLS() const
+    {
+        return mUseTLS;
+    }
+    virtual void setUseTLS(bool use);
 
     /** @return the SieveConfig for this account */
-    KMail::SieveConfig sieveConfig() const { return mSieveConfig; }
-    virtual void setSieveConfig( const KMail::SieveConfig & config );
+    KMail::SieveConfig sieveConfig() const
+    {
+        return mSieveConfig;
+    }
+    virtual void setSieveConfig(const KMail::SieveConfig &config);
 
     /** Configure the slave by adding to the meta data map */
     virtual KIO::MetaData slaveConfig() const;
 
-    virtual void readConfig( /*const*/ KConfig/*Base*/ & config );
-    virtual void writeConfig( KConfig/*Base*/ & config ) /*const*/;
+    virtual void readConfig(/*const*/ KConfig/*Base*/ & config);
+    virtual void writeConfig(KConfig/*Base*/ & config) /*const*/;
 
     /** @return an URL for this account */
     virtual KURL getUrl() const;
 
     /** @return the KIO slave for this account */
-    KIO::Slave * slave() const { return mSlave; }
+    KIO::Slave *slave() const
+    {
+        return mSlave;
+    }
 
     /** Kill all jobs that are currently in progress */
-    virtual void killAllJobs( bool disconnectSlave = false ) = 0;
+    virtual void killAllJobs(bool disconnectSlave = false) = 0;
 
     /** Read password from wallet, used for on-demand wallet opening */
     void readPassword();
 
     virtual bool mailCheckCanProceed() const;
 
-    virtual void setCheckingMail( bool checking );
+    virtual void setCheckingMail(bool checking);
 
     /** Reset connection list for the account */
-    static void resetConnectionList( NetworkAccount* acct );
-  protected:
+    static void resetConnectionList(NetworkAccount *acct);
+protected:
     virtual QString protocol() const = 0;
     virtual unsigned short int defaultPort() const = 0;
 
-  protected:
+protected:
     KMail::SieveConfig mSieveConfig;
     QGuardedPtr<KIO::Slave> mSlave;
     QString mLogin, mPasswd, mAuth, mHost;
@@ -135,7 +162,7 @@ namespace KMail {
     bool mUseTLS : 1;
     bool mAskAgain : 1;
     bool mPasswdDirty, mStorePasswdInConfig;
-  };
+};
 
 } // namespace KMail
 

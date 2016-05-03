@@ -29,7 +29,7 @@ class TimeLabels;
 class QScrollBar;
 
 namespace KCal {
-  class ResourceCalendar;
+class ResourceCalendar;
 }
 
 namespace KOrg {
@@ -37,11 +37,10 @@ namespace KOrg {
 /**
   Shows one agenda for every resource side-by-side.
 */
-class MultiAgendaView : public AgendaView
-{
-  Q_OBJECT
-  public:
-    explicit MultiAgendaView( Calendar* cal, QWidget *parent = 0, const char *name = 0 );
+class MultiAgendaView : public AgendaView {
+    Q_OBJECT
+public:
+    explicit MultiAgendaView(Calendar *cal, QWidget *parent = 0, const char *name = 0);
     ~MultiAgendaView();
 
     Incidence::List selectedIncidences();
@@ -51,16 +50,16 @@ class MultiAgendaView : public AgendaView
 
     bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay);
 
-    void setTypeAheadReceiver( QObject *o );
+    void setTypeAheadReceiver(QObject *o);
 
-  public slots:
-    void showDates( const QDate &start, const QDate &end );
-    void showIncidences( const Incidence::List &incidenceList );
+public slots:
+    void showDates(const QDate &start, const QDate &end);
+    void showIncidences(const Incidence::List &incidenceList);
     void updateView();
-    void changeIncidenceDisplay( Incidence *incidence, int mode );
+    void changeIncidenceDisplay(Incidence *incidence, int mode);
     void updateConfig();
 
-    void setIncidenceChanger( IncidenceChangerBase *changer );
+    void setIncidenceChanger(IncidenceChangerBase *changer);
 
     void finishTypeAhead();
 
@@ -68,28 +67,28 @@ class MultiAgendaView : public AgendaView
 
     void resourcesChanged();
 
-  protected:
-    void resizeEvent( QResizeEvent *ev );
-    bool eventFilter( QObject *obj, QEvent *event );
+protected:
+    void resizeEvent(QResizeEvent *ev);
+    bool eventFilter(QObject *obj, QEvent *event);
 
-  private:
-    void addView( const QString &label, KCal::ResourceCalendar *res, const QString &subRes = QString::null );
+private:
+    void addView(const QString &label, KCal::ResourceCalendar *res, const QString &subRes = QString::null);
     void deleteViews();
     void recreateViews();
     void setupViews();
-    void resizeScrollView( const QSize &size );
-    void installSplitterEventFilter( QSplitter *splitter );
+    void resizeScrollView(const QSize &size);
+    void installSplitterEventFilter(QSplitter *splitter);
 
-  private slots:
+private slots:
     void slotSelectionChanged();
     void slotClearTimeSpanSelection();
     void resizeSplitters();
-    void zoomView( const int delta, const QPoint &pos, const Qt::Orientation ori );
+    void zoomView(const int delta, const QPoint &pos, const Qt::Orientation ori);
     void slotResizeScrollView();
 
-  private:
-    QValueList<KOAgendaView*> mAgendaViews;
-    QValueList<QWidget*> mAgendaWidgets;
+private:
+    QValueList<KOAgendaView *> mAgendaViews;
+    QValueList<QWidget *> mAgendaWidgets;
     QHBox *mTopBox;
     QScrollView *mScrollView;
     TimeLabels *mTimeLabels;

@@ -24,16 +24,16 @@
 
 class KNNntpClient : public KNProtocolClient  {
 
-  public:
-    
-    KNNntpClient(int NfdPipeIn, int NfdPipeOut, QMutex& nntpMutex);
+public:
+
+    KNNntpClient(int NfdPipeIn, int NfdPipeOut, QMutex &nntpMutex);
     ~KNNntpClient();
-    
-  protected:
+
+protected:
 
     /** examines the job and calls the suitable handling method */
     virtual void processJob();
-  
+
     void doLoadGroups();
     void doFetchGroups();
     void doCheckNewGroups();
@@ -50,8 +50,8 @@ class KNNntpClient : public KNProtocolClient  {
     bool switchToGroup(const QString &newGroup);
 
     QString currentGroup;
-    QMutex& mutex;
-    
+    QMutex &mutex;
+
 };
 
 #endif

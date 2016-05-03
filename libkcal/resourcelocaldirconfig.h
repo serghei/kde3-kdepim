@@ -1,6 +1,6 @@
 /*
     This file is part of libkcal.
-    
+
     Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
@@ -36,22 +36,21 @@ namespace KCal {
 
 /**
   \internal
-  
+
   Configuration widget for local dir resource.
-  
+
   @see ResourceLocalDir
 */
-class LIBKCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
-{ 
+class LIBKCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    ResourceLocalDirConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceLocalDirConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource);
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  private:
+private:
     KURLRequester *mURL;
     QButtonGroup *formatGroup;
     QRadioButton *icalButton;

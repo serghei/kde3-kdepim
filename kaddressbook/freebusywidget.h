@@ -28,34 +28,35 @@
 
 #include "contacteditorwidget.h"
 
-class FreeBusyWidget : public KAB::ContactEditorWidget
-{
-  Q_OBJECT
+class FreeBusyWidget : public KAB::ContactEditorWidget {
+    Q_OBJECT
 
-  public:
-    FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    FreeBusyWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~FreeBusyWidget();
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private:
+private:
     KURLRequester *mURL;
 
     bool mReadOnly;
 };
 
-class FreeBusyWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+class FreeBusyWidgetFactory : public KAB::ContactEditorWidgetFactory {
+public:
+    KAB::ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
     {
-      return new FreeBusyWidget( ab, parent, name );
+        return new FreeBusyWidget(ab, parent, name);
     }
 
-    QString pageIdentifier() const { return "misc"; }
+    QString pageIdentifier() const
+    {
+        return "misc";
+    }
 };
 
 #endif

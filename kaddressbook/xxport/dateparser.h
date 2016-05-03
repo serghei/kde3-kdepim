@@ -37,14 +37,13 @@
     d = day (e.g. 3, 03 or 17)
     D = day (e.g. 03 or 17 )
  */
-class DateParser
-{
-  public:
-    DateParser( const QString &pattern );
+class DateParser {
+public:
+    DateParser(const QString &pattern);
     ~DateParser();
 
-    QDate parse( const QString &dateStr ) const;
-  private:
+    QDate parse(const QString &dateStr) const;
+private:
     QString mPattern;
 };
 

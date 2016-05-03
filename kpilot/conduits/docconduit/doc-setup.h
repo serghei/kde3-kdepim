@@ -33,14 +33,13 @@
 
 class DOCWidget;
 
-class DOCWidgetConfig : public ConduitConfigBase
-{
+class DOCWidgetConfig : public ConduitConfigBase {
 public:
-	DOCWidgetConfig(QWidget *, const char *);
-	virtual void commit();
-	virtual void load();
+    DOCWidgetConfig(QWidget *, const char *);
+    virtual void commit();
+    virtual void load();
 protected:
-	DOCWidget *fConfigWidget;
+    DOCWidget *fConfigWidget;
 } ;
 
 

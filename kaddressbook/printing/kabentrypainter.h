@@ -33,9 +33,8 @@
 
 typedef QValueList<QRect> QRectList;
 
-class KABEntryPainter
-{
-  public:
+class KABEntryPainter {
+public:
     KABEntryPainter();
     ~KABEntryPainter();
 
@@ -58,26 +57,26 @@ class KABEntryPainter
 
       @returns false if some error happens, otherwise true.
      */
-    bool printAddressee( const KABC::Addressee &addr, const QRect &window,
-                         QPainter *p, int top = 0, bool fake = false,
-                         QRect *rect = 0 );
+    bool printAddressee(const KABC::Addressee &addr, const QRect &window,
+                        QPainter *p, int top = 0, bool fake = false,
+                        QRect *rect = 0);
 
-    void setForegroundColor( const QColor &color = Qt::black );
-    void setBackgroundColor( const QColor &color = Qt::black );
-    void setHeaderColor( const QColor &color = Qt::white );
+    void setForegroundColor(const QColor &color = Qt::black);
+    void setBackgroundColor(const QColor &color = Qt::black);
+    void setHeaderColor(const QColor &color = Qt::white);
 
-    void setHeaderFont( const QFont &font = QFont( "Helvetica", 12, QFont::Normal, true ) );
-    void setHeadLineFont( const QFont &font = QFont( "Helvetica", 12, QFont::Normal, true ) );
-    void setBodyFont( const QFont &font = QFont( "Helvetica", 12, QFont::Normal, true ) );
-    void setFixedFont( const QFont &font = QFont( "Courier", 12, QFont::Normal, true ) );
-    void setCommentFont( const QFont &font = QFont( "Helvetica", 10, QFont::Normal, true ) );
+    void setHeaderFont(const QFont &font = QFont("Helvetica", 12, QFont::Normal, true));
+    void setHeadLineFont(const QFont &font = QFont("Helvetica", 12, QFont::Normal, true));
+    void setBodyFont(const QFont &font = QFont("Helvetica", 12, QFont::Normal, true));
+    void setFixedFont(const QFont &font = QFont("Courier", 12, QFont::Normal, true));
+    void setCommentFont(const QFont &font = QFont("Helvetica", 10, QFont::Normal, true));
 
-    void setUseHeaderColor( bool value = true );
+    void setUseHeaderColor(bool value = true);
 
-    void setShowAddresses( bool value = true );
-    void setShowEmails( bool value = true );
-    void setShowPhones( bool value = true );
-    void setShowURLs( bool value = true );
+    void setShowAddresses(bool value = true);
+    void setShowEmails(bool value = true);
+    void setShowPhones(bool value = true);
+    void setShowURLs(bool value = true);
 
     /**
       Returns the index of the rectangle if the point p is inside of
@@ -85,28 +84,28 @@ class KABEntryPainter
       email address in the emails list. If it does not point at one of
       the email addresses, -1 is returned.
      */
-    int hitsEmail( const QPoint &p );
+    int hitsEmail(const QPoint &p);
 
     /**
       Returns the index of the rectangle if the point p is inside of
       one of the telephone numbers. See hitsEmail
      */
-    int hitsPhone( const QPoint &p );
+    int hitsPhone(const QPoint &p);
 
     /**
       Returns the index of the rectangle if the point p is inside of
       one of the telephone numbers. See hitsEmail
      */
-    int hitsTalk( const QPoint &p );
+    int hitsTalk(const QPoint &p);
 
     /**
       Returns the index of the rectangle if the point p is inside of
       one of the telephone numbers. See hitsEmail
      */
-    int hitsURL( const QPoint &p );
+    int hitsURL(const QPoint &p);
 
-  private:
-    int hits( const QRectList& rects, const QPoint &p );
+private:
+    int hits(const QRectList &rects, const QPoint &p);
 
     QColor mForegroundColor;
     QColor mBackgroundColor;

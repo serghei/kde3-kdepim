@@ -27,7 +27,7 @@
 
 namespace Akregator {
 
-bool TreeNodeVisitor::visit(TreeNode* node)
+bool TreeNodeVisitor::visit(TreeNode *node)
 {
     return node->accept(this);
 }

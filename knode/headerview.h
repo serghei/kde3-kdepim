@@ -26,22 +26,28 @@ class KNHdrViewItem;
 
 class KNHeaderView : public KListView  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class KNHdrViewItem;
+    friend class KNHdrViewItem;
 
-  public:
-    KNHeaderView( QWidget *parent, const char *name = 0 );
+public:
+    KNHeaderView(QWidget *parent, const char *name = 0);
     ~KNHeaderView();
 
-    void setActive( QListViewItem *item );
+    void setActive(QListViewItem *item);
     void clear();
 
-    void ensureItemVisibleWithMargin( const QListViewItem *i );
+    void ensureItemVisibleWithMargin(const QListViewItem *i);
 
-    virtual void setSorting( int column, bool ascending = true );
-    bool sortByThreadChangeDate() const      { return mSortByThreadChangeDate; }
-    void setSortByThreadChangeDate( bool b ) { mSortByThreadChangeDate = b; }
+    virtual void setSorting(int column, bool ascending = true);
+    bool sortByThreadChangeDate() const
+    {
+        return mSortByThreadChangeDate;
+    }
+    void setSortByThreadChangeDate(bool b)
+    {
+        mSortByThreadChangeDate = b;
+    }
 
     bool nextUnreadArticle();
     bool nextUnreadThread();
@@ -49,42 +55,48 @@ class KNHeaderView : public KListView  {
     void readConfig();
     void writeConfig();
 
-    const KPaintInfo* paintInfo() const { return &mPaintInfo; }
+    const KPaintInfo *paintInfo() const
+    {
+        return &mPaintInfo;
+    }
 
-  signals:
-    void itemSelected( QListViewItem* );
-    void doubleClick( QListViewItem* );
-    void sortingChanged( int );
-    void focusChanged( QFocusEvent* );
-    void focusChangeRequest( QWidget* );
+signals:
+    void itemSelected(QListViewItem *);
+    void doubleClick(QListViewItem *);
+    void sortingChanged(int);
+    void focusChanged(QFocusEvent *);
+    void focusChangeRequest(QWidget *);
 
-  public slots:
+public slots:
     void nextArticle();
     void prevArticle();
     void incCurrentArticle();
     void decCurrentArticle();
     void selectCurrentArticle();
 
-    void toggleColumn( int column, int mode = -1 );
+    void toggleColumn(int column, int mode = -1);
     void prepareForGroup();
     void prepareForFolder();
 
-  protected:
-    void activeRemoved()            { mActiveItem = 0; }
+protected:
+    void activeRemoved()
+    {
+        mActiveItem = 0;
+    }
     /**
      * Reimplemented to avoid that KListview reloads the alternate
      * background on palette changes.
      */
-    virtual bool event( QEvent *e );
-    void contentsMousePressEvent( QMouseEvent *e );
-    void contentsMouseDoubleClickEvent( QMouseEvent *e );
-    void keyPressEvent( QKeyEvent *e );
-    bool eventFilter( QObject *, QEvent * );
-    void focusInEvent( QFocusEvent *e );
-    void focusOutEvent( QFocusEvent *e );
-    virtual QDragObject* dragObject();
+    virtual bool event(QEvent *e);
+    void contentsMousePressEvent(QMouseEvent *e);
+    void contentsMouseDoubleClickEvent(QMouseEvent *e);
+    void keyPressEvent(QKeyEvent *e);
+    bool eventFilter(QObject *, QEvent *);
+    void focusInEvent(QFocusEvent *e);
+    void focusOutEvent(QFocusEvent *e);
+    virtual QDragObject *dragObject();
 
-  private:
+private:
     int mSortCol;
     bool mSortAsc;
     bool mSortByThreadChangeDate;
@@ -96,9 +108,9 @@ class KNHeaderView : public KListView  {
     bool mShowingFolder;
     bool mInitDone;
 
-  private slots:
+private slots:
     void slotCenterDelayed();
-    void slotSizeChanged( int, int, int );
+    void slotSizeChanged(int, int, int);
     void resetCurrentTime();
 
 };
@@ -106,13 +118,13 @@ class KNHeaderView : public KListView  {
 
 class KNHeaderViewToolTip : public QToolTip {
 
-  public:
-    KNHeaderViewToolTip( KNHeaderView *parent );
+public:
+    KNHeaderViewToolTip(KNHeaderView *parent);
 
-  protected:
-    void maybeTip( const QPoint &p );
+protected:
+    void maybeTip(const QPoint &p);
 
-  private:
+private:
     KNHeaderView *listView;
 
 };

@@ -35,30 +35,35 @@ class GroupwareDataAdaptor;
   This class provides a resource for accessing a Groupware kioslave-based
   calendar.
 */
-class GroupwareJob : public QObject
-{
+class GroupwareJob : public QObject {
     Q_OBJECT
-  public:
-    GroupwareJob( GroupwareDataAdaptor *adaptor );
+public:
+    GroupwareJob(GroupwareDataAdaptor *adaptor);
 
     bool error() const;
     QString errorString() const;
 
     virtual void kill() = 0;
-    
-  signals:
-    void result( KPIM::GroupwareJob * );
 
-  protected:
+signals:
+    void result(KPIM::GroupwareJob *);
+
+protected:
     void success();
-    void error( const QString & );
-    GroupwareDataAdaptor *adaptor() { return mAdaptor; }
-    const GroupwareDataAdaptor *adaptor() const { return mAdaptor; }
+    void error(const QString &);
+    GroupwareDataAdaptor *adaptor()
+    {
+        return mAdaptor;
+    }
+    const GroupwareDataAdaptor *adaptor() const
+    {
+        return mAdaptor;
+    }
 
-  protected slots:
+protected slots:
     virtual void run() = 0;
 
-  private:
+private:
     QString mErrorString;
     GroupwareDataAdaptor *mAdaptor;
 };

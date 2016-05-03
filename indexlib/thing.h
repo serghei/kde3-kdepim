@@ -8,17 +8,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -63,46 +63,53 @@
  * This base class provides the machinery for this.
  */
 template <typename accessor>
-struct thing : protected accessor { // this allow the emtpy base optimization
-	protected:
-		thing( uint32_t idx, const accessor& access = accessor() ):
-			accessor( access ),
-			idx_( idx )
-			{
-			}
+struct thing : protected accessor   // this allow the emtpy base optimization
+{
+protected:
+    thing(uint32_t idx, const accessor &access = accessor()):
+        accessor(access),
+        idx_(idx)
+    {
+    }
 
-		unsigned char* base() {
-			return reinterpret_cast<unsigned char*>( accessor::rw_base( idx_ ) );
-		}
-		const unsigned char* base() const {
-			return reinterpret_cast<const unsigned char*>( accessor::ronly_base( idx_ ) );
-		}
-	public:
-		~thing() { }
-		thing( const thing& other ):
-			accessor( static_cast<const accessor&>( other ) ),
-			idx_( other.idx_ )
-			{
-			}
+    unsigned char *base()
+    {
+        return reinterpret_cast<unsigned char *>(accessor::rw_base(idx_));
+    }
+    const unsigned char *base() const
+    {
+        return reinterpret_cast<const unsigned char *>(accessor::ronly_base(idx_));
+    }
+public:
+    ~thing() { }
+    thing(const thing &other):
+        accessor(static_cast<const accessor &>(other)),
+        idx_(other.idx_)
+    {
+    }
 
-		thing& operator = ( const thing& other ) {
-			accessor::operator=( other );
-			idx_ = other.idx_;
-			return *this;
-		}
-	protected:
-		uint32_t idx_;
+    thing &operator = (const thing &other)
+    {
+        accessor::operator=(other);
+        idx_ = other.idx_;
+        return *this;
+    }
+protected:
+    uint32_t idx_;
 };
 
-template <void * ( *get_base )()>
-struct simple_accessor {
-	public:
-		void* rw_base( unsigned idx ) const {
-			return reinterpret_cast<unsigned char*>( get_base() ) + idx;
-		}
-		const void* ronly_base( unsigned idx ) const {
-			return reinterpret_cast<const unsigned char*>( get_base() ) + idx;
-		}
+template <void *(*get_base)()>
+struct simple_accessor
+{
+public:
+    void *rw_base(unsigned idx) const
+    {
+        return reinterpret_cast<unsigned char *>(get_base()) + idx;
+    }
+    const void *ronly_base(unsigned idx) const
+    {
+        return reinterpret_cast<const unsigned char *>(get_base()) + idx;
+    }
 };
 
 

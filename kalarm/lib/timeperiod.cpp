@@ -34,75 +34,99 @@
 
 // Collect these widget labels together to ensure consistent wording and
 // translations across different modules.
-QString TimePeriod::i18n_minutes()      { return i18n("minutes"); }
-QString TimePeriod::i18n_Minutes()      { return i18n("Minutes"); }
-QString TimePeriod::i18n_hours_mins()   { return i18n("hours/minutes"); }
-QString TimePeriod::i18n_Hours_Mins()   { return i18n("Hours/Minutes"); }
-QString TimePeriod::i18n_days()         { return i18n("days"); }
-QString TimePeriod::i18n_Days()         { return i18n("Days"); }
-QString TimePeriod::i18n_weeks()        { return i18n("weeks"); }
-QString TimePeriod::i18n_Weeks()        { return i18n("Weeks"); }
+QString TimePeriod::i18n_minutes()
+{
+    return i18n("minutes");
+}
+QString TimePeriod::i18n_Minutes()
+{
+    return i18n("Minutes");
+}
+QString TimePeriod::i18n_hours_mins()
+{
+    return i18n("hours/minutes");
+}
+QString TimePeriod::i18n_Hours_Mins()
+{
+    return i18n("Hours/Minutes");
+}
+QString TimePeriod::i18n_days()
+{
+    return i18n("days");
+}
+QString TimePeriod::i18n_Days()
+{
+    return i18n("Days");
+}
+QString TimePeriod::i18n_weeks()
+{
+    return i18n("weeks");
+}
+QString TimePeriod::i18n_Weeks()
+{
+    return i18n("Weeks");
+}
 
-static const int maxMinutes = 1000*60-1;   // absolute maximum value for hours:minutes = 999H59M
+static const int maxMinutes = 1000 * 60 - 1; // absolute maximum value for hours:minutes = 999H59M
 
 /*=============================================================================
 = Class TimePeriod
 = Contains a time unit combo box, plus a time spinbox, to select a time period.
 =============================================================================*/
 
-TimePeriod::TimePeriod(bool allowHourMinute, QWidget* parent, const char* name)
-	: QHBox(parent, name),
-	  mMaxDays(9999),
-	  mNoHourMinute(!allowHourMinute),
-	  mReadOnly(false)
+TimePeriod::TimePeriod(bool allowHourMinute, QWidget *parent, const char *name)
+    : QHBox(parent, name),
+      mMaxDays(9999),
+      mNoHourMinute(!allowHourMinute),
+      mReadOnly(false)
 {
-	setSpacing(KDialog::spacingHint());
+    setSpacing(KDialog::spacingHint());
 
-	mSpinStack = new QWidgetStack(this);
-	mSpinBox = new SpinBox(mSpinStack);
-	mSpinBox->setLineStep(1);
-	mSpinBox->setLineShiftStep(10);
-	mSpinBox->setRange(1, mMaxDays);
-	connect(mSpinBox, SIGNAL(valueChanged(int)), SLOT(slotDaysChanged(int)));
-	mSpinStack->addWidget(mSpinBox, 0);
+    mSpinStack = new QWidgetStack(this);
+    mSpinBox = new SpinBox(mSpinStack);
+    mSpinBox->setLineStep(1);
+    mSpinBox->setLineShiftStep(10);
+    mSpinBox->setRange(1, mMaxDays);
+    connect(mSpinBox, SIGNAL(valueChanged(int)), SLOT(slotDaysChanged(int)));
+    mSpinStack->addWidget(mSpinBox, 0);
 
-	mTimeSpinBox = new TimeSpinBox(0, 99999, mSpinStack);
-	mTimeSpinBox->setRange(1, maxMinutes);    // max 999H59M
-	connect(mTimeSpinBox, SIGNAL(valueChanged(int)), SLOT(slotTimeChanged(int)));
-	mSpinStack->addWidget(mTimeSpinBox, 1);
+    mTimeSpinBox = new TimeSpinBox(0, 99999, mSpinStack);
+    mTimeSpinBox->setRange(1, maxMinutes);    // max 999H59M
+    connect(mTimeSpinBox, SIGNAL(valueChanged(int)), SLOT(slotTimeChanged(int)));
+    mSpinStack->addWidget(mTimeSpinBox, 1);
 
-	mSpinStack->setFixedSize(mSpinBox->sizeHint().expandedTo(mTimeSpinBox->sizeHint()));
-	mHourMinuteRaised = mNoHourMinute;
-	showHourMin(!mNoHourMinute);
+    mSpinStack->setFixedSize(mSpinBox->sizeHint().expandedTo(mTimeSpinBox->sizeHint()));
+    mHourMinuteRaised = mNoHourMinute;
+    showHourMin(!mNoHourMinute);
 
-	mUnitsCombo = new ComboBox(false, this);
-	if (mNoHourMinute)
-		mDateOnlyOffset = 2;
-	else
-	{
-		mDateOnlyOffset = 0;
-		mUnitsCombo->insertItem(i18n_minutes());
-		mUnitsCombo->insertItem(i18n_hours_mins());
-	}
-	mUnitsCombo->insertItem(i18n_days());
-	mUnitsCombo->insertItem(i18n_weeks());
-	mMaxUnitShown = WEEKS;
-	mUnitsCombo->setFixedSize(mUnitsCombo->sizeHint());
-	connect(mUnitsCombo, SIGNAL(activated(int)), SLOT(slotUnitsSelected(int)));
+    mUnitsCombo = new ComboBox(false, this);
+    if(mNoHourMinute)
+        mDateOnlyOffset = 2;
+    else
+    {
+        mDateOnlyOffset = 0;
+        mUnitsCombo->insertItem(i18n_minutes());
+        mUnitsCombo->insertItem(i18n_hours_mins());
+    }
+    mUnitsCombo->insertItem(i18n_days());
+    mUnitsCombo->insertItem(i18n_weeks());
+    mMaxUnitShown = WEEKS;
+    mUnitsCombo->setFixedSize(mUnitsCombo->sizeHint());
+    connect(mUnitsCombo, SIGNAL(activated(int)), SLOT(slotUnitsSelected(int)));
 
-	setFocusProxy(mUnitsCombo);
-	setTabOrder(mUnitsCombo, mSpinStack);
+    setFocusProxy(mUnitsCombo);
+    setTabOrder(mUnitsCombo, mSpinStack);
 }
 
 void TimePeriod::setReadOnly(bool ro)
 {
-	if (ro != mReadOnly)
-	{
-		mReadOnly = ro;
-		mSpinBox->setReadOnly(ro);
-		mTimeSpinBox->setReadOnly(ro);
-		mUnitsCombo->setReadOnly(ro);
-	}
+    if(ro != mReadOnly)
+    {
+        mReadOnly = ro;
+        mSpinBox->setReadOnly(ro);
+        mTimeSpinBox->setReadOnly(ro);
+        mUnitsCombo->setReadOnly(ro);
+    }
 }
 
 /******************************************************************************
@@ -111,8 +135,8 @@ void TimePeriod::setReadOnly(bool ro)
 */
 void TimePeriod::setSelectOnStep(bool sel)
 {
-	mSpinBox->setSelectOnStep(sel);
-	mTimeSpinBox->setSelectOnStep(sel);
+    mSpinBox->setSelectOnStep(sel);
+    mTimeSpinBox->setSelectOnStep(sel);
 }
 
 /******************************************************************************
@@ -120,7 +144,7 @@ void TimePeriod::setSelectOnStep(bool sel)
 */
 void TimePeriod::setFocusOnCount()
 {
-	mSpinStack->setFocus();
+    mSpinStack->setFocus();
 }
 
 /******************************************************************************
@@ -129,19 +153,19 @@ void TimePeriod::setFocusOnCount()
 */
 void TimePeriod::setMaximum(int hourmin, int days)
 {
-	int oldmins = minutes();
-	if (hourmin > 0)
-	{
-		if (hourmin > maxMinutes)
-			hourmin = maxMinutes;
-		mTimeSpinBox->setRange(1, hourmin);
-	}
-	mMaxDays = (days >= 0) ? days : 0;
-	adjustDayWeekShown();
-	setUnitRange();
-	int mins = minutes();
-	if (mins != oldmins)
-		emit valueChanged(mins);
+    int oldmins = minutes();
+    if(hourmin > 0)
+    {
+        if(hourmin > maxMinutes)
+            hourmin = maxMinutes;
+        mTimeSpinBox->setRange(1, hourmin);
+    }
+    mMaxDays = (days >= 0) ? days : 0;
+    adjustDayWeekShown();
+    setUnitRange();
+    int mins = minutes();
+    if(mins != oldmins)
+        emit valueChanged(mins);
 }
 
 /******************************************************************************
@@ -150,16 +174,22 @@ void TimePeriod::setMaximum(int hourmin, int days)
  */
 int TimePeriod::minutes() const
 {
-	int factor = 0;
-	switch (mUnitsCombo->currentItem() + mDateOnlyOffset)
-	{
-		case HOURS_MINUTES:
-			return mTimeSpinBox->value();
-		case MINUTES:  factor = 1;  break;
-		case DAYS:     factor = 24*60;  break;
-		case WEEKS:    factor = 7*24*60;  break;
-	}
-	return mSpinBox->value() * factor;
+    int factor = 0;
+    switch(mUnitsCombo->currentItem() + mDateOnlyOffset)
+    {
+        case HOURS_MINUTES:
+            return mTimeSpinBox->value();
+        case MINUTES:
+            factor = 1;
+            break;
+        case DAYS:
+            factor = 24 * 60;
+            break;
+        case WEEKS:
+            factor = 7 * 24 * 60;
+            break;
+    }
+    return mSpinBox->value() * factor;
 }
 
 /******************************************************************************
@@ -169,52 +199,52 @@ int TimePeriod::minutes() const
 */
 void TimePeriod::setMinutes(int mins, bool dateOnly, TimePeriod::Units defaultUnits)
 {
-	int oldmins = minutes();
-	if (!dateOnly  &&  mNoHourMinute)
-		dateOnly = true;
-	int item;
-	if (mins)
-	{
-		int count = mins;
-		if (mins % (24*60))
-			item = (defaultUnits == MINUTES && count <= mSpinBox->maxValue()) ? MINUTES : HOURS_MINUTES;
-		else if (mins % (7*24*60))
-		{
-			item = DAYS;
-			count = mins / (24*60);
-		}
-		else
-		{
-			item = WEEKS;
-			count = mins / (7*24*60);
-		}
-		if (item < mDateOnlyOffset)
-			item = mDateOnlyOffset;
-		else if (item > mMaxUnitShown)
-			item = mMaxUnitShown;
-		mUnitsCombo->setCurrentItem(item - mDateOnlyOffset);
-		if (item == HOURS_MINUTES)
-			mTimeSpinBox->setValue(count);
-		else
-			mSpinBox->setValue(count);
-		item = setDateOnly(mins, dateOnly, false);
-	}
-	else
-	{
-		item = defaultUnits;
-		if (item < mDateOnlyOffset)
-			item = mDateOnlyOffset;
-		else if (item > mMaxUnitShown)
-			item = mMaxUnitShown;
-		mUnitsCombo->setCurrentItem(item - mDateOnlyOffset);
-		if (dateOnly && !mDateOnlyOffset  ||  !dateOnly && mDateOnlyOffset)
-			item = setDateOnly(mins, dateOnly, false);
-	}
-	showHourMin(item == HOURS_MINUTES  &&  !mNoHourMinute);
+    int oldmins = minutes();
+    if(!dateOnly  &&  mNoHourMinute)
+        dateOnly = true;
+    int item;
+    if(mins)
+    {
+        int count = mins;
+        if(mins % (24 * 60))
+            item = (defaultUnits == MINUTES && count <= mSpinBox->maxValue()) ? MINUTES : HOURS_MINUTES;
+        else if(mins % (7 * 24 * 60))
+        {
+            item = DAYS;
+            count = mins / (24 * 60);
+        }
+        else
+        {
+            item = WEEKS;
+            count = mins / (7 * 24 * 60);
+        }
+        if(item < mDateOnlyOffset)
+            item = mDateOnlyOffset;
+        else if(item > mMaxUnitShown)
+            item = mMaxUnitShown;
+        mUnitsCombo->setCurrentItem(item - mDateOnlyOffset);
+        if(item == HOURS_MINUTES)
+            mTimeSpinBox->setValue(count);
+        else
+            mSpinBox->setValue(count);
+        item = setDateOnly(mins, dateOnly, false);
+    }
+    else
+    {
+        item = defaultUnits;
+        if(item < mDateOnlyOffset)
+            item = mDateOnlyOffset;
+        else if(item > mMaxUnitShown)
+            item = mMaxUnitShown;
+        mUnitsCombo->setCurrentItem(item - mDateOnlyOffset);
+        if(dateOnly && !mDateOnlyOffset  ||  !dateOnly && mDateOnlyOffset)
+            item = setDateOnly(mins, dateOnly, false);
+    }
+    showHourMin(item == HOURS_MINUTES  &&  !mNoHourMinute);
 
-	int newmins = minutes();
-	if (newmins != oldmins)
-		emit valueChanged(newmins);
+    int newmins = minutes();
+    if(newmins != oldmins)
+        emit valueChanged(newmins);
 }
 
 /******************************************************************************
@@ -223,52 +253,52 @@ void TimePeriod::setMinutes(int mins, bool dateOnly, TimePeriod::Units defaultUn
 */
 TimePeriod::Units TimePeriod::setDateOnly(int mins, bool dateOnly, bool signal)
 {
-	int oldmins = 0;
-	if (signal)
-		oldmins = minutes();
-	int index = mUnitsCombo->currentItem();
-	Units units = static_cast<Units>(index + mDateOnlyOffset);
-	if (!mNoHourMinute)
-	{
-		if (!dateOnly  &&  mDateOnlyOffset)
-		{
-			// Change from date-only to allow hours/minutes
-			mUnitsCombo->insertItem(i18n_minutes(), 0);
-			mUnitsCombo->insertItem(i18n_hours_mins(), 1);
-			mDateOnlyOffset = 0;
-			adjustDayWeekShown();
-			mUnitsCombo->setCurrentItem(index += 2);
-		}
-		else if (dateOnly  &&  !mDateOnlyOffset)
-		{
-			// Change from allowing hours/minutes to date-only
-			mUnitsCombo->removeItem(0);
-			mUnitsCombo->removeItem(0);
-			mDateOnlyOffset = 2;
-			if (index > 2)
-				index -= 2;
-			else
-				index = 0;
-			adjustDayWeekShown();
-			mUnitsCombo->setCurrentItem(index);
-			if (units == HOURS_MINUTES  ||  units == MINUTES)
-			{
-				// Set units to days and round up the warning period
-				units = DAYS;
-				mUnitsCombo->setCurrentItem(DAYS - mDateOnlyOffset);
-				mSpinBox->setValue((mins + 1439) / 1440);
-			}
-			showHourMin(false);
-		}
-	}
+    int oldmins = 0;
+    if(signal)
+        oldmins = minutes();
+    int index = mUnitsCombo->currentItem();
+    Units units = static_cast<Units>(index + mDateOnlyOffset);
+    if(!mNoHourMinute)
+    {
+        if(!dateOnly  &&  mDateOnlyOffset)
+        {
+            // Change from date-only to allow hours/minutes
+            mUnitsCombo->insertItem(i18n_minutes(), 0);
+            mUnitsCombo->insertItem(i18n_hours_mins(), 1);
+            mDateOnlyOffset = 0;
+            adjustDayWeekShown();
+            mUnitsCombo->setCurrentItem(index += 2);
+        }
+        else if(dateOnly  &&  !mDateOnlyOffset)
+        {
+            // Change from allowing hours/minutes to date-only
+            mUnitsCombo->removeItem(0);
+            mUnitsCombo->removeItem(0);
+            mDateOnlyOffset = 2;
+            if(index > 2)
+                index -= 2;
+            else
+                index = 0;
+            adjustDayWeekShown();
+            mUnitsCombo->setCurrentItem(index);
+            if(units == HOURS_MINUTES  ||  units == MINUTES)
+            {
+                // Set units to days and round up the warning period
+                units = DAYS;
+                mUnitsCombo->setCurrentItem(DAYS - mDateOnlyOffset);
+                mSpinBox->setValue((mins + 1439) / 1440);
+            }
+            showHourMin(false);
+        }
+    }
 
-	if (signal)
-	{
-		int newmins = minutes();
-		if (newmins != oldmins)
-			emit valueChanged(newmins);
-	}
-	return units;
+    if(signal)
+    {
+        int newmins = minutes();
+        if(newmins != oldmins)
+            emit valueChanged(newmins);
+    }
+    return units;
 }
 
 /******************************************************************************
@@ -276,22 +306,22 @@ TimePeriod::Units TimePeriod::setDateOnly(int mins, bool dateOnly, bool signal)
 */
 void TimePeriod::adjustDayWeekShown()
 {
-	Units newMaxUnitShown = (mMaxDays >= 7) ? WEEKS : (mMaxDays || mDateOnlyOffset) ? DAYS : HOURS_MINUTES;
-	if (newMaxUnitShown > mMaxUnitShown)
-	{
-		if (mMaxUnitShown < DAYS)
-			mUnitsCombo->insertItem(i18n_days());
-		if (newMaxUnitShown == WEEKS)
-			mUnitsCombo->insertItem(i18n_weeks());
-	}
-	else if (newMaxUnitShown < mMaxUnitShown)
-	{
-		if (mMaxUnitShown == WEEKS)
-			mUnitsCombo->removeItem(WEEKS - mDateOnlyOffset);
-		if (newMaxUnitShown < DAYS)
-			mUnitsCombo->removeItem(DAYS - mDateOnlyOffset);
-	}
-	mMaxUnitShown = newMaxUnitShown;
+    Units newMaxUnitShown = (mMaxDays >= 7) ? WEEKS : (mMaxDays || mDateOnlyOffset) ? DAYS : HOURS_MINUTES;
+    if(newMaxUnitShown > mMaxUnitShown)
+    {
+        if(mMaxUnitShown < DAYS)
+            mUnitsCombo->insertItem(i18n_days());
+        if(newMaxUnitShown == WEEKS)
+            mUnitsCombo->insertItem(i18n_weeks());
+    }
+    else if(newMaxUnitShown < mMaxUnitShown)
+    {
+        if(mMaxUnitShown == WEEKS)
+            mUnitsCombo->removeItem(WEEKS - mDateOnlyOffset);
+        if(newMaxUnitShown < DAYS)
+            mUnitsCombo->removeItem(DAYS - mDateOnlyOffset);
+    }
+    mMaxUnitShown = newMaxUnitShown;
 }
 
 /******************************************************************************
@@ -300,26 +330,26 @@ void TimePeriod::adjustDayWeekShown()
 */
 void TimePeriod::setUnitRange()
 {
-	int maxval;
-	switch (static_cast<Units>(mUnitsCombo->currentItem() + mDateOnlyOffset))
-	{
-		case WEEKS:
-			maxval = mMaxDays / 7;
-			if (maxval)
-				break;
-			mUnitsCombo->setCurrentItem(DAYS - mDateOnlyOffset);
-			// fall through to DAYS
-		case DAYS:
-			maxval = mMaxDays ? mMaxDays : 1;
-			break;
-		case MINUTES:
-			maxval = mTimeSpinBox->maxValue();
-			break;
-		case HOURS_MINUTES:
-		default:
-			return;
-	}
-	mSpinBox->setRange(1, maxval);
+    int maxval;
+    switch(static_cast<Units>(mUnitsCombo->currentItem() + mDateOnlyOffset))
+    {
+        case WEEKS:
+            maxval = mMaxDays / 7;
+            if(maxval)
+                break;
+            mUnitsCombo->setCurrentItem(DAYS - mDateOnlyOffset);
+        // fall through to DAYS
+        case DAYS:
+            maxval = mMaxDays ? mMaxDays : 1;
+            break;
+        case MINUTES:
+            maxval = mTimeSpinBox->maxValue();
+            break;
+        case HOURS_MINUTES:
+        default:
+            return;
+    }
+    mSpinBox->setRange(1, maxval);
 }
 
 /******************************************************************************
@@ -327,9 +357,9 @@ void TimePeriod::setUnitRange()
 */
 void TimePeriod::slotUnitsSelected(int index)
 {
-	setUnitRange();
-	showHourMin(index + mDateOnlyOffset == HOURS_MINUTES);
-	emit valueChanged(minutes());
+    setUnitRange();
+    showHourMin(index + mDateOnlyOffset == HOURS_MINUTES);
+    emit valueChanged(minutes());
 }
 
 /******************************************************************************
@@ -337,8 +367,8 @@ void TimePeriod::slotUnitsSelected(int index)
 */
 void TimePeriod::slotDaysChanged(int)
 {
-	if (!mHourMinuteRaised)
-		emit valueChanged(minutes());
+    if(!mHourMinuteRaised)
+        emit valueChanged(minutes());
 }
 
 /******************************************************************************
@@ -346,8 +376,8 @@ void TimePeriod::slotDaysChanged(int)
 */
 void TimePeriod::slotTimeChanged(int value)
 {
-	if (mHourMinuteRaised)
-		emit valueChanged(value);
+    if(mHourMinuteRaised)
+        emit valueChanged(value);
 }
 
 /******************************************************************************
@@ -355,20 +385,20 @@ void TimePeriod::slotTimeChanged(int value)
  */
 void TimePeriod::showHourMin(bool hourMinute)
 {
-	if (hourMinute != mHourMinuteRaised)
-	{
-		mHourMinuteRaised = hourMinute;
-		if (hourMinute)
-		{
-			mSpinStack->raiseWidget(mTimeSpinBox);
-			mSpinStack->setFocusProxy(mTimeSpinBox);
-		}
-		else
-		{
-			mSpinStack->raiseWidget(mSpinBox);
-			mSpinStack->setFocusProxy(mSpinBox);
-		}
-	}
+    if(hourMinute != mHourMinuteRaised)
+    {
+        mHourMinuteRaised = hourMinute;
+        if(hourMinute)
+        {
+            mSpinStack->raiseWidget(mTimeSpinBox);
+            mSpinStack->setFocusProxy(mTimeSpinBox);
+        }
+        else
+        {
+            mSpinStack->raiseWidget(mSpinBox);
+            mSpinStack->setFocusProxy(mSpinBox);
+        }
+    }
 }
 
 /******************************************************************************
@@ -376,9 +406,9 @@ void TimePeriod::showHourMin(bool hourMinute)
  * If the hours:minutes text is omitted, both spinboxes are set to the same
  * WhatsThis text.
  */
-void TimePeriod::setWhatsThis(const QString& units, const QString& dayWeek, const QString& hourMin)
+void TimePeriod::setWhatsThis(const QString &units, const QString &dayWeek, const QString &hourMin)
 {
-	QWhatsThis::add(mUnitsCombo, units);
-	QWhatsThis::add(mSpinBox, dayWeek);
-	QWhatsThis::add(mTimeSpinBox, (hourMin.isNull() ? dayWeek : hourMin));
+    QWhatsThis::add(mUnitsCombo, units);
+    QWhatsThis::add(mSpinBox, dayWeek);
+    QWhatsThis::add(mTimeSpinBox, (hourMin.isNull() ? dayWeek : hourMin));
 }

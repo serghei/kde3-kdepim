@@ -40,58 +40,65 @@
 
 using namespace KCal;
 
-ResourceTVAnytimeConfig::ResourceTVAnytimeConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceTVAnytimeConfig::ResourceTVAnytimeConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+    resize(245, 115);
+    QGridLayout *mainLayout = new QGridLayout(this, 2, 2);
 
-  QLabel *label = new QLabel( i18n( "Schedule tarball URL:" ), this );
-  mainLayout->addWidget( label, 1, 0 );
-  mUrl = new KLineEdit( this );
-  mainLayout->addWidget( mUrl, 1, 1 );
-  label = new QLabel( i18n( "Retrieve how many days?" ), this );
-  mainLayout->addWidget( label, 2, 0 );
-  mDays = new QSpinBox( this );
-  mainLayout->addWidget( mDays, 2, 1 );
-  mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 3, 3, 0, 1 );
+    QLabel *label = new QLabel(i18n("Schedule tarball URL:"), this);
+    mainLayout->addWidget(label, 1, 0);
+    mUrl = new KLineEdit(this);
+    mainLayout->addWidget(mUrl, 1, 1);
+    label = new QLabel(i18n("Retrieve how many days?"), this);
+    mainLayout->addWidget(label, 2, 0);
+    mDays = new QSpinBox(this);
+    mainLayout->addWidget(mDays, 2, 1);
+    mReloadConfig = new KCal::ResourceCachedReloadConfig(this);
+    mainLayout->addMultiCellWidget(mReloadConfig, 3, 3, 0, 1);
 
 }
 
-void ResourceTVAnytimeConfig::loadSettings( KRES::Resource *resource )
+void ResourceTVAnytimeConfig::loadSettings(KRES::Resource *resource)
 {
-  kdDebug() << "KCal::ResourceTVAnytimeConfig::loadSettings()" << endl;
-  ResourceTVAnytime *res = static_cast<ResourceTVAnytime *>( resource );
-  mResource = res;
-  
-  if ( res ) {
-    if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
-      return;
+    kdDebug() << "KCal::ResourceTVAnytimeConfig::loadSettings()" << endl;
+    ResourceTVAnytime *res = static_cast<ResourceTVAnytime *>(resource);
+    mResource = res;
+
+    if(res)
+    {
+        if(!res->prefs())
+        {
+            kdError() << "No PREF" << endl;
+            return;
+        }
+        KConfigSkeleton::ItemInt *daysItem = res->prefs()->daysItem();
+        mDays->setMinValue(daysItem->minValue().toInt());
+        mDays->setMaxValue(daysItem->maxValue().toInt());
+        QWhatsThis::add(mDays, daysItem->whatsThis());
+        mUrl->setText(res->prefs()->url());
+        mDays->setValue(res->prefs()->days());
+        mReloadConfig->loadSettings(res);
     }
-    KConfigSkeleton::ItemInt * daysItem = res->prefs()->daysItem();
-    mDays->setMinValue( daysItem->minValue().toInt() );
-    mDays->setMaxValue( daysItem->maxValue().toInt() );
-    QWhatsThis::add( mDays, daysItem->whatsThis() );
-    mUrl->setText( res->prefs()->url() );
-    mDays->setValue( res->prefs()->days() );
-    mReloadConfig->loadSettings( res );
-  } else {
-    kdError(5700) << "KCalResourceTVAnytimeConfig::loadSettings(): no KCalResourceTVAnytime, cast failed" << endl;
-  }
+    else
+    {
+        kdError(5700) << "KCalResourceTVAnytimeConfig::loadSettings(): no KCalResourceTVAnytime, cast failed" << endl;
+    }
 }
 
-void ResourceTVAnytimeConfig::saveSettings( KRES::Resource *resource )
+void ResourceTVAnytimeConfig::saveSettings(KRES::Resource *resource)
 {
-  ResourceTVAnytime *res = static_cast<ResourceTVAnytime*>( resource );
-  if ( res ) {
-    res->prefs()->setUrl( mUrl->text() );
-    res->prefs()->setDays( mDays->value() );
-    mReloadConfig->saveSettings( res );
-  } else {
-    kdError(5700) << "KCalResourceTVAnytimeConfig::saveSettings(): no KCalResourceTVAnytime, cast failed" << endl;
-  }
+    ResourceTVAnytime *res = static_cast<ResourceTVAnytime *>(resource);
+    if(res)
+    {
+        res->prefs()->setUrl(mUrl->text());
+        res->prefs()->setDays(mDays->value());
+        mReloadConfig->saveSettings(res);
+    }
+    else
+    {
+        kdError(5700) << "KCalResourceTVAnytimeConfig::saveSettings(): no KCalResourceTVAnytime, cast failed" << endl;
+    }
 }
 
 #include "kcal_resourcetvanytimeconfig.moc"

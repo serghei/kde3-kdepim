@@ -37,34 +37,33 @@ class ResolutionDialogBase;
 
 class ResolutionTable;
 
-class ResolutionDlg : public KDialogBase
-{
+class ResolutionDlg : public KDialogBase {
     Q_OBJECT
 
 public:
-	ResolutionDlg( QWidget* parent=0, 
-		KPilotLink*fH=0L, 
-		const QString &caption=QString(), 
-		const QString &helpText=QString(), 
-		ResolutionTable *tab=0L );
-	~ResolutionDlg();
+    ResolutionDlg(QWidget *parent = 0,
+                  KPilotLink *fH = 0L,
+                  const QString &caption = QString(),
+                  const QString &helpText = QString(),
+                  ResolutionTable *tab = 0L);
+    ~ResolutionDlg();
 
 public slots:
-	void slotKeepBoth();
-	void slotUseBackup();
-	void slotUsePalm();
-	void slotUsePC();
-	void slotApply();
-	void _tickle();
+    void slotKeepBoth();
+    void slotUseBackup();
+    void slotUsePalm();
+    void slotUsePC();
+    void slotApply();
+    void _tickle();
 protected:
-	void fillListView();
-	void adjustButtons(ResolutionTable*tab);
+    void fillListView();
+    void adjustButtons(ResolutionTable *tab);
 
-	QTimer* tickleTimer;
-	KPilotLink* fHandle;
-	ResolutionTable*fTable;
+    QTimer *tickleTimer;
+    KPilotLink *fHandle;
+    ResolutionTable *fTable;
 
-	ResolutionDialogBase*fWidget;
+    ResolutionDialogBase *fWidget;
 };
 
 #endif // RESOLUTIONDIALOG_H

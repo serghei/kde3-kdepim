@@ -40,9 +40,8 @@ class FreeBusy;
 
   @short iCalendar format implementation
 */
-class LIBKCAL_EXPORT ICalFormat : public CalFormat
-{
-  public:
+class LIBKCAL_EXPORT ICalFormat : public CalFormat {
+public:
     ICalFormat();
     virtual ~ICalFormat();
 
@@ -54,66 +53,66 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
       @param calendar Calendar object to be filled.
       @param fileName The name of the calendar file on disk.
     */
-    bool load( Calendar * calendar, const QString &fileName );
+    bool load(Calendar *calendar, const QString &fileName);
     /**
       Writes out the calendar to disk in iCalendar format. Returns true if
       successful and false on error.
-     
+
       @param calendar The Calendar object to be written.
       @param fileName The name of the calendar file on disk.
     */
-    bool save( Calendar * calendar, const QString &fileName );
+    bool save(Calendar *calendar, const QString &fileName);
 
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( Calendar * calendar, const QString & );
+    bool fromString(Calendar *calendar, const QString &);
 
     /**
       Parse string and return first ical component.
     */
-    Incidence *fromString( const QString & );
+    Incidence *fromString(const QString &);
 
     /**
       Return calendar information as string.
     */
-    QString toString( Calendar * );
+    QString toString(Calendar *);
     /**
       Return incidence as full iCalendar formatted text.
     */
-    QString toICalString( Incidence * );
+    QString toICalString(Incidence *);
     /**
       Return incidence as iCalendar formatted text.
     */
-    QString toString( Incidence * );
+    QString toString(Incidence *);
     /**
       Return recurrence rule as iCalendar formatted text.
     */
-    QString toString( RecurrenceRule * );
+    QString toString(RecurrenceRule *);
     /**
       Parse string and fill recurrence object with
       that information
     */
-    bool fromString ( RecurrenceRule *, const QString& );
-  
+    bool fromString(RecurrenceRule *, const QString &);
+
     /**
       Create a scheduling message for event @p e using method @p m.
     */
-    QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);
+    QString createScheduleMessage(IncidenceBase *e, Scheduler::Method m);
     /**
       Parse scheduling message provided as string @p s.
     */
-    ScheduleMessage *parseScheduleMessage( Calendar *, const QString &s);
+    ScheduleMessage *parseScheduleMessage(Calendar *, const QString &s);
 
     /**
       Parse FREEBUSY object.
     */
-    FreeBusy *parseFreeBusy( const QString & );
+    FreeBusy *parseFreeBusy(const QString &);
 
     /**
       Set id of used time zone and whether this time zone is UTC or not.
     */
-    void setTimeZone( const QString &id, bool utc );
+    void setTimeZone(const QString &id, bool utc);
     /**
       Return id string of timezone used.
     */
@@ -123,16 +122,16 @@ class LIBKCAL_EXPORT ICalFormat : public CalFormat
     */
     bool utc() const;
 
-  protected:
+protected:
     /**
-      Parse string and return first ical component of a raw byte array of 
+      Parse string and return first ical component of a raw byte array of
       a utf8 encoded string. This is an overload used for efficiency reading
       to avoid utf8 conversions, which are expensive, when reading from disk.
     */
-    bool fromRawString( Calendar * calendar, const QCString & );
-    void setImplementation( ICalFormatImpl *impl );
+    bool fromRawString(Calendar *calendar, const QCString &);
+    void setImplementation(ICalFormatImpl *impl);
 
-  private:
+private:
     ICalFormatImpl *mImpl;
 
     QString mTimeZoneId;

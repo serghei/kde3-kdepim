@@ -60,81 +60,92 @@ class KMMimePartTree;
               It's purpose: Speed optimization for KDE 3.   (khz, 28.11.01)
  ===========================================================================
 */
-class partNode
-{
+class partNode {
     partNode();
 
-    int calcNodeIdOrFindNode( int& curId, const partNode* calcNode,
-                              int findId, partNode** findNode );
+    int calcNodeIdOrFindNode(int &curId, const partNode *calcNode,
+                             int findId, partNode **findNode);
 
 public:
-    static partNode * fromMessage( const KMMessage * msg );
+    static partNode *fromMessage(const KMMessage *msg);
 
-    partNode( DwBodyPart* dwPart,
-              int explicitType    = DwMime::kTypeUnknown,
-              int explicitSubType = DwMime::kSubtypeUnknown,
-	      bool deleteDwBodyPart = false );
+    partNode(DwBodyPart *dwPart,
+             int explicitType    = DwMime::kTypeUnknown,
+             int explicitSubType = DwMime::kSubtypeUnknown,
+             bool deleteDwBodyPart = false);
 
-    partNode( bool deleteDwBodyPart,
-              DwBodyPart* dwPart );
+    partNode(bool deleteDwBodyPart,
+             DwBodyPart *dwPart);
 
     ~partNode();
 
-    void dump( int chars=0 ) const;
+    void dump(int chars = 0) const;
 
-    void buildObjectTree( bool processSiblings=true );
+    void buildObjectTree(bool processSiblings = true);
 
-    DwBodyPart* dwPart() const {
+    DwBodyPart *dwPart() const
+    {
         return mDwPart;
     }
 
-    void setDwPart( DwBodyPart* part ) {
+    void setDwPart(DwBodyPart *part)
+    {
         mDwPart = part;
         mMsgPartOk = false;
     }
 
-    KMMessagePart& msgPart() const {
-        if( !mMsgPartOk ) {
+    KMMessagePart &msgPart() const
+    {
+        if(!mMsgPartOk)
+        {
             KMMessage::bodyPart(mDwPart, &mMsgPart);
             mMsgPartOk = true;
         }
         return mMsgPart;
     }
 
-    const QCString & encodedBody();
+    const QCString &encodedBody();
 
-    void setType( int type ) {
+    void setType(int type)
+    {
         mType = type;
     }
 
-    void setSubType( int subType ) {
+    void setSubType(int subType)
+    {
         mSubType = subType;
     }
 
-    int type() const {
+    int type() const
+    {
         return mType;
     }
 
     QCString typeString() const;
 
-    int subType() const {
+    int subType() const
+    {
         return mSubType;
     }
 
     QCString subTypeString() const;
 
-    bool hasType( int type ) {
-      return mType == type;
+    bool hasType(int type)
+    {
+        return mType == type;
     }
 
-    bool hasSubType( int subType ) {
-      return mSubType == subType;
+    bool hasSubType(int subType)
+    {
+        return mSubType == subType;
     }
 
-    void setEncryptionState( KMMsgEncryptionState state ) {
+    void setEncryptionState(KMMsgEncryptionState state)
+    {
         mEncryptionState = state;
     }
-    KMMsgEncryptionState encryptionState() const {
+    KMMsgEncryptionState encryptionState() const
+    {
         return mEncryptionState;
     }
 
@@ -144,69 +155,80 @@ public:
     // look at the signature states of all children and return result
     KMMsgSignatureState  overallSignatureState() const ;
 
-    void setSignatureState( KMMsgSignatureState state ) {
+    void setSignatureState(KMMsgSignatureState state)
+    {
         mSignatureState = state;
     }
-    KMMsgSignatureState signatureState() const {
+    KMMsgSignatureState signatureState() const
+    {
         return mSignatureState;
     }
 
     int nodeId() const;  // node ids start at 1 (this is the top level root node)
 
-    partNode* findId( int id );  // returns the node which has the given id (or 0, resp.)
+    partNode *findId(int id);    // returns the node which has the given id (or 0, resp.)
 
-    partNode* findType( int type, int subType, bool deep=true, bool wide=true );
+    partNode *findType(int type, int subType, bool deep = true, bool wide = true);
 
-    partNode* findTypeNot( int type, int subType, bool deep=true,
-                           bool wide=true );
+    partNode *findTypeNot(int type, int subType, bool deep = true,
+                          bool wide = true);
 
-    partNode* findNodeForDwPart( DwBodyPart* part );
+    partNode *findNodeForDwPart(DwBodyPart *part);
 
-    void fillMimePartTree( KMMimePartTreeItem* parentItem,
-                           KMMimePartTree*     mimePartTree,
-                           QString labelDescr    = QString::null,
-                           QString labelCntType  = QString::null,
-                           QString labelEncoding = QString::null,
-                           KIO::filesize_t size=0,
-                           bool revertOrder = false );
+    void fillMimePartTree(KMMimePartTreeItem *parentItem,
+                          KMMimePartTree     *mimePartTree,
+                          QString labelDescr    = QString::null,
+                          QString labelCntType  = QString::null,
+                          QString labelEncoding = QString::null,
+                          KIO::filesize_t size = 0,
+                          bool revertOrder = false);
 
-    void adjustDefaultType( partNode* node );
+    void adjustDefaultType(partNode *node);
 
-    void setNext( partNode* next ) {
+    void setNext(partNode *next)
+    {
         mNext = next;
-        if( mNext ){
+        if(mNext)
+        {
             mNext->mRoot = mRoot;
-            adjustDefaultType( mNext );
+            adjustDefaultType(mNext);
         }
     }
 
-    void setFirstChild( partNode* child ) {
+    void setFirstChild(partNode *child)
+    {
         mChild = child;
-        if( mChild ) {
+        if(mChild)
+        {
             mChild->mRoot = this;
-            adjustDefaultType( mChild );
+            adjustDefaultType(mChild);
         }
     }
 
-    void setProcessed( bool processed, bool recurse ) {
+    void setProcessed(bool processed, bool recurse)
+    {
         mWasProcessed = processed;
-	if ( recurse ) {
-	  if( mChild )
-            mChild->setProcessed( processed, true );
-	  if( mNext )
-            mNext->setProcessed( processed, true );
-	}
+        if(recurse)
+        {
+            if(mChild)
+                mChild->setProcessed(processed, true);
+            if(mNext)
+                mNext->setProcessed(processed, true);
+        }
     }
 
-    void setMimePartTreeItem( KMMimePartTreeItem* item ) {
+    void setMimePartTreeItem(KMMimePartTreeItem *item)
+    {
         mMimePartTreeItem = item;
     }
 
-    KMMimePartTreeItem* mimePartTreeItem() {
+    KMMimePartTreeItem *mimePartTreeItem()
+    {
         return mMimePartTreeItem;
     }
 
-    void setFromAddress( const QString& address ) {
+    void setFromAddress(const QString &address)
+    {
         mFromAddress = address;
     }
 
@@ -219,29 +241,45 @@ public:
 
     bool hasContentDispositionInline() const;
 
-    QString contentTypeParameter( const char * name ) const;
+    QString contentTypeParameter(const char *name) const;
 
-    const QString& trueFromAddress() const;
+    const QString &trueFromAddress() const;
 
-    partNode * parentNode() const { return mRoot; }
-    partNode * nextSibling() const { return mNext; }
-    partNode * firstChild() const { return mChild; }
-    partNode * next( bool allowChildren=true ) const;
+    partNode *parentNode() const
+    {
+        return mRoot;
+    }
+    partNode *nextSibling() const
+    {
+        return mNext;
+    }
+    partNode *firstChild() const
+    {
+        return mChild;
+    }
+    partNode *next(bool allowChildren = true) const;
     int childCount() const;
-    bool processed() const { return mWasProcessed; }
+    bool processed() const
+    {
+        return mWasProcessed;
+    }
 
-    KMail::Interface::BodyPartMemento * bodyPartMemento() const { return mBodyPartMemento; };
-    void setBodyPartMemento( KMail::Interface::BodyPartMemento * memento ) {
+    KMail::Interface::BodyPartMemento *bodyPartMemento() const
+    {
+        return mBodyPartMemento;
+    };
+    void setBodyPartMemento(KMail::Interface::BodyPartMemento *memento)
+    {
         mBodyPartMemento = memento;
     };
 
 private:
-    partNode*     mRoot;
-    partNode*     mNext;
-    partNode*     mChild;
+    partNode     *mRoot;
+    partNode     *mNext;
+    partNode     *mChild;
     bool          mWasProcessed; // to be used by parseObjectTree()
 private:
-    DwBodyPart*   mDwPart;   // may be zero
+    DwBodyPart   *mDwPart;   // may be zero
     mutable KMMessagePart mMsgPart;  // is valid - even if mDwPart is zero
     QCString      mEncodedBody;
     QString       mFromAddress;
@@ -252,8 +290,8 @@ private:
     mutable bool  mMsgPartOk;
     bool          mEncodedOk;
     bool          mDeleteDwBodyPart;
-    KMMimePartTreeItem* mMimePartTreeItem;
-    KMail::Interface::BodyPartMemento * mBodyPartMemento;
+    KMMimePartTreeItem *mMimePartTreeItem;
+    KMail::Interface::BodyPartMemento *mBodyPartMemento;
 };
 
 #endif

@@ -35,21 +35,22 @@
 using namespace KCal;
 
 
-CalendarUploadItem::CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type )
-    : GroupwareUploadItem( type )
+CalendarUploadItem::CalendarUploadItem(CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type)
+    : GroupwareUploadItem(type)
 {
-  if ( incidence && adaptor ) {
-    if ( incidence->type() == "Event" ) mItemType = KPIM::FolderLister::Event;
-    else if ( incidence->type() == "Todo" ) mItemType = KPIM::FolderLister::Todo;
-    else if ( incidence->type() == "Journal" ) mItemType = KPIM::FolderLister::Journal;
+    if(incidence && adaptor)
+    {
+        if(incidence->type() == "Event") mItemType = KPIM::FolderLister::Event;
+        else if(incidence->type() == "Todo") mItemType = KPIM::FolderLister::Todo;
+        else if(incidence->type() == "Journal") mItemType = KPIM::FolderLister::Journal;
 
-    setUrl( incidence->customProperty( adaptor->identifier(), "storagelocation" ) );
-    setUid( incidence->uid() );
+        setUrl(incidence->customProperty(adaptor->identifier(), "storagelocation"));
+        setUid(incidence->uid());
 
-    ICalFormat format;
-    format.setTimeZone( adaptor->resource()->timeZoneId(), true );
-    setData( format.toICalString( incidence ) );
-  }
+        ICalFormat format;
+        format.setTimeZone(adaptor->resource()->timeZoneId(), true);
+        setData(format.toICalString(incidence));
+    }
 }
 
 
@@ -60,91 +61,95 @@ CalendarAdaptor::CalendarAdaptor()
 
 QString CalendarAdaptor::mimeType() const
 {
-  return "text/calendar";
+    return "text/calendar";
 }
 
-bool CalendarAdaptor::localItemExists( const QString &localId )
+bool CalendarAdaptor::localItemExists(const QString &localId)
 {
-  KCal::Incidence *i = mResource->incidence( localId );
-  return i;
+    KCal::Incidence *i = mResource->incidence(localId);
+    return i;
 }
 
-bool CalendarAdaptor::localItemHasChanged( const QString &localId )
+bool CalendarAdaptor::localItemHasChanged(const QString &localId)
 {
-  KCal::Incidence *i = mResource->incidence( localId );
-  if ( !i ) return false;
+    KCal::Incidence *i = mResource->incidence(localId);
+    if(!i) return false;
 
-  if ( !mResource->deletedIncidences().isEmpty() &&
-      mResource->deletedIncidences().find( i )
-   != mResource->deletedIncidences().end() )
-    return true;
-  if ( !mResource->changedIncidences().isEmpty() &&
-       mResource->changedIncidences().find( i )
-    != mResource->changedIncidences().end() )
-    return true;
+    if(!mResource->deletedIncidences().isEmpty() &&
+            mResource->deletedIncidences().find(i)
+            != mResource->deletedIncidences().end())
+        return true;
+    if(!mResource->changedIncidences().isEmpty() &&
+            mResource->changedIncidences().find(i)
+            != mResource->changedIncidences().end())
+        return true;
 
-  return false;
+    return false;
 }
 
-void CalendarAdaptor::deleteItem( const QString &localId )
+void CalendarAdaptor::deleteItem(const QString &localId)
 {
-  mResource->disableChangeNotification();
-  KCal::Incidence *i = mResource->incidence( localId );
-  if ( i ) {
-    mResource->deleteIncidence( i );
-    mResource->clearChange( i );
-  }
-  mResource->enableChangeNotification();
-}
-
-void CalendarAdaptor::addItem( KCal::Incidence *i)
-{
-  if ( i ) {
     mResource->disableChangeNotification();
-    Incidence *existing = mResource->incidence( i->uid() );
-    if ( existing ) {
-      mResource->deleteIncidence( i );
+    KCal::Incidence *i = mResource->incidence(localId);
+    if(i)
+    {
+        mResource->deleteIncidence(i);
+        mResource->clearChange(i);
     }
-    mResource->addIncidence( i );
-    mResource->clearChange( i );
     mResource->enableChangeNotification();
-  }
+}
+
+void CalendarAdaptor::addItem(KCal::Incidence *i)
+{
+    if(i)
+    {
+        mResource->disableChangeNotification();
+        Incidence *existing = mResource->incidence(i->uid());
+        if(existing)
+        {
+            mResource->deleteIncidence(i);
+        }
+        mResource->addIncidence(i);
+        mResource->clearChange(i);
+        mResource->enableChangeNotification();
+    }
 }
 
 
-void CalendarAdaptor::calendarItemDownloaded( KCal::Incidence *inc,
-    const QString &newLocalId, const KURL &remoteId, const QString &fingerprint,
-    const QString &storagelocation )
+void CalendarAdaptor::calendarItemDownloaded(KCal::Incidence *inc,
+        const QString &newLocalId, const KURL &remoteId, const QString &fingerprint,
+        const QString &storagelocation)
 {
-kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId.url() << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;
-  // remove the currently existing item from the cache
-  deleteItem( newLocalId );
-  QString localId = idMapper()->localId( remoteId.path() );
-  if ( !localId.isEmpty() ) deleteItem( localId );
-  
-  // add the new item
-  inc->setCustomProperty( identifier(), "storagelocation", storagelocation );
-  if ( !localId.isEmpty() ) inc->setUid( localId );
-  addItem( inc );
-  
-  // update the fingerprint and the ids in the idMapper
-  idMapper()->removeRemoteId( localId );
-  idMapper()->removeRemoteId( newLocalId );
+    kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId.url() <<
+              ", fpr=" << fingerprint << ", storagelocation=" << storagelocation << endl;
+    // remove the currently existing item from the cache
+    deleteItem(newLocalId);
+    QString localId = idMapper()->localId(remoteId.path());
+    if(!localId.isEmpty()) deleteItem(localId);
 
-  emit itemDownloaded( inc->uid(), remoteId, fingerprint );
+    // add the new item
+    inc->setCustomProperty(identifier(), "storagelocation", storagelocation);
+    if(!localId.isEmpty()) inc->setUid(localId);
+    addItem(inc);
+
+    // update the fingerprint and the ids in the idMapper
+    idMapper()->removeRemoteId(localId);
+    idMapper()->removeRemoteId(newLocalId);
+
+    emit itemDownloaded(inc->uid(), remoteId, fingerprint);
 }
 
 
-void CalendarAdaptor::clearChange( const QString &uid )
+void CalendarAdaptor::clearChange(const QString &uid)
 {
-  KCal::Incidence *i = mResource->incidence( uid );
-  mResource->clearChange( i );
+    KCal::Incidence *i = mResource->incidence(uid);
+    mResource->clearChange(i);
 }
 
-KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem( KCal::Incidence*it,
-             KPIM::GroupwareUploadItem::UploadType type )
+KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem(KCal::Incidence *it,
+        KPIM::GroupwareUploadItem::UploadType type)
 {
-  return new CalendarUploadItem( this, it, type );
+    return new CalendarUploadItem(this, it, type);
 }
 
 #include "calendaradaptor.moc"

@@ -2,14 +2,14 @@
 /*======================================================================
   FILE: icalrestriction.h
   CREATOR: eric 24 April 1999
-  
+
 
 
  (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
      http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
+ it under the terms of either:
 
     The LGPL as published by the Free Software Foundation, version
     2.1, available at: http://www.fsf.org/copyleft/lesser.html
@@ -34,8 +34,9 @@
 #define ICALRESTRICTION_H
 
 /* These must stay in this order for icalrestriction_compare to work */
-typedef enum icalrestriction_kind {
-    ICAL_RESTRICTION_NONE=0,		/* 0 */
+typedef enum icalrestriction_kind
+{
+    ICAL_RESTRICTION_NONE = 0,		/* 0 */
     ICAL_RESTRICTION_ZERO,		/* 1 */
     ICAL_RESTRICTION_ONE,		/* 2 */
     ICAL_RESTRICTION_ZEROPLUS,		/* 3 */
@@ -46,15 +47,15 @@ typedef enum icalrestriction_kind {
     ICAL_RESTRICTION_UNKNOWN		/* 8 */
 } icalrestriction_kind;
 
-int 
+int
 icalrestriction_compare(icalrestriction_kind restr, int count);
 
 
 int
 icalrestriction_is_parameter_allowed(icalproperty_kind property,
-                                       icalparameter_kind parameter);
+                                     icalparameter_kind parameter);
 
-int icalrestriction_check(icalcomponent* comp);
+int icalrestriction_check(icalcomponent *comp);
 
 
 #endif /* !ICALRESTRICTION_H */

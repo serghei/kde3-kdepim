@@ -18,148 +18,153 @@
 #include <qvariant.h>
 #include <qvaluelist.h>
 
-namespace KIO
-{
-  class Job;
+namespace KIO {
+class Job;
 }
 
-namespace KXMLRPC
-{
-  class Query;
-  class QueryResult;
-  class Server;
-  class Result;
+namespace KXMLRPC {
+class Query;
+class QueryResult;
+class Server;
+class Result;
 
-  class Query : public QObject
-  {
+class Query : public QObject {
     Q_OBJECT
-    public:
+public:
 
 
-      static Query *create( const QVariant &id = QVariant(),
-                            QObject *parent = 0, const char *name = 0 );
+    static Query *create(const QVariant &id = QVariant(),
+                         QObject *parent = 0, const char *name = 0);
 
-    public slots:
-      void call( const QString &server, const QString &method,
-                 const QValueList<QVariant> &args = QValueList<QVariant>(),
-                 const QString &userAgent = "KDE-XMLRPC" );
+public slots:
+    void call(const QString &server, const QString &method,
+              const QValueList<QVariant> &args = QValueList<QVariant>(),
+              const QString &userAgent = "KDE-XMLRPC");
 
-    signals:
-      void message( const QValueList<QVariant> &result, const QVariant &id );
-      void fault( int, const QString&, const QVariant &id );
-      void finished( Query* );
+signals:
+    void message(const QValueList<QVariant> &result, const QVariant &id);
+    void fault(int, const QString &, const QVariant &id);
+    void finished(Query *);
 
-    private slots:
-      void slotData( KIO::Job *job, const QByteArray &data );
-      void slotResult( KIO::Job *job );
+private slots:
+    void slotData(KIO::Job *job, const QByteArray &data);
+    void slotResult(KIO::Job *job);
 
-    private:
-      bool isMessageResponse( const QDomDocument &doc ) const;
-      bool isFaultResponse( const QDomDocument &doc ) const;
+private:
+    bool isMessageResponse(const QDomDocument &doc) const;
+    bool isFaultResponse(const QDomDocument &doc) const;
 
-      Result parseMessageResponse( const QDomDocument &doc ) const;
-      Result parseFaultResponse( const QDomDocument &doc ) const;
+    Result parseMessageResponse(const QDomDocument &doc) const;
+    Result parseFaultResponse(const QDomDocument &doc) const;
 
-      QString markupCall( const QString &method,
-                          const QValueList<QVariant> &args ) const;
-      QString marshal( const QVariant &v ) const;
-      QVariant demarshal( const QDomElement &e ) const;
+    QString markupCall(const QString &method,
+                       const QValueList<QVariant> &args) const;
+    QString marshal(const QVariant &v) const;
+    QVariant demarshal(const QDomElement &e) const;
 
-      Query( const QVariant &id, QObject *parent = 0, const char *name = 0 );
-      ~Query();
+    Query(const QVariant &id, QObject *parent = 0, const char *name = 0);
+    ~Query();
 
-      QByteArray m_buffer;
-      QVariant m_id;
+    QByteArray m_buffer;
+    QVariant m_id;
 
-      QValueList<KIO::Job*> m_pendingJobs;
-  };
+    QValueList<KIO::Job *> m_pendingJobs;
+};
 
-  class Server : public QObject
-  {
+class Server : public QObject {
     Q_OBJECT
-    public:
-      Server( const KURL &url = KURL(),
-              QObject *parent = 0, const char *name = 0 );
-      ~Server();
+public:
+    Server(const KURL &url = KURL(),
+           QObject *parent = 0, const char *name = 0);
+    ~Server();
 
-      const KURL &url() const { return m_url; }
-      void setUrl( const KURL &url );
+    const KURL &url() const
+    {
+        return m_url;
+    }
+    void setUrl(const KURL &url);
 
-      QString userAgent() const { return m_userAgent; }
-      void setUserAgent( const QString &userAgent ) { m_userAgent = userAgent; }
+    QString userAgent() const
+    {
+        return m_userAgent;
+    }
+    void setUserAgent(const QString &userAgent)
+    {
+        m_userAgent = userAgent;
+    }
 
-      template <typename T>
-      void call( const QString &method, const QValueList<T> &arg,
-        QObject* obj1, const char* faultSlot,
-        QObject* obj2, const char* messageSlot, const QVariant &id = QVariant() );
+    template <typename T>
+    void call(const QString &method, const QValueList<T> &arg,
+              QObject *obj1, const char *faultSlot,
+              QObject *obj2, const char *messageSlot, const QVariant &id = QVariant());
 
 
-    public slots:
-      void call( const QString &method, const QValueList<QVariant> &args,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const QVariant &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, int arg ,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, bool arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, double arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const QString &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const QCString &arg ,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const QByteArray &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const QDateTime &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const QStringList &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
+public slots:
+    void call(const QString &method, const QValueList<QVariant> &args,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, const QVariant &arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, int arg ,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, bool arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, double arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, const QString &arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, const QCString &arg ,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, const QByteArray &arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, const QDateTime &arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
+    void call(const QString &method, const QStringList &arg,
+              QObject *faultObj, const char *faultSlot,
+              QObject *msgObj, const char *messageSlot,
+              const QVariant &id = QVariant());
 
-    private slots:
-      void queryFinished( Query* );
+private slots:
+    void queryFinished(Query *);
 
-    private:
-      KURL m_url;
-      QString m_userAgent;
+private:
+    KURL m_url;
+    QString m_userAgent;
 
-      QValueList<Query*> mPendingQueries;
-  };
+    QValueList<Query *> mPendingQueries;
+};
 }
 
 template <typename T>
-void KXMLRPC::Server::call( const QString &method, const QValueList<T> &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot, const QVariant &id )
+void KXMLRPC::Server::call(const QString &method, const QValueList<T> &arg,
+                           QObject *faultObj, const char *faultSlot,
+                           QObject *msgObj, const char *messageSlot, const QVariant &id)
 {
-  QValueList<QVariant> args;
+    QValueList<QVariant> args;
 
-  typename QValueList<T>::ConstIterator it = arg.begin();
-  typename QValueList<T>::ConstIterator end = arg.end();
-  for ( ; it != end; ++it )
-    args << QVariant( *it );
+    typename QValueList<T>::ConstIterator it = arg.begin();
+    typename QValueList<T>::ConstIterator end = arg.end();
+    for(; it != end; ++it)
+        args << QVariant(*it);
 
-  return call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
+    return call(method, args, faultObj, faultSlot, msgObj, messageSlot, id);
 }
 
 #endif

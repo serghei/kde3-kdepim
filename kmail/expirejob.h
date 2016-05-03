@@ -33,46 +33,48 @@
 
 namespace KMail {
 
-class ExpireJob : public ScheduledJob
-{
-  Q_OBJECT
+class ExpireJob : public ScheduledJob {
+    Q_OBJECT
 public:
-  ExpireJob( KMFolder* folder, bool immediate );
-  virtual ~ExpireJob();
+    ExpireJob(KMFolder *folder, bool immediate);
+    virtual ~ExpireJob();
 
-  virtual void execute();
-  virtual void kill();
+    virtual void execute();
+    virtual void kill();
 
 private slots:
-  void slotDoWork();
-  void slotMessagesMoved( KMCommand *command );
+    void slotDoWork();
+    void slotMessagesMoved(KMCommand *command);
 
 private:
-  void done();
+    void done();
 
 private:
-  QTimer mTimer;
-  QPtrList<KMMsgBase> mRemovedMsgs;
-  int mCurrentIndex;
-  int mMaxUnreadTime;
-  int mMaxReadTime;
-  bool mFolderOpen;
-  KMFolder *mMoveToFolder;
+    QTimer mTimer;
+    QPtrList<KMMsgBase> mRemovedMsgs;
+    int mCurrentIndex;
+    int mMaxUnreadTime;
+    int mMaxReadTime;
+    bool mFolderOpen;
+    KMFolder *mMoveToFolder;
 };
 
 /// A scheduled "expire mails in this folder" task.
-class ScheduledExpireTask : public ScheduledTask
-{
+class ScheduledExpireTask : public ScheduledTask {
 public:
-  /// If immediate is set, the job will execute synchronously. This is used when
-  /// the user requests explicitely that the operation should happen immediately.
-  ScheduledExpireTask( KMFolder* folder, bool immediate )
-    : ScheduledTask( folder, immediate ) {}
-  virtual ~ScheduledExpireTask() {}
-  virtual ScheduledJob* run() {
-    return folder() ? new ExpireJob( folder(), isImmediate() ) : 0;
-  }
-  virtual int taskTypeId() const { return 1; }
+    /// If immediate is set, the job will execute synchronously. This is used when
+    /// the user requests explicitely that the operation should happen immediately.
+    ScheduledExpireTask(KMFolder *folder, bool immediate)
+        : ScheduledTask(folder, immediate) {}
+    virtual ~ScheduledExpireTask() {}
+    virtual ScheduledJob *run()
+    {
+        return folder() ? new ExpireJob(folder(), isImmediate()) : 0;
+    }
+    virtual int taskTypeId() const
+    {
+        return 1;
+    }
 };
 
 } // namespace

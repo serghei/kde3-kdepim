@@ -32,23 +32,22 @@
 
 class QRadioButton;
 
-class ImportDialog : public KDialogBase
-{
+class ImportDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    ImportDialog( const KURL &url, QWidget *parent );
+public:
+    ImportDialog(const KURL &url, QWidget *parent);
     ~ImportDialog();
 
-  public slots:
+public slots:
     void slotOk();
 
-  signals:
-    void dialogFinished( ImportDialog * );
-    void openURL( const KURL &, bool );
-    void newWindow( const KURL & );
-    void addResource( const KURL & );
- 
-  private:
+signals:
+    void dialogFinished(ImportDialog *);
+    void openURL(const KURL &, bool);
+    void newWindow(const KURL &);
+    void addResource(const KURL &);
+
+private:
     KURL mUrl;
 
     QRadioButton *mAddButton;

@@ -29,9 +29,8 @@ class KLineEdit;
 class QCheckBox;
 class QRadioButton;
 
-class KDE_EXPORT KolabWizard : public KConfigWizard
-{
-  public:
+class KDE_EXPORT KolabWizard : public KConfigWizard {
+public:
     KolabWizard();
     ~KolabWizard();
 
@@ -39,7 +38,7 @@ class KDE_EXPORT KolabWizard : public KConfigWizard
     void usrReadConfig();
     void usrWriteConfig();
 
-  private:
+private:
     KLineEdit *mServerEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mRealNameEdit;

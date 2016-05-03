@@ -54,132 +54,132 @@
 
 
 MALWidgetSetup::MALWidgetSetup(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
-	fConfigWidget(new MALWidget(w))
+    ConduitConfigBase(w, n),
+    fConfigWidget(new MALWidget(w))
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConduitName=i18n("MAL");
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,MALConduitFactory::about());
-	fWidget = fConfigWidget;
+    fConduitName = i18n("MAL");
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, MALConduitFactory::about());
+    fWidget = fConfigWidget;
 
-	fConfigWidget->tabWidget->adjustSize();
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+    fConfigWidget->tabWidget->adjustSize();
+    fConfigWidget->resize(fConfigWidget->tabWidget->size());
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM( syncTime, SIGNAL(clicked(int)) );
-	CM( proxyType, SIGNAL(clicked(int)) );
+    CM(syncTime, SIGNAL(clicked(int)));
+    CM(proxyType, SIGNAL(clicked(int)));
 
-	CM( proxyServerName, SIGNAL(textChanged(const QString &)) );
-	CM( proxyCustomPortCheck, SIGNAL(clicked()) );
-	CM( proxyCustomPort, SIGNAL(valueChanged(int)) );
-	CM( proxyUserName, SIGNAL(textChanged(const QString &)) );
-	CM( proxyPassword, SIGNAL(textChanged(const QString &)) );
+    CM(proxyServerName, SIGNAL(textChanged(const QString &)));
+    CM(proxyCustomPortCheck, SIGNAL(clicked()));
+    CM(proxyCustomPort, SIGNAL(valueChanged(int)));
+    CM(proxyUserName, SIGNAL(textChanged(const QString &)));
+    CM(proxyPassword, SIGNAL(textChanged(const QString &)));
 
-	CM( malServerName, SIGNAL(textChanged(const QString &)) );
-	CM( malCustomPortCheck, SIGNAL(clicked()) );
-	CM( malCustomPort, SIGNAL(valueChanged(int)) );
-	CM( malUserName, SIGNAL(textChanged(const QString &)) );
-	CM( malPassword, SIGNAL(textChanged(const QString &)) );
+    CM(malServerName, SIGNAL(textChanged(const QString &)));
+    CM(malCustomPortCheck, SIGNAL(clicked()));
+    CM(malCustomPort, SIGNAL(valueChanged(int)));
+    CM(malUserName, SIGNAL(textChanged(const QString &)));
+    CM(malPassword, SIGNAL(textChanged(const QString &)));
 #undef CM
 }
 
 MALWidgetSetup::~MALWidgetSetup()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 /* virtual */ void MALWidgetSetup::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	MALConduitSettings::setSyncFrequency(
-		fConfigWidget->syncTime->id(fConfigWidget->syncTime->selected()));
+    MALConduitSettings::setSyncFrequency(
+        fConfigWidget->syncTime->id(fConfigWidget->syncTime->selected()));
 
-	// Proxy settings
-	MALConduitSettings::setProxyType(
-		fConfigWidget->proxyType->id(fConfigWidget->proxyType->selected()));
-	MALConduitSettings::setProxyServer( fConfigWidget->proxyServerName->currentText() );
+    // Proxy settings
+    MALConduitSettings::setProxyType(
+        fConfigWidget->proxyType->id(fConfigWidget->proxyType->selected()));
+    MALConduitSettings::setProxyServer(fConfigWidget->proxyServerName->currentText());
 
-	if (fConfigWidget->proxyCustomPortCheck->isChecked() )
-	{
-		MALConduitSettings::setProxyPort( fConfigWidget->proxyCustomPort->value());
-	}
-	else
-	{
-		MALConduitSettings::setProxyPort(0);
-	}
-	MALConduitSettings::setProxyUser( fConfigWidget->proxyUserName->text() );
-	MALConduitSettings::setProxyPassword( fConfigWidget->proxyPassword->password() );
+    if(fConfigWidget->proxyCustomPortCheck->isChecked())
+    {
+        MALConduitSettings::setProxyPort(fConfigWidget->proxyCustomPort->value());
+    }
+    else
+    {
+        MALConduitSettings::setProxyPort(0);
+    }
+    MALConduitSettings::setProxyUser(fConfigWidget->proxyUserName->text());
+    MALConduitSettings::setProxyPassword(fConfigWidget->proxyPassword->password());
 
-	// MAL Server settings (not yet possible!!!)
-	MALConduitSettings::setMALServer( fConfigWidget->malServerName->currentText() );
+    // MAL Server settings (not yet possible!!!)
+    MALConduitSettings::setMALServer(fConfigWidget->malServerName->currentText());
 
-	if (fConfigWidget->malCustomPortCheck->isChecked() )
-	{
-		MALConduitSettings::setMALPort( fConfigWidget->malCustomPort->value());
-	}
-	else
-	{
-		MALConduitSettings::setMALPort(0);
-	}
-	MALConduitSettings::setMALUser( fConfigWidget->malUserName->text() );
-	MALConduitSettings::setMALPassword( fConfigWidget->malPassword->text() );
+    if(fConfigWidget->malCustomPortCheck->isChecked())
+    {
+        MALConduitSettings::setMALPort(fConfigWidget->malCustomPort->value());
+    }
+    else
+    {
+        MALConduitSettings::setMALPort(0);
+    }
+    MALConduitSettings::setMALUser(fConfigWidget->malUserName->text());
+    MALConduitSettings::setMALPassword(fConfigWidget->malPassword->text());
 
-	MALConduitSettings::self()->writeConfig();
-	unmodified();
+    MALConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 
 
 /* virtual */ void MALWidgetSetup::load()
 {
-	FUNCTIONSETUP;
-	MALConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    MALConduitSettings::self()->readConfig();
 
-	fConfigWidget->syncTime->setButton( MALConduitSettings::syncFrequency() );
+    fConfigWidget->syncTime->setButton(MALConduitSettings::syncFrequency());
 
-	// Proxy settings
-	fConfigWidget->proxyType->setButton(MALConduitSettings::proxyType());
-	fConfigWidget->proxyServerName->setEditText(MALConduitSettings::proxyServer());
+    // Proxy settings
+    fConfigWidget->proxyType->setButton(MALConduitSettings::proxyType());
+    fConfigWidget->proxyServerName->setEditText(MALConduitSettings::proxyServer());
 
-	int proxyPortNr=MALConduitSettings::proxyPort();
-	if (proxyPortNr>0 && proxyPortNr<65536)
-	{
-		fConfigWidget->proxyCustomPortCheck->setChecked(true);
-		fConfigWidget->proxyCustomPort->setEnabled(true);
-		fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
-	}
-	fConfigWidget->proxyUserName->setText(MALConduitSettings::proxyUser());
-	fConfigWidget->proxyPassword->setText(QString::null);
-	fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
+    int proxyPortNr = MALConduitSettings::proxyPort();
+    if(proxyPortNr > 0 && proxyPortNr < 65536)
+    {
+        fConfigWidget->proxyCustomPortCheck->setChecked(true);
+        fConfigWidget->proxyCustomPort->setEnabled(true);
+        fConfigWidget->proxyCustomPort->setValue(proxyPortNr);
+    }
+    fConfigWidget->proxyUserName->setText(MALConduitSettings::proxyUser());
+    fConfigWidget->proxyPassword->setText(QString::null);
+    fConfigWidget->proxyPassword->insert(MALConduitSettings::proxyPassword());
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Got proxy password <"
-		<< MALConduitSettings::proxyPassword()
-		<< "> set Text <"
-		<< fConfigWidget->proxyPassword->text()
-		<< "> and Pwd <"
-		<< fConfigWidget->proxyPassword->password()
-		<< ">" << endl;
+    DEBUGKPILOT << fname << ": Got proxy password <"
+                << MALConduitSettings::proxyPassword()
+                << "> set Text <"
+                << fConfigWidget->proxyPassword->text()
+                << "> and Pwd <"
+                << fConfigWidget->proxyPassword->password()
+                << ">" << endl;
 #endif
 
-	// MAL Server settings (not yet possible!!!)
-	fConfigWidget->malServerName->setEditText(MALConduitSettings::mALServer());
+    // MAL Server settings (not yet possible!!!)
+    fConfigWidget->malServerName->setEditText(MALConduitSettings::mALServer());
 
-	int malPortNr=MALConduitSettings::mALPort();
-	if (malPortNr>0 && malPortNr<65536)
-	{
-		fConfigWidget->malCustomPortCheck->setChecked(true);
-		fConfigWidget->malCustomPort->setEnabled(true);
-		fConfigWidget->malCustomPort->setValue(proxyPortNr);
-	}
-	fConfigWidget->malUserName->setText(MALConduitSettings::mALUser());
-	fConfigWidget->malPassword->setText(MALConduitSettings::mALPassword());
-	unmodified();
+    int malPortNr = MALConduitSettings::mALPort();
+    if(malPortNr > 0 && malPortNr < 65536)
+    {
+        fConfigWidget->malCustomPortCheck->setChecked(true);
+        fConfigWidget->malCustomPort->setEnabled(true);
+        fConfigWidget->malCustomPort->setValue(proxyPortNr);
+    }
+    fConfigWidget->malUserName->setText(MALConduitSettings::mALUser());
+    fConfigWidget->malPassword->setText(MALConduitSettings::mALPassword());
+    unmodified();
 }
 
 /* static */ ConduitConfigBase *MALWidgetSetup::create(QWidget *w, const char *n)
 {
-	return new MALWidgetSetup(w,n);
+    return new MALWidgetSetup(w, n);
 }
 

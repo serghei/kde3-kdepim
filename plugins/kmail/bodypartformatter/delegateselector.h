@@ -23,7 +23,7 @@
 #include <kdialogbase.h>
 
 namespace KPIM {
-  class AddresseeLineEdit;
+class AddresseeLineEdit;
 }
 
 class QCheckBox;
@@ -31,17 +31,16 @@ class QCheckBox;
 /**
   Selection dialog for a delegate.
 */
-class DelegateSelector : public KDialogBase
-{
-  Q_OBJECT
+class DelegateSelector : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    DelegateSelector( QWidget *parent = 0 );
+public:
+    DelegateSelector(QWidget *parent = 0);
 
     QString delegate() const;
     bool rsvp() const;
 
-  private:
+private:
     KPIM::AddresseeLineEdit *mDelegate;
     QCheckBox *mRsvp;
 };

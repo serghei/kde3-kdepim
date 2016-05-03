@@ -30,13 +30,13 @@
 namespace Akregator {
 
 
-BrowserRun::BrowserRun(QWidget* mainWindow, Viewer* currentViewer, const KURL& url, const KParts::URLArgs& args, OpeningMode mode)
+BrowserRun::BrowserRun(QWidget *mainWindow, Viewer *currentViewer, const KURL &url, const KParts::URLArgs &args, OpeningMode mode)
     : KParts::BrowserRun(url, args, 0L, mainWindow, false, false, true)
 {
     m_currentViewer = currentViewer;
     m_openingMode = mode;
 
-    if (mode == CURRENT_TAB)
+    if(mode == CURRENT_TAB)
     {
         connect(m_currentViewer, SIGNAL(destroyed()), this, SLOT(slotViewerDeleted()));
     }
@@ -48,13 +48,12 @@ BrowserRun::~BrowserRun()
     kdDebug() << "BrowserRun::~BrowserRun()" << endl;
 }
 
-void BrowserRun::foundMimeType( const QString & type )
+void BrowserRun::foundMimeType(const QString &type)
 {
-    if (type=="text/html" ||type=="text/xml" || type=="application/xhtml+xml")
+    if(type == "text/html" || type == "text/xml" || type == "application/xhtml+xml")
         emit signalOpenInViewer(url(), m_currentViewer, m_openingMode);
-    else
-        if ( handleNonEmbeddable(type) == KParts::BrowserRun::NotHandled )
-            KRun::foundMimeType( type );
+    else if(handleNonEmbeddable(type) == KParts::BrowserRun::NotHandled)
+        KRun::foundMimeType(type);
 }
 
 void BrowserRun::slotViewerDeleted()

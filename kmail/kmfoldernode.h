@@ -26,53 +26,64 @@
 
 class KMFolderDir;
 
-class KMFolderNode: public QObject
-{
-  Q_OBJECT
+class KMFolderNode: public QObject {
+    Q_OBJECT
 
 public:
-  KMFolderNode( KMFolderDir * parent, const QString & name );
-  virtual ~KMFolderNode();
+    KMFolderNode(KMFolderDir *parent, const QString &name);
+    virtual ~KMFolderNode();
 
-  /** Is it a directory where mail folders are stored or is it a folder that
-    contains mail ?
-    Note that there are some kinds of mail folders like the type mh uses that
-    are directories on disk but are handled as folders here. */
-  virtual bool isDir(void) const;
-  virtual void setDir(bool aDir) { mDir = aDir; }
+    /** Is it a directory where mail folders are stored or is it a folder that
+      contains mail ?
+      Note that there are some kinds of mail folders like the type mh uses that
+      are directories on disk but are handled as folders here. */
+    virtual bool isDir(void) const;
+    virtual void setDir(bool aDir)
+    {
+        mDir = aDir;
+    }
 
-  /** Returns ptr to owning directory object or 0 if none. This
-    is just a wrapper for convenient access. */
-  KMFolderDir* parent(void) const ;
-  void setParent( KMFolderDir* aParent );
-  //	{ return (KMFolderDir*)KMFolderNodeInherited::parent(); }
+    /** Returns ptr to owning directory object or 0 if none. This
+      is just a wrapper for convenient access. */
+    KMFolderDir *parent(void) const ;
+    void setParent(KMFolderDir *aParent);
+    //	{ return (KMFolderDir*)KMFolderNodeInherited::parent(); }
 
-  /** Returns full path to the directory where this node is stored or 0
-   if the node has no parent. Example: if this object represents a folder
-   ~joe/Mail/inbox then path() returns "/home/joe/Mail" and name() returns
-   "inbox". */
-  virtual QString path() const;
+    /** Returns full path to the directory where this node is stored or 0
+     if the node has no parent. Example: if this object represents a folder
+     ~joe/Mail/inbox then path() returns "/home/joe/Mail" and name() returns
+     "inbox". */
+    virtual QString path() const;
 
-  /** Name of the node. Also used as file name. */
-  QString name() const { return mName; }
-  void setName(const QString& aName) { mName = aName; }
+    /** Name of the node. Also used as file name. */
+    QString name() const
+    {
+        return mName;
+    }
+    void setName(const QString &aName)
+    {
+        mName = aName;
+    }
 
-  /** Label of the node for visualzation purposes. Default the same as
-      the name. */
-  virtual QString label() const;
+    /** Label of the node for visualzation purposes. Default the same as
+        the name. */
+    virtual QString label() const;
 
-  /** URL of the node for visualization purposes. */
-  virtual QString prettyURL() const = 0;
+    /** URL of the node for visualization purposes. */
+    virtual QString prettyURL() const = 0;
 
-  /** ID of the node */
-  uint id() const;
-  void setId( uint id ) { mId = id; }
+    /** ID of the node */
+    uint id() const;
+    void setId(uint id)
+    {
+        mId = id;
+    }
 
 protected:
-  QString mName;
-  KMFolderDir *mParent;
-  bool mDir;
-  uint mId;
+    QString mName;
+    KMFolderDir *mParent;
+    bool mDir;
+    uint mId;
 };
 
 typedef QPtrList<KMFolderNode> KMFolderNodeList;

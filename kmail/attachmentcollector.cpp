@@ -33,53 +33,63 @@
 
 #include "partNode.h"
 
-static bool isInSkipList( partNode * ) {
-  return false;
+static bool isInSkipList(partNode *)
+{
+    return false;
 }
 
-static bool isInExclusionList( const partNode * node ) {
-  if ( !node )
-    return true;
+static bool isInExclusionList(const partNode *node)
+{
+    if(!node)
+        return true;
 
-  switch ( node->type() ) {
-  case DwMime::kTypeApplication:
-    switch ( node->subType() ) {
-    case DwMime::kSubtypePkcs7Mime:
-    case DwMime::kSubtypePkcs7Signature:
-    case DwMime::kSubtypePgpSignature:
-    case DwMime::kSubtypePgpEncrypted:
-      return true;
+    switch(node->type())
+    {
+        case DwMime::kTypeApplication:
+            switch(node->subType())
+            {
+                case DwMime::kSubtypePkcs7Mime:
+                case DwMime::kSubtypePkcs7Signature:
+                case DwMime::kSubtypePgpSignature:
+                case DwMime::kSubtypePgpEncrypted:
+                    return true;
+            }
+            break;
+        case DwMime::kTypeMultipart:
+            return true;
     }
-    break;
-  case DwMime::kTypeMultipart:
-    return true;
-  }
-  return false;
+    return false;
 }
 
 
-void KMail::AttachmentCollector::collectAttachmentsFrom( partNode * node ) {
-  while ( node ) {
-    if ( node->isFirstTextPart() ) {
-      node = node->next();
-      continue;
-    }
-    if ( isInSkipList( node ) ) {
-      node = node->next( false ); // skip even the children
-      continue;
-    }
-    if ( isInExclusionList( node ) ) {
-      node = node->next();
-      continue;
-    }
+void KMail::AttachmentCollector::collectAttachmentsFrom(partNode *node)
+{
+    while(node)
+    {
+        if(node->isFirstTextPart())
+        {
+            node = node->next();
+            continue;
+        }
+        if(isInSkipList(node))
+        {
+            node = node->next(false);   // skip even the children
+            continue;
+        }
+        if(isInExclusionList(node))
+        {
+            node = node->next();
+            continue;
+        }
 
-    if ( node->isHeuristicalAttachment() ) {
-      mAttachments.push_back( node );
-      node = node->next( false ); // just make double sure
-      continue;
-    }
+        if(node->isHeuristicalAttachment())
+        {
+            mAttachments.push_back(node);
+            node = node->next(false);   // just make double sure
+            continue;
+        }
 
-    node = node->next();
-  }
+        node = node->next();
+    }
 }
 

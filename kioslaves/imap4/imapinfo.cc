@@ -44,193 +44,193 @@
 
 #include <kdebug.h>
 
-imapInfo::imapInfo ():count_ (0),
-recent_ (0),
-unseen_ (0),
-uidValidity_ (0),
-uidNext_ (0),
-flags_ (0),
-permanentFlags_ (0),
-readWrite_ (false),
-countAvailable_ (false),
-recentAvailable_ (false),
-unseenAvailable_ (false),
-uidValidityAvailable_ (false),
-uidNextAvailable_ (false),
-flagsAvailable_ (false),
-permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
+imapInfo::imapInfo(): count_(0),
+    recent_(0),
+    unseen_(0),
+    uidValidity_(0),
+    uidNext_(0),
+    flags_(0),
+    permanentFlags_(0),
+    readWrite_(false),
+    countAvailable_(false),
+    recentAvailable_(false),
+    unseenAvailable_(false),
+    uidValidityAvailable_(false),
+    uidNextAvailable_(false),
+    flagsAvailable_(false),
+    permanentFlagsAvailable_(false), readWriteAvailable_(false)
 {
 }
 
-imapInfo::imapInfo (const imapInfo & mi):count_ (mi.count_),
-recent_ (mi.recent_),
-unseen_ (mi.unseen_),
-uidValidity_ (mi.uidValidity_),
-uidNext_ (mi.uidNext_),
-flags_ (mi.flags_),
-permanentFlags_ (mi.permanentFlags_),
-readWrite_ (mi.readWrite_),
-countAvailable_ (mi.countAvailable_),
-recentAvailable_ (mi.recentAvailable_),
-unseenAvailable_ (mi.unseenAvailable_),
-uidValidityAvailable_ (mi.uidValidityAvailable_),
-uidNextAvailable_ (mi.uidNextAvailable_),
-flagsAvailable_ (mi.flagsAvailable_),
-permanentFlagsAvailable_ (mi.permanentFlagsAvailable_),
-readWriteAvailable_ (mi.readWriteAvailable_)
+imapInfo::imapInfo(const imapInfo &mi): count_(mi.count_),
+    recent_(mi.recent_),
+    unseen_(mi.unseen_),
+    uidValidity_(mi.uidValidity_),
+    uidNext_(mi.uidNext_),
+    flags_(mi.flags_),
+    permanentFlags_(mi.permanentFlags_),
+    readWrite_(mi.readWrite_),
+    countAvailable_(mi.countAvailable_),
+    recentAvailable_(mi.recentAvailable_),
+    unseenAvailable_(mi.unseenAvailable_),
+    uidValidityAvailable_(mi.uidValidityAvailable_),
+    uidNextAvailable_(mi.uidNextAvailable_),
+    flagsAvailable_(mi.flagsAvailable_),
+    permanentFlagsAvailable_(mi.permanentFlagsAvailable_),
+    readWriteAvailable_(mi.readWriteAvailable_)
 {
 }
 
-imapInfo & imapInfo::operator = (const imapInfo & mi)
+imapInfo &imapInfo::operator = (const imapInfo &mi)
 {
-  // Avoid a = a.
-  if (this == &mi)
+    // Avoid a = a.
+    if(this == &mi)
+        return *this;
+
+    count_ = mi.count_;
+    recent_ = mi.recent_;
+    unseen_ = mi.unseen_;
+    uidValidity_ = mi.uidValidity_;
+    uidNext_ = mi.uidNext_;
+    flags_ = mi.flags_;
+    permanentFlags_ = mi.permanentFlags_;
+    readWrite_ = mi.readWrite_;
+    countAvailable_ = mi.countAvailable_;
+    recentAvailable_ = mi.recentAvailable_;
+    unseenAvailable_ = mi.unseenAvailable_;
+    uidValidityAvailable_ = mi.uidValidityAvailable_;
+    uidNextAvailable_ = mi.uidNextAvailable_;
+    flagsAvailable_ = mi.flagsAvailable_;
+    permanentFlagsAvailable_ = mi.permanentFlagsAvailable_;
+    readWriteAvailable_ = mi.readWriteAvailable_;
+
     return *this;
-
-  count_ = mi.count_;
-  recent_ = mi.recent_;
-  unseen_ = mi.unseen_;
-  uidValidity_ = mi.uidValidity_;
-  uidNext_ = mi.uidNext_;
-  flags_ = mi.flags_;
-  permanentFlags_ = mi.permanentFlags_;
-  readWrite_ = mi.readWrite_;
-  countAvailable_ = mi.countAvailable_;
-  recentAvailable_ = mi.recentAvailable_;
-  unseenAvailable_ = mi.unseenAvailable_;
-  uidValidityAvailable_ = mi.uidValidityAvailable_;
-  uidNextAvailable_ = mi.uidNextAvailable_;
-  flagsAvailable_ = mi.flagsAvailable_;
-  permanentFlagsAvailable_ = mi.permanentFlagsAvailable_;
-  readWriteAvailable_ = mi.readWriteAvailable_;
-
-  return *this;
 }
 
-imapInfo::imapInfo (const QStringList & list):count_ (0),
-recent_ (0),
-unseen_ (0),
-uidValidity_ (0),
-uidNext_ (0),
-flags_ (0),
-permanentFlags_ (0),
-readWrite_ (false),
-countAvailable_ (false),
-recentAvailable_ (false),
-unseenAvailable_ (false),
-uidValidityAvailable_ (false),
-uidNextAvailable_ (false),
-flagsAvailable_ (false),
-permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
+imapInfo::imapInfo(const QStringList &list): count_(0),
+    recent_(0),
+    unseen_(0),
+    uidValidity_(0),
+    uidNext_(0),
+    flags_(0),
+    permanentFlags_(0),
+    readWrite_(false),
+    countAvailable_(false),
+    recentAvailable_(false),
+    unseenAvailable_(false),
+    uidValidityAvailable_(false),
+    uidNextAvailable_(false),
+    flagsAvailable_(false),
+    permanentFlagsAvailable_(false), readWriteAvailable_(false)
 {
-  for (QStringList::ConstIterator it (list.begin ()); it != list.end (); ++it)
-  {
-    QString line (*it);
-
-    line.truncate(line.length() - 2);
-    QStringList tokens(QStringList::split (' ', line));
-
-    kdDebug(7116) << "Processing: " << line << endl;
-    if (tokens[0] != "*")
-      continue;
-
-    if (tokens[1] == "OK")
+    for(QStringList::ConstIterator it(list.begin()); it != list.end(); ++it)
     {
-      if (tokens[2] == "[UNSEEN")
-        setUnseen (tokens[3].left (tokens[3].length () - 1).toULong ());
+        QString line(*it);
 
-      else if (tokens[2] == "[UIDVALIDITY")
-        setUidValidity (tokens[3].left (tokens[3].length () - 1).toULong ());
+        line.truncate(line.length() - 2);
+        QStringList tokens(QStringList::split(' ', line));
 
-      else if (tokens[2] == "[UIDNEXT")
-        setUidNext (tokens[3].left (tokens[3].length () - 1).toULong ());
+        kdDebug(7116) << "Processing: " << line << endl;
+        if(tokens[0] != "*")
+            continue;
 
-      else if (tokens[2] == "[PERMANENTFLAGS")
-      {
-        int flagsStart = line.find('(');
-        int flagsEnd = line.find(')');
+        if(tokens[1] == "OK")
+        {
+            if(tokens[2] == "[UNSEEN")
+                setUnseen(tokens[3].left(tokens[3].length() - 1).toULong());
 
-        kdDebug(7116) << "Checking permFlags from " << flagsStart << " to " << flagsEnd << endl;
-        if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
-          setPermanentFlags (_flags (line.mid (flagsStart, flagsEnd).latin1()));
+            else if(tokens[2] == "[UIDVALIDITY")
+                setUidValidity(tokens[3].left(tokens[3].length() - 1).toULong());
 
-      }
-      else if (tokens[2] == "[READ-WRITE")
-      {
-        setReadWrite (true);
-      }
-      else if (tokens[2] == "[READ-ONLY")
-      {
-        setReadWrite (false);
-      }
-      else
-      {
-        kdDebug(7116) << "unknown token2: " << tokens[2] << endl;
-      }
+            else if(tokens[2] == "[UIDNEXT")
+                setUidNext(tokens[3].left(tokens[3].length() - 1).toULong());
+
+            else if(tokens[2] == "[PERMANENTFLAGS")
+            {
+                int flagsStart = line.find('(');
+                int flagsEnd = line.find(')');
+
+                kdDebug(7116) << "Checking permFlags from " << flagsStart << " to " << flagsEnd << endl;
+                if((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
+                    setPermanentFlags(_flags(line.mid(flagsStart, flagsEnd).latin1()));
+
+            }
+            else if(tokens[2] == "[READ-WRITE")
+            {
+                setReadWrite(true);
+            }
+            else if(tokens[2] == "[READ-ONLY")
+            {
+                setReadWrite(false);
+            }
+            else
+            {
+                kdDebug(7116) << "unknown token2: " << tokens[2] << endl;
+            }
+        }
+        else if(tokens[1] == "FLAGS")
+        {
+            int flagsStart = line.find('(');
+            int flagsEnd = line.find(')');
+
+            if((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
+                setFlags(_flags(line.mid(flagsStart, flagsEnd).latin1()));
+        }
+        else
+        {
+            if(tokens[2] == "EXISTS")
+                setCount(tokens[1].toULong());
+
+            else if(tokens[2] == "RECENT")
+                setRecent(tokens[1].toULong());
+
+            else
+                kdDebug(7116) << "unknown token1/2: " << tokens[1] << " " << tokens[2] << endl;
+        }
     }
-    else if (tokens[1] == "FLAGS")
-    {
-      int flagsStart = line.find ('(');
-      int flagsEnd = line.find (')');
-
-      if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
-        setFlags (_flags (line.mid (flagsStart, flagsEnd).latin1() ));
-    }
-    else
-    {
-      if (tokens[2] == "EXISTS")
-        setCount (tokens[1].toULong ());
-
-      else if (tokens[2] == "RECENT")
-        setRecent (tokens[1].toULong ());
-
-      else
-        kdDebug(7116) << "unknown token1/2: " << tokens[1] << " " << tokens[2] << endl;
-    }
-  }
 
 }
 
-ulong imapInfo::_flags (const QCString & inFlags)
+ulong imapInfo::_flags(const QCString &inFlags)
 {
-  ulong flags = 0;
-  parseString flagsString;
-  flagsString.data.duplicate(inFlags.data(), inFlags.length());
+    ulong flags = 0;
+    parseString flagsString;
+    flagsString.data.duplicate(inFlags.data(), inFlags.length());
 
-  if (flagsString[0] == '(')
-    flagsString.pos++;
+    if(flagsString[0] == '(')
+        flagsString.pos++;
 
-  while (!flagsString.isEmpty () && flagsString[0] != ')')
-  {
-    QCString entry = imapParser::parseOneWordC(flagsString).upper();
+    while(!flagsString.isEmpty() && flagsString[0] != ')')
+    {
+        QCString entry = imapParser::parseOneWordC(flagsString).upper();
 
-    if (entry.isEmpty ())
-      flagsString.clear();
-    else if (0 != entry.contains ("\\SEEN"))
-      flags ^= Seen;
-    else if (0 != entry.contains ("\\ANSWERED"))
-      flags ^= Answered;
-    else if (0 != entry.contains ("\\FLAGGED"))
-      flags ^= Flagged;
-    else if (0 != entry.contains ("\\DELETED"))
-      flags ^= Deleted;
-    else if (0 != entry.contains ("\\DRAFT"))
-      flags ^= Draft;
-    else if (0 != entry.contains ("\\RECENT"))
-      flags ^= Recent;
-    else if (0 != entry.contains ("\\*"))
-      flags ^= User;
+        if(entry.isEmpty())
+            flagsString.clear();
+        else if(0 != entry.contains("\\SEEN"))
+            flags ^= Seen;
+        else if(0 != entry.contains("\\ANSWERED"))
+            flags ^= Answered;
+        else if(0 != entry.contains("\\FLAGGED"))
+            flags ^= Flagged;
+        else if(0 != entry.contains("\\DELETED"))
+            flags ^= Deleted;
+        else if(0 != entry.contains("\\DRAFT"))
+            flags ^= Draft;
+        else if(0 != entry.contains("\\RECENT"))
+            flags ^= Recent;
+        else if(0 != entry.contains("\\*"))
+            flags ^= User;
 
-    // non standard kmail falgs
-    else if ( entry.contains( "KMAILFORWARDED" ) || entry.contains( "$FORWARDED" ) )
-      flags = flags | Forwarded;
-    else if ( entry.contains( "KMAILTODO" ) || entry.contains( "$TODO" ) )
-      flags = flags | Todo;
-    else if ( entry.contains( "KMAILWATCHED" ) || entry.contains( "$WATCHED" ) )
-      flags = flags | Watched;
-    else if ( entry.contains( "KMAILIGNORED" ) || entry.contains( "$IGNORED" ) )
-      flags = flags | Ignored;
-  }
+        // non standard kmail falgs
+        else if(entry.contains("KMAILFORWARDED") || entry.contains("$FORWARDED"))
+            flags = flags | Forwarded;
+        else if(entry.contains("KMAILTODO") || entry.contains("$TODO"))
+            flags = flags | Todo;
+        else if(entry.contains("KMAILWATCHED") || entry.contains("$WATCHED"))
+            flags = flags | Watched;
+        else if(entry.contains("KMAILIGNORED") || entry.contains("$IGNORED"))
+            flags = flags | Ignored;
+    }
 
-  return flags;
+    return flags;
 }

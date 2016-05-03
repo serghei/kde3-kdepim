@@ -19,15 +19,15 @@
   Boston, MA 02110-1301, USA.
 */
 
- #include "infoextension.h"
+#include "infoextension.h"
 
 #include <qwidget.h>
 #include <kparts/part.h>
 
 using namespace KParts;
 
-InfoExtension::InfoExtension( KParts::ReadOnlyPart *parent, const char* name)
-: QObject(parent, name), d(0)
+InfoExtension::InfoExtension(KParts::ReadOnlyPart *parent, const char *name)
+    : QObject(parent, name), d(0)
 {
 }
 

@@ -34,23 +34,23 @@
 #define __KMAIL_INTERFACES_OBSERVABLE_H__
 
 namespace KMail {
-  namespace Interface {
+namespace Interface {
 
-    class Observer;
+class Observer;
 
-    /**
-       @short observable interface
-    */
-    class Observable {
-    public:
-      virtual ~Observable() {}
+/**
+   @short observable interface
+*/
+class Observable {
+public:
+    virtual ~Observable() {}
 
-      virtual void attach( Observer * obs ) = 0;
-      virtual void detach( Observer * obs ) = 0;
-      virtual void notify() = 0;
-    };
+    virtual void attach(Observer *obs) = 0;
+    virtual void detach(Observer *obs) = 0;
+    virtual void notify() = 0;
+};
 
-  } // namespace Interface
+} // namespace Interface
 
 } // namespace KMail
 

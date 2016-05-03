@@ -27,15 +27,14 @@ class QComboBox;
 class QLineEdit;
 class QSpinBox;
 
-class ConfigGuiOpie : public ConfigGui
-{
-  public:
-    ConfigGuiOpie( const QSync::Member &, QWidget *parent );
+class ConfigGuiOpie : public ConfigGui {
+public:
+    ConfigGuiOpie(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     QLineEdit *mDeviceIP;
     QComboBox *mDeviceType;
     QLineEdit *mUserName;

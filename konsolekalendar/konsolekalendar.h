@@ -43,19 +43,17 @@
  * Provides the KonsoleKalendar class definition.
  */
 
-namespace KCal
-{
+namespace KCal {
 /**
  * The base class of the project.
  * @author Tuukka Pasanen
  */
-  class KonsoleKalendar
-  {
-  public:
+class KonsoleKalendar {
+public:
     /**
      * Constructs a KonsoleKalendar object from command line arguments.
      */
-    KonsoleKalendar( KonsoleKalendarVariables *variables );
+    KonsoleKalendar(KonsoleKalendarVariables *variables);
     /**
      * Destructor
      */
@@ -93,14 +91,14 @@ namespace KCal
      * @param  enddate   Ending date
      * @param  summary   Which summary event should have have
      */
-    bool isEvent( QDateTime startdate, QDateTime enddate, QString summary );
+    bool isEvent(QDateTime startdate, QDateTime enddate, QString summary);
 
     /**
      * Creates calendar file (If it doesn't exists)
      */
     bool createCalendar();
 
-  private:
+private:
 
     /**
      * Print event specs for dryrun and verbose options
@@ -113,7 +111,7 @@ namespace KCal
      * @param eventlist which event we should print
      * @param dt is the date to use when printing the event for recurring events
      */
-    bool printEventList( QTextStream *ts, Event::List *eventList, QDate dt );
+    bool printEventList(QTextStream *ts, Event::List *eventList, QDate dt);
 
     /**
      * Prints a single event in many formats
@@ -121,7 +119,7 @@ namespace KCal
      * @param event which we should print
      * @param dt is the date to use when printing the event for recurring events
      */
-    bool printEvent( QTextStream *ts, Event *event, QDate dt );
+    bool printEvent(QTextStream *ts, Event *event, QDate dt);
 
     /**
      * Variables that changes stuff in programm
@@ -138,7 +136,7 @@ namespace KCal
      */
     QDate m_saveDate;
 
-  };
+};
 
 }
 #endif

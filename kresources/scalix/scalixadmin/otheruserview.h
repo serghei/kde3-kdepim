@@ -25,19 +25,18 @@
 
 class OtherUserManager;
 
-class OtherUserView : public KListView
-{
-  Q_OBJECT
+class OtherUserView : public KListView {
+    Q_OBJECT
 
-  public:
-    OtherUserView( OtherUserManager *manager, QWidget *parent = 0 );
+public:
+    OtherUserView(OtherUserManager *manager, QWidget *parent = 0);
 
     QString selectedUser() const;
 
-  private slots:
+private slots:
     void userChanged();
 
-  private:
+private:
     OtherUserManager *mManager;
 };
 

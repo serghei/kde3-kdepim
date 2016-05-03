@@ -26,42 +26,52 @@
 
 namespace KWSDL {
 
-class Message
-{
-  public:
+class Message {
+public:
     typedef QValueList<Message> List;
 
-    class Part
-    {
-      public:
+    class Part {
+    public:
         typedef QMap<QString, Part> Map;
         typedef QValueList<Part> List;
 
         Part();
-        Part( const QString &name, const QString &type );
+        Part(const QString &name, const QString &type);
 
-        void setName( const QString &name ) { mName = name; }
-        QString name() const { return mName; }
+        void setName(const QString &name)
+        {
+            mName = name;
+        }
+        QString name() const
+        {
+            return mName;
+        }
 
-        void setType( const QString &type ) { mType = type; }
-        QString type() const { return mType; }
+        void setType(const QString &type)
+        {
+            mType = type;
+        }
+        QString type() const
+        {
+            return mType;
+        }
 
-      private:
+    private:
         QString mName;
         QString mType;
     };
 
     Message();
-    Message( const QString &name );
+    Message(const QString &name);
 
-    void setName( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
-    void addPart( const Part &part );
-    Part part( const QString &name ) const;
+    void addPart(const Part &part);
+    Part part(const QString &name) const;
     Part::List parts() const;
 
-  private:
+private:
     QString mName;
     Part::List mParts;
 };

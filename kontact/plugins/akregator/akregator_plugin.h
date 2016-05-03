@@ -39,39 +39,40 @@ namespace Akregator {
 
 typedef KParts::ReadOnlyPart MyBasePart;
 
-class UniqueAppHandler : public Kontact::UniqueAppHandler
-{
-    public:
-        UniqueAppHandler( Kontact::Plugin* plugin ) : Kontact::UniqueAppHandler( plugin ) {}
-        virtual void loadCommandLineOptions();
-        virtual int newInstance();
+class UniqueAppHandler : public Kontact::UniqueAppHandler {
+public:
+    UniqueAppHandler(Kontact::Plugin *plugin) : Kontact::UniqueAppHandler(plugin) {}
+    virtual void loadCommandLineOptions();
+    virtual int newInstance();
 };
 
 
-class Plugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class Plugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    Plugin( Kontact::Core *core, const char *name,
-                       const QStringList & );
+public:
+    Plugin(Kontact::Core *core, const char *name,
+           const QStringList &);
     ~Plugin();
 
-    int weight() const { return 700; }
+    int weight() const
+    {
+        return 700;
+    }
 
     AkregatorPartIface_stub *interface();
 
     virtual QStringList configModules() const;
     virtual QStringList invisibleToolbarActions() const;
     virtual bool isRunningStandalone();
-    virtual void readProperties( KConfig *config );
-    virtual void saveProperties( KConfig *config );
+    virtual void readProperties(KConfig *config);
+    virtual void saveProperties(KConfig *config);
 
-  private slots:
+private slots:
     void showPart();
     void addFeed();
 
-  protected:
+protected:
     MyBasePart *createPart();
     AkregatorPartIface_stub *m_stub;
     Kontact::UniqueAppWatcher *m_uniqueAppWatcher;

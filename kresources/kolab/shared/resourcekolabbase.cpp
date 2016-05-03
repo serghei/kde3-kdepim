@@ -49,207 +49,214 @@ using namespace Kolab;
 
 static unsigned int uniquifier = 0;
 
-ResourceKolabBase::ResourceKolabBase( const QCString& objId )
-  : mSilent( false )
+ResourceKolabBase::ResourceKolabBase(const QCString &objId)
+    : mSilent(false)
 {
-  KGlobal::locale()->insertCatalogue( "kres_kolab" );
-  KGlobal::locale()->insertCatalogue( "libkcal" );
-  QString uniqueObjId = QString( objId ) + QString::number( uniquifier++ );
-  mConnection = new KMailConnection( this, uniqueObjId.utf8() );
+    KGlobal::locale()->insertCatalogue("kres_kolab");
+    KGlobal::locale()->insertCatalogue("libkcal");
+    QString uniqueObjId = QString(objId) + QString::number(uniquifier++);
+    mConnection = new KMailConnection(this, uniqueObjId.utf8());
 }
 
 ResourceKolabBase::~ResourceKolabBase()
 {
-  delete mConnection;
+    delete mConnection;
 }
 
 
-bool ResourceKolabBase::kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
-                                           const QString& contentsType ) const
+bool ResourceKolabBase::kmailSubresources(QValueList<KMailICalIface::SubResource> &lst,
+        const QString &contentsType) const
 {
-  return mConnection->kmailSubresources( lst, contentsType );
+    return mConnection->kmailSubresources(lst, contentsType);
 }
 
-bool ResourceKolabBase::kmailTriggerSync( const QString& contentsType ) const
+bool ResourceKolabBase::kmailTriggerSync(const QString &contentsType) const
 {
-  return mConnection->kmailTriggerSync( contentsType );
+    return mConnection->kmailTriggerSync(contentsType);
 }
 
 
-bool ResourceKolabBase::kmailIncidencesCount( int &count,
-                                              const QString& mimetype,
-                                              const QString& resource ) const
+bool ResourceKolabBase::kmailIncidencesCount(int &count,
+        const QString &mimetype,
+        const QString &resource) const
 {
-  return mConnection->kmailIncidencesCount( count, mimetype, resource );
+    return mConnection->kmailIncidencesCount(count, mimetype, resource);
 }
 
-bool ResourceKolabBase::kmailIncidences( QMap<Q_UINT32, QString>& lst,
-                                         const QString& mimetype,
-                                         const QString& resource,
-                                         int startIndex,
-                                         int nbMessages ) const
+bool ResourceKolabBase::kmailIncidences(QMap<Q_UINT32, QString> &lst,
+                                        const QString &mimetype,
+                                        const QString &resource,
+                                        int startIndex,
+                                        int nbMessages) const
 {
-  return mConnection->kmailIncidences( lst, mimetype, resource, startIndex, nbMessages );
+    return mConnection->kmailIncidences(lst, mimetype, resource, startIndex, nbMessages);
 }
 
-bool ResourceKolabBase::kmailGetAttachment( KURL& url, const QString& resource,
-                                            Q_UINT32 sernum,
-                                            const QString& filename ) const
+bool ResourceKolabBase::kmailGetAttachment(KURL &url, const QString &resource,
+        Q_UINT32 sernum,
+        const QString &filename) const
 {
-  return mConnection->kmailGetAttachment( url, resource, sernum, filename );
+    return mConnection->kmailGetAttachment(url, resource, sernum, filename);
 }
 
-bool ResourceKolabBase::kmailAttachmentMimetype( QString & mimeType, QString & resource,
-                                                 Q_UINT32 sernum, const QString & filename ) const
+bool ResourceKolabBase::kmailAttachmentMimetype(QString &mimeType, QString &resource,
+        Q_UINT32 sernum, const QString &filename) const
 {
-  return mConnection->kmailAttachmentMimetype( mimeType, resource, sernum, filename );
+    return mConnection->kmailAttachmentMimetype(mimeType, resource, sernum, filename);
 }
 
-bool ResourceKolabBase::kmailListAttachments( QStringList &list,
-                                              const QString & resource,
-                                              Q_UINT32 sernum ) const
+bool ResourceKolabBase::kmailListAttachments(QStringList &list,
+        const QString &resource,
+        Q_UINT32 sernum) const
 {
-  return mConnection->kmailListAttachments( list, resource, sernum );
+    return mConnection->kmailListAttachments(list, resource, sernum);
 }
 
-bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
-                                              Q_UINT32 sernum )
+bool ResourceKolabBase::kmailDeleteIncidence(const QString &resource,
+        Q_UINT32 sernum)
 {
-  return mSilent || mConnection->kmailDeleteIncidence( resource, sernum );
+    return mSilent || mConnection->kmailDeleteIncidence(resource, sernum);
 }
 
 static QString plainTextBody()
 {
-  const char * firstPartTextToTranslate = I18N_NOOP(
-    "This is a Kolab Groupware object.\nTo view this object you"
-    " will need an email client that can understand the Kolab"
-    " Groupware format.\nFor a list of such email clients please"
-    " visit\n%1" );
-  const char * url = "http://www.kolab.org/kolab2-clients.html";
-  QString firstPartTextUntranslated = QString::fromLatin1( firstPartTextToTranslate ).arg( url );
-  QString firstPartText = i18n( firstPartTextToTranslate ).arg( url );
-  if ( firstPartText != firstPartTextUntranslated ) {
-    firstPartText.append("\n\n-----------------------------------------------------\n\n");
-    firstPartText.append( firstPartTextUntranslated );
-  }
-  return firstPartText;
+    const char *firstPartTextToTranslate = I18N_NOOP(
+            "This is a Kolab Groupware object.\nTo view this object you"
+            " will need an email client that can understand the Kolab"
+            " Groupware format.\nFor a list of such email clients please"
+            " visit\n%1");
+    const char *url = "http://www.kolab.org/kolab2-clients.html";
+    QString firstPartTextUntranslated = QString::fromLatin1(firstPartTextToTranslate).arg(url);
+    QString firstPartText = i18n(firstPartTextToTranslate).arg(url);
+    if(firstPartText != firstPartTextUntranslated)
+    {
+        firstPartText.append("\n\n-----------------------------------------------------\n\n");
+        firstPartText.append(firstPartTextUntranslated);
+    }
+    return firstPartText;
 }
 
-bool ResourceKolabBase::kmailUpdate( const QString& resource,
-                                     Q_UINT32& sernum,
-                                     const QString& xml,
-                                     const QString& mimetype,
-                                     const QString& subject,
-                                     const CustomHeaderMap& _customHeaders,
-                                     const QStringList& _attachmentURLs,
-                                     const QStringList& _attachmentMimetypes,
-                                     const QStringList& _attachmentNames,
-                                     const QStringList& deletedAttachments )
+bool ResourceKolabBase::kmailUpdate(const QString &resource,
+                                    Q_UINT32 &sernum,
+                                    const QString &xml,
+                                    const QString &mimetype,
+                                    const QString &subject,
+                                    const CustomHeaderMap &_customHeaders,
+                                    const QStringList &_attachmentURLs,
+                                    const QStringList &_attachmentMimetypes,
+                                    const QStringList &_attachmentNames,
+                                    const QStringList &deletedAttachments)
 {
-  if ( mSilent )
-    return true;
+    if(mSilent)
+        return true;
 
-  QString subj = subject;
-  if ( subj.isEmpty() )
-    subj = i18n("Internal kolab data: Do not delete this mail.");
+    QString subj = subject;
+    if(subj.isEmpty())
+        subj = i18n("Internal kolab data: Do not delete this mail.");
 
-  if ( mimetype.startsWith( "application/x-vnd.kolab" ) ) {
+    if(mimetype.startsWith("application/x-vnd.kolab"))
+    {
 
-    // Save the xml file. Will be deleted at the end of this method
-    KTempFile file;
-    file.setAutoDelete( true );
-    QTextStream* stream = file.textStream();
-    stream->setEncoding( QTextStream::UnicodeUTF8 );
-    *stream << xml;
-    file.close();
+        // Save the xml file. Will be deleted at the end of this method
+        KTempFile file;
+        file.setAutoDelete(true);
+        QTextStream *stream = file.textStream();
+        stream->setEncoding(QTextStream::UnicodeUTF8);
+        *stream << xml;
+        file.close();
 
-    // Add the xml file as an attachment
-    QStringList attachmentURLs = _attachmentURLs;
-    QStringList attachmentMimeTypes = _attachmentMimetypes;
-    QStringList attachmentNames = _attachmentNames;
-    KURL url;
-    url.setPath( file.name() );
-    url.setFileEncoding( "UTF-8" );
-    attachmentURLs.prepend( url.url() );
-    attachmentMimeTypes.prepend( mimetype );
-    attachmentNames.prepend( "kolab.xml" );
+        // Add the xml file as an attachment
+        QStringList attachmentURLs = _attachmentURLs;
+        QStringList attachmentMimeTypes = _attachmentMimetypes;
+        QStringList attachmentNames = _attachmentNames;
+        KURL url;
+        url.setPath(file.name());
+        url.setFileEncoding("UTF-8");
+        attachmentURLs.prepend(url.url());
+        attachmentMimeTypes.prepend(mimetype);
+        attachmentNames.prepend("kolab.xml");
 
-    CustomHeaderMap customHeaders( _customHeaders );
-    customHeaders.insert( "X-Kolab-Type", mimetype );
+        CustomHeaderMap customHeaders(_customHeaders);
+        customHeaders.insert("X-Kolab-Type", mimetype);
 
-    return mConnection->kmailUpdate( resource, sernum, subj, plainTextBody(), customHeaders,
-        attachmentURLs, attachmentMimeTypes, attachmentNames,
-        deletedAttachments );
-  } else {
-    // ical style, simply put the data inline
-    return mConnection->kmailUpdate( resource, sernum, subj, xml, _customHeaders,
-        _attachmentURLs, _attachmentMimetypes, _attachmentNames, deletedAttachments );
-  }
+        return mConnection->kmailUpdate(resource, sernum, subj, plainTextBody(), customHeaders,
+                                        attachmentURLs, attachmentMimeTypes, attachmentNames,
+                                        deletedAttachments);
+    }
+    else
+    {
+        // ical style, simply put the data inline
+        return mConnection->kmailUpdate(resource, sernum, subj, xml, _customHeaders,
+                                        _attachmentURLs, _attachmentMimetypes, _attachmentNames, deletedAttachments);
+    }
 }
 
-QString ResourceKolabBase::configFile( const QString& type ) const
+QString ResourceKolabBase::configFile(const QString &type) const
 {
-  return locateLocal( "config",
-                      QString( "kresources/kolab/%1rc" ).arg( type ) );
+    return locateLocal("config",
+                       QString("kresources/kolab/%1rc").arg(type));
 }
 
 bool ResourceKolabBase::connectToKMail() const
 {
-  return mConnection->connectToKMail();
+    return mConnection->connectToKMail();
 }
 
-bool ResourceKolabBase::kmailAddSubresource( const QString& resource,
-                                             const QString& parent,
-                                             const QString& contentsType )
+bool ResourceKolabBase::kmailAddSubresource(const QString &resource,
+        const QString &parent,
+        const QString &contentsType)
 {
-  return mConnection->kmailAddSubresource( resource, parent, contentsType );
+    return mConnection->kmailAddSubresource(resource, parent, contentsType);
 }
 
-bool ResourceKolabBase::kmailRemoveSubresource( const QString& resource )
+bool ResourceKolabBase::kmailRemoveSubresource(const QString &resource)
 {
-  return mConnection->kmailRemoveSubresource( resource );
+    return mConnection->kmailRemoveSubresource(resource);
 }
 
-QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
-                                                 const QString& text )
+QString ResourceKolabBase::findWritableResource(const ResourceMap &resources,
+        const QString &text)
 {
-  // I have to use the label (shown in the dialog) as key here. But given how the
-  // label is made up, it should be unique. If it's not, well the dialog would suck anyway...
-  QMap<QString, QString> possible;
-  QStringList labels;
-  ResourceMap::ConstIterator it;
-  for ( it = resources.begin(); it != resources.end(); ++it ) {
-    if ( it.data().writable() && it.data().active() ) {
-      // Writable and active possibility
-      possible[ it.data().label() ] = it.key();
+    // I have to use the label (shown in the dialog) as key here. But given how the
+    // label is made up, it should be unique. If it's not, well the dialog would suck anyway...
+    QMap<QString, QString> possible;
+    QStringList labels;
+    ResourceMap::ConstIterator it;
+    for(it = resources.begin(); it != resources.end(); ++it)
+    {
+        if(it.data().writable() && it.data().active())
+        {
+            // Writable and active possibility
+            possible[ it.data().label() ] = it.key();
+        }
     }
-  }
 
-  if ( possible.isEmpty() ) { // None found!!
-    kdWarning(5650) << "No writable resource found!" << endl;
-    KMessageBox::error( 0, i18n( "No writable resource was found, saving will not be possible. Reconfigure KMail first." ) );
-    return QString::null;
-  }
-  if ( possible.count() == 1 )
-    // Just one found
-    return possible.begin().data(); // yes this is the subresource key, i.e. location
+    if(possible.isEmpty())      // None found!!
+    {
+        kdWarning(5650) << "No writable resource found!" << endl;
+        KMessageBox::error(0, i18n("No writable resource was found, saving will not be possible. Reconfigure KMail first."));
+        return QString::null;
+    }
+    if(possible.count() == 1)
+        // Just one found
+        return possible.begin().data(); // yes this is the subresource key, i.e. location
 
-  QString t = text;
-  if ( t.isEmpty() )
-    i18n( "You have more than one writable resource folder. "
-          "Please select the one you want to write to." );
+    QString t = text;
+    if(t.isEmpty())
+        i18n("You have more than one writable resource folder. "
+             "Please select the one you want to write to.");
 
-  // Several found, ask the user
-  QString chosenLabel = KPIM::FolderSelectDialog::getItem( i18n( "Select Resource Folder" ),
-                                                           t, possible.keys() );
-  if ( chosenLabel.isEmpty() ) // cancelled
-    return QString::null;
-  return possible[chosenLabel];
+    // Several found, ask the user
+    QString chosenLabel = KPIM::FolderSelectDialog::getItem(i18n("Select Resource Folder"),
+                          t, possible.keys());
+    if(chosenLabel.isEmpty())    // cancelled
+        return QString::null;
+    return possible[chosenLabel];
 }
 
-KMailICalIface::StorageFormat ResourceKolabBase::kmailStorageFormat( const QString &folder ) const
+KMailICalIface::StorageFormat ResourceKolabBase::kmailStorageFormat(const QString &folder) const
 {
-  KMailICalIface::StorageFormat format = (KMailICalIface::StorageFormat) 3;
-  mConnection->kmailStorageFormat( format, folder );
-  return format;
+    KMailICalIface::StorageFormat format = (KMailICalIface::StorageFormat) 3;
+    mConnection->kmailStorageFormat(format, folder);
+    return format;
 }

@@ -31,117 +31,117 @@ class QWidget;
  * It also handles the configuration.
  * @author Mart Kelder (mart.kde@hccnet.nl)
  */
-class KEditListBoxManager : public KEditListBox
-{ Q_OBJECT
+class KEditListBoxManager : public KEditListBox {
+    Q_OBJECT
 public:
-	/**
-	 * Constructor: @see KEditListBoxManager::KEditListBoxManager( const QString&, QWidget, const char * name, bool, int )
-	 */
-	KEditListBoxManager(	QWidget *parent = 0, const char *name = 0,
-			bool checkAtEntering=true, int buttons = All );
-			
-	/**
-	 * The save as above, but with other options for KEditListBox.
-	 */
-	KEditListBoxManager(	const QString& title, QWidget *parent = 0,
-			const char *name = 0, bool checkAtEntering=true,
-			int buttons = All );
-		
-	/**
-	 * The save as above, but with other options for KEditListBox.
-	 */
-	KEditListBoxManager(	const QString& title,
-			const KEditListBox::CustomEditor &customEditor,
-			QWidget *parent = 0, const char *name = 0,
-			bool checkAtEntering = true, int buttons = All );
-	
-	/**
-	 * Destructor
-	 */		
-	~KEditListBoxManager();
-	
-	
-	/** 
-	 * Set the KConfig object (required before doing something
-	 * @param config The KConfig-object
-	 */
-	void setConfig( KConfig* config );
-	/**
-	 * Sets the groupName. groupName should contain at least one %1.
-	 * It is used for makeing groupnames.
-	 * @param name The groupname
-	 */
-	void setGroupName( const QString& name );
-	
-	/**
-	 * Sets the subGroupName. subGroupName should contain %1 and %2.
-	 * It is used to execute operations on a group and its subgroups.
-	 * @param name The groupname
-	 */
-	void setSubGroupName( const QString& name );
+    /**
+     * Constructor: @see KEditListBoxManager::KEditListBoxManager( const QString&, QWidget, const char * name, bool, int )
+     */
+    KEditListBoxManager(QWidget *parent = 0, const char *name = 0,
+                        bool checkAtEntering = true, int buttons = All);
+
+    /**
+     * The save as above, but with other options for KEditListBox.
+     */
+    KEditListBoxManager(const QString &title, QWidget *parent = 0,
+                        const char *name = 0, bool checkAtEntering = true,
+                        int buttons = All);
+
+    /**
+     * The save as above, but with other options for KEditListBox.
+     */
+    KEditListBoxManager(const QString &title,
+                        const KEditListBox::CustomEditor &customEditor,
+                        QWidget *parent = 0, const char *name = 0,
+                        bool checkAtEntering = true, int buttons = All);
+
+    /**
+     * Destructor
+     */
+    ~KEditListBoxManager();
+
+
+    /**
+     * Set the KConfig object (required before doing something
+     * @param config The KConfig-object
+     */
+    void setConfig(KConfig *config);
+    /**
+     * Sets the groupName. groupName should contain at least one %1.
+     * It is used for makeing groupnames.
+     * @param name The groupname
+     */
+    void setGroupName(const QString &name);
+
+    /**
+     * Sets the subGroupName. subGroupName should contain %1 and %2.
+     * It is used to execute operations on a group and its subgroups.
+     * @param name The groupname
+     */
+    void setSubGroupName(const QString &name);
 private:
-	/** 
-	 * This functions is called from and only from the constructor to prevent writing the
-	 * same code for all constructors
-	 */
-	void init();
-	
-	/**
-	 * This function reads the names out the config.
-	 */
-	void readNames();
+    /**
+     * This functions is called from and only from the constructor to prevent writing the
+     * same code for all constructors
+     */
+    void init();
+
+    /**
+     * This function reads the names out the config.
+     */
+    void readNames();
 private:
-	KConfig *_config; //Stores the KConfig-object
-	QString *_groupName; //Stores the groupName string.
-	QString *_subGroupName;
-	int _prevCount;
+    KConfig *_config; //Stores the KConfig-object
+    QString *_groupName; //Stores the groupName string.
+    QString *_subGroupName;
+    int _prevCount;
 
 private slots:
-	//These comes directly from the KEditListBox itselfs.
-	void slotChanged();
-	void slotAdded( const QString& );
-	void slotRemoved( const QString& );
-	
-	void slotActivated( QListBoxItem* );
-private:
-	/**
-	 * This private method moves an item. It is called from slotChanged().
-	 * @param src The number of the source-group.
-	 * @param dest The number of the destanation-group
-	 */
-	void moveItem( int src, int dest );
-	
-	/**
-	 * This private functions switch to groups: first^=last; last^=first; first^=last
-	 * @param first the first number of a group.
-	 * @param last the second number of a group (and the last number).
-	 */
-	void changeItem( int first, int last );
-	
-	/**
-	 * This function is called if the user change the name of the group
-	 */
-	void changedText();
-	
-signals:
-	/**
-	 * This signal is emitted when somebody selects an item
-	 * @param text The text of the newly selected item.
-	 */
-	void activated( const QString& text );
-	
-	/**
-	 * This signal is emitted when defaults have to be set.
-	 * @param name The name of the object: this is filled in the KEditListBox;
-	 * @param config The configuration in which the config have to be parsed.
-	 * @param index The number of the item.
-	 * this config is already in the right group.
-	 */
-	void setDefaults( const QString& name, const int index, KConfig* config );
+    //These comes directly from the KEditListBox itselfs.
+    void slotChanged();
+    void slotAdded(const QString &);
+    void slotRemoved(const QString &);
 
-	void elementsSwapped( int, int );
-	void elementDeleted( int );
-	
+    void slotActivated(QListBoxItem *);
+private:
+    /**
+     * This private method moves an item. It is called from slotChanged().
+     * @param src The number of the source-group.
+     * @param dest The number of the destanation-group
+     */
+    void moveItem(int src, int dest);
+
+    /**
+     * This private functions switch to groups: first^=last; last^=first; first^=last
+     * @param first the first number of a group.
+     * @param last the second number of a group (and the last number).
+     */
+    void changeItem(int first, int last);
+
+    /**
+     * This function is called if the user change the name of the group
+     */
+    void changedText();
+
+signals:
+    /**
+     * This signal is emitted when somebody selects an item
+     * @param text The text of the newly selected item.
+     */
+    void activated(const QString &text);
+
+    /**
+     * This signal is emitted when defaults have to be set.
+     * @param name The name of the object: this is filled in the KEditListBox;
+     * @param config The configuration in which the config have to be parsed.
+     * @param index The number of the item.
+     * this config is already in the right group.
+     */
+    void setDefaults(const QString &name, const int index, KConfig *config);
+
+    void elementsSwapped(int, int);
+    void elementDeleted(int);
+
 };
 
 #endif //MK_KEDITLISTBOXMAN_H

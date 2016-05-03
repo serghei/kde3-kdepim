@@ -44,56 +44,57 @@ class QWidgetStack;
 
 namespace KMail {
 
-  class RuleWidgetHandler;
+class RuleWidgetHandler;
 
-  /**
-   * @short Singleton to manage the list of RuleWidgetHandlers
-   */
-  class RuleWidgetHandlerManager {
-    static RuleWidgetHandlerManager * self;
+/**
+ * @short Singleton to manage the list of RuleWidgetHandlers
+ */
+class RuleWidgetHandlerManager {
+    static RuleWidgetHandlerManager *self;
 
     RuleWidgetHandlerManager();
-  public:
+public:
     ~RuleWidgetHandlerManager();
 
-    static RuleWidgetHandlerManager * instance() {
-      if ( !self )
-	self = new RuleWidgetHandlerManager();
-      return self;
+    static RuleWidgetHandlerManager *instance()
+    {
+        if(!self)
+            self = new RuleWidgetHandlerManager();
+        return self;
     }
 
-    void registerHandler( const RuleWidgetHandler * handler );
-    void unregisterHandler( const RuleWidgetHandler * handler );
+    void registerHandler(const RuleWidgetHandler *handler);
+    void unregisterHandler(const RuleWidgetHandler *handler);
 
-    void createWidgets( QWidgetStack *functionStack,
-                        QWidgetStack *valueStack,
-                        const QObject *receiver ) const;
-    KMSearchRule::Function function( const QCString & field,
-                                     const QWidgetStack *functionStack ) const;
-    QString value( const QCString & field,
-                   const QWidgetStack *functionStack,
-                   const QWidgetStack *valueStack ) const;
-    QString prettyValue( const QCString & field,
-                         const QWidgetStack *functionStack,
-                         const QWidgetStack *valueStack ) const;
-    bool handlesField( const QCString & field,
-                       const QWidgetStack *functionStack,
-                       const QWidgetStack *valueStack ) const;
-    void reset( QWidgetStack *functionStack,
-                QWidgetStack *valueStack ) const;
-    void setRule( QWidgetStack *functionStack,
-                  QWidgetStack *valueStack,
-                  const KMSearchRule *rule ) const;
-    void update( const QCString & field,
-                 QWidgetStack *functionStack,
-                 QWidgetStack *valueStack ) const;
+    void createWidgets(QWidgetStack *functionStack,
+                       QWidgetStack *valueStack,
+                       const QObject *receiver) const;
+    KMSearchRule::Function function(const QCString &field,
+                                    const QWidgetStack *functionStack) const;
+    QString value(const QCString &field,
+                  const QWidgetStack *functionStack,
+                  const QWidgetStack *valueStack) const;
+    QString prettyValue(const QCString &field,
+                        const QWidgetStack *functionStack,
+                        const QWidgetStack *valueStack) const;
+    bool handlesField(const QCString &field,
+                      const QWidgetStack *functionStack,
+                      const QWidgetStack *valueStack) const;
+    void reset(QWidgetStack *functionStack,
+               QWidgetStack *valueStack) const;
+    void setRule(QWidgetStack *functionStack,
+                 QWidgetStack *valueStack,
+                 const KMSearchRule *rule) const;
+    void update(const QCString &field,
+                QWidgetStack *functionStack,
+                QWidgetStack *valueStack) const;
 
-  private:
-    typedef QValueVector<const RuleWidgetHandler*>::const_iterator const_iterator;
-    typedef QValueVector<const RuleWidgetHandler*>::iterator iterator;
+private:
+    typedef QValueVector<const RuleWidgetHandler *>::const_iterator const_iterator;
+    typedef QValueVector<const RuleWidgetHandler *>::iterator iterator;
 
-    QValueVector<const RuleWidgetHandler*> mHandlers;
-  };
+    QValueVector<const RuleWidgetHandler *> mHandlers;
+};
 
 } // namespace KMail
 

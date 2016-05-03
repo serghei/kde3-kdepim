@@ -5,19 +5,19 @@
 
 #include "googlesearch.hh"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "kgooglesearch", "KDE Google Search", "0.1", "", KAboutData::License_GPL );
-  aboutData.addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+    KAboutData aboutData("kgooglesearch", "KDE Google Search", "0.1", "", KAboutData::License_GPL);
+    aboutData.addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app( false, false );
+    KApplication app(false, false);
 
-  GoogleSearch search;
+    GoogleSearch search;
 
-  search.googleSearch( "foobar", 0, 10, true, "", false, "", "latin1", "latin1" );
-  search.spellingSuggestion( "guugel" );
+    search.googleSearch("foobar", 0, 10, true, "", false, "", "latin1", "latin1");
+    search.spellingSuggestion("guugel");
 
-  return app.exec();
+    return app.exec();
 }

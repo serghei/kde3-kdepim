@@ -25,67 +25,68 @@
 
 #include "servertypemanager.h"
 
-ServerTypeManager* ServerTypeManager::mSelf = 0;
+ServerTypeManager *ServerTypeManager::mSelf = 0;
 static KStaticDeleter<ServerTypeManager> serverManagerDeleter;
 
-ServerTypeManager::ServerTypeManager( QObject *parent, const char *name )
-  : QObject( parent, name )
+ServerTypeManager::ServerTypeManager(QObject *parent, const char *name)
+    : QObject(parent, name)
 {
-  loadPlugins();
+    loadPlugins();
 }
 
 ServerTypeManager::~ServerTypeManager()
 {
 }
 
-ServerTypeManager* ServerTypeManager::self()
+ServerTypeManager *ServerTypeManager::self()
 {
-  if ( !mSelf )
-    serverManagerDeleter.setObject( mSelf, new ServerTypeManager( 0, 
-                                    "ServerTypeManager" ) );
+    if(!mSelf)
+        serverManagerDeleter.setObject(mSelf, new ServerTypeManager(0,
+                                       "ServerTypeManager"));
 
-  return mSelf;
+    return mSelf;
 }
 
 QStringList ServerTypeManager::identifiers() const
 {
-  return mServerTypeFactoryMap.keys();
+    return mServerTypeFactoryMap.keys();
 }
 
-QString ServerTypeManager::title( const QString& identifier ) const
+QString ServerTypeManager::title(const QString &identifier) const
 {
-  ServerTypeFactoryMap::ConstIterator it = mServerTypeFactoryMap.find( identifier );
-  if ( it == mServerTypeFactoryMap.end() )
-    return QString::null;
-  else
-    return it.data()->title();
+    ServerTypeFactoryMap::ConstIterator it = mServerTypeFactoryMap.find(identifier);
+    if(it == mServerTypeFactoryMap.end())
+        return QString::null;
+    else
+        return it.data()->title();
 }
 
-ServerType* ServerTypeManager::serverType( const QString& identifier )
+ServerType *ServerTypeManager::serverType(const QString &identifier)
 {
-  ServerTypeMap::ConstIterator serverIt = mServerTypeMap.find( identifier );
-  if ( serverIt == mServerTypeMap.end() ) { // none server type loaded yet
-    ServerTypeFactoryMap::Iterator it = mServerTypeFactoryMap.find( identifier );
-    if ( it == mServerTypeFactoryMap.end() ) // no factory for this type
-      return 0;
+    ServerTypeMap::ConstIterator serverIt = mServerTypeMap.find(identifier);
+    if(serverIt == mServerTypeMap.end())      // none server type loaded yet
+    {
+        ServerTypeFactoryMap::Iterator it = mServerTypeFactoryMap.find(identifier);
+        if(it == mServerTypeFactoryMap.end())    // no factory for this type
+            return 0;
 
-    ServerType *serverType = it.data()->serverType( 0, identifier.latin1() );
-    if ( !serverType )
-      return 0;
+        ServerType *serverType = it.data()->serverType(0, identifier.latin1());
+        if(!serverType)
+            return 0;
 
-    mServerTypeMap.insert( identifier, serverType );
-  }
+        mServerTypeMap.insert(identifier, serverType);
+    }
 
-  return mServerTypeMap[ identifier ];
+    return mServerTypeMap[ identifier ];
 }
 
 void ServerTypeManager::loadPlugins()
 {
-  mServerTypeMap.clear();
-  mServerTypeFactoryMap.clear();
+    mServerTypeMap.clear();
+    mServerTypeFactoryMap.clear();
 
-  ServerTypeFactory *factory = new EGroupwareHandlerFactory();
-  mServerTypeFactoryMap.insert( factory->identifier(), factory );
+    ServerTypeFactory *factory = new EGroupwareHandlerFactory();
+    mServerTypeFactoryMap.insert(factory->identifier(), factory);
 }
 
 #include "servertypemanager.moc"

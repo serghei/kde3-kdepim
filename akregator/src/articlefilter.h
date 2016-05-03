@@ -45,255 +45,259 @@ class AbstractAction;
 class AbstractMatcher;
 class Criterion;
 
-/** an article filter, basically a matcher and an action. 
+/** an article filter, basically a matcher and an action.
  *  @author Frank Osterfeld
  */
-class KDE_EXPORT ArticleFilter
-{
-    public:
-
-        ArticleFilter();
-        ArticleFilter(const AbstractMatcher& matcher, const AbstractAction& action);
-        ArticleFilter(const ArticleFilter& other);
-
-        virtual ~ArticleFilter();
-
-        /** checks whether an article matches the matcher, and executes the action if so */
-        void applyTo(Article& article) const;
-
-        
-        
-        /** name of the filter, for display in filter list */
-        const QString& name() const;
-        void setName(const QString& name);
-
-        int id() const;
-
-        AbstractMatcher* matcher() const;
-        void setMatcher(const AbstractMatcher& matcher);
-
-        AbstractAction* action() const;
-        void setAction(const AbstractAction& action);
-
-        ArticleFilter& operator=(const ArticleFilter& other);
-        bool operator==(const ArticleFilter& other) const;
-
-        void writeConfig(KConfig* config) const;
-        void readConfig(KConfig* config);
-
-    private:
-        class ArticleFilterPrivate;
-        ArticleFilterPrivate* d;
-    
-};
-
-class KDE_EXPORT ArticleFilterList : public QValueList<ArticleFilter>
-{
+class KDE_EXPORT ArticleFilter {
 public:
-    
-    void writeConfig(KConfig* config) const;
-    void readConfig(KConfig* config);
+
+    ArticleFilter();
+    ArticleFilter(const AbstractMatcher &matcher, const AbstractAction &action);
+    ArticleFilter(const ArticleFilter &other);
+
+    virtual ~ArticleFilter();
+
+    /** checks whether an article matches the matcher, and executes the action if so */
+    void applyTo(Article &article) const;
+
+
+
+    /** name of the filter, for display in filter list */
+    const QString &name() const;
+    void setName(const QString &name);
+
+    int id() const;
+
+    AbstractMatcher *matcher() const;
+    void setMatcher(const AbstractMatcher &matcher);
+
+    AbstractAction *action() const;
+    void setAction(const AbstractAction &action);
+
+    ArticleFilter &operator=(const ArticleFilter &other);
+    bool operator==(const ArticleFilter &other) const;
+
+    void writeConfig(KConfig *config) const;
+    void readConfig(KConfig *config);
+
+private:
+    class ArticleFilterPrivate;
+    ArticleFilterPrivate *d;
+
 };
 
-/** Abstract base class for matchers, a matcher just takes an article and checks whether the article matches some criterion or not. 
+class KDE_EXPORT ArticleFilterList : public QValueList<ArticleFilter> {
+public:
+
+    void writeConfig(KConfig *config) const;
+    void readConfig(KConfig *config);
+};
+
+/** Abstract base class for matchers, a matcher just takes an article and checks whether the article matches some criterion or not.
  *  @author Frank Osterfeld
  */
-class AbstractMatcher
-{
-    public:
+class AbstractMatcher {
+public:
 
-        virtual ~AbstractMatcher() {}
-        /** returns a copy of the matcher */
-        virtual AbstractMatcher* clone() const = 0;
+    virtual ~AbstractMatcher() {}
+    /** returns a copy of the matcher */
+    virtual AbstractMatcher *clone() const = 0;
 
-        virtual bool matches(const Article& article) const = 0;
+    virtual bool matches(const Article &article) const = 0;
 
-        virtual void writeConfig(KConfig* config) const = 0;
-        virtual void readConfig(KConfig* config) = 0;
+    virtual void writeConfig(KConfig *config) const = 0;
+    virtual void readConfig(KConfig *config) = 0;
 
-        virtual bool operator==(const AbstractMatcher&) const = 0;
-        virtual bool operator!=(const AbstractMatcher &other) const = 0;
+    virtual bool operator==(const AbstractMatcher &) const = 0;
+    virtual bool operator!=(const AbstractMatcher &other) const = 0;
 };
 
-class TagMatcher : public AbstractMatcher
-{
-    public:
+class TagMatcher : public AbstractMatcher {
+public:
 
-        TagMatcher();
-        TagMatcher(const QString& tagID);
-        TagMatcher(const TagMatcher& other);
-        
-        virtual ~TagMatcher();
-        
+    TagMatcher();
+    TagMatcher(const QString &tagID);
+    TagMatcher(const TagMatcher &other);
 
-        virtual bool matches(const Article& article) const;
+    virtual ~TagMatcher();
 
-        virtual TagMatcher* clone() const;
 
-        virtual void writeConfig(KConfig* config) const;
-        virtual void readConfig(KConfig* config);
+    virtual bool matches(const Article &article) const;
 
-        TagMatcher& operator=(const TagMatcher& other);
-        virtual bool operator==(const AbstractMatcher&) const;
-        virtual bool operator!=(const AbstractMatcher &other) const;
-        
-    private:
-    
-         class TagMatcherPrivate;
-         TagMatcherPrivate* d;
+    virtual TagMatcher *clone() const;
+
+    virtual void writeConfig(KConfig *config) const;
+    virtual void readConfig(KConfig *config);
+
+    TagMatcher &operator=(const TagMatcher &other);
+    virtual bool operator==(const AbstractMatcher &) const;
+    virtual bool operator!=(const AbstractMatcher &other) const;
+
+private:
+
+    class TagMatcherPrivate;
+    TagMatcherPrivate *d;
 };
 
-class AbstractAction
-{
-    public:
-        virtual void exec(Article& article) = 0;
+class AbstractAction {
+public:
+    virtual void exec(Article &article) = 0;
 
-        virtual void writeConfig(KConfig* config) const = 0;
-        virtual void readConfig(KConfig* config) = 0;
+    virtual void writeConfig(KConfig *config) const = 0;
+    virtual void readConfig(KConfig *config) = 0;
 
-        virtual AbstractAction* clone() const = 0;
-        virtual bool operator==(const AbstractAction& other) = 0;
+    virtual AbstractAction *clone() const = 0;
+    virtual bool operator==(const AbstractAction &other) = 0;
 };
 
-class DeleteAction : public AbstractAction
-{
-    public:
-        virtual void exec(Article& article);
-        
-        virtual void writeConfig(KConfig* config) const;
-        virtual void readConfig(KConfig* config);
+class DeleteAction : public AbstractAction {
+public:
+    virtual void exec(Article &article);
 
-        virtual DeleteAction* clone() const { return new DeleteAction; }
-        virtual bool operator==(const AbstractAction& other);
+    virtual void writeConfig(KConfig *config) const;
+    virtual void readConfig(KConfig *config);
+
+    virtual DeleteAction *clone() const
+    {
+        return new DeleteAction;
+    }
+    virtual bool operator==(const AbstractAction &other);
 };
 
-class SetStatusAction : public AbstractAction
-{
-    public:
-        SetStatusAction(int status=0);
-        
-        virtual void exec(Article& article);
-        
-        int status() const;
-        void setStatus(int status);
+class SetStatusAction : public AbstractAction {
+public:
+    SetStatusAction(int status = 0);
 
-        virtual void writeConfig(KConfig* config) const;
-        virtual void readConfig(KConfig* config);
+    virtual void exec(Article &article);
 
-        virtual SetStatusAction* clone() const { return new SetStatusAction(*this); }
-        virtual bool operator==(const AbstractAction& other);
+    int status() const;
+    void setStatus(int status);
 
-    private:
-        int m_status;
+    virtual void writeConfig(KConfig *config) const;
+    virtual void readConfig(KConfig *config);
+
+    virtual SetStatusAction *clone() const
+    {
+        return new SetStatusAction(*this);
+    }
+    virtual bool operator==(const AbstractAction &other);
+
+private:
+    int m_status;
 };
 
-class AssignTagAction : public AbstractAction
-{
-    public:
+class AssignTagAction : public AbstractAction {
+public:
 
-        AssignTagAction(const QString& tagID=QString::null);
-        virtual void exec(Article& article);
-                
-        const QString& tagID() const;
-        void setTagID(const QString& tagID);
+    AssignTagAction(const QString &tagID = QString::null);
+    virtual void exec(Article &article);
 
-        virtual void writeConfig(KConfig* config) const;
-        virtual void readConfig(KConfig* config);
+    const QString &tagID() const;
+    void setTagID(const QString &tagID);
 
-        virtual AssignTagAction* clone() const { return new AssignTagAction(*this); }
-        virtual bool operator==(const AbstractAction& other);
+    virtual void writeConfig(KConfig *config) const;
+    virtual void readConfig(KConfig *config);
 
-    private:
-        QString m_tagID;
+    virtual AssignTagAction *clone() const
+    {
+        return new AssignTagAction(*this);
+    }
+    virtual bool operator==(const AbstractAction &other);
+
+private:
+    QString m_tagID;
 };
 
 /** a powerful matcher supporting multiple criterions, which can be combined      via logical OR or AND
  *  @author Frerich Raabe
  */
-class KDE_EXPORT ArticleMatcher : public AbstractMatcher
-{
-    public:
+class KDE_EXPORT ArticleMatcher : public AbstractMatcher {
+public:
 
-        enum Association {
-            None, LogicalAnd, LogicalOr
-        };
+    enum Association
+    {
+        None, LogicalAnd, LogicalOr
+    };
 
-        ArticleMatcher();
-        ArticleMatcher( const QValueList<Criterion> &criteria, Association assoc);
-        
-        ArticleMatcher(const ArticleMatcher& other);
-        virtual ~ArticleMatcher();
+    ArticleMatcher();
+    ArticleMatcher(const QValueList<Criterion> &criteria, Association assoc);
 
-        /**
-         * returns whether the matcher matches all articles anyway (empty criteria list),
-         * so there is no need to call matches() at all.
-         */
-        virtual bool matchesAll() const;
-        
-        ArticleMatcher& operator=(const ArticleMatcher& other);
-        virtual ArticleMatcher* clone() const;
-        virtual bool matches(const Article &article) const;
-        virtual bool operator==(const AbstractMatcher &other) const;
-        virtual bool operator!=(const AbstractMatcher &other) const;
-        
-        
-        virtual void writeConfig(KConfig* config) const;
-        virtual void readConfig(KConfig* config);
+    ArticleMatcher(const ArticleMatcher &other);
+    virtual ~ArticleMatcher();
 
-    private:
+    /**
+     * returns whether the matcher matches all articles anyway (empty criteria list),
+     * so there is no need to call matches() at all.
+     */
+    virtual bool matchesAll() const;
 
-        static Association stringToAssociation(const QString& assocStr);
-        static QString associationToString(Association association);
+    ArticleMatcher &operator=(const ArticleMatcher &other);
+    virtual ArticleMatcher *clone() const;
+    virtual bool matches(const Article &article) const;
+    virtual bool operator==(const AbstractMatcher &other) const;
+    virtual bool operator!=(const AbstractMatcher &other) const;
 
-        bool anyCriterionMatches( const Article &a ) const;
-        bool allCriteriaMatch( const Article &a ) const;
 
-        QValueList<Criterion> m_criteria;
-        Association m_association;
+    virtual void writeConfig(KConfig *config) const;
+    virtual void readConfig(KConfig *config);
+
+private:
+
+    static Association stringToAssociation(const QString &assocStr);
+    static QString associationToString(Association association);
+
+    bool anyCriterionMatches(const Article &a) const;
+    bool allCriteriaMatch(const Article &a) const;
+
+    QValueList<Criterion> m_criteria;
+    Association m_association;
 };
 
 /** Criterion for ArticleMatcher
  *  @author Frerich Raabe
  */
-class KDE_EXPORT Criterion
-{
-    public:
+class KDE_EXPORT Criterion {
+public:
 
-        enum Subject {
-            Title, Description, Author, Link, Status, KeepFlag
-        };
+    enum Subject
+    {
+        Title, Description, Author, Link, Status, KeepFlag
+    };
 
-        static QString subjectToString(Subject subj);
-        static Subject stringToSubject(const QString& subjStr);
+    static QString subjectToString(Subject subj);
+    static Subject stringToSubject(const QString &subjStr);
 
-        enum Predicate {
-            Contains = 0x01,
-            Equals = 0x02,
-            Matches = 0x03,
-            Negation = 0x80
-        };
+    enum Predicate
+    {
+        Contains = 0x01,
+        Equals = 0x02,
+        Matches = 0x03,
+        Negation = 0x80
+    };
 
-        static QString predicateToString(Predicate pred);
-        static Predicate stringToPredicate(const QString& predStr);
-    
-        Criterion();
-        Criterion( Subject subject, Predicate predicate, const QVariant &object );
-        
-        bool satisfiedBy( const Article &article ) const;
+    static QString predicateToString(Predicate pred);
+    static Predicate stringToPredicate(const QString &predStr);
 
-        virtual void writeConfig(KConfig* config) const;
-        virtual void readConfig(KConfig* config);
+    Criterion();
+    Criterion(Subject subject, Predicate predicate, const QVariant &object);
 
-        Subject subject() const;
-        Predicate predicate() const;
-        QVariant object() const;
-        bool operator==(const Criterion& other) const
-        { return m_subject == other.m_subject && m_predicate == other.m_predicate && m_object == other.m_object; }
-        
-    private:
-        Subject m_subject;
-        Predicate m_predicate;
-        QVariant m_object;
+    bool satisfiedBy(const Article &article) const;
+
+    virtual void writeConfig(KConfig *config) const;
+    virtual void readConfig(KConfig *config);
+
+    Subject subject() const;
+    Predicate predicate() const;
+    QVariant object() const;
+    bool operator==(const Criterion &other) const
+    {
+        return m_subject == other.m_subject && m_predicate == other.m_predicate && m_object == other.m_object;
+    }
+
+private:
+    Subject m_subject;
+    Predicate m_predicate;
+    QVariant m_object;
 };
 
 } // namespace Filters

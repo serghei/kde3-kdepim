@@ -30,7 +30,7 @@
 #define kMagicNumber ((DwUint32) 0x22222222L)
 
 
-const char* const DwMessageComponent::sClassName = "DwMessageComponent";
+const char *const DwMessageComponent::sClassName = "DwMessageComponent";
 
 
 DwMessageComponent::DwMessageComponent()
@@ -44,8 +44,8 @@ DwMessageComponent::DwMessageComponent()
 }
 
 
-DwMessageComponent::DwMessageComponent(const DwMessageComponent& aCmp)
-  : mString(aCmp.mString)
+DwMessageComponent::DwMessageComponent(const DwMessageComponent &aCmp)
+    : mString(aCmp.mString)
 {
     mMagicNumber = (DwUint32) kMagicNumber;
     mIsModified = aCmp.mIsModified;
@@ -56,9 +56,9 @@ DwMessageComponent::DwMessageComponent(const DwMessageComponent& aCmp)
 }
 
 
-DwMessageComponent::DwMessageComponent(const DwString& aStr,
-    DwMessageComponent* aParent)
-  : mString(aStr)
+DwMessageComponent::DwMessageComponent(const DwString &aStr,
+                                       DwMessageComponent *aParent)
+    : mString(aStr)
 {
     mMagicNumber = (DwUint32) kMagicNumber;
     mIsModified = 0;
@@ -72,10 +72,11 @@ DwMessageComponent::DwMessageComponent(const DwString& aStr,
 DwMessageComponent::~DwMessageComponent()
 {
 #if defined (DW_DEBUG_VERSION) || defined (DW_DEVELOPMENT_VERSION)
-    if (mMagicNumber != (DwUint32) kMagicNumber) {
+    if(mMagicNumber != (DwUint32) kMagicNumber)
+    {
         std::cerr << "Bad value for 'this' in destructor" << std::endl;
         std::cerr << "(Possibly 'delete' was called twice for same object)"
-				<< std::endl;
+                  << std::endl;
         abort();
     }
     mMagicNumber = 0;
@@ -83,10 +84,10 @@ DwMessageComponent::~DwMessageComponent()
 }
 
 
-const DwMessageComponent&
-DwMessageComponent::operator = (const DwMessageComponent& aCmp)
+const DwMessageComponent &
+DwMessageComponent::operator = (const DwMessageComponent &aCmp)
 {
-    if (this == &aCmp) return *this;
+    if(this == &aCmp) return *this;
     mString = aCmp.mString;
     mIsModified = aCmp.mIsModified;
     mId = aCmp.mId;
@@ -94,39 +95,41 @@ DwMessageComponent::operator = (const DwMessageComponent& aCmp)
 }
 
 
-void DwMessageComponent::FromString(const DwString& aStr)
+void DwMessageComponent::FromString(const DwString &aStr)
 {
     mString = aStr;
     mIsModified = DwFalse;
-    if (mParent != 0) {
+    if(mParent != 0)
+    {
         mParent->SetModified();
     }
 }
 
 
-void DwMessageComponent::FromString(const char* aCstr)
+void DwMessageComponent::FromString(const char *aCstr)
 {
     assert(aCstr != 0);
     mString = aCstr;
-    if (mParent != 0) {
+    if(mParent != 0)
+    {
         mParent->SetModified();
     }
 }
 
 
-const DwString& DwMessageComponent::AsString()
+const DwString &DwMessageComponent::AsString()
 {
     return mString;
 }
 
 
-DwMessageComponent* DwMessageComponent::Parent()
+DwMessageComponent *DwMessageComponent::Parent()
 {
     return mParent;
 }
 
 
-void DwMessageComponent::SetParent(DwMessageComponent* aParent)
+void DwMessageComponent::SetParent(DwMessageComponent *aParent)
 {
     mParent = aParent;
 }
@@ -141,8 +144,9 @@ DwBool DwMessageComponent::IsModified() const
 void DwMessageComponent::SetModified()
 {
     mIsModified = 1;
-    if (mParent != 0) {
-      mParent->SetModified();
+    if(mParent != 0)
+    {
+        mParent->SetModified();
     }
 }
 
@@ -153,7 +157,7 @@ int DwMessageComponent::ClassId() const
 }
 
 
-const char* DwMessageComponent::ClassName() const
+const char *DwMessageComponent::ClassName() const
 {
     return mClassName;
 }
@@ -161,107 +165,110 @@ const char* DwMessageComponent::ClassName() const
 
 int DwMessageComponent::ObjectId() const
 {
-    return (int) (long) this;
+    return (int)(long) this;
 }
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwMessageComponent::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwMessageComponent::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwMessageComponent::PrintDebugInfo(std::ostream& , int ) const {}
+void DwMessageComponent::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwMessageComponent::_PrintDebugInfo(std::ostream& aStrm) const
+void DwMessageComponent::_PrintDebugInfo(std::ostream &aStrm) const
 {
     aStrm << "ObjectId:         " << ObjectId() << '\n';
     aStrm << "ClassId:          ";
-	switch (ClassId()) {
-	case kCidError:
-		aStrm << "kCidError";
-		break;
-	case kCidUnknown:
-        aStrm << "kCidUnknown";
-		break;
-	case kCidAddress:
-        aStrm << "kCidAddress";
-		break;
-	case kCidAddressList:
-        aStrm << "kCidAddressList";
-		break;
-	case kCidBody:
-        aStrm << "kCidBody";
-		break;
-	case kCidBodyPart:
-        aStrm << "kCidBodyPart";
-		break;
-	case kCidDispositionType:
-        aStrm << "kCidDispositionType";
-		break;
-	case kCidMechanism:
-        aStrm << "kCidMechanism";
-		break;
-	case kCidMediaType:
-        aStrm << "kCidMediaType";
-		break;
-	case kCidParameter:
-        aStrm << "kCidParameter";
-		break;
-	case kCidDateTime:
-        aStrm << "kCidDateTime";
-		break;
-	case kCidEntity:
-        aStrm << "kCidEntity";
-		break;
-	case kCidField:
-        aStrm << "kCidField";
-		break;
-	case kCidFieldBody:
-        aStrm << "kCidFieldBody";
-		break;
-	case kCidGroup:
-        aStrm << "kCidGroup";
-		break;
-	case kCidHeaders:
-        aStrm << "kCidHeaders";
-		break;
-	case kCidMailbox:
-        aStrm << "kCidMailbox";
-		break;
-	case kCidMailboxList:
-        aStrm << "kCidMailboxList";
-		break;
-	case kCidMessage:
-        aStrm << "kCidMessage";
-		break;
-	case kCidMessageComponent:
-        aStrm << "kCidMessageComponent";
-		break;
-	case kCidMsgId:
-        aStrm << "kCidMsgId";
-		break;
-	case kCidText:
-        aStrm << "kCidText";
-		break;
-	}
+    switch(ClassId())
+    {
+        case kCidError:
+            aStrm << "kCidError";
+            break;
+        case kCidUnknown:
+            aStrm << "kCidUnknown";
+            break;
+        case kCidAddress:
+            aStrm << "kCidAddress";
+            break;
+        case kCidAddressList:
+            aStrm << "kCidAddressList";
+            break;
+        case kCidBody:
+            aStrm << "kCidBody";
+            break;
+        case kCidBodyPart:
+            aStrm << "kCidBodyPart";
+            break;
+        case kCidDispositionType:
+            aStrm << "kCidDispositionType";
+            break;
+        case kCidMechanism:
+            aStrm << "kCidMechanism";
+            break;
+        case kCidMediaType:
+            aStrm << "kCidMediaType";
+            break;
+        case kCidParameter:
+            aStrm << "kCidParameter";
+            break;
+        case kCidDateTime:
+            aStrm << "kCidDateTime";
+            break;
+        case kCidEntity:
+            aStrm << "kCidEntity";
+            break;
+        case kCidField:
+            aStrm << "kCidField";
+            break;
+        case kCidFieldBody:
+            aStrm << "kCidFieldBody";
+            break;
+        case kCidGroup:
+            aStrm << "kCidGroup";
+            break;
+        case kCidHeaders:
+            aStrm << "kCidHeaders";
+            break;
+        case kCidMailbox:
+            aStrm << "kCidMailbox";
+            break;
+        case kCidMailboxList:
+            aStrm << "kCidMailboxList";
+            break;
+        case kCidMessage:
+            aStrm << "kCidMessage";
+            break;
+        case kCidMessageComponent:
+            aStrm << "kCidMessageComponent";
+            break;
+        case kCidMsgId:
+            aStrm << "kCidMsgId";
+            break;
+        case kCidText:
+            aStrm << "kCidText";
+            break;
+    }
     aStrm << '\n';
     aStrm << "ClassName:        " << ClassName() << '\n';
     aStrm << "String:           " << mString << '\n';
     aStrm << "IsModified:       " << (IsModified() ? "True" : "False") << '\n';
     aStrm << "Parent ObjectId:  ";
-    if (mParent) {
+    if(mParent)
+    {
         aStrm << mParent->ObjectId() << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
 }
 #else
-void DwMessageComponent::_PrintDebugInfo(std::ostream& ) const {}
+void DwMessageComponent::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 

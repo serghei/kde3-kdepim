@@ -28,29 +28,28 @@
 class QString;
 
 namespace KPIM {
-  class AddresseeView;
+class AddresseeView;
 }
 
 namespace KMail {
 
-  class VCardViewer : public KDialogBase
-  {
-     Q_OBJECT
-     public:
-       VCardViewer(QWidget *parent, const QString& vCard, const char* name);
-       virtual ~VCardViewer();
+class VCardViewer : public KDialogBase {
+    Q_OBJECT
+public:
+    VCardViewer(QWidget *parent, const QString &vCard, const char *name);
+    virtual ~VCardViewer();
 
-     protected:
-       virtual void slotUser1();
-       virtual void slotUser2();
-       virtual void slotUser3();
+protected:
+    virtual void slotUser1();
+    virtual void slotUser2();
+    virtual void slotUser3();
 
-     private:
-       KPIM::AddresseeView *  mAddresseeView;
-       KABC::Addressee::List  mAddresseeList;
+private:
+    KPIM::AddresseeView   *mAddresseeView;
+    KABC::Addressee::List  mAddresseeList;
 
-       QValueListIterator<KABC::Addressee> itAddresseeList;
-  };
+    QValueListIterator<KABC::Addressee> itAddresseeList;
+};
 
 }
 

@@ -42,51 +42,59 @@ class KIconView;
 class KPilotInstaller;
 class FileInstaller;
 
-class FileInstallWidget : public PilotComponent
-{
-Q_OBJECT
+class FileInstallWidget : public PilotComponent {
+    Q_OBJECT
 
 public:
-	FileInstallWidget(QWidget* parent, const QString& dbPath);
-	virtual ~FileInstallWidget();
+    FileInstallWidget(QWidget *parent, const QString &dbPath);
+    virtual ~FileInstallWidget();
 
-	// Pilot Component Methods:
-	void showComponent();
-	bool preHotSync(QString &);
-	void postHotSync();
+    // Pilot Component Methods:
+    void showComponent();
+    bool preHotSync(QString &);
+    void postHotSync();
 
 
 signals:
-	void fileInstallWidgetDone();
+    void fileInstallWidgetDone();
 
 protected:
-	void setSaveFileList(bool saveIt) { fSaveFileList = saveIt; }
-	bool getSaveFileList() { return fSaveFileList; }
+    void setSaveFileList(bool saveIt)
+    {
+        fSaveFileList = saveIt;
+    }
+    bool getSaveFileList()
+    {
+        return fSaveFileList;
+    }
 
-	/* virtual */ void dragEnterEvent(QDragEnterEvent* event);
-	/* virtual */ void dropEvent(QDropEvent* drop);
-	/* virtual */ bool eventFilter (QObject *watched, QEvent *event );
+    /* virtual */ void dragEnterEvent(QDragEnterEvent *event);
+    /* virtual */ void dropEvent(QDropEvent *drop);
+    /* virtual */ bool eventFilter(QObject *watched, QEvent *event);
 
     void contextMenu(QMouseEvent *event);
 
-	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
+    KPilotInstaller *getPilotInstallerApp()
+    {
+        return fKPilotInstaller;
+    }
 
 private:
-	KIconView  *fIconView;
-	bool        fSaveFileList;
+    KIconView  *fIconView;
+    bool        fSaveFileList;
 
-	KPilotInstaller* fKPilotInstaller;
-	FileInstaller *fInstaller;
-	QPushButton *clearButton,*addButton;
+    KPilotInstaller *fKPilotInstaller;
+    FileInstaller *fInstaller;
+    QPushButton *clearButton, *addButton;
 
 protected slots:
-	void slotClearButton();
-	void slotAddFile();
+    void slotClearButton();
+    void slotAddFile();
 
-	void slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & lst);
+    void slotDropEvent(QDropEvent *drop, const QValueList<QIconDragItem> &lst);
 
 public slots:
-	void refreshFileInstallList();
+    void refreshFileInstallList();
 };
 
 #endif

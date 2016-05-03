@@ -38,71 +38,66 @@ class KMMessagePart;
 
 namespace KMail {
 
-  class AttachmentStrategy;
+class AttachmentStrategy;
 
-  // Base class
-  class BodyVisitor
-  {
-    public:
-      BodyVisitor();
-      virtual ~BodyVisitor();
+// Base class
+class BodyVisitor {
+public:
+    BodyVisitor();
+    virtual ~BodyVisitor();
 
-      /** Register the parts that should be visited */
-      void visit( KMMessagePart * part );
-      void visit( QPtrList<KMMessagePart> & list );
+    /** Register the parts that should be visited */
+    void visit(KMMessagePart *part);
+    void visit(QPtrList<KMMessagePart> &list);
 
-      /** Returns a list of parts that should be loaded */
-      QPtrList<KMMessagePart> partsToLoad();
+    /** Returns a list of parts that should be loaded */
+    QPtrList<KMMessagePart> partsToLoad();
 
-      /** Decides whether a part should be loaded.
-          This needs to be implemented by a subclass */
-      virtual bool addPartToList( KMMessagePart * part ) = 0;
+    /** Decides whether a part should be loaded.
+        This needs to be implemented by a subclass */
+    virtual bool addPartToList(KMMessagePart *part) = 0;
 
-    protected:
-      /** 
-       * Checks if one of the parents needs loaded children
-       * This is e.g. needed for multipart/signed where all parts have to be loaded 
-       */
-      static bool parentNeedsLoading( KMMessagePart * part );
-      
-    protected:
-      QPtrList<KMMessagePart> mParts;
-      QStringList mBasicList;
-  };
+protected:
+    /**
+     * Checks if one of the parents needs loaded children
+     * This is e.g. needed for multipart/signed where all parts have to be loaded
+     */
+    static bool parentNeedsLoading(KMMessagePart *part);
 
-  // Factory to create a visitor according to the Attachment Strategy 
-  class BodyVisitorFactory
-  {
-    public:
-      static BodyVisitor* getVisitor( const AttachmentStrategy* strategy );
-  };
+protected:
+    QPtrList<KMMessagePart> mParts;
+    QStringList mBasicList;
+};
 
-  // Visitor for smart attachment display
-  class BodyVisitorSmart: public BodyVisitor
-  {
-    public:
-      BodyVisitorSmart();
+// Factory to create a visitor according to the Attachment Strategy
+class BodyVisitorFactory {
+public:
+    static BodyVisitor *getVisitor(const AttachmentStrategy *strategy);
+};
 
-      bool addPartToList( KMMessagePart * part );
-  };
-  
-  // Visitor for inline attachment display
-  class BodyVisitorInline: public BodyVisitor
-  {
-    public:
-      BodyVisitorInline();
+// Visitor for smart attachment display
+class BodyVisitorSmart: public BodyVisitor {
+public:
+    BodyVisitorSmart();
 
-      bool addPartToList( KMMessagePart * part );
-  };
-  
-  // Visitor for hidden attachment display
-  class BodyVisitorHidden: public BodyVisitor
-  {
-    public:
-      BodyVisitorHidden();
+    bool addPartToList(KMMessagePart *part);
+};
 
-      bool addPartToList( KMMessagePart * part );
-  };
+// Visitor for inline attachment display
+class BodyVisitorInline: public BodyVisitor {
+public:
+    BodyVisitorInline();
+
+    bool addPartToList(KMMessagePart *part);
+};
+
+// Visitor for hidden attachment display
+class BodyVisitorHidden: public BodyVisitor {
+public:
+    BodyVisitorHidden();
+
+    bool addPartToList(KMMessagePart *part);
+};
 
 }
 

@@ -37,37 +37,40 @@
 static const char kwatchgnupg_version[] = "1.0";
 static const char description[] = I18N_NOOP("GnuPG log viewer");
 
-struct about_data {
-  const char * name;
-  const char * desc;
-  const char * email;
-  const char * web;
+struct about_data
+{
+    const char *name;
+    const char *desc;
+    const char *email;
+    const char *web;
 };
 
-static const about_data authors[] = {
-  { "Steffen Hansen", I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
+static const about_data authors[] =
+{
+    { "Steffen Hansen", I18N_NOOP("Original Author"), "hansen@kde.org", 0 },
 };
 
 #if 0
 // can't create zero size array - doesn't compile
-static const about_data credits[] = {
-  // PENDING(steffen) add stuff
+static const about_data credits[] =
+{
+    // PENDING(steffen) add stuff
 };
 #endif
 
 AboutData::AboutData()
-  : KAboutData( "kwatchgnupg", I18N_NOOP("KWatchGnuPG"),
-		kwatchgnupg_version, description, License_GPL,
-		"(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n" )
+    : KAboutData("kwatchgnupg", I18N_NOOP("KWatchGnuPG"),
+                 kwatchgnupg_version, description, License_GPL,
+                 "(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n")
 {
-  using ::authors;
-  //using ::credits;
-  for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-    addAuthor( authors[i].name, authors[i].desc,
-	       authors[i].email, authors[i].web );
+    using ::authors;
+    //using ::credits;
+    for(unsigned int i = 0 ; i < sizeof authors / sizeof * authors ; ++i)
+        addAuthor(authors[i].name, authors[i].desc,
+                  authors[i].email, authors[i].web);
 #if 0
-  for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
-    addCredit( credits[i].name, credits[i].desc,
-	       credits[i].email, credits[i].web );
+    for(unsigned int i = 0 ; i < sizeof credits / sizeof * credits ; ++i)
+        addCredit(credits[i].name, credits[i].desc,
+                  credits[i].email, credits[i].web);
 #endif
 }

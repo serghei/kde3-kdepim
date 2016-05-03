@@ -27,146 +27,146 @@ using namespace QSync;
 
 Environment::Environment()
 {
-  mEnvironment = osync_env_new();
+    mEnvironment = osync_env_new();
 }
 
 Environment::~Environment()
 {
-  osync_env_free( mEnvironment );
+    osync_env_free(mEnvironment);
 }
 
 Environment::GroupIterator Environment::groupBegin()
 {
-  GroupIterator it( this );
-  it.mPos = 0;
+    GroupIterator it(this);
+    it.mPos = 0;
 
-  return it;
+    return it;
 }
 
 Environment::GroupIterator Environment::groupEnd()
 {
-  GroupIterator it( this );
-  it.mPos = groupCount();
+    GroupIterator it(this);
+    it.mPos = groupCount();
 
-  return it;
+    return it;
 }
 
 Environment::PluginIterator Environment::pluginBegin()
 {
-  PluginIterator it( this );
-  it.mPos = 0;
+    PluginIterator it(this);
+    it.mPos = 0;
 
-  return it;
+    return it;
 }
 
 Environment::PluginIterator Environment::pluginEnd()
 {
-  PluginIterator it( this );
-  it.mPos = pluginCount();
+    PluginIterator it(this);
+    it.mPos = pluginCount();
 
-  return it;
+    return it;
 }
 
 Result Environment::initialize()
 {
-  OSyncError *error = 0;
-  if ( !osync_env_initialize( mEnvironment, &error ) )
-    return Result( &error );
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osync_env_initialize(mEnvironment, &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
 Result Environment::finalize()
 {
-  OSyncError *error = 0;
-  if ( !osync_env_finalize( mEnvironment, &error ) )
-    return Result( &error);
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osync_env_finalize(mEnvironment, &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
 int Environment::groupCount() const
 {
-  return osync_env_num_groups( mEnvironment );
+    return osync_env_num_groups(mEnvironment);
 }
 
-Group Environment::groupAt( int pos ) const
+Group Environment::groupAt(int pos) const
 {
-  Group group;
+    Group group;
 
-  if ( pos < 0 || pos >= groupCount() )
-    return group;
+    if(pos < 0 || pos >= groupCount())
+        return group;
 
-  OSyncGroup *ogroup = osync_env_nth_group( mEnvironment, pos );
-  group.mGroup = ogroup;
-
-  return group;
-}
-
-Group Environment::groupByName( const QString &name ) const
-{
-  Group group;
-
-  OSyncGroup *ogroup = osync_env_find_group( mEnvironment, name.latin1() );
-  if ( ogroup )
+    OSyncGroup *ogroup = osync_env_nth_group(mEnvironment, pos);
     group.mGroup = ogroup;
 
-  return group;
+    return group;
+}
+
+Group Environment::groupByName(const QString &name) const
+{
+    Group group;
+
+    OSyncGroup *ogroup = osync_env_find_group(mEnvironment, name.latin1());
+    if(ogroup)
+        group.mGroup = ogroup;
+
+    return group;
 }
 
 Group Environment::addGroup()
 {
-  Group group;
+    Group group;
 
-  OSyncGroup *ogroup = osync_group_new( mEnvironment );
-  if ( ogroup )
-    group.mGroup = ogroup;
+    OSyncGroup *ogroup = osync_group_new(mEnvironment);
+    if(ogroup)
+        group.mGroup = ogroup;
 
-  return group;
+    return group;
 }
 
-Result Environment::removeGroup( const Group &group )
+Result Environment::removeGroup(const Group &group)
 {
-  OSyncError *error = 0;
-  if ( !osync_group_delete( group.mGroup, &error ) )
-    return Result( &error );
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osync_group_delete(group.mGroup, &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
 int Environment::pluginCount() const
 {
-  return osync_env_num_plugins( mEnvironment );
+    return osync_env_num_plugins(mEnvironment);
 }
 
-Plugin Environment::pluginAt( int pos ) const
+Plugin Environment::pluginAt(int pos) const
 {
-  Plugin plugin;
+    Plugin plugin;
 
-  if ( pos < 0 || pos >= pluginCount() )
-    return plugin;
+    if(pos < 0 || pos >= pluginCount())
+        return plugin;
 
-  OSyncPlugin *oplugin = osync_env_nth_plugin( mEnvironment, pos );
-  plugin.mPlugin = oplugin;
-
-  return plugin;
-}
-
-Plugin Environment::pluginByName( const QString &name ) const
-{
-  Plugin plugin;
-
-  OSyncPlugin *oplugin = osync_env_find_plugin( mEnvironment, name.latin1() );
-  if ( oplugin )
+    OSyncPlugin *oplugin = osync_env_nth_plugin(mEnvironment, pos);
     plugin.mPlugin = oplugin;
 
-  return plugin;
+    return plugin;
+}
+
+Plugin Environment::pluginByName(const QString &name) const
+{
+    Plugin plugin;
+
+    OSyncPlugin *oplugin = osync_env_find_plugin(mEnvironment, name.latin1());
+    if(oplugin)
+        plugin.mPlugin = oplugin;
+
+    return plugin;
 }
 
 Conversion Environment::conversion() const
 {
-  Conversion conversion;
-  conversion.mEnvironment = mEnvironment;
+    Conversion conversion;
+    conversion.mEnvironment = mEnvironment;
 
-  return conversion;
+    return conversion;
 }

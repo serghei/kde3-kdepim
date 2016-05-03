@@ -40,71 +40,71 @@
 #include "vcal-setupbase.h"
 
 VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
-	fConfigWidget(new VCalWidget(w))
+    ConduitConfigBase(w, n),
+    fConfigWidget(new VCalWidget(w))
 {
-	FUNCTIONSETUP;
-	fWidget=fConfigWidget;
+    FUNCTIONSETUP;
+    fWidget = fConfigWidget;
 
-	fConfigWidget->fCalendarFile->setMode(KFile::File);
-	fConfigWidget->fCalendarFile->setFilter(CSL1("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)"));
+    fConfigWidget->fCalendarFile->setMode(KFile::File);
+    fConfigWidget->fCalendarFile->setFilter(CSL1("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)"));
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fSyncDestination,SIGNAL(clicked(int)));
-	CM(fCalendarFile,SIGNAL(textChanged(const QString &)));
-	CM(fArchive,SIGNAL(toggled(bool)));
-	CM(fConflictResolution,SIGNAL(activated(int)));
+    CM(fSyncDestination, SIGNAL(clicked(int)));
+    CM(fCalendarFile, SIGNAL(textChanged(const QString &)));
+    CM(fArchive, SIGNAL(toggled(bool)));
+    CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
 }
 
 VCalWidgetSetupBase::~VCalWidgetSetupBase()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 /* virtual */ void VCalWidgetSetupBase::commit()
 {
-	FUNCTIONSETUP;
-	config()->readConfig();
+    FUNCTIONSETUP;
+    config()->readConfig();
 
-	// General page
+    // General page
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Selected type="
-		<< fConfigWidget->fSyncDestination->selected()
-		<< " with id="
-		<< fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected())
-		<< endl;
+    DEBUGKPILOT << fname << ": Selected type="
+                << fConfigWidget->fSyncDestination->selected()
+                << " with id="
+                << fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected())
+                << endl;
 #endif
-	config()->setCalendarType( fConfigWidget->fSyncDestination->id(
-			fConfigWidget->fSyncDestination->selected()));
-	config()->setCalendarFile( fConfigWidget->fCalendarFile->url());
+    config()->setCalendarType(fConfigWidget->fSyncDestination->id(
+                                  fConfigWidget->fSyncDestination->selected()));
+    config()->setCalendarFile(fConfigWidget->fCalendarFile->url());
 
-	config()->setSyncArchived( fConfigWidget->fArchive->isChecked() );
+    config()->setSyncArchived(fConfigWidget->fArchive->isChecked());
 
-	// Conflicts page
-	config()->setConflictResolution(
-		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
+    // Conflicts page
+    config()->setConflictResolution(
+        fConfigWidget->fConflictResolution->currentItem() + SyncAction::eCROffset);
 
-	config()->writeConfig();
-	unmodified();
+    config()->writeConfig();
+    unmodified();
 }
 
 /* virtual */ void VCalWidgetSetupBase::load()
 {
-	FUNCTIONSETUP;
-	config()->readConfig();
+    FUNCTIONSETUP;
+    config()->readConfig();
 
-	// General page
-	fConfigWidget->fSyncDestination->setButton( config()->calendarType());
-	fConfigWidget->fCalendarFile->setURL( config()->calendarFile() );
+    // General page
+    fConfigWidget->fSyncDestination->setButton(config()->calendarType());
+    fConfigWidget->fCalendarFile->setURL(config()->calendarFile());
 
-	fConfigWidget->fArchive->setChecked( config()->syncArchived() );
+    fConfigWidget->fArchive->setChecked(config()->syncArchived());
 
-	// Conflicts page
-	fConfigWidget->fConflictResolution->setCurrentItem(
-		config()->conflictResolution() - SyncAction::eCROffset);
+    // Conflicts page
+    fConfigWidget->fConflictResolution->setCurrentItem(
+        config()->conflictResolution() - SyncAction::eCROffset);
 
-	config()->writeConfig();
-	unmodified();
+    config()->writeConfig();
+    unmodified();
 }
 

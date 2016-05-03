@@ -33,66 +33,75 @@ using namespace KOrg;
 
 QString CellItem::label() const
 {
-  return i18n("<undefined>");
+    return i18n("<undefined>");
 }
 
-QPtrList<CellItem> CellItem::placeItem( QPtrList<CellItem> cells,
-                                        CellItem *placeItem )
+QPtrList<CellItem> CellItem::placeItem(QPtrList<CellItem> cells,
+                                       CellItem *placeItem)
 {
-  kdDebug(5855) << "Placing " << placeItem->label() << endl;
+    kdDebug(5855) << "Placing " << placeItem->label() << endl;
 
-  QPtrList<KOrg::CellItem> conflictItems;
-  int maxSubCells = 0;
-  QIntDict<KOrg::CellItem> subCellDict;
+    QPtrList<KOrg::CellItem> conflictItems;
+    int maxSubCells = 0;
+    QIntDict<KOrg::CellItem> subCellDict;
 
-  // Find all items which are in same cell
-  QPtrListIterator<KOrg::CellItem> it2( cells );
-  for( it2.toFirst(); it2.current(); ++it2 ) {
-    KOrg::CellItem *item = it2.current();
-    if ( item == placeItem ) continue;
+    // Find all items which are in same cell
+    QPtrListIterator<KOrg::CellItem> it2(cells);
+    for(it2.toFirst(); it2.current(); ++it2)
+    {
+        KOrg::CellItem *item = it2.current();
+        if(item == placeItem) continue;
 
-    if ( item->overlaps( placeItem ) ) {
-      kdDebug(5855) << "  Overlaps: " << item->label() << endl;
+        if(item->overlaps(placeItem))
+        {
+            kdDebug(5855) << "  Overlaps: " << item->label() << endl;
 
-      conflictItems.append( item );
-      if ( item->subCells() > maxSubCells ) maxSubCells = item->subCells();
-      subCellDict.insert( item->subCell(), item );
-    }
-  }
-
-  if ( conflictItems.count() > 0 ) {
-    // Look for unused sub cell and insert item
-    int i;
-    for( i = 0; i < maxSubCells; ++i ) {
-      kdDebug(5855) << "  Trying subcell " << i << endl;
-      if ( !subCellDict.find( i ) ) {
-        kdDebug(5855) << "  Use subcell " << i << endl;
-        placeItem->setSubCell( i );
-        break;
-      }
-    }
-    if ( i == maxSubCells ) {
-      kdDebug(5855) << "  New subcell " << i << endl;
-      placeItem->setSubCell( maxSubCells );
-      maxSubCells++;  // add new item to number of sub cells
+            conflictItems.append(item);
+            if(item->subCells() > maxSubCells) maxSubCells = item->subCells();
+            subCellDict.insert(item->subCell(), item);
+        }
     }
 
-    kdDebug(5855) << "  Sub cells: " << maxSubCells << endl;
+    if(conflictItems.count() > 0)
+    {
+        // Look for unused sub cell and insert item
+        int i;
+        for(i = 0; i < maxSubCells; ++i)
+        {
+            kdDebug(5855) << "  Trying subcell " << i << endl;
+            if(!subCellDict.find(i))
+            {
+                kdDebug(5855) << "  Use subcell " << i << endl;
+                placeItem->setSubCell(i);
+                break;
+            }
+        }
+        if(i == maxSubCells)
+        {
+            kdDebug(5855) << "  New subcell " << i << endl;
+            placeItem->setSubCell(maxSubCells);
+            maxSubCells++;  // add new item to number of sub cells
+        }
 
-    // Write results to item to be placed
-    conflictItems.append( placeItem );
-    placeItem->setSubCells( maxSubCells );
+        kdDebug(5855) << "  Sub cells: " << maxSubCells << endl;
 
-    QPtrListIterator<KOrg::CellItem> it3( conflictItems );
-    for( it3.toFirst(); it3.current(); ++it3 ) {
-      (*it3)->setSubCells( maxSubCells );
+        // Write results to item to be placed
+        conflictItems.append(placeItem);
+        placeItem->setSubCells(maxSubCells);
+
+        QPtrListIterator<KOrg::CellItem> it3(conflictItems);
+        for(it3.toFirst(); it3.current(); ++it3)
+        {
+            (*it3)->setSubCells(maxSubCells);
+        }
+        // Todo: Adapt subCells of items conflicting with conflicting items
     }
-    // Todo: Adapt subCells of items conflicting with conflicting items
-  } else {
-    kdDebug(5855) << "  no conflicts" << endl;
-    placeItem->setSubCell( 0 );
-    placeItem->setSubCells( 1 );
-  }
-  
-  return conflictItems;
+    else
+    {
+        kdDebug(5855) << "  no conflicts" << endl;
+        placeItem->setSubCell(0);
+        placeItem->setSubCells(1);
+    }
+
+    return conflictItems;
 }

@@ -25,19 +25,21 @@
 
 class SummaryWidget;
 
-class WeatherPlugin : public Kontact::Plugin
-{
-  public:
-    WeatherPlugin( Kontact::Core *core, const char *name, const QStringList& );
+class WeatherPlugin : public Kontact::Plugin {
+public:
+    WeatherPlugin(Kontact::Core *core, const char *name, const QStringList &);
     WeatherPlugin();
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parentWidget );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parentWidget);
 
     const KAboutData *aboutData();
 
-  protected:
-    virtual KParts::ReadOnlyPart *createPart() { return 0; }
-  private:
+protected:
+    virtual KParts::ReadOnlyPart *createPart()
+    {
+        return 0;
+    }
+private:
     KAboutData *mAboutData;
 };
 

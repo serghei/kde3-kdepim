@@ -43,25 +43,30 @@
 
 #include <vector>
 
-int main( int argc, char ** argv ) {
-  KAboutData aboutData( "test_keyselectiondialog", "KeySelectionDialog Test", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+int main(int argc, char **argv)
+{
+    KAboutData aboutData("test_keyselectiondialog", "KeySelectionDialog Test", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication app;
 
-  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
+    KGlobal::iconLoader()->addAppDir("libkleopatra");
 
-  Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
-				"Please select a key:",
-				std::vector<GpgME::Key>(),
-				Kleo::KeySelectionDialog::AllKeys, true, true );
+    Kleo::KeySelectionDialog dlg("Kleo::KeySelectionDialog Test",
+                                 "Please select a key:",
+                                 std::vector<GpgME::Key>(),
+                                 Kleo::KeySelectionDialog::AllKeys, true, true);
 
-  if ( dlg.exec() == QDialog::Accepted ) {
-    kdDebug() << "accepted; selected key: " << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>") << "\nselected _keys_:" << endl;
-    for ( std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it )
-      kdDebug() << (it->userID(0).id() ? it->userID(0).id() : "<null>") << endl;
-  } else {
-    kdDebug() << "rejected" << endl;
-  }
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        kdDebug() << "accepted; selected key: " << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() : "<null>") << "\nselected _keys_:" <<
+                  endl;
+        for(std::vector<GpgME::Key>::const_iterator it = dlg.selectedKeys().begin() ; it != dlg.selectedKeys().end() ; ++it)
+            kdDebug() << (it->userID(0).id() ? it->userID(0).id() : "<null>") << endl;
+    }
+    else
+    {
+        kdDebug() << "rejected" << endl;
+    }
 
-  return 0;
+    return 0;
 }

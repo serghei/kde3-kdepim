@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -35,19 +35,19 @@ public:
 
     MessageWithAttachments();
     virtual ~MessageWithAttachments();
-    
-    void SetText(const DwString& aStr);
+
+    void SetText(const DwString &aStr);
     int NumberOfAttachments() const;
-    void Attach7bitFile(const char* aFilename, int aType=DwMime::kTypeText,
-        int aSubtype=DwMime::kSubtypePlain);
-    void Attach8bitFile(const char* aFilename, int aType=DwMime::kTypeText,
-         int aSubtype=DwMime::kSubtypePlain);
-    void AttachBinaryFile(const char* aFilename, int aType=DwMime::kTypeApplication,
-        int aSubtype=DwMime::kSubtypeOctetStream);
+    void Attach7bitFile(const char *aFilename, int aType = DwMime::kTypeText,
+                        int aSubtype = DwMime::kSubtypePlain);
+    void Attach8bitFile(const char *aFilename, int aType = DwMime::kTypeText,
+                        int aSubtype = DwMime::kSubtypePlain);
+    void AttachBinaryFile(const char *aFilename, int aType = DwMime::kTypeApplication,
+                          int aSubtype = DwMime::kSubtypeOctetStream);
 
 protected:
 
-    int PutFileInString(const char* aFilename, DwString& str);
+    int PutFileInString(const char *aFilename, DwString &str);
 
 };
 

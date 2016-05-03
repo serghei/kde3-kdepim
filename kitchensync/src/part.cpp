@@ -34,55 +34,55 @@
 #include "part.h"
 
 typedef KParts::GenericFactory< KitchenSyncPart > KitchenSyncFactory;
-K_EXPORT_COMPONENT_FACTORY( libkitchensyncpart, KitchenSyncFactory )
+K_EXPORT_COMPONENT_FACTORY(libkitchensyncpart, KitchenSyncFactory)
 
-KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, const char *widgetName,
-                                  QObject *parent, const char *name,
-                                  const QStringList& )
-  : KParts::ReadOnlyPart( parent, name )
+KitchenSyncPart::KitchenSyncPart(QWidget *parentWidget, const char *widgetName,
+                                 QObject *parent, const char *name,
+                                 const QStringList &)
+    : KParts::ReadOnlyPart(parent, name)
 {
-  setInstance( KitchenSyncFactory::instance() );
+    setInstance(KitchenSyncFactory::instance());
 
-  QVBox *canvas = new QVBox( parentWidget, widgetName );
-  setWidget( canvas );
+    QVBox *canvas = new QVBox(parentWidget, widgetName);
+    setWidget(canvas);
 
-  new MainWidget( this, canvas );
+    new MainWidget(this, canvas);
 
-  KGlobal::iconLoader()->addAppDir( "kitchensync" );
+    KGlobal::iconLoader()->addAppDir("kitchensync");
 
-  setXMLFile( "kitchensync_part.rc" );
+    setXMLFile("kitchensync_part.rc");
 }
 
 KitchenSyncPart::~KitchenSyncPart()
 {
-  closeURL();
+    closeURL();
 }
 
 KAboutData *KitchenSyncPart::createAboutData()
 {
-  return MainWidget::aboutData();
+    return MainWidget::aboutData();
 }
 
 void KitchenSyncPart::exit()
 {
-  delete this;
+    delete this;
 }
 
-bool KitchenSyncPart::openURL( const KURL &url )
+bool KitchenSyncPart::openURL(const KURL &url)
 {
-  emit setWindowCaption( url.prettyURL() );
+    emit setWindowCaption(url.prettyURL());
 
-  return true;
+    return true;
 }
 
 bool KitchenSyncPart::openFile()
 {
-  return true;
+    return true;
 }
 
-void KitchenSyncPart::guiActivateEvent( KParts::GUIActivateEvent *e )
+void KitchenSyncPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-  KParts::ReadOnlyPart::guiActivateEvent( e );
+    KParts::ReadOnlyPart::guiActivateEvent(e);
 }
 
 #include "part.moc"

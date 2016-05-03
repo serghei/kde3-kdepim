@@ -31,147 +31,167 @@
   Combo box for type information of Addresses and Phone numbers.
 */
 template <class T>
-class TypeCombo : public KComboBox
-{
-  public:
+class TypeCombo : public KComboBox {
+public:
     typedef typename T::List List;
     typedef typename T::List::Iterator Iterator;
 
-    TypeCombo( List &list, QWidget *parent, const char *name = 0 );
+    TypeCombo(List &list, QWidget *parent, const char *name = 0);
 
-    void setLineEdit( QLineEdit *edit ) { mLineEdit = edit; }
-    QLineEdit *lineEdit() const { return mLineEdit; }
+    void setLineEdit(QLineEdit *edit)
+    {
+        mLineEdit = edit;
+    }
+    QLineEdit *lineEdit() const
+    {
+        return mLineEdit;
+    }
 
     void updateTypes();
 
-    void selectType( int type );
+    void selectType(int type);
 
     int selectedType();
 
     Iterator selectedElement();
 
-    void insertType( const List &list, int type,
-                     const T &defaultObject );
-    void insertTypeList( const List &list );
+    void insertType(const List &list, int type,
+                    const T &defaultObject);
+    void insertTypeList(const List &list);
 
-    bool hasType( int type );
+    bool hasType(int type);
 
-  private:
+private:
     List &mTypeList;
     QLineEdit *mLineEdit;
 };
 
 template <class T>
-TypeCombo<T>::TypeCombo( TypeCombo::List &list, QWidget *parent,
-                      const char *name )
-  : KComboBox( parent, name ),
-    mTypeList( list )
+TypeCombo<T>::TypeCombo(TypeCombo::List &list, QWidget *parent,
+                        const char *name)
+    : KComboBox(parent, name),
+      mTypeList(list)
 {
 }
 
 template <class T>
 void TypeCombo<T>::updateTypes()
 {
-  // Remember current item
-  QString currentId;
-  int current = currentItem();
-  if ( current >= 0 ) currentId = mTypeList[ current ].id();
+    // Remember current item
+    QString currentId;
+    int current = currentItem();
+    if(current >= 0) currentId = mTypeList[ current ].id();
 
-  clear();
+    clear();
 
-  QMap<int,int> labelCount;
+    QMap<int, int> labelCount;
 
-  uint i;
-  for ( i = 0; i < mTypeList.count(); ++i ) {
-    int type = ( mTypeList[ i ].type() & ~( T::Pref ) );
-    QString label = mTypeList[ i ].typeLabel( type );
-    int count = 1;
-    if ( labelCount.contains( type ) ) {
-      count = labelCount[ type ] + 1;
+    uint i;
+    for(i = 0; i < mTypeList.count(); ++i)
+    {
+        int type = (mTypeList[ i ].type() & ~(T::Pref));
+        QString label = mTypeList[ i ].typeLabel(type);
+        int count = 1;
+        if(labelCount.contains(type))
+        {
+            count = labelCount[ type ] + 1;
+        }
+        labelCount[ type ] = count;
+        if(count > 1)
+        {
+            label = i18n("label (number)", "%1 (%2)").arg(label)
+                    .arg(QString::number(count));
+        }
+        insertItem(label);
     }
-    labelCount[ type ] = count;
-    if ( count > 1 ) {
-      label = i18n("label (number)", "%1 (%2)").arg( label )
-                                           .arg( QString::number( count ) );
-    }
-    insertItem( label );
-  }
 
-  // Restore previous current item
-  if ( !currentId.isEmpty() ) {
-    for ( i = 0; i < mTypeList.count(); ++i ) {
-      if ( mTypeList[ i ].id() == currentId ) {
-        setCurrentItem( i );
-        break;
-      }
+    // Restore previous current item
+    if(!currentId.isEmpty())
+    {
+        for(i = 0; i < mTypeList.count(); ++i)
+        {
+            if(mTypeList[ i ].id() == currentId)
+            {
+                setCurrentItem(i);
+                break;
+            }
+        }
     }
-  }
 }
 
 template <class T>
-void TypeCombo<T>::selectType( int type )
+void TypeCombo<T>::selectType(int type)
 {
-  uint i;
-  for ( i = 0; i < mTypeList.count(); ++i ) {
-    if ( (mTypeList[ i ].type() & ~T::Pref) == type ) {
-      setCurrentItem( i );
-      break;
+    uint i;
+    for(i = 0; i < mTypeList.count(); ++i)
+    {
+        if((mTypeList[ i ].type() & ~T::Pref) == type)
+        {
+            setCurrentItem(i);
+            break;
+        }
     }
-  }
 }
 
 template <class T>
 int TypeCombo<T>::selectedType()
 {
-  return mTypeList[ currentItem() ].type();
+    return mTypeList[ currentItem() ].type();
 }
 
 template <class T>
 typename TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
 {
-  return mTypeList.at( currentItem() );
+    return mTypeList.at(currentItem());
 }
 
 template <class T>
-void TypeCombo<T>::insertType( const TypeCombo::List &list, int type,
-                               const T &defaultObject )
+void TypeCombo<T>::insertType(const TypeCombo::List &list, int type,
+                              const T &defaultObject)
 {
-  uint i;
-  for ( i = 0; i < list.count(); ++i ) {
-    if ( list[ i ].type() == type ) {
-      mTypeList.append( list[ i ] );
-      break;
+    uint i;
+    for(i = 0; i < list.count(); ++i)
+    {
+        if(list[ i ].type() == type)
+        {
+            mTypeList.append(list[ i ]);
+            break;
+        }
     }
-  }
-  if ( i == list.count() ) {
-    mTypeList.append( defaultObject );
-  }
+    if(i == list.count())
+    {
+        mTypeList.append(defaultObject);
+    }
 }
 
 template <class T>
-void TypeCombo<T>::insertTypeList( const TypeCombo::List &list )
+void TypeCombo<T>::insertTypeList(const TypeCombo::List &list)
 {
-  uint i;
-  for ( i = 0; i < list.count(); ++i ) {
-    uint j;
-    for ( j = 0; j < mTypeList.count(); ++j ) {
-      if ( list[ i ].id() == mTypeList[ j ].id() ) break;
+    uint i;
+    for(i = 0; i < list.count(); ++i)
+    {
+        uint j;
+        for(j = 0; j < mTypeList.count(); ++j)
+        {
+            if(list[ i ].id() == mTypeList[ j ].id()) break;
+        }
+        if(j == mTypeList.count())
+        {
+            mTypeList.append(list[ i ]);
+        }
     }
-    if ( j == mTypeList.count() ) {
-      mTypeList.append( list[ i ] );
-    }
-  }
 }
 
 template <class T>
-bool TypeCombo<T>::hasType( int type )
+bool TypeCombo<T>::hasType(int type)
 {
-  for ( uint i = 0; i < mTypeList.count(); ++i ) {
-    if ( ( mTypeList[ i ].type() & ~T::Pref ) == type )
-      return true;
-  }
+    for(uint i = 0; i < mTypeList.count(); ++i)
+    {
+        if((mTypeList[ i ].type() & ~T::Pref) == type)
+            return true;
+    }
 
-  return false;
+    return false;
 }
 
 #endif

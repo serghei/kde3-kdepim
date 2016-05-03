@@ -46,99 +46,110 @@
 
 namespace KMail {
 
-  //
-  //
-  // IdentityListViewItem
-  //
-  //
+//
+//
+// IdentityListViewItem
+//
+//
 
-  IdentityListViewItem::IdentityListViewItem( IdentityListView * parent, const KPIM::Identity & ident )
-    : KListViewItem( parent ), mUOID( ident.uoid() ) {
-    init( ident );
-  }
+IdentityListViewItem::IdentityListViewItem(IdentityListView *parent, const KPIM::Identity &ident)
+    : KListViewItem(parent), mUOID(ident.uoid())
+{
+    init(ident);
+}
 
-  IdentityListViewItem::IdentityListViewItem( IdentityListView * parent, QListViewItem * after, const KPIM::Identity & ident )
-    : KListViewItem( parent, after ), mUOID( ident.uoid() ) {
-    init( ident );
-  }
+IdentityListViewItem::IdentityListViewItem(IdentityListView *parent, QListViewItem *after, const KPIM::Identity &ident)
+    : KListViewItem(parent, after), mUOID(ident.uoid())
+{
+    init(ident);
+}
 
-  KPIM::Identity & IdentityListViewItem::identity() const {
-    KPIM::IdentityManager * im = kmkernel->identityManager();
-    assert( im );
-    return im->modifyIdentityForUoid( uoid() );
-  }
+KPIM::Identity &IdentityListViewItem::identity() const
+{
+    KPIM::IdentityManager *im = kmkernel->identityManager();
+    assert(im);
+    return im->modifyIdentityForUoid(uoid());
+}
 
-  void IdentityListViewItem::setIdentity( const KPIM::Identity & ident ) {
+void IdentityListViewItem::setIdentity(const KPIM::Identity &ident)
+{
     mUOID = ident.uoid();
-    init( ident );
-  }
+    init(ident);
+}
 
-  void IdentityListViewItem::redisplay() {
-    init( identity() );
-  }
+void IdentityListViewItem::redisplay()
+{
+    init(identity());
+}
 
-  void IdentityListViewItem::init( const KPIM::Identity & ident ) {
-    if ( ident.isDefault() )
-      // Add "(Default)" to the end of the default identity's name:
-      setText( 0, i18n("%1: identity name. Used in the config "
-		       "dialog, section Identity, to indicate the "
-		       "default identity", "%1 (Default)")
-	       .arg( ident.identityName() ) );
+void IdentityListViewItem::init(const KPIM::Identity &ident)
+{
+    if(ident.isDefault())
+        // Add "(Default)" to the end of the default identity's name:
+        setText(0, i18n("%1: identity name. Used in the config "
+                        "dialog, section Identity, to indicate the "
+                        "default identity", "%1 (Default)")
+                .arg(ident.identityName()));
     else
-      setText( 0, ident.identityName() );
-    setText( 1, ident.fullEmailAddr() );
-  }
+        setText(0, ident.identityName());
+    setText(1, ident.fullEmailAddr());
+}
 
-  //
-  //
-  // IdentityListView
-  //
-  //
+//
+//
+// IdentityListView
+//
+//
 
-  IdentityListView::IdentityListView( QWidget * parent, const char * name )
-    : KListView( parent, name )
-  {
-    setFullWidth( true );
-    setDragEnabled( true );
-    setAcceptDrops( true );
-    setDropVisualizer( true );
-    addColumn( i18n("Identity Name") );
-    addColumn( i18n("Email Address") );
-    setRootIsDecorated( false );
-    setRenameable( 0 );
-    setItemsRenameable( true );
+IdentityListView::IdentityListView(QWidget *parent, const char *name)
+    : KListView(parent, name)
+{
+    setFullWidth(true);
+    setDragEnabled(true);
+    setAcceptDrops(true);
+    setDropVisualizer(true);
+    addColumn(i18n("Identity Name"));
+    addColumn(i18n("Email Address"));
+    setRootIsDecorated(false);
+    setRenameable(0);
+    setItemsRenameable(true);
     // setShowToolTips( true );
-    setItemsMovable( false );
-    setAllColumnsShowFocus( true );
-    setSorting( -1 ); // disabled
-    setSelectionModeExt( Single ); // ### Extended would be nicer...
-  }
+    setItemsMovable(false);
+    setAllColumnsShowFocus(true);
+    setSorting(-1);   // disabled
+    setSelectionModeExt(Single);   // ### Extended would be nicer...
+}
 
-  void IdentityListView::rename( QListViewItem * i, int col ) {
-    if ( col == 0 && isRenameable( col ) ) {
-      IdentityListViewItem * item = dynamic_cast<IdentityListViewItem*>( i );
-      if ( item ) {
-	KPIM::Identity & ident = item->identity();
-	if ( ident.isDefault() )
-	  item->setText( 0, ident.identityName() );
-      }
+void IdentityListView::rename(QListViewItem *i, int col)
+{
+    if(col == 0 && isRenameable(col))
+    {
+        IdentityListViewItem *item = dynamic_cast<IdentityListViewItem *>(i);
+        if(item)
+        {
+            KPIM::Identity &ident = item->identity();
+            if(ident.isDefault())
+                item->setText(0, ident.identityName());
+        }
     }
-    KListView::rename( i, col );
-  }
+    KListView::rename(i, col);
+}
 
-  bool IdentityListView::acceptDrag( QDropEvent * e ) const {
+bool IdentityListView::acceptDrag(QDropEvent *e) const
+{
     // disallow moving:
-    return e->source() != viewport() && IdentityDrag::canDecode( e );
-  }
+    return e->source() != viewport() && IdentityDrag::canDecode(e);
+}
 
-  QDragObject * IdentityListView::dragObject() {
-    IdentityListViewItem * item = dynamic_cast<IdentityListViewItem*>( currentItem() );
-    if ( !item ) return 0;
+QDragObject *IdentityListView::dragObject()
+{
+    IdentityListViewItem *item = dynamic_cast<IdentityListViewItem *>(currentItem());
+    if(!item) return 0;
 
-    IdentityDrag * drag = new IdentityDrag( item->identity(), viewport() );
-    drag->setPixmap( SmallIcon("identity") );
+    IdentityDrag *drag = new IdentityDrag(item->identity(), viewport());
+    drag->setPixmap(SmallIcon("identity"));
     return drag;
-  }
+}
 
 } // namespace KMail
 

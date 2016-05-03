@@ -37,11 +37,10 @@
 
 namespace Akregator {
 
-class TagNode::TagNodePrivate
-{
-    public:
+class TagNode::TagNodePrivate {
+public:
     Filters::TagMatcher filter;
-    TreeNode* observed;
+    TreeNode *observed;
     int unread;
     QString icon;
     Tag tag;
@@ -51,7 +50,7 @@ class TagNode::TagNodePrivate
     QValueList<Article> updatedArticlesNotify;
 };
 
-TagNode::TagNode(const Tag& tag, TreeNode* observed) : d(new TagNodePrivate)
+TagNode::TagNode(const Tag &tag, TreeNode *observed) : d(new TagNodePrivate)
 {
     d->tag = tag;
     d->icon = tag.icon();
@@ -59,11 +58,14 @@ TagNode::TagNode(const Tag& tag, TreeNode* observed) : d(new TagNodePrivate)
     setTitle(tag.name());
     d->observed = observed;
     d->unread = 0;
-    
-    connect(observed, SIGNAL(signalDestroyed(TreeNode*)), this, SLOT(slotObservedDestroyed(TreeNode*)));
-    connect(observed, SIGNAL(signalArticlesAdded(TreeNode*, const QValueList<Article>&)), this, SLOT(slotArticlesAdded(TreeNode*, const QValueList<Article>&)) );
-    connect(observed, SIGNAL(signalArticlesUpdated(TreeNode*, const QValueList<Article>&)), this, SLOT(slotArticlesUpdated(TreeNode*, const QValueList<Article>&)) );
-    connect(observed, SIGNAL(signalArticlesRemoved(TreeNode*, const QValueList<Article>&)), this, SLOT(slotArticlesRemoved(TreeNode*, const QValueList<Article>&)) );
+
+    connect(observed, SIGNAL(signalDestroyed(TreeNode *)), this, SLOT(slotObservedDestroyed(TreeNode *)));
+    connect(observed, SIGNAL(signalArticlesAdded(TreeNode *, const QValueList<Article> &)), this, SLOT(slotArticlesAdded(TreeNode *,
+            const QValueList<Article> &)));
+    connect(observed, SIGNAL(signalArticlesUpdated(TreeNode *, const QValueList<Article> &)), this, SLOT(slotArticlesUpdated(TreeNode *,
+            const QValueList<Article> &)));
+    connect(observed, SIGNAL(signalArticlesRemoved(TreeNode *, const QValueList<Article> &)), this, SLOT(slotArticlesRemoved(TreeNode *,
+            const QValueList<Article> &)));
 
     d->articles = observed->articles(tag.id());
     calcUnread();
@@ -86,9 +88,9 @@ TagNode::~TagNode()
     d = 0;
 }
 
-bool TagNode::accept(TreeNodeVisitor* visitor)
+bool TagNode::accept(TreeNodeVisitor *visitor)
 {
-    if (visitor->visitTagNode(this))
+    if(visitor->visitTagNode(this))
         return true;
     else
         return visitor->visitTreeNode(this);
@@ -98,10 +100,10 @@ void TagNode::calcUnread()
 {
     int unread = 0;
     QValueList<Article>::Iterator en = d->articles.end();
-    for (QValueList<Article>::Iterator it = d->articles.begin(); it != en; ++it)
-        if ((*it).status() != Article::Read)
+    for(QValueList<Article>::Iterator it = d->articles.begin(); it != en; ++it)
+        if((*it).status() != Article::Read)
             ++unread;
-    if (d->unread != unread)
+    if(d->unread != unread)
     {
         d->unread = unread;
         nodeModified();
@@ -119,32 +121,32 @@ int TagNode::totalCount() const
     return d->articles.count();
 }
 
-    
-QValueList<Article> TagNode::articles(const QString& tag)
+
+QValueList<Article> TagNode::articles(const QString &tag)
 {
     return d->articles;
 }
 
 QStringList TagNode::tags() const
 {
-   // TODO
-   return QStringList();
+    // TODO
+    return QStringList();
 }
 
-QDomElement TagNode::toOPML( QDomElement parent, QDomDocument document ) const
+QDomElement TagNode::toOPML(QDomElement parent, QDomDocument document) const
 {
     return QDomElement();
-}    
+}
 
-TreeNode* TagNode::next()
+TreeNode *TagNode::next()
 {
-    if ( nextSibling() )
+    if(nextSibling())
         return nextSibling();
 
-    Folder* p = parent();
-    while (p)
+    Folder *p = parent();
+    while(p)
     {
-        if ( p->nextSibling() )
+        if(p->nextSibling())
             return p->nextSibling();
         else
             p = p->parent();
@@ -152,38 +154,38 @@ TreeNode* TagNode::next()
     return 0;
 }
 
-void TagNode::slotDeleteExpiredArticles() 
-{ 
-// not our business
+void TagNode::slotDeleteExpiredArticles()
+{
+    // not our business
 }
-    
+
 void TagNode::slotMarkAllArticlesAsRead()
-{ 
+{
     setNotificationMode(false);
     QValueList<Article>::Iterator en = d->articles.end();
-    for (QValueList<Article>::Iterator it = d->articles.begin(); it != en; ++it)
+    for(QValueList<Article>::Iterator it = d->articles.begin(); it != en; ++it)
         (*it).setStatus(Article::Read);
     setNotificationMode(true);
 }
-    
-void TagNode::slotAddToFetchQueue(FetchQueue* /*queue*/, bool /*intervalFetchOnly*/)
+
+void TagNode::slotAddToFetchQueue(FetchQueue * /*queue*/, bool /*intervalFetchOnly*/)
 {
-// not our business
+    // not our business
 }
 
 void TagNode::doArticleNotification()
 {
-    if (!d->addedArticlesNotify.isEmpty())
+    if(!d->addedArticlesNotify.isEmpty())
     {
         emit signalArticlesAdded(this, d->addedArticlesNotify);
         d->addedArticlesNotify.clear();
     }
-    if (!d->updatedArticlesNotify.isEmpty())
+    if(!d->updatedArticlesNotify.isEmpty())
     {
         emit signalArticlesUpdated(this, d->updatedArticlesNotify);
         d->updatedArticlesNotify.clear();
     }
-    if (!d->removedArticlesNotify.isEmpty())
+    if(!d->removedArticlesNotify.isEmpty())
     {
         emit signalArticlesRemoved(this, d->removedArticlesNotify);
         d->removedArticlesNotify.clear();
@@ -191,12 +193,12 @@ void TagNode::doArticleNotification()
     TreeNode::doArticleNotification();
 }
 
-void TagNode::slotArticlesAdded(TreeNode* node, const QValueList<Article>& list)
+void TagNode::slotArticlesAdded(TreeNode *node, const QValueList<Article> &list)
 {
     bool added = false;
-    for (QValueList<Article>::ConstIterator it = list.begin(); it != list.end(); ++it)
+    for(QValueList<Article>::ConstIterator it = list.begin(); it != list.end(); ++it)
     {
-        if (!d->articles.contains(*it) && d->filter.matches(*it))
+        if(!d->articles.contains(*it) && d->filter.matches(*it))
         {
             d->articles.append(*it);
             d->addedArticlesNotify.append(*it);
@@ -204,22 +206,22 @@ void TagNode::slotArticlesAdded(TreeNode* node, const QValueList<Article>& list)
         }
     }
 
-    if (added)
+    if(added)
     {
         calcUnread();
         articlesModified();
     }
 }
 
-void TagNode::slotArticlesUpdated(TreeNode* node, const QValueList<Article>& list)
+void TagNode::slotArticlesUpdated(TreeNode *node, const QValueList<Article> &list)
 {
     bool updated = false;
-    for (QValueList<Article>::ConstIterator it = list.begin(); it != list.end(); ++it)
+    for(QValueList<Article>::ConstIterator it = list.begin(); it != list.end(); ++it)
     {
-        if (d->articles.contains(*it))
+        if(d->articles.contains(*it))
         {
-            if (!d->filter.matches(*it)) // articles is in list, but doesn't match our criteria anymore -> remove it
-	    {
+            if(!d->filter.matches(*it))  // articles is in list, but doesn't match our criteria anymore -> remove it
+            {
                 d->articles.remove(*it);
                 d->removedArticlesNotify.append(*it);
                 updated = true;
@@ -231,8 +233,8 @@ void TagNode::slotArticlesUpdated(TreeNode* node, const QValueList<Article>& lis
             }
         }
         else // article not in list
-        { 
-            if (d->filter.matches(*it)) // articles is not in list, but matches our criteria -> add it
+        {
+            if(d->filter.matches(*it))  // articles is not in list, but matches our criteria -> add it
             {
                 d->articles.append(*it);
                 d->addedArticlesNotify.append(*it);
@@ -240,40 +242,40 @@ void TagNode::slotArticlesUpdated(TreeNode* node, const QValueList<Article>& lis
             }
         }
     }
-    if (updated)
+    if(updated)
     {
         calcUnread();
         articlesModified();
     }
 }
 
-void TagNode::slotArticlesRemoved(TreeNode* node, const QValueList<Article>& list)
+void TagNode::slotArticlesRemoved(TreeNode *node, const QValueList<Article> &list)
 {
     bool removed = false;
-    for (QValueList<Article>::ConstIterator it = list.begin(); it != list.end(); ++it)
+    for(QValueList<Article>::ConstIterator it = list.begin(); it != list.end(); ++it)
     {
-        if (d->articles.contains(*it))
+        if(d->articles.contains(*it))
         {
             d->articles.remove(*it);
             d->removedArticlesNotify.append(*it);
             removed = true;
         }
     }
-    if (removed)
+    if(removed)
     {
         calcUnread();
         articlesModified();
     }
 }
 
-void TagNode::setTitle(const QString& title)
+void TagNode::setTitle(const QString &title)
 {
-    if (d->tag.name() != title)
+    if(d->tag.name() != title)
         d->tag.setName(title);
     TreeNode::setTitle(title);
 }
 
-void TagNode::slotObservedDestroyed(TreeNode* /*observed*/)
+void TagNode::slotObservedDestroyed(TreeNode * /*observed*/)
 {
     d->removedArticlesNotify = d->articles;
     d->articles.clear();
@@ -283,19 +285,19 @@ void TagNode::slotObservedDestroyed(TreeNode* /*observed*/)
 void TagNode::tagChanged()
 {
     bool changed = false;
-    if (title() != d->tag.name())
+    if(title() != d->tag.name())
     {
         setTitle(d->tag.name());
         changed = true;
     }
 
-    if (d->icon != d->tag.icon())
+    if(d->icon != d->tag.icon())
     {
         d->icon = d->tag.icon();
         changed = true;
     }
 
-    if (changed)
+    if(changed)
         nodeModified();
 }
 

@@ -36,25 +36,24 @@ class QSignalMapper;
 class KLineEdit;
 class KComboBox;
 
-class PhoneTypeCombo : public KComboBox
-{
-  Q_OBJECT
+class PhoneTypeCombo : public KComboBox {
+    Q_OBJECT
 
-  public:
-    PhoneTypeCombo( QWidget *parent );
+public:
+    PhoneTypeCombo(QWidget *parent);
     ~PhoneTypeCombo();
 
-    void setType( int type );
+    void setType(int type);
     int type() const;
 
-  signals:
+signals:
     void modified();
 
-  protected slots:
-    void selected( int );
+protected slots:
+    void selected(int);
     void otherSelected();
 
-  private:
+private:
     void update();
 
     int mType;
@@ -62,22 +61,21 @@ class PhoneTypeCombo : public KComboBox
     QValueList<int> mTypeList;
 };
 
-class PhoneNumberWidget : public QWidget
-{
-  Q_OBJECT
+class PhoneNumberWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    PhoneNumberWidget( QWidget *parent );
+public:
+    PhoneNumberWidget(QWidget *parent);
 
-    void setNumber( const KABC::PhoneNumber &number );
+    void setNumber(const KABC::PhoneNumber &number);
     KABC::PhoneNumber number() const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  signals:
+signals:
     void modified();
 
-  private:
+private:
     PhoneTypeCombo *mTypeCombo;
     KLineEdit *mNumberEdit;
     KABC::PhoneNumber mNumber;
@@ -86,29 +84,28 @@ class PhoneNumberWidget : public QWidget
 /**
   Widget for editing phone numbers.
 */
-class PhoneEditWidget : public QWidget
-{
-  Q_OBJECT
+class PhoneEditWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    PhoneEditWidget( QWidget *parent, const char *name = 0 );
+public:
+    PhoneEditWidget(QWidget *parent, const char *name = 0);
     ~PhoneEditWidget();
 
-    void setPhoneNumbers( const KABC::PhoneNumber::List &list );
+    void setPhoneNumbers(const KABC::PhoneNumber::List &list);
     KABC::PhoneNumber::List phoneNumbers() const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  signals:
+signals:
     void modified();
 
-  protected slots:
+protected slots:
     void add();
     void remove();
     void changed();
-    void changed( int pos );
+    void changed(int pos);
 
-  private:
+private:
     void recreateNumberWidgets();
 
     KABC::PhoneNumber::List mPhoneNumberList;
@@ -125,15 +122,14 @@ class PhoneEditWidget : public QWidget
 /**
   Dialog for editing phone number types.
  */
-class PhoneTypeDialog : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    PhoneTypeDialog( int type, QWidget *parent );
+class PhoneTypeDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    PhoneTypeDialog(int type, QWidget *parent);
 
     int type() const;
 
-  private:
+private:
     int mType;
     KABC::PhoneNumber::TypeList mTypeList;
 

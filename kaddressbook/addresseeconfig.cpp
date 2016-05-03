@@ -28,72 +28,72 @@ using namespace KABC;
 
 AddresseeConfig::AddresseeConfig()
 {
-  mAddressee = Addressee();
+    mAddressee = Addressee();
 }
 
-AddresseeConfig::AddresseeConfig( const Addressee &addr )
+AddresseeConfig::AddresseeConfig(const Addressee &addr)
 {
-  mAddressee = addr;
+    mAddressee = addr;
 }
 
-void AddresseeConfig::setAddressee( const Addressee &addr )
+void AddresseeConfig::setAddressee(const Addressee &addr)
 {
-  mAddressee = addr;
+    mAddressee = addr;
 }
 
 Addressee AddresseeConfig::addressee()
 {
-  return mAddressee;
+    return mAddressee;
 }
 
-void AddresseeConfig::setAutomaticNameParsing( bool value )
+void AddresseeConfig::setAutomaticNameParsing(bool value)
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  config.writeEntry( "AutomaticNameParsing", value );
-  config.sync();
+    KConfig config("kaddressbook_addrconfig");
+    config.setGroup(mAddressee.uid());
+    config.writeEntry("AutomaticNameParsing", value);
+    config.sync();
 }
 
 bool AddresseeConfig::automaticNameParsing()
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  return config.readBoolEntry( "AutomaticNameParsing",
-                               KABPrefs::instance()->automaticNameParsing() );
+    KConfig config("kaddressbook_addrconfig");
+    config.setGroup(mAddressee.uid());
+    return config.readBoolEntry("AutomaticNameParsing",
+                                KABPrefs::instance()->automaticNameParsing());
 }
 
-void AddresseeConfig::setNoDefaultAddrTypes( const QValueList<int> &types )
+void AddresseeConfig::setNoDefaultAddrTypes(const QValueList<int> &types)
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  config.writeEntry( "NoDefaultAddrTypes", types );
-  config.sync();
+    KConfig config("kaddressbook_addrconfig");
+    config.setGroup(mAddressee.uid());
+    config.writeEntry("NoDefaultAddrTypes", types);
+    config.sync();
 }
 
 QValueList<int> AddresseeConfig::noDefaultAddrTypes() const
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  return config.readIntListEntry( "NoDefaultAddrTypes" );
+    KConfig config("kaddressbook_addrconfig");
+    config.setGroup(mAddressee.uid());
+    return config.readIntListEntry("NoDefaultAddrTypes");
 }
 
-void AddresseeConfig::setCustomFields( const QStringList &fields )
+void AddresseeConfig::setCustomFields(const QStringList &fields)
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  config.writeEntry( "LocalCustomFields", fields );
-  config.sync();
+    KConfig config("kaddressbook_addrconfig");
+    config.setGroup(mAddressee.uid());
+    config.writeEntry("LocalCustomFields", fields);
+    config.sync();
 }
 
 QStringList AddresseeConfig::customFields() const
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.setGroup( mAddressee.uid() );
-  return config.readListEntry( "LocalCustomFields" );
+    KConfig config("kaddressbook_addrconfig");
+    config.setGroup(mAddressee.uid());
+    return config.readListEntry("LocalCustomFields");
 }
 
 void AddresseeConfig::remove()
 {
-  KConfig config( "kaddressbook_addrconfig" );
-  config.deleteGroup( mAddressee.uid() );
+    KConfig config("kaddressbook_addrconfig");
+    config.deleteGroup(mAddressee.uid());
 }

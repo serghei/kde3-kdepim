@@ -28,15 +28,14 @@
 class KOrganizer;
 class CalendarView;
 
-class KONewStuff : public KNewStuff
-{
-  public:
-    KONewStuff( CalendarView * );
-    
-    bool install( const QString &fileName );
-    bool createUploadFile( const QString &fileName );
+class KONewStuff : public KNewStuff {
+public:
+    KONewStuff(CalendarView *);
 
-  private:
+    bool install(const QString &fileName);
+    bool createUploadFile(const QString &fileName);
+
+private:
     CalendarView *mView;
 };
 

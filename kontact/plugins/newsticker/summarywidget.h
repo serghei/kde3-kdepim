@@ -43,64 +43,64 @@ class KURLLabel;
 
 typedef QValueList< QPair<QString, KURL> > ArticleMap;
 
-typedef struct {
-  DCOPRef ref;
-  QString title;
-  QString url;
-  QPixmap logo;
-  ArticleMap map;
+typedef struct
+{
+    DCOPRef ref;
+    QString title;
+    QString url;
+    QPixmap logo;
+    ArticleMap map;
 } Feed;
 
 typedef QValueList<Feed> FeedList;
 
-class SummaryWidget : public Kontact::Summary, public DCOPObject
-{
-  Q_OBJECT
-  K_DCOP
+class SummaryWidget : public Kontact::Summary, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
-  public:
-    SummaryWidget( QWidget *parent, const char *name = 0 );
+public:
+    SummaryWidget(QWidget *parent, const char *name = 0);
 
     int summaryHeight() const;
     QStringList configModules() const;
 
-  k_dcop:
+k_dcop:
     /**
      * Inform the newsticker summary widget that an RSSDocument has been updated.
      */
-    void documentUpdated( DCOPRef );
+    void documentUpdated(DCOPRef);
     /**
      * Inform the newsticker summary widget that a feed has been added.
      */
-    void documentAdded( QString );
+    void documentAdded(QString);
     /**
      * Inform the newsticker summary widget that a feed has been removed.
      */
-    void documentRemoved( QString );
+    void documentRemoved(QString);
     /**
      * Inform the newsticker summary widget that an error occurred while updating a feed.
      * @param ref DCOPRef to the failing RSSDocument.
      * @param errorCode indicates the cause of the failure: 1 = RSS Parse Error, 2 = Could not access file, 3 = Unknown error.
      */
-    void documentUpdateError( DCOPRef ref, int errorCode );
+    void documentUpdateError(DCOPRef ref, int errorCode);
 
-  public slots:
-    void updateSummary( bool force = false );
+public slots:
+    void updateSummary(bool force = false);
     void configChanged();
 
-  protected slots:
+protected slots:
     void updateDocuments();
-    void rmbMenu( const QString& );
+    void rmbMenu(const QString &);
 
-  protected:
-    virtual bool eventFilter( QObject *obj, QEvent *e );
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *e);
     void initDocuments();
     void updateView();
     void readConfig();
 
-  private:
+private:
     QVBoxLayout *mLayout;
-    QWidget* mBaseWidget;
+    QWidget *mBaseWidget;
 
     QPtrList<QLabel> mLabels;
 

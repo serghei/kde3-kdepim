@@ -34,153 +34,153 @@
 
 #include "kaddressbookmain.h"
 
-KAddressBookMain::KAddressBookMain( const QString &file )
-  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 )
+KAddressBookMain::KAddressBookMain(const QString &file)
+    : DCOPObject("KAddressBookIface"), KMainWindow(0)
 {
-  // Set this to be the group leader for all subdialogs - this means
-  // modal subdialogs will only affect this dialog, not the other windows
-  setWFlags( getWFlags() | WGroupLeader );
+    // Set this to be the group leader for all subdialogs - this means
+    // modal subdialogs will only affect this dialog, not the other windows
+    setWFlags(getWFlags() | WGroupLeader);
 
-  setCaption( i18n( "Address Book Browser" ) );
+    setCaption(i18n("Address Book Browser"));
 
-  mCore = new KABCore( this, true, this, file );
-  mCore->restoreSettings();
+    mCore = new KABCore(this, true, this, file);
+    mCore->restoreSettings();
 
-  initActions();
+    initActions();
 
-  setCentralWidget( mCore->widget() );
+    setCentralWidget(mCore->widget());
 
-  statusBar()->show();
-  statusBar()->insertItem( "", 1 );
+    statusBar()->show();
+    statusBar()->insertItem("", 1);
 
-  KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(),
-    this );
-  progressDialog->hide();
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog(statusBar(),
+            this);
+    progressDialog->hide();
 
-  KPIM::StatusbarProgressWidget *progressWidget;
-  progressWidget = new KPIM::StatusbarProgressWidget( progressDialog,
-    statusBar() );
-  progressWidget->show();
+    KPIM::StatusbarProgressWidget *progressWidget;
+    progressWidget = new KPIM::StatusbarProgressWidget(progressDialog,
+            statusBar());
+    progressWidget->show();
 
-  statusBar()->addWidget( progressWidget, 0, true );
+    statusBar()->addWidget(progressWidget, 0, true);
 
-  mCore->setStatusBar( statusBar() );
+    mCore->setStatusBar(statusBar());
 
-  setStandardToolBarMenuEnabled( true );
+    setStandardToolBarMenuEnabled(true);
 
-  createGUI( "kaddressbookui.rc", false );
+    createGUI("kaddressbookui.rc", false);
 
-  resize( 400, 300 ); // initial size
-  setAutoSaveSettings();
+    resize(400, 300);   // initial size
+    setAutoSaveSettings();
 }
 
 KAddressBookMain::~KAddressBookMain()
 {
-  mCore->saveSettings();
+    mCore->saveSettings();
 }
 
-void KAddressBookMain::addEmail( QString addr )
+void KAddressBookMain::addEmail(QString addr)
 {
-  mCore->addEmail( addr );
+    mCore->addEmail(addr);
 }
 
-void KAddressBookMain::importVCard( const KURL& url )
+void KAddressBookMain::importVCard(const KURL &url)
 {
-  mCore->importVCard( url );
+    mCore->importVCard(url);
 }
 
-void KAddressBookMain::importVCardFromData( const QString& vCard )
+void KAddressBookMain::importVCardFromData(const QString &vCard)
 {
-  mCore->importVCardFromData( vCard );
+    mCore->importVCardFromData(vCard);
 }
 
-ASYNC KAddressBookMain::showContactEditor( QString uid )
+ASYNC KAddressBookMain::showContactEditor(QString uid)
 {
-  mCore->editContact( uid );
+    mCore->editContact(uid);
 }
 
 void KAddressBookMain::newDistributionList()
 {
-  mCore->newDistributionList();
+    mCore->newDistributionList();
 }
 
 void KAddressBookMain::newContact()
 {
-  mCore->newContact();
+    mCore->newContact();
 }
 
-QString KAddressBookMain::getNameByPhone( QString phone )
+QString KAddressBookMain::getNameByPhone(QString phone)
 {
-  return mCore->getNameByPhone( phone );
+    return mCore->getNameByPhone(phone);
 }
 
 void KAddressBookMain::save()
 {
-  mCore->save();
+    mCore->save();
 }
 
 void KAddressBookMain::exit()
 {
-  close();
+    close();
 }
 
 bool KAddressBookMain::handleCommandLine()
 {
-  return mCore->handleCommandLine( this );
+    return mCore->handleCommandLine(this);
 }
 
-void KAddressBookMain::saveProperties( KConfig* )
+void KAddressBookMain::saveProperties(KConfig *)
 {
 }
 
-void KAddressBookMain::readProperties( KConfig* )
+void KAddressBookMain::readProperties(KConfig *)
 {
 }
 
 bool KAddressBookMain::queryClose()
 {
-  return mCore->queryClose();
+    return mCore->queryClose();
 }
 
 void KAddressBookMain::initActions()
 {
-  KStdAction::quit( this, SLOT( close() ), actionCollection() );
+    KStdAction::quit(this, SLOT(close()), actionCollection());
 
-  KAction *action;
-  action = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
-  action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
+    KAction *action;
+    action = KStdAction::keyBindings(this, SLOT(configureKeyBindings()), actionCollection());
+    action->setWhatsThis(i18n("You will be presented with a dialog, where you can configure the application wide shortcuts."));
 
-  KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
+    KStdAction::configureToolbars(this, SLOT(configureToolbars()), actionCollection());
 }
 
 void KAddressBookMain::configureKeyBindings()
 {
-  KKeyDialog::configure( actionCollection(), this );
+    KKeyDialog::configure(actionCollection(), this);
 }
 
-void KAddressBookMain::loadProfile( const QString& )
+void KAddressBookMain::loadProfile(const QString &)
 {
 }
 
-void KAddressBookMain::saveToProfile( const QString& ) const
+void KAddressBookMain::saveToProfile(const QString &) const
 {
 }
 
 void KAddressBookMain::configureToolbars()
 {
-  saveMainWindowSettings( KGlobal::config(), "MainWindow" );
+    saveMainWindowSettings(KGlobal::config(), "MainWindow");
 
-  KEditToolbar edit( factory() );
-  connect( &edit, SIGNAL( newToolbarConfig() ),
-           this, SLOT( newToolbarConfig() ) );
+    KEditToolbar edit(factory());
+    connect(&edit, SIGNAL(newToolbarConfig()),
+            this, SLOT(newToolbarConfig()));
 
-  edit.exec();
+    edit.exec();
 }
 
 void KAddressBookMain::newToolbarConfig()
 {
-  createGUI( "kaddressbookui.rc", false );
-  applyMainWindowSettings( KGlobal::config(), "MainWindow" );
+    createGUI("kaddressbookui.rc", false);
+    applyMainWindowSettings(KGlobal::config(), "MainWindow");
 }
 
 #include "kaddressbookmain.moc"

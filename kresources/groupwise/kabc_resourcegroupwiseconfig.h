@@ -36,25 +36,24 @@ namespace KABC {
 
 class ResourceGroupwise;
 
-class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceGroupwiseConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceGroupwiseConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  protected slots:
+protected slots:
     void updateAddressBookList();
 
-  private:
+private:
     void updateAddressBookView();
     void saveAddressBookSettings();
     void loadAddressBookSettings();
-    void saveServerSettings( ResourceGroupwise *resource );
+    void saveServerSettings(ResourceGroupwise *resource);
 
     KURLRequester *mURL;
     KLineEdit *mUser;

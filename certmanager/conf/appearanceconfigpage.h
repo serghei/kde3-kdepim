@@ -35,26 +35,26 @@
 #include <kcmodule.h>
 
 namespace Kleo {
-  class AppearanceConfigWidget;
+class AppearanceConfigWidget;
 }
 
 /**
  * "Appearance" configuration page for kleopatra's configuration dialog
  */
 class AppearanceConfigurationPage : public KCModule {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  AppearanceConfigurationPage( QWidget * parent=0, const char * name=0 );
+    AppearanceConfigurationPage(QWidget *parent = 0, const char *name = 0);
 
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
 
 private slots:
-  void slotChanged();
+    void slotChanged();
 
 private:
-  Kleo::AppearanceConfigWidget* mWidget;
+    Kleo::AppearanceConfigWidget *mWidget;
 };
 
 #endif // _APPEARANCE_CONFIGURE_DIALOG_PRIVATE_H_

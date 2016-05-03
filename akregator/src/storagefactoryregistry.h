@@ -35,29 +35,28 @@ namespace Backend {
 
 class StorageFactory;
 
-class AKREGATOR_EXPORT StorageFactoryRegistry
-{
-    public:
-        static StorageFactoryRegistry* self();
+class AKREGATOR_EXPORT StorageFactoryRegistry {
+public:
+    static StorageFactoryRegistry *self();
 
-        ~StorageFactoryRegistry();
-        
-        bool registerFactory(StorageFactory* factory, const QString& typestr);
-        void unregisterFactory(const QString& typestr);
-        StorageFactory* getFactory(const QString& typestr);
-        bool containsFactory(const QString& typestr) const;
-        QStringList list() const;
-        
+    ~StorageFactoryRegistry();
 
-    private:
-        static StorageFactoryRegistry* m_instance;
-    
-        StorageFactoryRegistry();
-        StorageFactoryRegistry(const StorageFactoryRegistry&);
-        StorageFactoryRegistry& operator=(const StorageFactoryRegistry&);
+    bool registerFactory(StorageFactory *factory, const QString &typestr);
+    void unregisterFactory(const QString &typestr);
+    StorageFactory *getFactory(const QString &typestr);
+    bool containsFactory(const QString &typestr) const;
+    QStringList list() const;
 
-        class StorageFactoryRegistryPrivate;
-        StorageFactoryRegistryPrivate* d;
+
+private:
+    static StorageFactoryRegistry *m_instance;
+
+    StorageFactoryRegistry();
+    StorageFactoryRegistry(const StorageFactoryRegistry &);
+    StorageFactoryRegistry &operator=(const StorageFactoryRegistry &);
+
+    class StorageFactoryRegistryPrivate;
+    StorageFactoryRegistryPrivate *d;
 };
 
 }

@@ -22,65 +22,73 @@
 #include "kstringhandler.h"
 #include <qtooltip.h>
 
-KRSqueezedTextLabel::KRSqueezedTextLabel( const QString &text , QWidget *parent, const char *name )
- : QLabel ( parent, name ) {
-  setSizePolicy(QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed ));
-  fullText = text;
-  squeezeTextToLabel();
+KRSqueezedTextLabel::KRSqueezedTextLabel(const QString &text , QWidget *parent, const char *name)
+    : QLabel(parent, name)
+{
+    setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
+    fullText = text;
+    squeezeTextToLabel();
 }
 
-KRSqueezedTextLabel::KRSqueezedTextLabel( QWidget *parent, const char *name )
- : QLabel ( parent, name ) {
-  setSizePolicy(QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed ));
+KRSqueezedTextLabel::KRSqueezedTextLabel(QWidget *parent, const char *name)
+    : QLabel(parent, name)
+{
+    setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
 }
 
-void KRSqueezedTextLabel::resizeEvent( QResizeEvent * ) {
-  squeezeTextToLabel();
+void KRSqueezedTextLabel::resizeEvent(QResizeEvent *)
+{
+    squeezeTextToLabel();
 }
 
 QSize KRSqueezedTextLabel::minimumSizeHint() const
 {
-  QSize sh = QLabel::minimumSizeHint();
-  sh.setWidth(-1);
-  return sh;
+    QSize sh = QLabel::minimumSizeHint();
+    sh.setWidth(-1);
+    return sh;
 }
 
 QSize KRSqueezedTextLabel::sizeHint() const
 {
-  return QSize(contentsRect().width(), QLabel::sizeHint().height());
+    return QSize(contentsRect().width(), QLabel::sizeHint().height());
 }
 
-void KRSqueezedTextLabel::setText( const QString &text ) {
-  fullText = text;
-  squeezeTextToLabel();
-}
-
-void KRSqueezedTextLabel::squeezeTextToLabel() {
-  QFontMetrics fm(fontMetrics());
-  int labelWidth = size().width();
-  int textWidth = fm.width(fullText);
-  if (textWidth > labelWidth) {
-    QString squeezedText = KStringHandler::rPixelSqueeze(fullText, fm, labelWidth);
-    QLabel::setText(squeezedText);
-
-    QToolTip::remove( this );
-    QToolTip::add( this, fullText );
-
-  } else {
-    QLabel::setText(fullText);
-
-    QToolTip::remove( this );
-    QToolTip::hide();
-
-  }
-}
-
-void KRSqueezedTextLabel::setAlignment( int alignment )
+void KRSqueezedTextLabel::setText(const QString &text)
 {
-  // save fullText and restore it
-  QString tmpFull(fullText);
-  QLabel::setAlignment(alignment);
-  fullText = tmpFull;
+    fullText = text;
+    squeezeTextToLabel();
+}
+
+void KRSqueezedTextLabel::squeezeTextToLabel()
+{
+    QFontMetrics fm(fontMetrics());
+    int labelWidth = size().width();
+    int textWidth = fm.width(fullText);
+    if(textWidth > labelWidth)
+    {
+        QString squeezedText = KStringHandler::rPixelSqueeze(fullText, fm, labelWidth);
+        QLabel::setText(squeezedText);
+
+        QToolTip::remove(this);
+        QToolTip::add(this, fullText);
+
+    }
+    else
+    {
+        QLabel::setText(fullText);
+
+        QToolTip::remove(this);
+        QToolTip::hide();
+
+    }
+}
+
+void KRSqueezedTextLabel::setAlignment(int alignment)
+{
+    // save fullText and restore it
+    QString tmpFull(fullText);
+    QLabel::setAlignment(alignment);
+    fullText = tmpFull;
 }
 
 #include "krsqueezedtextlabel.moc"

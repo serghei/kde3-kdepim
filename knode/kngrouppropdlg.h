@@ -27,29 +27,32 @@ class KLineEdit;
 class KNGroup;
 
 namespace KNConfig {
-  class IdentityWidget;
-  class GroupCleanupWidget;
+class IdentityWidget;
+class GroupCleanupWidget;
 }
 
 
 class KNGroupPropDlg : public KDialogBase  {
 
-  public:
-    KNGroupPropDlg(KNGroup *group, QWidget *parent=0, const char *name=0);
+public:
+    KNGroupPropDlg(KNGroup *group, QWidget *parent = 0, const char *name = 0);
     ~KNGroupPropDlg();
 
-    bool nickHasChanged()const { return n_ickChanged; }
+    bool nickHasChanged()const
+    {
+        return n_ickChanged;
+    }
 
-  protected:
+protected:
     KNGroup *g_rp;
     bool n_ickChanged;
-    KNConfig::IdentityWidget* i_dWidget;
+    KNConfig::IdentityWidget *i_dWidget;
     KNConfig::GroupCleanupWidget *mCleanupWidget;
     KLineEdit *n_ick;
     QCheckBox *u_seCharset;
     QComboBox *c_harset;
 
-  protected slots:
+protected slots:
     void slotOk();
 
 };

@@ -25,44 +25,47 @@
 
 namespace KMail {
 
-  QStringList TransportManager::transportNames()
-  {
-    KConfigGroup general( KMKernel::config(), "General");
+QStringList TransportManager::transportNames()
+{
+    KConfigGroup general(KMKernel::config(), "General");
 
     int numTransports = general.readNumEntry("transports", 0);
 
     QStringList transportNames;
-    for ( int i = 1 ; i <= numTransports ; i++ ) {
-      KMTransportInfo ti;
-      ti.readConfig(i);
-      transportNames << ti.name;
+    for(int i = 1 ; i <= numTransports ; i++)
+    {
+        KMTransportInfo ti;
+        ti.readConfig(i);
+        transportNames << ti.name;
     }
 
     return transportNames;
-  }
+}
 
-  // more or less copied from AccountManager
-  uint TransportManager::createId()
-  {
+// more or less copied from AccountManager
+uint TransportManager::createId()
+{
     QValueList<unsigned int> usedIds;
 
-    KConfigGroup general( KMKernel::config(), "General");
-    int numTransports = general.readNumEntry( "transports", 0 );
+    KConfigGroup general(KMKernel::config(), "General");
+    int numTransports = general.readNumEntry("transports", 0);
 
-    for ( int i = 1 ; i <= numTransports ; i++ ) {
-      KMTransportInfo ti;
-      ti.readConfig( i );
-      usedIds << ti.id();
+    for(int i = 1 ; i <= numTransports ; i++)
+    {
+        KMTransportInfo ti;
+        ti.readConfig(i);
+        usedIds << ti.id();
     }
 
     usedIds << 0; // 0 is default for unknown
     int newId;
     do
     {
-      newId = kapp->random();
-    } while ( usedIds.find(newId) != usedIds.end() );
+        newId = kapp->random();
+    }
+    while(usedIds.find(newId) != usedIds.end());
 
     return newId;
-  }
+}
 
 } // namespace KMail

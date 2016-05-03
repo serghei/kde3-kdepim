@@ -27,12 +27,11 @@
 #include <kdialogbase.h>
 
 /** Select account from given list of account types */
-class KMAcctSelDlg: public KDialogBase
-{
-  Q_OBJECT
+class KMAcctSelDlg: public KDialogBase {
+    Q_OBJECT
 
-  public:
-    KMAcctSelDlg( QWidget *parent=0, const char *name=0, bool modal=true );
+public:
+    KMAcctSelDlg(QWidget *parent = 0, const char *name = 0, bool modal = true);
 
     /**
      * Returns selected button from the account selection group:
@@ -40,10 +39,10 @@ class KMAcctSelDlg: public KDialogBase
      */
     int selected(void) const;
 
-  private slots:
+private slots:
     void buttonClicked(int);
 
-  private:
+private:
     int mSelectedButton;
 };
 

@@ -32,47 +32,45 @@
 class QToolButton;
 
 namespace KABC {
-    class Addressee;
-    class AddressBook;
+class Addressee;
+class AddressBook;
 }
 
 namespace KPIM {
 namespace DistributionListEditor {
 
-class LineEdit : public KPIM::AddresseeLineEdit
-{
+class LineEdit : public KPIM::AddresseeLineEdit {
     Q_OBJECT
 public:
-    explicit LineEdit( QWidget* parent = 0 );
+    explicit LineEdit(QWidget *parent = 0);
 };
 
 
-class Line : public QWidget
-{
+class Line : public QWidget {
     Q_OBJECT
 public:
-    explicit Line( KABC::AddressBook* book, QWidget* parent = 0 );
+    explicit Line(KABC::AddressBook *book, QWidget *parent = 0);
 
-    void setEntry( const KPIM::DistributionList::Entry& entry );
-    KPIM::DistributionList::Entry entry() const; 
+    void setEntry(const KPIM::DistributionList::Entry &entry);
+    KPIM::DistributionList::Entry entry() const;
     void setFocusToLineEdit();
-    
+
 signals:
     void cleared();
     void textChanged();
 
 private:
-    KABC::Addressee findAddressee( const QString& name, const QString& email ) const; 
+    KABC::Addressee findAddressee(const QString &name, const QString &email) const;
 
 private slots:
-    void textChanged( const QString& );
+    void textChanged(const QString &);
 
 private:
     QString m_uid;
     QString m_initialText;
-    LineEdit* m_lineEdit;
-    QToolButton* m_clearButton;
-    KABC::AddressBook* m_addressBook;
+    LineEdit *m_lineEdit;
+    QToolButton *m_clearButton;
+    KABC::AddressBook *m_addressBook;
 };
 
 } // namespace DisributionListEditor

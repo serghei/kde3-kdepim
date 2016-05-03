@@ -49,49 +49,49 @@ class Identity;
  **/
 
 class KDE_EXPORT IdentityCombo : public QComboBox {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  IdentityCombo( IdentityManager* manager, QWidget * parent=0, const char * name=0 );
+    IdentityCombo(IdentityManager *manager, QWidget *parent = 0, const char *name = 0);
 
-  QString currentIdentityName() const;
-  uint currentIdentity() const;
-  void setCurrentIdentity( const QString & identityName );
-  void setCurrentIdentity( const Identity & identity );
-  void setCurrentIdentity( uint uoid );
+    QString currentIdentityName() const;
+    uint currentIdentity() const;
+    void setCurrentIdentity(const QString &identityName);
+    void setCurrentIdentity(const Identity &identity);
+    void setCurrentIdentity(uint uoid);
 
 signals:
-  /** @deprecated
-   *  @em Really emitted whenever the current identity changes. Either
-   *  by user intervention or on  setCurrentIdentity() or if the
-   *  current identity disappears.
-   **/
-  void identityChanged( const QString & identityName );
+    /** @deprecated
+     *  @em Really emitted whenever the current identity changes. Either
+     *  by user intervention or on  setCurrentIdentity() or if the
+     *  current identity disappears.
+     **/
+    void identityChanged(const QString &identityName);
 
-  /** @em Really emitted whenever the current identity changes. Either
-   *  by user intervention or on setCurrentIdentity() or if the
-   *  current identity disappears.
-   *
-   *  You might also want to listen to IdentityManager::changed,
-   *  IdentityManager::deleted and IdentityManager::added.
-   **/
-  void identityChanged( uint uoid );
+    /** @em Really emitted whenever the current identity changes. Either
+     *  by user intervention or on setCurrentIdentity() or if the
+     *  current identity disappears.
+     *
+     *  You might also want to listen to IdentityManager::changed,
+     *  IdentityManager::deleted and IdentityManager::added.
+     **/
+    void identityChanged(uint uoid);
 
 public slots:
-  /** Connected to IdentityManager::changed(). Reloads the list
-   *  of identities.
-   **/
-  void slotIdentityManagerChanged();
+    /** Connected to IdentityManager::changed(). Reloads the list
+     *  of identities.
+     **/
+    void slotIdentityManagerChanged();
 
 protected slots:
-  void slotEmitChanged(int);
+    void slotEmitChanged(int);
 
 protected:
-  void reloadCombo();
-  void reloadUoidList();
+    void reloadCombo();
+    void reloadUoidList();
 
 protected:
-  QValueList<uint> mUoidList;
-  IdentityManager* mIdentityManager;
+    QValueList<uint> mUoidList;
+    IdentityManager *mIdentityManager;
 };
 
 } // namespace

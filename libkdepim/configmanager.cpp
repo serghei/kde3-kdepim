@@ -21,8 +21,8 @@
 
 using namespace KPIM;
 
-ConfigManager::ConfigManager( QObject * parent, const char * name )
-  : QObject( parent, name )
+ConfigManager::ConfigManager(QObject *parent, const char *name)
+    : QObject(parent, name)
 {
 
 }

@@ -32,43 +32,45 @@
 
 #include "konewstuff.h"
 
-KONewStuff::KONewStuff( CalendarView *view ) :
-  KNewStuff( "korganizer/calendar", view ),
-  mView( view )
+KONewStuff::KONewStuff(CalendarView *view) :
+    KNewStuff("korganizer/calendar", view),
+    mView(view)
 {
 }
 
-bool KONewStuff::install( const QString &fileName )
+bool KONewStuff::install(const QString &fileName)
 {
-  kdDebug(5850) << "KONewStuff::install(): " << fileName << endl;
+    kdDebug(5850) << "KONewStuff::install(): " << fileName << endl;
 
-  CalendarLocal cal( KOPrefs::instance()->mTimeZoneId );
-  FileStorage storage( &cal, fileName );
-  if ( !storage.load() ) {
-    KMessageBox::error( mView, i18n("Could not load calendar.") );
-    return false;
-  }
+    CalendarLocal cal(KOPrefs::instance()->mTimeZoneId);
+    FileStorage storage(&cal, fileName);
+    if(!storage.load())
+    {
+        KMessageBox::error(mView, i18n("Could not load calendar."));
+        return false;
+    }
 
-  Event::List events = cal.events();
+    Event::List events = cal.events();
 
-  QStringList eventList;
+    QStringList eventList;
 
-  Event::List::ConstIterator it;
-  for( it = events.begin(); it != events.end(); ++it ) {
-    QString text = (*it)->summary();
-    eventList.append( text );
-  }
+    Event::List::ConstIterator it;
+    for(it = events.begin(); it != events.end(); ++it)
+    {
+        QString text = (*it)->summary();
+        eventList.append(text);
+    }
 
-  int result = KMessageBox::warningContinueCancelList( mView,
-    i18n("The downloaded events will be merged into your current calendar."),
-    eventList );
+    int result = KMessageBox::warningContinueCancelList(mView,
+                 i18n("The downloaded events will be merged into your current calendar."),
+                 eventList);
 
-  if ( result != KMessageBox::Continue ) return false;
+    if(result != KMessageBox::Continue) return false;
 
-  return mView->openCalendar( fileName, true );
+    return mView->openCalendar(fileName, true);
 }
 
-bool KONewStuff::createUploadFile( const QString &fileName )
+bool KONewStuff::createUploadFile(const QString &fileName)
 {
-  return mView->saveCalendar( fileName );
+    return mView->saveCalendar(fileName);
 }

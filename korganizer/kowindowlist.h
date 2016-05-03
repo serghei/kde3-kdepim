@@ -40,15 +40,14 @@ class KURL;
   @short manages a list of all KOrganizer instances
   @author Cornelius Schumacher
 */
-class KOWindowList : public QObject
-{
+class KOWindowList : public QObject {
     Q_OBJECT
-  public:
+public:
     /**
       Constructs a new list of KOrganizer windows. There should only be one
       instance of this class. The ActionManager class takes care of this.
     */
-    KOWindowList( const char *name = 0 );
+    KOWindowList(const char *name = 0);
     virtual ~KOWindowList();
 
     /**
@@ -59,7 +58,7 @@ class KOWindowList : public QObject
     /**
       Is there a instance with this URL?
     */
-    KOrg::MainWindow *findInstance( const KURL &url );
+    KOrg::MainWindow *findInstance(const KURL &url);
 
     /**
       Return default instance. This is the main window for the resource based
@@ -67,17 +66,17 @@ class KOWindowList : public QObject
     */
     KOrg::MainWindow *defaultInstance();
 
-  public slots:
+public slots:
     /**
       Register a main window.
     */
-    void addWindow( KOrg::MainWindow * );
+    void addWindow(KOrg::MainWindow *);
     /**
       Unregister a main window.
     */
-    void removeWindow( KOrg::MainWindow * );
+    void removeWindow(KOrg::MainWindow *);
 
-  private:
+private:
     QPtrList<KOrg::MainWindow> mWindowList; // list of all existing KOrganizer instances
 
     KOrg::MainWindow *mDefaultWindow;

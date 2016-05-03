@@ -58,94 +58,99 @@
 #include "kandy.moc"
 
 Kandy::Kandy(CommandScheduler *scheduler)
-    : KMainWindow( 0, "Kandy" ),
+    : KMainWindow(0, "Kandy"),
       mPrinter(0)
 {
-  mScheduler = scheduler;
+    mScheduler = scheduler;
 
-  mPreferencesDialog = 0;
+    mPreferencesDialog = 0;
 
-  mView = new KandyView(mScheduler,this);
+    mView = new KandyView(mScheduler, this);
 
-  // accept dnd
-  setAcceptDrops(true);
+    // accept dnd
+    setAcceptDrops(true);
 
-  // tell the KMainWindow that this is indeed the main widget
-  setCentralWidget(mView);
+    // tell the KMainWindow that this is indeed the main widget
+    setCentralWidget(mView);
 
-  // then, setup our actions
-  setupActions();
+    // then, setup our actions
+    setupActions();
 
-  statusBar()->insertItem(i18n(" Disconnected "),0,0,true);
+    statusBar()->insertItem(i18n(" Disconnected "), 0, 0, true);
 
-  setAutoSaveSettings();
+    setAutoSaveSettings();
 
-  // allow the view to change the statusbar and caption
-  connect(mView, SIGNAL(signalChangeStatusbar(const QString&)),
-          this,   SLOT(changeStatusbar(const QString&)));
-  connect(mView, SIGNAL(signalChangeCaption(const QString&)),
-          this,   SLOT(changeCaption(const QString&)));
+    // allow the view to change the statusbar and caption
+    connect(mView, SIGNAL(signalChangeStatusbar(const QString &)),
+            this,   SLOT(changeStatusbar(const QString &)));
+    connect(mView, SIGNAL(signalChangeCaption(const QString &)),
+            this,   SLOT(changeCaption(const QString &)));
 
-  connect(mView,SIGNAL(modifiedChanged(bool)),SLOT(setTitle()));
+    connect(mView, SIGNAL(modifiedChanged(bool)), SLOT(setTitle()));
 
-  KConfig *config = KGlobal::config();
-  config->setGroup("General");
-  QString currentProfile = config->readEntry("CurrentProfile",
-                                             locate("appdata","default.kandy"));
-  if (!currentProfile.isEmpty()) load(currentProfile);
+    KConfig *config = KGlobal::config();
+    config->setGroup("General");
+    QString currentProfile = config->readEntry("CurrentProfile",
+                             locate("appdata", "default.kandy"));
+    if(!currentProfile.isEmpty()) load(currentProfile);
 }
 
 Kandy::~Kandy()
 {
 }
 
-void Kandy::load(const QString& filename)
+void Kandy::load(const QString &filename)
 {
-  if (!mView->loadFile(filename)) {
-    KMessageBox::error(this,i18n("Could not load file %1").arg(filename));
-  }
+    if(!mView->loadFile(filename))
+    {
+        KMessageBox::error(this, i18n("Could not load file %1").arg(filename));
+    }
 
-  mFilename = filename;
-  setTitle();
+    mFilename = filename;
+    setTitle();
 }
 
-void Kandy::save(const QString & filename)
+void Kandy::save(const QString &filename)
 {
-  if (!filename.isEmpty()) {
-    if (!mView->saveFile(filename)) {
-      KMessageBox::error(this,i18n("Could not save file %1.").arg(filename));
-    } else {
-      mFilename = filename;
-      setTitle();
+    if(!filename.isEmpty())
+    {
+        if(!mView->saveFile(filename))
+        {
+            KMessageBox::error(this, i18n("Could not save file %1.").arg(filename));
+        }
+        else
+        {
+            mFilename = filename;
+            setTitle();
+        }
     }
-  }
 }
 
 void Kandy::setupActions()
 {
-  KStdAction::open(this, SLOT(fileOpen()), actionCollection());
-  KStdAction::save(this, SLOT(fileSave()), actionCollection());
-  KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
-//  KStdAction::print(this, SLOT(filePrint()), actionCollection());
-  KStdAction::quit(this, SLOT(close()), actionCollection());
+    KStdAction::open(this, SLOT(fileOpen()), actionCollection());
+    KStdAction::save(this, SLOT(fileSave()), actionCollection());
+    KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
+    //  KStdAction::print(this, SLOT(filePrint()), actionCollection());
+    KStdAction::quit(this, SLOT(close()), actionCollection());
 
-  createStandardStatusBarAction();
-  setStandardToolBarMenuEnabled(true);
-    
-  KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
-  KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+    createStandardStatusBarAction();
+    setStandardToolBarMenuEnabled(true);
 
-  new KAction(i18n("Mobile GUI"),0,this,SLOT(showMobileGui()),
-              actionCollection(),"show_mobilegui");
+    KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
+    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
+    KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
 
-  mConnectAction = new KAction(i18n("Connect"),0,this,SLOT(modemConnect()),
-                               actionCollection(),"modem_connect");
-  mDisconnectAction = new KAction(i18n("Disconnect"),0,this,
-                                  SLOT(modemDisconnect()),actionCollection(),
-                                  "modem_disconnect");
+    new KAction(i18n("Mobile GUI"), 0, this, SLOT(showMobileGui()),
+                actionCollection(), "show_mobilegui");
 
-  createGUI();
+    mConnectAction = new KAction(i18n("Connect"), 0, this, SLOT(modemConnect()),
+                                 actionCollection(), "modem_connect");
+    mDisconnectAction = new KAction(i18n("Disconnect"), 0, this,
+                                    SLOT(modemDisconnect()), actionCollection(),
+                                    "modem_disconnect");
+
+    createGUI();
 }
 
 void Kandy::saveProperties(KConfig */*config*/)
@@ -169,7 +174,7 @@ void Kandy::dragEnterEvent(QDragEnterEvent *event)
     KMainWindow::dragEnterEvent(event);
 
     // accept uri drops only
-//    event->accept(KURLDrag::canDecode(event));
+    //    event->accept(KURLDrag::canDecode(event));
 }
 
 void Kandy::dropEvent(QDropEvent *event)
@@ -180,22 +185,22 @@ void Kandy::dropEvent(QDropEvent *event)
 
     // do nothing
     KMainWindow::dropEvent(event);
-/*
-    KURL::List list;
+    /*
+        KURL::List list;
 
-    // see if we can decode a URI.. if not, just ignore it
-    if (KURLDrag::decode(event, list) && !list.isEmpty())
-    {
-        // okay, we have a URI.. process it
-        const KURL &url = uri.first();
-
-        if (url.isLocalFile())
+        // see if we can decode a URI.. if not, just ignore it
+        if (KURLDrag::decode(event, list) && !list.isEmpty())
         {
-           // load in the file
-           load(url.path());
+            // okay, we have a URI.. process it
+            const KURL &url = uri.first();
+
+            if (url.isLocalFile())
+            {
+               // load in the file
+               load(url.path());
+            }
         }
-    }
-*/
+    */
 }
 
 void Kandy::fileOpen()
@@ -204,19 +209,19 @@ void Kandy::fileOpen()
     // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
     // button is clicked
     QString filename = KFileDialog::getOpenFileName();
-    if (!filename.isEmpty()) load(filename);
+    if(!filename.isEmpty()) load(filename);
 }
 
 void Kandy::fileSave()
 {
-  if (mFilename.isEmpty()) fileSaveAs();
-  else save(mFilename);
+    if(mFilename.isEmpty()) fileSaveAs();
+    else save(mFilename);
 }
 
 void Kandy::fileSaveAs()
 {
-  QString filename = KFileDialog::getSaveFileName();
-  save(filename);
+    QString filename = KFileDialog::getSaveFileName();
+    save(filename);
 }
 
 void Kandy::filePrint()
@@ -224,8 +229,8 @@ void Kandy::filePrint()
     // this slot is called whenever the File->Print menu is selected,
     // the Print shortcut is pressed (usually CTRL+P) or the Print toolbar
     // button is clicked
-    if (!mPrinter) mPrinter = new QPrinter;
-    if (QPrintDialog::getPrinterSetup(mPrinter))
+    if(!mPrinter) mPrinter = new QPrinter;
+    if(QPrintDialog::getPrinterSetup(mPrinter))
     {
         // setup the printer.  with Qt, you always "print" to a
         // QPainter.. whether the output medium is a pixmap, a screen,
@@ -244,13 +249,13 @@ void Kandy::filePrint()
 
 void Kandy::optionsConfigureKeys()
 {
-    KKeyDialog::configure( actionCollection(), this );
+    KKeyDialog::configure(actionCollection(), this);
 }
 
 void Kandy::optionsConfigureToolbars()
 {
     // use the standard toolbar editor
-    saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+    saveMainWindowSettings(KGlobal::config(), autoSaveGroup());
     KEditToolbar dlg(actionCollection());
     connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
     dlg.exec();
@@ -261,27 +266,28 @@ void Kandy::newToolbarConfig()
     // this slot is called when user clicks "Ok" or "Apply" in the toolbar editor.
     // recreate our GUI, and re-apply the settings (e.g. "text under icons", etc.)
     createGUI();
-    applyMainWindowSettings( KGlobal::config(),  autoSaveGroup() );
+    applyMainWindowSettings(KGlobal::config(),  autoSaveGroup());
 }
 
 void Kandy::optionsPreferences()
 {
-  if (!mPreferencesDialog) {
-    mPreferencesDialog = new KandyPrefsDialog(this);
-    mPreferencesDialog->readConfig();
-  }
+    if(!mPreferencesDialog)
+    {
+        mPreferencesDialog = new KandyPrefsDialog(this);
+        mPreferencesDialog->readConfig();
+    }
 
-  mPreferencesDialog->show();
-  mPreferencesDialog->raise();
+    mPreferencesDialog->show();
+    mPreferencesDialog->raise();
 }
 
-void Kandy::changeStatusbar(const QString& text)
+void Kandy::changeStatusbar(const QString &text)
 {
     // display the text on the statusbar
     statusBar()->message(text);
 }
 
-void Kandy::changeCaption(const QString& text)
+void Kandy::changeCaption(const QString &text)
 {
     // display the text on the caption
     setCaption(text);
@@ -289,60 +295,68 @@ void Kandy::changeCaption(const QString& text)
 
 void Kandy::setTitle()
 {
-  if (mFilename.isEmpty()) {
-    setCaption(i18n("New Profile"),mView->isModified());
-  } else {
-    setCaption(mFilename,mView->isModified());
-  }
+    if(mFilename.isEmpty())
+    {
+        setCaption(i18n("New Profile"), mView->isModified());
+    }
+    else
+    {
+        setCaption(mFilename, mView->isModified());
+    }
 }
 
 bool Kandy::queryClose()
 {
-  if (mView->isModified()) {
-    switch (KMessageBox::warningYesNoCancel(this,
-        i18n("Save changes to profile %1?").arg(mFilename), QString::null, KStdGuiItem::save(), KStdGuiItem::discard())) {
-      case KMessageBox::Yes :
-        fileSave();
-        return true;
-      case KMessageBox::No :
-        return true;
-      default: // cancel
-        return false;
+    if(mView->isModified())
+    {
+        switch(KMessageBox::warningYesNoCancel(this,
+                                               i18n("Save changes to profile %1?").arg(mFilename), QString::null, KStdGuiItem::save(), KStdGuiItem::discard()))
+        {
+            case KMessageBox::Yes :
+                fileSave();
+                return true;
+            case KMessageBox::No :
+                return true;
+            default: // cancel
+                return false;
+        }
     }
-  } else {
-    return true;
-  }
+    else
+    {
+        return true;
+    }
 }
 
 void Kandy::modemConnect()
 {
-  if (!mScheduler->modem()->open()) {
-    KMessageBox::sorry(this,
-        i18n("Cannot open modem device %1.")
-        .arg(KandyPrefs::serialDevice()), i18n("Modem Error"));
-    return;
-  }
+    if(!mScheduler->modem()->open())
+    {
+        KMessageBox::sorry(this,
+                           i18n("Cannot open modem device %1.")
+                           .arg(KandyPrefs::serialDevice()), i18n("Modem Error"));
+        return;
+    }
 
-  statusBar()->changeItem(i18n(" Connected "),0);
+    statusBar()->changeItem(i18n(" Connected "), 0);
 
-  emit connectStateChanged(true);
+    emit connectStateChanged(true);
 }
 
 void Kandy::modemDisconnect()
 {
-  mScheduler->modem()->close();
+    mScheduler->modem()->close();
 
-  statusBar()->changeItem(i18n(" Disconnected "),0);
+    statusBar()->changeItem(i18n(" Disconnected "), 0);
 
-  emit connectStateChanged(false);
+    emit connectStateChanged(false);
 }
 
 void Kandy::showMobileGui()
 {
-  emit showMobileWin();
+    emit showMobileWin();
 }
 
-void Kandy::showErrorMessage( const QString &text )
+void Kandy::showErrorMessage(const QString &text)
 {
-  KMessageBox::error( 0, text );
+    KMessageBox::error(0, text);
 }

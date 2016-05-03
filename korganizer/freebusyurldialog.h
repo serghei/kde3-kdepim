@@ -33,32 +33,30 @@ namespace KCal {
 class Attendee;
 }
 
-class FreeBusyUrlDialog : public KDialogBase
-{
+class FreeBusyUrlDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    FreeBusyUrlDialog( KCal::Attendee *, QWidget *parent = 0,
-                       const char *name = 0 );
+public:
+    FreeBusyUrlDialog(KCal::Attendee *, QWidget *parent = 0,
+                      const char *name = 0);
 
-  public slots:
+public slots:
     void slotOk();
 
-  private:
+private:
     FreeBusyUrlWidget *mWidget;
 };
 
-class FreeBusyUrlWidget : public QWidget
-{
+class FreeBusyUrlWidget : public QWidget {
     Q_OBJECT
-  public:
-    FreeBusyUrlWidget( KCal::Attendee *, QWidget *parent = 0,
-                       const char *name = 0 );
+public:
+    FreeBusyUrlWidget(KCal::Attendee *, QWidget *parent = 0,
+                      const char *name = 0);
     ~FreeBusyUrlWidget();
 
     void loadConfig();
     void saveConfig();
 
-  private:
+private:
     KLineEdit *mUrlEdit;
     KCal::Attendee *mAttendee;
 };

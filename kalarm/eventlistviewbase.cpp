@@ -30,13 +30,12 @@
 #include "eventlistviewbase.moc"
 
 
-class EventListWhatsThisBase : public QWhatsThis
-{
-	public:
-		EventListWhatsThisBase(EventListViewBase* lv) : QWhatsThis(lv), mListView(lv) { }
-		virtual QString text(const QPoint&);
-	private:
-		EventListViewBase* mListView;
+class EventListWhatsThisBase : public QWhatsThis {
+public:
+    EventListWhatsThisBase(EventListViewBase *lv) : QWhatsThis(lv), mListView(lv) { }
+    virtual QString text(const QPoint &);
+private:
+    EventListViewBase *mListView;
 };
 
 
@@ -45,24 +44,24 @@ class EventListWhatsThisBase : public QWhatsThis
 =  Base class for displaying a list of events.
 =============================================================================*/
 
-EventListViewBase::EventListViewBase(QWidget* parent, const char* name)
-	: KListView(parent, name),
-	  mFind(0),
-	  mLastColumn(-1),
-	  mLastColumnHeaderWidth(0)
+EventListViewBase::EventListViewBase(QWidget *parent, const char *name)
+    : KListView(parent, name),
+      mFind(0),
+      mLastColumn(-1),
+      mLastColumnHeaderWidth(0)
 {
-	setAllColumnsShowFocus(true);
-	setShowSortIndicator(true);
+    setAllColumnsShowFocus(true);
+    setShowSortIndicator(true);
 
-	new EventListWhatsThisBase(this);
+    new EventListWhatsThisBase(this);
 }
 
-void EventListViewBase::addLastColumn(const QString& title)
+void EventListViewBase::addLastColumn(const QString &title)
 {
-	addColumn(title);
-	mLastColumn = columns() - 1;
-	mLastColumnHeaderWidth = columnWidth(mLastColumn);
-	setColumnWidthMode(mLastColumn, QListView::Maximum);
+    addColumn(title);
+    mLastColumn = columns() - 1;
+    mLastColumnHeaderWidth = columnWidth(mLastColumn);
+    setColumnWidthMode(mLastColumn, QListView::Maximum);
 }
 
 /******************************************************************************
@@ -70,32 +69,32 @@ void EventListViewBase::addLastColumn(const QString& title)
 */
 void EventListViewBase::refresh()
 {
-	QString currentID;
-	if (currentItem())
-		currentID = currentItem()->event().id();    // save current item for restoration afterwards
-	clear();
-	populate();
-	resizeLastColumn();
-	EventListViewItemBase* current = getEntry(currentID);
-	if (current)
-	{
-		setCurrentItem(current);
-		ensureItemVisible(current);
-	}
+    QString currentID;
+    if(currentItem())
+        currentID = currentItem()->event().id();    // save current item for restoration afterwards
+    clear();
+    populate();
+    resizeLastColumn();
+    EventListViewItemBase *current = getEntry(currentID);
+    if(current)
+    {
+        setCurrentItem(current);
+        ensureItemVisible(current);
+    }
 }
 
 /******************************************************************************
 *  Get the item for a given event ID.
 */
-EventListViewItemBase* EventListViewBase::getEntry(const QString& eventID) const
+EventListViewItemBase *EventListViewBase::getEntry(const QString &eventID) const
 {
-	if (!eventID.isEmpty())
-	{
-		for (EventListViewItemBase* item = firstChild();  item;  item = item->nextSibling())
-			if (item->event().id() == eventID)
-				return item;
-	}
-	return 0;
+    if(!eventID.isEmpty())
+    {
+        for(EventListViewItemBase *item = firstChild();  item;  item = item->nextSibling())
+            if(item->event().id() == eventID)
+                return item;
+    }
+    return 0;
 }
 
 /******************************************************************************
@@ -103,10 +102,10 @@ EventListViewItemBase* EventListViewBase::getEntry(const QString& eventID) const
 *  If 'selectionView' is non-null, the selection highlight is moved to the new
 *  event in that listView instance.
 */
-void EventListViewBase::addEvent(const KAEvent& event, const InstanceList& instanceList, EventListViewBase* selectionView)
+void EventListViewBase::addEvent(const KAEvent &event, const InstanceList &instanceList, EventListViewBase *selectionView)
 {
-	for (InstanceListConstIterator it = instanceList.begin();  it != instanceList.end();  ++it)
-		(*it)->addEntry(event, true, (*it == selectionView));
+    for(InstanceListConstIterator it = instanceList.begin();  it != instanceList.end();  ++it)
+        (*it)->addEntry(event, true, (*it == selectionView));
 }
 
 /******************************************************************************
@@ -114,80 +113,80 @@ void EventListViewBase::addEvent(const KAEvent& event, const InstanceList& insta
 *  If 'selectionView' is non-null, the selection highlight is moved to the
 *  modified event in that listView instance.
 */
-void EventListViewBase::modifyEvent(const QString& oldEventID, const KAEvent& newEvent,
-                                    const InstanceList& instanceList, EventListViewBase* selectionView)
+void EventListViewBase::modifyEvent(const QString &oldEventID, const KAEvent &newEvent,
+                                    const InstanceList &instanceList, EventListViewBase *selectionView)
 {
-	for (InstanceListConstIterator it = instanceList.begin();  it != instanceList.end();  ++it)
-	{
-		EventListViewBase* v = *it;
-		EventListViewItemBase* item = v->getEntry(oldEventID);
-		if (item)
-			v->deleteEntry(item, false);
-		v->addEntry(newEvent, true, (v == selectionView));
-	}
+    for(InstanceListConstIterator it = instanceList.begin();  it != instanceList.end();  ++it)
+    {
+        EventListViewBase *v = *it;
+        EventListViewItemBase *item = v->getEntry(oldEventID);
+        if(item)
+            v->deleteEntry(item, false);
+        v->addEntry(newEvent, true, (v == selectionView));
+    }
 }
 
 /******************************************************************************
 *  Delete an event from every displayed list.
 */
-void EventListViewBase::deleteEvent(const QString& eventID, const InstanceList& instanceList)
+void EventListViewBase::deleteEvent(const QString &eventID, const InstanceList &instanceList)
 {
-	for (InstanceListConstIterator it = instanceList.begin();  it != instanceList.end();  ++it)
-	{
-		EventListViewBase* v = *it;
-		EventListViewItemBase* item = v->getEntry(eventID);
-		if (item)
-			v->deleteEntry(item, true);
-		else
-			v->refresh();
-	}
+    for(InstanceListConstIterator it = instanceList.begin();  it != instanceList.end();  ++it)
+    {
+        EventListViewBase *v = *it;
+        EventListViewItemBase *item = v->getEntry(eventID);
+        if(item)
+            v->deleteEntry(item, true);
+        else
+            v->refresh();
+    }
 }
 
 /******************************************************************************
 *  Add a new item to the list.
 *  If 'reselect' is true, select/highlight the new item.
 */
-EventListViewItemBase* EventListViewBase::addEntry(const KAEvent& event, bool setSize, bool reselect)
+EventListViewItemBase *EventListViewBase::addEntry(const KAEvent &event, bool setSize, bool reselect)
 {
-	if (!shouldShowEvent(event))
-		return 0;
-	return addEntry(createItem(event), setSize, reselect);
+    if(!shouldShowEvent(event))
+        return 0;
+    return addEntry(createItem(event), setSize, reselect);
 }
 
-EventListViewItemBase* EventListViewBase::addEntry(EventListViewItemBase* item, bool setSize, bool reselect)
+EventListViewItemBase *EventListViewBase::addEntry(EventListViewItemBase *item, bool setSize, bool reselect)
 {
-	if (setSize)
-		resizeLastColumn();
-	if (reselect)
-	{
-		clearSelection();
-		setSelected(item, true);
-	}
-	return item;
+    if(setSize)
+        resizeLastColumn();
+    if(reselect)
+    {
+        clearSelection();
+        setSelected(item, true);
+    }
+    return item;
 }
 
 /******************************************************************************
 *  Update a specified item in the list.
 *  If 'reselect' is true, select the updated item.
 */
-EventListViewItemBase* EventListViewBase::updateEntry(EventListViewItemBase* item, const KAEvent& newEvent, bool setSize, bool reselect)
+EventListViewItemBase *EventListViewBase::updateEntry(EventListViewItemBase *item, const KAEvent &newEvent, bool setSize, bool reselect)
 {
-	deleteEntry(item);
-	return addEntry(newEvent, setSize, reselect);
+    deleteEntry(item);
+    return addEntry(newEvent, setSize, reselect);
 }
 
 /******************************************************************************
 *  Delete a specified item from the list.
 */
-void EventListViewBase::deleteEntry(EventListViewItemBase* item, bool setSize)
+void EventListViewBase::deleteEntry(EventListViewItemBase *item, bool setSize)
 {
-	if (item)
-	{
-		delete item;
-		if (setSize)
-			resizeLastColumn();
-		emit itemDeleted();
-	}
+    if(item)
+    {
+        delete item;
+        if(setSize)
+            resizeLastColumn();
+        emit itemDeleted();
+    }
 }
 
 /******************************************************************************
@@ -196,12 +195,12 @@ void EventListViewBase::deleteEntry(EventListViewItemBase* item, bool setSize)
 */
 void EventListViewBase::slotFind()
 {
-	if (!mFind)
-	{
-		mFind = new Find(this);
-		connect(mFind, SIGNAL(active(bool)), SIGNAL(findActive(bool)));
-	}
-	mFind->display();
+    if(!mFind)
+    {
+        mFind = new Find(this);
+        connect(mFind, SIGNAL(active(bool)), SIGNAL(findActive(bool)));
+    }
+    mFind->display();
 }
 
 /******************************************************************************
@@ -209,8 +208,8 @@ void EventListViewBase::slotFind()
 */
 void EventListViewBase::findNext(bool forward)
 {
-	if (mFind)
-		mFind->findNext(forward);
+    if(mFind)
+        mFind->findNext(forward);
 }
 
 /******************************************************************************
@@ -219,8 +218,8 @@ void EventListViewBase::findNext(bool forward)
 */
 void EventListViewBase::slotSelectAll()
 {
-	if (selectionMode() == QListView::Multi  ||  selectionMode() == QListView::Extended)
-		selectAll(true);
+    if(selectionMode() == QListView::Multi  ||  selectionMode() == QListView::Extended)
+        selectAll(true);
 }
 
 /******************************************************************************
@@ -229,7 +228,7 @@ void EventListViewBase::slotSelectAll()
 */
 void EventListViewBase::slotDeselect()
 {
-	selectAll(false);
+    selectAll(false);
 }
 
 /******************************************************************************
@@ -237,10 +236,10 @@ void EventListViewBase::slotDeselect()
 */
 bool EventListViewBase::anySelected() const
 {
-	for (QListViewItem* item = KListView::firstChild();  item;  item = item->nextSibling())
-		if (isSelected(item))
-			return true;
-	return false;
+    for(QListViewItem *item = KListView::firstChild();  item;  item = item->nextSibling())
+        if(isSelected(item))
+            return true;
+    return false;
 }
 
 /******************************************************************************
@@ -248,10 +247,10 @@ bool EventListViewBase::anySelected() const
 *  Reply = the event
 *        = 0 if no event is selected or multiple events are selected.
 */
-const KAEvent* EventListViewBase::selectedEvent() const
+const KAEvent *EventListViewBase::selectedEvent() const
 {
-	EventListViewItemBase* sel = selectedItem();
-	return sel ? &sel->event() : 0;
+    EventListViewItemBase *sel = selectedItem();
+    return sel ? &sel->event() : 0;
 }
 
 /******************************************************************************
@@ -260,36 +259,36 @@ const KAEvent* EventListViewBase::selectedEvent() const
 *  QListView::selectedItem().
 *  Reply = null if no items are selected, or if multiple items are selected.
 */
-EventListViewItemBase* EventListViewBase::selectedItem() const
+EventListViewItemBase *EventListViewBase::selectedItem() const
 {
-	if (selectionMode() == QListView::Single)
-		return (EventListViewItemBase*)KListView::selectedItem();
+    if(selectionMode() == QListView::Single)
+        return (EventListViewItemBase *)KListView::selectedItem();
 
-	QListViewItem* item = 0;
-	for (QListViewItem* it = firstChild();  it;  it = it->nextSibling())
-	{
-		if (isSelected(it))
-		{
-			if (item)
-				return 0;
-			item = it;
-		}
-	}
-	return (EventListViewItemBase*)item;
+    QListViewItem *item = 0;
+    for(QListViewItem *it = firstChild();  it;  it = it->nextSibling())
+    {
+        if(isSelected(it))
+        {
+            if(item)
+                return 0;
+            item = it;
+        }
+    }
+    return (EventListViewItemBase *)item;
 }
 
 /******************************************************************************
 *  Fetch all selected items.
 */
-QValueList<EventListViewItemBase*> EventListViewBase::selectedItems() const
+QValueList<EventListViewItemBase *> EventListViewBase::selectedItems() const
 {
-	QValueList<EventListViewItemBase*> items;
-	for (QListViewItem* item = firstChild();  item;  item = item->nextSibling())
-	{
-		if (isSelected(item))
-			items.append((EventListViewItemBase*)item);
-	}
-	return items;
+    QValueList<EventListViewItemBase *> items;
+    for(QListViewItem *item = firstChild();  item;  item = item->nextSibling())
+    {
+        if(isSelected(item))
+            items.append((EventListViewItemBase *)item);
+    }
+    return items;
 }
 
 /******************************************************************************
@@ -297,13 +296,13 @@ QValueList<EventListViewItemBase*> EventListViewBase::selectedItems() const
 */
 int EventListViewBase::selectedCount() const
 {
-	int count = 0;
-	for (QListViewItem* item = firstChild();  item;  item = item->nextSibling())
-	{
-		if (isSelected(item))
-			++count;
-	}
-	return count;
+    int count = 0;
+    for(QListViewItem *item = firstChild();  item;  item = item->nextSibling())
+    {
+        if(isSelected(item))
+            ++count;
+    }
+    return count;
 }
 
 /******************************************************************************
@@ -312,31 +311,31 @@ int EventListViewBase::selectedCount() const
 */
 void EventListViewBase::resizeLastColumn()
 {
-	int lastColumnWidth = mLastColumnHeaderWidth;
-	for (EventListViewItemBase* item = firstChild();  item;  item = item->nextSibling())
-	{
-		int mw = item->lastColumnWidth();
-		if (mw > lastColumnWidth)
-			lastColumnWidth = mw;
-	}
-	QHeader* head = header();
-	int x = head->sectionPos(mLastColumn);
-	int availableWidth = visibleWidth() - x;
-	int rightColWidth = 0;
-	int index = head->mapToIndex(mLastColumn);
-	if (index < mLastColumn)
-	{
-		// The last column has been dragged by the user to a different position.
-		// Ensure that the columns now to the right of it are still shown.
-		for (int i = index + 1;  i <= mLastColumn;  ++i)
-			rightColWidth += columnWidth(head->mapToSection(i));
-		availableWidth -= rightColWidth;
-	}
-	if (availableWidth < lastColumnWidth)
-		availableWidth = lastColumnWidth;
-	setColumnWidth(mLastColumn, availableWidth);
-	if (contentsWidth() > x + availableWidth + rightColWidth)
-		resizeContents(x + availableWidth + rightColWidth, contentsHeight());
+    int lastColumnWidth = mLastColumnHeaderWidth;
+    for(EventListViewItemBase *item = firstChild();  item;  item = item->nextSibling())
+    {
+        int mw = item->lastColumnWidth();
+        if(mw > lastColumnWidth)
+            lastColumnWidth = mw;
+    }
+    QHeader *head = header();
+    int x = head->sectionPos(mLastColumn);
+    int availableWidth = visibleWidth() - x;
+    int rightColWidth = 0;
+    int index = head->mapToIndex(mLastColumn);
+    if(index < mLastColumn)
+    {
+        // The last column has been dragged by the user to a different position.
+        // Ensure that the columns now to the right of it are still shown.
+        for(int i = index + 1;  i <= mLastColumn;  ++i)
+            rightColWidth += columnWidth(head->mapToSection(i));
+        availableWidth -= rightColWidth;
+    }
+    if(availableWidth < lastColumnWidth)
+        availableWidth = lastColumnWidth;
+    setColumnWidth(mLastColumn, availableWidth);
+    if(contentsWidth() > x + availableWidth + rightColWidth)
+        resizeContents(x + availableWidth + rightColWidth, contentsHeight());
 }
 
 /******************************************************************************
@@ -344,10 +343,10 @@ void EventListViewBase::resizeLastColumn()
 *  Sets the last column in the list view to extend at least to the right hand
 *  edge of the list view.
 */
-void EventListViewBase::resizeEvent(QResizeEvent* re)
+void EventListViewBase::resizeEvent(QResizeEvent *re)
 {
-	KListView::resizeEvent(re);
-	resizeLastColumn();
+    KListView::resizeEvent(re);
+    resizeLastColumn();
 }
 
 /******************************************************************************
@@ -355,10 +354,10 @@ void EventListViewBase::resizeEvent(QResizeEvent* re)
 *  Sets the last column in the list view to extend at least to the right hand
 *  edge of the list view.
 */
-void EventListViewBase::showEvent(QShowEvent* se)
+void EventListViewBase::showEvent(QShowEvent *se)
 {
-	KListView::showEvent(se);
-	resizeLastColumn();
+    KListView::showEvent(se);
+    resizeLastColumn();
 }
 
 /******************************************************************************
@@ -366,17 +365,17 @@ void EventListViewBase::showEvent(QShowEvent* se)
 */
 int EventListViewBase::itemHeight()
 {
-	EventListViewItemBase* item = firstChild();
-	if (!item)
-	{
-		// The list is empty, so create a temporary item to find its height
-		QListViewItem* item = new QListViewItem(this, QString::null);
-		int height = item->height();
-		delete item;
-		return height;
-	}
-	else
-		return item->height();
+    EventListViewItemBase *item = firstChild();
+    if(!item)
+    {
+        // The list is empty, so create a temporary item to find its height
+        QListViewItem *item = new QListViewItem(this, QString::null);
+        int height = item->height();
+        delete item;
+        return height;
+    }
+    else
+        return item->height();
 }
 
 
@@ -385,18 +384,18 @@ int EventListViewBase::itemHeight()
 =  Base class containing the details of one event for display in an
 *  EventListViewBase.
 =============================================================================*/
-QPixmap* EventListViewItemBase::mTextIcon;
-QPixmap* EventListViewItemBase::mFileIcon;
-QPixmap* EventListViewItemBase::mCommandIcon;
-QPixmap* EventListViewItemBase::mEmailIcon;
+QPixmap *EventListViewItemBase::mTextIcon;
+QPixmap *EventListViewItemBase::mFileIcon;
+QPixmap *EventListViewItemBase::mCommandIcon;
+QPixmap *EventListViewItemBase::mEmailIcon;
 int      EventListViewItemBase::mIconWidth = 0;
 
 
-EventListViewItemBase::EventListViewItemBase(EventListViewBase* parent, const KAEvent& event)
-	: QListViewItem(parent),
-	  mEvent(event)
+EventListViewItemBase::EventListViewItemBase(EventListViewBase *parent, const KAEvent &event)
+    : QListViewItem(parent),
+      mEvent(event)
 {
-	iconWidth();    // load the icons
+    iconWidth();    // load the icons
 }
 
 /******************************************************************************
@@ -404,9 +403,9 @@ EventListViewItemBase::EventListViewItemBase(EventListViewBase* parent, const KA
 */
 void EventListViewItemBase::setLastColumnText()
 {
-	EventListViewBase* parent = (EventListViewBase*)listView();
-	setText(parent->lastColumn(), lastColumnText());
-	mLastColumnWidth = width(parent->fontMetrics(), parent, parent->lastColumn());
+    EventListViewBase *parent = (EventListViewBase *)listView();
+    setText(parent->lastColumn(), lastColumnText());
+    mLastColumnWidth = width(parent->fontMetrics(), parent, parent->lastColumn());
 }
 
 /******************************************************************************
@@ -414,37 +413,41 @@ void EventListViewItemBase::setLastColumnText()
 */
 int EventListViewItemBase::iconWidth()
 {
-	if (!mIconWidth)
-	{
-		mTextIcon    = new QPixmap(SmallIcon("message"));
-		mFileIcon    = new QPixmap(SmallIcon("file"));
-		mCommandIcon = new QPixmap(SmallIcon("exec"));
-		mEmailIcon   = new QPixmap(SmallIcon("mail_generic"));
-		if (mTextIcon)
-			mIconWidth = mTextIcon->width();
-		if (mFileIcon  &&  mFileIcon->width() > mIconWidth)
-			mIconWidth = mFileIcon->width();
-		if (mCommandIcon  &&  mCommandIcon->width() > mIconWidth)
-			mIconWidth = mCommandIcon->width();
-		if (mEmailIcon  &&  mEmailIcon->width() > mIconWidth)
-			mIconWidth = mEmailIcon->width();
-	}
-	return mIconWidth;
+    if(!mIconWidth)
+    {
+        mTextIcon    = new QPixmap(SmallIcon("message"));
+        mFileIcon    = new QPixmap(SmallIcon("file"));
+        mCommandIcon = new QPixmap(SmallIcon("exec"));
+        mEmailIcon   = new QPixmap(SmallIcon("mail_generic"));
+        if(mTextIcon)
+            mIconWidth = mTextIcon->width();
+        if(mFileIcon  &&  mFileIcon->width() > mIconWidth)
+            mIconWidth = mFileIcon->width();
+        if(mCommandIcon  &&  mCommandIcon->width() > mIconWidth)
+            mIconWidth = mCommandIcon->width();
+        if(mEmailIcon  &&  mEmailIcon->width() > mIconWidth)
+            mIconWidth = mEmailIcon->width();
+    }
+    return mIconWidth;
 }
 
 /******************************************************************************
 *  Return the icon associated with the event's action.
 */
-QPixmap* EventListViewItemBase::eventIcon() const
+QPixmap *EventListViewItemBase::eventIcon() const
 {
-	switch (mEvent.action())
-	{
-		case KAAlarm::FILE:     return mFileIcon;
-		case KAAlarm::COMMAND:  return mCommandIcon;
-		case KAAlarm::EMAIL:    return mEmailIcon;
-		case KAAlarm::MESSAGE:
-		default:                return mTextIcon;
-	}
+    switch(mEvent.action())
+    {
+        case KAAlarm::FILE:
+            return mFileIcon;
+        case KAAlarm::COMMAND:
+            return mCommandIcon;
+        case KAAlarm::EMAIL:
+            return mEmailIcon;
+        case KAAlarm::MESSAGE:
+        default:
+            return mTextIcon;
+    }
 }
 
 
@@ -453,14 +456,14 @@ QPixmap* EventListViewItemBase::eventIcon() const
 =  Sets What's This? text depending on where in the list view is clicked.
 =============================================================================*/
 
-QString EventListWhatsThisBase::text(const QPoint& pt)
+QString EventListWhatsThisBase::text(const QPoint &pt)
 {
-	int column = -1;
-	QPoint viewportPt = mListView->viewport()->mapFrom(mListView, pt);
-	QRect frame = mListView->header()->frameGeometry();
-	if (frame.contains(pt)
-	||  mListView->itemAt(QPoint(mListView->itemMargin(), viewportPt.y())) && frame.contains(QPoint(pt.x(), frame.y())))
-		column = mListView->header()->sectionAt(pt.x());
-	return mListView->whatsThisText(column);
+    int column = -1;
+    QPoint viewportPt = mListView->viewport()->mapFrom(mListView, pt);
+    QRect frame = mListView->header()->frameGeometry();
+    if(frame.contains(pt)
+            ||  mListView->itemAt(QPoint(mListView->itemMargin(), viewportPt.y())) && frame.contains(QPoint(pt.x(), frame.y())))
+        column = mListView->header()->sectionAt(pt.x());
+    return mListView->whatsThisText(column);
 }
 

@@ -39,29 +39,29 @@
 #include "kitchensync_plugin.h"
 
 typedef KGenericFactory< KitchenSyncPlugin, Kontact::Core > KitchenSyncPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_kitchensync,
-                            KitchenSyncPluginFactory( "kontact_kitchensync" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_kitchensync,
+                           KitchenSyncPluginFactory("kontact_kitchensync"))
 
-KitchenSyncPlugin::KitchenSyncPlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "KitchenSync" )
+KitchenSyncPlugin::KitchenSyncPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "KitchenSync")
 {
-  setInstance( KitchenSyncPluginFactory::instance() );
+    setInstance(KitchenSyncPluginFactory::instance());
 }
 
 KitchenSyncPlugin::~KitchenSyncPlugin()
 {
 }
 
-KParts::ReadOnlyPart* KitchenSyncPlugin::createPart()
+KParts::ReadOnlyPart *KitchenSyncPlugin::createPart()
 {
-  return loadPart();
+    return loadPart();
 }
 
 QStringList KitchenSyncPlugin::configModules() const
 {
-  QStringList modules;
-  modules << "PIM/kitchensync.desktop";
-  return modules;
+    QStringList modules;
+    modules << "PIM/kitchensync.desktop";
+    return modules;
 }
 
 #include "kitchensync_plugin.moc"

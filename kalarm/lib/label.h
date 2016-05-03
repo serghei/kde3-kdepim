@@ -38,59 +38,60 @@ class LabelFocusWidget;
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class Label : public QLabel
-{
-		Q_OBJECT
-		friend class LabelFocusWidget;
-	public:
-		/** Constructs an empty label.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 *  @param f    Flags. See QWidget constructor for details.
-		 */
-		explicit Label(QWidget* parent, const char* name = 0, WFlags f = 0);
-		/** Constructs a label that displays @p text.
-		 *  @param text   Text string to display.
-		 *  @param parent The parent object of this widget.
-		 *  @param name   The name of this widget.
-		 *  @param f      Flags. See QWidget constructor for details.
-		 */
-		Label(const QString& text, QWidget* parent, const char* name = 0, WFlags f = 0);
-		/** Constructs a label, with a buddy widget, that displays @p text.
-		 *  @param buddy  Buddy widget which receives the keyboard focus when the
-		 *                label's accelerator key is pressed. If @p buddy is a radio
-		 *                button, @p buddy is in addition selected when the
-		 *                accelerator key is pressed.
-		 *  @param text   Text string to display.
-		 *  @param parent The parent object of this widget.
-		 *  @param name   The name of this widget.
-		 *  @param f      Flags. See QWidget constructor for details.
-		 */
-		Label(QWidget* buddy, const QString& text, QWidget* parent, const char* name = 0, WFlags f = 0);
-		/** Sets the label's buddy widget which receives the keyboard focus when the
-		 *  label's accelerator key is pressed. If @p buddy is a radio button,
-		 *  @p buddy is in addition selected when the accelerator key is pressed.
-		 */
-		virtual void      setBuddy(QWidget* buddy);
-	protected:
-		virtual void      drawContents(QPainter* p)  { QLabel::drawContents(p); }
-	private slots:
-		void              buddyDead();
-	private:
-		void              activated();
-		QRadioButton*     mRadioButton;   // buddy widget if it's a radio button, else 0
-		LabelFocusWidget* mFocusWidget;
+class Label : public QLabel {
+    Q_OBJECT
+    friend class LabelFocusWidget;
+public:
+    /** Constructs an empty label.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     *  @param f    Flags. See QWidget constructor for details.
+     */
+    explicit Label(QWidget *parent, const char *name = 0, WFlags f = 0);
+    /** Constructs a label that displays @p text.
+     *  @param text   Text string to display.
+     *  @param parent The parent object of this widget.
+     *  @param name   The name of this widget.
+     *  @param f      Flags. See QWidget constructor for details.
+     */
+    Label(const QString &text, QWidget *parent, const char *name = 0, WFlags f = 0);
+    /** Constructs a label, with a buddy widget, that displays @p text.
+     *  @param buddy  Buddy widget which receives the keyboard focus when the
+     *                label's accelerator key is pressed. If @p buddy is a radio
+     *                button, @p buddy is in addition selected when the
+     *                accelerator key is pressed.
+     *  @param text   Text string to display.
+     *  @param parent The parent object of this widget.
+     *  @param name   The name of this widget.
+     *  @param f      Flags. See QWidget constructor for details.
+     */
+    Label(QWidget *buddy, const QString &text, QWidget *parent, const char *name = 0, WFlags f = 0);
+    /** Sets the label's buddy widget which receives the keyboard focus when the
+     *  label's accelerator key is pressed. If @p buddy is a radio button,
+     *  @p buddy is in addition selected when the accelerator key is pressed.
+     */
+    virtual void      setBuddy(QWidget *buddy);
+protected:
+    virtual void      drawContents(QPainter *p)
+    {
+        QLabel::drawContents(p);
+    }
+private slots:
+    void              buddyDead();
+private:
+    void              activated();
+    QRadioButton     *mRadioButton;   // buddy widget if it's a radio button, else 0
+    LabelFocusWidget *mFocusWidget;
 };
 
 
 // Private class for use by Label
-class LabelFocusWidget : public QWidget
-{
-		Q_OBJECT
-	public:
-		LabelFocusWidget(QWidget* parent, const char* name = 0);
-	protected:
-		virtual void focusInEvent(QFocusEvent*);
+class LabelFocusWidget : public QWidget {
+    Q_OBJECT
+public:
+    LabelFocusWidget(QWidget *parent, const char *name = 0);
+protected:
+    virtual void focusInEvent(QFocusEvent *);
 };
 
 #endif // LABEL_H

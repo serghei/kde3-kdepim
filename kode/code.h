@@ -29,39 +29,41 @@
 #include <kdepimmacros.h>
 namespace KODE {
 
-class KDE_EXPORT Code
-{
-  public:
+class KDE_EXPORT Code {
+public:
     Code();
-    Code( int indent );
+    Code(int indent);
 
     void clear();
 
     bool isEmpty() const;
 
-    void setIndent( int indent );
+    void setIndent(int indent);
     void indent();
     void unindent();
 
-    QString text() const { return mText; }
+    QString text() const
+    {
+        return mText;
+    }
 
-    void addLine( const QString & );
-    void addBlock( const Code & );
-    void addBlock( const QString & );
-    void addBlock( const QString &, int indent );
+    void addLine(const QString &);
+    void addBlock(const Code &);
+    void addBlock(const QString &);
+    void addBlock(const QString &, int indent);
 
-    void addWrappedText( const QString & );
-    void addFormattedText( const QString & );
+    void addWrappedText(const QString &);
+    void addFormattedText(const QString &);
 
     void newLine();
 
-    Code &operator+=( const QString & );
-    Code &operator+=( const char * );
-    Code &operator+=( const Code & );
+    Code &operator+=(const QString &);
+    Code &operator+=(const char *);
+    Code &operator+=(const Code &);
 
-    static QString spaces( int count );
+    static QString spaces(int count);
 
-  private:
+private:
     QString mText;
     int mIndent;
 };

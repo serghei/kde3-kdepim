@@ -32,15 +32,15 @@ GroupDavCalendarAdaptor::GroupDavCalendarAdaptor() : DavCalendarAdaptor()
 {
 }
 
-void GroupDavCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
+void GroupDavCalendarAdaptor::customAdaptDownloadUrl(KURL &url)
 {
-  url = WebdavHandler::toDAV( url );
+    url = WebdavHandler::toDAV(url);
 }
 
-void GroupDavCalendarAdaptor::customAdaptUploadUrl( KURL &url )
+void GroupDavCalendarAdaptor::customAdaptUploadUrl(KURL &url)
 {
-  url = WebdavHandler::toDAV( url );
-  // FIXME: Find a good place where we can obtain the path for a new item
-//  url.setPath( url.path() + "/new.ics" );
+    url = WebdavHandler::toDAV(url);
+    // FIXME: Find a good place where we can obtain the path for a new item
+    //  url.setPath( url.path() + "/new.ics" );
 }
 

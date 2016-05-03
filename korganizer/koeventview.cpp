@@ -44,8 +44,8 @@ using namespace KOrg;
 
 //---------------------------------------------------------------------------
 
-KOEventView::KOEventView(Calendar *cal,QWidget *parent,const char *name)
-  : KOrg::BaseView(cal,parent,name)
+KOEventView::KOEventView(Calendar *cal, QWidget *parent, const char *name)
+    : KOrg::BaseView(cal, parent, name)
 {
 }
 
@@ -59,108 +59,111 @@ KOEventView::~KOEventView()
 
 KOEventPopupMenu *KOEventView::eventPopup()
 {
-  KOEventPopupMenu *eventPopup = new KOEventPopupMenu;
-  
-  connect(eventPopup,SIGNAL(editIncidenceSignal(Incidence *)),
-                     SIGNAL(editIncidenceSignal(Incidence *)));
-  connect(eventPopup,SIGNAL(showIncidenceSignal(Incidence *)),
-                     SIGNAL(showIncidenceSignal(Incidence *)));
-  connect(eventPopup,SIGNAL(deleteIncidenceSignal(Incidence *)),
-                     SIGNAL(deleteIncidenceSignal(Incidence *)));
-  connect(eventPopup,SIGNAL(cutIncidenceSignal(Incidence *)),
-                     SIGNAL(cutIncidenceSignal(Incidence *)));
-  connect(eventPopup,SIGNAL(copyIncidenceSignal(Incidence *)),
-                     SIGNAL(copyIncidenceSignal(Incidence *)));
-  connect(eventPopup,SIGNAL(pasteIncidenceSignal()),
-                     SIGNAL(pasteIncidenceSignal()));
-  connect(eventPopup,SIGNAL(toggleAlarmSignal(Incidence *)),
-                     SIGNAL(toggleAlarmSignal(Incidence*)));
-  connect(eventPopup,SIGNAL(dissociateOccurrenceSignal( Incidence *, const QDate & )),
-                     SIGNAL(dissociateOccurrenceSignal( Incidence *, const QDate & )));
-  connect(eventPopup,SIGNAL(dissociateFutureOccurrenceSignal( Incidence *, const QDate & )),
-                     SIGNAL(dissociateFutureOccurrenceSignal( Incidence *, const QDate & )));
+    KOEventPopupMenu *eventPopup = new KOEventPopupMenu;
 
-  return eventPopup;
+    connect(eventPopup, SIGNAL(editIncidenceSignal(Incidence *)),
+            SIGNAL(editIncidenceSignal(Incidence *)));
+    connect(eventPopup, SIGNAL(showIncidenceSignal(Incidence *)),
+            SIGNAL(showIncidenceSignal(Incidence *)));
+    connect(eventPopup, SIGNAL(deleteIncidenceSignal(Incidence *)),
+            SIGNAL(deleteIncidenceSignal(Incidence *)));
+    connect(eventPopup, SIGNAL(cutIncidenceSignal(Incidence *)),
+            SIGNAL(cutIncidenceSignal(Incidence *)));
+    connect(eventPopup, SIGNAL(copyIncidenceSignal(Incidence *)),
+            SIGNAL(copyIncidenceSignal(Incidence *)));
+    connect(eventPopup, SIGNAL(pasteIncidenceSignal()),
+            SIGNAL(pasteIncidenceSignal()));
+    connect(eventPopup, SIGNAL(toggleAlarmSignal(Incidence *)),
+            SIGNAL(toggleAlarmSignal(Incidence *)));
+    connect(eventPopup, SIGNAL(dissociateOccurrenceSignal(Incidence *, const QDate &)),
+            SIGNAL(dissociateOccurrenceSignal(Incidence *, const QDate &)));
+    connect(eventPopup, SIGNAL(dissociateFutureOccurrenceSignal(Incidence *, const QDate &)),
+            SIGNAL(dissociateFutureOccurrenceSignal(Incidence *, const QDate &)));
+
+    return eventPopup;
 }
 
 QPopupMenu *KOEventView::newEventPopup()
 {
-  KXMLGUIClient *client = KOCore::self()->xmlguiClient( this );
-  if ( !client ) {
-    kdError() << "KOEventView::newEventPopup(): no xmlGuiClient." << endl;
-    return 0;
-  }
-  if ( !client->factory() ) {
-    kdError() << "KOEventView::newEventPopup(): no factory" << endl;
-    return 0; // can happen if called too early
-  }
+    KXMLGUIClient *client = KOCore::self()->xmlguiClient(this);
+    if(!client)
+    {
+        kdError() << "KOEventView::newEventPopup(): no xmlGuiClient." << endl;
+        return 0;
+    }
+    if(!client->factory())
+    {
+        kdError() << "KOEventView::newEventPopup(): no factory" << endl;
+        return 0; // can happen if called too early
+    }
 
-  return static_cast<QPopupMenu*>
-      ( client->factory()->container( "rmb_selection_popup", client ) );
+    return static_cast<QPopupMenu *>
+           (client->factory()->container("rmb_selection_popup", client));
 }
 //---------------------------------------------------------------------------
 
 void KOEventView::popupShow()
 {
-  emit showIncidenceSignal(mCurrentIncidence);
+    emit showIncidenceSignal(mCurrentIncidence);
 }
 
 //---------------------------------------------------------------------------
 
 void KOEventView::popupEdit()
 {
-  emit editIncidenceSignal(mCurrentIncidence);
+    emit editIncidenceSignal(mCurrentIncidence);
 }
 
 //---------------------------------------------------------------------------
 
 void KOEventView::popupDelete()
 {
-  emit deleteIncidenceSignal(mCurrentIncidence);
+    emit deleteIncidenceSignal(mCurrentIncidence);
 }
 
 //---------------------------------------------------------------------------
 
 void KOEventView::popupCut()
 {
-  emit cutIncidenceSignal(mCurrentIncidence);
+    emit cutIncidenceSignal(mCurrentIncidence);
 }
 
 //---------------------------------------------------------------------------
 
 void KOEventView::popupCopy()
 {
-  emit copyIncidenceSignal(mCurrentIncidence);
+    emit copyIncidenceSignal(mCurrentIncidence);
 }
 
 //---------------------------------------------------------------------------
 
 void KOEventView::showNewEventPopup()
 {
-  QPopupMenu *popup = newEventPopup();
-  if ( !popup ) {
-    kdError() << "KOEventView::showNewEventPopup(): popup creation failed"
-              << endl;
-    return;
-  }
+    QPopupMenu *popup = newEventPopup();
+    if(!popup)
+    {
+        kdError() << "KOEventView::showNewEventPopup(): popup creation failed"
+                  << endl;
+        return;
+    }
 
-  popup->popup( QCursor::pos() );
+    popup->popup(QCursor::pos());
 }
 
 //---------------------------------------------------------------------------
 
-void KOEventView::defaultAction( Incidence *incidence )
+void KOEventView::defaultAction(Incidence *incidence)
 {
-  kdDebug(5850) << "KOEventView::defaultAction()" << endl;
+    kdDebug(5850) << "KOEventView::defaultAction()" << endl;
 
-  if ( !incidence ) return;
+    if(!incidence) return;
 
-  kdDebug(5850) << "  type: " << incidence->type() << endl;
+    kdDebug(5850) << "  type: " << incidence->type() << endl;
 
-  if ( incidence->isReadOnly() )
-    emit showIncidenceSignal(incidence);
-  else
-    emit editIncidenceSignal(incidence);
+    if(incidence->isReadOnly())
+        emit showIncidenceSignal(incidence);
+    else
+        emit editIncidenceSignal(incidence);
 }
 
 //---------------------------------------------------------------------------

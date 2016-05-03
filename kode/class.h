@@ -34,50 +34,79 @@
 
 namespace KODE {
 
-class KDE_EXPORT Class
-{
-  public:
+class KDE_EXPORT Class {
+public:
     typedef QValueList<Class> List;
-    
-    Class();
-    Class( const QString &name, const QString &nameSpace = QString::null );
 
-    Class( const Class & );
-    Class &operator=( const Class &c );
+    Class();
+    Class(const QString &name, const QString &nameSpace = QString::null);
+
+    Class(const Class &);
+    Class &operator=(const Class &c);
 
     bool isValid() const;
 
-    void addInclude( const QString &file,
-      const QString &forwardDeclaration = QString::null );
-    void addHeaderInclude( const QString &file );
-    void addHeaderIncludes( const QStringList &files );
-    void addBaseClass( const Class & );
-    void addFunction( const Function & );
-    void addMemberVariable( const MemberVariable &v );
-    void addTypedef( const Typedef & );
-    void addEnum( const Enum & );
+    void addInclude(const QString &file,
+                    const QString &forwardDeclaration = QString::null);
+    void addHeaderInclude(const QString &file);
+    void addHeaderIncludes(const QStringList &files);
+    void addBaseClass(const Class &);
+    void addFunction(const Function &);
+    void addMemberVariable(const MemberVariable &v);
+    void addTypedef(const Typedef &);
+    void addEnum(const Enum &);
 
-    void setName( const QString &name );
-    QString name() const { return mName; }
-    void setNameSpace( const QString &nameSpace );
-    QString nameSpace() const { return mNameSpace; }
-    QStringList includes() const { return mIncludes; }
-    QStringList headerIncludes() const { return mHeaderIncludes; }
-    QStringList forwardDeclarations() const { return mForwardDeclarations; }
-    Function::List functions() const { return mFunctions; }
-    MemberVariable::List memberVariables() const { return mMemberVariables; }
+    void setName(const QString &name);
+    QString name() const
+    {
+        return mName;
+    }
+    void setNameSpace(const QString &nameSpace);
+    QString nameSpace() const
+    {
+        return mNameSpace;
+    }
+    QStringList includes() const
+    {
+        return mIncludes;
+    }
+    QStringList headerIncludes() const
+    {
+        return mHeaderIncludes;
+    }
+    QStringList forwardDeclarations() const
+    {
+        return mForwardDeclarations;
+    }
+    Function::List functions() const
+    {
+        return mFunctions;
+    }
+    MemberVariable::List memberVariables() const
+    {
+        return mMemberVariables;
+    }
     Class::List baseClasses() const;
-    Typedef::List typedefs() const { return mTypedefs; }
-    Enum::List enums() const { return mEnums; }
+    Typedef::List typedefs() const
+    {
+        return mTypedefs;
+    }
+    Enum::List enums() const
+    {
+        return mEnums;
+    }
 
-    void setDocs( const QString & );
-    QString docs() const { return mDocs; }
+    void setDocs(const QString &);
+    QString docs() const
+    {
+        return mDocs;
+    }
 
-    bool hasFunction( const QString &name ) const;
-    
+    bool hasFunction(const QString &name) const;
+
     bool isQObject() const;
-    
-  private:
+
+private:
     // WARNING: If you add member variables, you have to adjust the copy
     //          constructor.
     QString mName;

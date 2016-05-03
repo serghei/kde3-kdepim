@@ -41,54 +41,58 @@
 
 namespace KPIM {
 
-SSLLabel::SSLLabel( QWidget* parent )
-  : QLabel( parent )
+SSLLabel::SSLLabel(QWidget *parent)
+    : QLabel(parent)
 {
-  setState( Done );
+    setState(Done);
 }
 
-void SSLLabel::setEncrypted( bool enc )
+void SSLLabel::setEncrypted(bool enc)
 {
-  if ( enc ) {
-    m_lastEncryptionState = Encrypted;
-  } else {
-    m_lastEncryptionState = Unencrypted;
-  }
+    if(enc)
+    {
+        m_lastEncryptionState = Encrypted;
+    }
+    else
+    {
+        m_lastEncryptionState = Unencrypted;
+    }
 }
 
 SSLLabel::State SSLLabel::lastState() const
 {
-  return m_lastEncryptionState;
+    return m_lastEncryptionState;
 }
 
-void SSLLabel::setState( State state )
+void SSLLabel::setState(State state)
 {
-  switch( state ) {
-  case Encrypted:
-    QToolTip::remove( this );
-    QToolTip::add( this, i18n("Connection is encrypted") );
-    setPixmap( SmallIcon( "encrypted", KGlobal::instance() ) );
-    show();
-    break;
-  case Unencrypted:
-    QToolTip::remove( this );
-    QToolTip::add( this, i18n("Connection is unencrypted") );
-    setPixmap( SmallIcon( "decrypted" ) );
-    show();
-    break;
-  case Done:
-    QToolTip::remove( this );
-    hide();
-    break;
-  case Clean:
-  default:
-    QToolTip::remove( this );
-    hide();
-    //we return because we do not save the state as the only
-    //action we want to perform is to hide ourself
-    return;
-  }
-  m_lastEncryptionState = state;
+    switch(state)
+    {
+        case Encrypted:
+            QToolTip::remove(this);
+            QToolTip::add(this, i18n("Connection is encrypted"));
+            setPixmap(SmallIcon("encrypted", KGlobal::instance()));
+            show();
+            break;
+        case Unencrypted:
+            QToolTip::remove(this);
+            QToolTip::add(this, i18n("Connection is unencrypted"));
+            setPixmap(SmallIcon("decrypted"));
+            show();
+            break;
+        case Done:
+            QToolTip::remove(this);
+            hide();
+            break;
+        case Clean:
+        default:
+            QToolTip::remove(this);
+            hide();
+            //we return because we do not save the state as the only
+            //action we want to perform is to hide ourself
+            return;
+    }
+    m_lastEncryptionState = state;
 }
 
 

@@ -30,46 +30,53 @@ class KDGanttView;
 class KDCanvasPolygon;
 
 namespace KCal {
-  class Calendar;
-  class ResourceCalendar;
-  class Incidence;
+class Calendar;
+class ResourceCalendar;
+class Incidence;
 }
 
 namespace KOrg {
 
 class TimelineSubItem;
 
-class TimelineItem : public KDGanttViewTaskItem
-{
-  public:
-    TimelineItem( const QString &label, KDGanttView* parent );
+class TimelineItem : public KDGanttViewTaskItem {
+public:
+    TimelineItem(const QString &label, KDGanttView *parent);
 
-    void insertIncidence( KCal::Incidence *incidence,
-                          const QDateTime &start = QDateTime(),
-                          const QDateTime &end = QDateTime() );
-    void removeIncidence( KCal::Incidence *incidence );
+    void insertIncidence(KCal::Incidence *incidence,
+                         const QDateTime &start = QDateTime(),
+                         const QDateTime &end = QDateTime());
+    void removeIncidence(KCal::Incidence *incidence);
 
-    void moveItems( KCal::Incidence* incidence, int delta, int duration );
+    void moveItems(KCal::Incidence *incidence, int delta, int duration);
 
-  private:
-    QMap<KCal::Incidence*, QValueList<TimelineSubItem*> > mItemMap;
+private:
+    QMap<KCal::Incidence *, QValueList<TimelineSubItem *> > mItemMap;
 };
 
-class TimelineSubItem : public KDGanttViewTaskItem
-{
-  public:
-    TimelineSubItem( KCal::Incidence *incidence, TimelineItem *parent );
+class TimelineSubItem : public KDGanttViewTaskItem {
+public:
+    TimelineSubItem(KCal::Incidence *incidence, TimelineItem *parent);
     ~TimelineSubItem();
 
-    KCal::Incidence* incidence() const { return mIncidence; }
+    KCal::Incidence *incidence() const
+    {
+        return mIncidence;
+    }
 
-    QDateTime originalStart() const { return mStart; }
-    void setOriginalStart( const QDateTime &dt ) { mStart = dt; }
+    QDateTime originalStart() const
+    {
+        return mStart;
+    }
+    void setOriginalStart(const QDateTime &dt)
+    {
+        mStart = dt;
+    }
 
-  private:
-    void showItem( bool show = true, int coordY = 0 );
+private:
+    void showItem(bool show = true, int coordY = 0);
 
-  private:
+private:
     KCal::Incidence *mIncidence;
     QDateTime mStart;
     KDCanvasPolygon *mLeft, *mRight;

@@ -32,25 +32,24 @@ class Calendar;
 /**
   vCalendar drag&drop class.
 */
-class KDE_EXPORT VCalDrag : public QStoredDrag
-{
-  public:
+class KDE_EXPORT VCalDrag : public QStoredDrag {
+public:
     /**
       Create a drag&drop object for vCalendar component \a vcal.
     */
-    VCalDrag( Calendar *vcal, QWidget *parent = 0, const char *name = 0 );
+    VCalDrag(Calendar *vcal, QWidget *parent = 0, const char *name = 0);
     ~VCalDrag() {}
 
     /**
       Return, if drag&drop object can be decode to vCalendar.
     */
-    static bool canDecode( QMimeSource * );
+    static bool canDecode(QMimeSource *);
     /**
       Decode drag&drop object to vCalendar component \a vcal.
     */
-    static bool decode( QMimeSource *e, Calendar *cal );
+    static bool decode(QMimeSource *e, Calendar *cal);
 
-  private:
+private:
     class Private;
     Private *d;
 };

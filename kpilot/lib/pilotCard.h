@@ -36,30 +36,59 @@
 #include <pi-dlp.h>
 #endif
 
-class KPilotCard
-{
+class KPilotCard {
 public:
-	KPilotCard() { ::memset(&fCard,0,sizeof(struct CardInfo)); }
-	KPilotCard(const CardInfo* card) { fCard = *card; }
+    KPilotCard()
+    {
+        ::memset(&fCard, 0, sizeof(struct CardInfo));
+    }
+    KPilotCard(const CardInfo *card)
+    {
+        fCard = *card;
+    }
 
-	CardInfo *cardInfo() { return &fCard; }
+    CardInfo *cardInfo()
+    {
+        return &fCard;
+    }
 
-	/**
-	* Ensures the names are properly terminated.  Needed incase we
-	* are syncing a new and bogus pilot.
-	*/
-	void boundsCheck() {}
+    /**
+    * Ensures the names are properly terminated.  Needed incase we
+    * are syncing a new and bogus pilot.
+    */
+    void boundsCheck() {}
 
-	const int getCardIndex() const          { return fCard.card; }
-	const int getCardVersion() const        { return fCard.version; }
-	unsigned long getRomSize() const        { return fCard.romSize; }
-	unsigned long getRamSize() const        { return fCard.ramSize; }
-	unsigned long getRamFree() const        { return fCard.ramFree; }
-	const char* getCardName() const         { return fCard.name; }
-	const char* getCardManufacturer() const { return fCard.manufacturer; }
+    const int getCardIndex() const
+    {
+        return fCard.card;
+    }
+    const int getCardVersion() const
+    {
+        return fCard.version;
+    }
+    unsigned long getRomSize() const
+    {
+        return fCard.romSize;
+    }
+    unsigned long getRamSize() const
+    {
+        return fCard.ramSize;
+    }
+    unsigned long getRamFree() const
+    {
+        return fCard.ramFree;
+    }
+    const char *getCardName() const
+    {
+        return fCard.name;
+    }
+    const char *getCardManufacturer() const
+    {
+        return fCard.manufacturer;
+    }
 
 private:
-	struct CardInfo fCard;
+    struct CardInfo fCard;
 };
 
 #endif

@@ -30,7 +30,7 @@
 
 
 extern "C" {
-  #include <libical/ical.h>
+#include <libical/ical.h>
 }
 
 namespace KCal {
@@ -42,27 +42,26 @@ class Compat;
 
   This class provides the libical dependent functions for ICalFormat.
 */
-class ICalFormatImpl
-{
-  public:
+class ICalFormatImpl {
+public:
     /** Create new iCal format for calendar object */
-    ICalFormatImpl( ICalFormat *parent );
+    ICalFormatImpl(ICalFormat *parent);
     virtual ~ICalFormatImpl();
 
-    bool populate( Calendar *, icalcomponent *fs);
+    bool populate(Calendar *, icalcomponent *fs);
 
-    icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request );
+    icalcomponent *writeIncidence(IncidenceBase *incidence, Scheduler::Method method = Scheduler::Request);
     icalcomponent *writeTodo(Todo *todo);
     icalcomponent *writeEvent(Event *event);
     icalcomponent *writeFreeBusy(FreeBusy *freebusy,
-                                 Scheduler::Method method = Scheduler::Publish );
+                                 Scheduler::Method method = Scheduler::Publish);
     icalcomponent *writeJournal(Journal *journal);
-    void writeIncidence(icalcomponent *parent,Incidence *incidence);
+    void writeIncidence(icalcomponent *parent, Incidence *incidence);
     icalproperty *writeAttendee(Attendee *attendee);
-    icalproperty *writeOrganizer( const Person &organizer );
+    icalproperty *writeOrganizer(const Person &organizer);
     icalproperty *writeAttachment(Attachment *attach);
     icalproperty *writeRecurrenceRule(Recurrence *);
-    icalrecurrencetype writeRecurrenceRule( RecurrenceRule *recur );
+    icalrecurrencetype writeRecurrenceRule(RecurrenceRule *recur);
     icalcomponent *writeAlarm(Alarm *alarm);
 
     QString extractErrorProperty(icalcomponent *);
@@ -71,35 +70,38 @@ class ICalFormatImpl
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
     Journal *readJournal(icalcomponent *vjournal);
     Attendee *readAttendee(icalproperty *attendee);
-    Person readOrganizer( icalproperty *organizer );
+    Person readOrganizer(icalproperty *organizer);
     Attachment *readAttachment(icalproperty *attach);
     void readIncidence(icalcomponent *parent, icaltimezone *timezone, Incidence *incidence);
-    void readRecurrenceRule(icalproperty *rrule,Incidence *event );
-    void readExceptionRule( icalproperty *rrule, Incidence *incidence );
-    void readRecurrence( const struct icalrecurrencetype &r, RecurrenceRule* recur );
-    void readAlarm(icalcomponent *alarm,Incidence *incidence);
+    void readRecurrenceRule(icalproperty *rrule, Incidence *event);
+    void readExceptionRule(icalproperty *rrule, Incidence *incidence);
+    void readRecurrence(const struct icalrecurrencetype &r, RecurrenceRule *recur);
+    void readAlarm(icalcomponent *alarm, Incidence *incidence);
     /** Return the PRODID string loaded from calendar file */
-    const QString &loadedProductId()  { return mLoadedProductId; }
+    const QString &loadedProductId()
+    {
+        return mLoadedProductId;
+    }
 
     static icaltimetype writeICalDate(const QDate &);
     static QDate readICalDate(icaltimetype);
     icaltimetype writeICalDateTime(const QDateTime &);
-    QDateTime readICalDateTime( icaltimetype&, icaltimezone* tz = 0 );
+    QDateTime readICalDateTime(icaltimetype &, icaltimezone *tz = 0);
     static icaldurationtype writeICalDuration(int seconds);
     static int readICalDuration(icaldurationtype);
-    static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
-    icaldatetimeperiodtype writeICalDateTimePeriod( const QDateTime &date );
+    static icaldatetimeperiodtype writeICalDatePeriod(const QDate &date);
+    icaldatetimeperiodtype writeICalDateTimePeriod(const QDateTime &date);
 
     icalcomponent *createCalendarComponent(Calendar * = 0);
-    icalcomponent *createScheduleComponent(IncidenceBase *,Scheduler::Method);
+    icalcomponent *createScheduleComponent(IncidenceBase *, Scheduler::Method);
 
-  protected:
+protected:
     void dumpIcalRecurrence(icalrecurrencetype);
-  private:
-    void writeIncidenceBase(icalcomponent *parent,IncidenceBase *);
+private:
+    void writeIncidenceBase(icalcomponent *parent, IncidenceBase *);
     void readIncidenceBase(icalcomponent *parent, IncidenceBase *);
-    void writeCustomProperties(icalcomponent *parent,CustomProperties *);
-    void readCustomProperties(icalcomponent *parent,CustomProperties *);
+    void writeCustomProperties(icalcomponent *parent, CustomProperties *);
+    void readCustomProperties(icalcomponent *parent, CustomProperties *);
     void readTimezone(icalcomponent *vtimezone);
 
     ICalFormat *mParent;

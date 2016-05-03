@@ -34,37 +34,36 @@ class KInstance;
 
 class KABCore;
 
-class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface
-{
-  Q_OBJECT
+class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface {
+    Q_OBJECT
 
-  public:
-    KAddressbookPart( QWidget *parentWidget, const char *widgetName,
-                      QObject *parent, const char *name, const QStringList& );
+public:
+    KAddressbookPart(QWidget *parentWidget, const char *widgetName,
+                     QObject *parent, const char *name, const QStringList &);
     virtual ~KAddressbookPart();
 
     static KAboutData *createAboutData();
 
-    virtual void saveToProfile( const QString& path ) const;
-    virtual void loadProfile( const QString& path );
-  public slots:
-    virtual void addEmail( QString addr );
-    virtual void importVCard( const KURL& url );
-    virtual void importVCardFromData( const QString& vCard );
-    virtual ASYNC showContactEditor( QString uid );
+    virtual void saveToProfile(const QString &path) const;
+    virtual void loadProfile(const QString &path);
+public slots:
+    virtual void addEmail(QString addr);
+    virtual void importVCard(const KURL &url);
+    virtual void importVCardFromData(const QString &vCard);
+    virtual ASYNC showContactEditor(QString uid);
     virtual void newContact();
     virtual void newDistributionList();
-    virtual QString getNameByPhone( QString phone );
+    virtual QString getNameByPhone(QString phone);
     virtual void save();
     virtual void exit();
-    virtual bool openURL( const KURL &url );
+    virtual bool openURL(const KURL &url);
     virtual bool handleCommandLine();
 
-  protected:
+protected:
     virtual bool openFile();
-    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *);
 
-  private:
+private:
     KABCore *mCore;
 };
 

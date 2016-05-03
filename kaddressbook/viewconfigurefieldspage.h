@@ -35,27 +35,26 @@ class QListBoxItem;
 class QPushButton;
 class QToolButton;
 
-class ViewConfigureFieldsPage : public QWidget
-{
-  Q_OBJECT
+class ViewConfigureFieldsPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    ViewConfigureFieldsPage( KABC::AddressBook *ab, QWidget *parent = 0,
-                             const char *name = 0 );
+public:
+    ViewConfigureFieldsPage(KABC::AddressBook *ab, QWidget *parent = 0,
+                            const char *name = 0);
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings(KConfig *);
+    void saveSettings(KConfig *);
 
-  public slots:
+public slots:
     void slotSelect();
     void slotUnSelect();
     void slotMoveUp();
     void slotMoveDown();
 
-    void slotShowFields( int );
+    void slotShowFields(int);
     void slotButtonsEnabled();
 
-  private:
+private:
     void initGUI();
 
     KComboBox *mCategoryCombo;

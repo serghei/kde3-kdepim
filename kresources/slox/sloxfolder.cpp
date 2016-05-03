@@ -21,29 +21,29 @@
 
 #include "sloxfolder.h"
 
-SloxFolder::SloxFolder( const QString &id, const QString &parentId, const QString &type, const QString &name, bool def ) :
-  item( 0 ),
-  mId( id ),
-  mParentId( parentId ),
-  mName( name ),
-  mDefault( def )
+SloxFolder::SloxFolder(const QString &id, const QString &parentId, const QString &type, const QString &name, bool def) :
+    item(0),
+    mId(id),
+    mParentId(parentId),
+    mName(name),
+    mDefault(def)
 {
-  if ( type == "calendar" )
-    mType = Calendar;
-  else if ( type == "task" )
-    mType = Tasks;
-  else if ( type == "contact" )
-    mType = Contacts;
-  else
-    mType = Unbound;
+    if(type == "calendar")
+        mType = Calendar;
+    else if(type == "task")
+        mType = Tasks;
+    else if(type == "contact")
+        mType = Contacts;
+    else
+        mType = Unbound;
 }
 
-QString SloxFolder::name( ) const
+QString SloxFolder::name() const
 {
-  // special cases for system folders
-  if ( mName == "system_global" )
-    return i18n( "Global Addressbook" );
-  if ( mName == "system_ldap" )
-    return i18n( "Internal Addressbook" );
-  return mName;
+    // special cases for system folders
+    if(mName == "system_global")
+        return i18n("Global Addressbook");
+    if(mName == "system_ldap")
+        return i18n("Internal Addressbook");
+    return mName;
 }

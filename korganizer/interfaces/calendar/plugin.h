@@ -26,30 +26,34 @@
 
 namespace KOrg {
 
-class Plugin
-{
-  public:
-    static int interfaceVersion() { return 2; }
-    static QString serviceType() { return "Calendar/Plugin"; }
+class Plugin {
+public:
+    static int interfaceVersion()
+    {
+        return 2;
+    }
+    static QString serviceType()
+    {
+        return "Calendar/Plugin";
+    }
 
     Plugin() {}
     virtual ~Plugin() {}
 
     virtual QString info() = 0;
 
-    virtual void configure( QWidget * ) {}
+    virtual void configure(QWidget *) {}
 };
 
-class PluginFactory : public KLibFactory
-{
-  public:
+class PluginFactory : public KLibFactory {
+public:
     virtual Plugin *create() = 0;
 
-  protected:
-    virtual QObject *createObject( QObject *, const char *,const char *,
-                                   const QStringList & )
+protected:
+    virtual QObject *createObject(QObject *, const char *, const char *,
+                                  const QStringList &)
     {
-      return 0;
+        return 0;
     }
 };
 

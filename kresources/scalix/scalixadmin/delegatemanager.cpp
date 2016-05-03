@@ -28,22 +28,22 @@ DelegateManager::~DelegateManager()
 {
 }
 
-void DelegateManager::addDelegate( const Scalix::Delegate &delegate )
+void DelegateManager::addDelegate(const Scalix::Delegate &delegate)
 {
-  mDelegates.append( delegate );
-  emit changed();
+    mDelegates.append(delegate);
+    emit changed();
 }
 
 void DelegateManager::clear()
 {
-  mDelegates.clear();
+    mDelegates.clear();
 
-  emit changed();
+    emit changed();
 }
 
 Scalix::Delegate::List DelegateManager::delegates() const
 {
-  return mDelegates;
+    return mDelegates;
 }
 
 #include "delegatemanager.moc"

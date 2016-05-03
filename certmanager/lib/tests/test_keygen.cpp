@@ -58,103 +58,111 @@
 
 #include <assert.h>
 
-static const char * keyParams[] = {
-  "Key-Type", "Key-Length",
-  "Subkey-Type", "Subkey-Length",
-  "Name-Real", "Name-Comment", "Name-Email", "Name-DN",
-  "Expire-Date",
-  "Passphrase"
-};
-static const int numKeyParams = sizeof keyParams / sizeof *keyParams;
-
-static const char * protocol = 0;
-
-KeyGenerator::KeyGenerator( QWidget * parent, const char * name, WFlags )
-  : KDialogBase( parent, name, true, "KeyGenerationJob test",
-		 Close|User1, User1, true, KGuiItem( "Create" ) )
+static const char *keyParams[] =
 {
-  QWidget * w = new QWidget( this );
-  setMainWidget( w );
+    "Key-Type", "Key-Length",
+    "Subkey-Type", "Subkey-Length",
+    "Name-Real", "Name-Comment", "Name-Email", "Name-DN",
+    "Expire-Date",
+    "Passphrase"
+};
+static const int numKeyParams = sizeof keyParams / sizeof * keyParams;
 
-  QGridLayout * glay = new QGridLayout( w, numKeyParams+3, 2, marginHint(), spacingHint() );
+static const char *protocol = 0;
 
-  int row = -1;
+KeyGenerator::KeyGenerator(QWidget *parent, const char *name, WFlags)
+    : KDialogBase(parent, name, true, "KeyGenerationJob test",
+                  Close | User1, User1, true, KGuiItem("Create"))
+{
+    QWidget *w = new QWidget(this);
+    setMainWidget(w);
 
-  ++row;
-  glay->addMultiCellWidget( new QLabel( "<GnupgKeyParms format=\"internal\">", w ),
-			    row, row, 0, 1 );
-  for ( int i = 0 ; i < numKeyParams ; ++i ) {
+    QGridLayout *glay = new QGridLayout(w, numKeyParams + 3, 2, marginHint(), spacingHint());
+
+    int row = -1;
+
     ++row;
-    glay->addWidget( new QLabel( keyParams[i], w ), row, 0 );
-    glay->addWidget( mLineEdits[i] = new QLineEdit( w ), row, 1 );
-  }
+    glay->addMultiCellWidget(new QLabel("<GnupgKeyParms format=\"internal\">", w),
+                             row, row, 0, 1);
+    for(int i = 0 ; i < numKeyParams ; ++i)
+    {
+        ++row;
+        glay->addWidget(new QLabel(keyParams[i], w), row, 0);
+        glay->addWidget(mLineEdits[i] = new QLineEdit(w), row, 1);
+    }
 
-  ++row;
-  glay->addMultiCellWidget( new QLabel( "</GnupgKeyParms>", w ),
-			    row, row, 0, 1 );
-  ++row;
-  glay->setRowStretch( row, 1 );
-  glay->setColStretch( 1, 1 );
+    ++row;
+    glay->addMultiCellWidget(new QLabel("</GnupgKeyParms>", w),
+                             row, row, 0, 1);
+    ++row;
+    glay->setRowStretch(row, 1);
+    glay->setColStretch(1, 1);
 
-  connect( this, SIGNAL(user1Clicked()), SLOT(slotStartKeyGeneration()) );
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotStartKeyGeneration()));
 }
 
 KeyGenerator::~KeyGenerator() {}
 
-void KeyGenerator::slotStartKeyGeneration() {
-  QString params = "<GnupgKeyParms format=\"internal\">\n";
-  for ( int i = 0 ; i < numKeyParams ; ++i )
-    if ( mLineEdits[i] && !mLineEdits[i]->text().stripWhiteSpace().isEmpty() )
-      params += keyParams[i] + ( ": " + mLineEdits[i]->text().stripWhiteSpace() ) + '\n';
-  params += "</GnupgKeyParms>\n";
+void KeyGenerator::slotStartKeyGeneration()
+{
+    QString params = "<GnupgKeyParms format=\"internal\">\n";
+    for(int i = 0 ; i < numKeyParams ; ++i)
+        if(mLineEdits[i] && !mLineEdits[i]->text().stripWhiteSpace().isEmpty())
+            params += keyParams[i] + (": " + mLineEdits[i]->text().stripWhiteSpace()) + '\n';
+    params += "</GnupgKeyParms>\n";
 
-   const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
-  if ( !proto )
-    proto = Kleo::CryptoBackendFactory::instance()->smime();
-  assert( proto );
+    const Kleo::CryptoBackend::Protocol *proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() :
+            Kleo::CryptoBackendFactory::instance()->smime() ;
+    if(!proto)
+        proto = Kleo::CryptoBackendFactory::instance()->smime();
+    assert(proto);
 
-  kdDebug() << "Using protocol " << proto->name() << endl;
+    kdDebug() << "Using protocol " << proto->name() << endl;
 
-  Kleo::KeyGenerationJob * job = proto->keyGenerationJob();
-  assert( job );
+    Kleo::KeyGenerationJob *job = proto->keyGenerationJob();
+    assert(job);
 
-  connect( job, SIGNAL(result(const GpgME::KeyGenerationResult&,const QByteArray&)),
-	   SLOT(slotResult(const GpgME::KeyGenerationResult&,const QByteArray&)) );
+    connect(job, SIGNAL(result(const GpgME::KeyGenerationResult &, const QByteArray &)),
+            SLOT(slotResult(const GpgME::KeyGenerationResult &, const QByteArray &)));
 
-  const GpgME::Error err = job->start( params );
-  if ( err )
-    showError( err );
-  else
-    (void)new Kleo::ProgressDialog( job, "Generating key", this );
+    const GpgME::Error err = job->start(params);
+    if(err)
+        showError(err);
+    else
+        (void)new Kleo::ProgressDialog(job, "Generating key", this);
 }
 
-void KeyGenerator::showError( const GpgME::Error & err ) {
-  KMessageBox::error( this, "Could not start key generation: " + QString::fromLocal8Bit( err.asString() ),
-		      "Key Generation Error" );
+void KeyGenerator::showError(const GpgME::Error &err)
+{
+    KMessageBox::error(this, "Could not start key generation: " + QString::fromLocal8Bit(err.asString()),
+                       "Key Generation Error");
 }
 
-void KeyGenerator::slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData ) {
-  if ( res.error() )
-    showError( res.error() );
-  else
-    KMessageBox::information( this, QString("Key generated successfully, %1 bytes long").arg( keyData.size() ),
-			      "Key Generation Finished" );
+void KeyGenerator::slotResult(const GpgME::KeyGenerationResult &res, const QByteArray &keyData)
+{
+    if(res.error())
+        showError(res.error());
+    else
+        KMessageBox::information(this, QString("Key generated successfully, %1 bytes long").arg(keyData.size()),
+                                 "Key Generation Finished");
 }
-  
-int main( int argc, char** argv ) {
-  if ( argc == 2 ) {
-    protocol = argv[1];
-    argc = 1; // hide from KDE
-  }
-  KAboutData aboutData( "test_keygen", "KeyGenerationJob Test", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
 
-  KeyGenerator * keygen = new KeyGenerator( 0, "KeyGenerator top-level" );
-  app.setMainWidget( keygen );
-  keygen->show();
+int main(int argc, char **argv)
+{
+    if(argc == 2)
+    {
+        protocol = argv[1];
+        argc = 1; // hide from KDE
+    }
+    KAboutData aboutData("test_keygen", "KeyGenerationJob Test", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication app;
 
-  return app.exec();
+    KeyGenerator *keygen = new KeyGenerator(0, "KeyGenerator top-level");
+    app.setMainWidget(keygen);
+    keygen->show();
+
+    return app.exec();
 }
 
 #include "test_keygen.moc"

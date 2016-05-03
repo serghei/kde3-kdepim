@@ -26,15 +26,14 @@
 
 class QStringList;
 
-class KPalmPlugin: public KFilePlugin
-{
+class KPalmPlugin: public KFilePlugin {
     Q_OBJECT
-    
+
 public:
-    KPalmPlugin( QObject *parent, const char *name, const QStringList& args );
-    
-    virtual bool readInfo( KFileMetaInfo& info, uint what);
-//    virtual bool writeInfo( const KFileMetaInfo& info ) const;
+    KPalmPlugin(QObject *parent, const char *name, const QStringList &args);
+
+    virtual bool readInfo(KFileMetaInfo &info, uint what);
+    //    virtual bool writeInfo( const KFileMetaInfo& info ) const;
 };
 
 #endif

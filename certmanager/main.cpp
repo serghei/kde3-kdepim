@@ -46,39 +46,41 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  AboutData aboutData;
+    AboutData aboutData;
 
-  KCmdLineArgs::init(argc, argv, &aboutData);
-  static const KCmdLineOptions options[] = {
-            { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
-            { "query " , I18N_NOOP("Initial query string"), 0 },
-	    { "import-certificate ", I18N_NOOP("Name of certificate file to import"), 0 },
-	    KCmdLineLastOption// End of options.
-  };
-  KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    static const KCmdLineOptions options[] =
+    {
+        { "external" , I18N_NOOP("Search for external certificates initially"), 0 },
+        { "query " , I18N_NOOP("Initial query string"), 0 },
+        { "import-certificate ", I18N_NOOP("Name of certificate file to import"), 0 },
+        KCmdLineLastOption// End of options.
+    };
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  KGlobal::locale()->insertCatalogue( "libkleopatra" );
-  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
+    KGlobal::locale()->insertCatalogue("libkleopatra");
+    KGlobal::iconLoader()->addAppDir("libkleopatra");
 
-  if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
-    KMessageBox::error(0,
-			i18n( "<qt>The crypto plugin could not be initialized.<br>"
-			      "Certificate Manager will terminate now.</qt>") );
-    return -2;
-  }
+    if(!Kleo::CryptoBackendFactory::instance()->smime())
+    {
+        KMessageBox::error(0,
+                           i18n("<qt>The crypto plugin could not be initialized.<br>"
+                                "Certificate Manager will terminate now.</qt>"));
+        return -2;
+    }
 
-  CertManager* manager = new CertManager( args->isSet("external"),
-					  QString::fromLocal8Bit(args->getOption("query")),
-					  QString::fromLocal8Bit(args->getOption("import-certificate")) );
+    CertManager *manager = new CertManager(args->isSet("external"),
+                                           QString::fromLocal8Bit(args->getOption("query")),
+                                           QString::fromLocal8Bit(args->getOption("import-certificate")));
 
-  args->clear();
-  manager->show();
+    args->clear();
+    manager->show();
 
-  return app.exec();
+    return app.exec();
 }

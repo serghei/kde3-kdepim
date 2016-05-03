@@ -42,96 +42,96 @@
 
 
 WelcomeAction::WelcomeAction(KPilotLink *p) :
-	SyncAction(p,"welcomeAction")
+    SyncAction(p, "welcomeAction")
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 /* virtual */ bool WelcomeAction::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
-		.arg(QString::fromLatin1(KPILOT_VERSION)));
-	emit logMessage( i18n("Using encoding %1 on the handheld.").arg(Pilot::codecName()) );
-	emit syncDone(this);
-	return true;
+    addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
+                    .arg(QString::fromLatin1(KPILOT_VERSION)));
+    emit logMessage(i18n("Using encoding %1 on the handheld.").arg(Pilot::codecName()));
+    emit syncDone(this);
+    return true;
 }
 
 SorryAction::SorryAction(KPilotLink *p, const QString &s) :
-	SyncAction(p,"sorryAction"),
-	fMessage(s)
+    SyncAction(p, "sorryAction"),
+    fMessage(s)
 {
-	if (fMessage.isEmpty())
-	{
-		fMessage = i18n("KPilot is busy and cannot process the "
-			"HotSync right now.");
-	}
+    if(fMessage.isEmpty())
+    {
+        fMessage = i18n("KPilot is busy and cannot process the "
+                        "HotSync right now.");
+    }
 }
 
 bool SorryAction::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	addSyncLogEntry(fMessage);
-	return delayDone();
+    addSyncLogEntry(fMessage);
+    return delayDone();
 }
 
-CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p,"cleanupAction")
+CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p, "cleanupAction")
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 /* virtual */ bool CleanupAction::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (deviceLink())
-	{
-		deviceLink()->endSync( KPilotLink::UpdateUserInfo );
-	}
-	emit syncDone(this);
-	return true;
+    if(deviceLink())
+    {
+        deviceLink()->endSync(KPilotLink::UpdateUserInfo);
+    }
+    emit syncDone(this);
+    return true;
 }
 
 
-TestLink::TestLink(KPilotLink * p) :
-	SyncAction(p, "testLink")
+TestLink::TestLink(KPilotLink *p) :
+    SyncAction(p, "testLink")
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 }
 
 /* virtual */ bool TestLink::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	int i;
-	int dbindex = 0;
-	int count = 0;
-	struct DBInfo db;
+    int i;
+    int dbindex = 0;
+    int count = 0;
+    struct DBInfo db;
 
-	addSyncLogEntry(i18n("Testing.\n"));
+    addSyncLogEntry(i18n("Testing.\n"));
 
-	while ((i = deviceLink()->getNextDatabase(dbindex,&db)) > 0)
-	{
-		count++;
-		dbindex = db.index + 1;
+    while((i = deviceLink()->getNextDatabase(dbindex, &db)) > 0)
+    {
+        count++;
+        dbindex = db.index + 1;
 
-		DEBUGKPILOT << fname
-			<< ": Read database " << db.name
-			<< " with index " << db.index
-			<< endl;
+        DEBUGKPILOT << fname
+                    << ": Read database " << db.name
+                    << " with index " << db.index
+                    << endl;
 
-		// Let the Pilot User know what's happening
-		openConduit();
-		// Let the KDE User know what's happening
-		// Pretty sure all database names are in latin1.
-		emit logMessage(i18n("Syncing database %1...")
-			.arg(Pilot::fromPilot(db.name)));
-	}
+        // Let the Pilot User know what's happening
+        openConduit();
+        // Let the KDE User know what's happening
+        // Pretty sure all database names are in latin1.
+        emit logMessage(i18n("Syncing database %1...")
+                        .arg(Pilot::fromPilot(db.name)));
+    }
 
-	emit logMessage(i18n("HotSync finished."));
-	emit syncDone(this);
-	return true;
+    emit logMessage(i18n("HotSync finished."));
+    emit syncDone(this);
+    return true;
 }

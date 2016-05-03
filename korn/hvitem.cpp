@@ -30,53 +30,53 @@
 #include <qcursor.h>
 #include <qtooltip.h>
 
-HVItem::HVItem( QWidget *parent, const char *name )
-	: BoxContainerItem( 0, name ),
-	_label( new Label( parent, "label" ) ),
-	_popup( new KPopupMenu( _label, "popupmenu" ) ),
-	_actions( new KActionCollection( _popup, "actions" ) )
+HVItem::HVItem(QWidget *parent, const char *name)
+    : BoxContainerItem(0, name),
+      _label(new Label(parent, "label")),
+      _popup(new KPopupMenu(_label, "popupmenu")),
+      _actions(new KActionCollection(_popup, "actions"))
 {
-	_popup->insertTitle( kapp->miniIcon(), kapp->caption() );
-	this->fillKPopupMenu( _popup, _actions );
-	_popup->insertSeparator();
-	KStdAction::quit( kapp, SLOT( quit() ), _actions )->plug( _popup );
-	
-	connect( _label, SIGNAL( mouseButtonPressed( Qt::ButtonState ) ), this, SLOT( mouseButtonPressed( Qt::ButtonState ) ) );
+    _popup->insertTitle(kapp->miniIcon(), kapp->caption());
+    this->fillKPopupMenu(_popup, _actions);
+    _popup->insertSeparator();
+    KStdAction::quit(kapp, SLOT(quit()), _actions)->plug(_popup);
+
+    connect(_label, SIGNAL(mouseButtonPressed(Qt::ButtonState)), this, SLOT(mouseButtonPressed(Qt::ButtonState)));
 }
 
 HVItem::~HVItem()
 {
-	//Let everything be deleted by his parents.
+    //Let everything be deleted by his parents.
 }
-	
+
 void HVItem::showBox()
 {
-	_label->show();
-}
-	
-void HVItem::setCount( const int count, const bool newMessages )
-{
-	drawLabel( _label, count, newMessages );
+    _label->show();
 }
 
-void HVItem::setTooltip( const QString& string )
+void HVItem::setCount(const int count, const bool newMessages)
 {
-	QToolTip::add( _label, string );
+    drawLabel(_label, count, newMessages);
 }
 
-void HVItem::slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& name )
+void HVItem::setTooltip(const QString &string)
 {
-	showPassivePopup( _label, list, total, name, date );
+    QToolTip::add(_label, string);
 }
 
-void HVItem::slotShowPassivePopup( const QString& errorMessage, const QString& name )
+void HVItem::slotShowPassivePopup(QPtrList< KornMailSubject > *list, int total, bool date, const QString &name)
 {
-	KPassivePopup::message( QString( "korn-%1-%2" ).arg( objId() ).arg( name ), errorMessage, _label, "Passive error message" );
+    showPassivePopup(_label, list, total, name, date);
 }
-	
+
+void HVItem::slotShowPassivePopup(const QString &errorMessage, const QString &name)
+{
+    KPassivePopup::message(QString("korn-%1-%2").arg(objId()).arg(name), errorMessage, _label, "Passive error message");
+}
+
 void HVItem::doPopup()
 {
-	_popup->popup( QCursor::pos() );
+    _popup->popup(QCursor::pos());
 }
 
 #include "hvitem.moc"

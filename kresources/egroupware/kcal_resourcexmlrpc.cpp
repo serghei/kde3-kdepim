@@ -80,7 +80,7 @@
 using namespace KCal;
 
 typedef KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_xmlrpc, XMLRPCFactory )
+K_EXPORT_COMPONENT_FACTORY(kcal_xmlrpc, XMLRPCFactory)
 
 
 static const QString SearchEventsCommand = "calendar.bocalendar.search";
@@ -93,1111 +93,1206 @@ static const QString AddTodoCommand = "infolog.boinfolog.write";
 static const QString DeleteTodoCommand = "infolog.boinfolog.delete";
 static const QString LoadTodoCategoriesCommand = "infolog.boinfolog.categories";
 
-static void setRights( Incidence *incidence, int rights )
+static void setRights(Incidence *incidence, int rights)
 {
-  incidence->setCustomProperty( "EGWRESOURCE", "RIGHTS", QString::number( rights ) );
+    incidence->setCustomProperty("EGWRESOURCE", "RIGHTS", QString::number(rights));
 }
 
-static int rights( Incidence *incidence )
+static int rights(Incidence *incidence)
 {
-  return incidence->customProperty( "EGWRESOURCE", "RIGHTS" ).toInt();
+    return incidence->customProperty("EGWRESOURCE", "RIGHTS").toInt();
 }
 
-ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
-  : ResourceCached( config ), mServer( 0 ), mLock( 0 )
+ResourceXMLRPC::ResourceXMLRPC(const KConfig *config)
+    : ResourceCached(config), mServer(0), mLock(0)
 {
-  init();
+    init();
 
-  mPrefs->addGroupPrefix( identifier() );
+    mPrefs->addGroupPrefix(identifier());
 
-  if ( config )
-    readConfig( config );
+    if(config)
+        readConfig(config);
 
-  initEGroupware();
+    initEGroupware();
 }
 
-ResourceXMLRPC::ResourceXMLRPC( )
-  : ResourceCached( 0 ), mServer( 0 ), mLock( 0 )
+ResourceXMLRPC::ResourceXMLRPC()
+    : ResourceCached(0), mServer(0), mLock(0)
 {
-  init();
+    init();
 
-  mPrefs->addGroupPrefix( identifier() );
+    mPrefs->addGroupPrefix(identifier());
 
-  initEGroupware();
+    initEGroupware();
 }
 
 ResourceXMLRPC::~ResourceXMLRPC()
 {
-  disableChangeNotification();
+    disableChangeNotification();
 
-  delete mServer;
-  mServer = 0;
+    delete mServer;
+    mServer = 0;
 
-  delete mLock;
-  mLock = 0;
+    delete mLock;
+    mLock = 0;
 
-  delete mPrefs;
-  mPrefs = 0;
+    delete mPrefs;
+    mPrefs = 0;
 
-  delete mSynchronizer;
-  mSynchronizer = 0;
+    delete mSynchronizer;
+    mSynchronizer = 0;
 }
 
 void ResourceXMLRPC::init()
 {
-  setType( "xmlrpc" );
+    setType("xmlrpc");
 
-  mTodoStateMapper.setPath( "kcal/todostatemap/" );
+    mTodoStateMapper.setPath("kcal/todostatemap/");
 
-  mPrefs = new EGroupwarePrefs;
-  mLoaded = 0;
+    mPrefs = new EGroupwarePrefs;
+    mLoaded = 0;
 
-  mLock = new KABC::LockNull( true );
-  mSynchronizer = new Synchronizer();
+    mLock = new KABC::LockNull(true);
+    mSynchronizer = new Synchronizer();
 }
 
 void ResourceXMLRPC::initEGroupware()
 {
-  KURL url( mPrefs->url() );
+    KURL url(mPrefs->url());
 }
 
-void ResourceXMLRPC::readConfig( const KConfig* config )
+void ResourceXMLRPC::readConfig(const KConfig *config)
 {
-  mPrefs->readConfig();
+    mPrefs->readConfig();
 
-  ResourceCached::readConfig( config );
+    ResourceCached::readConfig(config);
 }
 
-void ResourceXMLRPC::writeConfig( KConfig* config )
+void ResourceXMLRPC::writeConfig(KConfig *config)
 {
-  ResourceCalendar::writeConfig( config );
+    ResourceCalendar::writeConfig(config);
 
-  mPrefs->writeConfig();
+    mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+    ResourceCached::writeConfig(config);
 }
 
 bool ResourceXMLRPC::doOpen()
 {
-  kdDebug(5800) << "ResourceXMLRPC::doOpen()" << endl;
+    kdDebug(5800) << "ResourceXMLRPC::doOpen()" << endl;
 
-  if ( mServer )
-    delete mServer;
+    if(mServer)
+        delete mServer;
 
-  mServer = new KXMLRPC::Server( KURL(), this );
-  mServer->setUrl( KURL( mPrefs->url() ) );
-  mServer->setUserAgent( "KDE-Calendar" );
+    mServer = new KXMLRPC::Server(KURL(), this);
+    mServer->setUrl(KURL(mPrefs->url()));
+    mServer->setUserAgent("KDE-Calendar");
 
-  QMap<QString, QVariant> args;
-  args.insert( "domain", mPrefs->domain() );
-  args.insert( "username", mPrefs->user() );
-  args.insert( "password", mPrefs->password() );
+    QMap<QString, QVariant> args;
+    args.insert("domain", mPrefs->domain());
+    args.insert("username", mPrefs->user());
+    args.insert("password", mPrefs->password());
 
-  mServer->call( "system.login", QVariant( args ),
-                 this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mServer->call("system.login", QVariant(args),
+                  this, SLOT(loginFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
 
-  mSynchronizer->start();
+    mSynchronizer->start();
 
-  return true;
+    return true;
 }
 
 void ResourceXMLRPC::doClose()
 {
-  kdDebug(5800) << "ResourceXMLRPC::doClose()" << endl;
+    kdDebug(5800) << "ResourceXMLRPC::doClose()" << endl;
 
-  QMap<QString, QVariant> args;
-  args.insert( "sessionid", mSessionID );
-  args.insert( "kp3", mKp3 );
+    QMap<QString, QVariant> args;
+    args.insert("sessionid", mSessionID);
+    args.insert("kp3", mKp3);
 
-  mServer->call( "system.logout", QVariant( args ),
-                 this, SLOT( logoutFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mServer->call("system.logout", QVariant(args),
+                  this, SLOT(logoutFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
 
-  mSynchronizer->start();
+    mSynchronizer->start();
 }
 
 bool ResourceXMLRPC::doLoad()
 {
-  kdDebug() << "ResourceXMLRPC::load()" << endl;
+    kdDebug() << "ResourceXMLRPC::load()" << endl;
 
-  mCalendar.close();
+    mCalendar.close();
 
-  disableChangeNotification();
-  loadCache();
-  enableChangeNotification();
+    disableChangeNotification();
+    loadCache();
+    enableChangeNotification();
 
-  emit resourceChanged( this );
+    emit resourceChanged(this);
 
-  clearChanges();
+    clearChanges();
 
-  loadCache();
-  mTodoStateMapper.setIdentifier( type() + "_" + identifier() );
-  mTodoStateMapper.load();
+    loadCache();
+    mTodoStateMapper.setIdentifier(type() + "_" + identifier());
+    mTodoStateMapper.load();
 
-  QMap<QString, QVariant> args, columns;
-  args.insert( "start", QDateTime( QDate::currentDate().addDays( -12 ) ) );
-  args.insert( "end", QDateTime( QDate::currentDate().addDays( 2000 ) ) );
+    QMap<QString, QVariant> args, columns;
+    args.insert("start", QDateTime(QDate::currentDate().addDays(-12)));
+    args.insert("end", QDateTime(QDate::currentDate().addDays(2000)));
 
-  mServer->call( SearchEventsCommand, args,
-                 this, SLOT( listEventsFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-  args.clear();
+    mServer->call(SearchEventsCommand, args,
+                  this, SLOT(listEventsFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
+    args.clear();
 
-  columns.insert( "type", "task" );
-  args.insert( "filter", "none" );
-  args.insert( "col_filter", columns );
-  args.insert( "order", "id_parent" );
+    columns.insert("type", "task");
+    args.insert("filter", "none");
+    args.insert("col_filter", columns);
+    args.insert("order", "id_parent");
 
-  mServer->call( SearchTodosCommand, args,
-                 this, SLOT( listTodosFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mServer->call(SearchTodosCommand, args,
+                  this, SLOT(listTodosFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
 
-  mServer->call( LoadEventCategoriesCommand, QVariant( QMap<QString, QVariant>() ),
-                 this, SLOT( loadEventCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mServer->call(LoadEventCategoriesCommand, QVariant(QMap<QString, QVariant>()),
+                  this, SLOT(loadEventCategoriesFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
 
-  mServer->call( LoadTodoCategoriesCommand, QVariant( false, 0 ),
-                 this, SLOT( loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-  return true;
+    mServer->call(LoadTodoCategoriesCommand, QVariant(false, 0),
+                  this, SLOT(loadTodoCategoriesFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
+    return true;
 }
 
 bool ResourceXMLRPC::doSave()
 {
-  if ( readOnly() || !hasChanges() ) {
-    emit resourceSaved( this );
+    if(readOnly() || !hasChanges())
+    {
+        emit resourceSaved(this);
+        return true;
+    }
+
+    saveCache();
+
+    const Event::List events = mCalendar.rawEvents();
+    Event::List::ConstIterator evIt;
+
+    uint counter = 0;
+    for(evIt = events.begin(); evIt != events.end(); ++evIt)
+    {
+        if(!(*evIt)->isReadOnly())
+        {
+            QMap<QString, QVariant> args;
+            writeEvent((*evIt), args);
+
+            args.insert("id", idMapper().remoteId((*evIt)->uid()).toInt());
+            mServer->call(AddEventCommand, QVariant(args),
+                          this, SLOT(updateEventFinished(const QValueList<QVariant> &, const QVariant &)),
+                          this, SLOT(fault(int, const QString &, const QVariant &)));
+            counter++;
+        }
+    }
+
+    const Todo::List todos = mCalendar.rawTodos();
+    Todo::List::ConstIterator todoIt;
+
+    for(todoIt = todos.begin(); todoIt != todos.end(); ++todoIt)
+    {
+        if(!(*todoIt)->isReadOnly())
+        {
+            QMap<QString, QVariant> args;
+            writeTodo((*todoIt), args);
+
+            args.insert("id", idMapper().remoteId((*todoIt)->uid()).toInt());
+            mServer->call(AddTodoCommand, QVariant(args),
+                          this, SLOT(updateTodoFinished(const QValueList<QVariant> &, const QVariant &)),
+                          this, SLOT(fault(int, const QString &, const QVariant &)));
+            counter++;
+        }
+    }
+
+    if(counter != 0)
+        mSynchronizer->start();
+
+    mTodoStateMapper.save();
+
     return true;
-  }
-
-  saveCache();
-
-  const Event::List events = mCalendar.rawEvents();
-  Event::List::ConstIterator evIt;
-
-  uint counter = 0;
-  for ( evIt = events.begin(); evIt != events.end(); ++evIt ) {
-    if ( !(*evIt)->isReadOnly() ) {
-      QMap<QString, QVariant> args;
-      writeEvent( (*evIt), args );
-
-      args.insert( "id", idMapper().remoteId( (*evIt)->uid() ).toInt() );
-      mServer->call( AddEventCommand, QVariant( args ),
-                     this, SLOT( updateEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-      counter++;
-    }
-  }
-
-  const Todo::List todos = mCalendar.rawTodos();
-  Todo::List::ConstIterator todoIt;
-
-  for ( todoIt = todos.begin(); todoIt != todos.end(); ++todoIt ) {
-    if ( !(*todoIt)->isReadOnly() ) {
-      QMap<QString, QVariant> args;
-      writeTodo( (*todoIt), args );
-
-      args.insert( "id", idMapper().remoteId( (*todoIt)->uid() ).toInt() );
-      mServer->call( AddTodoCommand, QVariant( args ),
-                     this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-      counter++;
-    }
-  }
-
-  if ( counter != 0 )
-    mSynchronizer->start();
-
-  mTodoStateMapper.save();
-
-  return true;
 }
 
 bool ResourceXMLRPC::isSaving()
 {
-  return false;
+    return false;
 }
 
 KABC::Lock *ResourceXMLRPC::lock()
 {
-  return mLock;
+    return mLock;
 }
 
 
-bool ResourceXMLRPC::addEvent( Event* ev )
+bool ResourceXMLRPC::addEvent(Event *ev)
 {
-  QMap<QString, QVariant> args;
+    QMap<QString, QVariant> args;
 
-  disableChangeNotification();
+    disableChangeNotification();
 
-  setRights( ev, EGW_ACCESS_ALL );
-  Event *oldEvent = mCalendar.event( ev->uid() );
-  if ( oldEvent ) { // already exists
-    if ( !oldEvent->isReadOnly() ) {
-      writeEvent( ev, args );
-      args.insert( "id", idMapper().remoteId( ev->uid() ).toInt() );
-      mServer->call( AddEventCommand, QVariant( args ),
-                     this, SLOT( updateEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    setRights(ev, EGW_ACCESS_ALL);
+    Event *oldEvent = mCalendar.event(ev->uid());
+    if(oldEvent)      // already exists
+    {
+        if(!oldEvent->isReadOnly())
+        {
+            writeEvent(ev, args);
+            args.insert("id", idMapper().remoteId(ev->uid()).toInt());
+            mServer->call(AddEventCommand, QVariant(args),
+                          this, SLOT(updateEventFinished(const QValueList<QVariant> &, const QVariant &)),
+                          this, SLOT(fault(int, const QString &, const QVariant &)));
 
-      mCalendar.deleteIncidence( oldEvent );
-      mCalendar.addIncidence( ev );
-      saveCache();
+            mCalendar.deleteIncidence(oldEvent);
+            mCalendar.addIncidence(ev);
+            saveCache();
+        }
     }
-  } else { // new event
-    writeEvent( ev, args );
-    mServer->call( AddEventCommand, QVariant( args ),
-                   this, SLOT( addEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                   this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                   QVariant( ev->uid() ) );
+    else     // new event
+    {
+        writeEvent(ev, args);
+        mServer->call(AddEventCommand, QVariant(args),
+                      this, SLOT(addEventFinished(const QValueList<QVariant> &, const QVariant &)),
+                      this, SLOT(fault(int, const QString &, const QVariant &)),
+                      QVariant(ev->uid()));
 
-    mCalendar.addEvent( ev );
-    saveCache();
-  }
+        mCalendar.addEvent(ev);
+        saveCache();
+    }
 
-  enableChangeNotification();
+    enableChangeNotification();
 
-  return true;
+    return true;
 }
 
-bool ResourceXMLRPC::deleteEvent( Event* ev )
+bool ResourceXMLRPC::deleteEvent(Event *ev)
 {
-  if ( !(rights( ev ) & EGW_ACCESS_DELETE) && rights( ev ) != -1 )
-    return false;
+    if(!(rights(ev) & EGW_ACCESS_DELETE) && rights(ev) != -1)
+        return false;
 
-  mServer->call( DeleteEventCommand, idMapper().remoteId( ev->uid() ).toInt(),
-                 this, SLOT( deleteEventFinished( const QValueList<QVariant>&,
-                                                  const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                 QVariant( ev->uid() ) );
-  return true;
-}
-
-
-Event *ResourceXMLRPC::event( const QString& uid )
-{
-  return mCalendar.event( uid );
-}
-
-Event::List ResourceXMLRPC::rawEventsForDate( const QDate& qd,
-                                              EventSortField sortField,
-                                              SortDirection sortDirection )
-{
-  return mCalendar.rawEventsForDate( qd, sortField, sortDirection );
+    mServer->call(DeleteEventCommand, idMapper().remoteId(ev->uid()).toInt(),
+                  this, SLOT(deleteEventFinished(const QValueList<QVariant> &,
+                             const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)),
+                  QVariant(ev->uid()));
+    return true;
 }
 
 
-Event::List ResourceXMLRPC::rawEvents( const QDate& start, const QDate& end,
-                                       bool inclusive )
+Event *ResourceXMLRPC::event(const QString &uid)
 {
-  return mCalendar.rawEvents( start, end, inclusive );
+    return mCalendar.event(uid);
 }
 
-Event::List ResourceXMLRPC::rawEventsForDate( const QDateTime& qdt )
+Event::List ResourceXMLRPC::rawEventsForDate(const QDate &qd,
+        EventSortField sortField,
+        SortDirection sortDirection)
 {
-  return mCalendar.rawEventsForDate( qdt.date() );
+    return mCalendar.rawEventsForDate(qd, sortField, sortDirection);
+}
+
+
+Event::List ResourceXMLRPC::rawEvents(const QDate &start, const QDate &end,
+                                      bool inclusive)
+{
+    return mCalendar.rawEvents(start, end, inclusive);
+}
+
+Event::List ResourceXMLRPC::rawEventsForDate(const QDateTime &qdt)
+{
+    return mCalendar.rawEventsForDate(qdt.date());
 }
 
 Event::List ResourceXMLRPC::rawEvents()
 {
-  return mCalendar.rawEvents();
+    return mCalendar.rawEvents();
 }
 
 
-bool ResourceXMLRPC::addTodo( Todo *todo )
+bool ResourceXMLRPC::addTodo(Todo *todo)
 {
-  QMap<QString, QVariant> args;
+    QMap<QString, QVariant> args;
 
-  disableChangeNotification();
+    disableChangeNotification();
 
-  setRights( todo, EGW_ACCESS_ALL );
-  Todo *oldTodo = mCalendar.todo( todo->uid() );
-  if ( oldTodo ) { // already exists
-    if ( !oldTodo->isReadOnly() ) {
-      writeTodo( todo, args );
-      args.insert( "id", idMapper().remoteId( todo->uid() ).toInt() );
-      mServer->call( AddTodoCommand, QVariant( args ),
-                     this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    setRights(todo, EGW_ACCESS_ALL);
+    Todo *oldTodo = mCalendar.todo(todo->uid());
+    if(oldTodo)      // already exists
+    {
+        if(!oldTodo->isReadOnly())
+        {
+            writeTodo(todo, args);
+            args.insert("id", idMapper().remoteId(todo->uid()).toInt());
+            mServer->call(AddTodoCommand, QVariant(args),
+                          this, SLOT(updateTodoFinished(const QValueList<QVariant> &, const QVariant &)),
+                          this, SLOT(fault(int, const QString &, const QVariant &)));
 
-      mCalendar.deleteIncidence( oldTodo );
-      mCalendar.addIncidence( todo );
-      saveCache();
+            mCalendar.deleteIncidence(oldTodo);
+            mCalendar.addIncidence(todo);
+            saveCache();
+        }
     }
-  } else { // new todo
-    writeTodo( todo, args );
-    mServer->call( AddTodoCommand, QVariant( args ),
-                   this, SLOT( addTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                   this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                   QVariant( todo->uid() ) );
+    else     // new todo
+    {
+        writeTodo(todo, args);
+        mServer->call(AddTodoCommand, QVariant(args),
+                      this, SLOT(addTodoFinished(const QValueList<QVariant> &, const QVariant &)),
+                      this, SLOT(fault(int, const QString &, const QVariant &)),
+                      QVariant(todo->uid()));
 
-    mCalendar.addTodo( todo );
-    saveCache();
-  }
+        mCalendar.addTodo(todo);
+        saveCache();
+    }
 
-  enableChangeNotification();
+    enableChangeNotification();
 
-  return true;
+    return true;
 }
 
-bool ResourceXMLRPC::deleteTodo( Todo *todo )
+bool ResourceXMLRPC::deleteTodo(Todo *todo)
 {
-  if ( !(rights( todo ) & EGW_ACCESS_DELETE) && rights( todo ) != -1 )
-    return false;
+    if(!(rights(todo) & EGW_ACCESS_DELETE) && rights(todo) != -1)
+        return false;
 
-  mServer->call( DeleteTodoCommand, idMapper().remoteId( todo->uid() ).toInt(),
-                 this, SLOT( deleteTodoFinished( const QValueList<QVariant>&,
-                                                 const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                 QVariant( todo->uid() ) );
-  return true;
+    mServer->call(DeleteTodoCommand, idMapper().remoteId(todo->uid()).toInt(),
+                  this, SLOT(deleteTodoFinished(const QValueList<QVariant> &,
+                             const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)),
+                  QVariant(todo->uid()));
+    return true;
 }
 
 Todo::List ResourceXMLRPC::rawTodos()
 {
-  return mCalendar.rawTodos();
+    return mCalendar.rawTodos();
 }
 
-Todo *ResourceXMLRPC::todo( const QString& uid )
+Todo *ResourceXMLRPC::todo(const QString &uid)
 {
-  return mCalendar.todo( uid );
+    return mCalendar.todo(uid);
 }
 
-Todo::List ResourceXMLRPC::rawTodosForDate( const QDate& date )
+Todo::List ResourceXMLRPC::rawTodosForDate(const QDate &date)
 {
-  return mCalendar.rawTodosForDate( date );
+    return mCalendar.rawTodosForDate(date);
 }
 
-bool ResourceXMLRPC::addJournal( Journal* journal )
+bool ResourceXMLRPC::addJournal(Journal *journal)
 {
-  return mCalendar.addJournal( journal );
+    return mCalendar.addJournal(journal);
 }
 
-bool ResourceXMLRPC::deleteJournal( Journal* journal )
+bool ResourceXMLRPC::deleteJournal(Journal *journal)
 {
-  return mCalendar.deleteJournal( journal );
+    return mCalendar.deleteJournal(journal);
 }
 
-Journal::List ResourceXMLRPC::journals( const QDate& date )
+Journal::List ResourceXMLRPC::journals(const QDate &date)
 {
-  return mCalendar.journals( date );
+    return mCalendar.journals(date);
 }
 
-Journal *ResourceXMLRPC::journal( const QString& uid )
+Journal *ResourceXMLRPC::journal(const QString &uid)
 {
-  return mCalendar.journal( uid );
+    return mCalendar.journal(uid);
 }
 
 
-Alarm::List ResourceXMLRPC::alarmsTo( const QDateTime& to )
+Alarm::List ResourceXMLRPC::alarmsTo(const QDateTime &to)
 {
-  return mCalendar.alarmsTo( to );
+    return mCalendar.alarmsTo(to);
 }
 
-Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime& to )
+Alarm::List ResourceXMLRPC::alarms(const QDateTime &from, const QDateTime &to)
 {
-  return mCalendar.alarms( from, to );
+    return mCalendar.alarms(from, to);
 }
 
 void ResourceXMLRPC::dump() const
 {
-  ResourceCalendar::dump();
+    ResourceCalendar::dump();
 }
 
 void ResourceXMLRPC::reload()
 {
-  load();
+    load();
 }
 
 
-void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
-                                    const QVariant& )
+void ResourceXMLRPC::loginFinished(const QValueList<QVariant> &variant,
+                                   const QVariant &)
 {
-  QMap<QString, QVariant> map = variant[ 0 ].toMap();
+    QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
-  KURL url = KURL( mPrefs->url() );
-  if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
+    KURL url = KURL(mPrefs->url());
+    if(map[ "GOAWAY" ].toString() == "XOXO")      // failed
+    {
+        mSessionID = mKp3 = "";
+    }
+    else
+    {
+        mSessionID = map[ "sessionid" ].toString();
+        mKp3 = map[ "kp3" ].toString();
+    }
+
+    url.setUser(mSessionID);
+    url.setPass(mKp3);
+    mServer->setUrl(url);
+
+    mSynchronizer->stop();
+}
+
+void ResourceXMLRPC::logoutFinished(const QValueList<QVariant> &variant,
+                                    const QVariant &)
+{
+    QMap<QString, QVariant> map = variant[ 0 ].toMap();
+
+    if(map[ "GOODBYE" ].toString() != "XOXO")
+        kdError() << "logout failed" << endl;
+
+    KURL url = KURL(mPrefs->url());
     mSessionID = mKp3 = "";
-  } else {
-    mSessionID = map[ "sessionid" ].toString();
-    mKp3 = map[ "kp3" ].toString();
-  }
+    url.setUser(mSessionID);
+    url.setPass(mKp3);
+    mServer->setUrl(url);
 
-  url.setUser( mSessionID );
-  url.setPass( mKp3 );
-  mServer->setUrl( url );
-
-  mSynchronizer->stop();
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
-                                     const QVariant& )
+void ResourceXMLRPC::listEventsFinished(const QValueList<QVariant> &list,
+                                        const QVariant &)
 {
-  QMap<QString, QVariant> map = variant[ 0 ].toMap();
+    const QValueList<QVariant> eventList = list[ 0 ].toList();
+    QValueList<QVariant>::ConstIterator eventIt;
 
-  if ( map[ "GOODBYE" ].toString() != "XOXO" )
-    kdError() << "logout failed" << endl;
+    disableChangeNotification();
 
-  KURL url = KURL( mPrefs->url() );
-  mSessionID = mKp3 = "";
-  url.setUser( mSessionID );
-  url.setPass( mKp3 );
-  mServer->setUrl( url );
+    Event::List retrievedEvents;
 
-  mSynchronizer->stop();
-}
+    bool changed = false;
+    for(eventIt = eventList.begin(); eventIt != eventList.end(); ++eventIt)
+    {
+        QMap<QString, QVariant> map = (*eventIt).toMap();
 
-void ResourceXMLRPC::listEventsFinished( const QValueList<QVariant>& list,
-                                         const QVariant& )
-{
-  const QValueList<QVariant> eventList = list[ 0 ].toList();
-  QValueList<QVariant>::ConstIterator eventIt;
+        Event *event = new Event;
+        event->setFloats(false);
 
-  disableChangeNotification();
+        QString uid;
+        readEvent(map, event, uid);
 
-  Event::List retrievedEvents;
+        // do we already have this event?
+        Event *oldEvent = 0;
+        QString localUid = idMapper().localId(uid);
+        if(!localUid.isEmpty())
+            oldEvent = mCalendar.event(localUid);
 
-  bool changed = false;
-  for ( eventIt = eventList.begin(); eventIt != eventList.end(); ++eventIt ) {
-    QMap<QString, QVariant> map = (*eventIt).toMap();
+        if(oldEvent)
+        {
+            event->setUid(oldEvent->uid());
+            event->setCreated(oldEvent->created());
 
-    Event *event = new Event;
-    event->setFloats( false );
-
-    QString uid;
-    readEvent( map, event, uid );
-
-    // do we already have this event?
-    Event *oldEvent = 0;
-    QString localUid = idMapper().localId( uid );
-    if ( !localUid.isEmpty() )
-      oldEvent = mCalendar.event( localUid );
-
-    if ( oldEvent ) {
-      event->setUid( oldEvent->uid() );
-      event->setCreated( oldEvent->created() );
-
-      if ( !(*oldEvent == *event) ) {
-        mCalendar.deleteEvent( oldEvent );
-        mCalendar.addEvent( event );
-        retrievedEvents.append( event );
-        changed = true;
-      } else
-        delete event;
-    } else {
-      if ( !localUid.isEmpty() )
-        event->setUid( localUid );
-      idMapper().setRemoteId( event->uid(), uid );
-      mCalendar.addEvent( event );
-      retrievedEvents.append( event );
-      changed = true;
+            if(!(*oldEvent == *event))
+            {
+                mCalendar.deleteEvent(oldEvent);
+                mCalendar.addEvent(event);
+                retrievedEvents.append(event);
+                changed = true;
+            }
+            else
+                delete event;
+        }
+        else
+        {
+            if(!localUid.isEmpty())
+                event->setUid(localUid);
+            idMapper().setRemoteId(event->uid(), uid);
+            mCalendar.addEvent(event);
+            retrievedEvents.append(event);
+            changed = true;
+        }
     }
-  }
 
-  enableChangeNotification();
+    enableChangeNotification();
 
-  clearChanges();
+    clearChanges();
 
 
-  if ( changed ) {
-    cleanUpEventCache( retrievedEvents );
+    if(changed)
+    {
+        cleanUpEventCache(retrievedEvents);
+        saveCache();
+        emit resourceChanged(this);
+    }
+
+    checkLoadingFinished();
+}
+
+void ResourceXMLRPC::deleteEventFinished(const QValueList<QVariant> &,
+        const QVariant &id)
+{
+    idMapper().removeRemoteId(idMapper().remoteId(id.toString()));
+
+    Event *ev = mCalendar.event(id.toString());
+
+    disableChangeNotification();
+    mCalendar.deleteEvent(ev);
     saveCache();
-    emit resourceChanged( this );
-  }
+    enableChangeNotification();
 
-  checkLoadingFinished();
+    emit resourceChanged(this);
 }
 
-void ResourceXMLRPC::deleteEventFinished( const QValueList<QVariant>&,
-                                          const QVariant& id )
+void ResourceXMLRPC::updateEventFinished(const QValueList<QVariant> &,
+        const QVariant &)
 {
-  idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
-
-  Event *ev = mCalendar.event( id.toString() );
-
-  disableChangeNotification();
-  mCalendar.deleteEvent( ev );
-  saveCache();
-  enableChangeNotification();
-
-  emit resourceChanged( this );
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::updateEventFinished( const QValueList<QVariant>&,
-                                          const QVariant& )
+void ResourceXMLRPC::addEventFinished(const QValueList<QVariant> &list,
+                                      const QVariant &id)
 {
-  mSynchronizer->stop();
+    idMapper().setRemoteId(id.toString(), list[ 0 ].toString());
+
+    emit resourceChanged(this);
 }
 
-void ResourceXMLRPC::addEventFinished( const QValueList<QVariant>& list,
-                                       const QVariant& id )
+void ResourceXMLRPC::loadEventCategoriesFinished(const QValueList<QVariant> &mapList, const QVariant &)
 {
-  idMapper().setRemoteId( id.toString(), list[ 0 ].toString() );
+    mEventCategoryMap.clear();
 
-  emit resourceChanged( this );
-}
+    const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
+    QMap<QString, QVariant>::ConstIterator it;
 
-void ResourceXMLRPC::loadEventCategoriesFinished( const QValueList<QVariant> &mapList, const QVariant& )
-{
-  mEventCategoryMap.clear();
+    KPimPrefs prefs("korganizerrc");
+    for(it = map.begin(); it != map.end(); ++it)
+    {
+        mEventCategoryMap.insert(it.data().toString(), it.key().toInt());
 
-  const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
-  QMap<QString, QVariant>::ConstIterator it;
-
-  KPimPrefs prefs( "korganizerrc" );
-  for ( it = map.begin(); it != map.end(); ++it ) {
-    mEventCategoryMap.insert( it.data().toString(), it.key().toInt() );
-
-    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() )
-      prefs.mCustomCategories.append( it.data().toString() );
-  }
-
-  prefs.usrWriteConfig();
-  prefs.config()->sync();
-
-  checkLoadingFinished();
-}
-
-void ResourceXMLRPC::listTodosFinished( const QValueList<QVariant>& list,
-                                        const QVariant& )
-{
-  const QValueList<QVariant> todoList = list[ 0 ].toList();
-  QValueList<QVariant>::ConstIterator todoIt;
-
-  disableChangeNotification();
-
-  Todo::List retrievedTodos;
-
-  bool changed = false;
-  for ( todoIt = todoList.begin(); todoIt != todoList.end(); ++todoIt ) {
-    QMap<QString, QVariant> map = (*todoIt).toMap();
-
-    Todo *todo = new Todo;
-
-    QString uid;
-    readTodo( map, todo, uid );
-
-    // do we already have this todo?
-    Todo *oldTodo = 0;
-    QString localUid = idMapper().localId( uid );
-    if ( !localUid.isEmpty() )
-      oldTodo = mCalendar.todo( localUid );
-
-    if ( oldTodo ) {
-      todo->setUid( oldTodo->uid() );
-      todo->setCreated( oldTodo->created() );
-
-      if ( !(*oldTodo == *todo) ) {
-        mCalendar.deleteTodo( oldTodo );
-        mCalendar.addTodo( todo );
-        retrievedTodos.append( todo );
-        changed = true;
-      } else
-        delete todo;
-    } else {
-      idMapper().setRemoteId( todo->uid(), uid );
-      mCalendar.addTodo( todo );
-      retrievedTodos.append( todo );
-      changed = true;
+        if(prefs.mCustomCategories.find(it.data().toString()) == prefs.mCustomCategories.end())
+            prefs.mCustomCategories.append(it.data().toString());
     }
-  }
 
-  enableChangeNotification();
+    prefs.usrWriteConfig();
+    prefs.config()->sync();
 
-  if ( changed ) {
-    cleanUpTodoCache( retrievedTodos );
+    checkLoadingFinished();
+}
+
+void ResourceXMLRPC::listTodosFinished(const QValueList<QVariant> &list,
+                                       const QVariant &)
+{
+    const QValueList<QVariant> todoList = list[ 0 ].toList();
+    QValueList<QVariant>::ConstIterator todoIt;
+
+    disableChangeNotification();
+
+    Todo::List retrievedTodos;
+
+    bool changed = false;
+    for(todoIt = todoList.begin(); todoIt != todoList.end(); ++todoIt)
+    {
+        QMap<QString, QVariant> map = (*todoIt).toMap();
+
+        Todo *todo = new Todo;
+
+        QString uid;
+        readTodo(map, todo, uid);
+
+        // do we already have this todo?
+        Todo *oldTodo = 0;
+        QString localUid = idMapper().localId(uid);
+        if(!localUid.isEmpty())
+            oldTodo = mCalendar.todo(localUid);
+
+        if(oldTodo)
+        {
+            todo->setUid(oldTodo->uid());
+            todo->setCreated(oldTodo->created());
+
+            if(!(*oldTodo == *todo))
+            {
+                mCalendar.deleteTodo(oldTodo);
+                mCalendar.addTodo(todo);
+                retrievedTodos.append(todo);
+                changed = true;
+            }
+            else
+                delete todo;
+        }
+        else
+        {
+            idMapper().setRemoteId(todo->uid(), uid);
+            mCalendar.addTodo(todo);
+            retrievedTodos.append(todo);
+            changed = true;
+        }
+    }
+
+    enableChangeNotification();
+
+    if(changed)
+    {
+        cleanUpTodoCache(retrievedTodos);
+        saveCache();
+        emit resourceChanged(this);
+    }
+
+    checkLoadingFinished();
+}
+
+void ResourceXMLRPC::deleteTodoFinished(const QValueList<QVariant> &,
+                                        const QVariant &id)
+{
+    idMapper().removeRemoteId(idMapper().remoteId(id.toString()));
+    mTodoStateMapper.remove(idMapper().remoteId(id.toString()));
+
+    Todo *todo = mCalendar.todo(id.toString());
+    disableChangeNotification();
+    mCalendar.deleteTodo(todo);
     saveCache();
-    emit resourceChanged( this );
-  }
+    enableChangeNotification();
 
-  checkLoadingFinished();
+    emit resourceChanged(this);
 }
 
-void ResourceXMLRPC::deleteTodoFinished( const QValueList<QVariant>&,
-                                         const QVariant& id )
+void ResourceXMLRPC::addTodoFinished(const QValueList<QVariant> &list,
+                                     const QVariant &id)
 {
-  idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
-  mTodoStateMapper.remove( idMapper().remoteId( id.toString() ) );
+    idMapper().setRemoteId(id.toString(), list[ 0 ].toString());
 
-  Todo *todo = mCalendar.todo( id.toString() );
-  disableChangeNotification();
-  mCalendar.deleteTodo( todo );
-  saveCache();
-  enableChangeNotification();
-
-  emit resourceChanged( this );
+    emit resourceChanged(this);
 }
 
-void ResourceXMLRPC::addTodoFinished( const QValueList<QVariant>& list,
-                                      const QVariant& id )
+void ResourceXMLRPC::updateTodoFinished(const QValueList<QVariant> &,
+                                        const QVariant &)
 {
-  idMapper().setRemoteId( id.toString(), list[ 0 ].toString() );
-
-  emit resourceChanged( this );
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::updateTodoFinished( const QValueList<QVariant>&,
-                                         const QVariant& )
+void ResourceXMLRPC::loadTodoCategoriesFinished(const QValueList<QVariant> &mapList, const QVariant &)
 {
-  mSynchronizer->stop();
-}
+    mTodoCategoryMap.clear();
 
-void ResourceXMLRPC::loadTodoCategoriesFinished( const QValueList<QVariant> &mapList, const QVariant& )
-{
-  mTodoCategoryMap.clear();
+    const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
+    QMap<QString, QVariant>::ConstIterator it;
 
-  const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
-  QMap<QString, QVariant>::ConstIterator it;
+    KPimPrefs prefs("korganizerrc");
+    for(it = map.begin(); it != map.end(); ++it)
+    {
+        mTodoCategoryMap.insert(it.data().toString(), it.key().toInt());
 
-  KPimPrefs prefs( "korganizerrc" );
-  for ( it = map.begin(); it != map.end(); ++it ) {
-    mTodoCategoryMap.insert( it.data().toString(), it.key().toInt() );
-
-    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() )
-      prefs.mCustomCategories.append( it.data().toString() );
-  }
-
-  prefs.usrWriteConfig();
-  prefs.config()->sync();
-
-  checkLoadingFinished();
-}
-
-void ResourceXMLRPC::fault( int error, const QString& errorMsg,
-                            const QVariant& )
-{
-  kdError() << "Server send error " << error << ": " << errorMsg << endl;
-  mSynchronizer->stop();
-}
-
-void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *event,
-                                QString &uid )
-{
-  // for recurrence
-  int rType = CAL_RECUR_NONE;
-  int rInterval = 1;
-  int rData = 0;
-  int rights = 0;
-  QDateTime rEndDate;
-  QValueList<QDateTime> rExceptions;
-
-  QMap<QString, QVariant>::ConstIterator it;
-  for ( it = args.begin(); it != args.end(); ++it ) {
-    if ( it.key() == "id" ) {
-      uid = it.data().toString();
-    } else if ( it.key() == "rights" ) {
-      rights = it.data().toInt();
-    } else if ( it.key() == "start" ) {
-      event->setDtStart( it.data().toDateTime() );
-    } else if ( it.key() == "end" ) {
-      QDateTime start = args[ "start" ].toDateTime();
-      QDateTime end = it.data().toDateTime();
-      if ( start.time() == end.time() &&
-           start.time().hour() == 0 && start.time().minute() == 0 &&
-           start.time().second() == 0 ) {
-        event->setDtEnd( end.addDays( -1 ) );
-        event->setFloats( true );
-      } else {
-        event->setDtEnd( end );
-        event->setHasEndDate( true );
-      }
-    } else if ( it.key() == "modtime" ) {
-      event->setLastModified( it.data().toDateTime() );
-    } else if ( it.key() == "title" ) {
-      event->setSummary( it.data().toString() );
-    } else if ( it.key() == "description" ) {
-      event->setDescription( it.data().toString() );
-    } else if ( it.key() == "location" ) {
-      event->setLocation( it.data().toString() );
-    } else if ( it.key() == "access" ) {
-      event->setSecrecy( (it.data().toString() == "public" ?
-                          Incidence::SecrecyPublic : Incidence::SecrecyPrivate) );
-    } else if ( it.key() == "category" ) {
-      const QMap<QString, QVariant> categories = it.data().toMap();
-      QMap<QString, QVariant>::ConstIterator catIt;
-
-      QStringList eventCategories;
-      for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-        mEventCategoryMap.insert( catIt.data().toString(), catIt.key().toInt() );
-        eventCategories.append( catIt.data().toString() );
-      }
-
-      event->setCategories( eventCategories );
-    } else if ( it.key() == "priority" ) {
-      int priority = 0;
-
-      switch( it.data().toInt() ) {
-        case CAL_PRIO_LOW:
-          priority = 10;
-          break;
-        case CAL_PRIO_NORMAL:
-          priority = 5;
-          break;
-        case CAL_PRIO_HIGH:
-          priority = 1;
-      }
-
-      event->setPriority( priority );
-    } else if ( it.key() == "recur_type" ) {
-      rType = it.data().toInt();
-    } else if ( it.key() == "recur_interval" ) {
-      rInterval = it.data().toInt();
-    } else if ( it.key() == "recur_enddate" ) {
-      rEndDate = it.data().toDateTime();
-    } else if ( it.key() == "recur_data" ) {
-      rData = it.data().toInt();
-    } else if ( it.key() == "recur_exception" ) {
-      const QMap<QString, QVariant> dateList = it.data().toMap();
-      QMap<QString, QVariant>::ConstIterator dateIt;
-
-      for ( dateIt = dateList.begin(); dateIt != dateList.end(); ++dateIt )
-        rExceptions.append( (*dateIt).toDateTime() );
-    } else if ( it.key() == "participants" ) {
-      const QMap<QString, QVariant> persons = it.data().toMap();
-      QMap<QString, QVariant>::ConstIterator personsIt;
-
-      for ( personsIt = persons.begin(); personsIt != persons.end(); ++personsIt ) {
-        QMap<QString, QVariant> person = (*personsIt).toMap();
-        Attendee::PartStat status = Attendee::InProcess;
-        if ( person[ "status" ] == "A" )
-          status = Attendee::Accepted;
-        else if ( person[ "status" ] == "R" )
-          status = Attendee::Declined;
-        else if ( person[ "status" ] == "T" )
-          status = Attendee::Tentative;
-        else if ( person[ "status" ] == "N" )
-          status = Attendee::InProcess;
-
-        Attendee *attendee = new Attendee( person[ "name" ].toString(),
-                                           person[ "email" ].toString(),
-                                           false, status );
-        attendee->setUid( personsIt.key() );
-        event->addAttendee( attendee );
-      }
-    } else if ( it.key() == "alarm" ) {
-      const QMap<QString, QVariant> alarmList = it.data().toMap();
-      QMap<QString, QVariant>::ConstIterator alarmIt;
-
-      for ( alarmIt = alarmList.begin(); alarmIt != alarmList.end(); ++alarmIt ) {
-        QMap<QString, QVariant> alarm = (*alarmIt).toMap();
-
-        Alarm *vAlarm = event->newAlarm();
-        vAlarm->setText( event->summary() );
-        vAlarm->setTime( alarm[ "time" ].toDateTime() );
-        vAlarm->setStartOffset( alarm[ "offset" ].toInt() );
-        vAlarm->setEnabled( alarm[ "enabled" ].toBool() );
-      }
+        if(prefs.mCustomCategories.find(it.data().toString()) == prefs.mCustomCategories.end())
+            prefs.mCustomCategories.append(it.data().toString());
     }
-  }
 
-  if ( rType != CAL_RECUR_NONE && rInterval > 0 ) {
-    Recurrence *re = event->recurrence();
-//    re->setRecurStart( event->dtStart() );
+    prefs.usrWriteConfig();
+    prefs.config()->sync();
 
-
-    if ( rInterval == 0 ) // libkcal crashes with rInterval == 0
-      rInterval = 1;
-
-    switch ( rType ) {
-      case CAL_RECUR_DAILY:
-        re->setDaily( rInterval );
-        break;
-      case CAL_RECUR_WEEKLY: {
-        QBitArray weekMask( 7 );
-        weekMask.setBit( 0, rData & CAL_MONDAY );
-        weekMask.setBit( 1, rData & CAL_TUESDAY );
-        weekMask.setBit( 2, rData & CAL_WEDNESDAY );
-        weekMask.setBit( 3, rData & CAL_THURSDAY );
-        weekMask.setBit( 4, rData & CAL_FRIDAY );
-        weekMask.setBit( 5, rData & CAL_SATURDAY );
-        weekMask.setBit( 6, rData & CAL_SUNDAY );
-
-        re->setWeekly( rInterval, weekMask );
-        break; }
-      case CAL_RECUR_MONTHLY_MDAY:
-        re->setMonthly( rInterval );
-        break;
-      case CAL_RECUR_MONTHLY_WDAY:
-        re->setMonthly( rInterval );
-        // TODO: Set the correct monthly pos
-        break;
-      case CAL_RECUR_YEARLY:
-        re->setYearly( rInterval );
-        break;
-    }
-    if ( rEndDate.date().isValid() )
-      re->setEndDate( rEndDate.date() );
-
-    QValueList<QDateTime>::ConstIterator exIt;
-    for ( exIt = rExceptions.begin(); exIt != rExceptions.end(); ++exIt )
-      re->addExDateTime( *exIt );
-  }
-
-  event->setReadOnly( !(rights & EGW_ACCESS_EDIT) );
-  setRights( event, rights );
+    checkLoadingFinished();
 }
 
-void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
+void ResourceXMLRPC::fault(int error, const QString &errorMsg,
+                           const QVariant &)
 {
-  args.insert( "start", event->dtStart() );
+    kdError() << "Server send error " << error << ": " << errorMsg << endl;
+    mSynchronizer->stop();
+}
 
-  // handle all day events
-  if ( event->doesFloat() )
-    args.insert( "end", event->dtEnd().addDays( 1 ) );
-  else
-    args.insert( "end", event->dtEnd() );
+void ResourceXMLRPC::readEvent(const QMap<QString, QVariant> &args, Event *event,
+                               QString &uid)
+{
+    // for recurrence
+    int rType = CAL_RECUR_NONE;
+    int rInterval = 1;
+    int rData = 0;
+    int rights = 0;
+    QDateTime rEndDate;
+    QValueList<QDateTime> rExceptions;
 
-  args.insert( "modtime", event->lastModified() );
-  args.insert( "title", event->summary() );
-  args.insert( "description", event->description() );
-  args.insert( "location", event->location() );
+    QMap<QString, QVariant>::ConstIterator it;
+    for(it = args.begin(); it != args.end(); ++it)
+    {
+        if(it.key() == "id")
+        {
+            uid = it.data().toString();
+        }
+        else if(it.key() == "rights")
+        {
+            rights = it.data().toInt();
+        }
+        else if(it.key() == "start")
+        {
+            event->setDtStart(it.data().toDateTime());
+        }
+        else if(it.key() == "end")
+        {
+            QDateTime start = args[ "start" ].toDateTime();
+            QDateTime end = it.data().toDateTime();
+            if(start.time() == end.time() &&
+                    start.time().hour() == 0 && start.time().minute() == 0 &&
+                    start.time().second() == 0)
+            {
+                event->setDtEnd(end.addDays(-1));
+                event->setFloats(true);
+            }
+            else
+            {
+                event->setDtEnd(end);
+                event->setHasEndDate(true);
+            }
+        }
+        else if(it.key() == "modtime")
+        {
+            event->setLastModified(it.data().toDateTime());
+        }
+        else if(it.key() == "title")
+        {
+            event->setSummary(it.data().toString());
+        }
+        else if(it.key() == "description")
+        {
+            event->setDescription(it.data().toString());
+        }
+        else if(it.key() == "location")
+        {
+            event->setLocation(it.data().toString());
+        }
+        else if(it.key() == "access")
+        {
+            event->setSecrecy((it.data().toString() == "public" ?
+                               Incidence::SecrecyPublic : Incidence::SecrecyPrivate));
+        }
+        else if(it.key() == "category")
+        {
+            const QMap<QString, QVariant> categories = it.data().toMap();
+            QMap<QString, QVariant>::ConstIterator catIt;
 
-  // SECRECY
-  args.insert( "access", (event->secrecy() == Incidence::SecrecyPublic ? "public" : "private") );
+            QStringList eventCategories;
+            for(catIt = categories.begin(); catIt != categories.end(); ++catIt)
+            {
+                mEventCategoryMap.insert(catIt.data().toString(), catIt.key().toInt());
+                eventCategories.append(catIt.data().toString());
+            }
 
-  // CATEGORY
-  const QStringList categories = event->categories();
-  QStringList::ConstIterator catIt;
-  QMap<QString, QVariant> catMap;
-  int counter = 0;
-  for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-    QMap<QString, int>::Iterator it = mEventCategoryMap.find( *catIt );
-    if ( it == mEventCategoryMap.end() ) // new category
-      catMap.insert( QString::number( counter-- ), *catIt );
+            event->setCategories(eventCategories);
+        }
+        else if(it.key() == "priority")
+        {
+            int priority = 0;
+
+            switch(it.data().toInt())
+            {
+                case CAL_PRIO_LOW:
+                    priority = 10;
+                    break;
+                case CAL_PRIO_NORMAL:
+                    priority = 5;
+                    break;
+                case CAL_PRIO_HIGH:
+                    priority = 1;
+            }
+
+            event->setPriority(priority);
+        }
+        else if(it.key() == "recur_type")
+        {
+            rType = it.data().toInt();
+        }
+        else if(it.key() == "recur_interval")
+        {
+            rInterval = it.data().toInt();
+        }
+        else if(it.key() == "recur_enddate")
+        {
+            rEndDate = it.data().toDateTime();
+        }
+        else if(it.key() == "recur_data")
+        {
+            rData = it.data().toInt();
+        }
+        else if(it.key() == "recur_exception")
+        {
+            const QMap<QString, QVariant> dateList = it.data().toMap();
+            QMap<QString, QVariant>::ConstIterator dateIt;
+
+            for(dateIt = dateList.begin(); dateIt != dateList.end(); ++dateIt)
+                rExceptions.append((*dateIt).toDateTime());
+        }
+        else if(it.key() == "participants")
+        {
+            const QMap<QString, QVariant> persons = it.data().toMap();
+            QMap<QString, QVariant>::ConstIterator personsIt;
+
+            for(personsIt = persons.begin(); personsIt != persons.end(); ++personsIt)
+            {
+                QMap<QString, QVariant> person = (*personsIt).toMap();
+                Attendee::PartStat status = Attendee::InProcess;
+                if(person[ "status" ] == "A")
+                    status = Attendee::Accepted;
+                else if(person[ "status" ] == "R")
+                    status = Attendee::Declined;
+                else if(person[ "status" ] == "T")
+                    status = Attendee::Tentative;
+                else if(person[ "status" ] == "N")
+                    status = Attendee::InProcess;
+
+                Attendee *attendee = new Attendee(person[ "name" ].toString(),
+                                                  person[ "email" ].toString(),
+                                                  false, status);
+                attendee->setUid(personsIt.key());
+                event->addAttendee(attendee);
+            }
+        }
+        else if(it.key() == "alarm")
+        {
+            const QMap<QString, QVariant> alarmList = it.data().toMap();
+            QMap<QString, QVariant>::ConstIterator alarmIt;
+
+            for(alarmIt = alarmList.begin(); alarmIt != alarmList.end(); ++alarmIt)
+            {
+                QMap<QString, QVariant> alarm = (*alarmIt).toMap();
+
+                Alarm *vAlarm = event->newAlarm();
+                vAlarm->setText(event->summary());
+                vAlarm->setTime(alarm[ "time" ].toDateTime());
+                vAlarm->setStartOffset(alarm[ "offset" ].toInt());
+                vAlarm->setEnabled(alarm[ "enabled" ].toBool());
+            }
+        }
+    }
+
+    if(rType != CAL_RECUR_NONE && rInterval > 0)
+    {
+        Recurrence *re = event->recurrence();
+        //    re->setRecurStart( event->dtStart() );
+
+
+        if(rInterval == 0)    // libkcal crashes with rInterval == 0
+            rInterval = 1;
+
+        switch(rType)
+        {
+            case CAL_RECUR_DAILY:
+                re->setDaily(rInterval);
+                break;
+            case CAL_RECUR_WEEKLY:
+            {
+                QBitArray weekMask(7);
+                weekMask.setBit(0, rData & CAL_MONDAY);
+                weekMask.setBit(1, rData & CAL_TUESDAY);
+                weekMask.setBit(2, rData & CAL_WEDNESDAY);
+                weekMask.setBit(3, rData & CAL_THURSDAY);
+                weekMask.setBit(4, rData & CAL_FRIDAY);
+                weekMask.setBit(5, rData & CAL_SATURDAY);
+                weekMask.setBit(6, rData & CAL_SUNDAY);
+
+                re->setWeekly(rInterval, weekMask);
+                break;
+            }
+            case CAL_RECUR_MONTHLY_MDAY:
+                re->setMonthly(rInterval);
+                break;
+            case CAL_RECUR_MONTHLY_WDAY:
+                re->setMonthly(rInterval);
+                // TODO: Set the correct monthly pos
+                break;
+            case CAL_RECUR_YEARLY:
+                re->setYearly(rInterval);
+                break;
+        }
+        if(rEndDate.date().isValid())
+            re->setEndDate(rEndDate.date());
+
+        QValueList<QDateTime>::ConstIterator exIt;
+        for(exIt = rExceptions.begin(); exIt != rExceptions.end(); ++exIt)
+            re->addExDateTime(*exIt);
+    }
+
+    event->setReadOnly(!(rights & EGW_ACCESS_EDIT));
+    setRights(event, rights);
+}
+
+void ResourceXMLRPC::writeEvent(Event *event, QMap<QString, QVariant> &args)
+{
+    args.insert("start", event->dtStart());
+
+    // handle all day events
+    if(event->doesFloat())
+        args.insert("end", event->dtEnd().addDays(1));
     else
-      catMap.insert( QString::number( it.data() ), *catIt );
-  }
-  args.insert( "category", catMap );
+        args.insert("end", event->dtEnd());
 
-  // PRIORITY
-  int priority = 0;
-  if ( event->priority() == 1 )
-    priority = CAL_PRIO_HIGH;
-  else if ( event->priority() > 1 && event->priority() <= 5 )
-    priority = CAL_PRIO_NORMAL;
-  else
-    priority = CAL_PRIO_LOW;
+    args.insert("modtime", event->lastModified());
+    args.insert("title", event->summary());
+    args.insert("description", event->description());
+    args.insert("location", event->location());
 
-  args.insert( "priority", priority );
+    // SECRECY
+    args.insert("access", (event->secrecy() == Incidence::SecrecyPublic ? "public" : "private"));
 
-  // RECURRENCE
-  Recurrence *rec = event->recurrence();
-  if ( !rec->doesRecur() ) {
-    args.insert( "recur_type", int( 0 ) );
-    args.insert( "recur_interval", int( 0 ) );
-    args.insert( "recur_enddate", QDateTime() );
-    args.insert( "recur_data", int( 0 ) );
-    args.insert( "recur_exception", QMap<QString, QVariant>() );
-  } else {
-    switch ( rec->recurrenceType() ) {
-      case Recurrence::rDaily:
-          args.insert( "recur_type", int( CAL_RECUR_DAILY ) );
-          break;
-      case Recurrence::rWeekly:  {
-          int weekMask = 0;
-          if ( rec->days().testBit( 0 ) )
-            weekMask += CAL_MONDAY;
-          if ( rec->days().testBit( 1 ) )
-            weekMask += CAL_TUESDAY;
-          if ( rec->days().testBit( 2 ) )
-            weekMask += CAL_WEDNESDAY;
-          if ( rec->days().testBit( 3 ) )
-            weekMask += CAL_THURSDAY;
-          if ( rec->days().testBit( 4 ) )
-            weekMask += CAL_FRIDAY;
-          if ( rec->days().testBit( 5 ) )
-            weekMask += CAL_SATURDAY;
-          if ( rec->days().testBit( 6 ) )
-            weekMask += CAL_SUNDAY;
-
-          args.insert( "recur_data", weekMask );
-          args.insert( "recur_type", int( CAL_RECUR_WEEKLY ) );
-          }
-          break;
-      case Recurrence::rMonthlyPos:
-          args.insert( "recur_type", int( CAL_RECUR_MONTHLY_MDAY ) );
-          break;
-      case Recurrence::rMonthlyDay:
-          args.insert( "recur_type", int( CAL_RECUR_MONTHLY_WDAY ) );
-          break;
-      case Recurrence::rYearlyDay:
-          args.insert( "recur_type", int( CAL_RECUR_YEARLY ) );
-          break;
-      default:
-          break;
-    }
-
-    args.insert( "recur_interval", rec->frequency() );
-    args.insert( "recur_enddate", rec->endDateTime() );
-
-    //  TODO: Also use exception dates!
-    const QValueList<QDateTime> dates = event->recurrence()->exDateTimes();
-    QValueList<QDateTime>::ConstIterator dateIt;
-    QMap<QString, QVariant> exMap;
+    // CATEGORY
+    const QStringList categories = event->categories();
+    QStringList::ConstIterator catIt;
+    QMap<QString, QVariant> catMap;
     int counter = 0;
-    for ( dateIt = dates.begin(); dateIt != dates.end(); ++dateIt, ++counter )
-      exMap.insert( QString::number( counter ), *dateIt );
-
-    args.insert( "recur_exception", exMap );
-  }
-
-  // PARTICIPANTS
-  const Attendee::List attendees = event->attendees();
-  Attendee::List::ConstIterator attIt;
-  QMap<QString, QVariant> persons;
-  for ( attIt = attendees.begin(); attIt != attendees.end(); ++attIt ) {
-    QMap<QString, QVariant> person;
-    QString status;
-
-    if ( (*attIt)->status() == Attendee::Accepted )
-      status = "A";
-    else if ( (*attIt)->status() == Attendee::Declined )
-      status = "R";
-    else if ( (*attIt)->status() == Attendee::Tentative )
-      status = "T";
-    else
-      status = "N";
-
-    person.insert( "status", status );
-    person.insert( "name", (*attIt)->name() );
-    person.insert( "email", (*attIt)->email() );
-
-    persons.insert( (*attIt)->uid(), person );
-  }
-  args.insert( "participants", persons );
-
-  // ALARMS
-  const Alarm::List alarms = event->alarms();
-  Alarm::List::ConstIterator alarmIt;
-  QMap<QString, QVariant> alarmMap;
-  for ( alarmIt = alarms.begin(); alarmIt != alarms.end(); ++alarmIt ) {
-    QMap<QString, QVariant> alarm;
-    alarm.insert( "time", (*alarmIt)->time() );
-    alarm.insert( "offset", (*alarmIt)->startOffset().asSeconds() );
-    alarm.insert( "enabled", ( (*alarmIt)->enabled() ? int( 1 ) : int( 0 ) ) );
-
-    alarmMap.insert( "id", alarm ); // that sucks...
-  }
-
-  args.insert( "alarm", alarmMap );
-}
-
-void ResourceXMLRPC::writeTodo( Todo* todo, QMap<QString, QVariant>& args )
-{
-  args.insert( "subject", todo->summary() );
-  args.insert( "des", todo->description() );
-  args.insert( "access",
-               (todo->secrecy() == Todo::SecrecyPublic ? "public" : "private" ) );
-
-  // CATEGORIES
-  QMap<QString, QVariant> catMap;
-
-  const QStringList categories = todo->categories();
-  QStringList::ConstIterator catIt;
-  int counter = 0;
-  for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-    QMap<QString, int>::Iterator it = mTodoCategoryMap.find( *catIt );
-    if ( it == mTodoCategoryMap.end() )
-      catMap.insert( QString::number( counter-- ), *catIt );
-    else
-      catMap.insert( QString::number( it.data() ), *catIt );
-  }
-  args.insert( "category", catMap );
-
-  args.insert( "datemodified", todo->lastModified() );
-  args.insert( "startdate", todo->dtStart() );
-  args.insert( "enddate", todo->dtDue() );
-
-  // SUBTODO
-  Incidence *inc = todo->relatedTo();
-  if ( inc ) {
-    QString parentUid = idMapper().remoteId( inc->uid() );
-    args.insert( "id_parent", parentUid );
-  }
-
-  // STATE
-  QString remoteId = idMapper().remoteId( todo->uid() );
-  QString status = mTodoStateMapper.remoteState( remoteId, todo->percentComplete() );
-  args.insert( "status", status );
-}
-
-void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, QString &uid )
-{
-  uid = args[ "id" ].toString();
-
-/*
-  info_from
-  info_addr
-  info_owner
-  info_responsible
-  info_modifier
-*/
-
-  todo->setSummary( args[ "subject" ].toString() );
-  todo->setDescription( args[ "des" ].toString() );
-  todo->setSecrecy( args[ "access" ].toString() == "public" ? Todo::SecrecyPublic : Todo::SecrecyPrivate );
-
-  // CATEGORIES
-  const QMap<QString, QVariant> categories = args[ "category" ].toMap();
-  QMap<QString, QVariant>::ConstIterator it;
-
-  QStringList todoCategories;
-  for ( it = categories.begin(); it != categories.end(); ++it ) {
-    mTodoCategoryMap.insert( it.data().toString(), it.key().toInt() );
-    todoCategories.append( it.data().toString() );
-  }
-
-  todo->setCategories( todoCategories );
-
-  todo->setLastModified( args[ "datemodified" ].toDateTime() );
-
-  todo->setFloats( true );
-  QDateTime dateTime = args[ "startdate" ].toDateTime();
-  if ( dateTime.isValid() ) {
-    todo->setDtStart( dateTime );
-    todo->setHasStartDate( true );
-    if ( !dateTime.time().isNull() )
-      todo->setFloats( false );
-  }
-
-  dateTime = args[ "enddate" ].toDateTime();
-  if ( dateTime.isValid() ) {
-    todo->setDtDue( dateTime );
-    todo->setHasDueDate( true );
-    if ( !dateTime.time().isNull() )
-      todo->setFloats( false );
-  }
-
-  // SUBTODO
-  QString parentId = args[ "id_parent" ].toString();
-  if ( parentId != "0" ) { // we are a sub todo
-    QString localParentUid = idMapper().localId( parentId );
-    if ( !localParentUid.isEmpty() ) { // found parent todo
-      Todo *parent = mCalendar.todo( localParentUid );
-      if ( parent )
-        todo->setRelatedTo( parent );
+    for(catIt = categories.begin(); catIt != categories.end(); ++catIt)
+    {
+        QMap<QString, int>::Iterator it = mEventCategoryMap.find(*catIt);
+        if(it == mEventCategoryMap.end())    // new category
+            catMap.insert(QString::number(counter--), *catIt);
+        else
+            catMap.insert(QString::number(it.data()), *catIt);
     }
-  }
+    args.insert("category", catMap);
 
-  // STATE
-  QString status = args[ "status" ].toString();
-  int state = TodoStateMapper::toLocal( status );
+    // PRIORITY
+    int priority = 0;
+    if(event->priority() == 1)
+        priority = CAL_PRIO_HIGH;
+    else if(event->priority() > 1 && event->priority() <= 5)
+        priority = CAL_PRIO_NORMAL;
+    else
+        priority = CAL_PRIO_LOW;
 
-  mTodoStateMapper.addTodoState( uid, state, status );
-  todo->setPercentComplete( state );
+    args.insert("priority", priority);
 
-  int rights = args[ "rights" ].toInt();
-  todo->setReadOnly( !(rights & EGW_ACCESS_EDIT) );
-  setRights( todo, rights );
+    // RECURRENCE
+    Recurrence *rec = event->recurrence();
+    if(!rec->doesRecur())
+    {
+        args.insert("recur_type", int(0));
+        args.insert("recur_interval", int(0));
+        args.insert("recur_enddate", QDateTime());
+        args.insert("recur_data", int(0));
+        args.insert("recur_exception", QMap<QString, QVariant>());
+    }
+    else
+    {
+        switch(rec->recurrenceType())
+        {
+            case Recurrence::rDaily:
+                args.insert("recur_type", int(CAL_RECUR_DAILY));
+                break;
+            case Recurrence::rWeekly:
+            {
+                int weekMask = 0;
+                if(rec->days().testBit(0))
+                    weekMask += CAL_MONDAY;
+                if(rec->days().testBit(1))
+                    weekMask += CAL_TUESDAY;
+                if(rec->days().testBit(2))
+                    weekMask += CAL_WEDNESDAY;
+                if(rec->days().testBit(3))
+                    weekMask += CAL_THURSDAY;
+                if(rec->days().testBit(4))
+                    weekMask += CAL_FRIDAY;
+                if(rec->days().testBit(5))
+                    weekMask += CAL_SATURDAY;
+                if(rec->days().testBit(6))
+                    weekMask += CAL_SUNDAY;
+
+                args.insert("recur_data", weekMask);
+                args.insert("recur_type", int(CAL_RECUR_WEEKLY));
+            }
+            break;
+            case Recurrence::rMonthlyPos:
+                args.insert("recur_type", int(CAL_RECUR_MONTHLY_MDAY));
+                break;
+            case Recurrence::rMonthlyDay:
+                args.insert("recur_type", int(CAL_RECUR_MONTHLY_WDAY));
+                break;
+            case Recurrence::rYearlyDay:
+                args.insert("recur_type", int(CAL_RECUR_YEARLY));
+                break;
+            default:
+                break;
+        }
+
+        args.insert("recur_interval", rec->frequency());
+        args.insert("recur_enddate", rec->endDateTime());
+
+        //  TODO: Also use exception dates!
+        const QValueList<QDateTime> dates = event->recurrence()->exDateTimes();
+        QValueList<QDateTime>::ConstIterator dateIt;
+        QMap<QString, QVariant> exMap;
+        int counter = 0;
+        for(dateIt = dates.begin(); dateIt != dates.end(); ++dateIt, ++counter)
+            exMap.insert(QString::number(counter), *dateIt);
+
+        args.insert("recur_exception", exMap);
+    }
+
+    // PARTICIPANTS
+    const Attendee::List attendees = event->attendees();
+    Attendee::List::ConstIterator attIt;
+    QMap<QString, QVariant> persons;
+    for(attIt = attendees.begin(); attIt != attendees.end(); ++attIt)
+    {
+        QMap<QString, QVariant> person;
+        QString status;
+
+        if((*attIt)->status() == Attendee::Accepted)
+            status = "A";
+        else if((*attIt)->status() == Attendee::Declined)
+            status = "R";
+        else if((*attIt)->status() == Attendee::Tentative)
+            status = "T";
+        else
+            status = "N";
+
+        person.insert("status", status);
+        person.insert("name", (*attIt)->name());
+        person.insert("email", (*attIt)->email());
+
+        persons.insert((*attIt)->uid(), person);
+    }
+    args.insert("participants", persons);
+
+    // ALARMS
+    const Alarm::List alarms = event->alarms();
+    Alarm::List::ConstIterator alarmIt;
+    QMap<QString, QVariant> alarmMap;
+    for(alarmIt = alarms.begin(); alarmIt != alarms.end(); ++alarmIt)
+    {
+        QMap<QString, QVariant> alarm;
+        alarm.insert("time", (*alarmIt)->time());
+        alarm.insert("offset", (*alarmIt)->startOffset().asSeconds());
+        alarm.insert("enabled", ((*alarmIt)->enabled() ? int(1) : int(0)));
+
+        alarmMap.insert("id", alarm);   // that sucks...
+    }
+
+    args.insert("alarm", alarmMap);
+}
+
+void ResourceXMLRPC::writeTodo(Todo *todo, QMap<QString, QVariant> &args)
+{
+    args.insert("subject", todo->summary());
+    args.insert("des", todo->description());
+    args.insert("access",
+                (todo->secrecy() == Todo::SecrecyPublic ? "public" : "private"));
+
+    // CATEGORIES
+    QMap<QString, QVariant> catMap;
+
+    const QStringList categories = todo->categories();
+    QStringList::ConstIterator catIt;
+    int counter = 0;
+    for(catIt = categories.begin(); catIt != categories.end(); ++catIt)
+    {
+        QMap<QString, int>::Iterator it = mTodoCategoryMap.find(*catIt);
+        if(it == mTodoCategoryMap.end())
+            catMap.insert(QString::number(counter--), *catIt);
+        else
+            catMap.insert(QString::number(it.data()), *catIt);
+    }
+    args.insert("category", catMap);
+
+    args.insert("datemodified", todo->lastModified());
+    args.insert("startdate", todo->dtStart());
+    args.insert("enddate", todo->dtDue());
+
+    // SUBTODO
+    Incidence *inc = todo->relatedTo();
+    if(inc)
+    {
+        QString parentUid = idMapper().remoteId(inc->uid());
+        args.insert("id_parent", parentUid);
+    }
+
+    // STATE
+    QString remoteId = idMapper().remoteId(todo->uid());
+    QString status = mTodoStateMapper.remoteState(remoteId, todo->percentComplete());
+    args.insert("status", status);
+}
+
+void ResourceXMLRPC::readTodo(const QMap<QString, QVariant> &args, Todo *todo, QString &uid)
+{
+    uid = args[ "id" ].toString();
+
+    /*
+      info_from
+      info_addr
+      info_owner
+      info_responsible
+      info_modifier
+    */
+
+    todo->setSummary(args[ "subject" ].toString());
+    todo->setDescription(args[ "des" ].toString());
+    todo->setSecrecy(args[ "access" ].toString() == "public" ? Todo::SecrecyPublic : Todo::SecrecyPrivate);
+
+    // CATEGORIES
+    const QMap<QString, QVariant> categories = args[ "category" ].toMap();
+    QMap<QString, QVariant>::ConstIterator it;
+
+    QStringList todoCategories;
+    for(it = categories.begin(); it != categories.end(); ++it)
+    {
+        mTodoCategoryMap.insert(it.data().toString(), it.key().toInt());
+        todoCategories.append(it.data().toString());
+    }
+
+    todo->setCategories(todoCategories);
+
+    todo->setLastModified(args[ "datemodified" ].toDateTime());
+
+    todo->setFloats(true);
+    QDateTime dateTime = args[ "startdate" ].toDateTime();
+    if(dateTime.isValid())
+    {
+        todo->setDtStart(dateTime);
+        todo->setHasStartDate(true);
+        if(!dateTime.time().isNull())
+            todo->setFloats(false);
+    }
+
+    dateTime = args[ "enddate" ].toDateTime();
+    if(dateTime.isValid())
+    {
+        todo->setDtDue(dateTime);
+        todo->setHasDueDate(true);
+        if(!dateTime.time().isNull())
+            todo->setFloats(false);
+    }
+
+    // SUBTODO
+    QString parentId = args[ "id_parent" ].toString();
+    if(parentId != "0")      // we are a sub todo
+    {
+        QString localParentUid = idMapper().localId(parentId);
+        if(!localParentUid.isEmpty())      // found parent todo
+        {
+            Todo *parent = mCalendar.todo(localParentUid);
+            if(parent)
+                todo->setRelatedTo(parent);
+        }
+    }
+
+    // STATE
+    QString status = args[ "status" ].toString();
+    int state = TodoStateMapper::toLocal(status);
+
+    mTodoStateMapper.addTodoState(uid, state, status);
+    todo->setPercentComplete(state);
+
+    int rights = args[ "rights" ].toInt();
+    todo->setReadOnly(!(rights & EGW_ACCESS_EDIT));
+    setRights(todo, rights);
 }
 
 void ResourceXMLRPC::checkLoadingFinished()
 {
-  mLoaded++;
-  if ( mLoaded == 4 ) {
-    mLoaded = 0;
-    emit resourceLoaded( this );
-  }
+    mLoaded++;
+    if(mLoaded == 4)
+    {
+        mLoaded = 0;
+        emit resourceLoaded(this);
+    }
 }
 
 #include "kcal_resourcexmlrpc.moc"

@@ -31,9 +31,8 @@
 class KConfigSkeleton;
 class KConfigSkeletonItem;
 
-class KDE_EXPORT KConfigPropagator
-{
-  public:
+class KDE_EXPORT KConfigPropagator {
+public:
 
     /**
       Create KConfigPropagator object without associated source configuration.
@@ -41,40 +40,41 @@ class KDE_EXPORT KConfigPropagator
     KConfigPropagator();
     /**
       Create KConfigPropagator object.
-      
+
       @param skeleton KConfigSkeleton object used as source for the propagation
       @param kcfgFile file name of kcfg file containing the propagation rules
     */
-    KConfigPropagator( KConfigSkeleton *skeleton, const QString &kcfgFile );
+    KConfigPropagator(KConfigSkeleton *skeleton, const QString &kcfgFile);
     virtual ~KConfigPropagator() {}
 
-    KConfigSkeleton *skeleton() { return mSkeleton; }
+    KConfigSkeleton *skeleton()
+    {
+        return mSkeleton;
+    }
 
     /*
       Commit changes according to propagation rules.
     */
     void commit();
 
-    class KDE_EXPORT Condition
-    {
-      public:
-        Condition() : isValid( false ) {}
-      
+    class KDE_EXPORT Condition {
+    public:
+        Condition() : isValid(false) {}
+
         QString file;
         QString group;
         QString key;
         QString value;
-        
+
         bool isValid;
     };
 
-    class KDE_EXPORT Rule
-    {
-      public:
+    class KDE_EXPORT Rule {
+    public:
         typedef QValueList<Rule> List;
-        
-        Rule() : hideValue( false ) {}
-        
+
+        Rule() : hideValue(false) {}
+
         QString sourceFile;
         QString sourceGroup;
         QString sourceEntry;
@@ -88,29 +88,39 @@ class KDE_EXPORT KConfigPropagator
         bool hideValue;
     };
 
-    class KDE_EXPORT Change
-    {
-      public:
+    class KDE_EXPORT Change {
+    public:
         typedef QPtrList<Change> List;
 
-        Change( const QString &title ) : mTitle( title ) {}
+        Change(const QString &title) : mTitle(title) {}
         virtual ~Change();
-      
-        void setTitle( const QString &title ) { mTitle = title; }
-        QString title() const { return mTitle; }
 
-        virtual QString arg1() const { return QString::null; }
-        virtual QString arg2() const { return QString::null; }
+        void setTitle(const QString &title)
+        {
+            mTitle = title;
+        }
+        QString title() const
+        {
+            return mTitle;
+        }
+
+        virtual QString arg1() const
+        {
+            return QString::null;
+        }
+        virtual QString arg2() const
+        {
+            return QString::null;
+        }
 
         virtual void apply() = 0;
 
-      private:
+    private:
         QString mTitle;
     };
 
-    class KDE_EXPORT ChangeConfig : public Change
-    {
-      public:
+    class KDE_EXPORT ChangeConfig : public Change {
+    public:
         ChangeConfig();
         ~ChangeConfig() {}
 
@@ -128,38 +138,38 @@ class KDE_EXPORT KConfigPropagator
     };
 
     void updateChanges();
-    
+
     Change::List changes();
 
     Rule::List rules();
 
-  protected:
+protected:
     void init();
 
     /**
       Implement this function in a subclass if you want to add changes which
       can't be expressed as propagations in the kcfg file.
     */
-    virtual void addCustomChanges( Change::List & ) {}
+    virtual void addCustomChanges(Change::List &) {}
 
-    KConfigSkeletonItem *findItem( const QString &group, const QString &name );
+    KConfigSkeletonItem *findItem(const QString &group, const QString &name);
 
-    QString itemValueAsString( KConfigSkeletonItem * );
+    QString itemValueAsString(KConfigSkeletonItem *);
 
     void readKcfgFile();
 
-    Rule parsePropagation( const QDomElement &e );
-    Condition parseCondition( const QDomElement &e );
+    Rule parsePropagation(const QDomElement &e);
+    Condition parseCondition(const QDomElement &e);
 
-    void parseConfigEntryPath( const QString &path, QString &file,
-                               QString &group, QString &entry );
+    void parseConfigEntryPath(const QString &path, QString &file,
+                              QString &group, QString &entry);
 
-  private:
+private:
     KConfigSkeleton *mSkeleton;
     QString mKcfgFile;
 
     Rule::List mRules;
-    Change::List mChanges;    
+    Change::List mChanges;
 };
 
 #endif

@@ -27,18 +27,16 @@
 
 class KStatusBar;
 
-namespace Kontact
-{
+namespace Kontact {
 
 /**
   Summary widget for display in the Summary View plugin.
  */
-class KDE_EXPORT Summary : public QWidget
-{
-  Q_OBJECT
+class KDE_EXPORT Summary : public QWidget {
+    Q_OBJECT
 
-  public:
-    Summary( QWidget *parent, const char *name = 0 );
+public:
+    Summary(QWidget *parent, const char *name = 0);
 
     virtual ~Summary();
 
@@ -47,41 +45,50 @@ class KDE_EXPORT Summary : public QWidget
       much vertical space relative to other summary widgets this widget will use
       in the summary view.
     */
-    virtual int summaryHeight() const { return 1; }
+    virtual int summaryHeight() const
+    {
+        return 1;
+    }
 
     /**
       Creates a heading for a typical summary view with an icon and a heading.
      */
-    QWidget *createHeader( QWidget* parent, const QPixmap &icon,
-                           const QString& heading );
+    QWidget *createHeader(QWidget *parent, const QPixmap &icon,
+                          const QString &heading);
 
     /**
       Return list of strings identifying configuration modules for this summary
       part. The string has to be suitable for being passed to
       KCMultiDialog::addModule().
     */
-    virtual QStringList configModules() const { return QStringList(); }
+    virtual QStringList configModules() const
+    {
+        return QStringList();
+    }
 
-  public slots:
+public slots:
     virtual void configChanged() {}
 
     /**
       This is called if the displayed information should be updated.
       @param force true if the update was requested by the user
     */
-    virtual void updateSummary( bool force = false ) { Q_UNUSED( force ); }
+    virtual void updateSummary(bool force = false)
+    {
+        Q_UNUSED(force);
+    }
 
-  signals:
-    void message( const QString &message );
-    void summaryWidgetDropped( QWidget *target, QWidget *widget, int alignment );
+signals:
+    void message(const QString &message);
+    void summaryWidgetDropped(QWidget *target, QWidget *widget, int alignment);
 
-  protected:
-    virtual void mousePressEvent( QMouseEvent* );
-    virtual void mouseMoveEvent( QMouseEvent* );
-    virtual void dragEnterEvent( QDragEnterEvent* );
-    virtual void dropEvent( QDropEvent* );
+protected:
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
 
-  private:
+private:
     KStatusBar *mStatusBar;
     QPoint mDragStartPoint;
 

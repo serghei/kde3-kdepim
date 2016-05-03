@@ -26,32 +26,32 @@
 
 #include <qlayout.h>
 
-GroupConfigDialog::GroupConfigDialog( QWidget *parent, SyncProcess *process )
-  : KDialogBase( parent, 0, true, i18n("Configure Synchronization Group"),
-     Ok )
+GroupConfigDialog::GroupConfigDialog(QWidget *parent, SyncProcess *process)
+    : KDialogBase(parent, 0, true, i18n("Configure Synchronization Group"),
+                  Ok)
 {
-  QFrame *topFrame = makeMainWidget();
+    QFrame *topFrame = makeMainWidget();
 
-  QBoxLayout *topLayout = new QVBoxLayout( topFrame );
+    QBoxLayout *topLayout = new QVBoxLayout(topFrame);
 
-  mConfigWidget = new GroupConfig( topFrame );
-  topLayout->addWidget( mConfigWidget );
+    mConfigWidget = new GroupConfig(topFrame);
+    topLayout->addWidget(mConfigWidget);
 
-  mConfigWidget->setSyncProcess( process );
+    mConfigWidget->setSyncProcess(process);
 
-  setInitialSize( configDialogSize( "size_groupconfigdialog" ) );
+    setInitialSize(configDialogSize("size_groupconfigdialog"));
 }
 
 GroupConfigDialog::~GroupConfigDialog()
 {
-  saveDialogSize( "size_groupconfigdialog" );
+    saveDialogSize("size_groupconfigdialog");
 }
 
 void GroupConfigDialog::slotOk()
 {
-  mConfigWidget->saveConfig();
+    mConfigWidget->saveConfig();
 
-  accept();
+    accept();
 }
 
 #include "groupconfigdialog.moc"

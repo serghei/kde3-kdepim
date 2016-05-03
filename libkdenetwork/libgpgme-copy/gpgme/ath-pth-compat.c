@@ -40,63 +40,63 @@ static pth_mutex_t check_init_lock = PTH_MUTEX_INIT;
 /* Initialize the mutex *PRIV.  If JUST_CHECK is true, only do this if
    it is not already initialized.  */
 static int
-mutex_pth_init (void **priv, int just_check)
+mutex_pth_init(void **priv, int just_check)
 {
-  int err = 0;
+    int err = 0;
 
-  if (just_check)
-    pth_mutex_acquire (&check_init_lock, 0, NULL);
-  if (!*priv || !just_check)
+    if(just_check)
+        pth_mutex_acquire(&check_init_lock, 0, NULL);
+    if(!*priv || !just_check)
     {
-      pth_mutex_t *lock = malloc (sizeof (pth_mutex_t));
-      if (!lock)
-	err = ENOMEM;
-      if (!err)
-	{
-	  err = pth_mutex_init (lock);
-	  if (err == FALSE)
-	    err = errno;
-	  else
-	    err = 0;
+        pth_mutex_t *lock = malloc(sizeof(pth_mutex_t));
+        if(!lock)
+            err = ENOMEM;
+        if(!err)
+        {
+            err = pth_mutex_init(lock);
+            if(err == FALSE)
+                err = errno;
+            else
+                err = 0;
 
-	  if (err)
-	    free (lock);
-	  else
-	    *priv = lock;
-	}
+            if(err)
+                free(lock);
+            else
+                *priv = lock;
+        }
     }
-  if (just_check)
-    pth_mutex_release (&check_init_lock);
-  return err;
+    if(just_check)
+        pth_mutex_release(&check_init_lock);
+    return err;
 }
 
 
 static int
-mutex_pth_destroy (void *priv)
+mutex_pth_destroy(void *priv)
 {
-  free (priv);
-  return 0;
+    free(priv);
+    return 0;
 }
 
 
 static int
-mutex_pth_lock (void *priv)
+mutex_pth_lock(void *priv)
 {
-  int ret = pth_mutex_acquire ((pth_mutex_t *) priv, 0, NULL);
-  return ret == FALSE ? errno : 0;
+    int ret = pth_mutex_acquire((pth_mutex_t *) priv, 0, NULL);
+    return ret == FALSE ? errno : 0;
 }
 
 
 static int
-mutex_pth_unlock (void *priv)
+mutex_pth_unlock(void *priv)
 {
-  int ret = pth_mutex_release ((pth_mutex_t *) priv);
-  return ret == FALSE ? errno : 0;
+    int ret = pth_mutex_release((pth_mutex_t *) priv);
+    return ret == FALSE ? errno : 0;
 }
 
 
 static struct ath_ops ath_pth_ops =
-  {
+{
     mutex_pth_init,
     mutex_pth_destroy,
     mutex_pth_lock,
@@ -109,15 +109,15 @@ static struct ath_ops ath_pth_ops =
     pth_connect,
     NULL,	/* FIXME: When GNU PTh has sendmsg.  */
     NULL	/* FIXME: When GNU PTh has recvmsg.  */
-  };
+};
 
 
 struct ath_ops *
-ath_pth_available (void)
+ath_pth_available(void)
 {
-  if (pth_mutex_init && pth_mutex_acquire && pth_mutex_release
-      && pth_read && pth_write && pth_select && pth_waitpid)
-    return &ath_pth_ops;
-  else
-    return 0;
+    if(pth_mutex_init && pth_mutex_acquire && pth_mutex_release
+            && pth_read && pth_write && pth_select && pth_waitpid)
+        return &ath_pth_ops;
+    else
+        return 0;
 }

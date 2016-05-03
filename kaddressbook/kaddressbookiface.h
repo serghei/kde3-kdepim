@@ -29,16 +29,15 @@
 #include <qstringlist.h>
 #include <kdepimmacros.h>
 
-class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
-{
-  K_DCOP
+class KDE_EXPORT KAddressBookIface : virtual public DCOPObject {
+    K_DCOP
 
-  k_dcop:
-    virtual void addEmail( QString addr ) = 0;
-    virtual void importVCard( const KURL& url ) = 0;
-    virtual void importVCardFromData( const QString& vCard ) = 0;
+k_dcop:
+    virtual void addEmail(QString addr) = 0;
+    virtual void importVCard(const KURL &url) = 0;
+    virtual void importVCardFromData(const QString &vCard) = 0;
 
-    virtual ASYNC showContactEditor( QString uid ) = 0;
+    virtual ASYNC showContactEditor(QString uid) = 0;
 
     /**
       Shows dialog for creation of a new contact.  Returns once a contact
@@ -55,7 +54,7 @@ class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
     /**
       Save changes to the address book files.
      */
-    virtual QString getNameByPhone( QString phone ) = 0;
+    virtual QString getNameByPhone(QString phone) = 0;
     virtual void save() = 0;
     virtual void exit() = 0;
 
@@ -65,8 +64,8 @@ class KDE_EXPORT KAddressBookIface : virtual public DCOPObject
      */
     virtual bool handleCommandLine() = 0;
 
-    virtual void loadProfile( const QString& path ) = 0;
-    virtual void saveToProfile( const QString& path ) const = 0;
+    virtual void loadProfile(const QString &path) = 0;
+    virtual void saveToProfile(const QString &path) const = 0;
 };
 
 #endif

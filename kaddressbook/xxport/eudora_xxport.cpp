@@ -36,178 +36,191 @@
 
 #define CTRL_C 3
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_eudora_xxport, EudoraXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER(libkaddrbk_eudora_xxport, EudoraXXPort)
 
-EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::XXPort( ab, parent, name )
+EudoraXXPort::EudoraXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::XXPort(ab, parent, name)
 {
-  createImportAction( i18n( "Import Eudora Addressbook..." ) );
+    createImportAction(i18n("Import Eudora Addressbook..."));
 }
 
-KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
+KABC::AddresseeList EudoraXXPort::importContacts(const QString &) const
 {
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
-		"*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), 0 );
-  if ( fileName.isEmpty() )
-    return KABC::AddresseeList();
+    QString fileName = KFileDialog::getOpenFileName(QDir::homeDirPath(),
+                       "*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), 0);
+    if(fileName.isEmpty())
+        return KABC::AddresseeList();
 
-  QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) )
-    return KABC::AddresseeList();
+    QFile file(fileName);
+    if(!file.open(IO_ReadOnly))
+        return KABC::AddresseeList();
 
-  QString line;
-  QTextStream stream( &file );
-  KABC::Addressee *a = 0;
-  int bytesRead = 0;
+    QString line;
+    QTextStream stream(&file);
+    KABC::Addressee *a = 0;
+    int bytesRead = 0;
 
-  KABC::AddresseeList list;
+    KABC::AddresseeList list;
 
-  while( !stream.eof() ) {
-    line = stream.readLine();
-    bytesRead += line.length();
-    QString tmp;
+    while(!stream.eof())
+    {
+        line = stream.readLine();
+        bytesRead += line.length();
+        QString tmp;
 
-    if ( line.startsWith( "alias" ) ) {
-      if ( a ) { // Write it out
+        if(line.startsWith("alias"))
+        {
+            if(a)      // Write it out
+            {
+                list << *a;
+                delete a;
+                a = 0;
+                a = new KABC::Addressee();
+            }
+            else
+                a = new KABC::Addressee();
+
+            tmp = key(line).stripWhiteSpace();
+            if(!tmp.isEmpty())
+                a->setFormattedName(tmp);
+
+            tmp = email(line).stripWhiteSpace();
+            if(!tmp.isEmpty())
+                a->insertEmail(tmp);
+        }
+        else if(line.startsWith("note"))
+        {
+            if(!a)    // Must have an alias before a note
+                break;
+
+            tmp = comment(line).stripWhiteSpace();
+            if(!tmp.isEmpty())
+                a->setNote(tmp);
+
+            tmp = get(line, "name").stripWhiteSpace();
+            if(!tmp.isEmpty())
+                a->setNameFromString(tmp);
+
+            tmp = get(line, "address").stripWhiteSpace();
+            if(!tmp.isEmpty())
+            {
+                KABC::Address addr;
+                kdDebug(5720) << tmp << endl; // dump complete address
+                addr.setLabel(tmp);
+                a->insertAddress(addr);
+            }
+
+            tmp = get(line, "phone").stripWhiteSpace();
+            if(!tmp.isEmpty())
+                a->insertPhoneNumber(KABC::PhoneNumber(tmp, KABC::PhoneNumber::Home));
+        }
+    }
+
+    if(a)      // Write out address
+    {
         list << *a;
         delete a;
         a = 0;
-        a = new KABC::Addressee();
-      } else
-        a = new KABC::Addressee();
-
-      tmp = key( line ).stripWhiteSpace();
-      if ( !tmp.isEmpty() )
-        a->setFormattedName( tmp );
-
-      tmp = email( line ).stripWhiteSpace();
-      if ( !tmp.isEmpty() )
-        a->insertEmail( tmp );
-    } else if ( line.startsWith( "note" ) ) {
-      if ( !a ) // Must have an alias before a note
-        break;
-
-      tmp = comment( line ).stripWhiteSpace();
-      if ( !tmp.isEmpty() )
-        a->setNote( tmp );
-
-      tmp = get( line, "name" ).stripWhiteSpace();
-      if ( !tmp.isEmpty() )
-        a->setNameFromString( tmp );
-
-      tmp = get( line, "address" ).stripWhiteSpace();
-      if ( !tmp.isEmpty() ) {
-        KABC::Address addr;
-        kdDebug(5720) << tmp << endl; // dump complete address
-        addr.setLabel( tmp );
-        a->insertAddress( addr );
-      }
-
-      tmp = get( line, "phone" ).stripWhiteSpace();
-      if ( !tmp.isEmpty() )
-         a->insertPhoneNumber( KABC::PhoneNumber( tmp, KABC::PhoneNumber::Home ) );
     }
-  }
 
-  if ( a ) { // Write out address
-    list << *a;
-    delete a;
-    a = 0;
-  }
+    file.close();
 
-  file.close();
-
-  return list;
+    return list;
 }
 
-QString EudoraXXPort::key( const QString& line) const
+QString EudoraXXPort::key(const QString &line) const
 {
-  int e;
-  QString result;
-  int b = line.find( '\"', 0 );
+    int e;
+    QString result;
+    int b = line.find('\"', 0);
 
-  if ( b == -1 ) {
-    b = line.find( ' ' );
-    if ( b == -1 )
-      return result;
+    if(b == -1)
+    {
+        b = line.find(' ');
+        if(b == -1)
+            return result;
+
+        b++;
+        e = line.find(' ', b);
+        result = line.mid(b, e - b);
+
+        return result;
+    }
 
     b++;
-    e = line.find( ' ', b );
-    result = line.mid( b, e - b );
+    e = line.find('\"', b);
+    if(e == -1)
+        return result;
+
+    result = line.mid(b, e - b);
 
     return result;
-  }
+}
 
-  b++;
-  e = line.find( '\"', b );
-  if ( e == -1 )
+QString EudoraXXPort::email(const QString &line) const
+{
+    int b;
+    QString result;
+    b = line.findRev('\"');
+    if(b == -1)
+    {
+        b = line.findRev(' ');
+        if(b == -1)
+            return result;
+    }
+    result = line.mid(b + 1);
+
     return result;
-
-  result = line.mid( b, e - b );
-
-  return result;
 }
 
-QString EudoraXXPort::email( const QString& line ) const
+QString EudoraXXPort::comment(const QString &line) const
 {
-  int b;
-  QString result;
-  b = line.findRev( '\"' );
-  if ( b == -1 ) {
-    b = line.findRev( ' ' );
-    if ( b == -1 )
-      return result;
-  }
-  result = line.mid( b + 1 );
+    int b;
+    QString result;
+    uint i;
+    b = line.findRev('>');
+    if(b == -1)
+    {
+        b = line.findRev('\"');
+        if(b == -1)
+            return result;
+    }
 
-  return result;
+    result = line.mid(b + 1);
+    for(i = 0; i < result.length(); i++)
+    {
+        if(result[ i ] == CTRL_C)
+            result[ i ] = '\n';
+    }
+
+    return result;
 }
 
-QString EudoraXXPort::comment( const QString& line ) const
+QString EudoraXXPort::get(const QString &line, const QString &key) const
 {
-  int b;
-  QString result;
-  uint i;
-  b = line.findRev( '>' );
-  if ( b == -1 ) {
-    b = line.findRev( '\"' );
-    if ( b == -1 )
-      return result;
-  }
+    QString fd = "<" + key + ":";
+    int b, e;
+    uint i;
 
-  result = line.mid( b + 1 );
-  for ( i = 0; i < result.length(); i++ ) {
-    if ( result[ i ] == CTRL_C )
-      result[ i ] = '\n';
-  }
+    // Find formatted key, return on error
+    b = line.find(fd);
+    if(b == -1)
+        return QString::null;
 
-  return result;
-}
+    b += fd.length();
+    e = line.find('>', b);
+    if(e == -1)
+        return QString::null;
 
-QString EudoraXXPort::get( const QString& line, const QString& key ) const
-{
-  QString fd = "<" + key + ":";
-  int b, e;
-  uint i;
+    e--;
+    QString result = line.mid(b, e - b + 1);
+    for(i = 0; i < result.length(); i++)
+    {
+        if(result[ i ] == CTRL_C)
+            result[ i ] = '\n';
+    }
 
-  // Find formatted key, return on error
-  b = line.find( fd );
-  if ( b == -1 )
-    return QString::null;
-
-  b += fd.length();
-  e = line.find( '>', b );
-  if ( e == -1 )
-    return QString::null;
-
-  e--;
-  QString result = line.mid( b, e - b + 1 );
-  for ( i = 0; i < result.length(); i++ ) {
-    if ( result[ i ] == CTRL_C )
-      result[ i ] = '\n';
-  }
-
-  return result;
+    return result;
 }
 
 #include "eudora_xxport.moc"

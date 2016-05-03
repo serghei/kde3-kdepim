@@ -45,87 +45,87 @@
 
 static const KCmdLineOptions options[] =
 {
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	{"vcal-file <path>","Set vcal file", 0},
-	KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    {"data-dir <path>", "Set data directory", "."},
+    {"vcal-file <path>", "Set vcal file", 0},
+    KCmdLineLastOption
 };
 
 
 
 int main(int argc, char **argv)
 {
-	KApplication::disableAutoDcopRegistration();
+    KApplication::disableAutoDcopRegistration();
 
-	KAboutData aboutData("importdatebook","Import Date Book","0.1");
-	KCmdLineArgs::init(argc,argv,&aboutData);
-	KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("importdatebook", "Import Date Book", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	KApplication app( false, false );
+    KApplication app(false, false);
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	debug_level= (args->isSet("verbose")) ? 4 : 0;
+    debug_level = (args->isSet("verbose")) ? 4 : 0;
 
-	QString datadir = args->getOption("data-dir");
-	QString vcalfile = args->getOption("vcal-file");
+    QString datadir = args->getOption("data-dir");
+    QString vcalfile = args->getOption("vcal-file");
 
-	if (datadir.isEmpty())
-	{
-		WARNINGKPILOT << "! Must provide a data-directory." << endl;
-	}
-	if (vcalfile.isEmpty())
-	{
-		WARNINGKPILOT << "! Must provide a vcal-file to read." << endl;
-	}
-	if (datadir.isEmpty() || vcalfile.isEmpty())
-	{
-		return 1;
-	}
+    if(datadir.isEmpty())
+    {
+        WARNINGKPILOT << "! Must provide a data-directory." << endl;
+    }
+    if(vcalfile.isEmpty())
+    {
+        WARNINGKPILOT << "! Must provide a vcal-file to read." << endl;
+    }
+    if(datadir.isEmpty() || vcalfile.isEmpty())
+    {
+        return 1;
+    }
 
-	DEBUGKPILOT << "Using vcal-file: [" << vcalfile 
-		<< "], creating DatebookDB in: [" << datadir
-		<< "]" << endl;
+    DEBUGKPILOT << "Using vcal-file: [" << vcalfile
+                << "], creating DatebookDB in: [" << datadir
+                << "]" << endl;
 
-	KCal::CalendarLocal *calendar = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
-	if (!calendar || !calendar->load( vcalfile ))
-	{
-		return 1;
-	}
+    KCal::CalendarLocal *calendar = new KCal::CalendarLocal(QString::fromLatin1("UTC"));
+    if(!calendar || !calendar->load(vcalfile))
+    {
+        return 1;
+    }
 
-	DEBUGKPILOT << "Opened calendar with: [" 
-		<< calendar->incidences().count() << "] incidences." << endl;
+    DEBUGKPILOT << "Opened calendar with: ["
+                << calendar->incidences().count() << "] incidences." << endl;
 
-	Pilot::setupPilotCodec( CSL1("Latin1") );
+    Pilot::setupPilotCodec(CSL1("Latin1"));
 
-	PilotLocalDatabase db( datadir, "DatebookDB" );
-	db.createDatabase( 0xdead, 0xbeef );
-	PilotDateInfo appInfo(0L);
-	appInfo.resetToDefault();
-	appInfo.writeTo(&db);
+    PilotLocalDatabase db(datadir, "DatebookDB");
+    db.createDatabase(0xdead, 0xbeef);
+    PilotDateInfo appInfo(0L);
+    appInfo.resetToDefault();
+    appInfo.writeTo(&db);
 
-	KCal::Event::List events = calendar->events();
+    KCal::Event::List events = calendar->events();
 
-	for (KCal::Event::List::ConstIterator i = events.begin();
-		i != events.end(); ++i)
-	{
-		PilotDateEntry * d = new PilotDateEntry();
+    for(KCal::Event::List::ConstIterator i = events.begin();
+            i != events.end(); ++i)
+    {
+        PilotDateEntry *d = new PilotDateEntry();
 
-		const KCal::Event *e = *i;
-		DEBUGKPILOT << "event: [" << e->summary() << "]" << endl;
+        const KCal::Event *e = *i;
+        DEBUGKPILOT << "event: [" << e->summary() << "]" << endl;
 
-		if (KCalSync::setDateEntry(d,e,*appInfo.categoryInfo()))
-		{
-DEBUGKPILOT << "got here." << endl;
-			PilotRecord *r = d->pack();
-			if (r)
-			{
-				db.writeRecord(r);
-				delete r;
-			}
-		}
-	}
+        if(KCalSync::setDateEntry(d, e, *appInfo.categoryInfo()))
+        {
+            DEBUGKPILOT << "got here." << endl;
+            PilotRecord *r = d->pack();
+            if(r)
+            {
+                db.writeRecord(r);
+                delete r;
+            }
+        }
+    }
 
-	return 0;
+    return 0;
 }
 

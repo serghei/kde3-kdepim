@@ -28,8 +28,7 @@
 #include <dcopobject.h>
 
 
-class KNotesIface : virtual public DCOPObject
-{
+class KNotesIface : virtual public DCOPObject {
     K_DCOP
 k_dcop:
     /**
@@ -39,8 +38,8 @@ k_dcop:
      * @param text the body of the new note
      * @return the new notes' id
      */
-    virtual QString newNote( const QString& name = QString::null,
-                             const QString& text = QString::null ) = 0;
+    virtual QString newNote(const QString &name = QString::null,
+                            const QString &text = QString::null) = 0;
 
     /**
      * Create a new note and inserts the current text in the clipboard
@@ -50,54 +49,54 @@ k_dcop:
      *        KNotes will choose an appropriate name
      * @return the new notes' id
      */
-    virtual QString newNoteFromClipboard( const QString& name = QString::null ) = 0;
+    virtual QString newNoteFromClipboard(const QString &name = QString::null) = 0;
 
     /**
      * Deletes a note forever.
      * @param noteId the id of the note to kill
      */
-    virtual ASYNC killNote( const QString& noteId ) = 0;
+    virtual ASYNC killNote(const QString &noteId) = 0;
 
     /**
      * Deletes a note forever.
      * @param noteId the id of the note to kill
      * @param force do not request confirmation
      */
-    virtual ASYNC killNote( const QString& noteId, bool force ) = 0;
+    virtual ASYNC killNote(const QString &noteId, bool force) = 0;
 
     /**
      * Get all the notes including their ids.
      * @return a QMap that maps the id of a note to its name
      */
-    virtual QMap<QString,QString> notes() const = 0;
+    virtual QMap<QString, QString> notes() const = 0;
 
     /**
      * Changes the title/name of a note.
      * @param noteId the id of the note to be modified
      * @param newName the new title
      */
-    virtual ASYNC setName( const QString& noteId, const QString& newName ) = 0;
+    virtual ASYNC setName(const QString &noteId, const QString &newName) = 0;
 
     /**
      * Sets the text of a note. This will delete the old text!
      * @param noteId the id of the note
      * @param newText the new text for the note
      */
-    virtual ASYNC setText( const QString& noteId, const QString& newText ) = 0;
+    virtual ASYNC setText(const QString &noteId, const QString &newText) = 0;
 
     /**
      * Returns the title/name of a note.
      * @param noteId the id of the note in question
      * @return the name as a QString
      */
-    virtual QString name( const QString& noteId ) const = 0;
+    virtual QString name(const QString &noteId) const = 0;
 
     /**
      * Returns the text of a note.
      * @param noteId the id of the note in question
      * @return the body as a QString
      */
-    virtual QString text( const QString& noteId ) const = 0;
+    virtual QString text(const QString &noteId) const = 0;
 };
 
 #endif

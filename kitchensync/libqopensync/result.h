@@ -28,30 +28,30 @@ struct OSyncError;
 
 namespace QSync {
 
-class Result
-{
-  public:
+class Result {
+public:
     /**
       Result types.
      */
-    enum Type {
-      NoError,
-      GenericError,
-      IOError,
-      NotSupported,
-      Timeout,
-      Disconnected,
-      FileNotFound,
-      Exists,
-      Convert,
-      Misconfiguration,
-      Initialization,
-      Parameter,
-      Expected,
-      NoConnection,
-      Temporary,
-      Locked,
-      PluginNotFound
+    enum Type
+    {
+        NoError,
+        GenericError,
+        IOError,
+        NotSupported,
+        Timeout,
+        Disconnected,
+        FileNotFound,
+        Exists,
+        Convert,
+        Misconfiguration,
+        Initialization,
+        Parameter,
+        Expected,
+        NoConnection,
+        Temporary,
+        Locked,
+        PluginNotFound
     };
 
     /**
@@ -62,13 +62,13 @@ class Result
     /**
       Constructs a result of the given type.
      */
-    Result( Type type );
+    Result(Type type);
 
     /**
       Construct Result from OpenSync error object. Deletes the OpenSync error
       object.
     */
-    Result( OSyncError **, bool deleteError = true );
+    Result(OSyncError **, bool deleteError = true);
 
     /**
       Destroys the result.
@@ -78,7 +78,7 @@ class Result
     /**
       Sets the name of the result.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
       Returns the name of the result.
@@ -88,7 +88,7 @@ class Result
     /**
       Sets the message text of the result.
      */
-    void setMessage( const QString &message );
+    void setMessage(const QString &message);
 
     /**
       Returns the message text of the result.
@@ -98,7 +98,7 @@ class Result
     /**
       Sets the type of the result.
      */
-    void setType( Type type );
+    void setType(Type type);
 
     /**
       Returns the type of the result.
@@ -115,7 +115,7 @@ class Result
     */
     bool isError() const;
 
-  private:
+private:
     QString mName;
     QString mMessage;
     Type mType;

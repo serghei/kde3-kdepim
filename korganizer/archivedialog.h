@@ -38,25 +38,24 @@ class Calendar;
 }
 using namespace KCal;
 
-class ArchiveDialog : public KDialogBase
-{
+class ArchiveDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    ArchiveDialog(Calendar *calendar,QWidget *parent=0, const char *name=0);
+public:
+    ArchiveDialog(Calendar *calendar, QWidget *parent = 0, const char *name = 0);
     virtual ~ArchiveDialog();
 
-  signals:
+signals:
     // connected by KODialogManager to CalendarView
     void eventsDeleted();
     void autoArchivingSettingsModified();
 
-  protected slots:
+protected slots:
     void slotEventsDeleted();
     void slotUser1();
     void slotEnableUser1();
     void slotActionChanged();
 
-  private:
+private:
     KURLRequester *mArchiveFile;
     KDateEdit *mDateEdit;
     QCheckBox *mDeleteCb;

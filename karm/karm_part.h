@@ -27,32 +27,31 @@ class TaskView;
  * @author Thorsten Staerk <kde at staerk dot de>
  * @version 0.1
  */
-class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface
-{
-  Q_OBJECT
+class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface {
+    Q_OBJECT
 
-  private:
+private:
     void             makeMenus();
-    QString          _hastodo( Task* task, const QString &taskname ) const;
-    QString          _hasTask( Task* task, const QString &taskname ) const;
-    Task*            _hasUid( Task* task, const QString &uid ) const;
+    QString          _hastodo(Task *task, const QString &taskname) const;
+    QString          _hasTask(Task *task, const QString &taskname) const;
+    Task            *_hasUid(Task *task, const QString &uid) const;
 
-    KAccel*          _accel;
-    KAccelMenuWatch* _watcher;
-    TaskView*        _taskView;
-    Preferences*     _preferences;
-    KarmTray*        _tray;
-    KAction*         actionStart;
-    KAction*         actionStop;
-    KAction*         actionStopAll;
-    KAction*         actionDelete;
-    KAction*         actionEdit;
-//    KAction* actionAddComment;
-    KAction*         actionMarkAsComplete;
-    KAction*         actionMarkAsIncomplete;
-    KAction*         actionPreferences;
-    KAction*         actionClipTotals;
-    KAction*         actionClipHistory;
+    KAccel          *_accel;
+    KAccelMenuWatch *_watcher;
+    TaskView        *_taskView;
+    Preferences     *_preferences;
+    KarmTray        *_tray;
+    KAction         *actionStart;
+    KAction         *actionStop;
+    KAction         *actionStopAll;
+    KAction         *actionDelete;
+    KAction         *actionEdit;
+    //    KAction* actionAddComment;
+    KAction         *actionMarkAsComplete;
+    KAction         *actionMarkAsIncomplete;
+    KAction         *actionPreferences;
+    KAction         *actionClipTotals;
+    KAction         *actionClipHistory;
     QString          m_error[ KARM_MAX_ERROR_NO + 1 ];
 
     friend class KarmTray;
@@ -64,28 +63,29 @@ public:
     void quit();
     virtual bool save();
     QString version() const;
-    QString taskIdFromName( const QString &taskName ) const;
+    QString taskIdFromName(const QString &taskName) const;
     /** @reimp from KarmDCOPIface */
-    int addTask( const QString &taskName );
+    int addTask(const QString &taskName);
     /** @reimp from KarmDCOPIface */
-    QString setPerCentComplete( const QString& taskName, int PerCent );
+    QString setPerCentComplete(const QString &taskName, int PerCent);
     /** @reimp from KarmDCOPIface */
-    int bookTime( const QString& taskId, const QString& iso8601StartDateTime, long durationInMinutes );
+    int bookTime(const QString &taskId, const QString &iso8601StartDateTime, long durationInMinutes);
     /** @reimp from KarmDCOPIface */
-    QString getError( int karmErrorNumber ) const;
-    int totalMinutesForTaskId( const QString& taskId );
-    QString starttimerfor( const QString &taskname );
-    QString stoptimerfor( const QString &taskname );
+    QString getError(int karmErrorNumber) const;
+    int totalMinutesForTaskId(const QString &taskId);
+    QString starttimerfor(const QString &taskname);
+    QString stoptimerfor(const QString &taskname);
     QString deletetodo();
     bool    getpromptdelete();
-    QString setpromptdelete( bool prompt );
-    QString exportcsvfile( QString filename, QString from, QString to, int type = 0, bool decimalMinutes=true, bool allTasks=true, QString delimiter="r", QString quote="q" );
-    QString importplannerfile( QString filename );
+    QString setpromptdelete(bool prompt);
+    QString exportcsvfile(QString filename, QString from, QString to, int type = 0, bool decimalMinutes = true, bool allTasks = true,
+                          QString delimiter = "r", QString quote = "q");
+    QString importplannerfile(QString filename);
 
     virtual ~karmPart();
 
     /**
-     * This is a virtual function inherited from KParts::ReadWritePart.  
+     * This is a virtual function inherited from KParts::ReadWritePart.
      * A shell will use this to inform this Part if it should act
      * read-only
      */
@@ -108,30 +108,29 @@ protected:
     virtual bool saveFile();
 
 protected slots:
-    void contextMenuRequest( QListViewItem*, const QPoint& point, int );
+    void contextMenuRequest(QListViewItem *, const QPoint &point, int);
     void fileOpen();
     void fileSaveAs();
     void slotSelectionChanged();
-    void startNewSession(); 
+    void startNewSession();
 };
 
 class KInstance;
 class KAboutData;
 
-class karmPartFactory : public KParts::Factory
-{
+class karmPartFactory : public KParts::Factory {
     Q_OBJECT
 public:
     karmPartFactory();
     virtual ~karmPartFactory();
-    virtual KParts::Part* createPartObject( QWidget *parentWidget, const char *widgetName,
-                                            QObject *parent, const char *name,
-                                            const char *classname, const QStringList &args );
-    static KInstance* instance();
- 
+    virtual KParts::Part *createPartObject(QWidget *parentWidget, const char *widgetName,
+                                           QObject *parent, const char *name,
+                                           const char *classname, const QStringList &args);
+    static KInstance *instance();
+
 private:
-    static KInstance* s_instance;
-    static KAboutData* s_about;
+    static KInstance *s_instance;
+    static KAboutData *s_about;
 };
 
 #endif // _KARMPART_H_

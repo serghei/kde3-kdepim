@@ -45,151 +45,157 @@
 
 KOEventPopupMenu::KOEventPopupMenu()
 {
-  mCurrentIncidence = 0;
-  mCurrentDate = QDate();
-  mHasAdditionalItems = false;
+    mCurrentIncidence = 0;
+    mCurrentDate = QDate();
+    mHasAdditionalItems = false;
 
-  insertItem( i18n("&Show"), this, SLOT( popupShow() ) );
-  mEditOnlyItems.append(
-    insertItem(i18n("&Edit..."), this, SLOT( popupEdit() ) ) );
+    insertItem(i18n("&Show"), this, SLOT(popupShow()));
+    mEditOnlyItems.append(
+        insertItem(i18n("&Edit..."), this, SLOT(popupEdit())));
 #ifndef KORG_NOPRINTER
-  insertItem( KOGlobals::self()->smallIcon("printer1"), i18n("&Print..."),
-              this, SLOT( print() ) );
+    insertItem(KOGlobals::self()->smallIcon("printer1"), i18n("&Print..."),
+               this, SLOT(print()));
 #endif
-  //------------------------------------------------------------------------
-  mEditOnlyItems.append( insertSeparator() );
-  mEditOnlyItems.append(
-    insertItem( KOGlobals::self()->smallIcon("editcut"), i18n("&Cut"),
-                this, SLOT( popupCut() ) ) );
-  mEditOnlyItems.append(
-    insertItem( KOGlobals::self()->smallIcon("editcopy"), i18n("&Copy"),
-                this, SLOT( popupCopy() ) ) );
-  // paste is always possible
-  insertItem( KOGlobals::self()->smallIcon("editpaste"), i18n("&Paste"),
-                this, SLOT( popupPaste() ) );
-  mEditOnlyItems.append(
-    insertItem( KOGlobals::self()->smallIcon("editdelete"), i18n("&Delete"),
-                this, SLOT( popupDelete() ) ) );
-  //------------------------------------------------------------------------
-  mEditOnlyItems.append( insertSeparator() );
-  mEditOnlyItems.append(
-    insertItem( KOGlobals::self()->smallIcon("bell"), i18n("&Toggle Reminder"),
-                this, SLOT( popupAlarm() ) ) );
-  //------------------------------------------------------------------------
-  mRecurrenceItems.append( insertSeparator() );
-  mRecurrenceItems.append(
-    insertItem( i18n("&Dissociate This Occurrence"),
-                this, SLOT( dissociateOccurrence() ) ) );
-  mRecurrenceItems.append(
-    insertItem( i18n("&Dissociate Future Occurrences"),
-                this, SLOT( dissociateFutureOccurrence() ) ) );
+    //------------------------------------------------------------------------
+    mEditOnlyItems.append(insertSeparator());
+    mEditOnlyItems.append(
+        insertItem(KOGlobals::self()->smallIcon("editcut"), i18n("&Cut"),
+                   this, SLOT(popupCut())));
+    mEditOnlyItems.append(
+        insertItem(KOGlobals::self()->smallIcon("editcopy"), i18n("&Copy"),
+                   this, SLOT(popupCopy())));
+    // paste is always possible
+    insertItem(KOGlobals::self()->smallIcon("editpaste"), i18n("&Paste"),
+               this, SLOT(popupPaste()));
+    mEditOnlyItems.append(
+        insertItem(KOGlobals::self()->smallIcon("editdelete"), i18n("&Delete"),
+                   this, SLOT(popupDelete())));
+    //------------------------------------------------------------------------
+    mEditOnlyItems.append(insertSeparator());
+    mEditOnlyItems.append(
+        insertItem(KOGlobals::self()->smallIcon("bell"), i18n("&Toggle Reminder"),
+                   this, SLOT(popupAlarm())));
+    //------------------------------------------------------------------------
+    mRecurrenceItems.append(insertSeparator());
+    mRecurrenceItems.append(
+        insertItem(i18n("&Dissociate This Occurrence"),
+                   this, SLOT(dissociateOccurrence())));
+    mRecurrenceItems.append(
+        insertItem(i18n("&Dissociate Future Occurrences"),
+                   this, SLOT(dissociateFutureOccurrence())));
 
-  insertSeparator();
-  insertItem( KOGlobals::self()->smallIcon("mail_forward"), i18n( "Send as iCalendar..."),
-              this, SLOT(forward()) );
-}
-
-void KOEventPopupMenu::showIncidencePopup( Incidence *incidence, const QDate &qd )
-{
-  mCurrentIncidence = incidence;
-  mCurrentDate = qd;
-
-  if (mCurrentIncidence) {
-    // Enable/Disabled menu items only valid for editable events.
-    QValueList<int>::Iterator it;
-    for( it = mEditOnlyItems.begin(); it != mEditOnlyItems.end(); ++it ) {
-      setItemEnabled(*it,!mCurrentIncidence->isReadOnly());
-    }
-    for ( it = mRecurrenceItems.begin(); it != mRecurrenceItems.end(); ++it ) {
-      setItemVisible( *it, mCurrentIncidence->doesRecur() );
-    }
-    popup(QCursor::pos());
-  } else {
-    kdDebug(5850) << "KOEventPopupMenu::showEventPopup(): No event selected" << endl;
-  }
-}
-
-void KOEventPopupMenu::addAdditionalItem(const QIconSet &icon,const QString &text,
-                                    const QObject *receiver, const char *member,
-                                    bool editOnly)
-{
-  if (!mHasAdditionalItems) {
-    mHasAdditionalItems = true;
     insertSeparator();
-  }
-  int id = insertItem(icon,text,receiver,member);
-  if (editOnly) mEditOnlyItems.append(id);
+    insertItem(KOGlobals::self()->smallIcon("mail_forward"), i18n("Send as iCalendar..."),
+               this, SLOT(forward()));
+}
+
+void KOEventPopupMenu::showIncidencePopup(Incidence *incidence, const QDate &qd)
+{
+    mCurrentIncidence = incidence;
+    mCurrentDate = qd;
+
+    if(mCurrentIncidence)
+    {
+        // Enable/Disabled menu items only valid for editable events.
+        QValueList<int>::Iterator it;
+        for(it = mEditOnlyItems.begin(); it != mEditOnlyItems.end(); ++it)
+        {
+            setItemEnabled(*it, !mCurrentIncidence->isReadOnly());
+        }
+        for(it = mRecurrenceItems.begin(); it != mRecurrenceItems.end(); ++it)
+        {
+            setItemVisible(*it, mCurrentIncidence->doesRecur());
+        }
+        popup(QCursor::pos());
+    }
+    else
+    {
+        kdDebug(5850) << "KOEventPopupMenu::showEventPopup(): No event selected" << endl;
+    }
+}
+
+void KOEventPopupMenu::addAdditionalItem(const QIconSet &icon, const QString &text,
+        const QObject *receiver, const char *member,
+        bool editOnly)
+{
+    if(!mHasAdditionalItems)
+    {
+        mHasAdditionalItems = true;
+        insertSeparator();
+    }
+    int id = insertItem(icon, text, receiver, member);
+    if(editOnly) mEditOnlyItems.append(id);
 }
 
 void KOEventPopupMenu::popupShow()
 {
-  if (mCurrentIncidence) emit showIncidenceSignal(mCurrentIncidence);
+    if(mCurrentIncidence) emit showIncidenceSignal(mCurrentIncidence);
 }
 
 void KOEventPopupMenu::popupEdit()
 {
-  if (mCurrentIncidence) emit editIncidenceSignal(mCurrentIncidence);
+    if(mCurrentIncidence) emit editIncidenceSignal(mCurrentIncidence);
 }
 
 void KOEventPopupMenu::print()
 {
 #ifndef KORG_NOPRINTER
-  KOCoreHelper helper;
-  CalPrinter printer( this, 0, &helper );
-  connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
+    KOCoreHelper helper;
+    CalPrinter printer(this, 0, &helper);
+    connect(this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()));
 
-  Incidence::List selectedIncidences;
-  selectedIncidences.append( mCurrentIncidence );
+    Incidence::List selectedIncidences;
+    selectedIncidences.append(mCurrentIncidence);
 
-  printer.print( KOrg::CalPrinterBase::Incidence,
-                 mCurrentDate, mCurrentDate, selectedIncidences );
+    printer.print(KOrg::CalPrinterBase::Incidence,
+                  mCurrentDate, mCurrentDate, selectedIncidences);
 #endif
 }
 
 void KOEventPopupMenu::popupDelete()
 {
-  if (mCurrentIncidence) emit deleteIncidenceSignal(mCurrentIncidence);
+    if(mCurrentIncidence) emit deleteIncidenceSignal(mCurrentIncidence);
 }
 
 void KOEventPopupMenu::popupCut()
 {
-  if (mCurrentIncidence) emit cutIncidenceSignal(mCurrentIncidence);
+    if(mCurrentIncidence) emit cutIncidenceSignal(mCurrentIncidence);
 }
 
 void KOEventPopupMenu::popupCopy()
 {
-  if (mCurrentIncidence) emit copyIncidenceSignal(mCurrentIncidence);
+    if(mCurrentIncidence) emit copyIncidenceSignal(mCurrentIncidence);
 }
 
 void KOEventPopupMenu::popupPaste()
 {
-  emit pasteIncidenceSignal();
+    emit pasteIncidenceSignal();
 }
 
 
 void KOEventPopupMenu::popupAlarm()
 {
-  if (mCurrentIncidence) emit toggleAlarmSignal( mCurrentIncidence );
+    if(mCurrentIncidence) emit toggleAlarmSignal(mCurrentIncidence);
 }
 
 void KOEventPopupMenu::dissociateOccurrence()
 {
-  if ( mCurrentIncidence )
-    emit dissociateOccurrenceSignal( mCurrentIncidence, mCurrentDate );
+    if(mCurrentIncidence)
+        emit dissociateOccurrenceSignal(mCurrentIncidence, mCurrentDate);
 }
 
 void KOEventPopupMenu::dissociateFutureOccurrence()
 {
-  if ( mCurrentIncidence )
-    emit dissociateFutureOccurrenceSignal( mCurrentIncidence, mCurrentDate );
+    if(mCurrentIncidence)
+        emit dissociateFutureOccurrenceSignal(mCurrentIncidence, mCurrentDate);
 }
 
 void KOEventPopupMenu::forward()
 {
-  KOrg::MainWindow *w = ActionManager::findInstance( KURL() );
-  if ( !w || !mCurrentIncidence )
-    return;
-  KActionCollection *ac = w->getActionCollection();
-  KAction *action = ac->action( "schedule_forward" );
-  action->activate();
+    KOrg::MainWindow *w = ActionManager::findInstance(KURL());
+    if(!w || !mCurrentIncidence)
+        return;
+    KActionCollection *ac = w->getActionCollection();
+    KAction *action = ac->action("schedule_forward");
+    action->activate();
 }

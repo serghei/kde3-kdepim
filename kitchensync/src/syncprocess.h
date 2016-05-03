@@ -29,34 +29,39 @@ namespace QSync {
 class Engine;
 }
 
-class SyncProcess : public QObject
-{
-  Q_OBJECT
+class SyncProcess : public QObject {
+    Q_OBJECT
 
-  public:
-    SyncProcess( const QSync::Group &group );
+public:
+    SyncProcess(const QSync::Group &group);
     ~SyncProcess();
 
-    QSync::Group group() const { return mGroup; }
-    QSync::Engine* engine() const { return mEngine; }
+    QSync::Group group() const
+    {
+        return mGroup;
+    }
+    QSync::Engine *engine() const
+    {
+        return mEngine;
+    }
 
     QString groupStatus() const;
-    QString memberStatus( const QSync::Member &member ) const;
+    QString memberStatus(const QSync::Member &member) const;
 
-    QSync::Result addMember( const QSync::Plugin &plugin );
+    QSync::Result addMember(const QSync::Plugin &plugin);
 
     void reinitEngine();
 
     /** apply object type filter hack **/
     void applyObjectTypeFilter();
 
-  signals:
+signals:
     /**
       This signal is emitted whenever the engine has changed ( reinitialized ).
      */
-    void engineChanged( QSync::Engine *engine );
+    void engineChanged(QSync::Engine *engine);
 
-  private:
+private:
     QSync::Group mGroup;
     QSync::Engine *mEngine;
 };

@@ -35,24 +35,24 @@
 
 namespace KPIM {
 
-  class AddresseeViewItem : public QObject, public KListViewItem
-  {
-  Q_OBJECT
+class AddresseeViewItem : public QObject, public KListViewItem {
+    Q_OBJECT
 
-  public:
-    enum Category {
-      To          =0,
-      CC          =1,
-      BCC         =2,
-      Group       =3,
-      Entry       =4,
-      FilledGroup =5,
-      DistList    =6
+public:
+    enum Category
+    {
+        To          = 0,
+        CC          = 1,
+        BCC         = 2,
+        Group       = 3,
+        Entry       = 4,
+        FilledGroup = 5,
+        DistList    = 6
     };
-    AddresseeViewItem( AddresseeViewItem *parent, const KABC::Addressee& addr, int emailIndex = 0 );
-    AddresseeViewItem( KListView *lv, const QString& name, Category cat=Group );
-    AddresseeViewItem( AddresseeViewItem *parent, const QString& name, const KABC::Addressee::List &lst );
-    AddresseeViewItem( AddresseeViewItem *parent, const QString& name );
+    AddresseeViewItem(AddresseeViewItem *parent, const KABC::Addressee &addr, int emailIndex = 0);
+    AddresseeViewItem(KListView *lv, const QString &name, Category cat = Group);
+    AddresseeViewItem(AddresseeViewItem *parent, const QString &name, const KABC::Addressee::List &lst);
+    AddresseeViewItem(AddresseeViewItem *parent, const QString &name);
     ~AddresseeViewItem();
 
     KABC::Addressee       addressee() const;
@@ -62,24 +62,23 @@ namespace KPIM {
     QString name()  const;
     QString email() const;
 
-    bool matches( const QString& ) const;
+    bool matches(const QString &) const;
 
-    virtual int compare( QListViewItem * i, int col, bool ascending ) const;
-    virtual void setSelected( bool );
+    virtual int compare(QListViewItem *i, int col, bool ascending) const;
+    virtual void setSelected(bool);
 
-  signals:
-    void addressSelected( AddresseeViewItem*, bool );
+signals:
+    void addressSelected(AddresseeViewItem *, bool);
 
-  private:
+private:
     struct AddresseeViewItemPrivate;
     AddresseeViewItemPrivate *d;
-  };
+};
 
-  class KDE_EXPORT AddressesDialog : public KDialogBase
-  {
+class KDE_EXPORT AddressesDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    AddressesDialog( QWidget *widget=0, const char *name=0 );
+public:
+    AddressesDialog(QWidget *widget = 0, const char *name = 0);
     ~AddressesDialog();
 
     /**
@@ -100,11 +99,11 @@ namespace KPIM {
      * Note that this doesn't include the distribution lists
      */
     KABC::Addressee::List toAddresses()  const;
-   /**
-     * Returns the list of picked "To" addresses as KABC::Addressee::List.
-     * Note that this does include the distribution lists
-     * Multiple Addressees are removed
-     */
+    /**
+      * Returns the list of picked "To" addresses as KABC::Addressee::List.
+      * Note that this does include the distribution lists
+      * Multiple Addressees are removed
+      */
     KABC::Addressee::List allToAddressesNoDuplicates()  const;
     /**
      * Returns the list of picked "CC" addresses as KABC::Addressee::List.
@@ -133,36 +132,36 @@ namespace KPIM {
      */
     QStringList bccDistributionLists() const;
 
-  public slots:
+public slots:
     /**
      * Displays the CC field if @p b is true, else
      * hides it. By default displays it.
      */
-    void setShowCC( bool b );
+    void setShowCC(bool b);
     /**
      * Displays the BCC field if @p b is true, else
      * hides it. By default displays it.
      */
-    void setShowBCC( bool b );
+    void setShowBCC(bool b);
     /**
      * If called adds "Recent Addresses" item to the picker list view,
      * with the addresses given in @p addr.
      */
-    void setRecentAddresses( const KABC::Addressee::List& addr );
+    void setRecentAddresses(const KABC::Addressee::List &addr);
     /**
      * Adds addresses in @p l to the selected "To" group.
      */
-    void setSelectedTo( const QStringList& l );
-     /**
-     * Adds addresses in @p l to the selected "CC" group.
-     */
-    void setSelectedCC( const QStringList& l );
-     /**
-     * Adds addresses in @p l to the selected "BCC" group.
-     */
-    void setSelectedBCC( const QStringList& l );
+    void setSelectedTo(const QStringList &l);
+    /**
+    * Adds addresses in @p l to the selected "CC" group.
+    */
+    void setSelectedCC(const QStringList &l);
+    /**
+    * Adds addresses in @p l to the selected "BCC" group.
+    */
+    void setSelectedBCC(const QStringList &l);
 
-  protected slots:
+protected slots:
     void addSelectedTo();
     void addSelectedCC();
     void addSelectedBCC();
@@ -173,39 +172,39 @@ namespace KPIM {
     void ldapSearchResult();
     void launchAddressBook();
 
-    void filterChanged( const QString & );
+    void filterChanged(const QString &);
 
     void updateAvailableAddressees();
     void availableSelectionChanged();
     void selectedSelectionChanged();
-    void availableAddressSelected( AddresseeViewItem* item, bool selected );
-    void selectedAddressSelected( AddresseeViewItem* item, bool selected );
+    void availableAddressSelected(AddresseeViewItem *item, bool selected);
+    void selectedAddressSelected(AddresseeViewItem *item, bool selected);
 
-  protected:
-    AddresseeViewItem* selectedToItem();
-    AddresseeViewItem* selectedCcItem();
-    AddresseeViewItem* selectedBccItem();
+protected:
+    AddresseeViewItem *selectedToItem();
+    AddresseeViewItem *selectedCcItem();
+    AddresseeViewItem *selectedBccItem();
 
     void initConnections();
     void addDistributionLists();
-    void addAddresseeToAvailable( const KABC::Addressee& addr,
-                                  AddresseeViewItem* defaultParent=0, bool useCategory=true );
-    void addAddresseeToSelected( const KABC::Addressee& addr,
-                                 AddresseeViewItem* defaultParent=0 );
-    void addAddresseesToSelected( AddresseeViewItem *parent,
-                                  const QPtrList<AddresseeViewItem>& addresses );
-    QStringList entryToString( const KABC::Addressee::List& l ) const;
-    KABC::Addressee::List allAddressee( AddresseeViewItem* parent ) const;
-    KABC::Addressee::List allAddressee( KListView* view, bool onlySelected = true ) const;
-    QStringList allDistributionLists( AddresseeViewItem* parent ) const;
+    void addAddresseeToAvailable(const KABC::Addressee &addr,
+                                 AddresseeViewItem *defaultParent = 0, bool useCategory = true);
+    void addAddresseeToSelected(const KABC::Addressee &addr,
+                                AddresseeViewItem *defaultParent = 0);
+    void addAddresseesToSelected(AddresseeViewItem *parent,
+                                 const QPtrList<AddresseeViewItem> &addresses);
+    QStringList entryToString(const KABC::Addressee::List &l) const;
+    KABC::Addressee::List allAddressee(AddresseeViewItem *parent) const;
+    KABC::Addressee::List allAddressee(KListView *view, bool onlySelected = true) const;
+    QStringList allDistributionLists(AddresseeViewItem *parent) const;
 
-  private:
+private:
     // if there's only one group in the available list, open it
     void checkForSingleAvailableGroup();
 
     // used to re-show items in the available list
     // it is recursive, but should only ever recurse once so should be fine
-    void unmapSelectedAddress(AddresseeViewItem* item);
+    void unmapSelectedAddress(AddresseeViewItem *item);
     void updateRecentAddresses();
 
     struct AddressesDialogPrivate;
@@ -214,7 +213,7 @@ namespace KPIM {
     QPtrList<AddresseeViewItem> selectedAvailableAddresses;
     QPtrList<AddresseeViewItem> selectedSelectedAddresses;
     QPtrDict<AddresseeViewItem> selectedToAvailableMapping;
-  };
+};
 
 }
 

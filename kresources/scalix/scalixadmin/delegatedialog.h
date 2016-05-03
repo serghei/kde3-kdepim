@@ -32,22 +32,21 @@ namespace Scalix {
 class Delegate;
 }
 
-class DelegateDialog : public KDialogBase
-{
-  Q_OBJECT
+class DelegateDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    DelegateDialog( QWidget *parent = 0 );
+public:
+    DelegateDialog(QWidget *parent = 0);
 
-    void setDelegate( const Scalix::Delegate &delegate );
+    void setDelegate(const Scalix::Delegate &delegate);
     Scalix::Delegate delegate() const;
 
-  private slots:
+private slots:
     void selectEmail();
 
-  private:
+private:
     QLineEdit *mEmail;
-    QMap<int, QCheckBox*> mRights;
+    QMap<int, QCheckBox *> mRights;
 };
 
 #endif

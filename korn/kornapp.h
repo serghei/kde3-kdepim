@@ -14,30 +14,32 @@ class KornShell;
 * @author Sirtaj Singh Kang (taj@kde.org)
 * @version $Id: kornapp.h 125140 2001-12-02 15:02:24Z gebauer $
 */
-class KornApp : public KUniqueApplication
-{
-	Q_OBJECT
+class KornApp : public KUniqueApplication {
+    Q_OBJECT
 
 public:
-	/**
-	* KornApp Constructor
-	*/
-	KornApp() : KUniqueApplication(), _shell( 0 ), _instanceCount( 0 ) {}
+    /**
+    * KornApp Constructor
+    */
+    KornApp() : KUniqueApplication(), _shell(0), _instanceCount(0) {}
 
-	/**
-	* KornApp Destructor
-	*/
-	virtual ~KornApp(){}
+    /**
+    * KornApp Destructor
+    */
+    virtual ~KornApp() {}
 
-	virtual int newInstance();
-	void setShell( KornShell *shell ){ _shell = shell; };
-	
+    virtual int newInstance();
+    void setShell(KornShell *shell)
+    {
+        _shell = shell;
+    };
+
 private:
-	KornShell *_shell;
-	int _instanceCount;
+    KornShell *_shell;
+    int _instanceCount;
 
-	KornApp& operator=( const KornApp& );
-	KornApp( const KornApp& );
+    KornApp &operator=(const KornApp &);
+    KornApp(const KornApp &);
 };
 
 #endif // SSK_KORNAPP_H

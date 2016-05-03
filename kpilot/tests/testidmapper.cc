@@ -44,26 +44,26 @@
  */
 bool test1()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
+    IDMapper *mapper = new IDMapper(TESTFILE);
 
-	delete mapper;
-	mapper = 0l;
+    delete mapper;
+    mapper = 0l;
 
-	QFile f( TESTFILE );
-	bool result = f.exists();
-	
-	if( result )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	return result;
+    QFile f(TESTFILE);
+    bool result = f.exists();
+
+    if(result)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    return result;
 }
 
 /**
@@ -71,39 +71,39 @@ bool test1()
  */
 bool test2()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
-	mapper->registerPCObjectId( CONDUIT, CSL1("testuid-1") );
+    IDMapper *mapper = new IDMapper(TESTFILE);
+    mapper->registerPCObjectId(CONDUIT, CSL1("testuid-1"));
 
-	delete mapper;
-	mapper = 0l;
-	
-	// Creating a new mapper ensures that the file is readed. So we know if this
-	// test passess that the data is saved and readed from the xml file correctly.
-	mapper = new IDMapper( TESTFILE );
+    delete mapper;
+    mapper = 0l;
 
-	bool result1 = ( mapper->getPCObjectIds( CONDUIT ).size() == 1 );
-	bool result2 = false;
-	
-	if( result1 )
-		result2 = ( mapper->getPCObjectIds( CONDUIT ).first() == "testuid-1" );
-	
-	
-	if( result1 && result2 )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	delete mapper;
-	mapper = 0l;
-	
-	return (result1 && result2);
+    // Creating a new mapper ensures that the file is readed. So we know if this
+    // test passess that the data is saved and readed from the xml file correctly.
+    mapper = new IDMapper(TESTFILE);
+
+    bool result1 = (mapper->getPCObjectIds(CONDUIT).size() == 1);
+    bool result2 = false;
+
+    if(result1)
+        result2 = (mapper->getPCObjectIds(CONDUIT).first() == "testuid-1");
+
+
+    if(result1 && result2)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    delete mapper;
+    mapper = 0l;
+
+    return (result1 && result2);
 }
 
 /**
@@ -112,39 +112,39 @@ bool test2()
  */
 bool test3()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
-	mapper->setHHObjectId( CONDUIT, "testuid-1", 100 );
+    IDMapper *mapper = new IDMapper(TESTFILE);
+    mapper->setHHObjectId(CONDUIT, "testuid-1", 100);
 
-	delete mapper;
-	mapper = 0l;
+    delete mapper;
+    mapper = 0l;
 
-	// Creating a new mapper ensures that the file is readed. So we know if this
-	// test passess that the data is saved and readed from the xml file correctly.
-	mapper = new IDMapper( TESTFILE );
+    // Creating a new mapper ensures that the file is readed. So we know if this
+    // test passess that the data is saved and readed from the xml file correctly.
+    mapper = new IDMapper(TESTFILE);
 
-	bool result1 = ( mapper->getHHObjectIds( CONDUIT ).size() == 1 );
-	bool result2 = false;
-	
-	if( result1 )
-		result2 = ( mapper->getHHObjectIds( CONDUIT ).first() == 100 );
-	
-	
-	if( result1 && result2 )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	delete mapper;
-	mapper = 0l;
-	
-	return (result1 && result2);
+    bool result1 = (mapper->getHHObjectIds(CONDUIT).size() == 1);
+    bool result2 = false;
+
+    if(result1)
+        result2 = (mapper->getHHObjectIds(CONDUIT).first() == 100);
+
+
+    if(result1 && result2)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    delete mapper;
+    mapper = 0l;
+
+    return (result1 && result2);
 }
 
 /**
@@ -152,40 +152,40 @@ bool test3()
  */
 bool test4()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
-	mapper->registerHHObjectId( CONDUIT, 150 );
+    IDMapper *mapper = new IDMapper(TESTFILE);
+    mapper->registerHHObjectId(CONDUIT, 150);
 
-	delete mapper;
-	mapper = 0l;
-	
-	// Creating a new mapper ensures that the file is readed. So we know if this
-	// test passess that the data is saved and readed from the xml file correctly.
-	mapper = new IDMapper( TESTFILE );
+    delete mapper;
+    mapper = 0l;
 
-	// We have two pids registered at this moment
-	bool result1 = ( mapper->getHHObjectIds( CONDUIT ).size() == 2 );
-	bool result2 = false;
-	
-	// This prevents the test from chrashing when getHHObjectIds.size is 0.
-	if( result1 )
-		result2 = ( mapper->getHHObjectIds( CONDUIT ).contains( 150 ) );
-	
-	if( result1 && result2 )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	delete mapper;
-	mapper = 0l;
-	
-	return (result1 && result2);
+    // Creating a new mapper ensures that the file is readed. So we know if this
+    // test passess that the data is saved and readed from the xml file correctly.
+    mapper = new IDMapper(TESTFILE);
+
+    // We have two pids registered at this moment
+    bool result1 = (mapper->getHHObjectIds(CONDUIT).size() == 2);
+    bool result2 = false;
+
+    // This prevents the test from chrashing when getHHObjectIds.size is 0.
+    if(result1)
+        result2 = (mapper->getHHObjectIds(CONDUIT).contains(150));
+
+    if(result1 && result2)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    delete mapper;
+    mapper = 0l;
+
+    return (result1 && result2);
 }
 
 /**
@@ -194,39 +194,39 @@ bool test4()
  */
 bool test5()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
-	mapper->setPCObjectId( CONDUIT, 150, "testuid-2" );
+    IDMapper *mapper = new IDMapper(TESTFILE);
+    mapper->setPCObjectId(CONDUIT, 150, "testuid-2");
 
-	delete mapper;
-	mapper = 0l;
+    delete mapper;
+    mapper = 0l;
 
-	// Creating a new mapper ensures that the file is readed. So we know if this
-	// test passess that the data is saved and readed from the xml file correctly.
-	mapper = new IDMapper( TESTFILE );
+    // Creating a new mapper ensures that the file is readed. So we know if this
+    // test passess that the data is saved and readed from the xml file correctly.
+    mapper = new IDMapper(TESTFILE);
 
-	bool result1 = ( mapper->getPCObjectIds( CONDUIT ).size() == 2 );
-	bool result2 = false;
-	
-	if( result1 )
-		result2 = ( mapper->getPCObjectIds( CONDUIT ).contains( "testuid-2" ) );
-	
-	
-	if( result1 && result2 )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	delete mapper;
-	mapper = 0l;
-	
-	return (result1 && result2);
+    bool result1 = (mapper->getPCObjectIds(CONDUIT).size() == 2);
+    bool result2 = false;
+
+    if(result1)
+        result2 = (mapper->getPCObjectIds(CONDUIT).contains("testuid-2"));
+
+
+    if(result1 && result2)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": " << result1 << " " << result2 << endl;
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    delete mapper;
+    mapper = 0l;
+
+    return (result1 && result2);
 }
 
 
@@ -235,26 +235,26 @@ bool test5()
  */
 bool test6()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
+    IDMapper *mapper = new IDMapper(TESTFILE);
 
-	// Should be true (PCId is set to "testuid-2").
-	bool result = mapper->hasPCId( CONDUIT, 150 );
+    // Should be true (PCId is set to "testuid-2").
+    bool result = mapper->hasPCId(CONDUIT, 150);
 
-	delete mapper;
-	mapper = 0l;
-	
-	if( result )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	return result;
+    delete mapper;
+    mapper = 0l;
+
+    if(result)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    return result;
 }
 
 /**
@@ -262,53 +262,54 @@ bool test6()
  */
 bool test7()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	IDMapper *mapper = new IDMapper( TESTFILE );
+    IDMapper *mapper = new IDMapper(TESTFILE);
 
-	// Should be true (HHId is set to "150").
-	bool result = mapper->hasHHId( CONDUIT, "testuid-2" );
+    // Should be true (HHId is set to "150").
+    bool result = mapper->hasHHId(CONDUIT, "testuid-2");
 
-	delete mapper;
-	mapper = 0l;
-	
-	if( result )
-	{
-		DEBUGKPILOT << fname << ": passed" << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": failed" << endl;
-	}
-	
-	return result;
+    delete mapper;
+    mapper = 0l;
+
+    if(result)
+    {
+        DEBUGKPILOT << fname << ": passed" << endl;
+    }
+    else
+    {
+        DEBUGKPILOT << fname << ": failed" << endl;
+    }
+
+    return result;
 }
 
 int main(int argc, char **argv)
 {
-	KApplication::disableAutoDcopRegistration();
-	KAboutData aboutData("testidmapper","Test IDMapper","0.1");
-	KCmdLineArgs::init(argc,argv,&aboutData);
+    KApplication::disableAutoDcopRegistration();
+    KAboutData aboutData("testidmapper", "Test IDMapper", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-	KApplication app( false, false );
+    KApplication app(false, false);
 
-	// Remove file from previous test run
-	QDir test( "Testing" );
-	if( !test.exists() ) {
-		QDir current;
-		current.mkdir( "Testing" );
-	}
-	
-	QFile f( TESTFILE );
-	if( f.exists() )
-		QFile::remove( TESTFILE );
+    // Remove file from previous test run
+    QDir test("Testing");
+    if(!test.exists())
+    {
+        QDir current;
+        current.mkdir("Testing");
+    }
 
-	if( test1() && test2() && test3() && 
-			test4() && test5() && test6() &&
-			test7() )
-		return 0;
-	else
-		return 1;
+    QFile f(TESTFILE);
+    if(f.exists())
+        QFile::remove(TESTFILE);
+
+    if(test1() && test2() && test3() &&
+            test4() && test5() && test6() &&
+            test7())
+        return 0;
+    else
+        return 1;
 }
 
 

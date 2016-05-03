@@ -1,6 +1,6 @@
 #ifndef _XQGANTTLISTVIEW_H_
 #define _XQGANTTLISTVIEW_H_
- 
+
 /*
 
     This library is free software; you can redistribute it and/or
@@ -48,55 +48,56 @@ class xQGanttListView : public QScrollView
 //////////////////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
 
 public:
 
 
-  ///  Constructor.
-  /*!
-   *
-   */
-  xQGanttListView(KGanttItem* toplevelitem, QWidget* parent = 0,  
-		  const char * name=0, WFlags f=0 );
+    ///  Constructor.
+    /*!
+     *
+     */
+    xQGanttListView(KGanttItem *toplevelitem, QWidget *parent = 0,
+                    const char *name = 0, WFlags f = 0);
 
 
-  ///  Destructor.
-  /*!
-   *
-   */
-  ~xQGanttListView();
+    ///  Destructor.
+    /*!
+     *
+     */
+    ~xQGanttListView();
 
 
 
-  ///  Connect barview to this listview.
-  /*!
-   *
-   */
-  void setBarView(xQGanttBarView* v) {
-    ((xQGanttListViewPort*) _viewport)->setBarViewPort(v->viewport());
-  }
+    ///  Connect barview to this listview.
+    /*!
+     *
+     */
+    void setBarView(xQGanttBarView *v)
+    {
+        ((xQGanttListViewPort *) _viewport)->setBarViewPort(v->viewport());
+    }
 
 
 
 public slots:
 
-  void contentsMoved(int,int);
+    void contentsMoved(int, int);
 
 
 protected:
 
-  //  ptr to toplevelitem
-  KGanttItem* _toplevelitem;
+    //  ptr to toplevelitem
+    KGanttItem *_toplevelitem;
 
-  QBrush _headerBackBrush;
- 
-  xQGanttBarView* _barview;
-  xQGanttListViewPort* _viewport;
+    QBrush _headerBackBrush;
 
-  void drawHeader();
-  void paintEvent(QPaintEvent * e);
+    xQGanttBarView *_barview;
+    xQGanttListViewPort *_viewport;
+
+    void drawHeader();
+    void paintEvent(QPaintEvent *e);
 
 };
 

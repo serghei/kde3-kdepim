@@ -14,10 +14,9 @@
 #include <ktimewidget.h>
 #else
 #warning "Workaround for KTimeWidget in KDE 3.1"
-class KTimeWidget : public QWidget
-{
+class KTimeWidget : public QWidget {
 public:
-	KTimeWidget(QWidget *p, const char *n) : QWidget(p,n) {};
+    KTimeWidget(QWidget *p, const char *n) : QWidget(p, n) {};
 } ;
 
 

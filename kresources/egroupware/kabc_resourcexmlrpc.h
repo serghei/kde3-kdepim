@@ -37,61 +37,63 @@ namespace KABC {
 
 class EGroupwarePrefs;
 
-class KDE_EXPORT ResourceXMLRPC : public ResourceCached
-{
-  Q_OBJECT
+class KDE_EXPORT ResourceXMLRPC : public ResourceCached {
+    Q_OBJECT
 
-  public:
-    ResourceXMLRPC( const KConfig* );
-    ResourceXMLRPC( const QString &url, const QString &domain,
-                    const QString &user, const QString &password );
+public:
+    ResourceXMLRPC(const KConfig *);
+    ResourceXMLRPC(const QString &url, const QString &domain,
+                   const QString &user, const QString &password);
     ~ResourceXMLRPC();
 
-    virtual void writeConfig( KConfig* );
+    virtual void writeConfig(KConfig *);
 
-    EGroupwarePrefs *prefs() const { return mPrefs; }
+    EGroupwarePrefs *prefs() const
+    {
+        return mPrefs;
+    }
 
     virtual bool doOpen();
     virtual void doClose();
 
     virtual Ticket *requestSaveTicket();
-    virtual void releaseSaveTicket( Ticket* );
+    virtual void releaseSaveTicket(Ticket *);
 
     virtual bool load();
     virtual bool asyncLoad();
-    virtual bool save( Ticket * );
-    virtual bool asyncSave( Ticket * );
+    virtual bool save(Ticket *);
+    virtual bool asyncSave(Ticket *);
 
-  protected:
+protected:
     void init();
 
-  protected slots:
-    void loginFinished( const QValueList<QVariant>&, const QVariant& );
-    void logoutFinished( const QValueList<QVariant>&, const QVariant& );
+protected slots:
+    void loginFinished(const QValueList<QVariant> &, const QVariant &);
+    void logoutFinished(const QValueList<QVariant> &, const QVariant &);
 
-    void listContactsFinished( const QValueList<QVariant>&, const QVariant& );
-    void addContactFinished( const QValueList<QVariant>&, const QVariant& );
-    void updateContactFinished( const QValueList<QVariant>&, const QVariant& );
-    void deleteContactFinished( const QValueList<QVariant>&, const QVariant& );
-    void loadCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
-    void loadCustomFieldsFinished( const QValueList<QVariant>&, const QVariant& );
+    void listContactsFinished(const QValueList<QVariant> &, const QVariant &);
+    void addContactFinished(const QValueList<QVariant> &, const QVariant &);
+    void updateContactFinished(const QValueList<QVariant> &, const QVariant &);
+    void deleteContactFinished(const QValueList<QVariant> &, const QVariant &);
+    void loadCategoriesFinished(const QValueList<QVariant> &, const QVariant &);
+    void loadCustomFieldsFinished(const QValueList<QVariant> &, const QVariant &);
 
-    void fault( int, const QString&, const QVariant& );
-    void addContactFault( int, const QString&, const QVariant& );
-    void updateContactFault( int, const QString&, const QVariant& );
-    void deleteContactFault( int, const QString&, const QVariant& );
+    void fault(int, const QString &, const QVariant &);
+    void addContactFault(int, const QString &, const QVariant &);
+    void updateContactFault(int, const QString &, const QVariant &);
+    void deleteContactFault(int, const QString &, const QVariant &);
 
-    void addContact( const KABC::Addressee& );
-    void updateContact( const KABC::Addressee& );
-    void deleteContact( const KABC::Addressee& );
+    void addContact(const KABC::Addressee &);
+    void updateContact(const KABC::Addressee &);
+    void deleteContact(const KABC::Addressee &);
 
-  private:
+private:
     void initEGroupware();
 
-    QString addrTypesToTypeStr( int );
+    QString addrTypesToTypeStr(int);
 
-    void writeContact( const Addressee&, QMap<QString, QVariant>& );
-    void readContact( const QMap<QString, QVariant>&, Addressee &addr, QString& );
+    void writeContact(const Addressee &, QMap<QString, QVariant> &);
+    void readContact(const QMap<QString, QVariant> &, Addressee &addr, QString &);
 
     EGroupwarePrefs *mPrefs;
 

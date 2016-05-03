@@ -29,11 +29,10 @@
 
 namespace Akregator {
 
-class TagFolder::TagFolderPrivate
-{
+class TagFolder::TagFolderPrivate {
 };
 
-TagFolder::TagFolder(const QString& title) : Folder(title), d(new TagFolderPrivate)
+TagFolder::TagFolder(const QString &title) : Folder(title), d(new TagFolderPrivate)
 {
 }
 
@@ -44,15 +43,15 @@ TagFolder::~TagFolder()
     d = 0;
 }
 
-bool TagFolder::accept(TreeNodeVisitor* visitor)
+bool TagFolder::accept(TreeNodeVisitor *visitor)
 {
-    if (visitor->visitTagFolder(this))
+    if(visitor->visitTagFolder(this))
         return true;
     else
         return visitor->visitFolder(this);
 }
 
-QDomElement TagFolder::toOPML( QDomElement /*parent*/, QDomDocument /*document*/ ) const
+QDomElement TagFolder::toOPML(QDomElement /*parent*/, QDomDocument /*document*/) const
 {
     return QDomElement();
 }

@@ -39,20 +39,20 @@
 int main(int argc, char *argv[])
 {
 
-	KAboutData about("converter", I18N_NOOP("KPalmDOC"), "-0.0.1",
-		"KPalmDOC - KDE Converter for PalmDOC texts.\n\n",
-		KAboutData::License_GPL, "(c) 2003, Reinhold Kainhofer");
-	about.addAuthor("Reinhold Kainhofer", I18N_NOOP("Main Developer"),
-		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
-	about.addCredit("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"),
-		"groot@kde.org", "http://www.kpilot.org/");
+    KAboutData about("converter", I18N_NOOP("KPalmDOC"), "-0.0.1",
+                     "KPalmDOC - KDE Converter for PalmDOC texts.\n\n",
+                     KAboutData::License_GPL, "(c) 2003, Reinhold Kainhofer");
+    about.addAuthor("Reinhold Kainhofer", I18N_NOOP("Main Developer"),
+                    "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+    about.addCredit("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"),
+                    "groot@kde.org", "http://www.kpilot.org/");
 
-	KCmdLineArgs::init(argc, argv, &about);
-	KApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, &about);
+    KApplication::addCmdLineOptions();
 
-	KApplication app;
-	ConverterDlg *dlg=new ConverterDlg(0L, i18n("PalmDOC Converter"));
-	dlg->show();
-	return app.exec();
+    KApplication app;
+    ConverterDlg *dlg = new ConverterDlg(0L, i18n("PalmDOC Converter"));
+    dlg->show();
+    return app.exec();
 }
 

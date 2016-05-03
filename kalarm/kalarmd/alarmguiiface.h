@@ -26,21 +26,20 @@
 
 #include <dcopobject.h>
 
-namespace KAlarmd
+namespace KAlarmd {
+enum RegisterResult   // result code of registerApp() DCOP call
 {
-	enum RegisterResult   // result code of registerApp() DCOP call
-	{
-		FAILURE   = 0,
-		SUCCESS   = 1,
-		NOT_FOUND = 2    // notification type requires client start, but client executable not found
-	};
+    FAILURE   = 0,
+    SUCCESS   = 1,
+    NOT_FOUND = 2    // notification type requires client start, but client executable not found
+};
 
-	enum CalendarStatus    // parameters to client notification
-	{
-		CALENDAR_ENABLED,        // calendar is now being monitored
-		CALENDAR_DISABLED,       // calendar is available but not being monitored
-		CALENDAR_UNAVAILABLE     // calendar is unavailable for monitoring
-	};
+enum CalendarStatus    // parameters to client notification
+{
+    CALENDAR_ENABLED,        // calendar is now being monitored
+    CALENDAR_DISABLED,       // calendar is available but not being monitored
+    CALENDAR_UNAVAILABLE     // calendar is unavailable for monitoring
+};
 }
 
 /*=============================================================================
@@ -48,24 +47,23 @@ namespace KAlarmd
 =  Client applications should inherit from this class to receive notifications
 *  from the alarm daemon.
 =============================================================================*/
-class AlarmGuiIface : virtual public DCOPObject
-{
-		K_DCOP
-	k_dcop:
-		/** Called to notify a change in status of the calendar.
-		    @param calendarStatus new calendar status. Value is of type CalendarStatus.
-		 */
-		virtual ASYNC alarmDaemonUpdate(int calendarStatus, const QString& calendarURL) = 0;
+class AlarmGuiIface : virtual public DCOPObject {
+    K_DCOP
+k_dcop:
+    /** Called to notify a change in status of the calendar.
+        @param calendarStatus new calendar status. Value is of type CalendarStatus.
+     */
+    virtual ASYNC alarmDaemonUpdate(int calendarStatus, const QString &calendarURL) = 0;
 
-		/** Called to notify that an alarm is due.
-		 */
-		virtual ASYNC handleEvent(const QString& calendarURL, const QString& eventID) = 0;
+    /** Called to notify that an alarm is due.
+     */
+    virtual ASYNC handleEvent(const QString &calendarURL, const QString &eventID) = 0;
 
-		/** Called to indicate success/failure of (re)register() call.
-		    @param result success/failure code. Value is of type RegisterResult.
-		    @param version kalarmd version, e.g. 50101 indicates 5.1.1.
-		 */
-		virtual ASYNC registered(bool reregister, int result, int version) = 0;
+    /** Called to indicate success/failure of (re)register() call.
+        @param result success/failure code. Value is of type RegisterResult.
+        @param version kalarmd version, e.g. 50101 indicates 5.1.1.
+     */
+    virtual ASYNC registered(bool reregister, int result, int version) = 0;
 };
 
 #endif

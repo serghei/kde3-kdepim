@@ -34,27 +34,29 @@
 
 class KPilotDBSelectionWidget;
 
-class KPilotDBSelectionDialog : public KDialogBase
-{
-Q_OBJECT
+class KPilotDBSelectionDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	KPilotDBSelectionDialog(QStringList &selectedDBs, QStringList &deviceDBs,
-		QStringList &addedDBs,  QWidget *, const char *);
-	virtual ~KPilotDBSelectionDialog();
+    KPilotDBSelectionDialog(QStringList &selectedDBs, QStringList &deviceDBs,
+                            QStringList &addedDBs,  QWidget *, const char *);
+    virtual ~KPilotDBSelectionDialog();
 
-	QStringList getSelectedDBs();
-	QStringList getAddedDBs() const {return fAddedDBs; };
+    QStringList getSelectedDBs();
+    QStringList getAddedDBs() const
+    {
+        return fAddedDBs;
+    };
 private:
-	QStringList fSelectedDBs;
-	QStringList fAddedDBs;
-	QStringList fDeviceDBs;
+    QStringList fSelectedDBs;
+    QStringList fAddedDBs;
+    QStringList fDeviceDBs;
 protected slots:
-	void addDB();
-	void removeDB();
-	void slotTextChanged( const QString& dbname);
+    void addDB();
+    void removeDB();
+    void slotTextChanged(const QString &dbname);
 
 private:
-	KPilotDBSelectionWidget *fSelectionWidget;
+    KPilotDBSelectionWidget *fSelectionWidget;
 } ;
 
 #endif

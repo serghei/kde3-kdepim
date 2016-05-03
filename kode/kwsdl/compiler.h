@@ -29,29 +29,28 @@
 
 namespace KWSDL {
 
-class Compiler : public QObject
-{
-  Q_OBJECT
+class Compiler : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     Compiler();
 
-    void setWSDLUrl( const QString &wsdlUrl );
-    void setOutputDirectory( const QString &outputDirectory );
-    void setNameSpace( const QString &nameSpace );
+    void setWSDLUrl(const QString &wsdlUrl);
+    void setOutputDirectory(const QString &outputDirectory);
+    void setNameSpace(const QString &nameSpace);
 
-  public slots:
+public slots:
     void run();
 
-  private slots:
+private slots:
     void download();
-    void parse( const QDomElement& );
+    void parse(const QDomElement &);
     void create();
 
-  private:
+private:
     QString mWSDLUrl;
     QString mOutputDirectory;
-    QString mNameSpace;    
+    QString mNameSpace;
 
     Parser mParser;
     QString mWSDLBaseUrl;

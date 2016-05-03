@@ -39,35 +39,35 @@
  * QLabel
  */
 class KDE_EXPORT KRSqueezedTextLabel : public QLabel {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /**
-   * Default constructor.
-   */
-  KRSqueezedTextLabel( QWidget *parent, const char *name = 0 );
-  KRSqueezedTextLabel( const QString &text, QWidget *parent, const char *name = 0 );
+    /**
+     * Default constructor.
+     */
+    KRSqueezedTextLabel(QWidget *parent, const char *name = 0);
+    KRSqueezedTextLabel(const QString &text, QWidget *parent, const char *name = 0);
 
-  virtual QSize minimumSizeHint() const;
-  virtual QSize sizeHint() const;
-  /**
-   * Overridden for internal reasons; the API remains unaffected.
-   */
-  virtual void setAlignment( int );
+    virtual QSize minimumSizeHint() const;
+    virtual QSize sizeHint() const;
+    /**
+     * Overridden for internal reasons; the API remains unaffected.
+     */
+    virtual void setAlignment(int);
 
 public slots:
-  void setText( const QString & );
+    void setText(const QString &);
 
 protected:
-  /**
-   * used when widget is resized
-   */
-  void resizeEvent( QResizeEvent * );
-  /**
-   * does the dirty work
-   */
-  void squeezeTextToLabel();
-  QString fullText;
+    /**
+     * used when widget is resized
+     */
+    void resizeEvent(QResizeEvent *);
+    /**
+     * does the dirty work
+     */
+    void squeezeTextToLabel();
+    QString fullText;
 
 };
 

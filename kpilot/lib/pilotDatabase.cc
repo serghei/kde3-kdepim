@@ -45,68 +45,68 @@ static int creationCount = 0;
 static QStringList *createdNames = 0L;
 
 PilotDatabase::PilotDatabase(const QString &s) :
-	fDBOpen(false),
-	fName(s)
+    fDBOpen(false),
+    fName(s)
 {
-	FUNCTIONSETUP;
-	creationCount++;
-	if (!createdNames)
-	{
-		createdNames = new QStringList();
-	}
-	createdNames->append(s.isEmpty() ? CSL1("<empty>") : s);
+    FUNCTIONSETUP;
+    creationCount++;
+    if(!createdNames)
+    {
+        createdNames = new QStringList();
+    }
+    createdNames->append(s.isEmpty() ? CSL1("<empty>") : s);
 }
 
 /* virtual */ PilotDatabase::~PilotDatabase()
 {
-	FUNCTIONSETUP;
-	creationCount--;
-	if (createdNames)
-	{
-		createdNames->remove(fName.isEmpty() ? CSL1("<empty>") : fName);
-	}
+    FUNCTIONSETUP;
+    creationCount--;
+    if(createdNames)
+    {
+        createdNames->remove(fName.isEmpty() ? CSL1("<empty>") : fName);
+    }
 }
 
 /* static */ int PilotDatabase::instanceCount()
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname << ": " << creationCount << " databases." << endl;
-	if (createdNames)
-	{
-		DEBUGKPILOT << fname << ": "
-			<< createdNames->join(CSL1(",")) << endl;
-	}
-	return creationCount;
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname << ": " << creationCount << " databases." << endl;
+    if(createdNames)
+    {
+        DEBUGKPILOT << fname << ": "
+                    << createdNames->join(CSL1(",")) << endl;
+    }
+    return creationCount;
 }
 
 /* virtual */ Pilot::RecordIDList PilotDatabase::idList()
 {
-	Pilot::RecordIDList l;
+    Pilot::RecordIDList l;
 
-	for (unsigned int i = 0 ; ; i++)
-	{
-		PilotRecord *r = readRecordByIndex(i);
-		if (!r) break;
-		l.append(r->id());
-		delete r;
-	}
+    for(unsigned int i = 0 ; ; i++)
+    {
+        PilotRecord *r = readRecordByIndex(i);
+        if(!r) break;
+        l.append(r->id());
+        delete r;
+    }
 
-	return l;
+    return l;
 }
 
 /* virtual */ Pilot::RecordIDList PilotDatabase::modifiedIDList()
 {
-	Pilot::RecordIDList l;
+    Pilot::RecordIDList l;
 
-	resetDBIndex();
-	while(1)
-	{
-		PilotRecord *r = readNextModifiedRec();
-		if (!r) break;
-		l.append(r->id());
-		delete r;
-	}
+    resetDBIndex();
+    while(1)
+    {
+        PilotRecord *r = readNextModifiedRec();
+        if(!r) break;
+        l.append(r->id());
+        delete r;
+    }
 
-	return l;
+    return l;
 }
 

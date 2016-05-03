@@ -41,34 +41,37 @@ class ActionManager;
 
 class KDE_EXPORT KOrganizerIfaceImpl : public QObject, virtual public KOrganizerIface {
 public:
-  KOrganizerIfaceImpl( ActionManager* mActionManager,
-                       QObject* parent=0, const char* name=0 );
-  ~KOrganizerIfaceImpl();
+    KOrganizerIfaceImpl(ActionManager *mActionManager,
+                        QObject *parent = 0, const char *name = 0);
+    ~KOrganizerIfaceImpl();
 
-  bool openURL( const QString &url );
-  bool mergeURL( const QString &url );
-  void closeURL();
-  bool saveURL();
-  bool saveAsURL( const QString &url );
-  QString getCurrentURLasString() const;
+    bool openURL(const QString &url);
+    bool mergeURL(const QString &url);
+    void closeURL();
+    bool saveURL();
+    bool saveAsURL(const QString &url);
+    QString getCurrentURLasString() const;
 
-  bool editIncidence( const QString &uid );
-  /** @reimp from KOrganizerIface::deleteIncidence() */
-  bool deleteIncidence( const QString &uid )  { return deleteIncidence( uid, false ); }
-  /** @reimp from KOrganizerIface::deleteIncidence() */
-  bool deleteIncidence( const QString &uid, bool force );
+    bool editIncidence(const QString &uid);
+    /** @reimp from KOrganizerIface::deleteIncidence() */
+    bool deleteIncidence(const QString &uid)
+    {
+        return deleteIncidence(uid, false);
+    }
+    /** @reimp from KOrganizerIface::deleteIncidence() */
+    bool deleteIncidence(const QString &uid, bool force);
 
-  /** @reimp from KOrganizerIface::addIncidence() */
-  bool addIncidence( const QString &iCal );
+    /** @reimp from KOrganizerIface::addIncidence() */
+    bool addIncidence(const QString &iCal);
 
-  /** @reimp from KOrganizerIface::loadProfile() */
-  void loadProfile( const QString& path );
+    /** @reimp from KOrganizerIface::loadProfile() */
+    void loadProfile(const QString &path);
 
-  /** @reimp from KOrganizerIface::saveToProfile() */
-  void saveToProfile( const QString& path ) const;
+    /** @reimp from KOrganizerIface::saveToProfile() */
+    void saveToProfile(const QString &path) const;
 
 private:
-  ActionManager* mActionManager;
+    ActionManager *mActionManager;
 };
 
 

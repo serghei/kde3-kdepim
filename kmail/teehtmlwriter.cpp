@@ -41,58 +41,67 @@
 
 namespace KMail {
 
-  TeeHtmlWriter::TeeHtmlWriter( HtmlWriter * writer1, HtmlWriter * writer2 )
+TeeHtmlWriter::TeeHtmlWriter(HtmlWriter *writer1, HtmlWriter *writer2)
     : HtmlWriter()
-  {
-    if ( writer1 )
-      mWriters.append( writer1 );
-    if ( writer2 )
-      mWriters.append( writer2 );
-  }
+{
+    if(writer1)
+        mWriters.append(writer1);
+    if(writer2)
+        mWriters.append(writer2);
+}
 
-  TeeHtmlWriter::~TeeHtmlWriter() {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      delete (*it);
-  }
+TeeHtmlWriter::~TeeHtmlWriter()
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        delete(*it);
+}
 
-  void TeeHtmlWriter::addHtmlWriter( HtmlWriter * writer ) {
-    if ( writer )
-      mWriters.append( writer );
-  }
+void TeeHtmlWriter::addHtmlWriter(HtmlWriter *writer)
+{
+    if(writer)
+        mWriters.append(writer);
+}
 
-  void TeeHtmlWriter::begin( const QString & css ) {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->begin( css );
-  }
+void TeeHtmlWriter::begin(const QString &css)
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->begin(css);
+}
 
-  void TeeHtmlWriter::end() {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->end();
-  }
+void TeeHtmlWriter::end()
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->end();
+}
 
-  void TeeHtmlWriter::reset() {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->reset();
-  }
+void TeeHtmlWriter::reset()
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->reset();
+}
 
-  void TeeHtmlWriter::write( const QString & str ) {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->write( str );
-  }
+void TeeHtmlWriter::write(const QString &str)
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->write(str);
+}
 
-  void TeeHtmlWriter::queue( const QString & str ) {
-   for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->queue( str );
-  }
+void TeeHtmlWriter::queue(const QString &str)
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->queue(str);
+}
 
-  void TeeHtmlWriter::flush() {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->flush();
-  }
+void TeeHtmlWriter::flush()
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->flush();
+}
 
-  void TeeHtmlWriter::embedPart( const QCString & contentId, const QString & url ) {
-    for ( QValueListIterator<HtmlWriter*> it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->embedPart( contentId, url );
-  }
+void TeeHtmlWriter::embedPart(const QCString &contentId, const QString &url)
+{
+    for(QValueListIterator<HtmlWriter *> it = mWriters.begin(); it != mWriters.end(); ++it)
+        (*it)->embedPart(contentId, url);
+}
 
 } // namespace KMail

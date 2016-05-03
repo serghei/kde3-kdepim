@@ -25,58 +25,62 @@ namespace KMail {
 
 class FavoriteFolderView;
 
-class FavoriteFolderViewItem : public KMFolderTreeItem
-{
-  Q_OBJECT
-  public:
-    FavoriteFolderViewItem( FavoriteFolderView *parent, const QString & name, KMFolder* folder );
+class FavoriteFolderViewItem : public KMFolderTreeItem {
+    Q_OBJECT
+public:
+    FavoriteFolderViewItem(FavoriteFolderView *parent, const QString &name, KMFolder *folder);
 
-  protected:
-    bool useTopLevelIcon() const { return false; }
-    int iconSize() const { return 22; }
+protected:
+    bool useTopLevelIcon() const
+    {
+        return false;
+    }
+    int iconSize() const
+    {
+        return 22;
+    }
 
-  private slots:
+private slots:
     void nameChanged();
 
-  private:
+private:
     QString mOldName;
 };
 
-class FavoriteFolderView : public FolderTreeBase
-{
-  Q_OBJECT
+class FavoriteFolderView : public FolderTreeBase {
+    Q_OBJECT
 
-  public:
-    FavoriteFolderView( KMMainWidget *mainWidget, QWidget *parent = 0 );
+public:
+    FavoriteFolderView(KMMainWidget *mainWidget, QWidget *parent = 0);
     ~FavoriteFolderView();
 
     void readConfig();
     void writeConfig();
 
-    KMFolderTreeItem* addFolder( KMFolder *folder, const QString &name = QString::null,
-                                 QListViewItem *after = 0 );
-    void addFolder( KMFolderTreeItem *fti );
+    KMFolderTreeItem *addFolder(KMFolder *folder, const QString &name = QString::null,
+                                QListViewItem *after = 0);
+    void addFolder(KMFolderTreeItem *fti);
 
-  public slots:
-    void folderTreeSelectionChanged( KMFolder *folder );
+public slots:
+    void folderTreeSelectionChanged(KMFolder *folder);
     void checkMail();
 
-  protected:
-    bool acceptDrag(QDropEvent* e) const;
-    void contentsDragEnterEvent( QDragEnterEvent *e );
+protected:
+    bool acceptDrag(QDropEvent *e) const;
+    void contentsDragEnterEvent(QDragEnterEvent *e);
     void readColorConfig();
 
-  private:
-    static QString prettyName( KMFolderTreeItem* fti );
-    KMFolderTreeItem* findFolderTreeItem( KMFolder* folder ) const;
-    void handleGroupwareFolder( KMFolderTreeItem *fti );
+private:
+    static QString prettyName(KMFolderTreeItem *fti);
+    KMFolderTreeItem *findFolderTreeItem(KMFolder *folder) const;
+    void handleGroupwareFolder(KMFolderTreeItem *fti);
 
-  private slots:
+private slots:
     void selectionChanged();
-    void itemClicked( QListViewItem *item );
-    void folderRemoved( KMFolder *folder );
-    void dropped( QDropEvent *e, QListViewItem *after );
-    void contextMenu( QListViewItem *item, const QPoint &point );
+    void itemClicked(QListViewItem *item);
+    void folderRemoved(KMFolder *folder);
+    void dropped(QDropEvent *e, QListViewItem *after);
+    void contextMenu(QListViewItem *item, const QPoint &point);
     void removeFolder();
     void initializeFavorites();
     void renameFolder();
@@ -84,9 +88,9 @@ class FavoriteFolderView : public FolderTreeBase
     void notifyInstancesOnChange();
     void refresh();
 
-  private:
-    KMFolderTreeItem* mContextMenuItem;
-    static QValueList<FavoriteFolderView*> mInstances;
+private:
+    KMFolderTreeItem *mContextMenuItem;
+    static QValueList<FavoriteFolderView *> mInstances;
     bool mReadingConfig;
 };
 

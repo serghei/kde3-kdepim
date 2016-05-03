@@ -36,26 +36,27 @@
 
 using namespace KABC;
 
-void DavAddressBookAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister */*folderLister*/ )
+void DavAddressBookAdaptor::interpretListFoldersJob(KIO::Job *job, KPIM::FolderLister */*folderLister*/)
 {
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
-  Q_ASSERT( davjob );
-  if ( !davjob ) return;
+    KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
+    Q_ASSERT(davjob);
+    if(!davjob) return;
 
-  QDomDocument doc = davjob->response();
-  kdDebug(7000) << " Doc: " << doc.toString() << endl;
+    QDomDocument doc = davjob->response();
+    kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
-  QDomElement docElement = doc.documentElement();
-  QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    QDomNode n2 = n.namedItem( "propstat" );
-    QDomNode n3 = n2.namedItem( "prop" );
-    
-    KURL href( n.namedItem( "href" ).toElement().text() );
-    QString displayName = n3.namedItem( "displayname" ).toElement().text();
-    KPIM::FolderLister::ContentType type = getContentType( n3 );
+    QDomElement docElement = doc.documentElement();
+    QDomNode n;
+    for(n = docElement.firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        QDomNode n2 = n.namedItem("propstat");
+        QDomNode n3 = n2.namedItem("prop");
 
-    emit folderInfoRetrieved( href, displayName, type );
-    emit folderSubitemRetrieved( href, getFolderHasSubs( n3 ) );
-  }
+        KURL href(n.namedItem("href").toElement().text());
+        QString displayName = n3.namedItem("displayname").toElement().text();
+        KPIM::FolderLister::ContentType type = getContentType(n3);
+
+        emit folderInfoRetrieved(href, displayName, type);
+        emit folderSubitemRetrieved(href, getFolderHasSubs(n3));
+    }
 }

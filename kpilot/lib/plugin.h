@@ -48,15 +48,14 @@ class KLibrary;
 
 class PilotDatabase;
 
-namespace Pilot
-{
-	/**
-	* As the API for conduits may change in the course of time,
-	* identify them and refuse to load incompatible API versions.
-	* Bump this number every release to the current YYYYMMDD
-	* value.
-	*/
-	static const unsigned int PLUGIN_API = 20061118;
+namespace Pilot {
+/**
+* As the API for conduits may change in the course of time,
+* identify them and refuse to load incompatible API versions.
+* Bump this number every release to the current YYYYMMDD
+* value.
+*/
+static const unsigned int PLUGIN_API = 20061118;
 }
 
 /**
@@ -75,105 +74,110 @@ namespace Pilot
 * seems a little foolish.
 *
 */
-class KDE_EXPORT ConduitConfigBase : public QObject
-{
-Q_OBJECT
+class KDE_EXPORT ConduitConfigBase : public QObject {
+    Q_OBJECT
 public:
-	/**
-	* Constructor. Creates a conduit configuration support object
-	* with the given parent @p parent and name (optional) @p n.
-	*/
-	ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
+    /**
+    * Constructor. Creates a conduit configuration support object
+    * with the given parent @p parent and name (optional) @p n.
+    */
+    ConduitConfigBase(QWidget *parent = 0L, const char *n = 0L);
 
-	/** Destructor. */
-	virtual ~ConduitConfigBase();
+    /** Destructor. */
+    virtual ~ConduitConfigBase();
 
-	/**
-	* This function is called to check whether the configuration
-	* of the conduit has changed -- and hence, whether the user
-	* needs to be prompted. By default, this just returns
-	* fModified, but you can do more complicated things.
-	*/
-	virtual bool isModified() const
-	{
-		return fModified;
-	} ;
+    /**
+    * This function is called to check whether the configuration
+    * of the conduit has changed -- and hence, whether the user
+    * needs to be prompted. By default, this just returns
+    * fModified, but you can do more complicated things.
+    */
+    virtual bool isModified() const
+    {
+        return fModified;
+    } ;
 
-	/** Accessor for the actual widget for the configuration. */
-	QWidget *widget() const
-	{
-		return fWidget;
-	} ;
+    /** Accessor for the actual widget for the configuration. */
+    QWidget *widget() const
+    {
+        return fWidget;
+    } ;
 
-	/**
-	* Load or save the config widget's settings in the given
-	* KConfig object; leave the group unchanged. load() and
-	* commit() should both call unmodified() to indicate that
-	* the current settings match the on-disk ones.
-	*/
-	virtual void commit() = 0;
-	virtual void load() = 0;
-	/**
-	* Called when the object is to be hidden again and might
-	* need to save changed settings. Should prompt the user
-	* and call commit() if needed. Override this function only
-	* if you need a very different kind of prompt window.
-	*
-	* Returns false if the change is to be canceled. Returns
-	* true otherwise, whether or not the changes were saved.
-	*/
-	virtual bool maybeSave();
+    /**
+    * Load or save the config widget's settings in the given
+    * KConfig object; leave the group unchanged. load() and
+    * commit() should both call unmodified() to indicate that
+    * the current settings match the on-disk ones.
+    */
+    virtual void commit() = 0;
+    virtual void load() = 0;
+    /**
+    * Called when the object is to be hidden again and might
+    * need to save changed settings. Should prompt the user
+    * and call commit() if needed. Override this function only
+    * if you need a very different kind of prompt window.
+    *
+    * Returns false if the change is to be canceled. Returns
+    * true otherwise, whether or not the changes were saved.
+    */
+    virtual bool maybeSave();
 
-	QString conduitName() const { return fConduitName; } ;
+    QString conduitName() const
+    {
+        return fConduitName;
+    } ;
 
-	/**
-	* This is the function that does the work of adding an about
-	* page to a tabwidget. It is made public and static so that
-	* it can be used elsewhere wherever tabwidgets appear.
-	*
-	* The about tab is created using aboutPage(). The new about
-	* widget is added to the tab widget @p w with the heading
-	* "About".
-	*
-	* @param w The tab widget to which the about page is added.
-	* @param data The KAboutData that is used.
-	*
-	*/
-	static  void addAboutPage(QTabWidget *w,
-		KAboutData *data=0L);
+    /**
+    * This is the function that does the work of adding an about
+    * page to a tabwidget. It is made public and static so that
+    * it can be used elsewhere wherever tabwidgets appear.
+    *
+    * The about tab is created using aboutPage(). The new about
+    * widget is added to the tab widget @p w with the heading
+    * "About".
+    *
+    * @param w The tab widget to which the about page is added.
+    * @param data The KAboutData that is used.
+    *
+    */
+    static  void addAboutPage(QTabWidget *w,
+                              KAboutData *data = 0L);
 
-	/**
-	* This creates the actual about widget. Again, public & static so
-	* you can slap in an about widget wherever.
-	*
-	* An about widget is created that shows the contributors to
-	* the application, along with copyright information and the
-	* application's icon. This widget can be used pretty much
-	* anywhere. Copied from KAboutDialog, mostly.
-	*
-	* @param parent The widget that holds the about widget.
-	* @param data The KAboutData that is used to populate the widget.
-	*/
-	static QWidget *aboutPage(QWidget *parent, KAboutData *data=0L);
+    /**
+    * This creates the actual about widget. Again, public & static so
+    * you can slap in an about widget wherever.
+    *
+    * An about widget is created that shows the contributors to
+    * the application, along with copyright information and the
+    * application's icon. This widget can be used pretty much
+    * anywhere. Copied from KAboutDialog, mostly.
+    *
+    * @param parent The widget that holds the about widget.
+    * @param data The KAboutData that is used to populate the widget.
+    */
+    static QWidget *aboutPage(QWidget *parent, KAboutData *data = 0L);
 
 protected:
-	/**
-	* This function provides the string for the prompt used
-	* in maybeSave(). Override it to change the text.
-	*/
-	virtual QString maybeSaveText() const;
+    /**
+    * This function provides the string for the prompt used
+    * in maybeSave(). Override it to change the text.
+    */
+    virtual QString maybeSaveText() const;
 
-	void unmodified() { fModified=false; } ;
+    void unmodified()
+    {
+        fModified = false;
+    } ;
 
-	bool fModified;
-	QWidget *fWidget;
-	QString fConduitName;
+    bool fModified;
+    QWidget *fWidget;
+    QString fConduitName;
 
 
 protected slots:
-	void modified();
+    void modified();
 signals:
-	void changed(bool);
+    void changed(bool);
 
 } ;
 
@@ -191,59 +195,85 @@ signals:
 * by the conduit and offer rollback functionality if we think the
 * conduit has behaved improperly.
 */
-class KDE_EXPORT CUDCounter
-{
+class KDE_EXPORT CUDCounter {
 public:
-	/** Create new counter initialized to 0, and be told what
-	 * kind of CUD we're counting (PC or Handheld, etc.) */
-	CUDCounter(QString s);
+    /** Create new counter initialized to 0, and be told what
+     * kind of CUD we're counting (PC or Handheld, etc.) */
+    CUDCounter(QString s);
 
-	/** Track the creation of @p c items */
-	void created(unsigned int c=1);
-	/** Track updates to @p u items */
-	void updated(unsigned int u=1);
-	/** Track the destruction of @p d items */
-	void deleted(unsigned int d=1);
-	/** How many @p t items did we start with? */
-	void setStartCount(unsigned int t);
-	/** How many @p t items did we end with? */
-	void setEndCount(unsigned int t);
+    /** Track the creation of @p c items */
+    void created(unsigned int c = 1);
+    /** Track updates to @p u items */
+    void updated(unsigned int u = 1);
+    /** Track the destruction of @p d items */
+    void deleted(unsigned int d = 1);
+    /** How many @p t items did we start with? */
+    void setStartCount(unsigned int t);
+    /** How many @p t items did we end with? */
+    void setEndCount(unsigned int t);
 
-	unsigned int countCreated() { return fC; }
-	unsigned int countUpdated() { return fU; }
-	unsigned int countDeleted() { return fD; }
-	unsigned int countStart() { return fStart; }
-	unsigned int countEnd() { return fEnd; }
+    unsigned int countCreated()
+    {
+        return fC;
+    }
+    unsigned int countUpdated()
+    {
+        return fU;
+    }
+    unsigned int countDeleted()
+    {
+        return fD;
+    }
+    unsigned int countStart()
+    {
+        return fStart;
+    }
+    unsigned int countEnd()
+    {
+        return fEnd;
+    }
 
-	/** percentage of changes.  unfortunately, we have to rely on our
-	 * developers (hi, self!) to correctly set total number of records
-	 * conduits start with, so add a little protection...
-	 */
-	unsigned int percentCreated() { return (fEnd   > 0 ? fC/fEnd   : 0); }
-	unsigned int percentUpdated() { return (fEnd   > 0 ? fU/fEnd   : 0); }
-	unsigned int percentDeleted() { return (fStart > 0 ? fD/fStart : 0); }
+    /** percentage of changes.  unfortunately, we have to rely on our
+     * developers (hi, self!) to correctly set total number of records
+     * conduits start with, so add a little protection...
+     */
+    unsigned int percentCreated()
+    {
+        return (fEnd   > 0 ? fC / fEnd   : 0);
+    }
+    unsigned int percentUpdated()
+    {
+        return (fEnd   > 0 ? fU / fEnd   : 0);
+    }
+    unsigned int percentDeleted()
+    {
+        return (fStart > 0 ? fD / fStart : 0);
+    }
 
-	/** Measurement Of Objects -- report numbers of
-	* objects created, updated, deleted. This
-	* string is already i18n()ed.
-	*/
-	QString moo() const;
+    /** Measurement Of Objects -- report numbers of
+    * objects created, updated, deleted. This
+    * string is already i18n()ed.
+    */
+    QString moo() const;
 
-	/** Type of counter(Handheld or PC).  This string is already
-	 * i18n()ed.
-	*/
-	QString type() const { return fType; }
+    /** Type of counter(Handheld or PC).  This string is already
+     * i18n()ed.
+    */
+    QString type() const
+    {
+        return fType;
+    }
 private:
-	/** keep track of Creates, Updates, Deletes, and Total
-	 * number of records so we can detect abnormal behavior and
-	 * hopefully prevent data loss.
-	 */
-	unsigned int fC,fU,fD,fStart,fEnd;
+    /** keep track of Creates, Updates, Deletes, and Total
+     * number of records so we can detect abnormal behavior and
+     * hopefully prevent data loss.
+     */
+    unsigned int fC, fU, fD, fStart, fEnd;
 
-	/** What kind of CUD are we keeping track of so we can
-	 * moo() it out later?  (PC, Handheld, etc.)
-	 */
-	QString fType;
+    /** What kind of CUD are we keeping track of so we can
+     * moo() it out later?  (PC, Handheld, etc.)
+     */
+    QString fType;
 } ;
 
 
@@ -257,105 +287,115 @@ private:
 * conduit can read/write metadata and local settings.
 */
 
-class KDE_EXPORT ConduitAction : public SyncAction
-{
-Q_OBJECT
+class KDE_EXPORT ConduitAction : public SyncAction {
+    Q_OBJECT
 
 public:
-	ConduitAction(KPilotLink *,
-		const char *name=0L,
-		const QStringList &args = QStringList());
-	virtual ~ConduitAction();
+    ConduitAction(KPilotLink *,
+                  const char *name = 0L,
+                  const QStringList &args = QStringList());
+    virtual ~ConduitAction();
 
-	/** ConduitAction is done doing work.  Allow it to sanity-check the
-	 * results
-	 */
-	void finished();
+    /** ConduitAction is done doing work.  Allow it to sanity-check the
+     * results
+     */
+    void finished();
 
-	QString conduitName() const { return fConduitName; } ;
+    QString conduitName() const
+    {
+        return fConduitName;
+    } ;
 
-	/** Retrieve the sync mode set for this action. */
-	const SyncMode &syncMode() const { return fSyncDirection; };
+    /** Retrieve the sync mode set for this action. */
+    const SyncMode &syncMode() const
+    {
+        return fSyncDirection;
+    };
 
-	/**
-	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It
-	* completely ignores all modified flags and walks through all records
-	* in the database.
-	*/
-	bool isFullSync() const
-	{
-		return fFirstSync || fSyncDirection.isFullSync() ;
-	}
+    /**
+    * A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It
+    * completely ignores all modified flags and walks through all records
+    * in the database.
+    */
+    bool isFullSync() const
+    {
+        return fFirstSync || fSyncDirection.isFullSync() ;
+    }
 
-	/**
-	* A first sync (i.e. database newly fetched from the handheld )
-	* does not check for deleted records, but understands them as
-	* added on the other side. The flag is set by the conduits
-	* when opening the local database, or the calendar/addressbook
-	* (if it is empty). This also implies a full sync.
-	*/
-	bool isFirstSync() const
-	{
-		return fFirstSync || fSyncDirection.isFirstSync() ;
-	}
+    /**
+    * A first sync (i.e. database newly fetched from the handheld )
+    * does not check for deleted records, but understands them as
+    * added on the other side. The flag is set by the conduits
+    * when opening the local database, or the calendar/addressbook
+    * (if it is empty). This also implies a full sync.
+    */
+    bool isFirstSync() const
+    {
+        return fFirstSync || fSyncDirection.isFirstSync() ;
+    }
 
 protected:
-	/** Retrieve the conflict resolution setting for this action. */
-	ConflictResolution getConflictResolution() const
-		{ return fConflictResolution; };
+    /** Retrieve the conflict resolution setting for this action. */
+    ConflictResolution getConflictResolution() const
+    {
+        return fConflictResolution;
+    };
 
-	/** Try to change the sync mode from what it is now to the mode @p m.
-	* This may fail (ie. changing a backup to a restore is not kosher) and
-	* changeSync() will return false then.
-	*/
-	bool changeSync(SyncMode::Mode m);
+    /** Try to change the sync mode from what it is now to the mode @p m.
+    * This may fail (ie. changing a backup to a restore is not kosher) and
+    * changeSync() will return false then.
+    */
+    bool changeSync(SyncMode::Mode m);
 
-	// Set the conflict resolution, except if the resolution
-	// form is UseGlobalSetting, in which case nothing changes
-	// (assumes then that the resolution form is already set
-	// according to that global setting).
-	//
-	void setConflictResolution(ConflictResolution res)
-	{
-		if (SyncAction::eUseGlobalSetting != res)
-			fConflictResolution=res;
-	}
+    // Set the conflict resolution, except if the resolution
+    // form is UseGlobalSetting, in which case nothing changes
+    // (assumes then that the resolution form is already set
+    // according to that global setting).
+    //
+    void setConflictResolution(ConflictResolution res)
+    {
+        if(SyncAction::eUseGlobalSetting != res)
+            fConflictResolution = res;
+    }
 
-	void setFirstSync(bool first) { fFirstSync=first; } ;
+    void setFirstSync(bool first)
+    {
+        fFirstSync = first;
+    } ;
 
-	PilotDatabase *fDatabase;
-	PilotDatabase *fLocalDatabase; // Guaranteed to be a PilotLocalDatabase
+    PilotDatabase *fDatabase;
+    PilotDatabase *fLocalDatabase; // Guaranteed to be a PilotLocalDatabase
 
-	/**
-	* Open both the local copy of database @p dbName
-	* and the version on the Pilot. Return true only
-	* if both opens succeed. If the local copy of the database
-	* does not exist, it is retrieved from the handheld. In this
-	* case, retrieved is set to true, otherwise it is left alone
-	* (i.e. retains its value and is not explicitly set to false).
-	*
-	* @param dbName database name to open.
-	* @param retrieved indicator whether the database had to be loaded
-	*        from the handheld.
-	*/
-	bool openDatabases(const QString &dbName, bool*retrieved=0L);
+    /**
+    * Open both the local copy of database @p dbName
+    * and the version on the Pilot. Return true only
+    * if both opens succeed. If the local copy of the database
+    * does not exist, it is retrieved from the handheld. In this
+    * case, retrieved is set to true, otherwise it is left alone
+    * (i.e. retains its value and is not explicitly set to false).
+    *
+    * @param dbName database name to open.
+    * @param retrieved indicator whether the database had to be loaded
+    *        from the handheld.
+    */
+    bool openDatabases(const QString &dbName, bool *retrieved = 0L);
 
-	/**
-	* Name of the conduit; might be changed by subclasses. Should
-	* normally be set in the constructor.
-	*/
-	QString fConduitName;
+    /**
+    * Name of the conduit; might be changed by subclasses. Should
+    * normally be set in the constructor.
+    */
+    QString fConduitName;
 
-	/** Every plugin has 2 CUDCounters--one for keeping track of
-	 * changes made to PC data and one for keeping track of Palm data. */
-	CUDCounter *fCtrHH;
-	CUDCounter *fCtrPC;
+    /** Every plugin has 2 CUDCounters--one for keeping track of
+     * changes made to PC data and one for keeping track of Palm data. */
+    CUDCounter *fCtrHH;
+    CUDCounter *fCtrPC;
 
 private:
-	SyncMode fSyncDirection;
-	ConflictResolution fConflictResolution;
+    SyncMode fSyncDirection;
+    ConflictResolution fConflictResolution;
 
-	bool fFirstSync;
+    bool fFirstSync;
 } ;
 
 /**
@@ -364,49 +404,47 @@ private:
 * and runs that. Once the conduit has finished, the proxy unloads everything
 * and emits syncDone().
 */
-class ConduitProxy : public ConduitAction
-{
-Q_OBJECT
+class ConduitProxy : public ConduitAction {
+    Q_OBJECT
 
 public:
-	ConduitProxy(KPilotLink *,
-		const QString &desktopName,
-		const SyncAction::SyncMode &m);
+    ConduitProxy(KPilotLink *,
+                 const QString &desktopName,
+                 const SyncAction::SyncMode &m);
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 protected slots:
-	void execDone(SyncAction *);
+    void execDone(SyncAction *);
 
 protected:
-	QString fDesktopName;
-	QString fLibraryName;
-	ConduitAction *fConduit;
+    QString fDesktopName;
+    QString fLibraryName;
+    ConduitAction *fConduit;
 } ;
 
 /** A namespace containing only static helper methods. */
-namespace PluginUtility
-{
-	/** Searches the argument list for --foo=bar and returns bar, QString::null if not found.
-	* Don't include the -- in the argname. */
-	QString findArgument(const QStringList &a, const QString argname);
+namespace PluginUtility {
+/** Searches the argument list for --foo=bar and returns bar, QString::null if not found.
+* Don't include the -- in the argname. */
+QString findArgument(const QStringList &a, const QString argname);
 
-	/**
-	* This function attempts to detect whether or not the given
-	* application is running. If it is, true is returned, otherwise
-	* false.
-	*
-	* The current approach is to ask the DCOP server if the application
-	* has registered.
-	*/
-	bool isRunning(const QCString &appName);
+/**
+* This function attempts to detect whether or not the given
+* application is running. If it is, true is returned, otherwise
+* false.
+*
+* The current approach is to ask the DCOP server if the application
+* has registered.
+*/
+bool isRunning(const QCString &appName);
 
-	/**
-	* Check a given library for its version, returning 0 if no
-	* version symbol is found.
-	*/
-	unsigned long pluginVersion(const KLibrary *);
-	QString pluginVersionString(const KLibrary *);
+/**
+* Check a given library for its version, returning 0 if no
+* version symbol is found.
+*/
+unsigned long pluginVersion(const KLibrary *);
+QString pluginVersionString(const KLibrary *);
 }
 
 /**

@@ -35,52 +35,52 @@ class OSyncMemberUpdate;
 
 namespace QSync {
 
-class SyncMemberUpdate
-{
-  friend class CallbackHandler;
+class SyncMemberUpdate {
+    friend class CallbackHandler;
 
-  public:
-    enum Type {
-      Connected,
-      SentChanges,
-      CommittedAll,
-      Disconnected,
-      ConnectError,
-      GetChangesError,
-      CommittedAllError,
-      SyncDoneError,
-      DisconnectedError
+public:
+    enum Type
+    {
+        Connected,
+        SentChanges,
+        CommittedAll,
+        Disconnected,
+        ConnectError,
+        GetChangesError,
+        CommittedAllError,
+        SyncDoneError,
+        DisconnectedError
     };
 
     SyncMemberUpdate();
-    SyncMemberUpdate( OSyncMemberUpdate* );
+    SyncMemberUpdate(OSyncMemberUpdate *);
     ~SyncMemberUpdate();
 
     Type type() const;
     Result result() const;
     Member member() const;
 
-  private:
+private:
     Type mType;
     Result mResult;
     Member mMember;
 };
 
-class SyncChangeUpdate
-{
-  friend class CallbackHandler;
+class SyncChangeUpdate {
+    friend class CallbackHandler;
 
-  public:
-    enum Type {
-      Received = 1,
-      ReceivedInfo,
-      Sent,
-      WriteError,
-      ReceiveError
+public:
+    enum Type
+    {
+        Received = 1,
+        ReceivedInfo,
+        Sent,
+        WriteError,
+        ReceiveError
     };
 
     SyncChangeUpdate();
-    SyncChangeUpdate( OSyncChangeUpdate* );
+    SyncChangeUpdate(OSyncChangeUpdate *);
     ~SyncChangeUpdate();
 
     Type type() const;
@@ -89,7 +89,7 @@ class SyncChangeUpdate
     int memberId() const;
     int mappingId() const;
 
-  private:
+private:
     Type mType;
     Result mResult;
     SyncChange mChange;
@@ -97,19 +97,19 @@ class SyncChangeUpdate
     int mMappingId;
 };
 
-class SyncMappingUpdate
-{
-  friend class CallbackHandler;
+class SyncMappingUpdate {
+    friend class CallbackHandler;
 
-  public:
-    enum Type {
-      Solved = 1,
-      Synced,
-      WriteError
+public:
+    enum Type
+    {
+        Solved = 1,
+        Synced,
+        WriteError
     };
 
     SyncMappingUpdate();
-    SyncMappingUpdate( OSyncMappingUpdate*, OSyncEngine* );
+    SyncMappingUpdate(OSyncMappingUpdate *, OSyncEngine *);
     ~SyncMappingUpdate();
 
     Type type() const;
@@ -117,37 +117,37 @@ class SyncMappingUpdate
     long long int winner() const;
     SyncMapping mapping() const;
 
-  private:
+private:
     Type mType;
     Result mResult;
     long long int mWinner;
     SyncMapping mMapping;
 };
 
-class SyncEngineUpdate
-{
-  friend class CallbackHandler;
+class SyncEngineUpdate {
+    friend class CallbackHandler;
 
-  public:
-    enum Type {
-      EndPhaseConnected = 1,
-      EndPhaseRead,
-      EndPhaseWrite,
-      EndPhaseDisconnected,
-      Error,
-      SyncSuccessfull,
-      PrevUnclean,
-      EndConflicts
+public:
+    enum Type
+    {
+        EndPhaseConnected = 1,
+        EndPhaseRead,
+        EndPhaseWrite,
+        EndPhaseDisconnected,
+        Error,
+        SyncSuccessfull,
+        PrevUnclean,
+        EndConflicts
     };
 
     SyncEngineUpdate();
-    SyncEngineUpdate( OSyncEngineUpdate* );
+    SyncEngineUpdate(OSyncEngineUpdate *);
     ~SyncEngineUpdate();
 
     Type type() const;
     Result result() const;
 
-  private:
+private:
     Type mType;
     Result mResult;
 };

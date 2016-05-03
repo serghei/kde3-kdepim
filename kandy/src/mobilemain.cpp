@@ -48,21 +48,21 @@
 #include "mobilemain.moc"
 
 MobileMain::MobileMain(CommandScheduler *scheduler, KandyPrefs *prefs)
-    : KMainWindow( 0, "MobileMain" )
+    : KMainWindow(0, "MobileMain")
 {
-  mView = new MobileGui(scheduler, prefs, this);
-  setCentralWidget(mView);
-  setupActions();
+    mView = new MobileGui(scheduler, prefs, this);
+    setCentralWidget(mView);
+    setupActions();
 
-  statusBar()->insertItem(i18n(" Disconnected "),1,0,true);
-  connect(mView,SIGNAL(statusMessage(const QString &)),
-          SLOT(showStatusMessage(const QString &)));
-  connect(mView,SIGNAL(transientStatusMessage(const QString &)),
-          SLOT(showTransientStatusMessage(const QString &)));
+    statusBar()->insertItem(i18n(" Disconnected "), 1, 0, true);
+    connect(mView, SIGNAL(statusMessage(const QString &)),
+            SLOT(showStatusMessage(const QString &)));
+    connect(mView, SIGNAL(transientStatusMessage(const QString &)),
+            SLOT(showTransientStatusMessage(const QString &)));
 
-  statusBar()->show();
+    statusBar()->show();
 
-  setAutoSaveSettings();
+    setAutoSaveSettings();
 }
 
 MobileMain::~MobileMain()
@@ -71,19 +71,19 @@ MobileMain::~MobileMain()
 
 void MobileMain::setupActions()
 {
-  KStdAction::quit(this, SLOT(close()), actionCollection());
+    KStdAction::quit(this, SLOT(close()), actionCollection());
 
-  new KAction(i18n("Terminal"),0,this,SLOT(showTerminal()),
-              actionCollection(),"show_terminal");
+    new KAction(i18n("Terminal"), 0, this, SLOT(showTerminal()),
+                actionCollection(), "show_terminal");
 
-  createStandardStatusBarAction();
-  setStandardToolBarMenuEnabled(true);
-   
-  KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
-  KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+    createStandardStatusBarAction();
+    setStandardToolBarMenuEnabled(true);
 
-  createGUI("kandymobileui.rc");
+    KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
+    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
+    KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+
+    createGUI("kandymobileui.rc");
 }
 
 void MobileMain::saveProperties(KConfig */*config*/)
@@ -107,7 +107,7 @@ void MobileMain::dragEnterEvent(QDragEnterEvent *event)
     KMainWindow::dragEnterEvent(event);
 
     // accept uri drops only
-//    event->accept(KURLDrag::canDecode(event));
+    //    event->accept(KURLDrag::canDecode(event));
 }
 
 void MobileMain::dropEvent(QDropEvent *event)
@@ -122,13 +122,13 @@ void MobileMain::dropEvent(QDropEvent *event)
 
 void MobileMain::optionsConfigureKeys()
 {
-    KKeyDialog::configure( actionCollection(), this );
+    KKeyDialog::configure(actionCollection(), this);
 }
 
 void MobileMain::optionsConfigureToolbars()
 {
     // use the standard toolbar editor
-    saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+    saveMainWindowSettings(KGlobal::config(), autoSaveGroup());
     KEditToolbar dlg(actionCollection());
     connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
     dlg.exec();
@@ -138,54 +138,58 @@ void MobileMain::newToolbarConfig()
 {
     // recreate our GUI
     createGUI("kandymobileui.rc");
-    applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+    applyMainWindowSettings(KGlobal::config(), autoSaveGroup());
 }
 
 void MobileMain::optionsPreferences()
 {
-  emit showPreferencesWin();
+    emit showPreferencesWin();
 }
 
-void MobileMain::showStatusMessage(const QString& text)
+void MobileMain::showStatusMessage(const QString &text)
 {
-  // display the text on the statusbar
-  statusBar()->message(text);
+    // display the text on the statusbar
+    statusBar()->message(text);
 }
 
-void MobileMain::showTransientStatusMessage(const QString& text)
+void MobileMain::showTransientStatusMessage(const QString &text)
 {
-  // display the text on the statusbar for 2 s.
-  statusBar()->message(text,2000);
+    // display the text on the statusbar for 2 s.
+    statusBar()->message(text, 2000);
 }
 
-void MobileMain::changeCaption(const QString& text)
+void MobileMain::changeCaption(const QString &text)
 {
-  // display the text on the caption
-  setCaption(text);
+    // display the text on the caption
+    setCaption(text);
 }
 
 bool MobileMain::queryClose()
 {
 #if 0
-  if (m_view->isModified()) {
-    switch (KMessageBox::warningYesNoCancel(this,
-        i18n("Save changes to profile %1?").arg(mFilename))) {
-      case KMessageBox::Yes :
-        fileSave();
-        return true;
-      case KMessageBox::No :
-        return true;
-      default: // cancel
-        return false;
+    if(m_view->isModified())
+    {
+        switch(KMessageBox::warningYesNoCancel(this,
+                                               i18n("Save changes to profile %1?").arg(mFilename)))
+        {
+            case KMessageBox::Yes :
+                fileSave();
+                return true;
+            case KMessageBox::No :
+                return true;
+            default: // cancel
+                return false;
+        }
     }
-  } else {
-    return true;
-  }
+    else
+    {
+        return true;
+    }
 #endif
-  return true;
+    return true;
 }
 
 void MobileMain::showTerminal()
 {
-  emit showTerminalWin();
+    emit showTerminalWin();
 }

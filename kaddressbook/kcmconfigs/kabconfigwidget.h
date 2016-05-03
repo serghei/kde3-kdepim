@@ -36,24 +36,23 @@ class KListView;
 
 class AddresseeWidget;
 
-class KABConfigWidget : public QWidget
-{
-  Q_OBJECT
+class KABConfigWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    KABConfigWidget( QWidget *parent, const char *name = 0 );
+public:
+    KABConfigWidget(QWidget *parent, const char *name = 0);
 
     void restoreSettings();
     void saveSettings();
     void defaults();
 
-  signals:
-    void changed( bool );
+signals:
+    void changed(bool);
 
-  public slots:
+public slots:
     void modified();
 
-  private:
+private:
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
     QCheckBox *mTradeAsFamilyName;

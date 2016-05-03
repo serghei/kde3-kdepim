@@ -23,113 +23,121 @@
 
 using namespace KWSDL;
 
-void WSDL::setBindings( const Binding::List &bindings )
+void WSDL::setBindings(const Binding::List &bindings)
 {
-  mBindings = bindings;
+    mBindings = bindings;
 }
 
 Binding::List WSDL::bindings() const
 {
-  return mBindings;
+    return mBindings;
 }
 
-void WSDL::setMessages( const Message::List &messages )
+void WSDL::setMessages(const Message::List &messages)
 {
-  mMessages = messages;
+    mMessages = messages;
 }
 
 Message::List WSDL::messages() const
 {
-  return mMessages;
+    return mMessages;
 }
 
-void WSDL::setPorts( const Port::List &ports )
+void WSDL::setPorts(const Port::List &ports)
 {
-  mPorts = ports;
+    mPorts = ports;
 }
 
 Port::List WSDL::ports() const
 {
-  return mPorts;
+    return mPorts;
 }
 
-void WSDL::setService( const Service &service )
+void WSDL::setService(const Service &service)
 {
-  mService = service;
+    mService = service;
 }
 
 Service WSDL::service() const
 {
-  return mService;
+    return mService;
 }
 
-void WSDL::setTypes( const Schema::Types &types )
+void WSDL::setTypes(const Schema::Types &types)
 {
-  mTypes = types;
+    mTypes = types;
 }
 
 Schema::Types WSDL::types() const
 {
-  return mTypes;
+    return mTypes;
 }
 
-Message WSDL::findMessage( const QString &name ) const
+Message WSDL::findMessage(const QString &name) const
 {
-  Message::List::ConstIterator it;
-  for ( it = mMessages.begin(); it != mMessages.end(); ++it ) {
-    if ( (*it).name() == name ) {
-      return *it;
+    Message::List::ConstIterator it;
+    for(it = mMessages.begin(); it != mMessages.end(); ++it)
+    {
+        if((*it).name() == name)
+        {
+            return *it;
+        }
     }
-  }
 
-  return Message();
+    return Message();
 }
 
-Message WSDL::findOutputMessage( const QString &name ) const
+Message WSDL::findOutputMessage(const QString &name) const
 {
-  Port::List::ConstIterator it;
-  for ( it = mPorts.begin(); it != mPorts.end(); ++it ) {
-    Port::Operation::List operations = (*it).operations();
-    Port::Operation::List::ConstIterator opIt;
-    for ( opIt = operations.begin(); opIt != operations.end(); ++opIt ) {
-      if ( (*opIt).input() == name )
-        return findMessage( (*opIt).output() );
+    Port::List::ConstIterator it;
+    for(it = mPorts.begin(); it != mPorts.end(); ++it)
+    {
+        Port::Operation::List operations = (*it).operations();
+        Port::Operation::List::ConstIterator opIt;
+        for(opIt = operations.begin(); opIt != operations.end(); ++opIt)
+        {
+            if((*opIt).input() == name)
+                return findMessage((*opIt).output());
+        }
     }
-  }
 
-  return Message();
+    return Message();
 }
 
-Port WSDL::findPort( const QString &name ) const
+Port WSDL::findPort(const QString &name) const
 {
-  Port::List::ConstIterator it;
-  for ( it = mPorts.begin(); it != mPorts.end(); ++it ) {
-    if ( (*it).name() == name )
-      return *it;
-  }
-
-  return Port();
-}
-
-Binding WSDL::findBinding( const QString &name ) const
-{
-  Binding::List::ConstIterator it;
-  for ( it = mBindings.begin(); it != mBindings.end(); ++it ) {
-    if ( (*it).name() == name )
-      return *it;
-  }
-
-  return Binding();
-}
-
-Binding::Operation WSDL::findBindingOperation( const QString &portName, const QString &operationName ) const
-{
-  Binding::List::ConstIterator it;
-  for ( it = mBindings.begin(); it != mBindings.end(); ++it ) {
-    if ( (*it).type() == portName ) {
-      return (*it).operation( operationName );
+    Port::List::ConstIterator it;
+    for(it = mPorts.begin(); it != mPorts.end(); ++it)
+    {
+        if((*it).name() == name)
+            return *it;
     }
-  }
 
-  return Binding::Operation();
+    return Port();
+}
+
+Binding WSDL::findBinding(const QString &name) const
+{
+    Binding::List::ConstIterator it;
+    for(it = mBindings.begin(); it != mBindings.end(); ++it)
+    {
+        if((*it).name() == name)
+            return *it;
+    }
+
+    return Binding();
+}
+
+Binding::Operation WSDL::findBindingOperation(const QString &portName, const QString &operationName) const
+{
+    Binding::List::ConstIterator it;
+    for(it = mBindings.begin(); it != mBindings.end(); ++it)
+    {
+        if((*it).type() == portName)
+        {
+            return (*it).operation(operationName);
+        }
+    }
+
+    return Binding::Operation();
 }

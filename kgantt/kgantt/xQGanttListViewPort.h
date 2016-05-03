@@ -48,82 +48,85 @@ class xQGanttListViewPort : public QFrame
 ////////////////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class xQGanttListView;
- 
+    friend class xQGanttListView;
+
 
 public:
 
 
-  ///  Constructor.
-  /*!
-   *
-   */
-  xQGanttListViewPort(KGanttItem* toplevelitem, QWidget* parent = 0,
-		     const char * name=0, WFlags f=0 );
+    ///  Constructor.
+    /*!
+     *
+     */
+    xQGanttListViewPort(KGanttItem *toplevelitem, QWidget *parent = 0,
+                        const char *name = 0, WFlags f = 0);
 
 
 
-  ///  Destructor.
-  /*!
-   *
-   */
-  ~xQGanttListViewPort();
- 
+    ///  Destructor.
+    /*!
+     *
+     */
+    ~xQGanttListViewPort();
+
 
 
 public slots:
 
-  void barViewResized();
+    void barViewResized();
 
 
 protected:
 
-  ///  Update widget.
-  /*!
-   *
-   */
-  void update(int x1, int y1, int x2, int y2);
+    ///  Update widget.
+    /*!
+     *
+     */
+    void update(int x1, int y1, int x2, int y2);
 
 
-  ///
-  /*!
-   *
-   */
-  void setBarViewPort(xQGanttBarViewPort* v);
+    ///
+    /*!
+     *
+     */
+    void setBarViewPort(xQGanttBarViewPort *v);
 
 
-  void drawContents(QPainter*, int x1, int y1, int x2, int y2);
-  void drawItem(KGanttItem*, QPainter* p, const QRect&, int);
+    void drawContents(QPainter *, int x1, int y1, int x2, int y2);
+    void drawItem(KGanttItem *, QPainter *p, const QRect &, int);
 
-  xQGanttBarViewPort* _barviewport;
+    xQGanttBarViewPort *_barviewport;
 
-  int _width;
+    int _width;
 
-  KGanttItem* _toplevelitem;
+    KGanttItem *_toplevelitem;
 
-  void paintEvent(QPaintEvent * e) {    
-    // printf("xQGanttListViewPort::paintEvent()\n");
-    update(e->rect().left(), e->rect().top(),
-	   e->rect().right(), e->rect().bottom() );
-  }
-
-  QPopupMenu* _menu;
-
-  void mousePressEvent(QMouseEvent* e) {
-
-    if(e->button() == RightButton && e->state() == ControlButton ) {
-      _menu->popup(e->globalPos());
-      return;
+    void paintEvent(QPaintEvent *e)
+    {
+        // printf("xQGanttListViewPort::paintEvent()\n");
+        update(e->rect().left(), e->rect().top(),
+               e->rect().right(), e->rect().bottom());
     }
-    
-  }
+
+    QPopupMenu *_menu;
+
+    void mousePressEvent(QMouseEvent *e)
+    {
+
+        if(e->button() == RightButton && e->state() == ControlButton)
+        {
+            _menu->popup(e->globalPos());
+            return;
+        }
+
+    }
 
 
-  QBrush brush1, brush2;
+    QBrush brush1, brush2;
 
-  static int _ListViewCounter;
+    static int _ListViewCounter;
 
 };
 

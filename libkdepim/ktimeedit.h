@@ -41,12 +41,11 @@
   @short Provides a way to edit times in a user-friendly manner.
   @author Preston Brown, Ian Dawes
 */
-class KDE_EXPORT KTimeEdit : public QComboBox
-{
+class KDE_EXPORT KTimeEdit : public QComboBox {
     Q_OBJECT
-  public:
+public:
     /** constructs a new time edit. */
-    KTimeEdit(QWidget *parent=0, QTime qt=QTime(12,0), const char *name=0);
+    KTimeEdit(QWidget *parent = 0, QTime qt = QTime(12, 0), const char *name = 0);
 
     virtual ~KTimeEdit();
 
@@ -64,23 +63,23 @@ class KDE_EXPORT KTimeEdit : public QComboBox
     /** return true if input is a valid time and false if not */
     bool inputIsValid() const;
 
-  signals:
+signals:
     /**
       Emitted every time the time displayed changes. "newt" is the new
       time.
     */
     void timeChanged(QTime newt);
 
-  public slots:
+public slots:
     /** used to set the time which is displayed to a specific value. */
     void setTime(QTime qt);
 
-  protected slots:
+protected slots:
     void active(int);
     void hilit(int);
     void changedText();
 
-  protected:
+protected:
     virtual void keyPressEvent(QKeyEvent *qke);
     void addTime(QTime qt);
     void subTime(QTime qt);

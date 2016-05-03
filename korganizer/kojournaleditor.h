@@ -43,14 +43,13 @@ class KOEditorGeneralJournal;
 /**
   This class provides a dialog for editing a Journal.
 */
-class KOJournalEditor : public KOIncidenceEditor
-{
+class KOJournalEditor : public KOIncidenceEditor {
     Q_OBJECT
-  public:
+public:
     /**
       Constructs a new Journal editor.
     */
-    KOJournalEditor( Calendar *calendar, QWidget *parent );
+    KOJournalEditor(Calendar *calendar, QWidget *parent);
     virtual ~KOJournalEditor();
 
     void init();
@@ -67,16 +66,16 @@ class KOJournalEditor : public KOIncidenceEditor
       summary contains multiple lines, the summary will be used as description
       and only the first line of summary will be used as the summary.
     */
-    void setTexts( const QString &summary, const QString &description = QString::null );
+    void setTexts(const QString &summary, const QString &description = QString::null);
     /** Edit an existing Journal. */
     void editIncidence(Incidence *, Calendar *);
 
     /** Set widgets to default values */
-    void setDate( const QDate &date );
+    void setDate(const QDate &date);
     /** Read event object and setup widgets accordingly */
-    void readJournal( Journal * );
+    void readJournal(Journal *);
     /** Write event settings to event object */
-    void writeJournal( Journal * );
+    void writeJournal(Journal *);
 
     int msgItemDelete();
     /** Check if the input is valid. */
@@ -86,22 +85,25 @@ class KOJournalEditor : public KOIncidenceEditor
     bool processInput();
 
     /** This Journal has been modified externally */
-    void modified (int change=0);
+    void modified(int change = 0);
 
-  protected slots:
+protected slots:
     void loadDefaults();
     void deleteJournal();
 
-    void slotSaveTemplate( const QString & );
+    void slotSaveTemplate(const QString &);
 
-  protected:
-    QString type() { return "Journal"; }
+protected:
+    QString type()
+    {
+        return "Journal";
+    }
     void setupGeneral();
-//    int msgItemDelete();
+    //    int msgItemDelete();
 
-    void loadTemplate( /*const*/ CalendarLocal& );
-    QStringList& templates() const;
-  private:
+    void loadTemplate(/*const*/ CalendarLocal &);
+    QStringList &templates() const;
+private:
     Journal *mJournal;
     KOEditorGeneralJournal *mGeneral;
 };

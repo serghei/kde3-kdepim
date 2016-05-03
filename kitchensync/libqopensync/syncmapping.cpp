@@ -27,12 +27,12 @@
 using namespace QSync;
 
 SyncMapping::SyncMapping()
-  : mEngine( 0 ), mMapping( 0 )
+    : mEngine(0), mMapping(0)
 {
 }
 
-SyncMapping::SyncMapping( OSyncMapping *mapping, OSyncEngine *engine )
-  : mEngine( engine ), mMapping( mapping )
+SyncMapping::SyncMapping(OSyncMapping *mapping, OSyncEngine *engine)
+    : mEngine(engine), mMapping(mapping)
 {
 }
 
@@ -42,59 +42,59 @@ SyncMapping::~SyncMapping()
 
 bool SyncMapping::isValid() const
 {
-  return ( mEngine != 0 && mMapping != 0 );
+    return (mEngine != 0 && mMapping != 0);
 }
 
 long long SyncMapping::id() const
 {
-  Q_ASSERT( mMapping );
+    Q_ASSERT(mMapping);
 
-  return osengine_mapping_get_id( mMapping );
+    return osengine_mapping_get_id(mMapping);
 }
 
 void SyncMapping::duplicate()
 {
-  Q_ASSERT( mEngine );
-  Q_ASSERT( mMapping );
+    Q_ASSERT(mEngine);
+    Q_ASSERT(mMapping);
 
-  osengine_mapping_duplicate( mEngine, mMapping );
+    osengine_mapping_duplicate(mEngine, mMapping);
 }
 
-void SyncMapping::solve( const SyncChange &change )
+void SyncMapping::solve(const SyncChange &change)
 {
-  Q_ASSERT( mEngine );
-  Q_ASSERT( mMapping );
-  Q_ASSERT( change.isValid() );
+    Q_ASSERT(mEngine);
+    Q_ASSERT(mMapping);
+    Q_ASSERT(change.isValid());
 
-  osengine_mapping_solve( mEngine, mMapping, change.mSyncChange );
+    osengine_mapping_solve(mEngine, mMapping, change.mSyncChange);
 }
 
 void SyncMapping::ignore()
 {
-  Q_ASSERT( mEngine );
-  Q_ASSERT( mMapping );
+    Q_ASSERT(mEngine);
+    Q_ASSERT(mMapping);
 
-  //TODO: error should be returned as Result
-  OSyncError *error = 0;
-  osengine_mapping_ignore_conflict( mEngine, mMapping, &error );
+    //TODO: error should be returned as Result
+    OSyncError *error = 0;
+    osengine_mapping_ignore_conflict(mEngine, mMapping, &error);
 }
 
 int SyncMapping::changesCount() const
 {
-  Q_ASSERT( mMapping );
+    Q_ASSERT(mMapping);
 
-  return osengine_mapping_num_changes( mMapping );
+    return osengine_mapping_num_changes(mMapping);
 }
 
-SyncChange SyncMapping::changeAt( int pos )
+SyncChange SyncMapping::changeAt(int pos)
 {
-  Q_ASSERT( mMapping );
+    Q_ASSERT(mMapping);
 
-  if ( pos < 0 || pos >= osengine_mapping_num_changes( mMapping ) )
-    return SyncChange();
+    if(pos < 0 || pos >= osengine_mapping_num_changes(mMapping))
+        return SyncChange();
 
-  OSyncChange *ochange = osengine_mapping_nth_change( mMapping, pos );
+    OSyncChange *ochange = osengine_mapping_nth_change(mMapping, pos);
 
-  return SyncChange( ochange );
+    return SyncChange(ochange);
 }
 

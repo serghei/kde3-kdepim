@@ -1,6 +1,6 @@
 #ifndef _KGANTTBARCONFIG_H_
 #define _KGANTTBARCONFIG_H_
-  
+
 /*
 
     This library is free software; you can redistribute it and/or
@@ -34,24 +34,23 @@
 class xQGanttBarView;
 
 
-class KGanttBarConfig : public QWidget
-{
+class KGanttBarConfig : public QWidget {
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
 
-  KGanttBarConfig(xQGanttBarView* barview,
-		  QWidget* parent = 0, const char* name=0, WFlags f=0);
-   
+    KGanttBarConfig(xQGanttBarView *barview,
+                    QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+
 
 protected slots:
 
-  void changeBackground(const QColor& color);
-  
+    void changeBackground(const QColor &color);
+
 protected:
 
-  xQGanttBarView* _barview;
+    xQGanttBarView *_barview;
 
 };
 

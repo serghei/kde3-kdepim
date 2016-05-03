@@ -25,10 +25,9 @@
 
 using namespace KCal;
 
-extern "C"
-{
-  void *init_kcal_local()
-  {
-    return new KRES::PluginFactory<ResourceLocal,ResourceLocalConfig>();
-  }
+extern "C" {
+    void *init_kcal_local()
+    {
+        return new KRES::PluginFactory<ResourceLocal, ResourceLocalConfig>();
+    }
 }

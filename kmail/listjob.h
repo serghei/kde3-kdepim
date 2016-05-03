@@ -39,11 +39,11 @@ class FolderStorage;
 class KURL;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 namespace KPIM {
-  class ProgressItem;
+class ProgressItem;
 }
 
 namespace KMail {
@@ -51,93 +51,106 @@ namespace KMail {
 /**
  * Generic folder list job for (d)imap accounts
  */
-class ListJob : public FolderJob
-{
-  Q_OBJECT
+class ListJob : public FolderJob {
+    Q_OBJECT
 public:
-  /**
-   * Create a new job
-   * @param storage the parent folder, either provide this or a path
-   * @param account the ImapAccountBase
-   * @param type Type of subscription
-   * @param complete list all folders or only next level
-   * @param path the listing path;
-   *             if empty the path of the folder will be taken
-   * @param item a parent ProgressItem
-   */
-  ListJob( ImapAccountBase* account, ImapAccountBase::ListType type,
-           FolderStorage* storage = 0, const QString& path = QString::null,
-           bool complete = false, KPIM::ProgressItem* item = 0 );
+    /**
+     * Create a new job
+     * @param storage the parent folder, either provide this or a path
+     * @param account the ImapAccountBase
+     * @param type Type of subscription
+     * @param complete list all folders or only next level
+     * @param path the listing path;
+     *             if empty the path of the folder will be taken
+     * @param item a parent ProgressItem
+     */
+    ListJob(ImapAccountBase *account, ImapAccountBase::ListType type,
+            FolderStorage *storage = 0, const QString &path = QString::null,
+            bool complete = false, KPIM::ProgressItem *item = 0);
 
-  virtual ~ListJob();
+    virtual ~ListJob();
 
-  /**
-   * Set whether the listing should include only folders that the
-   * account is subscribed to locally. This is different from the server
-   * side subscription managed by the ctor parameter.
-   */
-  void setHonorLocalSubscription( bool value );
+    /**
+     * Set whether the listing should include only folders that the
+     * account is subscribed to locally. This is different from the server
+     * side subscription managed by the ctor parameter.
+     */
+    void setHonorLocalSubscription(bool value);
 
-  /**
-   * Return whether the listing includes only folders that the
-   * account is subscribed to locally. This is different from the server
-   * side subscription managed by the ctor parameter.
-   */
-  bool honorLocalSubscription() const;
+    /**
+     * Return whether the listing includes only folders that the
+     * account is subscribed to locally. This is different from the server
+     * side subscription managed by the ctor parameter.
+     */
+    bool honorLocalSubscription() const;
 
-  virtual void execute();
+    virtual void execute();
 
-  /** Path */
-  void setPath( const QString& path ) { mPath = path; }
+    /** Path */
+    void setPath(const QString &path)
+    {
+        mPath = path;
+    }
 
-  /** Storage */
-  void setStorage( FolderStorage* st ) { mStorage = st; }
+    /** Storage */
+    void setStorage(FolderStorage *st)
+    {
+        mStorage = st;
+    }
 
-  /** Set this to true for a complete listing */
-  void setComplete( bool complete ) { mComplete = complete; }
+    /** Set this to true for a complete listing */
+    void setComplete(bool complete)
+    {
+        mComplete = complete;
+    }
 
-  /** Set parent progress item */
-  void setParentProgressItem( KPIM::ProgressItem* it ) {
-    mParentProgressItem = it; }
+    /** Set parent progress item */
+    void setParentProgressItem(KPIM::ProgressItem *it)
+    {
+        mParentProgressItem = it;
+    }
 
-  /** Set the namespace for this listing */
-  void setNamespace( const QString& ns ) { mNamespace = ns; }
+    /** Set the namespace for this listing */
+    void setNamespace(const QString &ns)
+    {
+        mNamespace = ns;
+    }
 
 protected slots:
-  /**
-   * Is called when the listing is done
-   * Passes the folders and the jobData to the responding folder
-   */
-  void slotListResult( KIO::Job* job );
+    /**
+     * Is called when the listing is done
+     * Passes the folders and the jobData to the responding folder
+     */
+    void slotListResult(KIO::Job *job);
 
-  /**
-   * Collects the folder information
-   */
-  void slotListEntries( KIO::Job* job, const KIO::UDSEntryList& uds );
+    /**
+     * Collects the folder information
+     */
+    void slotListEntries(KIO::Job *job, const KIO::UDSEntryList &uds);
 
-  /**
-   * Called from the account when a connection was established
-   */
-  void slotConnectionResult( int errorCode, const QString& errorMsg );
+    /**
+     * Called from the account when a connection was established
+     */
+    void slotConnectionResult(int errorCode, const QString &errorMsg);
 
 signals:
-  /**
-   * Emitted when new folders have been received
-   */
-  void receivedFolders( const QStringList&, const QStringList&,
-      const QStringList&, const QStringList&, const ImapAccountBase::jobData& );
+    /**
+     * Emitted when new folders have been received
+     */
+    void receivedFolders(const QStringList &, const QStringList &,
+                         const QStringList &, const QStringList &, const ImapAccountBase::jobData &);
 
 protected:
-  FolderStorage* mStorage;
-  ImapAccountBase* mAccount;
-  ImapAccountBase::ListType mType;
-  bool mComplete;
-  bool mHonorLocalSubscription;
-  QString mPath;
-  QStringList mSubfolderNames, mSubfolderPaths,
-              mSubfolderMimeTypes, mSubfolderAttributes;
-  KPIM::ProgressItem* mParentProgressItem;
-  QString mNamespace;
+    FolderStorage *mStorage;
+    ImapAccountBase *mAccount;
+    ImapAccountBase::ListType mType;
+    bool mComplete;
+    bool mHonorLocalSubscription;
+    QString mPath;
+    QStringList mSubfolderNames, mSubfolderPaths,
+                mSubfolderMimeTypes, mSubfolderAttributes;
+    KPIM::ProgressItem *mParentProgressItem;
+    QString mNamespace;
 };
 
 } // namespace

@@ -37,30 +37,29 @@
 
 #include "KDGanttViewItem.h"
 
-class KDGanttViewEventItem : public KDGanttViewItem
-{
+class KDGanttViewEventItem : public KDGanttViewItem {
 public:
-    KDGanttViewEventItem( KDGanttView* view,
-                          const QString& lvtext = QString::null,
-                         const QString& name = QString::null );
-    KDGanttViewEventItem( KDGanttViewItem* parent,
-                          const QString& lvtext = QString::null,
-                         const QString& name = QString::null );
-    KDGanttViewEventItem( KDGanttView* view, KDGanttViewItem* after,
-                          const QString& lvtext = QString::null,
-                         const QString& name = QString::null );
-    KDGanttViewEventItem( KDGanttViewItem* parent, KDGanttViewItem* after,
-                          const QString& lvtext = QString::null,
-                         const QString& name = QString::null );
+    KDGanttViewEventItem(KDGanttView *view,
+                         const QString &lvtext = QString::null,
+                         const QString &name = QString::null);
+    KDGanttViewEventItem(KDGanttViewItem *parent,
+                         const QString &lvtext = QString::null,
+                         const QString &name = QString::null);
+    KDGanttViewEventItem(KDGanttView *view, KDGanttViewItem *after,
+                         const QString &lvtext = QString::null,
+                         const QString &name = QString::null);
+    KDGanttViewEventItem(KDGanttViewItem *parent, KDGanttViewItem *after,
+                         const QString &lvtext = QString::null,
+                         const QString &name = QString::null);
     virtual ~KDGanttViewEventItem();
 
-    void setLeadTime( const QDateTime& leadTimeStart );
-    void setStartTime( const QDateTime& start );
+    void setLeadTime(const QDateTime &leadTimeStart);
+    void setStartTime(const QDateTime &start);
     QDateTime leadTime() const;
 
 private:
-    void showItem( bool show = true, int coordY = 0 );
-    QDateTime* myLeadTime;
+    void showItem(bool show = true, int coordY = 0);
+    QDateTime *myLeadTime;
     void initItem();
     void hideMe();
 };

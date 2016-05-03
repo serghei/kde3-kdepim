@@ -65,9 +65,8 @@ class KCal::Todo;
  * @author Mark Bucciarelli <mark@hubcapconsulting.com>
  */
 
-class KDE_EXPORT KarmStorage
-{
-  public:
+class KDE_EXPORT KarmStorage {
+public:
     /*
      * Return reference to storage singleton.
      *
@@ -100,7 +99,7 @@ class KDE_EXPORT KarmStorage
      * @return empty string if success, error message if error.
      *
      */
-    QString load(TaskView* taskview, const Preferences* preferences, QString fileName="" );
+    QString load(TaskView *taskview, const Preferences *preferences, QString fileName = "");
 
     /*
      * Return the name of the iCal file
@@ -113,9 +112,9 @@ class KDE_EXPORT KarmStorage
      * This is needed if the iCal file has been modified
      */
     QString buildTaskView(KCal::ResourceCalendar *rc, TaskView *view);
-    
+
     /* Close calendar and clear view.  Release lock if holding one. */
-    void closeStorage(TaskView* view);
+    void closeStorage(TaskView *view);
 
     /*
      * Save all tasks and their totals to an iCalendar file.
@@ -127,7 +126,7 @@ class KDE_EXPORT KarmStorage
      *
      * @param taskview    The list group used in the TaskView
      */
-    QString save(TaskView* taskview);
+    QString save(TaskView *taskview);
 
     /**
      * Read tasks and their total times from a text file (legacy storage).
@@ -142,7 +141,7 @@ class KDE_EXPORT KarmStorage
      *    string    task name
      *    [string]  desktops, in which to count. e.g. "1,2,5" (optional)
      */
-    QString loadFromFlatFile(TaskView* taskview, const QString& filename);
+    QString loadFromFlatFile(TaskView *taskview, const QString &filename);
 
     /**
      *  Reads tasks and their total times from text file (legacy).
@@ -152,13 +151,13 @@ class KDE_EXPORT KarmStorage
      *
      *  @see loadFromFlatFile
      */
-    QString loadFromFlatFileCumulative(TaskView* taskview,
-        const QString& filename);
+    QString loadFromFlatFileCumulative(TaskView *taskview,
+                                       const QString &filename);
 
     /**
      Output a report based on contents of ReportCriteria.
      */
-    QString report( TaskView *taskview, const ReportCriteria &rc );
+    QString report(TaskView *taskview, const ReportCriteria &rc);
 
     /**
      * Log the change in a task's time.
@@ -185,7 +184,7 @@ class KDE_EXPORT KarmStorage
      * @param task   The task the change is for.
      * @param delta  Change in task time, in seconds.  Can be negative.
      */
-    void changeTime(const Task* task, const long deltaSeconds);
+    void changeTime(const Task *task, const long deltaSeconds);
 
     /**
      * Book time to a task.
@@ -203,7 +202,7 @@ class KDE_EXPORT KarmStorage
      * @return true if event was added, false if not (if, for example, the
      * attempted file lock failed).
      */
-    bool bookTime(const Task* task, const QDateTime& startDateTime, 
+    bool bookTime(const Task *task, const QDateTime &startDateTime,
                   long durationInSeconds);
 
     /**
@@ -217,7 +216,11 @@ class KDE_EXPORT KarmStorage
      * @param oldname  The old name of the task.  The new name is in the task
      *   object already.
      */
-    void setName(const Task* task, const QString& oldname) { Q_UNUSED(task); Q_UNUSED(oldname); }
+    void setName(const Task *task, const QString &oldname)
+    {
+        Q_UNUSED(task);
+        Q_UNUSED(oldname);
+    }
 
 
     /**
@@ -228,7 +231,10 @@ class KDE_EXPORT KarmStorage
      *
      * @param task    The task the timer was started for.
      */
-    void startTimer(const Task* task) { Q_UNUSED(task); }
+    void startTimer(const Task *task)
+    {
+        Q_UNUSED(task);
+    }
 
     /**
      * Log the event that the timer has stopped for this task.
@@ -239,7 +245,7 @@ class KDE_EXPORT KarmStorage
      *
      * @param task   The task the timer was stopped for.
      */
-    void stopTimer(const Task* task, QDateTime when=QDateTime::currentDateTime());
+    void stopTimer(const Task *task, QDateTime when = QDateTime::currentDateTime());
 
     /**
      * Log a new comment for this task.
@@ -250,7 +256,7 @@ class KDE_EXPORT KarmStorage
      * @param task     The task that gets the comment
      * @param comment  The comment
      */
-    void addComment(const Task* task, const QString& comment);
+    void addComment(const Task *task, const QString &comment);
 
 
     /**
@@ -261,7 +267,7 @@ class KDE_EXPORT KarmStorage
      * @param task   The task to be removed.
      * @return true if change was saved, false otherwise
      */
-    bool removeTask(Task* task);
+    bool removeTask(Task *task);
 
     /**
      * Add this task from iCalendar file.
@@ -275,7 +281,7 @@ class KDE_EXPORT KarmStorage
      * @return The unique ID for the new VTODO.  Return an null QString if
      * there was an error creating the new calendar object.
      */
-    QString addTask(const Task* task, const Task* parent);
+    QString addTask(const Task *task, const Task *parent);
 
     /**
      *  Check if the iCalendar file currently loaded has any Todos in it.
@@ -294,26 +300,26 @@ class KDE_EXPORT KarmStorage
      * @return true if a previous file has been loaded and the iCalendar file
      * specified in the preferences is different.
      */
-    bool isNewStorage(const Preferences* preferences) const;
+    bool isNewStorage(const Preferences *preferences) const;
 
     /** Return a list of start/stop events for the given date range. */
-    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
+    QValueList<HistoryEvent> getHistory(const QDate &from, const QDate &to);
 
-  private:
+private:
     static KarmStorage                *_instance;
     KCal::ResourceCalendar            *_calendar;
     QString                           _icalfile;
 
     KarmStorage();
-    void adjustFromLegacyFileFormat(Task* task);
+    void adjustFromLegacyFileFormat(Task *task);
     bool parseLine(QString line, long *time, QString *name, int *level,
-        DesktopList* desktopList);
+                   DesktopList *desktopList);
     QString writeTaskAsTodo
-      (Task* task, const int level, QPtrStack< KCal::Todo >& parents);
+    (Task *task, const int level, QPtrStack< KCal::Todo > &parents);
     bool saveCalendar();
 
-    KCal::Event* baseEvent(const Task*);
-    bool remoteResource( const QString& file ) const;
+    KCal::Event *baseEvent(const Task *);
+    bool remoteResource(const QString &file) const;
 
     /**
      *  Writes all tasks and their totals to a Comma-Separated Values file.
@@ -322,28 +328,28 @@ class KDE_EXPORT KarmStorage
      *    taskName,subtaskName,..,sessionTime,time,totalSessionTime,totalTime
      * the number of subtasks is determined at runtime.
      */
-    QString exportcsvFile( TaskView *taskview, const ReportCriteria &rc );
+    QString exportcsvFile(TaskView *taskview, const ReportCriteria &rc);
 
     /**
      *  Write task history to file as comma-delimited data.
      */
-    QString exportcsvHistory (
-            TaskView* taskview,
-            const QDate& from,
-            const QDate& to,
-            const ReportCriteria &rc
-            );
+    QString exportcsvHistory(
+        TaskView *taskview,
+        const QDate &from,
+        const QDate &to,
+        const ReportCriteria &rc
+    );
 
-    long printTaskHistory (
-            const Task *task,
-            const QMap<QString,long>& taskdaytotals,
-            QMap<QString,long>& daytotals,
-            const QDate& from,
-            const QDate& to,
-            const int level, 
-	    std::vector <QString> &matrix,
-            const ReportCriteria &rc
-            );
+    long printTaskHistory(
+        const Task *task,
+        const QMap<QString, long> &taskdaytotals,
+        QMap<QString, long> &daytotals,
+        const QDate &from,
+        const QDate &to,
+        const int level,
+        std::vector <QString> &matrix,
+        const ReportCriteria &rc
+    );
 };
 
 /**
@@ -353,22 +359,39 @@ class KDE_EXPORT KarmStorage
  * saves it in the history.  This class represents such an event read from
  * storage, and abstracts it from the specific storage used.
  */
-class HistoryEvent
-{
-  public:
+class HistoryEvent {
+public:
     /** Needed to be used in a value list. */
     HistoryEvent() {}
     HistoryEvent(QString uid, QString name, long duration,
-        QDateTime start, QDateTime stop, QString todoUid);
-    QString uid() {return _uid; }
-    QString name() {return _name; }
+                 QDateTime start, QDateTime stop, QString todoUid);
+    QString uid()
+    {
+        return _uid;
+    }
+    QString name()
+    {
+        return _name;
+    }
     /** In seconds. */
-    long duration() {return _duration; }
-    QDateTime start() {return _start; }
-    QDateTime stop() { return _stop; }
-    QString todoUid() {return _todoUid; }
+    long duration()
+    {
+        return _duration;
+    }
+    QDateTime start()
+    {
+        return _start;
+    }
+    QDateTime stop()
+    {
+        return _stop;
+    }
+    QString todoUid()
+    {
+        return _todoUid;
+    }
 
-  private:
+private:
     QString _uid;
     QString _todoUid;
     QString _name;

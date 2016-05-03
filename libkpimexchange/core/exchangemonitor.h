@@ -41,63 +41,63 @@ class ExchangeAccount;
 
 class ExchangeMonitor : public QObject {
     Q_OBJECT
-  public:
+public:
     typedef long ID;
     typedef QValueList<ID> IDList;
 
     enum { CallBack, Poll };
-    enum { Delete,  /** Any:              0   The message or folder subscribed to was deleted. 
+    enum { Delete,  /** Any:              0   The message or folder subscribed to was deleted.
                         Folder            1   A message or folder was deleted from the folder.  */
-           Move,    /** Any:              0   The message or folder was moved. 
+           Move,    /** Any:              0   The message or folder was moved.
                         Folder            1   A message or folder was moved from or to the folder.  */
-           Newmail, /** Mailbox or Folder Any Special new mail update. 
+           Newmail, /** Mailbox or Folder Any Special new mail update.
                         Message           Any Not valid - return 400 (Bad Request). */
-           Update,  /** Message           0   The message was modified (either properties or body). 
-                        Folder            0   Properties of the folder were modified. 
-                        Folder            1   A message or sub-folder was created in the folder, copied to 
-                                              the folder, moved to or from the folder, deleted from the folder, 
+           Update,  /** Message           0   The message was modified (either properties or body).
+                        Folder            0   Properties of the folder were modified.
+                        Folder            1   A message or sub-folder was created in the folder, copied to
+                                              the folder, moved to or from the folder, deleted from the folder,
                                               modified in the folder, or the folder properties were modified. */
-           UpdateNewMember, /**  Any      0   Not valid - return 400 (Bad Request). 
-                        Existing Folder   1   A message or sub-folder was created in the folder, copied to 
+           UpdateNewMember, /**  Any      0   Not valid - return 400 (Bad Request).
+                        Existing Folder   1   A message or sub-folder was created in the folder, copied to
                                               the folder, or moved to the folder. */
            Any      /** Message           1   Treat as depth = 0. */
-    };
+         };
 
-    ExchangeMonitor( ExchangeAccount* account, int pollMode, const QHostAddress& ownInterface  );
+    ExchangeMonitor(ExchangeAccount *account, int pollMode, const QHostAddress &ownInterface);
     ~ExchangeMonitor();
-    void addWatch( const KURL &url, int mode, int depth );
-    void removeWatch( const KURL &url );
-    void removeWatch( ID id );
+    void addWatch(const KURL &url, int mode, int depth);
+    void removeWatch(const KURL &url);
+    void removeWatch(ID id);
 
-  signals:
-    void notify( const QValueList<long>& IDs, const QValueList<KURL>& urls );
-//    void added( ID id, const KURL& url );
-//    void removed( ID id, const KURL& url );
+signals:
+    void notify(const QValueList<long> &IDs, const QValueList<KURL> &urls);
+    //    void added( ID id, const KURL& url );
+    //    void removed( ID id, const KURL& url );
 
-    void error( int result, const QString& moreInfo );
+    void error(int result, const QString &moreInfo);
 
-  private slots:
-    void slotSubscribeResult( KIO::Job * );
-    void slotUnsubscribeResult( KIO::Job * );
+private slots:
+    void slotSubscribeResult(KIO::Job *);
+    void slotUnsubscribeResult(KIO::Job *);
     void slotPollTimer();
-    void poll( const IDList& IDs );
-    void slotPollResult( KIO::Job * );
+    void poll(const IDList &IDs);
+    void slotPollResult(KIO::Job *);
     void slotRenewTimer();
-    void slotRenewResult( KIO::Job * );
+    void slotRenewResult(KIO::Job *);
     void slotActivated(int socket);
 
-  private:
-//    void init();
+private:
+    //    void init();
 
-    QMap<ID,KURL> mSubscriptionMap;
+    QMap<ID, KURL> mSubscriptionMap;
     QSocketDevice *mSocket;
-    QSocketNotifier* mNotifier;
+    QSocketNotifier *mNotifier;
     QTextStream *mStream;
-    ExchangeAccount* mAccount;
+    ExchangeAccount *mAccount;
     int mSubscriptionLifetime;
     // QString mSubscriptionId;
-    QTimer* mPollTimer;
-    QTimer* mRenewTimer;
+    QTimer *mPollTimer;
+    QTimer *mRenewTimer;
     int mPollMode;
 };
 

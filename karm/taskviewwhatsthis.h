@@ -18,15 +18,14 @@ this is the karm-taskview-specific implementation of qwhatsthis
 
 @author Thorsten Staerk
 */
-class TaskViewWhatsThis : public QWhatsThis
-{
+class TaskViewWhatsThis : public QWhatsThis {
 public:
-    TaskViewWhatsThis( QWidget* );
+    TaskViewWhatsThis(QWidget *);
     ~TaskViewWhatsThis();
 
-    QString text ( const QPoint & );
+    QString text(const QPoint &);
 
 private:
-    KListView* _listView;  // stores the associated listview for column widths
+    KListView *_listView;  // stores the associated listview for column widths
 };
 #endif

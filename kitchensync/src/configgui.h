@@ -29,43 +29,46 @@ class QBoxLayout;
 class KLineEdit;
 class QTextEdit;
 
-class ConfigGui : public QWidget
-{
-  public:
-    ConfigGui( const QSync::Member &, QWidget *parent );
+class ConfigGui : public QWidget {
+public:
+    ConfigGui(const QSync::Member &, QWidget *parent);
 
-    class Factory
-    {
-      public:
-        static ConfigGui *create( const QSync::Member &, QWidget *parent );
+    class Factory {
+    public:
+        static ConfigGui *create(const QSync::Member &, QWidget *parent);
     };
 
-    void setInstanceName( const QString & );
+    void setInstanceName(const QString &);
     QString instanceName() const;
 
-    virtual void load( const QString &xml ) = 0;
+    virtual void load(const QString &xml) = 0;
     virtual QString save() const = 0;
 
-    QSync::Member member() const { return mMember; }
+    QSync::Member member() const
+    {
+        return mMember;
+    }
 
-    QBoxLayout *topLayout() const { return mTopLayout; }
+    QBoxLayout *topLayout() const
+    {
+        return mTopLayout;
+    }
 
-  private:
+private:
     QSync::Member mMember;
 
     QBoxLayout *mTopLayout;
     KLineEdit *mNameEdit;
 };
 
-class ConfigGuiXml : public ConfigGui
-{
-  public:
-    ConfigGuiXml( const QSync::Member &, QWidget *parent );
+class ConfigGuiXml : public ConfigGui {
+public:
+    ConfigGuiXml(const QSync::Member &, QWidget *parent);
 
-    void load( const QString & );
+    void load(const QString &);
     QString save() const;
 
-  private:
+private:
     QTextEdit *mTextEdit;
 };
 

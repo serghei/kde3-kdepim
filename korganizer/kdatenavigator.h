@@ -42,40 +42,45 @@ using namespace KCal;
 
 class KODayMatrix;
 
-class KDateNavigator: public QFrame
-{
+class KDateNavigator: public QFrame {
     Q_OBJECT
-  public:
-    KDateNavigator( QWidget *parent = 0, const char *name = 0 );
+public:
+    KDateNavigator(QWidget *parent = 0, const char *name = 0);
     ~KDateNavigator();
 
     /**
       Associate date navigator with a calendar. It is used by KODayMatrix.
     */
-    void setCalendar( Calendar * );
+    void setCalendar(Calendar *);
 
-    void setBaseDate( const QDate & );
+    void setBaseDate(const QDate &);
 
-    KCal::DateList selectedDates() const { return mSelectedDates; }
+    KCal::DateList selectedDates() const
+    {
+        return mSelectedDates;
+    }
 
-    QSizePolicy sizePolicy () const;
+    QSizePolicy sizePolicy() const;
 
-    NavigatorBar *navigatorBar() const { return mNavigatorBar; }
+    NavigatorBar *navigatorBar() const
+    {
+        return mNavigatorBar;
+    }
     QDate startDate() const;
     QDate endDate() const;
 
-  public slots:
-    void selectDates( const KCal::DateList & );
+public slots:
+    void selectDates(const KCal::DateList &);
     void updateView();
     void updateConfig();
     void updateDayMatrix();
     void updateToday();
 
-  signals:
-    void datesSelected( const KCal::DateList & );
-    void incidenceDropped( Incidence *, const QDate & );
-    void incidenceDroppedMove( Incidence *, const QDate & );
-    void weekClicked( const QDate &);
+signals:
+    void datesSelected(const KCal::DateList &);
+    void incidenceDropped(Incidence *, const QDate &);
+    void incidenceDroppedMove(Incidence *, const QDate &);
+    void weekClicked(const QDate &);
 
     void goPrevious();
     void goNext();
@@ -85,18 +90,18 @@ class KDateNavigator: public QFrame
     void goNextYear();
     void goPrevYear();
 
-    void goMonth( int month );
+    void goMonth(int month);
 
-  protected:
+protected:
     void updateDates();
 
-    void wheelEvent( QWheelEvent * );
+    void wheelEvent(QWheelEvent *);
 
-    bool eventFilter( QObject *,QEvent * );
+    bool eventFilter(QObject *, QEvent *);
 
-    void setShowWeekNums( bool enabled );
+    void setShowWeekNums(bool enabled);
 
-  private:
+private:
     NavigatorBar *mNavigatorBar;
 
     QLabel *mHeadings[ 7 ];
@@ -108,8 +113,8 @@ class KDateNavigator: public QFrame
     QDate mBaseDate;
 
     // Disabling copy constructor and assignment operator
-    KDateNavigator( const KDateNavigator & );
-    KDateNavigator &operator=( const KDateNavigator & );
+    KDateNavigator(const KDateNavigator &);
+    KDateNavigator &operator=(const KDateNavigator &);
 };
 
 #endif

@@ -20,8 +20,7 @@ class SystemTray;
  *
  * @short Main window class
  */
-class KMobile : public KMainWindow
-{
+class KMobile : public KMainWindow {
     Q_OBJECT
 public:
     /**
@@ -34,7 +33,10 @@ public:
      */
     virtual ~KMobile();
 
-    KMobileView * mainView() const { return m_view; };
+    KMobileView *mainView() const
+    {
+        return m_view;
+    };
 
 protected:
     /**
@@ -76,7 +78,7 @@ private slots:
 
     void newToolbarConfig();
 
-    void changeStatusbar(const QString& text);
+    void changeStatusbar(const QString &text);
 
 private:
     void setupAccel();

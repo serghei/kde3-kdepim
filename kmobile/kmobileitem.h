@@ -10,8 +10,7 @@
 #include <ktrader.h>
 #include "kmobiledevice.h"
 
-class KMobileItem : public QObject, public QIconViewItem 
-{
+class KMobileItem : public QObject, public QIconViewItem {
     Q_OBJECT
     friend class KMobileView;
 public:
@@ -22,7 +21,7 @@ public:
     void configSave() const;
     bool configLoad(int index);
 
-    QString config_SectionName( int idx = -1 ) const;
+    QString config_SectionName(int idx = -1) const;
     QPixmap getIcon() const;
 
     static KTrader::OfferList getMobileDevicesList();

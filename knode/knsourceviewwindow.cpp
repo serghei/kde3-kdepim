@@ -22,40 +22,40 @@
 #include "utilities.h"
 
 
-KNSourceViewWindow::KNSourceViewWindow( const QString &text )
-  : KTextBrowser(0)
+KNSourceViewWindow::KNSourceViewWindow(const QString &text)
+    : KTextBrowser(0)
 {
-  setWFlags(WType_TopLevel | WDestructiveClose);
-  QAccel *accel = new QAccel( this, "browser close-accel" );
-  accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
-  KNConfig::Appearance *app=knGlobals.configManager()->appearance();
+    setWFlags(WType_TopLevel | WDestructiveClose);
+    QAccel *accel = new QAccel(this, "browser close-accel");
+    accel->connectItem(accel->insertItem(Qt::Key_Escape), this , SLOT(close()));
+    KNConfig::Appearance *app = knGlobals.configManager()->appearance();
 
-  setTextFormat( PlainText );
+    setTextFormat(PlainText);
 
-  setCaption(kapp->makeStdCaption(i18n("Article Source")));
-  setPaper( QBrush(app->backgroundColor()) );
-  setFont( app->articleFixedFont() );
-  setColor( app->textColor() );
-  setWordWrap( KTextBrowser::NoWrap );
+    setCaption(kapp->makeStdCaption(i18n("Article Source")));
+    setPaper(QBrush(app->backgroundColor()));
+    setFont(app->articleFixedFont());
+    setColor(app->textColor());
+    setWordWrap(KTextBrowser::NoWrap);
 
-  setText( text );
-  KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
-  show();
+    setText(text);
+    KNHelper::restoreWindowSize("sourceWindow", this, QSize(500, 300));
+    show();
 }
 
 
-void KNSourceViewWindow::setPalette( const QPalette &pal )
+void KNSourceViewWindow::setPalette(const QPalette &pal)
 {
-  QPalette p = pal;
-  p.setColor( QColorGroup::Text, knGlobals.configManager()->appearance()->textColor() );
-  p.setColor( QColorGroup::Background, knGlobals.configManager()->appearance()->backgroundColor() );
-  KTextBrowser::setPalette( p );
+    QPalette p = pal;
+    p.setColor(QColorGroup::Text, knGlobals.configManager()->appearance()->textColor());
+    p.setColor(QColorGroup::Background, knGlobals.configManager()->appearance()->backgroundColor());
+    KTextBrowser::setPalette(p);
 }
 
 
 KNSourceViewWindow::~KNSourceViewWindow()
 {
-  KNHelper::saveWindowSize("sourceWindow",size());
+    KNHelper::saveWindowSize("sourceWindow", size());
 }
 
 

@@ -27,21 +27,20 @@ class AttendeeSelectorWidget;
 /**
   Dialog to select a set off attendees.
 */
-class AttendeeSelector : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    AttendeeSelector( QWidget *parent = 0 );
+class AttendeeSelector : public KDialogBase {
+    Q_OBJECT
+public:
+    AttendeeSelector(QWidget *parent = 0);
 
     QStringList attendees() const;
 
-  private slots:
+private slots:
     void addClicked();
     void removeClicked();
-    void textChanged( const QString &text );
+    void textChanged(const QString &text);
     void selectionChanged();
 
-  private:
+private:
     AttendeeSelectorWidget *ui;
 };
 

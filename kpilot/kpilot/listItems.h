@@ -35,78 +35,93 @@
 #include <qlistview.h>
 #include <pi-dlp.h>
 
-class PilotListItem : public QListBoxText
-{
+class PilotListItem : public QListBoxText {
 public:
-	PilotListItem(const QString &text, recordid_t pilotid=0, void *r=0);
-	virtual ~PilotListItem();
-	recordid_t id() const {return fid;};
-	const void *rec() const {return fr;};
+    PilotListItem(const QString &text, recordid_t pilotid = 0, void *r = 0);
+    virtual ~PilotListItem();
+    recordid_t id() const
+    {
+        return fid;
+    };
+    const void *rec() const
+    {
+        return fr;
+    };
 
 
 protected:
-	recordid_t fid;
-	void *fr;
+    recordid_t fid;
+    void *fr;
 
 #ifdef DEBUG
 public:
-	static void counts();
+    static void counts();
 private:
-	static int crt,del,bal,count;
+    static int crt, del, bal, count;
 #endif
 };
 
-class PilotCheckListItem : public QCheckListItem
-{
+class PilotCheckListItem : public QCheckListItem {
 public:
-	PilotCheckListItem( QListView * parent, const QString & text, recordid_t pilotid=0, void *r=0);
-	virtual ~PilotCheckListItem();
-	recordid_t id() const {return fid;};
-	const void  *rec() const {return fr;};
+    PilotCheckListItem(QListView *parent, const QString &text, recordid_t pilotid = 0, void *r = 0);
+    virtual ~PilotCheckListItem();
+    recordid_t id() const
+    {
+        return fid;
+    };
+    const void  *rec() const
+    {
+        return fr;
+    };
 protected:
-	virtual void stateChange ( bool );
-	recordid_t fid;
-	void *fr;
+    virtual void stateChange(bool);
+    recordid_t fid;
+    void *fr;
 #ifdef DEBUG
 public:
-	static void counts();
+    static void counts();
 private:
-	static int crt, del, bal, count;
+    static int crt, del, bal, count;
 #endif
 };
 
 struct PilotListViewItemData
 {
-	int valCol;
-	bool valOk;
-	unsigned long val;
+    int valCol;
+    bool valOk;
+    unsigned long val;
 };
 
-class PilotListViewItem : public QListViewItem
-{
+class PilotListViewItem : public QListViewItem {
 public:
-	PilotListViewItem( QListView * parent,
-		QString label1, QString label2 = QString::null,
-		QString label3 = QString::null, QString label4 = QString::null,
-		recordid_t pilotid=0, void *r=0);
-	virtual ~PilotListViewItem();
-	recordid_t id() const {return fid;};
-	const void  *rec() const {return fr;};
+    PilotListViewItem(QListView *parent,
+                      QString label1, QString label2 = QString::null,
+                      QString label3 = QString::null, QString label4 = QString::null,
+                      recordid_t pilotid = 0, void *r = 0);
+    virtual ~PilotListViewItem();
+    recordid_t id() const
+    {
+        return fid;
+    };
+    const void  *rec() const
+    {
+        return fr;
+    };
 public:
-	void setNumericCol(int col, bool numeric);
-	int compare( QListViewItem *i, int col, bool ascending ) const;
+    void setNumericCol(int col, bool numeric);
+    int compare(QListViewItem *i, int col, bool ascending) const;
 protected:
-	QValueList<int> numericCols;
-	recordid_t fid;
-	void *fr;
-	// Caching to make sorting faster:
-	PilotListViewItemData*d;
-	unsigned long colValue(int col, bool *ok) const;
+    QValueList<int> numericCols;
+    recordid_t fid;
+    void *fr;
+    // Caching to make sorting faster:
+    PilotListViewItemData *d;
+    unsigned long colValue(int col, bool *ok) const;
 #ifdef DEBUG
 public:
-	static void counts();
+    static void counts();
 private:
-	static int crt, del, bal, count;
+    static int crt, del, bal, count;
 #endif
 };
 

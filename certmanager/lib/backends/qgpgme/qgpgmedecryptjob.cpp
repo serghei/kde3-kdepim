@@ -45,47 +45,52 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEDecryptJob::QGpgMEDecryptJob( GpgME::Context * context )
-  : DecryptJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEDecryptJob::QGpgMEDecryptJob(GpgME::Context *context)
+    : DecryptJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEDecryptJob::~QGpgMEDecryptJob() {
+Kleo::QGpgMEDecryptJob::~QGpgMEDecryptJob()
+{
 }
 
-void Kleo::QGpgMEDecryptJob::setup( const QByteArray & cipherText ) {
-  assert( !mInData );
-  assert( !mOutData );
+void Kleo::QGpgMEDecryptJob::setup(const QByteArray &cipherText)
+{
+    assert(!mInData);
+    assert(!mOutData);
 
-  createInData( cipherText );
-  createOutData();
+    createInData(cipherText);
+    createOutData();
 }
 
-GpgME::Error Kleo::QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
-  setup( cipherText );
+GpgME::Error Kleo::QGpgMEDecryptJob::start(const QByteArray &cipherText)
+{
+    setup(cipherText);
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startDecryption(*mInData, *mOutData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec( const QByteArray & cipherText,
-						      QByteArray & plainText ) {
-  setup( cipherText );
-  const GpgME::DecryptionResult result = mCtx->decrypt( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  getAuditLog();
-  return result;
+GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec(const QByteArray &cipherText,
+        QByteArray &plainText)
+{
+    setup(cipherText);
+    const GpgME::DecryptionResult result = mCtx->decrypt(*mInData, *mOutData);
+    plainText = mOutDataDataProvider->data();
+    getAuditLog();
+    return result;
 }
 
-void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(), mOutDataDataProvider->data() );
+void Kleo::QGpgMEDecryptJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mCtx->decryptionResult(), mOutDataDataProvider->data());
 }
 
 #include "qgpgmedecryptjob.moc"

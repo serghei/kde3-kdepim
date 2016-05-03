@@ -27,22 +27,27 @@
 
 class SummaryWidget;
 
-class KPilotPlugin : public Kontact::Plugin
-{
-  public:
-    KPilotPlugin( Kontact::Core *core, const char *name, const QStringList& );
+class KPilotPlugin : public Kontact::Plugin {
+public:
+    KPilotPlugin(Kontact::Core *core, const char *name, const QStringList &);
     KPilotPlugin();
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parentWidget );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parentWidget);
 
-    virtual bool showInSideBar() const { return false; }
-//    virtual QStringList configModules() const;
+    virtual bool showInSideBar() const
+    {
+        return false;
+    }
+    //    virtual QStringList configModules() const;
 
     const KAboutData *aboutData();
 
-  protected:
-    virtual KParts::ReadOnlyPart *createPart() { return 0; }
-  private:
+protected:
+    virtual KParts::ReadOnlyPart *createPart()
+    {
+        return 0;
+    }
+private:
     KAboutData *mAboutData;
 };
 

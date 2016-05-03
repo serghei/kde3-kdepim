@@ -34,17 +34,16 @@
 class TimeWidget;
 class KAboutData;
 
-class TimeWidgetConfig : public ConduitConfigBase
-{
-Q_OBJECT
+class TimeWidgetConfig : public ConduitConfigBase {
+    Q_OBJECT
 public:
-	TimeWidgetConfig(QWidget *parent, const char *);
-	virtual void commit();
-	virtual void load();
-	static ConduitConfigBase *create(QWidget *,const char *);
+    TimeWidgetConfig(QWidget *parent, const char *);
+    virtual void commit();
+    virtual void load();
+    static ConduitConfigBase *create(QWidget *, const char *);
 protected:
-	TimeWidget *fConfigWidget;
-	KAboutData *fAbout;
+    TimeWidget *fConfigWidget;
+    KAboutData *fAbout;
 } ;
 
 #endif

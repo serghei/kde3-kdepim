@@ -40,34 +40,35 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
+class Error;
+class Context;
 }
 
 namespace Kleo {
 
-  class QGpgMEDecryptJob : public DecryptJob, private QGpgMEJob {
+class QGpgMEDecryptJob : public DecryptJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEDecryptJob( GpgME::Context * context );
+public:
+    QGpgMEDecryptJob(GpgME::Context *context);
     ~QGpgMEDecryptJob();
 
     /*! \reimp from DecryptJob */
-    GpgME::Error start( const QByteArray & cipherText );
+    GpgME::Error start(const QByteArray &cipherText);
 
     /*! \reimp from DecryptJob */
-    GpgME::DecryptionResult exec( const QByteArray & cipherText,
-				  QByteArray & plainText );
+    GpgME::DecryptionResult exec(const QByteArray &cipherText,
+                                 QByteArray &plainText);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & cipherText );
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    void setup(const QByteArray &cipherText);
+};
 
 }
 

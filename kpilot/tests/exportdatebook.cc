@@ -46,91 +46,91 @@
 
 static const KCmdLineOptions options[] =
 {
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	{"vcal-file <path>","Set vcal file", 0},
-	KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    {"data-dir <path>", "Set data directory", "."},
+    {"vcal-file <path>", "Set vcal file", 0},
+    KCmdLineLastOption
 };
 
 
 
 int main(int argc, char **argv)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	KApplication::disableAutoDcopRegistration();
+    KApplication::disableAutoDcopRegistration();
 
-	KAboutData aboutData("exportdatebook","Emport Date Book","0.1");
-	KCmdLineArgs::init(argc,argv,&aboutData);
-	KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("exportdatebook", "Emport Date Book", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	KApplication app( false, false );
+    KApplication app(false, false);
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	debug_level= (args->isSet("verbose")) ? 4 : 0;
+    debug_level = (args->isSet("verbose")) ? 4 : 0;
 
-	QString datadir = args->getOption("data-dir");
-	QString vcalfile = args->getOption("vcal-file");
+    QString datadir = args->getOption("data-dir");
+    QString vcalfile = args->getOption("vcal-file");
 
-	if (datadir.isEmpty())
-	{
-		WARNINGKPILOT << "! Must provide a data-directory." << endl;
-	}
-	if (vcalfile.isEmpty())
-	{
-		WARNINGKPILOT << "! Must provide a vcal-file to write to." << endl;
-	}
-	if (datadir.isEmpty() || vcalfile.isEmpty())
-	{
-		return 1;
-	}
+    if(datadir.isEmpty())
+    {
+        WARNINGKPILOT << "! Must provide a data-directory." << endl;
+    }
+    if(vcalfile.isEmpty())
+    {
+        WARNINGKPILOT << "! Must provide a vcal-file to write to." << endl;
+    }
+    if(datadir.isEmpty() || vcalfile.isEmpty())
+    {
+        return 1;
+    }
 
-	/*
-	KConfig korgcfg( locate( "config", CSL1("korganizerrc") ) );
+    /*
+    KConfig korgcfg( locate( "config", CSL1("korganizerrc") ) );
 
-	// this part taken from adcalendarbase.cpp:
-	korgcfg.setGroup( "Time & Date" );
-	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
+    // this part taken from adcalendarbase.cpp:
+    korgcfg.setGroup( "Time & Date" );
+    QString tz(korgcfg.readEntry( "TimeZoneId" ) );
 
-	DEBUGKPILOT << fname << ": KOrganizer's time zone = " << tz << endl;
+    DEBUGKPILOT << fname << ": KOrganizer's time zone = " << tz << endl;
 
-	KCal::CalendarLocal *calendar = new KCal::CalendarLocal( tz );
-	*/
-	KCal::CalendarLocal *calendar = new KCal::CalendarLocal( QString() );
+    KCal::CalendarLocal *calendar = new KCal::CalendarLocal( tz );
+    */
+    KCal::CalendarLocal *calendar = new KCal::CalendarLocal(QString());
 
-	if (!calendar)
-	{
-		WARNINGKPILOT << "! Can't create calendar object." << endl;
-		return 1;
-	}
+    if(!calendar)
+    {
+        WARNINGKPILOT << "! Can't create calendar object." << endl;
+        return 1;
+    }
 
-	Pilot::setupPilotCodec( CSL1("Latin1") );
+    Pilot::setupPilotCodec(CSL1("Latin1"));
 
-	PilotLocalDatabase db( datadir, "DatebookDB" );
+    PilotLocalDatabase db(datadir, "DatebookDB");
 
-	PilotDateInfo *fAppointmentAppInfo = new PilotDateInfo( &db );
+    PilotDateInfo *fAppointmentAppInfo = new PilotDateInfo(&db);
 
-	int currentRecord = 0;
-	PilotRecord *pilotRec = 0;
-	PilotDateEntry *d = 0;
+    int currentRecord = 0;
+    PilotRecord *pilotRec = 0;
+    PilotDateEntry *d = 0;
 
-	while ((pilotRec = db.readRecordByIndex(currentRecord++)) != NULL)
-	{
-		d = new PilotDateEntry(pilotRec);
+    while((pilotRec = db.readRecordByIndex(currentRecord++)) != NULL)
+    {
+        d = new PilotDateEntry(pilotRec);
 
-		KCal::Event*event = new KCal::Event;
+        KCal::Event *event = new KCal::Event;
 
-		KCalSync::setEvent(event, d,*fAppointmentAppInfo->categoryInfo());
+        KCalSync::setEvent(event, d, *fAppointmentAppInfo->categoryInfo());
 
-		event->setSyncStatus( KCal::Incidence::SYNCNONE );
+        event->setSyncStatus(KCal::Incidence::SYNCNONE);
 
-		calendar->addEvent(event);
+        calendar->addEvent(event);
 
-	}
+    }
 
-	calendar->save(vcalfile);
+    calendar->save(vcalfile);
 
-	return 0;
+    return 0;
 }
 

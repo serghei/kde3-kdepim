@@ -42,38 +42,37 @@ class CalFormat;
 /**
   This class provides a calendar resource stored as a local file.
 */
-class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
-{
+class LIBKCAL_EXPORT ResourceLocal : public ResourceCached {
     Q_OBJECT
 
     friend class ResourceLocalConfig;
 
-  public:
+public:
     /**
       Create resource from configuration information stored in a KConfig object.
     */
-    ResourceLocal( const KConfig * );
+    ResourceLocal(const KConfig *);
     /**
       Create resource for file named @a fileName.
     */
-    ResourceLocal( const QString& fileName );
+    ResourceLocal(const QString &fileName);
     virtual ~ResourceLocal();
 
-    virtual void writeConfig( KConfig* config );
+    virtual void writeConfig(KConfig *config);
 
     KABC::Lock *lock();
 
     QString fileName() const;
-    bool setFileName( const QString &fileName );
-    bool setValue( const QString &key, const QString &value );
+    bool setFileName(const QString &fileName);
+    bool setValue(const QString &key, const QString &value);
 
 
     void dump() const;
 
-  protected slots:
+protected slots:
     void reload();
 
-  protected:
+protected:
     virtual bool doLoad();
     virtual bool doSave();
     /**
@@ -85,7 +84,7 @@ class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
 
     QDateTime readLastModified();
 
-  private:
+private:
     void init();
 
     KURL mURL;

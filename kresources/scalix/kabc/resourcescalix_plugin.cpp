@@ -35,19 +35,18 @@
 
 using namespace Scalix;
 
-class ScalixFactory : public KRES::PluginFactoryBase
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
+class ScalixFactory : public KRES::PluginFactoryBase {
+public:
+    KRES::Resource *resource(const KConfig *config)
     {
-      return new KABC::ResourceScalix( config );
+        return new KABC::ResourceScalix(config);
     }
 
-    KRES::ConfigWidget *configWidget( QWidget* )
+    KRES::ConfigWidget *configWidget(QWidget *)
     {
-      return 0;
+        return 0;
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY(kabc_scalix,ScalixFactory)
+K_EXPORT_COMPONENT_FACTORY(kabc_scalix, ScalixFactory)
 

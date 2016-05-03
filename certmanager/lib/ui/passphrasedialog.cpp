@@ -60,64 +60,71 @@
 #include <qlayout.h>
 #include <qfontmetrics.h>
 
-struct Kleo::PassphraseDialog::Private {
-  KPasswordEdit * lineedit;
+struct Kleo::PassphraseDialog::Private
+{
+    KPasswordEdit *lineedit;
 };
 
 
-Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & caption,
-					  QWidget * parent, const char * name, bool modal )
-  : KDialogBase( parent, name, modal, caption, Ok|Cancel, Ok ), d( 0 )
+Kleo::PassphraseDialog::PassphraseDialog(const QString &msg, const QString &caption,
+        QWidget *parent, const char *name, bool modal)
+    : KDialogBase(parent, name, modal, caption, Ok | Cancel, Ok), d(0)
 {
-  d = new Private();
+    d = new Private();
 
-  QWidget * w = new QWidget( this );
-  setMainWidget( w );
+    QWidget *w = new QWidget(this);
+    setMainWidget(w);
 
-  QHBoxLayout * hlay = new QHBoxLayout( w, 0, spacingHint() );
+    QHBoxLayout *hlay = new QHBoxLayout(w, 0, spacingHint());
 
-  QLabel * label = new QLabel( w );
-  label->setPixmap( DesktopIcon( "pgp-keys", KIcon::SizeMedium ) );
-  hlay->addWidget( label, 0, AlignTop );
+    QLabel *label = new QLabel(w);
+    label->setPixmap(DesktopIcon("pgp-keys", KIcon::SizeMedium));
+    hlay->addWidget(label, 0, AlignTop);
 
-  QVBoxLayout * vlay = new QVBoxLayout( hlay ); // inherits spacing
+    QVBoxLayout *vlay = new QVBoxLayout(hlay);    // inherits spacing
 
-  vlay->addWidget( new QLabel( msg.isEmpty() ? i18n("Please enter your passphrase:") : msg, w ) );
+    vlay->addWidget(new QLabel(msg.isEmpty() ? i18n("Please enter your passphrase:") : msg, w));
 
-  d->lineedit = new KPasswordEdit( KPasswordEdit::OneStar, w, "d->lineedit" );
-  d->lineedit->setMinimumWidth( fontMetrics().width("*") * 20 );
-  d->lineedit->setFocus();
+    d->lineedit = new KPasswordEdit(KPasswordEdit::OneStar, w, "d->lineedit");
+    d->lineedit->setMinimumWidth(fontMetrics().width("*") * 20);
+    d->lineedit->setFocus();
 
-  vlay->addWidget( d->lineedit );
+    vlay->addWidget(d->lineedit);
 
-  connect( d->lineedit, SIGNAL(returnPressed()), SLOT(slotOk()) );
+    connect(d->lineedit, SIGNAL(returnPressed()), SLOT(slotOk()));
 
-  disableResize();
+    disableResize();
 }
 
 
-Kleo::PassphraseDialog::~PassphraseDialog() {
-  delete d; d = 0;
+Kleo::PassphraseDialog::~PassphraseDialog()
+{
+    delete d;
+    d = 0;
 }
 
-const char * Kleo::PassphraseDialog::passphrase() const {
-  return d->lineedit->password();
+const char *Kleo::PassphraseDialog::passphrase() const
+{
+    return d->lineedit->password();
 }
 
-void Kleo::PassphraseDialog::slotOk() {
-  const char * pass = passphrase();
-  emit finished( pass ? pass : "" );
-  KDialogBase::slotOk();
+void Kleo::PassphraseDialog::slotOk()
+{
+    const char *pass = passphrase();
+    emit finished(pass ? pass : "");
+    KDialogBase::slotOk();
 }
 
-void Kleo::PassphraseDialog::slotCancel() {
-  emit canceled();
-  KDialogBase::slotCancel();
+void Kleo::PassphraseDialog::slotCancel()
+{
+    emit canceled();
+    KDialogBase::slotCancel();
 }
 
-  
-void Kleo::PassphraseDialog::virtual_hook( int id, void * data ) {
-  return KDialogBase::virtual_hook( id, data );
+
+void Kleo::PassphraseDialog::virtual_hook(int id, void *data)
+{
+    return KDialogBase::virtual_hook(id, data);
 }
 
 #include "passphrasedialog.moc"

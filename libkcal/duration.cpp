@@ -28,33 +28,33 @@ using namespace KCal;
 
 Duration::Duration()
 {
-  mSeconds = 0;
+    mSeconds = 0;
 }
 
-Duration::Duration( const QDateTime &start, const QDateTime &end )
+Duration::Duration(const QDateTime &start, const QDateTime &end)
 {
-  mSeconds = start.secsTo( end );
+    mSeconds = start.secsTo(end);
 }
 
-Duration::Duration( int seconds )
+Duration::Duration(int seconds)
 {
-  mSeconds = seconds;
-}
-
-
-bool KCal::operator==( const Duration& d1, const Duration& d2 )
-{
-    return ( d1.asSeconds() == d2.asSeconds() );
+    mSeconds = seconds;
 }
 
 
-
-QDateTime Duration::end( const QDateTime &start ) const
+bool KCal::operator==(const Duration &d1, const Duration &d2)
 {
-  return start.addSecs( mSeconds );
+    return (d1.asSeconds() == d2.asSeconds());
+}
+
+
+
+QDateTime Duration::end(const QDateTime &start) const
+{
+    return start.addSecs(mSeconds);
 }
 
 int Duration::asSeconds() const
 {
-  return mSeconds;
+    return mSeconds;
 }

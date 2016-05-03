@@ -30,41 +30,39 @@ class ListWidget;
 class QListBox;
 class QPushButton;
 
-class ListInputField : public SimpleInputField
-{
-  Q_OBJECT
+class ListInputField : public SimpleInputField {
+    Q_OBJECT
 
-  public:
-    ListInputField( const QString &name, const QString &typeName, const Schema::SimpleType *type );
+public:
+    ListInputField(const QString &name, const QString &typeName, const Schema::SimpleType *type);
 
-    virtual void setXMLData( const QDomElement &element );
-    virtual void xmlData( QDomDocument &document, QDomElement &parent );
+    virtual void setXMLData(const QDomElement &element);
+    virtual void xmlData(QDomDocument &document, QDomElement &parent);
 
-    virtual void setData( const QString &data );
+    virtual void setData(const QString &data);
     virtual QString data() const;
 
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual QWidget *createWidget(QWidget *parent);
 
-  private:
+private:
     ListWidget *mInputWidget;
     QString mTypeName;
 };
 
-class ListWidget : public QWidget
-{
-  Q_OBJECT
+class ListWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    ListWidget( InputField *parentField, const QString &name, const QString &type, QWidget *parent );
+public:
+    ListWidget(InputField *parentField, const QString &name, const QString &type, QWidget *parent);
 
     void update();
 
-  private slots:
+private slots:
     void add();
     void edit();
     void remove();
 
-  private:
+private:
     void updateButtons();
 
     InputField *mParentField;

@@ -45,14 +45,14 @@ class QListView;
   an additional Event attribute.
 */
 class KOProjectViewItem : public KGanttItem {
-  public:
-    KOProjectViewItem(Todo *,KGanttItem* parentTask, const QString& text,
-                      const QDateTime& start, const QDateTime& end);
+public:
+    KOProjectViewItem(Todo *, KGanttItem *parentTask, const QString &text,
+                      const QDateTime &start, const QDateTime &end);
     ~KOProjectViewItem();
 
     Todo *event();
 
-  private:
+private:
     Todo *mEvent;
 };
 
@@ -63,56 +63,58 @@ class KOProjectViewItem : public KGanttItem {
  * @short project view on todo items.
  * @author Cornelius Schumacher <schumacher@kde.org>
  */
-class KOProjectView : public KOrg::BaseView
-{
+class KOProjectView : public KOrg::BaseView {
     Q_OBJECT
-  public:
-    KOProjectView(Calendar *, QWidget* parent=0, const char* name=0 );
+public:
+    KOProjectView(Calendar *, QWidget *parent = 0, const char *name = 0);
     ~KOProjectView() {}
 
     Incidence::List selectedIncidences();
     DateList selectedDates();
 
     /** Return number of shown dates. */
-    int currentDateCount() { return 0; }
+    int currentDateCount()
+    {
+        return 0;
+    }
 
     void readSettings();
     void writeSettings(KConfig *);
 
-  public slots:
+public slots:
     void updateView();
     void updateConfig();
 
     void changeIncidenceDisplay(Incidence *, int);
 
     void showDates(const QDate &start, const QDate &end);
-    void showIncidences( const Incidence::List &incidenceList );
+    void showIncidences(const Incidence::List &incidenceList);
 
-/*
-    void editItem(QListViewItem *item);
-    void showItem(QListViewItem *item);
-    void popupMenu(QListViewItem *item,const QPoint &,int);
-    void newTodo();
-    void newSubTodo();
-    void itemClicked(QListViewItem *);
-*/
+    /*
+        void editItem(QListViewItem *item);
+        void showItem(QListViewItem *item);
+        void popupMenu(QListViewItem *item,const QPoint &,int);
+        void newTodo();
+        void newSubTodo();
+        void itemClicked(QListViewItem *);
+    */
 
-  protected slots:
+protected slots:
     void showModeMenu();
     void zoomIn();
     void zoomOut();
-    void taskChanged(KGanttItem *task,KGanttItem::Change change);
+    void taskChanged(KGanttItem *task, KGanttItem::Change change);
 
-  private:
+private:
     void createMainTask();
-    KGanttItem *createTask(KGanttItem *,Todo *);
+    KGanttItem *createTask(KGanttItem *, Todo *);
 
     KGantt *mGantt;
     KGanttItem *mMainTask;
 
-    QMap<Todo *,KGanttItem *>::ConstIterator insertTodoItem(Todo *todo);
+    QMap<Todo *, KGanttItem *>::ConstIterator insertTodoItem(Todo *todo);
 
-    QMap<Todo *,KGanttItem *> mTodoMap;
+    QMap<Todo *, KGanttItem *> mTodoMap;
 };
 
 #endif

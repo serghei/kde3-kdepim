@@ -40,59 +40,70 @@
 
 static int serial = 0;
 
-KMail::PartNodeBodyPart::PartNodeBodyPart( partNode & n, const QTextCodec * codec  )
-  : KMail::Interface::BodyPart(), mPartNode( n ), mCodec( codec ),
-    mDefaultDisplay( KMail::Interface::BodyPart::None )
+KMail::PartNodeBodyPart::PartNodeBodyPart(partNode &n, const QTextCodec *codec)
+    : KMail::Interface::BodyPart(), mPartNode(n), mCodec(codec),
+      mDefaultDisplay(KMail::Interface::BodyPart::None)
 {}
 
-QString KMail::PartNodeBodyPart::makeLink( const QString & path ) const {
-  static const int utf8 = 106;
-  // FIXME: use a PRNG for the first arg, instead of a serial number
-  return QString( "x-kmail:/bodypart/%1/%2/%3" )
-    .arg( serial++ ).arg( mPartNode.nodeId() )
-    .arg( KURL::encode_string_no_slash( path, utf8 ) );
+QString KMail::PartNodeBodyPart::makeLink(const QString &path) const
+{
+    static const int utf8 = 106;
+    // FIXME: use a PRNG for the first arg, instead of a serial number
+    return QString("x-kmail:/bodypart/%1/%2/%3")
+           .arg(serial++).arg(mPartNode.nodeId())
+           .arg(KURL::encode_string_no_slash(path, utf8));
 }
 
-QString KMail::PartNodeBodyPart::asText() const {
-  if ( mPartNode.type() != DwMime::kTypeText )
+QString KMail::PartNodeBodyPart::asText() const
+{
+    if(mPartNode.type() != DwMime::kTypeText)
+        return QString::null;
+    return mPartNode.msgPart().bodyToUnicode(mCodec);
+}
+
+QByteArray KMail::PartNodeBodyPart::asBinary() const
+{
+    return mPartNode.msgPart().bodyDecodedBinary();
+}
+
+QString KMail::PartNodeBodyPart::contentTypeParameter(const char *param) const
+{
+    return mPartNode.contentTypeParameter(param);
+}
+
+QString KMail::PartNodeBodyPart::contentDescription() const
+{
+    return mPartNode.msgPart().contentDescription();
+}
+
+QString KMail::PartNodeBodyPart::contentDispositionParameter(const char *) const
+{
+    kdWarning(5006) << "Sorry, not yet implemented: PartNodeBodyPart::contentDispositionParameter()" << endl;
     return QString::null;
-  return mPartNode.msgPart().bodyToUnicode( mCodec );
 }
 
-QByteArray KMail::PartNodeBodyPart::asBinary() const {
-  return mPartNode.msgPart().bodyDecodedBinary();
+bool KMail::PartNodeBodyPart::hasCompleteBody() const
+{
+    kdWarning(5006) << "Sorry, not yet implemented: PartNodeBodyPart::contentDispositionParameter()" << endl;
+    return true;
 }
 
-QString KMail::PartNodeBodyPart::contentTypeParameter( const char * param ) const {
-  return mPartNode.contentTypeParameter( param );
+KMail::Interface::BodyPartMemento *KMail::PartNodeBodyPart::memento() const
+{
+    return mPartNode.bodyPartMemento();
 }
 
-QString KMail::PartNodeBodyPart::contentDescription() const {
-  return mPartNode.msgPart().contentDescription();
+void KMail::PartNodeBodyPart::setBodyPartMemento(Interface::BodyPartMemento *memento)
+{
+    mPartNode.setBodyPartMemento(memento);
 }
 
-QString KMail::PartNodeBodyPart::contentDispositionParameter( const char * ) const {
-  kdWarning( 5006 ) << "Sorry, not yet implemented: PartNodeBodyPart::contentDispositionParameter()" << endl;
-  return QString::null;
+KMail::Interface::BodyPart::Display KMail::PartNodeBodyPart::defaultDisplay() const
+{
+    return mDefaultDisplay;
 }
 
-bool KMail::PartNodeBodyPart::hasCompleteBody() const {
-  kdWarning( 5006 ) << "Sorry, not yet implemented: PartNodeBodyPart::contentDispositionParameter()" << endl;
-  return true;
-}
-
-KMail::Interface::BodyPartMemento * KMail::PartNodeBodyPart::memento() const {
-  return mPartNode.bodyPartMemento();
-}
-
-void KMail::PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
-  mPartNode.setBodyPartMemento( memento );
-}
-
-KMail::Interface::BodyPart::Display KMail::PartNodeBodyPart::defaultDisplay() const {
-  return mDefaultDisplay;
-}
-
-void KMail::PartNodeBodyPart::setDefaultDisplay( KMail::Interface::BodyPart::Display d ){
-  mDefaultDisplay = d;
+void KMail::PartNodeBodyPart::setDefaultDisplay(KMail::Interface::BodyPart::Display d)
+{
+    mDefaultDisplay = d;
 }

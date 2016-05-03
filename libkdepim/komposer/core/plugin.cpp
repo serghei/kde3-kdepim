@@ -26,24 +26,23 @@
 #include <kdebug.h>
 #include <qstring.h>
 
-namespace Komposer
-{
+namespace Komposer {
 
-class Plugin::Private
-{
+class Plugin::Private {
 public:
-  //Core* core;
+    //Core* core;
 };
 
-Plugin::Plugin( QObject *parent, const char *name, const QStringList & )
-    : QObject( parent, name ), d( new Private )
+Plugin::Plugin(QObject *parent, const char *name, const QStringList &)
+    : QObject(parent, name), d(new Private)
 {
-  //d->core = core;
+    //d->core = core;
 }
 
 Plugin::~Plugin()
 {
-  delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
 void
@@ -64,15 +63,15 @@ Plugin::quitClicked()
 void
 Plugin::aboutToUnload()
 {
-  kdDebug()<<"plugin unloading"<<endl;
-  emit readyForUnload();
+    kdDebug() << "plugin unloading" << endl;
+    emit readyForUnload();
 }
 
-Core*
+Core *
 Plugin::core() const
 {
-  return 0;
-  //return d->core;
+    return 0;
+    //return d->core;
 }
 
 }//end namespace Komposer

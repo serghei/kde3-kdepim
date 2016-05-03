@@ -20,12 +20,12 @@
 
 class KNSourceViewWindow : public KTextBrowser {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KNSourceViewWindow( const QString &text );
+public:
+    KNSourceViewWindow(const QString &text);
     ~KNSourceViewWindow();
-    virtual void setPalette( const QPalette &pal );
+    virtual void setPalette(const QPalette &pal);
 
 };
 

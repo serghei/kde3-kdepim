@@ -25,20 +25,19 @@
 
 #include <qwidget.h>
 
-class AboutPage : public QWidget
-{
-  Q_OBJECT
+class AboutPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    AboutPage( QWidget *parent );
+public:
+    AboutPage(QWidget *parent);
 
-  signals:
+signals:
     void addGroup();
 
-  private slots:
-    void handleUrl( const KURL& );
+private slots:
+    void handleUrl(const KURL &);
 
-  private:
+private:
     QString htmlText() const;
 };
 

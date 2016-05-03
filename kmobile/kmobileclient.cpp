@@ -31,50 +31,51 @@
 KMobileClient::KMobileClient()
     : DCOPClient()
 {
-  // initialize Application and Object of remote DCOP-aware KMobile application
-  m_kmobileApp = "kmobile";
-  m_kmobileObj = "kmobileIface";
+    // initialize Application and Object of remote DCOP-aware KMobile application
+    m_kmobileApp = "kmobile";
+    m_kmobileObj = "kmobileIface";
 
-  bool ok = attach();
-  PRINT_DEBUG << QString("attached to DCOP server %1\n").arg(ok?"sucessful.":"failed.");
+    bool ok = attach();
+    PRINT_DEBUG << QString("attached to DCOP server %1\n").arg(ok ? "sucessful." : "failed.");
 
-//  m_clientAppId = registerAs("kmobileclient");
-//  PRINT_DEBUG << QString("registered as DCOP client %1\n").arg(m_clientAppId);
+    //  m_clientAppId = registerAs("kmobileclient");
+    //  PRINT_DEBUG << QString("registered as DCOP client %1\n").arg(m_clientAppId);
 
-  isKMobileAvailable();
+    isKMobileAvailable();
 }
 
 KMobileClient::~KMobileClient()
 {
-  detach();
-  PRINT_DEBUG << QString("detached from server\n");
+    detach();
+    PRINT_DEBUG << QString("detached from server\n");
 }
 
 
 bool KMobileClient::isKMobileAvailable()
 {
-  bool available = isApplicationRegistered(m_kmobileApp);
-  PRINT_DEBUG << QString("KMobile DCOP server: %1\n").arg(available?"available.":"not available");
-  if (!available) {
-	startKMobileApplication();
-	// check again...
-	available = isApplicationRegistered(m_kmobileApp);
-  }
-  return available;
+    bool available = isApplicationRegistered(m_kmobileApp);
+    PRINT_DEBUG << QString("KMobile DCOP server: %1\n").arg(available ? "available." : "not available");
+    if(!available)
+    {
+        startKMobileApplication();
+        // check again...
+        available = isApplicationRegistered(m_kmobileApp);
+    }
+    return available;
 }
 
 bool KMobileClient::startKMobileApplication()
 {
-  QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
-  QStringList params;
-  params << "--minimized";
-  arg << QString("kmobile") << params;
-  QCString replyType;
-  QByteArray replyData;
-  bool ok = call("klauncher", "klauncher", "kdeinit_exec_wait(QString,QStringList)", data, replyType, replyData);
-  PRINT_DEBUG << QString("DCOP-CALL to klauncher: %1\n").arg(ok?"ok.":"failed.");
-  return ok;
+    QByteArray data;
+    QDataStream arg(data, IO_WriteOnly);
+    QStringList params;
+    params << "--minimized";
+    arg << QString("kmobile") << params;
+    QCString replyType;
+    QByteArray replyData;
+    bool ok = call("klauncher", "klauncher", "kdeinit_exec_wait(QString,QStringList)", data, replyType, replyData);
+    PRINT_DEBUG << QString("DCOP-CALL to klauncher: %1\n").arg(ok ? "ok." : "failed.");
+    return ok;
 }
 
 
@@ -124,108 +125,108 @@ bool KMobileClient::startKMobileApplication()
 
 QStringList KMobileClient::deviceNames()
 {
-  if (!isKMobileAvailable())
-	return QStringList();
-  RETURN_TYPE( "deviceNames()", QString::fromLatin1(""), QStringList );
+    if(!isKMobileAvailable())
+        return QStringList();
+    RETURN_TYPE("deviceNames()", QString::fromLatin1(""), QStringList);
 }
 
-void KMobileClient::removeDevice( QString deviceName )
+void KMobileClient::removeDevice(QString deviceName)
 {
-  PREPARE( "removeDevice(QString)", deviceName );
-  Q_UNUSED(ok);
+    PREPARE("removeDevice(QString)", deviceName);
+    Q_UNUSED(ok);
 }
 
-void KMobileClient::configDevice( QString deviceName )
+void KMobileClient::configDevice(QString deviceName)
 {
-  PREPARE( "configDevice(QString)", deviceName );
-  Q_UNUSED(ok);
-}
-
-
-bool KMobileClient::connectDevice( QString deviceName )
-{
-  RETURN_BOOL( "connectDevice(QString)", deviceName );
-}
-
-bool KMobileClient::disconnectDevice( QString deviceName )
-{
-  RETURN_BOOL( "disconnectDevice(QString)", deviceName );
-}
-
-bool KMobileClient::connected( QString deviceName )
-{
-  RETURN_BOOL( "connected(QString)", deviceName );
+    PREPARE("configDevice(QString)", deviceName);
+    Q_UNUSED(ok);
 }
 
 
-QString KMobileClient::deviceClassName( QString deviceName )
+bool KMobileClient::connectDevice(QString deviceName)
 {
-  RETURN_QSTRING( "deviceClassName(QString)", deviceName );
+    RETURN_BOOL("connectDevice(QString)", deviceName);
 }
 
-QString KMobileClient::deviceName( QString deviceName )
+bool KMobileClient::disconnectDevice(QString deviceName)
 {
-  RETURN_QSTRING( "deviceName(QString)", deviceName );
+    RETURN_BOOL("disconnectDevice(QString)", deviceName);
 }
 
-QString KMobileClient::revision( QString deviceName )
+bool KMobileClient::connected(QString deviceName)
 {
-  RETURN_QSTRING( "revision(QString)", deviceName );
+    RETURN_BOOL("connected(QString)", deviceName);
 }
 
-int KMobileClient::classType( QString deviceName )
+
+QString KMobileClient::deviceClassName(QString deviceName)
 {
-  RETURN_INT( "classType(QString)", deviceName );
+    RETURN_QSTRING("deviceClassName(QString)", deviceName);
 }
 
-int KMobileClient::capabilities( QString deviceName )
+QString KMobileClient::deviceName(QString deviceName)
 {
-  RETURN_INT( "capabilities(QString)", deviceName );
+    RETURN_QSTRING("deviceName(QString)", deviceName);
 }
 
-QString KMobileClient::nameForCap( QString deviceName, int cap )
+QString KMobileClient::revision(QString deviceName)
 {
-  RETURN_QSTRING( "nameForCap(QString,int)", deviceName << cap );
+    RETURN_QSTRING("revision(QString)", deviceName);
 }
 
-QString KMobileClient::iconFileName( QString deviceName )
+int KMobileClient::classType(QString deviceName)
 {
-  RETURN_QSTRING( "iconFileName(QString)", deviceName );
+    RETURN_INT("classType(QString)", deviceName);
 }
 
-int KMobileClient::numAddresses( QString deviceName )
+int KMobileClient::capabilities(QString deviceName)
 {
-  RETURN_INT( "numAddresses(QString)", deviceName );
+    RETURN_INT("capabilities(QString)", deviceName);
 }
 
-QString KMobileClient::readAddress( QString deviceName, int index )
+QString KMobileClient::nameForCap(QString deviceName, int cap)
 {
-  RETURN_QSTRING( "readAddress(QString,int)", deviceName << index );
+    RETURN_QSTRING("nameForCap(QString,int)", deviceName << cap);
 }
 
-bool KMobileClient::storeAddress( QString deviceName, int index, QString vcard, bool append )
+QString KMobileClient::iconFileName(QString deviceName)
 {
-  RETURN_BOOL( "storeAddress(QString,int,QString,bool)", deviceName << index << vcard << append );
+    RETURN_QSTRING("iconFileName(QString)", deviceName);
 }
 
-int KMobileClient::numCalendarEntries( QString deviceName )
+int KMobileClient::numAddresses(QString deviceName)
 {
-  RETURN_INT( "numCalendarEntries(QString)", deviceName );
+    RETURN_INT("numAddresses(QString)", deviceName);
 }
 
-int KMobileClient::numNotes( QString deviceName )
+QString KMobileClient::readAddress(QString deviceName, int index)
 {
-  RETURN_INT( "numNotes(QString)", deviceName );
+    RETURN_QSTRING("readAddress(QString,int)", deviceName << index);
 }
 
-QString KMobileClient::readNote( QString deviceName, int index )
+bool KMobileClient::storeAddress(QString deviceName, int index, QString vcard, bool append)
 {
-  RETURN_QSTRING( "readNote(QString,int)", deviceName << index );
+    RETURN_BOOL("storeAddress(QString,int,QString,bool)", deviceName << index << vcard << append);
 }
 
-bool KMobileClient::storeNote( QString deviceName, int index, QString note )
+int KMobileClient::numCalendarEntries(QString deviceName)
 {
-  RETURN_BOOL( "storeNote(QString,int,QString)", deviceName << index << note );
+    RETURN_INT("numCalendarEntries(QString)", deviceName);
+}
+
+int KMobileClient::numNotes(QString deviceName)
+{
+    RETURN_INT("numNotes(QString)", deviceName);
+}
+
+QString KMobileClient::readNote(QString deviceName, int index)
+{
+    RETURN_QSTRING("readNote(QString,int)", deviceName << index);
+}
+
+bool KMobileClient::storeNote(QString deviceName, int index, QString note)
+{
+    RETURN_BOOL("storeNote(QString,int,QString)", deviceName << index << note);
 }
 
 

@@ -35,20 +35,19 @@ struct DBInfo;
 /**
 @author Reinhold Kainhofer
 */
-class DBFlagsEditor : public KDialogBase
-{
-Q_OBJECT
+class DBFlagsEditor : public KDialogBase {
+    Q_OBJECT
 public:
-	DBFlagsEditor(DBInfo*dbinfo=0L, QWidget *parent = 0);
-	~DBFlagsEditor();
+    DBFlagsEditor(DBInfo *dbinfo = 0L, QWidget *parent = 0);
+    ~DBFlagsEditor();
 
 protected:
-	void fillWidgets();
-	DBInfo*dbi;
-	DBFlagsEditorWidget*widget;
+    void fillWidgets();
+    DBInfo *dbi;
+    DBFlagsEditorWidget *widget;
 protected slots:
-	virtual void slotOk();
-	virtual void slotCancel();
+    virtual void slotOk();
+    virtual void slotCancel();
 
 
 };

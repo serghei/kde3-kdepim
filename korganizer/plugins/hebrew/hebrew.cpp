@@ -31,82 +31,81 @@
 
 bool Hebrew::IsraelP;
 
-class HebrewFactory:public CalendarDecorationFactory
-{
+class HebrewFactory: public CalendarDecorationFactory {
 public:
-  CalendarDecoration * create()
-  {
-    return new Hebrew;
-  }
+    CalendarDecoration *create()
+    {
+        return new Hebrew;
+    }
 };
 
-K_EXPORT_COMPONENT_FACTORY( libkorg_hebrew, HebrewFactory )
+K_EXPORT_COMPONENT_FACTORY(libkorg_hebrew, HebrewFactory)
 
 
-QString Hebrew::shortText(const QDate & date)
+QString Hebrew::shortText(const QDate &date)
 {
 
-  KConfig config("korganizerrc", true, false); // Open read-only, no kdeglobals
+    KConfig config("korganizerrc", true, false); // Open read-only, no kdeglobals
 
-  config.setGroup("Calendar/Hebrew Calendar Plugin");
-  IsraelP =
-    config.readBoolEntry("Israel",
-                         (KGlobal::locale()->country() == ".il"));
-  Holiday::ParshaP = config.readBoolEntry("Parsha", true);
-  Holiday::CholP = config.readBoolEntry("Chol_HaMoed", true);
-  Holiday::OmerP = config.readBoolEntry("Omer", true);
-  QString *label_text = new QString();
+    config.setGroup("Calendar/Hebrew Calendar Plugin");
+    IsraelP =
+        config.readBoolEntry("Israel",
+                             (KGlobal::locale()->country() == ".il"));
+    Holiday::ParshaP = config.readBoolEntry("Parsha", true);
+    Holiday::CholP = config.readBoolEntry("Chol_HaMoed", true);
+    Holiday::OmerP = config.readBoolEntry("Omer", true);
+    QString *label_text = new QString();
 
-  int day = date.day();
-  int month = date.month();
-  int year = date.year();
+    int day = date.day();
+    int month = date.month();
+    int year = date.year();
 
-  // core calculations!!
-  struct DateResult result;
+    // core calculations!!
+    struct DateResult result;
 
-  Converter::SecularToHebrewConversion(year, month, day, /*0, */
-                                       &result);
-  int hebrew_day = result.day;
-  int hebrew_month = result.month;
-  int hebrew_year = result.year;
-  int hebrew_day_of_week = result.day_of_week;
-  bool hebrew_leap_year_p = result.hebrew_leap_year_p;
-  int hebrew_kvia = result.kvia;
-  int hebrew_day_number = result.hebrew_day_number;
+    Converter::SecularToHebrewConversion(year, month, day, /*0, */
+                                         &result);
+    int hebrew_day = result.day;
+    int hebrew_month = result.month;
+    int hebrew_year = result.year;
+    int hebrew_day_of_week = result.day_of_week;
+    bool hebrew_leap_year_p = result.hebrew_leap_year_p;
+    int hebrew_kvia = result.kvia;
+    int hebrew_day_number = result.hebrew_day_number;
 
-  QStringList holidays =
-    Holiday::FindHoliday(hebrew_month, hebrew_day,
-                         hebrew_day_of_week + 1, hebrew_kvia,
-                         hebrew_leap_year_p, IsraelP,
-                         hebrew_day_number, hebrew_year);
+    QStringList holidays =
+        Holiday::FindHoliday(hebrew_month, hebrew_day,
+                             hebrew_day_of_week + 1, hebrew_kvia,
+                             hebrew_leap_year_p, IsraelP,
+                             hebrew_day_number, hebrew_year);
 
-  KCalendarSystem *cal = KCalendarSystemFactory::create("hebrew");
-  *label_text = QString("%1 %2").arg(cal->dayString(date, false))
-                                .arg(cal->monthName(date));
+    KCalendarSystem *cal = KCalendarSystemFactory::create("hebrew");
+    *label_text = QString("%1 %2").arg(cal->dayString(date, false))
+                  .arg(cal->monthName(date));
 
-  if (holidays.count())
-      {
+    if(holidays.count())
+    {
         int count = holidays.count();
 
-        for (int h = 0; h <= count; ++h)
-            {
-              *label_text += "\n" + holidays[h];
-            }
-      }
+        for(int h = 0; h <= count; ++h)
+        {
+            *label_text += "\n" + holidays[h];
+        }
+    }
 
-  return *label_text;
+    return *label_text;
 }
 
 QString Hebrew::info()
 {
-  return
-    i18n("This plugin provides the date in the Jewish calendar.");
+    return
+        i18n("This plugin provides the date in the Jewish calendar.");
 }
 
-void Hebrew::configure(QWidget * parent)
+void Hebrew::configure(QWidget *parent)
 {
-  ConfigDialog *dlg = new ConfigDialog(parent);        //parent?
+    ConfigDialog *dlg = new ConfigDialog(parent);        //parent?
 
-  dlg->exec();
-  delete dlg;
+    dlg->exec();
+    delete dlg;
 }

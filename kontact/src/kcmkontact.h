@@ -36,31 +36,32 @@ class QListViewItem;
 class KAboutData;
 class KListView;
 
-class KcmKontact : public KPrefsModule
-{
-  Q_OBJECT
+class KcmKontact : public KPrefsModule {
+    Q_OBJECT
 
-  public:
-    KcmKontact( QWidget *parent = 0, const char *name = 0 );
+public:
+    KcmKontact(QWidget *parent = 0, const char *name = 0);
 
-    virtual const KAboutData* aboutData() const;
+    virtual const KAboutData *aboutData() const;
 };
 
-class PluginSelection : public KPrefsWid
-{
-  Q_OBJECT
+class PluginSelection : public KPrefsWid {
+    Q_OBJECT
 
-  public:
-    PluginSelection( KConfigSkeleton::ItemString *item, QWidget *parent );
+public:
+    PluginSelection(KConfigSkeleton::ItemString *item, QWidget *parent);
     ~PluginSelection();
 
     void readConfig();
     void writeConfig();
 
     QValueList<QWidget *> widgets() const;
-    QComboBox *comboBox() const { return mPluginCombo; }
+    QComboBox *comboBox() const
+    {
+        return mPluginCombo;
+    }
 
-  private:
+private:
     QComboBox *mPluginCombo;
     QValueList<KService::Ptr> mPluginList;
     KConfigSkeleton::ItemString *mItem;

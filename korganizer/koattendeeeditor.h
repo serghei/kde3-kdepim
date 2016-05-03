@@ -32,92 +32,91 @@ class QPushButton;
 class QHBox;
 
 namespace KPIM {
-  class AddresseeLineEdit;
+class AddresseeLineEdit;
 }
 
 namespace KABC {
-  class Addressee;
+class Addressee;
 }
 
 namespace KCal {
-  class Incidence;
+class Incidence;
 }
 
 /**
   Common base class for attendee editor and free busy view.
 */
-class KOAttendeeEditor : public QWidget
-{
-  Q_OBJECT
-  public:
-    KOAttendeeEditor( QWidget *parent, const char *name = 0 );
+class KOAttendeeEditor : public QWidget {
+    Q_OBJECT
+public:
+    KOAttendeeEditor(QWidget *parent, const char *name = 0);
 
-    virtual void insertAttendee( KCal::Attendee* attendee, bool fetchFB = true ) = 0;
+    virtual void insertAttendee(KCal::Attendee *attendee, bool fetchFB = true) = 0;
 
-    virtual void readEvent( KCal::Incidence *incidence );
-    virtual void writeEvent( KCal::Incidence *incidence );
+    virtual void readEvent(KCal::Incidence *incidence);
+    virtual void writeEvent(KCal::Incidence *incidence);
 
     /** return a clone of the event with attendees to be canceld*/
-    void cancelAttendeeEvent( KCal::Incidence *incidence );
+    void cancelAttendeeEvent(KCal::Incidence *incidence);
 
-  public slots:
+public slots:
     void acceptForMe();
     void declineForMe();
 
-  signals:
-    void updateAttendeeSummary( int count );
+signals:
+    void updateAttendeeSummary(int count);
 
-  protected:
-    void initOrganizerWidgets( QWidget *parent, QBoxLayout *layout );
-    void initEditWidgets( QWidget *parent, QBoxLayout *layout );
+protected:
+    void initOrganizerWidgets(QWidget *parent, QBoxLayout *layout);
+    void initEditWidgets(QWidget *parent, QBoxLayout *layout);
 
     /** Reads values from a KABC::Addressee and inserts a new Attendee
      * item into the listview with those items. Used when adding attendees
      * from the addressbook and expanding distribution lists.
      * The optional Attendee parameter can be used to pass in default values
      * to be used by the new Attendee. */
-    void insertAttendeeFromAddressee( const KABC::Addressee &a, const KCal::Attendee* at=0 );
+    void insertAttendeeFromAddressee(const KABC::Addressee &a, const KCal::Attendee *at = 0);
 
     void fillOrganizerCombo();
 
-    virtual KCal::Attendee* currentAttendee() const = 0;
+    virtual KCal::Attendee *currentAttendee() const = 0;
     virtual void updateCurrentItem() = 0;
 
-    virtual void changeStatusForMe( KCal::Attendee::PartStat status ) = 0;
+    virtual void changeStatusForMe(KCal::Attendee::PartStat status) = 0;
 
-    virtual bool eventFilter( QObject *, QEvent *);
+    virtual bool eventFilter(QObject *, QEvent *);
 
-  protected slots:
+protected slots:
     void addNewAttendee();
     void openAddressBook();
 
-    void setEnableAttendeeInput( bool enabled );
+    void setEnableAttendeeInput(bool enabled);
     void updateAttendeeInput();
     void clearAttendeeInput();
-    void fillAttendeeInput( KCal::Attendee *a );
+    void fillAttendeeInput(KCal::Attendee *a);
     void updateAttendee();
 
-  protected:
+protected:
     KPIM::AddresseeLineEdit *mNameEdit;
     QString mUid;
-    QComboBox* mRoleCombo;
-    QCheckBox* mRsvpButton;
-    QComboBox* mStatusCombo;
+    QComboBox *mRoleCombo;
+    QCheckBox *mRsvpButton;
+    QComboBox *mStatusCombo;
 
-    QHBox* mOrganizerHBox;
+    QHBox *mOrganizerHBox;
     QComboBox *mOrganizerCombo; // either we organize it (combo shown)
     QLabel *mOrganizerLabel; // or someone else does (just a label is shown)
 
-    QLabel* mDelegateLabel;
+    QLabel *mDelegateLabel;
 
-    QPushButton* mAddButton;
-    QPushButton* mRemoveButton;
-    QPushButton* mAddressBookButton;
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+    QPushButton *mAddressBookButton;
 
     QPtrList<KCal::Attendee> mdelAttendees;
     QPtrList<KCal::Attendee> mnewAttendees;
 
-  private:
+private:
     bool mDisableItemUpdate;
 };
 

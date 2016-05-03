@@ -25,20 +25,22 @@
 #include "combobox.h"
 
 
-class EmailIdCombo : public KPIM::IdentityCombo
-{
-		Q_OBJECT
-	public:
-		explicit EmailIdCombo(KPIM::IdentityManager*, QWidget* parent = 0, const char* name = 0);
-		void  setReadOnly(bool ro)    { mReadOnly = ro; }
-	protected:
-		virtual void mousePressEvent(QMouseEvent*);
-		virtual void mouseReleaseEvent(QMouseEvent*);
-		virtual void mouseMoveEvent(QMouseEvent*);
-		virtual void keyPressEvent(QKeyEvent*);
-		virtual void keyReleaseEvent(QKeyEvent*);
-	private:
-		bool    mReadOnly;      // value cannot be changed
+class EmailIdCombo : public KPIM::IdentityCombo {
+    Q_OBJECT
+public:
+    explicit EmailIdCombo(KPIM::IdentityManager *, QWidget *parent = 0, const char *name = 0);
+    void  setReadOnly(bool ro)
+    {
+        mReadOnly = ro;
+    }
+protected:
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyReleaseEvent(QKeyEvent *);
+private:
+    bool    mReadOnly;      // value cannot be changed
 };
 
 #endif // EMAILIDCOMBO_H

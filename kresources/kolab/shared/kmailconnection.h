@@ -49,78 +49,78 @@ class ResourceKolabBase;
   This class provides the kmail connectivity for IMAP resources.
 */
 class KMailConnection : public QObject, public DCOPObject {
-  Q_OBJECT
-  K_DCOP
+    Q_OBJECT
+    K_DCOP
 
-  // These are the methods called by KMail when the resource changes
+    // These are the methods called by KMail when the resource changes
 k_dcop:
-  bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, int format, const QString& xml );
-  void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& xml );
-  void fromKMailRefresh( const QString& type, const QString& resource );
-  void fromKMailAddSubresource( const QString& type, const QString& resource,
-                                const QString& label, bool writable,
-                                bool alarmRelevant );
-  void fromKMailDelSubresource( const QString& type, const QString& resource );
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map, const QString& type,
-                                 const QString& folder );
+    bool fromKMailAddIncidence(const QString &type, const QString &resource,
+                               Q_UINT32 sernum, int format, const QString &xml);
+    void fromKMailDelIncidence(const QString &type, const QString &resource,
+                               const QString &xml);
+    void fromKMailRefresh(const QString &type, const QString &resource);
+    void fromKMailAddSubresource(const QString &type, const QString &resource,
+                                 const QString &label, bool writable,
+                                 bool alarmRelevant);
+    void fromKMailDelSubresource(const QString &type, const QString &resource);
+    void fromKMailAsyncLoadResult(const QMap<Q_UINT32, QString> &map, const QString &type,
+                                  const QString &folder);
 
 public:
-  KMailConnection( ResourceKolabBase* resource, const QCString& objId );
-  virtual ~KMailConnection();
+    KMailConnection(ResourceKolabBase *resource, const QCString &objId);
+    virtual ~KMailConnection();
 
-  /**
-   * Do the connection to KMail.
-   */
-  bool connectToKMail();
+    /**
+     * Do the connection to KMail.
+     */
+    bool connectToKMail();
 
-  // Call the DCOP methods
-  bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
-                          const QString& contentsType );
-  bool kmailIncidencesCount( int& count,
-                             const QString& mimetype,
-                             const QString& resource );
-  bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
-                        const QString& resource,
-                        int startIndex,
-                        int nbMessages );
+    // Call the DCOP methods
+    bool kmailSubresources(QValueList<KMailICalIface::SubResource> &lst,
+                           const QString &contentsType);
+    bool kmailIncidencesCount(int &count,
+                              const QString &mimetype,
+                              const QString &resource);
+    bool kmailIncidences(QMap<Q_UINT32, QString> &lst, const QString &mimetype,
+                         const QString &resource,
+                         int startIndex,
+                         int nbMessages);
 
-  bool kmailGetAttachment( KURL& url, const QString& resource, Q_UINT32 sernum,
-                           const QString& filename );
-  bool kmailAttachmentMimetype( QString &mimeType, const QString &resource,
-                                Q_UINT32 sernum, const QString &filename );
-  bool kmailListAttachments( QStringList &list, const QString &resource,
-                             Q_UINT32 sernum );
-  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
-  bool kmailUpdate( const QString& resource,
-                    Q_UINT32& sernum,
-                    const QString& subject,
-                    const QString& plainTextBody,
-                    const QMap<QCString, QString>& customHeaders,
-                    const QStringList& attachmentURLs,
-                    const QStringList& attachmentMimetypes,
-                    const QStringList& attachmentNames,
-                    const QStringList& deletedAttachments );
+    bool kmailGetAttachment(KURL &url, const QString &resource, Q_UINT32 sernum,
+                            const QString &filename);
+    bool kmailAttachmentMimetype(QString &mimeType, const QString &resource,
+                                 Q_UINT32 sernum, const QString &filename);
+    bool kmailListAttachments(QStringList &list, const QString &resource,
+                              Q_UINT32 sernum);
+    bool kmailDeleteIncidence(const QString &resource, Q_UINT32 sernum);
+    bool kmailUpdate(const QString &resource,
+                     Q_UINT32 &sernum,
+                     const QString &subject,
+                     const QString &plainTextBody,
+                     const QMap<QCString, QString> &customHeaders,
+                     const QStringList &attachmentURLs,
+                     const QStringList &attachmentMimetypes,
+                     const QStringList &attachmentNames,
+                     const QStringList &deletedAttachments);
 
-  bool kmailStorageFormat( KMailICalIface::StorageFormat& type, const QString& folder);
+    bool kmailStorageFormat(KMailICalIface::StorageFormat &type, const QString &folder);
 
-  bool kmailTriggerSync( const QString& contentsType );
-  bool kmailAddSubresource( const QString& resource,
-                            const QString& parent,
-                            const QString& contentsType );
-  bool kmailRemoveSubresource( const QString& resource );
+    bool kmailTriggerSync(const QString &contentsType);
+    bool kmailAddSubresource(const QString &resource,
+                             const QString &parent,
+                             const QString &contentsType);
+    bool kmailRemoveSubresource(const QString &resource);
 
 private slots:
-  virtual void unregisteredFromDCOP( const QCString& );
+    virtual void unregisteredFromDCOP(const QCString &);
 
 private:
-  /** Connect a signal from KMail to a local slot. */
-  bool connectKMailSignal( const QCString&, const QCString& );
+    /** Connect a signal from KMail to a local slot. */
+    bool connectKMailSignal(const QCString &, const QCString &);
 
-  ResourceKolabBase* mResource;
-  DCOPClient* mDCOPClient;
-  KMailICalIface_stub* mKMailIcalIfaceStub;
+    ResourceKolabBase *mResource;
+    DCOPClient *mDCOPClient;
+    KMailICalIface_stub *mKMailIcalIfaceStub;
 };
 
 }

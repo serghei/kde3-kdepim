@@ -61,20 +61,21 @@
 
 namespace Akregator {
 
-BrowserInterface::BrowserInterface( MainWindow *shell, const char *name )
-    : KParts::BrowserInterface( shell, name )
+BrowserInterface::BrowserInterface(MainWindow *shell, const char *name)
+    : KParts::BrowserInterface(shell, name)
 {
     m_shell = shell;
 }
 
 MainWindow::MainWindow()
-    : KParts::MainWindow( 0L, "akregator_mainwindow" ){
+    : KParts::MainWindow(0L, "akregator_mainwindow")
+{
     // set the shell's ui resource file
     setXMLFile("akregator_shell.rc");
 
-    m_browserIface=new BrowserInterface(this, "browser_interface");
+    m_browserIface = new BrowserInterface(this, "browser_interface");
 
-    m_part=0;
+    m_part = 0;
 
     // then, setup our actions
 
@@ -82,13 +83,13 @@ MainWindow::MainWindow()
     // and a status bar
     statusBar()->show();
 
-    int statH=fontMetrics().height()+2;
+    int statH = fontMetrics().height() + 2;
     m_statusLabel = new KSqueezedTextLabel(this);
     m_statusLabel->setTextFormat(Qt::RichText);
-    m_statusLabel->setSizePolicy(QSizePolicy( QSizePolicy::Ignored, QSizePolicy::Fixed ));
-    m_statusLabel->setMinimumWidth( 0 );
-    m_statusLabel->setFixedHeight( statH );
-    statusBar()->addWidget (m_statusLabel, 1, false);
+    m_statusLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
+    m_statusLabel->setMinimumWidth(0);
+    m_statusLabel->setFixedHeight(statH);
+    statusBar()->addWidget(m_statusLabel, 1, false);
 
     setupActions();
     createGUI(0L);
@@ -100,18 +101,18 @@ bool MainWindow::loadPart()
     // name which is a bad idea usually.. but it's alright in this
     // case since our Part is made for this Shell
     KLibFactory *factory = KLibLoader::self()->factory("libakregatorpart");
-    if (factory)
+    if(factory)
     {
         // now that the Part is loaded, we cast it to a Part to get
         // our hands on it
-        m_part = static_cast<Akregator::Part*>(factory->create(this, "akregator_part", "KParts::ReadOnlyPart" ));
+        m_part = static_cast<Akregator::Part *>(factory->create(this, "akregator_part", "KParts::ReadOnlyPart"));
 
-        if (m_part)
+        if(m_part)
         {
             // tell the KParts::MainWindow that this is indeed the main widget
             setCentralWidget(m_part->widget());
 
-            connect(m_part, SIGNAL(setWindowCaption (const QString &)), this, SLOT(setCaption (const QString &)));
+            connect(m_part, SIGNAL(setWindowCaption(const QString &)), this, SLOT(setCaption(const QString &)));
 
             connect(TrayIcon::getInstance(), SIGNAL(quitSelected()), this, SLOT(slotQuit()));
             // and integrate the part's GUI with the shell's
@@ -133,12 +134,12 @@ bool MainWindow::loadPart()
 
 void MainWindow::setupProgressWidgets()
 {
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog(statusBar(), this);
     progressDialog->raise();
     progressDialog->hide();
-    m_progressBar = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
+    m_progressBar = new KPIM::StatusbarProgressWidget(progressDialog, statusBar());
     m_progressBar->show();
-    statusBar()->addWidget( m_progressBar, 0, true );
+    statusBar()->addWidget(m_progressBar, 0, true);
 }
 
 MainWindow::~MainWindow()
@@ -163,24 +164,24 @@ void MainWindow::setupActions()
     KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
 }
 
-void MainWindow::saveProperties(KConfig* config)
+void MainWindow::saveProperties(KConfig *config)
 {
-    if (!m_part)
+    if(!m_part)
         loadPart();
 
-    static_cast<Akregator::Part*>(m_part)->saveProperties(config);
+    static_cast<Akregator::Part *>(m_part)->saveProperties(config);
     config->writeEntry("docked", isHidden());
 
     //delete m_part;
 }
 
-void MainWindow::readProperties(KConfig* config)
+void MainWindow::readProperties(KConfig *config)
 {
-    if (!m_part)
+    if(!m_part)
         loadPart();
-    static_cast<Akregator::Part*>(m_part)->readProperties(config);
-    
-    if (Settings::showTrayIcon() && config->readBoolEntry("docked", false)) 
+    static_cast<Akregator::Part *>(m_part)->readProperties(config);
+
+    if(Settings::showTrayIcon() && config->readBoolEntry("docked", false))
         hide();
     else
         show();
@@ -188,10 +189,10 @@ void MainWindow::readProperties(KConfig* config)
 
 void MainWindow::optionsConfigureKeys()
 {
-    KKeyDialog dlg( true, this );
+    KKeyDialog dlg(true, this);
 
     dlg.insert(actionCollection());
-    if (m_part)
+    if(m_part)
         dlg.insert(m_part->actionCollection());
 
     dlg.configure();
@@ -218,24 +219,24 @@ void MainWindow::applyNewToolbarConfig()
 
 KParts::BrowserExtension *MainWindow::browserExtension(KParts::ReadOnlyPart *p)
 {
-    return KParts::BrowserExtension::childObject( p );
+    return KParts::BrowserExtension::childObject(p);
 }
 
 
 // from konqmainwindow
-void MainWindow::connectActionCollection( KActionCollection *coll )
+void MainWindow::connectActionCollection(KActionCollection *coll)
 {
-    if (!coll) return;
-    connect( coll, SIGNAL( actionStatusText( const QString & ) ),
-              m_statusLabel, SLOT( setText( const QString & ) ) );
-    connect( coll, SIGNAL( clearStatusText() ),
-             this, SLOT( slotClearStatusText() ) );
+    if(!coll) return;
+    connect(coll, SIGNAL(actionStatusText(const QString &)),
+            m_statusLabel, SLOT(setText(const QString &)));
+    connect(coll, SIGNAL(clearStatusText()),
+            this, SLOT(slotClearStatusText()));
 }
 
 bool MainWindow::queryExit()
 {
     kdDebug() << "MainWindow::queryExit()" << endl;
-    if ( !kapp->sessionSaving() )
+    if(!kapp->sessionSaving())
     {
         delete m_part; // delete that here instead of dtor to ensure nested khtmlparts are deleted before singleton objects like KHTMLPageCache
         m_part = 0;
@@ -248,14 +249,14 @@ bool MainWindow::queryExit()
 
 void MainWindow::slotQuit()
 {
-    if (TrayIcon::getInstance())
+    if(TrayIcon::getInstance())
         TrayIcon::getInstance()->hide();
     kapp->quit();
 }
 
 bool MainWindow::queryClose()
 {
-    if (kapp->sessionSaving() || TrayIcon::getInstance() == 0 || TrayIcon::getInstance()->isHidden() )
+    if(kapp->sessionSaving() || TrayIcon::getInstance() == 0 || TrayIcon::getInstance()->isHidden())
     {
         return true;
     }
@@ -265,7 +266,9 @@ bool MainWindow::queryClose()
 
         // Associate source to image and show the dialog:
         QMimeSourceFactory::defaultFactory()->setPixmap("systray_shot", shot);
-        KMessageBox::information(this, i18n( "<qt><p>Closing the main window will keep Akregator running in the system tray. Use 'Quit' from the 'File' menu to quit the application.</p><p><center><img source=\"systray_shot\"></center></p></qt>" ), i18n( "Docking in System Tray" ), "hideOnCloseInfo");
+        KMessageBox::information(this,
+                                 i18n("<qt><p>Closing the main window will keep Akregator running in the system tray. Use 'Quit' from the 'File' menu to quit the application.</p><p><center><img source=\"systray_shot\"></center></p></qt>"),
+                                 i18n("Docking in System Tray"), "hideOnCloseInfo");
         hide();
         return false;
     }
@@ -277,7 +280,7 @@ void MainWindow::slotClearStatusText()
     m_statusLabel->setText(QString());
 }
 
-void MainWindow::slotSetStatusBarText( const QString & text )
+void MainWindow::slotSetStatusBarText(const QString &text)
 {
     m_statusLabel->setText(text);
 }

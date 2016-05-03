@@ -24,51 +24,53 @@
 
 #include "delegateview.h"
 
-class DelegateItem : public QListViewItem
-{
-  public:
-    DelegateItem( QListView *parent, const Scalix::Delegate &delegate )
-      : QListViewItem( parent ), mDelegate( delegate )
+class DelegateItem : public QListViewItem {
+public:
+    DelegateItem(QListView *parent, const Scalix::Delegate &delegate)
+        : QListViewItem(parent), mDelegate(delegate)
     {
-      setText( 0, mDelegate.email() );
-      setText( 1, Scalix::Delegate::rightsAsString( mDelegate.rights() ) );
+        setText(0, mDelegate.email());
+        setText(1, Scalix::Delegate::rightsAsString(mDelegate.rights()));
     }
 
-    Scalix::Delegate delegate() const { return mDelegate; }
+    Scalix::Delegate delegate() const
+    {
+        return mDelegate;
+    }
 
-  private:
+private:
     Scalix::Delegate mDelegate;
 };
 
-DelegateView::DelegateView( DelegateManager *manager, QWidget *parent )
-  : KListView( parent ), mManager( manager )
+DelegateView::DelegateView(DelegateManager *manager, QWidget *parent)
+    : KListView(parent), mManager(manager)
 {
-  addColumn( i18n( "Delegate" ) );
-  addColumn( i18n( "Rights" ) );
-  setFullWidth( true );
-  setAllColumnsShowFocus( true );
+    addColumn(i18n("Delegate"));
+    addColumn(i18n("Rights"));
+    setFullWidth(true);
+    setAllColumnsShowFocus(true);
 
-  connect( mManager, SIGNAL( changed() ), SLOT( delegateChanged() ) );
+    connect(mManager, SIGNAL(changed()), SLOT(delegateChanged()));
 
-  delegateChanged();
+    delegateChanged();
 }
 
 Scalix::Delegate DelegateView::selectedDelegate() const
 {
-  DelegateItem *item = dynamic_cast<DelegateItem*>( selectedItem() );
-  if ( item )
-    return item->delegate();
+    DelegateItem *item = dynamic_cast<DelegateItem *>(selectedItem());
+    if(item)
+        return item->delegate();
 
-  return Scalix::Delegate();
+    return Scalix::Delegate();
 }
 
 void DelegateView::delegateChanged()
 {
-  clear();
+    clear();
 
-  const Scalix::Delegate::List delegates = mManager->delegates();
-  for ( uint i = 0; i < delegates.count(); ++i )
-    new DelegateItem( this, delegates[ i ] );
+    const Scalix::Delegate::List delegates = mManager->delegates();
+    for(uint i = 0; i < delegates.count(); ++i)
+        new DelegateItem(this, delegates[ i ]);
 }
 
 #include "delegateview.moc"

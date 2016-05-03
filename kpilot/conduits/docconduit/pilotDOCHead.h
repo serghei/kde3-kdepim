@@ -33,27 +33,27 @@
 class PilotRecord;
 
 
-class PilotDOCHead:public PilotRecordBase {
- private:
-	static const int textRecordSize;
+class PilotDOCHead: public PilotRecordBase {
+private:
+    static const int textRecordSize;
 
- public:
-	int version;
-	int spare;
-	long int storyLen;
-	int numRecords;
-	int recordSize;
-	long int position;
+public:
+    int version;
+    int spare;
+    long int storyLen;
+    int numRecords;
+    int recordSize;
+    long int position;
 
-	PilotRecord *pack() const;
+    PilotRecord *pack() const;
 
- public:
-	 PilotDOCHead();
-	 PilotDOCHead(PilotRecord * rec);
-	 PilotDOCHead(const PilotDOCHead & e);
-	~PilotDOCHead() { }
+public:
+    PilotDOCHead();
+    PilotDOCHead(PilotRecord *rec);
+    PilotDOCHead(const PilotDOCHead &e);
+    ~PilotDOCHead() { }
 
-	PilotDOCHead & operator=(const PilotDOCHead & e);
+    PilotDOCHead &operator=(const PilotDOCHead &e);
 };
 
 

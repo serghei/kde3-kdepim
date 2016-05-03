@@ -40,63 +40,77 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class ColourCombo : public QComboBox
-{
-		Q_OBJECT
-		Q_PROPERTY(QColor color READ color WRITE setColor)
-	public:
-		/** Constructor.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 *  @param defaultColour The colour which is selected by default.
-		 */
-		explicit ColourCombo(QWidget* parent = 0, const char* name = 0, const QColor& defaultColour = 0xFFFFFF);
-		/** Returns the selected colour. */
-		QColor       color() const               { return mSelectedColour; }
-		/** Returns the selected colour. */
-		QColor       colour() const              { return mSelectedColour; }
-		/** Sets the selected colour to @p c. */
-		void         setColor(const QColor& c)   { setColour(c); }
-		/** Sets the selected colour to @p c. */
-		void         setColour(const QColor& c);
-		/** Initialises the list of colours to @p list. */
-		void         setColours(const ColourList& list);
-		/** Returns true if the first entry in the list, i.e. the custom colour, is selected. */
-		bool         isCustomColour() const      { return !currentItem(); }
-		/** Returns true if the widget is read only. */
-		bool         isReadOnly() const          { return mReadOnly; }
-		/** Sets whether the combo box can be changed by the user.
-		 *  @param readOnly True to set the widget read-only, false to set it read-write.
-		 */
-		virtual void setReadOnly(bool readOnly);
-	signals:
-		/** Signal emitted when a new colour has been selected. */
-		void         activated(const QColor&);    // a new colour box has been selected
-		/** Signal emitted when a new colour has been highlighted. */
-		void         highlighted(const QColor&);  // a new item has been highlighted
-	public slots:
-		/** Enables or disables the widget. */
-		virtual void setEnabled(bool enabled);
-	protected:
-		virtual void resizeEvent(QResizeEvent*);
-		virtual void mousePressEvent(QMouseEvent*);
-		virtual void mouseReleaseEvent(QMouseEvent*);
-		virtual void mouseMoveEvent(QMouseEvent*);
-		virtual void keyPressEvent(QKeyEvent*);
-		virtual void keyReleaseEvent(QKeyEvent*);
-	private slots:
-		void         slotActivated(int index);
-		void         slotHighlighted(int index);
-		void         slotPreferencesChanged();
-	private:
-		void         addColours();
-		void         drawCustomItem(QRect&, bool insert);
+class ColourCombo : public QComboBox {
+    Q_OBJECT
+    Q_PROPERTY(QColor color READ color WRITE setColor)
+public:
+    /** Constructor.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     *  @param defaultColour The colour which is selected by default.
+     */
+    explicit ColourCombo(QWidget *parent = 0, const char *name = 0, const QColor &defaultColour = 0xFFFFFF);
+    /** Returns the selected colour. */
+    QColor       color() const
+    {
+        return mSelectedColour;
+    }
+    /** Returns the selected colour. */
+    QColor       colour() const
+    {
+        return mSelectedColour;
+    }
+    /** Sets the selected colour to @p c. */
+    void         setColor(const QColor &c)
+    {
+        setColour(c);
+    }
+    /** Sets the selected colour to @p c. */
+    void         setColour(const QColor &c);
+    /** Initialises the list of colours to @p list. */
+    void         setColours(const ColourList &list);
+    /** Returns true if the first entry in the list, i.e. the custom colour, is selected. */
+    bool         isCustomColour() const
+    {
+        return !currentItem();
+    }
+    /** Returns true if the widget is read only. */
+    bool         isReadOnly() const
+    {
+        return mReadOnly;
+    }
+    /** Sets whether the combo box can be changed by the user.
+     *  @param readOnly True to set the widget read-only, false to set it read-write.
+     */
+    virtual void setReadOnly(bool readOnly);
+signals:
+    /** Signal emitted when a new colour has been selected. */
+    void         activated(const QColor &);   // a new colour box has been selected
+    /** Signal emitted when a new colour has been highlighted. */
+    void         highlighted(const QColor &); // a new item has been highlighted
+public slots:
+    /** Enables or disables the widget. */
+    virtual void setEnabled(bool enabled);
+protected:
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyReleaseEvent(QKeyEvent *);
+private slots:
+    void         slotActivated(int index);
+    void         slotHighlighted(int index);
+    void         slotPreferencesChanged();
+private:
+    void         addColours();
+    void         drawCustomItem(QRect &, bool insert);
 
-		ColourList   mColourList;      // the sorted colours to display
-		QColor       mSelectedColour;  // currently selected colour
-		QColor       mCustomColour;    // current colour of the Custom item
-		bool         mReadOnly;        // value cannot be changed
-		bool         mDisabled;
+    ColourList   mColourList;      // the sorted colours to display
+    QColor       mSelectedColour;  // currently selected colour
+    QColor       mCustomColour;    // current colour of the Custom item
+    bool         mReadOnly;        // value cannot be changed
+    bool         mDisabled;
 };
 
 #endif // COLOURCOMBO_H

@@ -7,12 +7,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-    
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-    
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -28,57 +28,59 @@ StateMachine::StateMachine()
 }
 
 
-void StateMachine::setState( const QString &state, const Code &code )
+void StateMachine::setState(const QString &state, const Code &code)
 {
-  mStateMap.insert( state, code );
+    mStateMap.insert(state, code);
 
-  if ( mInitialState.isEmpty() ) mInitialState = state;
+    if(mInitialState.isEmpty()) mInitialState = state;
 }
 
-void StateMachine::setInitialState( const QString &state )
+void StateMachine::setInitialState(const QString &state)
 {
-  mInitialState = state;
+    mInitialState = state;
 }
 
 Code StateMachine::stateDefinition()
 {
-  Code code;
-  
-  QStringList states;  
-  QMap<QString,Code>::ConstIterator it;
-  for ( it = mStateMap.begin(); it != mStateMap.end(); ++it ) {
-    states.append( it.key() );
-  }
-  
-  code += "enum State { " + states.join( ", " ) + " };";
-  code += "State state = " + mInitialState + ";";
+    Code code;
 
-  return code;
+    QStringList states;
+    QMap<QString, Code>::ConstIterator it;
+    for(it = mStateMap.begin(); it != mStateMap.end(); ++it)
+    {
+        states.append(it.key());
+    }
+
+    code += "enum State { " + states.join(", ") + " };";
+    code += "State state = " + mInitialState + ";";
+
+    return code;
 }
 
 Code StateMachine::transitionLogic()
 {
-  Code code;
+    Code code;
 
-  code += "switch( state ) {";
-  code.indent();
-
-  QMap<QString,Code>::ConstIterator it;
-  for ( it = mStateMap.begin(); it != mStateMap.end(); ++it ) {
-    code += "case " + it.key() + ":";
+    code += "switch( state ) {";
     code.indent();
-    code.addBlock( it.data() );
+
+    QMap<QString, Code>::ConstIterator it;
+    for(it = mStateMap.begin(); it != mStateMap.end(); ++it)
+    {
+        code += "case " + it.key() + ":";
+        code.indent();
+        code.addBlock(it.data());
+        code += "break;";
+        code.unindent();
+    }
+
+    code += "default:";
+    code.indent();
     code += "break;";
     code.unindent();
-  }
-  
-  code += "default:";
-  code.indent();
-  code += "break;";
-  code.unindent();
-  
-  code.unindent();
-  code += "}";
-  
-  return code;
+
+    code.unindent();
+    code += "}";
+
+    return code;
 }

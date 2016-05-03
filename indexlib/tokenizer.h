@@ -6,22 +6,25 @@
 #include <memory>
 #include <assert.h>
 
-namespace indexlib { namespace detail {
+namespace indexlib {
+namespace detail {
 
 class tokenizer {
-	public:
-		virtual ~tokenizer() { }
-		std::vector<std::string> string_to_words( const char* str ) {
-			assert( str );
-			return do_string_to_words( str );
-		}
-	
-	private:
-		virtual std::vector<std::string> do_string_to_words( const char* ) = 0;
+public:
+    virtual ~tokenizer() { }
+    std::vector<std::string> string_to_words(const char *str)
+    {
+        assert(str);
+        return do_string_to_words(str);
+    }
+
+private:
+    virtual std::vector<std::string> do_string_to_words(const char *) = 0;
 };
 
-std::auto_ptr<tokenizer> get_tokenizer( std::string );
-}}
+std::auto_ptr<tokenizer> get_tokenizer(std::string);
+}
+}
 
 
 

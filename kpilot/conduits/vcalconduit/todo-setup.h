@@ -31,14 +31,13 @@
 
 #include "vcal-setup.h"
 
-class ToDoWidgetSetup : public VCalWidgetSetupBase
-{
+class ToDoWidgetSetup : public VCalWidgetSetupBase {
 public:
-	ToDoWidgetSetup(QWidget *,const char *);
-	virtual ~ToDoWidgetSetup();
+    ToDoWidgetSetup(QWidget *, const char *);
+    virtual ~ToDoWidgetSetup();
 
-	virtual VCalConduitSettings*config();
-	static ConduitConfigBase *create(QWidget *, const char *);
+    virtual VCalConduitSettings *config();
+    static ConduitConfigBase *create(QWidget *, const char *);
 } ;
 
 #endif

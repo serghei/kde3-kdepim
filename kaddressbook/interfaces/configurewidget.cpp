@@ -27,9 +27,9 @@
 
 using namespace KAB;
 
-ConfigureWidget::ConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
-                                  const char *name )
-  : QWidget( parent, name ), mAddressBook( ab )
+ConfigureWidget::ConfigureWidget(KABC::AddressBook *ab, QWidget *parent,
+                                 const char *name)
+    : QWidget(parent, name), mAddressBook(ab)
 {
 }
 
@@ -37,17 +37,17 @@ ConfigureWidget::~ConfigureWidget()
 {
 }
 
-void ConfigureWidget::restoreSettings( KConfig* )
+void ConfigureWidget::restoreSettings(KConfig *)
 {
-  // should be reimplemented in the views, extensions etc.
+    // should be reimplemented in the views, extensions etc.
 }
 
-void ConfigureWidget::saveSettings( KConfig* )
+void ConfigureWidget::saveSettings(KConfig *)
 {
-  // should be reimplemented in the views, extensions etc.
+    // should be reimplemented in the views, extensions etc.
 }
 
 KABC::AddressBook *ConfigureWidget::addressBook() const
 {
-  return mAddressBook;
+    return mAddressBook;
 }

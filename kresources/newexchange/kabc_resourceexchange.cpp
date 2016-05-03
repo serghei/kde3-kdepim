@@ -28,21 +28,21 @@
 
 using namespace KABC;
 
-ResourceExchange::ResourceExchange( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceExchange::ResourceExchange(const KConfig *config)
+    : ResourceGroupwareBase(config)
 {
-  init();
-  if ( config ) readConfig( config );
+    init();
+    if(config) readConfig(config);
 }
 
 void ResourceExchange::init()
 {
-  setType( "ResourceExchange" );
-  setPrefs( createPrefs() );
-  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::AddressBook ) );
-  setAdaptor( new ExchangeAddressBookAdaptor() );
-  
-  ResourceGroupwareBase::init();
+    setType("ResourceExchange");
+    setPrefs(createPrefs());
+    setFolderLister(new KPIM::FolderLister(KPIM::FolderLister::AddressBook));
+    setAdaptor(new ExchangeAddressBookAdaptor());
+
+    ResourceGroupwareBase::init();
 }
 
 #include "kabc_resourceexchange.moc"

@@ -35,41 +35,40 @@ class QListView;
 class LineView;
 class TimeLine;
 
-class TimeSpanWidget : public QWidget
-{
+class TimeSpanWidget : public QWidget {
     Q_OBJECT
-  public:
-    TimeSpanWidget( QWidget *parent=0, const char *name=0 );
+public:
+    TimeSpanWidget(QWidget *parent = 0, const char *name = 0);
     virtual ~TimeSpanWidget();
-    
-    void addItem( KCal::Event * );
+
+    void addItem(KCal::Event *);
 
     QValueList<int> splitterSizes();
-    void setSplitterSizes( QValueList<int> );
-    
+    void setSplitterSizes(QValueList<int>);
+
     void clear();
-    
-    void setDateRange( const QDateTime &start, const QDateTime &end );
-    
+
+    void setDateRange(const QDateTime &start, const QDateTime &end);
+
     QDateTime startDateTime();
     QDateTime endDateTime();
 
-  public slots:
+public slots:
     void updateView();
 
     void zoomIn();
     void zoomOut();
     void centerView();
-    
-  signals:
+
+signals:
     void dateRangeChanged();
-    
-  private:
+
+private:
     QSplitter *mSplitter;
     QListView *mList;
     TimeLine *mTimeLine;
     LineView *mLineView;
-    
+
     QDateTime mStartDate;
     QDateTime mEndDate;
     int mSecsPerPixel;

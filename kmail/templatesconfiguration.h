@@ -26,20 +26,19 @@
 #include "templatesconfiguration_base.h"
 #include "templatesinsertcommand.h"
 
-class TemplatesConfiguration : public TemplatesConfigurationBase
-{
-  Q_OBJECT
+class TemplatesConfiguration : public TemplatesConfigurationBase {
+    Q_OBJECT
 
-  public:
+public:
 
-    TemplatesConfiguration( QWidget *parent = 0, const char *name = 0 );
+    TemplatesConfiguration(QWidget *parent = 0, const char *name = 0);
 
     void loadFromGlobal();
     void saveToGlobal();
-    void loadFromIdentity( uint id );
-    void saveToIdentity( uint id );
-    void loadFromFolder( QString id, uint identity = 0 );
-    void saveToFolder( QString id );
+    void loadFromIdentity(uint id);
+    void saveToIdentity(uint id);
+    void loadFromFolder(QString id, uint identity = 0);
+    void saveToFolder(QString id);
 
     /** Do import settings from 'Phrases' configuration. */
     void loadFromPhrases();
@@ -48,7 +47,7 @@ class TemplatesConfiguration : public TemplatesConfigurationBase
     static void importFromPhrases();
 
     /** Convert 'Phrases'-like placeholders into 'Templates' compatible. */
-    static QString convertPhrases( QString &str );
+    static QString convertPhrases(QString &str);
 
     static QString defaultNewMessage();
     static QString defaultReply();
@@ -56,19 +55,19 @@ class TemplatesConfiguration : public TemplatesConfigurationBase
     static QString defaultForward();
     static QString defaultQuoteString();
 
-  public slots:
+public slots:
 
-    void slotInsertCommand( QString cmd, int adjustCursor = 0 );
+    void slotInsertCommand(QString cmd, int adjustCursor = 0);
 
     void slotTextChanged();
 
-  signals:
+signals:
 
     void changed();
 
-  protected:
+protected:
 
-    QString strOrBlank( QString str );
+    QString strOrBlank(QString str);
 
 };
 

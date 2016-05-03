@@ -34,18 +34,18 @@ class KConfig;
 class KInstance;
 class KHolidays;
 
-class KDE_EXPORT KOGlobals
-{
-  public:
+class KDE_EXPORT KOGlobals {
+public:
     static KOGlobals *self();
 
     enum { INCIDENCEADDED, INCIDENCEEDITED, INCIDENCEDELETED };
     enum { PRIORITY_MODIFIED, COMPLETION_MODIFIED, CATEGORY_MODIFIED,
            DATE_MODIFIED, RELATION_MODIFIED, ALARM_MODIFIED,
            DESCRIPTION_MODIFIED, SUMMARY_MODIFIED,
-           COMPLETION_MODIFIED_WITH_RECURRENCE, UNKNOWN_MODIFIED };
+           COMPLETION_MODIFIED_WITH_RECURRENCE, UNKNOWN_MODIFIED
+         };
 
-    static void fitDialogToScreen( QWidget *widget, bool force=false );
+    static void fitDialogToScreen(QWidget *widget, bool force = false);
     KConfig *config() const;
 
     static bool reverseLayout();
@@ -56,27 +56,27 @@ class KDE_EXPORT KOGlobals
 
     ~KOGlobals();
 
-    QPixmap smallIcon( const QString& name );
-    QIconSet smallIconSet( const QString& name, int size = 0 );
+    QPixmap smallIcon(const QString &name);
+    QIconSet smallIconSet(const QString &name, int size = 0);
 
-    QStringList holiday( const QDate & );
-    bool isWorkDay( const QDate & );
+    QStringList holiday(const QDate &);
+    bool isWorkDay(const QDate &);
     int getWorkWeekMask();
     /**
        Set which holidays the user wants to use.
        @param h a KHolidays object initialized with the desired locale.
        We capture this object, so you must not delete it.
     */
-    void setHolidays( KHolidays *h );
+    void setHolidays(KHolidays *h);
 
     /** return the KHolidays object or 0 if none has been defined
     */
     KHolidays *holidays() const;
 
-  protected:
+protected:
     KOGlobals();
 
-  private:
+private:
     static KOGlobals *mSelf;
 
     KInstance *mOwnInstance;

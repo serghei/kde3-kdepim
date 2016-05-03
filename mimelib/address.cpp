@@ -32,7 +32,7 @@
 #include <mimelib/group.h>
 #include <mimelib/mailbox.h>
 
-const char* const DwAddress::sClassName = "DwAddress";
+const char *const DwAddress::sClassName = "DwAddress";
 
 
 DwAddress::DwAddress()
@@ -44,8 +44,8 @@ DwAddress::DwAddress()
 }
 
 
-DwAddress::DwAddress(const DwAddress& aAddr)
-  : DwFieldBody(aAddr)
+DwAddress::DwAddress(const DwAddress &aAddr)
+    : DwFieldBody(aAddr)
 {
     mIsValid = aAddr.mIsValid;
     mNext = 0;
@@ -54,8 +54,8 @@ DwAddress::DwAddress(const DwAddress& aAddr)
 }
 
 
-DwAddress::DwAddress(const DwString& aStr, DwMessageComponent* aParent)
-  : DwFieldBody(aStr, aParent)
+DwAddress::DwAddress(const DwString &aStr, DwMessageComponent *aParent)
+    : DwFieldBody(aStr, aParent)
 {
     mIsValid = 0;
     mNext = 0;
@@ -69,9 +69,9 @@ DwAddress::~DwAddress()
 }
 
 
-const DwAddress& DwAddress::operator = (const DwAddress& aAddr)
+const DwAddress &DwAddress::operator = (const DwAddress &aAddr)
 {
-    if (this == &aAddr) return *this;
+    if(this == &aAddr) return *this;
     DwFieldBody::operator = (aAddr);
     mIsValid = aAddr.mIsValid;
     return *this;
@@ -92,51 +92,55 @@ DwBool DwAddress::IsGroup() const
 }
 
 
-DwAddress* DwAddress::Next() const
+DwAddress *DwAddress::Next() const
 {
     return mNext;
 }
 
 
-void DwAddress::SetNext(DwAddress* aAddress)
+void DwAddress::SetNext(DwAddress *aAddress)
 {
     mNext = aAddress;
 }
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwAddress::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwAddress::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "---------------- Debug info for DwAddress class ----------------\n";
+          "---------------- Debug info for DwAddress class ----------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwAddress::PrintDebugInfo(std::ostream&, int ) const {}
+void DwAddress::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwAddress::_PrintDebugInfo(std::ostream& aStrm) const
+void DwAddress::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwFieldBody::_PrintDebugInfo(aStrm);
     aStrm << "IsValid:          ";
-    if (mIsValid) {
+    if(mIsValid)
+    {
         aStrm << "True\n";
     }
-    else {
+    else
+    {
         aStrm << "False\n";
     }
     aStrm << "Next address:     ";
-    if (mNext) {
+    if(mNext)
+    {
         aStrm << mNext->ObjectId() << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
 }
 #else
-void DwAddress::_PrintDebugInfo(std::ostream& ) const {}
+void DwAddress::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 

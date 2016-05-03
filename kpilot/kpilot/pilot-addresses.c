@@ -30,45 +30,47 @@
 #include "pi-header.h"
 
 /* These are indexes in the tabledelims array */
-enum terminators { term_newline=0,
-	term_comma=1,
-	term_semi=2,
-	term_tab=3 } ;
+enum terminators { term_newline = 0,
+                   term_comma = 1,
+                   term_semi = 2,
+                   term_tab = 3
+                 } ;
 terminators tabledelim = term_comma;
 char 	tabledelims[4] = { '\n', ',', ';', '\t' };
 
 
 
 int realentry[21] =
-    { 0, 1, 13, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20 };
+{ 0, 1, 13, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20 };
 
-const char *tableheads[21] = {
-	"Last name",	/* 0 	*/
-	"First name", 	/* 1	*/
-	"Title", 	/* 2	(real entry 13)*/
-	"Company", 	/* 3	*/
-	"Phone1", 	/* 4	*/
-	"Phone2",	/* 5	*/
-	"Phone3", 	/* 6	*/
-	"Phone4", 	/* 7	*/
-	"Phone5", 	/* 8	*/
-	"Address", 	/* 9	*/
-	"City", 	/* 10	*/
-	"State",	/* 11	*/
-	"Zip Code",	/* 12	*/
-	"Country", 	/* 13	*/
-	"Custom 1", 	/* 14	*/
-	"Custom 2", 	/* 15	*/
-	"Custom 3", 	/* 16	*/
-	"Custom 4", 	/* 17	*/
-	"Note",		/* 18	*/
-	"Private", 	/* 19	*/
-	"Category"	/* 20	*/
+const char *tableheads[21] =
+{
+    "Last name",	/* 0 	*/
+    "First name", 	/* 1	*/
+    "Title", 	/* 2	(real entry 13)*/
+    "Company", 	/* 3	*/
+    "Phone1", 	/* 4	*/
+    "Phone2",	/* 5	*/
+    "Phone3", 	/* 6	*/
+    "Phone4", 	/* 7	*/
+    "Phone5", 	/* 8	*/
+    "Address", 	/* 9	*/
+    "City", 	/* 10	*/
+    "State",	/* 11	*/
+    "Zip Code",	/* 12	*/
+    "Country", 	/* 13	*/
+    "Custom 1", 	/* 14	*/
+    "Custom 2", 	/* 15	*/
+    "Custom 3", 	/* 16	*/
+    "Custom 4", 	/* 17	*/
+    "Note",		/* 18	*/
+    "Private", 	/* 19	*/
+    "Category"	/* 20	*/
 };
 
 int
-	augment 	= 0,
-	defaultcategory = 0;
+augment 	= 0,
+   defaultcategory = 0;
 
 
 
@@ -84,42 +86,44 @@ int
  * Returns:     Modified character, 'c'
  *
  ***********************************************************************/
-int inchar(FILE * in)
+int inchar(FILE *in)
 {
-	int 	c;	/* switch */
+    int 	c;	/* switch */
 
-	c = getc(in);
-	if (c == '\\') {
-		c = getc(in);
-		switch (c) {
-		case 'b':
-			c = '\b';
-			break;
-		case 'f':
-			c = '\f';
-			break;
-		case 'n':
-			c = '\n';
-			break;
-		case 't':
-			c = '\t';
-			break;
-		case 'r':
-			c = '\r';
-			break;
-		case 'v':
-			c = '\v';
-			break;
-		case '\\':
-			c = '\\';
-			break;
-		default:
-			ungetc(c, in);
-			c = '\\';
-			break;
-		}
-	}
-	return c;
+    c = getc(in);
+    if(c == '\\')
+    {
+        c = getc(in);
+        switch(c)
+        {
+            case 'b':
+                c = '\b';
+                break;
+            case 'f':
+                c = '\f';
+                break;
+            case 'n':
+                c = '\n';
+                break;
+            case 't':
+                c = '\t';
+                break;
+            case 'r':
+                c = '\r';
+                break;
+            case 'v':
+                c = '\v';
+                break;
+            case '\\':
+                c = '\\';
+                break;
+            default:
+                ungetc(c, in);
+                c = '\\';
+                break;
+        }
+    }
+    return c;
 }
 
 
@@ -145,65 +149,75 @@ int inchar(FILE * in)
  ***********************************************************************/
 int read_field(char *dest, FILE *in, size_t length)
 {
-	int 	c;
+    int 	c;
 
-	if (length<=1) return -1;
-	/* reserve space for trailing NUL */
-	length--;
+    if(length <= 1) return -1;
+    /* reserve space for trailing NUL */
+    length--;
 
-	do {	/* Absorb whitespace */
-		c = getc(in);
-		if(c == '\n') {
-			*dest = 0;
-			return term_newline;
-		}
+    do  	/* Absorb whitespace */
+    {
+        c = getc(in);
+        if(c == '\n')
+        {
+            *dest = 0;
+            return term_newline;
+        }
 
-	} while ((c != EOF) && ((c == ' ') || (c == '\t') || (c == '\r')));
+    }
+    while((c != EOF) && ((c == ' ') || (c == '\t') || (c == '\r')));
 
-	if (c == '"') {
-		c = inchar(in);
+    if(c == '"')
+    {
+        c = inchar(in);
 
-		while (c != EOF) {
-			if (c == '"') {
-				c = inchar(in);
-				if (c != '"')
-					break;
-			}
-			*dest++ = c;
-			if (!(--length))
-				break;
-			c = inchar(in);
-		}
-	} else {
-		while (c != EOF) {
-			if ((c == '\n') || (c == tabledelims[tabledelim])) {
-				break;
-			}
-			*dest++ = c;
-			if (!(--length))
-				break;
-			c = inchar(in);
-		}
-	}
-	*dest++ = '\0';
+        while(c != EOF)
+        {
+            if(c == '"')
+            {
+                c = inchar(in);
+                if(c != '"')
+                    break;
+            }
+            *dest++ = c;
+            if(!(--length))
+                break;
+            c = inchar(in);
+        }
+    }
+    else
+    {
+        while(c != EOF)
+        {
+            if((c == '\n') || (c == tabledelims[tabledelim]))
+            {
+                break;
+            }
+            *dest++ = c;
+            if(!(--length))
+                break;
+            c = inchar(in);
+        }
+    }
+    *dest++ = '\0';
 
-	/* Absorb whitespace */
-	while ((c != EOF) && ((c == ' ') || (c == '\t')))
-		c = getc(in);
+    /* Absorb whitespace */
+    while((c != EOF) && ((c == ' ') || (c == '\t')))
+        c = getc(in);
 
-	if (c == ',')
-		return term_comma;
+    if(c == ',')
+        return term_comma;
 
-	else if (c == ';')
-		return term_semi;
+    else if(c == ';')
+        return term_semi;
 
-	else if (c == '\t')
-		return term_tab;
+    else if(c == '\t')
+        return term_tab;
 
-	else if (c == EOF)
-		return -1;	/* No more */
-	else
-		return term_newline;
+    else if(c == EOF)
+        return -1;	/* No more */
+    else
+        return term_newline;
 }
 
 
@@ -218,45 +232,46 @@ int read_field(char *dest, FILE *in, size_t length)
  * Returns:     Nothing
  *
  ***********************************************************************/
-void outchar(char c, FILE * out)
+void outchar(char c, FILE *out)
 {
-		switch (c) {
-		case '"':
-			putc('"', out);
-			putc('"', out);
-			break;
-		case '\b':
-			putc('\\', out);
-			putc('b', out);
-			break;
-		case '\f':
-			putc('\\', out);
-			putc('f', out);
-			break;
-		case '\n':
-			putc('\\', out);
-			putc('n', out);
-			break;
-		case '\t':
-			putc('\\', out);
-			putc('t', out);
-			break;
-		case '\r':
-			putc('\\', out);
-			putc('r', out);
-			break;
-		case '\v':
-			putc('\\', out);
-			putc('v', out);
-			break;
-		case '\\':
-			putc('\\', out);
-			putc('\\', out);
-			break;
-		default:
-			putc(c, out);
-			break;
-		}
+    switch(c)
+    {
+        case '"':
+            putc('"', out);
+            putc('"', out);
+            break;
+        case '\b':
+            putc('\\', out);
+            putc('b', out);
+            break;
+        case '\f':
+            putc('\\', out);
+            putc('f', out);
+            break;
+        case '\n':
+            putc('\\', out);
+            putc('n', out);
+            break;
+        case '\t':
+            putc('\\', out);
+            putc('t', out);
+            break;
+        case '\r':
+            putc('\\', out);
+            putc('r', out);
+            break;
+        case '\v':
+            putc('\\', out);
+            putc('v', out);
+            break;
+        case '\\':
+            putc('\\', out);
+            putc('\\', out);
+            break;
+        default:
+            putc(c, out);
+            break;
+    }
 }
 
 
@@ -273,18 +288,19 @@ void outchar(char c, FILE * out)
  * Returns:
  *
  ***********************************************************************/
-int write_field(FILE * out, const char *source, enum terminators more)
+int write_field(FILE *out, const char *source, enum terminators more)
 {
-	putc('"', out);
+    putc('"', out);
 
-	while (*source) {
-		outchar(*source, out);
-		source++;
-	}
-	putc('"', out);
+    while(*source)
+    {
+        outchar(*source, out);
+        source++;
+    }
+    putc('"', out);
 
-	putc(tabledelims[more], out);
-	return 0;
+    putc(tabledelims[more], out);
+    return 0;
 }
 
 
@@ -303,12 +319,12 @@ int write_field(FILE * out, const char *source, enum terminators more)
  ***********************************************************************/
 int match_phone(char *buf, struct AddressAppInfo *aai)
 {
-	int 	i;
+    int 	i;
 
-	for (i = 0; i < 8; i++)
-		if (strncasecmp(buf, aai->phoneLabels[i], sizeof(aai->phoneLabels[0])) == 0)
-			return i;
-	return atoi(buf);	/* 0 is default */
+    for(i = 0; i < 8; i++)
+        if(strncasecmp(buf, aai->phoneLabels[i], sizeof(aai->phoneLabels[0])) == 0)
+            return i;
+    return atoi(buf);	/* 0 is default */
 }
 
 
@@ -325,38 +341,45 @@ int match_phone(char *buf, struct AddressAppInfo *aai)
  *
  ***********************************************************************/
 
-void write_record_CSV(FILE *out, const struct AddressAppInfo *aai, const struct Address *addr, const int attribute, const int category, const int augment)
+void write_record_CSV(FILE *out, const struct AddressAppInfo *aai, const struct Address *addr, const int attribute, const int category,
+                      const int augment)
 {
-	int j;
-	char buffer[16];
+    int j;
+    char buffer[16];
 
-	if (augment && (category || addr->showPhone)) {
-		write_field(out,
-				aai->category.name[category],
-				term_semi);
-		write_field(out,
-				aai->phoneLabels[addr->phoneLabel[addr->showPhone]],
-				term_semi);
-	}
+    if(augment && (category || addr->showPhone))
+    {
+        write_field(out,
+                    aai->category.name[category],
+                    term_semi);
+        write_field(out,
+                    aai->phoneLabels[addr->phoneLabel[addr->showPhone]],
+                    term_semi);
+    }
 
-	for (j = 0; j < 19; j++) {
-		if (addr->entry[realentry[j]]) {
-			if (augment && (j >= 4) && (j <= 8)) {
-				write_field(out,
-						aai->phoneLabels[addr->phoneLabel
-								[j - 4]], term_semi);
-			}
-			write_field(out, addr->entry[realentry[j]],
-					tabledelim);
-		} else {
-			write_field(out, "", tabledelim);
-		}
-	}
+    for(j = 0; j < 19; j++)
+    {
+        if(addr->entry[realentry[j]])
+        {
+            if(augment && (j >= 4) && (j <= 8))
+            {
+                write_field(out,
+                            aai->phoneLabels[addr->phoneLabel
+                                             [j - 4]], term_semi);
+            }
+            write_field(out, addr->entry[realentry[j]],
+                        tabledelim);
+        }
+        else
+        {
+            write_field(out, "", tabledelim);
+        }
+    }
 
-	snprintf(buffer, sizeof(buffer), "%d", (attribute & dlpRecAttrSecret) ? 1 : 0);
-	write_field(out, buffer, tabledelim);
+    snprintf(buffer, sizeof(buffer), "%d", (attribute & dlpRecAttrSecret) ? 1 : 0);
+    write_field(out, buffer, tabledelim);
 
-	write_field(out,
-		aai->category.name[category],
-		term_newline);
+    write_field(out,
+                aai->category.name[category],
+                term_newline);
 }

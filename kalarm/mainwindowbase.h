@@ -31,20 +31,19 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class MainWindowBase : public KMainWindow
-{
-		Q_OBJECT
+class MainWindowBase : public KMainWindow {
+    Q_OBJECT
 
-	public:
-		explicit MainWindowBase(QWidget* parent = 0, const char* name = 0, WFlags f = WType_TopLevel | WDestructiveClose)
-		                    : KMainWindow(parent, name, f), disableQuit(false) { }
+public:
+    explicit MainWindowBase(QWidget *parent = 0, const char *name = 0, WFlags f = WType_TopLevel | WDestructiveClose)
+        : KMainWindow(parent, name, f), disableQuit(false) { }
 
-	protected:
-		virtual void closeEvent(QCloseEvent*);
-		virtual bool queryExit();
+protected:
+    virtual void closeEvent(QCloseEvent *);
+    virtual bool queryExit();
 
-	private:
-		bool  disableQuit;       // allow the application to quit
+private:
+    bool  disableQuit;       // allow the application to quit
 };
 
 #endif // MAINWINDOWBASE_H

@@ -31,97 +31,102 @@
 using namespace KCal;
 
 IncidenceBase::IncidenceBase()
-  : mReadOnly( false ), mFloats( true ), mDuration( 0 ), mHasDuration( false ),
-    mPilotId( 0 ), mSyncStatus( SYNCMOD )
+    : mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
+      mPilotId(0), mSyncStatus(SYNCMOD)
 {
-  setUid( CalFormat::createUniqueId() );
+    setUid(CalFormat::createUniqueId());
 
-  mAttendees.setAutoDelete( true );
+    mAttendees.setAutoDelete(true);
 }
 
 IncidenceBase::IncidenceBase(const IncidenceBase &i) :
-  CustomProperties( i )
+    CustomProperties(i)
 {
-  mReadOnly = i.mReadOnly;
-  mDtStart = i.mDtStart;
-  mDuration = i.mDuration;
-  mHasDuration = i.mHasDuration;
-  mOrganizer = i.mOrganizer;
-  mUid = i.mUid;
-  Attendee::List attendees = i.attendees();
-  Attendee::List::ConstIterator it;
-  for( it = attendees.begin(); it != attendees.end(); ++it ) {
-    mAttendees.append( new Attendee( *(*it) ) );
-  }
-  mFloats = i.mFloats;
-  mLastModified = i.mLastModified;
-  mPilotId = i.mPilotId;
-  mSyncStatus = i.mSyncStatus;
-  mComments = i.mComments;
+    mReadOnly = i.mReadOnly;
+    mDtStart = i.mDtStart;
+    mDuration = i.mDuration;
+    mHasDuration = i.mHasDuration;
+    mOrganizer = i.mOrganizer;
+    mUid = i.mUid;
+    Attendee::List attendees = i.attendees();
+    Attendee::List::ConstIterator it;
+    for(it = attendees.begin(); it != attendees.end(); ++it)
+    {
+        mAttendees.append(new Attendee(*(*it)));
+    }
+    mFloats = i.mFloats;
+    mLastModified = i.mLastModified;
+    mPilotId = i.mPilotId;
+    mSyncStatus = i.mSyncStatus;
+    mComments = i.mComments;
 
-  mAttendees.setAutoDelete( true );
+    mAttendees.setAutoDelete(true);
 }
 
 IncidenceBase::~IncidenceBase()
 {
 }
 
-IncidenceBase& IncidenceBase::operator=( const IncidenceBase& i )
+IncidenceBase &IncidenceBase::operator=(const IncidenceBase &i)
 {
-  CustomProperties::operator=( i );
-  mReadOnly = i.mReadOnly;
-  mDtStart = i.mDtStart;
-  mDuration = i.mDuration;
-  mHasDuration = i.mHasDuration;
-  mOrganizer = i.mOrganizer;
-  mUid = i.mUid;
-  mAttendees.clear();
-  Attendee::List attendees = i.attendees();
-  Attendee::List::ConstIterator it;
-  for( it = attendees.begin(); it != attendees.end(); ++it ) {
-    mAttendees.append( new Attendee( *(*it) ) );
-  }
-  mFloats = i.mFloats;
-  mLastModified = i.mLastModified;
-  mPilotId = i.mPilotId;
-  mSyncStatus = i.mSyncStatus;
-  mComments = i.mComments;
+    CustomProperties::operator=(i);
+    mReadOnly = i.mReadOnly;
+    mDtStart = i.mDtStart;
+    mDuration = i.mDuration;
+    mHasDuration = i.mHasDuration;
+    mOrganizer = i.mOrganizer;
+    mUid = i.mUid;
+    mAttendees.clear();
+    Attendee::List attendees = i.attendees();
+    Attendee::List::ConstIterator it;
+    for(it = attendees.begin(); it != attendees.end(); ++it)
+    {
+        mAttendees.append(new Attendee(*(*it)));
+    }
+    mFloats = i.mFloats;
+    mLastModified = i.mLastModified;
+    mPilotId = i.mPilotId;
+    mSyncStatus = i.mSyncStatus;
+    mComments = i.mComments;
 
-  return *this;
+    return *this;
 }
 
-bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
+bool IncidenceBase::operator==(const IncidenceBase &i2) const
 {
-  if( attendees().count() != i2.attendees().count() ) {
-      return false; // no need to check further
-  }
-
-  Attendee::List al1 = attendees();
-  Attendee::List al2 = i2.attendees();
-  Attendee::List::ConstIterator a1 = al1.begin();
-  Attendee::List::ConstIterator a2 = al2.begin();
-  for( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 ) {
-    if( **a1 == **a2 )
-        continue;
-    else {
-        return false;
+    if(attendees().count() != i2.attendees().count())
+    {
+        return false; // no need to check further
     }
-  }
 
-  if ( !CustomProperties::operator==(i2) )
-    return false;
+    Attendee::List al1 = attendees();
+    Attendee::List al2 = i2.attendees();
+    Attendee::List::ConstIterator a1 = al1.begin();
+    Attendee::List::ConstIterator a2 = al2.begin();
+    for(; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2)
+    {
+        if(**a1 == **a2)
+            continue;
+        else
+        {
+            return false;
+        }
+    }
 
-  return ( dtStart() == i2.dtStart() &&
-           organizer() == i2.organizer() &&
-           uid() == i2.uid() &&
-           // Don't compare lastModified, otherwise the operator is not
-           // of much use. We are not comparing for identity, after all.
-           doesFloat() == i2.doesFloat() &&
-           duration() == i2.duration() &&
-           hasDuration() == i2.hasDuration() &&
-           pilotId() == i2.pilotId() &&
-           syncStatus() == i2.syncStatus() );
-  // no need to compare mObserver
+    if(!CustomProperties::operator==(i2))
+        return false;
+
+    return (dtStart() == i2.dtStart() &&
+            organizer() == i2.organizer() &&
+            uid() == i2.uid() &&
+            // Don't compare lastModified, otherwise the operator is not
+            // of much use. We are not comparing for identity, after all.
+            doesFloat() == i2.doesFloat() &&
+            duration() == i2.duration() &&
+            hasDuration() == i2.hasDuration() &&
+            pilotId() == i2.pilotId() &&
+            syncStatus() == i2.syncStatus());
+    // no need to compare mObserver
 }
 
 
@@ -129,297 +134,306 @@ bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
 
 void IncidenceBase::setUid(const QString &uid)
 {
-  mUid = uid;
-  updated();
+    mUid = uid;
+    updated();
 }
 
 QString IncidenceBase::uid() const
 {
-  return mUid;
+    return mUid;
 }
 
 void IncidenceBase::setLastModified(const QDateTime &lm)
 {
-  // DON'T! updated() because we call this from
-  // Calendar::updateEvent().
+    // DON'T! updated() because we call this from
+    // Calendar::updateEvent().
 
-  // Remove milliseconds part.
-  QDateTime current = lm;
-  QTime t = current.time();
-  t.setHMS( t.hour(), t.minute(), t.second(), 0 );
-  current.setTime( t );
+    // Remove milliseconds part.
+    QDateTime current = lm;
+    QTime t = current.time();
+    t.setHMS(t.hour(), t.minute(), t.second(), 0);
+    current.setTime(t);
 
-  mLastModified = current;
+    mLastModified = current;
 }
 
 QDateTime IncidenceBase::lastModified() const
 {
-  return mLastModified;
+    return mLastModified;
 }
 
-void IncidenceBase::setOrganizer( const Person &o )
+void IncidenceBase::setOrganizer(const Person &o)
 {
-  // we don't check for readonly here, because it is
-  // possible that by setting the organizer we are changing
-  // the event's readonly status...
-  mOrganizer = o;
+    // we don't check for readonly here, because it is
+    // possible that by setting the organizer we are changing
+    // the event's readonly status...
+    mOrganizer = o;
 
-  updated();
+    updated();
 }
 
 void IncidenceBase::setOrganizer(const QString &o)
 {
-  QString mail( o );
-  if ( mail.startsWith("MAILTO:", false) )
-    mail = mail.remove( 0, 7 );
-  // split the string into full name plus email.
-  Person organizer( mail );
-  setOrganizer( organizer );
+    QString mail(o);
+    if(mail.startsWith("MAILTO:", false))
+        mail = mail.remove(0, 7);
+    // split the string into full name plus email.
+    Person organizer(mail);
+    setOrganizer(organizer);
 }
 
 Person IncidenceBase::organizer() const
 {
-  return mOrganizer;
+    return mOrganizer;
 }
 
-void IncidenceBase::setReadOnly( bool readOnly )
+void IncidenceBase::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
+    mReadOnly = readOnly;
 }
 
 void IncidenceBase::setDtStart(const QDateTime &dtStart)
 {
-//  if (mReadOnly) return;
-  mDtStart = dtStart;
-  updated();
+    //  if (mReadOnly) return;
+    mDtStart = dtStart;
+    updated();
 }
 
 QDateTime IncidenceBase::dtStart() const
 {
-  return mDtStart;
+    return mDtStart;
 }
 
 QString IncidenceBase::dtStartTimeStr() const
 {
-  return KGlobal::locale()->formatTime(dtStart().time());
+    return KGlobal::locale()->formatTime(dtStart().time());
 }
 
 QString IncidenceBase::dtStartDateStr(bool shortfmt) const
 {
-  return KGlobal::locale()->formatDate(dtStart().date(),shortfmt);
+    return KGlobal::locale()->formatDate(dtStart().date(), shortfmt);
 }
 
 QString IncidenceBase::dtStartStr() const
 {
-  return KGlobal::locale()->formatDateTime(dtStart());
+    return KGlobal::locale()->formatDateTime(dtStart());
 }
 
 
 bool IncidenceBase::doesFloat() const
 {
-  return mFloats;
+    return mFloats;
 }
 
 void IncidenceBase::setFloats(bool f)
 {
-  if (mReadOnly) return;
-  mFloats = f;
-  updated();
+    if(mReadOnly) return;
+    mFloats = f;
+    updated();
 }
 
 
-void IncidenceBase::addComment(const QString& comment)
+void IncidenceBase::addComment(const QString &comment)
 {
-  mComments += comment;
+    mComments += comment;
 }
 
-bool IncidenceBase::removeComment( const QString& comment)
+bool IncidenceBase::removeComment(const QString &comment)
 {
-  bool found = false;
-  QStringList::Iterator i;
+    bool found = false;
+    QStringList::Iterator i;
 
-  for ( i = mComments.begin(); !found && i != mComments.end(); ++i ) {
-    if ( (*i) == comment ) {
-      found = true;
-      mComments.remove(i);
+    for(i = mComments.begin(); !found && i != mComments.end(); ++i)
+    {
+        if((*i) == comment)
+        {
+            found = true;
+            mComments.remove(i);
+        }
     }
-  }
 
-  return found;
+    return found;
 }
 
 void IncidenceBase::clearComments()
 {
-  mComments.clear();
+    mComments.clear();
 }
 
 QStringList IncidenceBase::comments() const
 {
-  return mComments;
+    return mComments;
 }
 
 
 void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
 {
-//  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
-  if (mReadOnly) return;
-//  kdDebug(5800) << "IncidenceBase::addAttendee() weiter" << endl;
-  if (a->name().left(7).upper() == "MAILTO:")
-    a->setName(a->name().remove(0,7));
+    //  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
+    if(mReadOnly) return;
+    //  kdDebug(5800) << "IncidenceBase::addAttendee() weiter" << endl;
+    if(a->name().left(7).upper() == "MAILTO:")
+        a->setName(a->name().remove(0, 7));
 
-  mAttendees.append(a);
-  if (doupdate) updated();
+    mAttendees.append(a);
+    if(doupdate) updated();
 }
 
 #if 0
 void IncidenceBase::removeAttendee(Attendee *a)
 {
-  if (mReadOnly) return;
-  mAttendees.removeRef(a);
-  updated();
+    if(mReadOnly) return;
+    mAttendees.removeRef(a);
+    updated();
 }
 
 void IncidenceBase::removeAttendee(const char *n)
 {
-  Attendee *a;
+    Attendee *a;
 
-  if (mReadOnly) return;
-  for (a = mAttendees.first(); a; a = mAttendees.next())
-    if (a->getName() == n) {
-      mAttendees.remove();
-      break;
-    }
+    if(mReadOnly) return;
+    for(a = mAttendees.first(); a; a = mAttendees.next())
+        if(a->getName() == n)
+        {
+            mAttendees.remove();
+            break;
+        }
 }
 #endif
 
 void IncidenceBase::clearAttendees()
 {
-  if (mReadOnly) return;
-  mAttendees.clear();
+    if(mReadOnly) return;
+    mAttendees.clear();
 }
 
-Attendee *IncidenceBase::attendeeByMail( const QString &email ) const
+Attendee *IncidenceBase::attendeeByMail(const QString &email) const
 {
-  Attendee::List::ConstIterator it;
-  for( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
-    if ( (*it)->email() == email ) return *it;
-  }
-
-  return 0;
-}
-
-Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
-                                          const QString &email) const
-{
-  QStringList mails = emails;
-  if ( !email.isEmpty() ) mails.append( email );
-
-  Attendee::List::ConstIterator itA;
-  for( itA = mAttendees.begin(); itA != mAttendees.end(); ++itA ) {
-    for ( QStringList::Iterator it = mails.begin(); it != mails.end(); ++it ) {
-      if ( (*itA)->email() == (*it) ) return *itA;
+    Attendee::List::ConstIterator it;
+    for(it = mAttendees.begin(); it != mAttendees.end(); ++it)
+    {
+        if((*it)->email() == email) return *it;
     }
-  }
 
-  return 0;
+    return 0;
 }
 
-Attendee *IncidenceBase::attendeeByUid( const QString &uid ) const
+Attendee *IncidenceBase::attendeeByMails(const QStringList &emails,
+        const QString &email) const
 {
-  Attendee::List::ConstIterator it;
-  for( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
-    if ( (*it)->uid() == uid ) return *it;
-  }
+    QStringList mails = emails;
+    if(!email.isEmpty()) mails.append(email);
 
-  return 0;
+    Attendee::List::ConstIterator itA;
+    for(itA = mAttendees.begin(); itA != mAttendees.end(); ++itA)
+    {
+        for(QStringList::Iterator it = mails.begin(); it != mails.end(); ++it)
+        {
+            if((*itA)->email() == (*it)) return *itA;
+        }
+    }
+
+    return 0;
+}
+
+Attendee *IncidenceBase::attendeeByUid(const QString &uid) const
+{
+    Attendee::List::ConstIterator it;
+    for(it = mAttendees.begin(); it != mAttendees.end(); ++it)
+    {
+        if((*it)->uid() == uid) return *it;
+    }
+
+    return 0;
 }
 
 
 void IncidenceBase::setDuration(int seconds)
 {
-  mDuration = seconds;
-  setHasDuration(true);
-  updated();
+    mDuration = seconds;
+    setHasDuration(true);
+    updated();
 }
 
 int IncidenceBase::duration() const
 {
-  return mDuration;
+    return mDuration;
 }
 
 void IncidenceBase::setHasDuration(bool hasDuration)
 {
-  mHasDuration = hasDuration;
+    mHasDuration = hasDuration;
 }
 
 bool IncidenceBase::hasDuration() const
 {
-  return mHasDuration;
+    return mHasDuration;
 }
 
 void IncidenceBase::setSyncStatus(int stat)
 {
-  if (mReadOnly) return;
-  if ( mSyncStatus == stat ) return;
-  mSyncStatus = stat;
-  updatedSilent();
+    if(mReadOnly) return;
+    if(mSyncStatus == stat) return;
+    mSyncStatus = stat;
+    updatedSilent();
 }
 void IncidenceBase::setSyncStatusSilent(int stat)
 {
-  if (mReadOnly) return;
-  mSyncStatus = stat;
+    if(mReadOnly) return;
+    mSyncStatus = stat;
 }
 
 int IncidenceBase::syncStatus() const
 {
-  return mSyncStatus;
+    return mSyncStatus;
 }
 
-void IncidenceBase::setPilotId( unsigned long id )
+void IncidenceBase::setPilotId(unsigned long id)
 {
-  if (mReadOnly) return;
-  if ( mPilotId == id) return;
-  mPilotId = id;
-  updatedSilent();
+    if(mReadOnly) return;
+    if(mPilotId == id) return;
+    mPilotId = id;
+    updatedSilent();
 }
 
 unsigned long IncidenceBase::pilotId() const
 {
-  return mPilotId;
+    return mPilotId;
 }
 
-void IncidenceBase::registerObserver( IncidenceBase::Observer *observer )
+void IncidenceBase::registerObserver(IncidenceBase::Observer *observer)
 {
-  if( !mObservers.contains( observer ) ) mObservers.append( observer );
+    if(!mObservers.contains(observer)) mObservers.append(observer);
 }
 
-void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
+void IncidenceBase::unRegisterObserver(IncidenceBase::Observer *observer)
 {
-  mObservers.remove( observer );
+    mObservers.remove(observer);
 }
 
 void IncidenceBase::updated()
 {
-  QPtrListIterator<Observer> it(mObservers);
-  while( it.current() ) {
-    Observer *o = it.current();
-    ++it;
-    o->incidenceUpdated( this );
-  }
+    QPtrListIterator<Observer> it(mObservers);
+    while(it.current())
+    {
+        Observer *o = it.current();
+        ++it;
+        o->incidenceUpdated(this);
+    }
 }
 
 void IncidenceBase::customPropertyUpdated()
 {
-  updated();
+    updated();
 }
 
 void IncidenceBase::updatedSilent()
 {
-  QPtrListIterator<Observer> it(mObservers);
-  while( it.current() ) {
-    Observer *o = it.current();
-    ++it;
-    o->incidenceUpdatedSilent( this );
-  }
+    QPtrListIterator<Observer> it(mObservers);
+    while(it.current())
+    {
+        Observer *o = it.current();
+        ++it;
+        o->incidenceUpdatedSilent(this);
+    }
 }
 

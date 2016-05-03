@@ -44,40 +44,40 @@
 #include "todoEditor.moc"
 
 
-TodoEditor::TodoEditor(PilotTodoEntry * p, struct ToDoAppInfo *appInfo,
-	QWidget * parent, const char *name) :
-	KDialogBase(parent, name, false, i18n("To-do Editor"), Ok|Cancel),
-	fDeleteOnCancel(p == 0L),
-	fTodo(p),
-	fAppInfo(appInfo)
+TodoEditor::TodoEditor(PilotTodoEntry *p, struct ToDoAppInfo *appInfo,
+                       QWidget *parent, const char *name) :
+    KDialogBase(parent, name, false, i18n("To-do Editor"), Ok | Cancel),
+    fDeleteOnCancel(p == 0L),
+    fTodo(p),
+    fAppInfo(appInfo)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fWidget=new TodoEditorBase(this);
-	setMainWidget(fWidget);
-	fillFields();
+    fWidget = new TodoEditorBase(this);
+    setMainWidget(fWidget);
+    fillFields();
 
-	connect(parent, SIGNAL(recordChanged(PilotTodoEntry *)),
-		this, SLOT(updateRecord(PilotTodoEntry *)));
+    connect(parent, SIGNAL(recordChanged(PilotTodoEntry *)),
+            this, SLOT(updateRecord(PilotTodoEntry *)));
 
 }
 
 TodoEditor::~TodoEditor()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (fDeleteOnCancel && fTodo)
-	{
+    if(fDeleteOnCancel && fTodo)
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Deleting private todo record." << endl;
+        DEBUGKPILOT << fname
+                    << ": Deleting private todo record." << endl;
 #endif
-		delete fTodo;
-		fTodo = 0L;
-	}
+        delete fTodo;
+        fTodo = 0L;
+    }
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Help! I'm deleting!" << endl;
+    DEBUGKPILOT << fname << ": Help! I'm deleting!" << endl;
 #endif
 }
 
@@ -85,89 +85,89 @@ TodoEditor::~TodoEditor()
 
 void TodoEditor::fillFields()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (fTodo == 0L)
-	{
-		fTodo = new PilotTodoEntry();
-		fDeleteOnCancel = true;
-	}
+    if(fTodo == 0L)
+    {
+        fTodo = new PilotTodoEntry();
+        fDeleteOnCancel = true;
+    }
 
-	fWidget->fDescription->setText(fTodo->getDescription());
-	fWidget->fCompleted->setChecked(fTodo->getComplete());
-	if (fTodo->getIndefinite())
-	{
-		fWidget->fHasEndDate->setChecked(false);
-	}
-	else
-	{
-		fWidget->fHasEndDate->setChecked(true);
-		fWidget->fEndDate->setDate(readTm(fTodo->getDueDate()).date());
-	}
-	fWidget->fPriority->setCurrentItem(fTodo->getPriority());
-//	fCategory->setCurrentItem(fTodo->getCategory()));
-	fWidget->fNote->setText(fTodo->getNote());
+    fWidget->fDescription->setText(fTodo->getDescription());
+    fWidget->fCompleted->setChecked(fTodo->getComplete());
+    if(fTodo->getIndefinite())
+    {
+        fWidget->fHasEndDate->setChecked(false);
+    }
+    else
+    {
+        fWidget->fHasEndDate->setChecked(true);
+        fWidget->fEndDate->setDate(readTm(fTodo->getDueDate()).date());
+    }
+    fWidget->fPriority->setCurrentItem(fTodo->getPriority());
+    //	fCategory->setCurrentItem(fTodo->getCategory()));
+    fWidget->fNote->setText(fTodo->getNote());
 }
 
 
 
 /* slot */ void TodoEditor::slotCancel()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (fDeleteOnCancel && fTodo)
-	{
-		delete fTodo;
+    if(fDeleteOnCancel && fTodo)
+    {
+        delete fTodo;
 
-		fTodo = 0L;
-	}
-	KDialogBase::slotCancel();
+        fTodo = 0L;
+    }
+    KDialogBase::slotCancel();
 }
 
 /* slot */ void TodoEditor::slotOk()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	// Commit changes here
-	fTodo->setDescription(fWidget->fDescription->text());
-	fTodo->setComplete(fWidget->fCompleted->isChecked());
-	if (fWidget->fHasEndDate->isChecked())
-	{
-		fTodo->setIndefinite(false);
-		struct tm duedate=writeTm(fWidget->fEndDate->date());
-		fTodo->setDueDate(duedate);
-	}
-	else
-	{
-		fTodo->setIndefinite(true);
-	}
-	fTodo->setPriority(fWidget->fPriority->currentItem());
-//	fTodo->setCategory(fWidget->fCategory->currentItem());
-	fTodo->setNote(fWidget->fNote->text());
+    // Commit changes here
+    fTodo->setDescription(fWidget->fDescription->text());
+    fTodo->setComplete(fWidget->fCompleted->isChecked());
+    if(fWidget->fHasEndDate->isChecked())
+    {
+        fTodo->setIndefinite(false);
+        struct tm duedate = writeTm(fWidget->fEndDate->date());
+        fTodo->setDueDate(duedate);
+    }
+    else
+    {
+        fTodo->setIndefinite(true);
+    }
+    fTodo->setPriority(fWidget->fPriority->currentItem());
+    //	fTodo->setCategory(fWidget->fCategory->currentItem());
+    fTodo->setNote(fWidget->fNote->text());
 
-	emit(recordChangeComplete(fTodo));
-	KDialogBase::slotOk();
+    emit(recordChangeComplete(fTodo));
+    KDialogBase::slotOk();
 }
 
-/* slot */ void TodoEditor::updateRecord(PilotTodoEntry * p)
+/* slot */ void TodoEditor::updateRecord(PilotTodoEntry *p)
 {
-	FUNCTIONSETUP;
-	if (p != fTodo)
-	{
-		// Not meant for me
-		//
-		//
-		return;
-	}
+    FUNCTIONSETUP;
+    if(p != fTodo)
+    {
+        // Not meant for me
+        //
+        //
+        return;
+    }
 
-	if (p->isDeleted())
-	{
-		delayedDestruct();
-		return;
-	}
-	else
-	{
-		fillFields();
-	}
+    if(p->isDeleted())
+    {
+        delayedDestruct();
+        return;
+    }
+    else
+    {
+        fillFields();
+    }
 }
 

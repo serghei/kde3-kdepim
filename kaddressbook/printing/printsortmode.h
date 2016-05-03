@@ -30,14 +30,13 @@
 
 #include <kabc/sortmode.h>
 
-class PrintSortMode : public KABC::SortMode
-{
-  public:
-    PrintSortMode( KABC::Field *field, bool ascending = true );
+class PrintSortMode : public KABC::SortMode {
+public:
+    PrintSortMode(KABC::Field *field, bool ascending = true);
 
-    virtual bool lesser( const KABC::Addressee&, const KABC::Addressee& ) const;
+    virtual bool lesser(const KABC::Addressee &, const KABC::Addressee &) const;
 
-  private:
+private:
     KABC::Field *mSortField;
     KABC::Field *mGivenNameField;
     KABC::Field *mFamilyNameField;

@@ -39,15 +39,14 @@ class Calendar;
 
   @short vCalendar/iCalendar Drag-and-Drop object factory.
 */
-class LIBKCAL_EXPORT DndFactory
-{
-  public:
-    DndFactory( Calendar * );
+class LIBKCAL_EXPORT DndFactory {
+public:
+    DndFactory(Calendar *);
 
     /**
       Create a drag object.
     */
-    ICalDrag *createDrag( Incidence *incidence, QWidget *owner );
+    ICalDrag *createDrag(Incidence *incidence, QWidget *owner);
 
     /** Create Todo object from drop event */
     Todo *createDropTodo(QDropEvent *de);
@@ -55,13 +54,13 @@ class LIBKCAL_EXPORT DndFactory
     Event *createDrop(QDropEvent *de);
 
     /** cut incidence to clipboard */
-    void cutIncidence( Incidence * );
+    void cutIncidence(Incidence *);
     /** copy the incidence to clipboard */
-    bool copyIncidence( Incidence * );
+    bool copyIncidence(Incidence *);
     /** pastes the event or todo and returns a pointer to the new incidence pasted. */
-    Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
+    Incidence *pasteIncidence(const QDate &, const QTime *newTime = 0);
 
-  private:
+private:
     Calendar *mCalendar;
 
     class Private;

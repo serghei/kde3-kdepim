@@ -32,48 +32,50 @@ namespace KABC {
 
 class GroupwarePrefs;
 
-class ResourceGroupware : public ResourceCached
-{
-  Q_OBJECT
+class ResourceGroupware : public ResourceCached {
+    Q_OBJECT
 
-  public:
-    ResourceGroupware( const KConfig * );
-    ResourceGroupware( const KURL &url,
-                       const QString &user, const QString &password );
+public:
+    ResourceGroupware(const KConfig *);
+    ResourceGroupware(const KURL &url,
+                      const QString &user, const QString &password);
     ~ResourceGroupware();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig(const KConfig *);
+    void writeConfig(KConfig *);
 
     void readAddressBooks();
     void writeAddressBooks();
 
     void retrieveAddressBooks();
 
-    GroupwarePrefs *prefs() const { return mPrefs; }
+    GroupwarePrefs *prefs() const
+    {
+        return mPrefs;
+    }
 
     bool doOpen();
     void doClose();
 
     Ticket *requestSaveTicket();
-    void releaseSaveTicket( Ticket* );
+    void releaseSaveTicket(Ticket *);
 
     bool load();
     bool asyncLoad();
-    bool save( Ticket * );
-    bool asyncSave( Ticket * );
+    bool save(Ticket *);
+    bool asyncSave(Ticket *);
 
-  protected:
+protected:
     void init();
 
-  private slots:
-    void slotJobResult( KIO::Job * );
-    void slotJobData( KIO::Job *, const QByteArray & );
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
+private slots:
+    void slotJobResult(KIO::Job *);
+    void slotJobData(KIO::Job *, const QByteArray &);
+    void slotJobPercent(KIO::Job *job, unsigned long percent);
 
     void cancelLoad();
 
-  private:
+private:
     GroupwarePrefs *mPrefs;
 
     KIO::TransferJob *mDownloadJob;

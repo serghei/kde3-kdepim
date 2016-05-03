@@ -42,13 +42,12 @@
  * Provides the KonsoleKalendarVariables class definition.
  */
 
-namespace KCal
+namespace KCal {
+/**
+ * ExportType is the type of Export output
+ */
+enum ExportType
 {
-  /**
-   * ExportType is the type of Export output
-   */
-  enum ExportType
-  {
     /** Export none */
     ExportTypeNone,
     /** Export as text (default) */
@@ -67,16 +66,15 @@ namespace KCal
     ExportTypeCSV,
     /** Export VCard (NOT AVAILABLE YET) */
     ExportTypeVCard
-  };
+};
 
-  /**
-   * This class provides all the variables for the program.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarVariables
-  {
-  public:
+/**
+ * This class provides all the variables for the program.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarVariables {
+public:
     /**
      * Construct an empty KonsoleKalendarVariables object.
      */
@@ -90,7 +88,7 @@ namespace KCal
      * Set switch to use Events.
      * @param useEvents if true, operation uses Events.
      */
-    void setUseEvents( bool useEvents );
+    void setUseEvents(bool useEvents);
     /**
      * Get use Events switch.
      * @return true if operation using Events is specified.
@@ -101,7 +99,7 @@ namespace KCal
      * Set switch to use Todos.
      * @param useTodos if true, operation uses Todos.
      */
-    void setUseTodos( bool useTodos );
+    void setUseTodos(bool useTodos);
     /**
      * Get use Todos switch.
      * @return true if operation using Todos is specified.
@@ -112,7 +110,7 @@ namespace KCal
      * Set switch to use Journals.
      * @param useJournals if true, operation uses Journals.
      */
-    void setUseJournals( bool useJournals );
+    void setUseJournals(bool useJournals);
     /**
      * Get use Journals switch.
      * @return true if operation using Journals is specified.
@@ -123,7 +121,7 @@ namespace KCal
      * Sets start date.
      * @param start is the start date.
      */
-    void setStartDateTime( QDateTime start );
+    void setStartDateTime(QDateTime start);
 
     /**
      * Get start date.
@@ -141,7 +139,7 @@ namespace KCal
      * Sets end date.
      * @param end is the enddate.
      */
-    void setEndDateTime( QDateTime end );
+    void setEndDateTime(QDateTime end);
 
     /**
      * Get end date.
@@ -159,7 +157,7 @@ namespace KCal
      * Sets the UID, the unique tag for VCard entry.
      * @param uid unique tag for VCard entry.
      */
-    void setUID( QString uid );
+    void setUID(QString uid);
 
     /**
      * Get UID, the unique tag for VCard entry.
@@ -177,7 +175,7 @@ namespace KCal
      * Show only next activity and exit.
      * @param next true or false.
      */
-    void setNext( bool next );
+    void setNext(bool next);
 
     /**
      * Should we show only next activity and exit?
@@ -188,7 +186,7 @@ namespace KCal
      * Should program be more verbose?
      * @param verbose a flag to set verbosity.
      */
-    void setVerbose( bool verbose );
+    void setVerbose(bool verbose);
 
     /**
      * Should program be more verbose?
@@ -199,7 +197,7 @@ namespace KCal
      * Should we only try to run it and do nothing?
      * @param dryrun false no and true just test it.
      */
-    void setDryRun( bool dryrun );
+    void setDryRun(bool dryrun);
 
     /**
      * Is this program only in testing mode?
@@ -211,7 +209,7 @@ namespace KCal
      * Set calendar file
      * @param calendar Calendar files full path.
      */
-    void setCalendarFile( QString calendar );
+    void setCalendarFile(QString calendar);
 
     /**
      * Returns fullpath to calendar file.
@@ -223,7 +221,7 @@ namespace KCal
      * Set file to import active calendar.
      * @param calendar Calendar file to import.
      */
-    void setImportFile( QString calendar );
+    void setImportFile(QString calendar);
 
     /**
      * Return import filename.
@@ -235,7 +233,7 @@ namespace KCal
      * Add description.
      * @param description to event.
      */
-    void setDescription( QString description );
+    void setDescription(QString description);
 
     /**
      * Return description.
@@ -253,7 +251,7 @@ namespace KCal
      * Add location information.
      * @param location location where the event occurs.
      */
-    void setLocation( QString location );
+    void setLocation(QString location);
 
     /**
      * Return location information.
@@ -271,7 +269,7 @@ namespace KCal
      * Add summary.
      * @param summary event summary.
      */
-    void setSummary( QString summary );
+    void setSummary(QString summary);
 
     /**
      * Get summary.
@@ -289,7 +287,7 @@ namespace KCal
      * View all option.
      * @param all flag to view all Events.
      */
-    void setAll( bool all );
+    void setAll(bool all);
     /**
      * Return all option.
      */
@@ -303,7 +301,7 @@ namespace KCal
      * Set if Event is floating.
      * @param floating if true then the Event is floating.
      */
-    void setFloating( bool floating );
+    void setFloating(bool floating);
     /**
      * Return if Event is floating.
      */
@@ -313,7 +311,7 @@ namespace KCal
      * Set calendar resources for global use.
      */
 
-    void setCalendar( CalendarResources *resources );
+    void setCalendar(CalendarResources *resources);
 
     /**
      * Get global calendar resources.
@@ -324,7 +322,7 @@ namespace KCal
     /**
      * Set output file.
      */
-    void setExportFile( QString export_file );
+    void setExportFile(QString export_file);
 
     /**
      * To what file we'll output.
@@ -339,7 +337,7 @@ namespace KCal
     /**
      * Set export type that'll we use.
      */
-    void setExportType( ExportType exportType );
+    void setExportType(ExportType exportType);
 
     /**
      * What export type to use.
@@ -350,7 +348,7 @@ namespace KCal
      * Set how many day should be seen.
      */
 
-    void setDaysCount( int count );
+    void setDaysCount(int count);
 
     /**
      * Is there some cound of days should be seen.
@@ -363,7 +361,7 @@ namespace KCal
 
     int getDaysCount();
 
-  private:
+private:
     bool m_bIsUID;
     QString m_UID;
     bool m_bIsStartDateTime;
@@ -392,7 +390,7 @@ namespace KCal
     bool m_bDaysCount;
     int m_daysCount;
     CalendarResources *m_calendarResources;
-  };
+};
 
 }
 

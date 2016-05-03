@@ -29,50 +29,69 @@
 
 namespace Akregator {
 
-namespace Backend 
-{
-    class Storage;
+namespace Backend {
+class Storage;
 }
 
 class FeedList;
 class FetchQueue;
 class TagSet;
 
-class Kernel
-{
-     public:
+class Kernel {
+public:
 
-         static Kernel* self();
+    static Kernel *self();
 
-         Kernel();
-         virtual ~Kernel();
-         
-         Backend::Storage* storage() { return m_storage; }
-         void setStorage(Backend::Storage* storage) { m_storage = storage; }
+    Kernel();
+    virtual ~Kernel();
 
-         FeedList* feedList() { return m_feedList; }
-         void setFeedList(FeedList* feedList) { m_feedList = feedList; }
+    Backend::Storage *storage()
+    {
+        return m_storage;
+    }
+    void setStorage(Backend::Storage *storage)
+    {
+        m_storage = storage;
+    }
 
-         FetchQueue* fetchQueue() { return m_fetchQueue; }
+    FeedList *feedList()
+    {
+        return m_feedList;
+    }
+    void setFeedList(FeedList *feedList)
+    {
+        m_feedList = feedList;
+    }
 
-         TagSet* tagSet() { return m_tagSet; }
-         
-         void setArticleFilterList(const Filters::ArticleFilterList& list)
-         {
-            m_articleFilterList = list;
-         }
+    FetchQueue *fetchQueue()
+    {
+        return m_fetchQueue;
+    }
 
-         Filters::ArticleFilterList articleFilterList() const { return m_articleFilterList; }
-        
-     private:
+    TagSet *tagSet()
+    {
+        return m_tagSet;
+    }
 
-         static Kernel* m_self;
+    void setArticleFilterList(const Filters::ArticleFilterList &list)
+    {
+        m_articleFilterList = list;
+    }
 
-         Backend::Storage* m_storage;
-         FeedList* m_feedList;
-         FetchQueue* m_fetchQueue;
-         TagSet* m_tagSet;
-         Filters::ArticleFilterList m_articleFilterList;
+    Filters::ArticleFilterList articleFilterList() const
+    {
+        return m_articleFilterList;
+    }
+
+private:
+
+    static Kernel *m_self;
+
+    Backend::Storage *m_storage;
+    FeedList *m_feedList;
+    FetchQueue *m_fetchQueue;
+    TagSet *m_tagSet;
+    Filters::ArticleFilterList m_articleFilterList;
 };
 
 }

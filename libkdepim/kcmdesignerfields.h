@@ -33,44 +33,43 @@ class QPushButton;
 
 namespace KPIM {
 
-class KDE_EXPORT KCMDesignerFields : public KCModule
-{
-  Q_OBJECT
+class KDE_EXPORT KCMDesignerFields : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMDesignerFields( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMDesignerFields(QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
     virtual void save();
     virtual void defaults();
 
-  protected:
+protected:
     void        loadUiFiles();
-    void        loadActivePages(const QStringList&);
+    void        loadActivePages(const QStringList &);
     QStringList saveActivePages();
 
     virtual QString localUiDir() = 0;
     virtual QString uiPath() = 0;
-    virtual void writeActivePages( const QStringList & ) = 0;
+    virtual void writeActivePages(const QStringList &) = 0;
     virtual QStringList readActivePages() = 0;
     virtual QString applicationName() = 0;
 
-  private slots:
-    void updatePreview( QListViewItem* );
-    void itemClicked( QListViewItem* );
+private slots:
+    void updatePreview(QListViewItem *);
+    void itemClicked(QListViewItem *);
     void startDesigner();
     void rebuildList();
     void deleteFile();
     void importFile();
     void delayedInit();
 
-  private:
+private:
     void initGUI();
 
     KListView *mPageView;
     QLabel *mPagePreview;
     QLabel *mPageDetails;
-    QPushButton *mDeleteButton;    
+    QPushButton *mDeleteButton;
     QPushButton *mImportButton;
     QPushButton *mDesignerButton;
 };

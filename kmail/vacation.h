@@ -23,25 +23,28 @@ class QString;
 class QStringList;
 template <typename T> class QValueList;
 namespace KMail {
-  class SieveJob;
-  class VacationDialog;
+class SieveJob;
+class VacationDialog;
 }
 namespace KMime {
-  namespace Types {
-    struct AddrSpec;
-    typedef QValueList<AddrSpec> AddrSpecList;
-  }
+namespace Types {
+struct AddrSpec;
+typedef QValueList<AddrSpec> AddrSpecList;
+}
 }
 
 namespace KMail {
 
-  class Vacation : public QObject {
+class Vacation : public QObject {
     Q_OBJECT
-  public:
-    Vacation( QObject * parent=0, bool checkOnly = false, const char * name=0 );
+public:
+    Vacation(QObject *parent = 0, bool checkOnly = false, const char *name = 0);
     virtual ~Vacation();
 
-    bool isUsable() const { return !mUrl.isEmpty(); }
+    bool isUsable() const
+    {
+        return !mUrl.isEmpty();
+    }
 
     static QString defaultMessageText();
     static int defaultNotificationInterval();
@@ -49,40 +52,40 @@ namespace KMail {
     static bool defaultSendForSpam();
     static QString defaultDomainName();
 
-  protected:
-    static QString composeScript( const QString & messageText,
-				  int notificationInterval,
-				  const KMime::Types::AddrSpecList & aliases,
-                                  bool sendForSpam, const QString & excludeDomain );
-    static bool parseScript( const QString & script, QString & messageText,
-			     int & notificationInterval, QStringList & aliases,
-                             bool & sendForSpam, QString & domainName );
+protected:
+    static QString composeScript(const QString &messageText,
+                                 int notificationInterval,
+                                 const KMime::Types::AddrSpecList &aliases,
+                                 bool sendForSpam, const QString &excludeDomain);
+    static bool parseScript(const QString &script, QString &messageText,
+                            int &notificationInterval, QStringList &aliases,
+                            bool &sendForSpam, QString &domainName);
     KURL findURL() const;
-    void handlePutResult( KMail::SieveJob * job, bool success, bool );
+    void handlePutResult(KMail::SieveJob *job, bool success, bool);
 
 
-  signals:
-    void result( bool success );
+signals:
+    void result(bool success);
     // indicates if the vaction script is active or not
-    void scriptActive( bool active );
+    void scriptActive(bool active);
 
-  protected slots:
+protected slots:
     void slotDialogDefaults();
-    void slotGetResult( KMail::SieveJob * job, bool success,
-			const QString & script, bool active );
+    void slotGetResult(KMail::SieveJob *job, bool success,
+                       const QString &script, bool active);
     void slotDialogOk();
     void slotDialogCancel();
-    void slotPutActiveResult( KMail::SieveJob *, bool );
-    void slotPutInactiveResult( KMail::SieveJob *, bool );
-  protected:
+    void slotPutActiveResult(KMail::SieveJob *, bool);
+    void slotPutInactiveResult(KMail::SieveJob *, bool);
+protected:
     // IO:
-    KMail::SieveJob * mSieveJob;
+    KMail::SieveJob *mSieveJob;
     KURL mUrl;
     // GUI:
-    KMail::VacationDialog * mDialog;
+    KMail::VacationDialog *mDialog;
     bool mWasActive;
     bool mCheckOnly;
-  };
+};
 
 } // namespace KMail
 

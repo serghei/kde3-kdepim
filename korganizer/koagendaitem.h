@@ -41,12 +41,12 @@ class KOAgendaItem;
 
 struct MultiItemInfo
 {
-  int mStartCellXLeft, mStartCellXRight;
-  int mStartCellYTop, mStartCellYBottom;
-  KOAgendaItem *mFirstMultiItem;
-  KOAgendaItem *mPrevMultiItem;
-  KOAgendaItem *mNextMultiItem;
-  KOAgendaItem *mLastMultiItem;
+    int mStartCellXLeft, mStartCellXRight;
+    int mStartCellYTop, mStartCellYBottom;
+    KOAgendaItem *mFirstMultiItem;
+    KOAgendaItem *mPrevMultiItem;
+    KOAgendaItem *mNextMultiItem;
+    KOAgendaItem *mLastMultiItem;
 };
 
 /*
@@ -71,17 +71,28 @@ struct MultiItemInfo
   when the move started. The prev and next members of mStartMoveInfo are used
   for that longer sequence including all (shown and hidden) items.
 */
-class KOAgendaItem : public QWidget, public KOrg::CellItem
-{
+class KOAgendaItem : public QWidget, public KOrg::CellItem {
     Q_OBJECT
-  public:
-    KOAgendaItem(Incidence *incidence, const QDate &qd, QWidget *parent, const char *name=0,
-                 WFlags f=0 );
+public:
+    KOAgendaItem(Incidence *incidence, const QDate &qd, QWidget *parent, const char *name = 0,
+                 WFlags f = 0);
 
-    int cellXLeft() const { return mCellXLeft; }
-    int cellXRight() const { return mCellXRight; }
-    int cellYTop() const { return mCellYTop; }
-    int cellYBottom() const { return mCellYBottom; }
+    int cellXLeft() const
+    {
+        return mCellXLeft;
+    }
+    int cellXRight() const
+    {
+        return mCellXRight;
+    }
+    int cellYTop() const
+    {
+        return mCellYTop;
+    }
+    int cellYBottom() const
+    {
+        return mCellYBottom;
+    }
     int cellHeight() const;
     int cellWidth() const;
 
@@ -97,37 +108,70 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
     /** End the movement (i.e. clean up) */
     void endMove();
 
-    void moveRelative(int dx,int dy);
+    void moveRelative(int dx, int dy);
     void expandTop(int dy);
     void expandBottom(int dy);
     void expandLeft(int dx);
     void expandRight(int dx);
 
     bool isMultiItem();
-    KOAgendaItem *prevMoveItem() const { return (mStartMoveInfo)?(mStartMoveInfo->mPrevMultiItem):0; }
-    KOAgendaItem *nextMoveItem() const { return (mStartMoveInfo)?(mStartMoveInfo->mNextMultiItem):0; }
-    MultiItemInfo *moveInfo() const { return mStartMoveInfo; }
-    void setMultiItem(KOAgendaItem *first,KOAgendaItem *prev,
+    KOAgendaItem *prevMoveItem() const
+    {
+        return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0;
+    }
+    KOAgendaItem *nextMoveItem() const
+    {
+        return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0;
+    }
+    MultiItemInfo *moveInfo() const
+    {
+        return mStartMoveInfo;
+    }
+    void setMultiItem(KOAgendaItem *first, KOAgendaItem *prev,
                       KOAgendaItem *next, KOAgendaItem *last);
-    KOAgendaItem *prependMoveItem(KOAgendaItem*);
-    KOAgendaItem *appendMoveItem(KOAgendaItem*);
-    KOAgendaItem *removeMoveItem(KOAgendaItem*);
-    KOAgendaItem *firstMultiItem() const { return (mMultiItemInfo)?(mMultiItemInfo->mFirstMultiItem):0; }
-    KOAgendaItem *prevMultiItem() const { return (mMultiItemInfo)?(mMultiItemInfo->mPrevMultiItem):0; }
-    KOAgendaItem *nextMultiItem() const { return (mMultiItemInfo)?(mMultiItemInfo->mNextMultiItem):0; }
-    KOAgendaItem *lastMultiItem() const { return (mMultiItemInfo)?(mMultiItemInfo->mLastMultiItem):0; }
+    KOAgendaItem *prependMoveItem(KOAgendaItem *);
+    KOAgendaItem *appendMoveItem(KOAgendaItem *);
+    KOAgendaItem *removeMoveItem(KOAgendaItem *);
+    KOAgendaItem *firstMultiItem() const
+    {
+        return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0;
+    }
+    KOAgendaItem *prevMultiItem() const
+    {
+        return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0;
+    }
+    KOAgendaItem *nextMultiItem() const
+    {
+        return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0;
+    }
+    KOAgendaItem *lastMultiItem() const
+    {
+        return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0;
+    }
 
     bool dissociateFromMultiItem();
 
-    bool setIncidence( Incidence * );
-    Incidence *incidence() const { return mIncidence; }
-    QDate itemDate() { return mDate; }
+    bool setIncidence(Incidence *);
+    Incidence *incidence() const
+    {
+        return mIncidence;
+    }
+    QDate itemDate()
+    {
+        return mDate;
+    }
 
     /** Update the date of this item's occurrence (not in the event) */
-    void setItemDate( const QDate &qd );
+    void setItemDate(const QDate &qd);
 
-    void setText ( const QString & text ) { mLabelText = text; }
-    QString text () { return mLabelText; }
+    void setText(const QString &text)
+    {
+        mLabelText = text;
+    }
+    QString text()
+    {
+        return mLabelText;
+    }
 
     static QToolTipGroup *toolTipGroup();
 
@@ -137,20 +181,26 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
 
     QString label() const;
 
-    bool overlaps( KOrg::CellItem * ) const;
+    bool overlaps(KOrg::CellItem *) const;
 
-    void setResourceColor( const QColor& color ) { mResourceColor = color; }
-    QColor resourceColor() {return mResourceColor;}
-  signals:
-    void removeAgendaItem( KOAgendaItem* );
-    void showAgendaItem( KOAgendaItem* );
+    void setResourceColor(const QColor &color)
+    {
+        mResourceColor = color;
+    }
+    QColor resourceColor()
+    {
+        return mResourceColor;
+    }
+signals:
+    void removeAgendaItem(KOAgendaItem *);
+    void showAgendaItem(KOAgendaItem *);
 
-  public slots:
+public slots:
     void updateIcons();
-    void select(bool=true);
-    void addAttendee( const QString & );
+    void select(bool = true);
+    void addAttendee(const QString &);
 
-  protected:
+protected:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
     void paintEvent(QPaintEvent *e);
@@ -170,7 +220,7 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
     void endMovePrivate();
 
 
-  private:
+private:
     int mCellXLeft, mCellXRight;
     int mCellYTop, mCellYBottom;
     int mSubCell;  // subcell number of this item
@@ -184,13 +234,13 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
     bool mIconOrganizer;
 
     // Multi item pointers
-    MultiItemInfo* mMultiItemInfo;
-  protected:
+    MultiItemInfo *mMultiItemInfo;
+protected:
     // Variables to remember start position
-    MultiItemInfo* mStartMoveInfo;
+    MultiItemInfo *mStartMoveInfo;
     //Color of the resource
     QColor mResourceColor;
-  private:
+private:
     static QToolTipGroup *mToolTipGroup;
 
     bool mSelected;

@@ -18,15 +18,16 @@
 
 #include "resource.h"
 
-namespace KNode
+namespace KNode {
+struct about_authors
 {
-  struct about_authors {
-    const char* name;
-    const char* desc;
-    const char* email;
-  };
+    const char *name;
+    const char *desc;
+    const char *email;
+};
 
-  static const about_authors authors[] = {
+static const about_authors authors[] =
+{
     { "Volker Krause", I18N_NOOP("Maintainer"), "volker.krause@rwth-aachen.de" },
     { "Roberto Selbach Teixeira", I18N_NOOP("Former maintainer"), "roberto@kde.org" },
     { "Christian Gebauer", 0, "gebauer@kde.org" },
@@ -38,27 +39,27 @@ namespace KNode
     { "Stephan Johach", 0, "lucardus@onlinehome.de" },
     { "Matthias Kalle Dalheimer", 0, "kalle@kde.org" },
     { "Zack Rusin", 0, "zack@kde.org" }
-  };
+};
 
-  AboutData::AboutData()
-    : KAboutData( "knode",
-                  I18N_NOOP("KNode"),
-                  KNODE_VERSION,
-                  I18N_NOOP("A newsreader for KDE"),
-                  KAboutData::License_GPL,
-                  I18N_NOOP("Copyright (c) 1999-2005 the KNode authors"),
-                  0,
-                  "http://knode.sourceforge.net/" )
-  {
+AboutData::AboutData()
+    : KAboutData("knode",
+                 I18N_NOOP("KNode"),
+                 KNODE_VERSION,
+                 I18N_NOOP("A newsreader for KDE"),
+                 KAboutData::License_GPL,
+                 I18N_NOOP("Copyright (c) 1999-2005 the KNode authors"),
+                 0,
+                 "http://knode.sourceforge.net/")
+{
     using KNode::authors;
-    for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
-      addAuthor( authors[i].name, authors[i].desc, authors[i].email );
+    for(unsigned int i = 0 ; i < sizeof authors / sizeof * authors ; ++i)
+        addAuthor(authors[i].name, authors[i].desc, authors[i].email);
 
-    addCredit( "Jakob Schroeter", 0, "js@camaya.net" );
-  }
+    addCredit("Jakob Schroeter", 0, "js@camaya.net");
+}
 
-  AboutData::~AboutData()
-  {
-  }
+AboutData::~AboutData()
+{
+}
 
 } // namespace KNode

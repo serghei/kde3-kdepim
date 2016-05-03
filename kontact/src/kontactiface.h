@@ -22,14 +22,13 @@
 
 #include <dcopobject.h>
 
-class KontactIface : public DCOPObject
-{
-  K_DCOP
-  public:
+class KontactIface : public DCOPObject {
+    K_DCOP
+public:
     KontactIface() : DCOPObject("KontactIface") {}
 
-  k_dcop:
-    virtual void selectPlugin( const QString &name ) = 0;
+k_dcop:
+    virtual void selectPlugin(const QString &name) = 0;
 
 };
 

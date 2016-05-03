@@ -28,20 +28,19 @@ class QListViewItem;
 
 #include "groupwisesettingswidgetbase.h"
 
-class GroupWiseSettingsWidget : public GroupWiseSettingsWidgetBase
-{
-Q_OBJECT
+class GroupWiseSettingsWidget : public GroupWiseSettingsWidgetBase {
+    Q_OBJECT
 public:
-  GroupWiseSettingsWidget( QWidget * parent );
-  QMap<QString, QString> dirtySettings();
-  void reset();
+    GroupWiseSettingsWidget(QWidget *parent);
+    QMap<QString, QString> dirtySettings();
+    void reset();
 protected slots:
-  /**
-   * Add the renamed item to the list of dirty (changed) settings
-   */
-  void slotItemRenamed( QListViewItem *Item, int ColumnRenamed );
-private: 
-  QMap<QString, QString> m_dirtySettings;
+    /**
+     * Add the renamed item to the list of dirty (changed) settings
+     */
+    void slotItemRenamed(QListViewItem *Item, int ColumnRenamed);
+private:
+    QMap<QString, QString> m_dirtySettings;
 };
 
 #endif

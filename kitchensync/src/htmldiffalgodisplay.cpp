@@ -25,73 +25,73 @@
 
 using namespace KSync;
 
-static QString textToHTML( const QString &text )
+static QString textToHTML(const QString &text)
 {
-  return QStyleSheet::convertFromPlainText( text );
+    return QStyleSheet::convertFromPlainText(text);
 }
 
-HTMLDiffAlgoDisplay::HTMLDiffAlgoDisplay( QWidget *parent )
-  : KTextBrowser( parent )
+HTMLDiffAlgoDisplay::HTMLDiffAlgoDisplay(QWidget *parent)
+    : KTextBrowser(parent)
 {
-  setWrapPolicy( QTextEdit::AtWordBoundary );
-  setVScrollBarMode( QScrollView::AlwaysOff );
-  setHScrollBarMode( QScrollView::AlwaysOff );
+    setWrapPolicy(QTextEdit::AtWordBoundary);
+    setVScrollBarMode(QScrollView::AlwaysOff);
+    setHScrollBarMode(QScrollView::AlwaysOff);
 }
 
 void HTMLDiffAlgoDisplay::begin()
 {
-  clear();
-  mText = "";
+    clear();
+    mText = "";
 
-  mText.append( "<html>" );
-  mText.append( QString( "<body text=\"%1\" bgcolor=\"%2\">" )
-               .arg( KGlobalSettings::textColor().name() )
-               .arg( KGlobalSettings::baseColor().name() ) );
+    mText.append("<html>");
+    mText.append(QString("<body text=\"%1\" bgcolor=\"%2\">")
+                 .arg(KGlobalSettings::textColor().name())
+                 .arg(KGlobalSettings::baseColor().name()));
 
-  mText.append( "<center><table>" );
-  mText.append( QString( "<tr><th></th><th align=\"center\">%1</th><td>         </td><th align=\"center\">%2</th></tr>" )
-               .arg( mLeftTitle )
-               .arg( mRightTitle ) );
+    mText.append("<center><table>");
+    mText.append(QString("<tr><th></th><th align=\"center\">%1</th><td>         </td><th align=\"center\">%2</th></tr>")
+                 .arg(mLeftTitle)
+                 .arg(mRightTitle));
 }
 
 void HTMLDiffAlgoDisplay::end()
 {
-  mText.append( "</table></center>"
-                "</body>"
-                "</html>" );
+    mText.append("</table></center>"
+                 "</body>"
+                 "</html>");
 
-  setText( mText );
+    setText(mText);
 }
 
-void HTMLDiffAlgoDisplay::setLeftSourceTitle( const QString &title )
+void HTMLDiffAlgoDisplay::setLeftSourceTitle(const QString &title)
 {
-  mLeftTitle = title;
+    mLeftTitle = title;
 }
 
-void HTMLDiffAlgoDisplay::setRightSourceTitle( const QString &title )
+void HTMLDiffAlgoDisplay::setRightSourceTitle(const QString &title)
 {
-  mRightTitle = title;
+    mRightTitle = title;
 }
 
-void HTMLDiffAlgoDisplay::additionalLeftField( const QString &id, const QString &value )
+void HTMLDiffAlgoDisplay::additionalLeftField(const QString &id, const QString &value)
 {
-  mText.append( QString( "<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>" )
-               .arg( id )
-               .arg( textToHTML( value ) ) );
+    mText.append(QString("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>")
+                 .arg(id)
+                 .arg(textToHTML(value)));
 }
 
-void HTMLDiffAlgoDisplay::additionalRightField( const QString &id, const QString &value )
+void HTMLDiffAlgoDisplay::additionalRightField(const QString &id, const QString &value)
 {
-  mText.append( QString( "<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>" )
-               .arg( id )
-               .arg( textToHTML( value ) ) );
+    mText.append(QString("<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>")
+                 .arg(id)
+                 .arg(textToHTML(value)));
 }
 
-void HTMLDiffAlgoDisplay::conflictField( const QString &id, const QString &leftValue,
-                                          const QString &rightValue )
+void HTMLDiffAlgoDisplay::conflictField(const QString &id, const QString &leftValue,
+                                        const QString &rightValue)
 {
-  mText.append( QString( "<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>" )
-               .arg( id )
-               .arg( textToHTML( leftValue ) )
-               .arg( textToHTML( rightValue ) ) );
+    mText.append(QString("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>")
+                 .arg(id)
+                 .arg(textToHTML(leftValue))
+                 .arg(textToHTML(rightValue)));
 }

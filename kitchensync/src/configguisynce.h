@@ -28,16 +28,15 @@ class QCheckBox;
 
 class KLineEdit;
 
-class ConfigGuiSynce : public ConfigGui
-{
-  public:
-    ConfigGuiSynce( const QSync::Member &, QWidget *parent );
+class ConfigGuiSynce : public ConfigGui {
+public:
+    ConfigGuiSynce(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
 
     QString save() const;
 
-  private:
+private:
     void initGUI();
 
     QCheckBox *mContacts;

@@ -31,23 +31,23 @@ t it will be useful,
 using namespace KCal;
 
 typedef KGenericFactory<ICSPlugin> ICSFactory;
-K_EXPORT_COMPONENT_FACTORY(kfile_ics, ICSFactory( "kfile_ics" ))
+K_EXPORT_COMPONENT_FACTORY(kfile_ics, ICSFactory("kfile_ics"))
 
-ICSPlugin::ICSPlugin( QObject *parent, const char *name, const QStringList& args )
-  : KFilePlugin( parent, name, args )
+ICSPlugin::ICSPlugin(QObject *parent, const char *name, const QStringList &args)
+    : KFilePlugin(parent, name, args)
 {
-  KFileMimeTypeInfo* info = addMimeTypeInfo( "text/calendar" ); //TODO: vcs !!
+    KFileMimeTypeInfo *info = addMimeTypeInfo("text/calendar");   //TODO: vcs !!
 
-  KFileMimeTypeInfo::GroupInfo* group = 0L;
-  group = addGroupInfo(info, "ICSInfo", i18n("Calendar Statistics"));
+    KFileMimeTypeInfo::GroupInfo *group = 0L;
+    group = addGroupInfo(info, "ICSInfo", i18n("Calendar Statistics"));
 
-  addItemInfo( group, "ProductID",   i18n("Product ID"),     QVariant::String );
-  addItemInfo( group, "Events",        i18n("Events"),         QVariant::Int );
-  addItemInfo( group, "Todos",         i18n("To-dos"),         QVariant::Int );
-  addItemInfo( group, "TodoCompleted", i18n("Completed To-dos"), QVariant::Int );
-  addItemInfo( group, "TodoOverdue",   i18n("Overdue To-dos"), QVariant::Int );
-  addItemInfo( group, "Journals",      i18n("Journals"),       QVariant::Int );
-//   addItemInfo( group, "Reminders",     i18n("Reminders"),      QVariant::Int );
+    addItemInfo(group, "ProductID",   i18n("Product ID"),     QVariant::String);
+    addItemInfo(group, "Events",        i18n("Events"),         QVariant::Int);
+    addItemInfo(group, "Todos",         i18n("To-dos"),         QVariant::Int);
+    addItemInfo(group, "TodoCompleted", i18n("Completed To-dos"), QVariant::Int);
+    addItemInfo(group, "TodoOverdue",   i18n("Overdue To-dos"), QVariant::Int);
+    addItemInfo(group, "Journals",      i18n("Journals"),       QVariant::Int);
+    //   addItemInfo( group, "Reminders",     i18n("Reminders"),      QVariant::Int );
 
 }
 
@@ -55,42 +55,44 @@ ICSPlugin::ICSPlugin( QObject *parent, const char *name, const QStringList& args
 I chose to use libkcal instead of reading the calendar manually. It's easier to
 maintain this way.
 */
-bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
+bool ICSPlugin::readInfo(KFileMetaInfo &info, uint /*what*/)
 {
-  KFileMetaInfoGroup group = appendGroup( info, "ICSInfo");
+    KFileMetaInfoGroup group = appendGroup(info, "ICSInfo");
 
-  CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
-  if( !cal.load( info.path() ) ) {
-    kdDebug() << "Could not load calendar" << endl;
-    return false;
-  }
+    CalendarLocal cal(QString::fromLatin1("UTC"));
+    if(!cal.load(info.path()))
+    {
+        kdDebug() << "Could not load calendar" << endl;
+        return false;
+    }
 
-  appendItem( group, "ProductID", QVariant( cal.productId() ) );
-  appendItem( group, "Events", QVariant( int( cal.events().count() ) ) );
-  appendItem( group, "Journals", QVariant( int( cal.journals().count() ) ) );
-  Todo::List todos = cal.todos();
+    appendItem(group, "ProductID", QVariant(cal.productId()));
+    appendItem(group, "Events", QVariant(int(cal.events().count())));
+    appendItem(group, "Journals", QVariant(int(cal.journals().count())));
+    Todo::List todos = cal.todos();
 
-  // count completed and overdue
-  Todo::List::ConstIterator it = todos.begin();
-  Todo::List::ConstIterator end = todos.end();
+    // count completed and overdue
+    Todo::List::ConstIterator it = todos.begin();
+    Todo::List::ConstIterator end = todos.end();
 
-  int completed = 0;
-  int overdue = 0;
-  for ( ; it != end ; ++it ) {
-    Todo *todo = *it;
-    if ( todo->isCompleted() )
-      ++completed;
-    else if ( todo->hasDueDate() && todo->dtDue().date() < QDate::currentDate() )
-      ++overdue;
-  }
+    int completed = 0;
+    int overdue = 0;
+    for(; it != end ; ++it)
+    {
+        Todo *todo = *it;
+        if(todo->isCompleted())
+            ++completed;
+        else if(todo->hasDueDate() && todo->dtDue().date() < QDate::currentDate())
+            ++overdue;
+    }
 
-  appendItem( group, "Todos", QVariant( int(todos.count() ) ) );
-  appendItem( group, "TodoCompleted", QVariant( completed ) );
-  appendItem( group, "TodoOverdue", QVariant( overdue ) );
+    appendItem(group, "Todos", QVariant(int(todos.count())));
+    appendItem(group, "TodoCompleted", QVariant(completed));
+    appendItem(group, "TodoOverdue", QVariant(overdue));
 
-  cal.close();
+    cal.close();
 
-  return true;
+    return true;
 }
 
 #include "kfile_ics.moc"

@@ -39,13 +39,12 @@ namespace KAB {
 class Core;
 }
 
-class ExtensionData
-{
-  public:
+class ExtensionData {
+public:
     ExtensionData();
     typedef QValueList<ExtensionData> List;
 
-    KToggleAction* action;
+    KToggleAction *action;
     KAB::ExtensionWidget *widget;
     QString identifier;
     QString title;
@@ -53,12 +52,11 @@ class ExtensionData
     bool isDetailsExtension;
 };
 
-class ExtensionManager : public QObject
-{
-  Q_OBJECT
+class ExtensionManager : public QObject {
+    Q_OBJECT
 
-  public:
-    ExtensionManager( QWidget *extensionBar, QWidgetStack *detailsStack, KAB::Core *core, QObject *parent, const char *name = 0 );
+public:
+    ExtensionManager(QWidget *extensionBar, QWidgetStack *detailsStack, KAB::Core *core, QObject *parent, const char *name = 0);
     ~ExtensionManager();
 
     /**
@@ -83,26 +81,26 @@ class ExtensionManager : public QObject
     bool isQuickEditVisible() const;
 
     QWidget *activeDetailsWidget() const;
- 
-  public slots:
+
+public slots:
     void setSelectionChanged();
     void createActions();
 
-  signals:
+signals:
 
-    void detailsWidgetActivated( QWidget* widget );
-    void detailsWidgetDeactivated( QWidget* widget );
-    void modified( const KABC::Addressee::List& );
-    void deleted( const QStringList& );
+    void detailsWidgetActivated(QWidget *widget);
+    void detailsWidgetDeactivated(QWidget *widget);
+    void modified(const KABC::Addressee::List &);
+    void deleted(const QStringList &);
 
-  private slots:
-    void activationToggled( const QString &extid );
+private slots:
+    void activationToggled(const QString &extid);
 
-  private:
+private:
     void createExtensionWidgets();
-    void setExtensionActive( const QString &extid, bool active ); 
+    void setExtensionActive(const QString &extid, bool active);
 
-  private:
+private:
     QWidget *mExtensionBar;
     KAB::Core *mCore;
     QMap<QString, ExtensionData> mExtensionMap;
@@ -111,7 +109,7 @@ class ExtensionManager : public QObject
     QPtrList<KAction> mActionList;
     KActionCollection *mActionCollection;
     QSplitter *mSplitter;
-    QWidgetStack *mDetailsStack; 
+    QWidgetStack *mDetailsStack;
     QWidget *mActiveDetailsWidget;
 };
 

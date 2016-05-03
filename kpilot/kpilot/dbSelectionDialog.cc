@@ -42,103 +42,108 @@
 
 
 KPilotDBSelectionDialog::KPilotDBSelectionDialog(QStringList &selectedDBs, QStringList &deviceDBs,
-		QStringList &addedDBs, QWidget *w, const char *n) :
-	KDialogBase(w, n, true, QString::null, KDialogBase::Ok | KDialogBase::Cancel,
-		KDialogBase::Ok, false),
-	fSelectedDBs(selectedDBs),
-	fAddedDBs(addedDBs),
-	fDeviceDBs(deviceDBs)
+        QStringList &addedDBs, QWidget *w, const char *n) :
+    KDialogBase(w, n, true, QString::null, KDialogBase::Ok | KDialogBase::Cancel,
+                KDialogBase::Ok, false),
+    fSelectedDBs(selectedDBs),
+    fAddedDBs(addedDBs),
+    fDeviceDBs(deviceDBs)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fSelectionWidget = new KPilotDBSelectionWidget(this);
-	setMainWidget(fSelectionWidget);
+    fSelectionWidget = new KPilotDBSelectionWidget(this);
+    setMainWidget(fSelectionWidget);
 
-	// Fill the encodings list
-	QStringList items(deviceDBs);
-	for ( QStringList::Iterator it = fAddedDBs.begin(); it != fAddedDBs.end(); ++it ) {
-		if (items.contains(*it)==0) items << (*it);
-	}
-	for ( QStringList::Iterator it = fSelectedDBs.begin(); it != fSelectedDBs.end(); ++it ) {
-		if (items.contains(*it)==0) items << (*it);
-	}
-	items.sort();
+    // Fill the encodings list
+    QStringList items(deviceDBs);
+    for(QStringList::Iterator it = fAddedDBs.begin(); it != fAddedDBs.end(); ++it)
+    {
+        if(items.contains(*it) == 0) items << (*it);
+    }
+    for(QStringList::Iterator it = fSelectedDBs.begin(); it != fSelectedDBs.end(); ++it)
+    {
+        if(items.contains(*it) == 0) items << (*it);
+    }
+    items.sort();
 
-	for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
-		QCheckListItem*checkitem=new QCheckListItem(fSelectionWidget->fDatabaseList,
-			*it, QCheckListItem::CheckBox);
-		if (fSelectedDBs.contains(*it)) checkitem->setOn(true);
-	}
+    for(QStringList::Iterator it = items.begin(); it != items.end(); ++it)
+    {
+        QCheckListItem *checkitem = new QCheckListItem(fSelectionWidget->fDatabaseList,
+                *it, QCheckListItem::CheckBox);
+        if(fSelectedDBs.contains(*it)) checkitem->setOn(true);
+    }
 
-	connect(fSelectionWidget->fNameEdit, SIGNAL(textChanged( const QString & )),
-		this, SLOT(slotTextChanged( const QString &)));
-	connect(fSelectionWidget->fAddButton, SIGNAL(clicked()),
-		this, SLOT(addDB()));
-	connect(fSelectionWidget->fRemoveButton, SIGNAL(clicked()),
-		this, SLOT(removeDB()));
+    connect(fSelectionWidget->fNameEdit, SIGNAL(textChanged(const QString &)),
+            this, SLOT(slotTextChanged(const QString &)));
+    connect(fSelectionWidget->fAddButton, SIGNAL(clicked()),
+            this, SLOT(addDB()));
+    connect(fSelectionWidget->fRemoveButton, SIGNAL(clicked()),
+            this, SLOT(removeDB()));
 }
 
 KPilotDBSelectionDialog::~KPilotDBSelectionDialog()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 void KPilotDBSelectionDialog::addDB()
 {
-	FUNCTIONSETUP;
-	QString dbname(fSelectionWidget->fNameEdit->text());
-	if (!dbname.isEmpty())
-	{
-		fSelectionWidget->fNameEdit->clear();
-		new QCheckListItem(fSelectionWidget->fDatabaseList, dbname,
-			QCheckListItem::CheckBox);
-		fAddedDBs << dbname;
-	}
+    FUNCTIONSETUP;
+    QString dbname(fSelectionWidget->fNameEdit->text());
+    if(!dbname.isEmpty())
+    {
+        fSelectionWidget->fNameEdit->clear();
+        new QCheckListItem(fSelectionWidget->fDatabaseList, dbname,
+                           QCheckListItem::CheckBox);
+        fAddedDBs << dbname;
+    }
 }
 
 void KPilotDBSelectionDialog::removeDB()
 {
-	FUNCTIONSETUP;
-	QListViewItem*item(fSelectionWidget->fDatabaseList->selectedItem());
-	if (item)
-	{
-		QString dbname=item->text(0);
-		if (fDeviceDBs.contains(dbname))
-		{
-			KMessageBox::error(this, i18n("This is a database that exists on the device. It was not added manually, so it can not removed from the list."), i18n("Database on Device"));
-		}
-		else
-		{
-			fSelectedDBs.remove(dbname);
-			fAddedDBs.remove(dbname);
-			KPILOT_DELETE(item);
-		}
-	}
-	else
-	{
-		KMessageBox::information(this, i18n("You need to select a database to delete in the list."),i18n("No Database Selected"), CSL1("NoDBSelected"));
-	}
+    FUNCTIONSETUP;
+    QListViewItem *item(fSelectionWidget->fDatabaseList->selectedItem());
+    if(item)
+    {
+        QString dbname = item->text(0);
+        if(fDeviceDBs.contains(dbname))
+        {
+            KMessageBox::error(this, i18n("This is a database that exists on the device. It was not added manually, so it can not removed from the list."),
+                               i18n("Database on Device"));
+        }
+        else
+        {
+            fSelectedDBs.remove(dbname);
+            fAddedDBs.remove(dbname);
+            KPILOT_DELETE(item);
+        }
+    }
+    else
+    {
+        KMessageBox::information(this, i18n("You need to select a database to delete in the list."), i18n("No Database Selected"), CSL1("NoDBSelected"));
+    }
 }
 
 QStringList KPilotDBSelectionDialog::getSelectedDBs()
 {
-	fSelectedDBs.clear();
+    fSelectedDBs.clear();
 
-	//  update the list of selected databases
-	QListViewItemIterator it( fSelectionWidget->fDatabaseList );
-	while ( it.current() ) {
-		QCheckListItem *item = dynamic_cast<QCheckListItem*>(it.current());
-		++it;
+    //  update the list of selected databases
+    QListViewItemIterator it(fSelectionWidget->fDatabaseList);
+    while(it.current())
+    {
+        QCheckListItem *item = dynamic_cast<QCheckListItem *>(it.current());
+        ++it;
 
-		if ( item && item->isOn() )
-			fSelectedDBs << item->text();
-	}
+        if(item && item->isOn())
+            fSelectedDBs << item->text();
+    }
 
-	return fSelectedDBs;
+    return fSelectedDBs;
 }
 
-void KPilotDBSelectionDialog::slotTextChanged( const QString& dbname)
+void KPilotDBSelectionDialog::slotTextChanged(const QString &dbname)
 {
-	FUNCTIONSETUP;
-	fSelectionWidget->fAddButton->setDisabled(dbname.isEmpty());
+    FUNCTIONSETUP;
+    fSelectionWidget->fAddButton->setDisabled(dbname.isEmpty());
 }

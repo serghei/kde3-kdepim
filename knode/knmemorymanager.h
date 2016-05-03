@@ -24,7 +24,7 @@ class KNArticleCollection;
 
 class KNMemoryManager {
 
-  public:
+public:
     KNMemoryManager();
     ~KNMemoryManager();
 
@@ -38,35 +38,43 @@ class KNMemoryManager {
     void updateCacheEntry(KNArticle *a);
     void removeCacheEntry(KNArticle *a);
 
-  protected:
+protected:
 
     class ArticleItem {
     public:
-      ArticleItem(KNArticle *a) { art=a; sync(); }
-      ~ArticleItem()            {}
-      void sync();
+        ArticleItem(KNArticle *a)
+        {
+            art = a;
+            sync();
+        }
+        ~ArticleItem()            {}
+        void sync();
 
-      KNArticle *art;
-      int storageSize;
+        KNArticle *art;
+        int storageSize;
     };
 
     class CollectionItem {
     public:
-      CollectionItem(KNArticleCollection *c) { col=c; sync(); }
-      ~CollectionItem()                      { }
-      void sync();
+        CollectionItem(KNArticleCollection *c)
+        {
+            col = c;
+            sync();
+        }
+        ~CollectionItem()                      { }
+        void sync();
 
-      KNArticleCollection *col;
-      int storageSize;
+        KNArticleCollection *col;
+        int storageSize;
     };
 
-    CollectionItem* findCacheEntry(KNArticleCollection *c, bool take=false);
-    ArticleItem* findCacheEntry(KNArticle *a, bool take=false);
+    CollectionItem *findCacheEntry(KNArticleCollection *c, bool take = false);
+    ArticleItem *findCacheEntry(KNArticle *a, bool take = false);
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 
-    QValueList<CollectionItem*> mColList;
-    QValueList<ArticleItem*> mArtList;
+    QValueList<CollectionItem *> mColList;
+    QValueList<ArticleItem *> mArtList;
     int c_ollCacheSize, a_rtCacheSize;
 };
 

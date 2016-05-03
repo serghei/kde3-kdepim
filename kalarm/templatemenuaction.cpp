@@ -30,14 +30,14 @@
 #include "templatemenuaction.moc"
 
 
-TemplateMenuAction::TemplateMenuAction(const QString& label, const QString& icon, QObject* receiver,
-                                       const char* slot, KActionCollection* actions, const char* name)
-	: KActionMenu(label, icon, actions, name)
+TemplateMenuAction::TemplateMenuAction(const QString &label, const QString &icon, QObject *receiver,
+                                       const char *slot, KActionCollection *actions, const char *name)
+    : KActionMenu(label, icon, actions, name)
 {
-	setDelayed(false);
-	connect(popupMenu(), SIGNAL(aboutToShow()), SLOT(slotInitMenu()));
-	connect(popupMenu(), SIGNAL(activated(int)), SLOT(slotSelected(int)));
-	connect(this, SIGNAL(selected(const KAEvent&)), receiver, slot);
+    setDelayed(false);
+    connect(popupMenu(), SIGNAL(aboutToShow()), SLOT(slotInitMenu()));
+    connect(popupMenu(), SIGNAL(activated(int)), SLOT(slotSelected(int)));
+    connect(this, SIGNAL(selected(const KAEvent &)), receiver, slot);
 }
 
 /******************************************************************************
@@ -46,22 +46,22 @@ TemplateMenuAction::TemplateMenuAction(const QString& label, const QString& icon
 */
 void TemplateMenuAction::slotInitMenu()
 {
-	KPopupMenu* menu = popupMenu();
-	menu->clear();
-	mOriginalTexts.clear();
-	QValueList<KAEvent> templates = KAlarm::templateList();
-	for (QValueList<KAEvent>::ConstIterator it = templates.constBegin();  it != templates.constEnd();  ++it)
-	{
-		QString name = (*it).templateName();
-		// Insert the template in sorted order
-		QStringList::Iterator tit;
-		for (tit = mOriginalTexts.begin();
-		     tit != mOriginalTexts.end()  &&  QString::localeAwareCompare(name, *tit) > 0;
-		     ++tit);
-		mOriginalTexts.insert(tit, name);
-	}
-	for (QStringList::ConstIterator tit = mOriginalTexts.constBegin();  tit != mOriginalTexts.constEnd();  ++tit)
-		menu->insertItem(*tit);
+    KPopupMenu *menu = popupMenu();
+    menu->clear();
+    mOriginalTexts.clear();
+    QValueList<KAEvent> templates = KAlarm::templateList();
+    for(QValueList<KAEvent>::ConstIterator it = templates.constBegin();  it != templates.constEnd();  ++it)
+    {
+        QString name = (*it).templateName();
+        // Insert the template in sorted order
+        QStringList::Iterator tit;
+        for(tit = mOriginalTexts.begin();
+                tit != mOriginalTexts.end()  &&  QString::localeAwareCompare(name, *tit) > 0;
+                ++tit);
+        mOriginalTexts.insert(tit, name);
+    }
+    for(QStringList::ConstIterator tit = mOriginalTexts.constBegin();  tit != mOriginalTexts.constEnd();  ++tit)
+        menu->insertItem(*tit);
 }
 
 /******************************************************************************
@@ -70,15 +70,15 @@ void TemplateMenuAction::slotInitMenu()
 */
 void TemplateMenuAction::slotSelected(int id)
 {
-	KPopupMenu* menu = popupMenu();
-	QString item = mOriginalTexts[menu->indexOf(id)];
-	if (!item.isEmpty())
-	{
-		AlarmCalendar* cal = AlarmCalendar::templateCalendarOpen();
-		if (cal)
-		{
-			KAEvent templ = KAEvent::findTemplateName(*cal, item);
-			emit selected(templ);
-		}
-	}
+    KPopupMenu *menu = popupMenu();
+    QString item = mOriginalTexts[menu->indexOf(id)];
+    if(!item.isEmpty())
+    {
+        AlarmCalendar *cal = AlarmCalendar::templateCalendarOpen();
+        if(cal)
+        {
+            KAEvent templ = KAEvent::findTemplateName(*cal, item);
+            emit selected(templ);
+        }
+    }
 }

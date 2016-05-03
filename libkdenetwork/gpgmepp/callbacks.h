@@ -5,12 +5,12 @@
 
    This is an internal header file, subject to change without
    notice. DO NOT USE.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -28,10 +28,10 @@
 
 extern "C" {
 
-  void progress_callback( void * opaque, const char * what,
-			  int type, int current, int total );
-  gpgme_error_t passphrase_callback( void * opaque, const char * uid_hint,
-				     const char * desc, int prev_was_bad, int fd );
+    void progress_callback(void *opaque, const char *what,
+                           int type, int current, int total);
+    gpgme_error_t passphrase_callback(void *opaque, const char *uid_hint,
+                                      const char *desc, int prev_was_bad, int fd);
 }
 
 extern gpgme_data_cbs data_provider_callbacks;

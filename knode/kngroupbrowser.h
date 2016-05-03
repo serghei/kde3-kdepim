@@ -34,12 +34,12 @@ class KNNntpAccount;
 
 class KNGroupBrowser : public KDialogBase {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     class CheckItem : public QCheckListItem {
 
-      public:
+    public:
         CheckItem(QListView *v, const KNGroupInfo &gi, KNGroupBrowser *b);
         CheckItem(QListViewItem *i, const KNGroupInfo &gi, KNGroupBrowser *b);
         ~CheckItem();
@@ -47,14 +47,14 @@ class KNGroupBrowser : public KDialogBase {
 
         KNGroupInfo info;
 
-      protected:
+    protected:
         void stateChange(bool s);
         KNGroupBrowser *browser;
     };
 
     class GroupItem : public QListViewItem {
 
-      public:
+    public:
         GroupItem(QListView *v, const KNGroupInfo &gi);
         GroupItem(QListViewItem *i, const KNGroupInfo &gi);
         ~GroupItem();
@@ -62,25 +62,28 @@ class KNGroupBrowser : public KDialogBase {
         KNGroupInfo info;
     };
 
-    KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons=0,
-                   bool newCBact=false, const QString &user1=QString::null, const QString &user2=QString::null);
+    KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons = 0,
+                   bool newCBact = false, const QString &user1 = QString::null, const QString &user2 = QString::null);
     ~KNGroupBrowser();
 
-    KNNntpAccount* account()const      { return a_ccount; }
-    virtual void itemChangedState(CheckItem *it, bool s)=0;
+    KNNntpAccount *account()const
+    {
+        return a_ccount;
+    }
+    virtual void itemChangedState(CheckItem *it, bool s) = 0;
 
-  public slots:
-    void slotReceiveList(KNGroupListData* d);
+public slots:
+    void slotReceiveList(KNGroupListData *d);
 
-  signals:
+signals:
     void loadList(KNNntpAccount *a);
 
-  protected:
-    virtual void updateItemState(CheckItem *it)=0;
+protected:
+    virtual void updateItemState(CheckItem *it) = 0;
     void changeItemState(const KNGroupInfo &gi, bool s);
     bool itemInListView(QListView *view, const KNGroupInfo &gi);
     void removeListItem(QListView *view, const KNGroupInfo &gi);
-    void createListItems(QListViewItem *parent=0);
+    void createListItems(QListViewItem *parent = 0);
 
     QWidget *page;
     QListView *groupView;
@@ -99,7 +102,7 @@ class KNGroupBrowser : public KDialogBase {
     KNNntpAccount *a_ccount;
     QSortedList<KNGroupInfo> *allList, *matchList;
 
-  protected slots:
+protected slots:
     void slotLoadList();
     void slotItemExpand(QListViewItem *it);
     void slotCenterDelayed();

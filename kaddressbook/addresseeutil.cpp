@@ -29,27 +29,27 @@
 
 #include "addresseeutil.h"
 
-QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
+QString AddresseeUtil::addresseesToClipboard(const KABC::Addressee::List &list)
 {
-  KABC::VCardConverter converter;
+    KABC::VCardConverter converter;
 
-  return converter.createVCards( list );
+    return converter.createVCards(list);
 }
 
-KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data )
+KABC::Addressee::List AddresseeUtil::clipboardToAddressees(const QString &data)
 {
-  KABC::VCardConverter converter;
+    KABC::VCardConverter converter;
 
-  return converter.parseVCards( data );
+    return converter.parseVCards(data);
 }
 
-QString AddresseeUtil::addresseesToEmails( const KABC::Addressee::List &addrList )
+QString AddresseeUtil::addresseesToEmails(const KABC::Addressee::List &addrList)
 {
-  QStringList emails;
+    QStringList emails;
 
-  KABC::Addressee::List::ConstIterator it;
-  for ( it = addrList.begin(); it != addrList.end(); ++it )
-    emails.append( (*it).fullEmail() );
+    KABC::Addressee::List::ConstIterator it;
+    for(it = addrList.begin(); it != addrList.end(); ++it)
+        emails.append((*it).fullEmail());
 
-  return emails.join( "," );
+    return emails.join(",");
 }

@@ -54,48 +54,70 @@ class docBookmark;
 
 class docBookmark {
 public:
-	static bool compare_pos;
-	docBookmark():bmkName(), position(0) { };
-	docBookmark(QString name, long int pos):bmkName(name), position(pos) { };
-	docBookmark(const docBookmark &bmk):bmkName(bmk.bmkName),position(bmk.position){};
-	virtual ~ docBookmark() { };
-	virtual int findMatches(QString, bmkList &fBookmarks) {
-		FUNCTIONSETUP;
-		fBookmarks.append(new docBookmark(*this));
-		return 1;
-	};
+    static bool compare_pos;
+    docBookmark(): bmkName(), position(0) { };
+    docBookmark(QString name, long int pos): bmkName(name), position(pos) { };
+    docBookmark(const docBookmark &bmk): bmkName(bmk.bmkName), position(bmk.position) {};
+    virtual ~ docBookmark() { };
+    virtual int findMatches(QString, bmkList &fBookmarks)
+    {
+        FUNCTIONSETUP;
+        fBookmarks.append(new docBookmark(*this));
+        return 1;
+    };
 
-	QString bmkName;
-	long int position;
+    QString bmkName;
+    long int position;
 };
 
-class docMatchBookmark:public docBookmark {
- public:
-	docMatchBookmark():docBookmark() { from=0; to=100;};
-	docMatchBookmark(QString pattrn, int options=0):docBookmark(),
-		pattern(pattrn), opts(options) { from=0; to=100; };
-	docMatchBookmark(QString pattrn, QString bmkname,
-		int options=0):docBookmark(bmkname, 0), pattern(pattrn),
-		opts(options) { from=0; to=100; };
-	virtual ~ docMatchBookmark() { };
+class docMatchBookmark: public docBookmark {
+public:
+    docMatchBookmark(): docBookmark()
+    {
+        from = 0;
+        to = 100;
+    };
+    docMatchBookmark(QString pattrn, int options = 0): docBookmark(),
+        pattern(pattrn), opts(options)
+    {
+        from = 0;
+        to = 100;
+    };
+    docMatchBookmark(QString pattrn, QString bmkname,
+                     int options = 0): docBookmark(bmkname, 0), pattern(pattrn),
+        opts(options)
+    {
+        from = 0;
+        to = 100;
+    };
+    virtual ~ docMatchBookmark() { };
 
-	virtual int findMatches(QString, bmkList &fBookmarks);
-	QString pattern;
-	int opts;
-	int from, to;
+    virtual int findMatches(QString, bmkList &fBookmarks);
+    QString pattern;
+    int opts;
+    int from, to;
 };
 
-class docRegExpBookmark:public docMatchBookmark {
- public:
-	docRegExpBookmark():docMatchBookmark() { capSubexpression=-1;};
-	docRegExpBookmark(QString regexp, int cap=0,
-		int options=0):docMatchBookmark(regexp, options) {capSubexpression=cap; };
-	docRegExpBookmark(QString pattrn, QString bmkname,
-		int options=0):docMatchBookmark(pattrn, bmkname, options) { capSubexpression=-1; };
-	virtual ~ docRegExpBookmark() { };
+class docRegExpBookmark: public docMatchBookmark {
+public:
+    docRegExpBookmark(): docMatchBookmark()
+    {
+        capSubexpression = -1;
+    };
+    docRegExpBookmark(QString regexp, int cap = 0,
+                      int options = 0): docMatchBookmark(regexp, options)
+    {
+        capSubexpression = cap;
+    };
+    docRegExpBookmark(QString pattrn, QString bmkname,
+                      int options = 0): docMatchBookmark(pattrn, bmkname, options)
+    {
+        capSubexpression = -1;
+    };
+    virtual ~ docRegExpBookmark() { };
 
-	virtual int findMatches(QString, bmkList &fBookmarks);
-	int capSubexpression;
+    virtual int findMatches(QString, bmkList &fBookmarks);
+    int capSubexpression;
 };
 
 
@@ -103,81 +125,107 @@ class docRegExpBookmark:public docMatchBookmark {
  *  The converter class that does the real work for us.
  *************************************************************************************************************/
 
-class DOCConverter:public QObject {
-Q_OBJECT
+class DOCConverter: public QObject {
+    Q_OBJECT
 private:
-	PilotDatabase * docdb;
-	QString txtfilename;
-	QString bmkfilename;
-	bool compress;
+    PilotDatabase *docdb;
+    QString txtfilename;
+    QString bmkfilename;
+    bool compress;
 
-	bmkList fBookmarks;
+    bmkList fBookmarks;
 public:
-	enum eSortBookmarksEnum
-	{
-		eSortNone,
-		eSortPos,
-		eSortName
-	} eSortBookmarks;
+    enum eSortBookmarksEnum
+    {
+        eSortNone,
+        eSortPos,
+        eSortName
+    } eSortBookmarks;
 
 public:
-	 DOCConverter(QObject *parent=0L, const char *name=0L);
-	 virtual ~ DOCConverter();
+    DOCConverter(QObject *parent = 0L, const char *name = 0L);
+    virtual ~ DOCConverter();
 
-	QString readText();
-	void setTXTpath(QString path, QString file);
-	void setTXTpath(QString filename);
-	void setPDB(PilotDatabase * dbi);
-	QString txtFilename() const {return txtfilename;}
-	QString bmkFilename() const {return bmkfilename;}
-	void setBmkFilename(QString bmkf) { bmkfilename=bmkf;}
+    QString readText();
+    void setTXTpath(QString path, QString file);
+    void setTXTpath(QString filename);
+    void setPDB(PilotDatabase *dbi);
+    QString txtFilename() const
+    {
+        return txtfilename;
+    }
+    QString bmkFilename() const
+    {
+        return bmkfilename;
+    }
+    void setBmkFilename(QString bmkf)
+    {
+        bmkfilename = bmkf;
+    }
 
-	bool getCompress() const { return compress; };
-	void setCompress(bool newcomp) {compress=newcomp;};
+    bool getCompress() const
+    {
+        return compress;
+    };
+    void setCompress(bool newcomp)
+    {
+        compress = newcomp;
+    };
 
-	bool convertTXTtoPDB();
-	bool convertPDBtoTXT();
+    bool convertTXTtoPDB();
+    bool convertPDBtoTXT();
 
-	int setBookmarks(bmkList bookmarks) {
-		fBookmarks = bookmarks;
-		return fBookmarks.count();
-	};
-	int clearBookmarks() {
-		fBookmarks.clear();
-		return fBookmarks.count();
-	};
-	int addBookmark(docBookmark*bookmark) {
-		fBookmarks.append(bookmark);
-		return fBookmarks.count();
-	};
+    int setBookmarks(bmkList bookmarks)
+    {
+        fBookmarks = bookmarks;
+        return fBookmarks.count();
+    };
+    int clearBookmarks()
+    {
+        fBookmarks.clear();
+        return fBookmarks.count();
+    };
+    int addBookmark(docBookmark *bookmark)
+    {
+        fBookmarks.append(bookmark);
+        return fBookmarks.count();
+    };
 
-	int findBmkEndtags(QString &, bmkList&);
-	int findBmkInline(QString &, bmkList&);
-	int findBmkFile(QString &, bmkList&);
+    int findBmkEndtags(QString &, bmkList &);
+    int findBmkInline(QString &, bmkList &);
+    int findBmkFile(QString &, bmkList &);
 
 
-	void setSort(enum eSortBookmarksEnum sort) {eSortBookmarks=sort;}
-	enum eSortBookmarksEnum getSort() {return eSortBookmarks;}
+    void setSort(enum eSortBookmarksEnum sort)
+    {
+        eSortBookmarks = sort;
+    }
+    enum eSortBookmarksEnum getSort()
+    {
+        return eSortBookmarks;
+    }
 
-	enum eBmkTypesEnum {
-		eBmkNone = 0,
-		eBmkFile = 1,
-		eBmkInline = 2,
-		eBmkEndtags = 4,
-		eBmkDefaultBmkFile = 8
-	} fBmkTypes;
-	void setBookmarkTypes(int types) {
-		fBmkTypes = (eBmkTypesEnum) types;
-	};
+    enum eBmkTypesEnum
+    {
+        eBmkNone = 0,
+        eBmkFile = 1,
+        eBmkInline = 2,
+        eBmkEndtags = 4,
+        eBmkDefaultBmkFile = 8
+    } fBmkTypes;
+    void setBookmarkTypes(int types)
+    {
+        fBmkTypes = (eBmkTypesEnum) types;
+    };
 
 protected:
-	int findBookmarks();
+    int findBookmarks();
 
 private:
-	void readConfig();
+    void readConfig();
 signals:
-	void logMessage(const QString &);
-	void logError(const QString &);
+    void logMessage(const QString &);
+    void logError(const QString &);
 };
 
 #endif

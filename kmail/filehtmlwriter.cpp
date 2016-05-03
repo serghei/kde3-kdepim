@@ -40,69 +40,81 @@
 
 namespace KMail {
 
-  FileHtmlWriter::FileHtmlWriter( const QString & filename )
+FileHtmlWriter::FileHtmlWriter(const QString &filename)
     : HtmlWriter(),
-      mFile( filename.isEmpty() ? QString( "filehtmlwriter.out" ) : filename )
-  {
-    mStream.setEncoding( QTextStream::UnicodeUTF8 );
-  }
+      mFile(filename.isEmpty() ? QString("filehtmlwriter.out") : filename)
+{
+    mStream.setEncoding(QTextStream::UnicodeUTF8);
+}
 
-  FileHtmlWriter::~FileHtmlWriter() {
-    if ( mFile.isOpen() ) {
-      kdWarning( 5006 ) << "FileHtmlWriter: file still open!" << endl;
-      mStream.unsetDevice();
-      mFile.close();
+FileHtmlWriter::~FileHtmlWriter()
+{
+    if(mFile.isOpen())
+    {
+        kdWarning(5006) << "FileHtmlWriter: file still open!" << endl;
+        mStream.unsetDevice();
+        mFile.close();
     }
-  }
+}
 
-  void FileHtmlWriter::begin( const QString & css ) {
+void FileHtmlWriter::begin(const QString &css)
+{
     openOrWarn();
-    if ( !css.isEmpty() )
-      write( "<!-- CSS Definitions \n" + css + "-->\n" );
-  }
+    if(!css.isEmpty())
+        write("<!-- CSS Definitions \n" + css + "-->\n");
+}
 
-  void FileHtmlWriter::end() {
+void FileHtmlWriter::end()
+{
     flush();
     mStream.unsetDevice();
     mFile.close();
-  }
+}
 
-  void FileHtmlWriter::reset() {
-    if ( mFile.isOpen() ) {
-      mStream.unsetDevice();
-      mFile.close();
+void FileHtmlWriter::reset()
+{
+    if(mFile.isOpen())
+    {
+        mStream.unsetDevice();
+        mFile.close();
     }
-  }
+}
 
-  void FileHtmlWriter::write( const QString & str ) {
+void FileHtmlWriter::write(const QString &str)
+{
     mStream << str;
     flush();
-  }
+}
 
-  void FileHtmlWriter::queue( const QString & str ) {
-    write( str );
-  }
+void FileHtmlWriter::queue(const QString &str)
+{
+    write(str);
+}
 
-  void FileHtmlWriter::flush() {
+void FileHtmlWriter::flush()
+{
     mFile.flush();
-  }
+}
 
-  void FileHtmlWriter::openOrWarn() {
-    if ( mFile.isOpen() ) {
-      kdWarning( 5006 ) << "FileHtmlWriter: file still open!" << endl;
-      mStream.unsetDevice();
-      mFile.close();
+void FileHtmlWriter::openOrWarn()
+{
+    if(mFile.isOpen())
+    {
+        kdWarning(5006) << "FileHtmlWriter: file still open!" << endl;
+        mStream.unsetDevice();
+        mFile.close();
     }
-    if ( !mFile.open( IO_WriteOnly ) )
-      kdWarning( 5006 ) << "FileHtmlWriter: Cannot open file " << mFile.name() << endl;
+    if(!mFile.open(IO_WriteOnly))
+        kdWarning(5006) << "FileHtmlWriter: Cannot open file " << mFile.name() << endl;
     else
-      mStream.setDevice( &mFile );
-  }
+        mStream.setDevice(&mFile);
+}
 
-  void FileHtmlWriter::embedPart( const QCString & contentId, const QString & url ) {
+void FileHtmlWriter::embedPart(const QCString &contentId, const QString &url)
+{
     mStream << "<!-- embedPart(contentID=" << contentId << ", url=" << url << ") -->" << endl;
     flush();
-  }
+}
 
 
 } // namespace KMail

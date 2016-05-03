@@ -38,9 +38,8 @@ class QStringList;
 QColor getTextColor(const QColor &c);
 
 
-class KDE_EXPORT KOPrefs : public KOPrefsBase
-{
-  public:
+class KDE_EXPORT KOPrefs : public KOPrefsBase {
+public:
     virtual ~KOPrefs();
 
     /** Get instance of KOPrefs. It is made sure that there is only one
@@ -56,39 +55,39 @@ class KDE_EXPORT KOPrefs : public KOPrefsBase
     /** Write preferences to config file */
     void usrWriteConfig();
 
-  protected:
+protected:
     void setCategoryDefaults();
     void setTimeZoneIdDefault();
 
     /** Fill empty mail fields with default values. */
     void fillMailDefaults();
 
-  private:
+private:
     /** Constructor disabled for public. Use instance() to create a KOPrefs
     object. */
     KOPrefs();
 
     static KOPrefs *mInstance;
 
-  public:
+public:
     // preferences data
-    void setFullName( const QString & );
+    void setFullName(const QString &);
     QString fullName();
-    void setEmail( const QString & );
+    void setEmail(const QString &);
     QString email();
     /// Returns all email addresses for the user.
     QStringList allEmails();
     /// Returns all email addresses together with the full username for the user.
     QStringList fullEmails();
     /// Return true if the given email belongs to the user
-    bool thatIsMe( const QString& email );
+    bool thatIsMe(const QString &email);
 
-    void setCategoryColor( const QString &cat, const QColor &color );
-    QColor *categoryColor( const QString &cat );
-    bool hasCategoryColor( const QString &cat ) const;
+    void setCategoryColor(const QString &cat, const QColor &color);
+    QColor *categoryColor(const QString &cat);
+    bool hasCategoryColor(const QString &cat) const;
 
-    void setResourceColor ( const QString &, const QColor & );
-    QColor* resourceColor( const QString & );
+    void setResourceColor(const QString &, const QColor &);
+    QColor *resourceColor(const QString &);
 
     QString mHtmlExportFile;
 
@@ -96,7 +95,7 @@ class KDE_EXPORT KOPrefs : public KOPrefsBase
     QString mPublishPassword;
     QString mRetrievePassword;
 
-  private:
+private:
     QDict<QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
 
@@ -108,7 +107,7 @@ class KDE_EXPORT KOPrefs : public KOPrefsBase
 
     QStringList mMyAddrBookMails;
 
-  public: // Do not use - except in KOPrefsDialogMain
+public: // Do not use - except in KOPrefsDialogMain
     QString mName;
     QString mEmail;
 };

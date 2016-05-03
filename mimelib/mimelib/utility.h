@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -32,19 +32,19 @@ class DwString;
 
 void DW_EXPORT DwInitialize();
 void DW_EXPORT DwFinalize();
-int  DW_EXPORT DwCteStrToEnum(const DwString& aStr);
-void DW_EXPORT DwCteEnumToStr(int aEnum, DwString& aStr);
-int  DW_EXPORT DwTypeStrToEnum(const DwString& aStr);
-void DW_EXPORT DwTypeEnumToStr(int aEnum, DwString& aStr);
-int  DW_EXPORT DwSubtypeStrToEnum(const DwString& aStr);
-void DW_EXPORT DwSubtypeEnumToStr(int aEnum, DwString& aStr);
-int  DW_EXPORT DwToCrLfEol(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwToLfEol(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwToCrEol(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwToLocalEol(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwEncodeBase64(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwDecodeBase64(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwEncodeQuotedPrintable(const DwString& aSrcStr, DwString& aDestStr);
-int  DW_EXPORT DwDecodeQuotedPrintable(const DwString& aSrcStr, DwString& aDestStr);
+int  DW_EXPORT DwCteStrToEnum(const DwString &aStr);
+void DW_EXPORT DwCteEnumToStr(int aEnum, DwString &aStr);
+int  DW_EXPORT DwTypeStrToEnum(const DwString &aStr);
+void DW_EXPORT DwTypeEnumToStr(int aEnum, DwString &aStr);
+int  DW_EXPORT DwSubtypeStrToEnum(const DwString &aStr);
+void DW_EXPORT DwSubtypeEnumToStr(int aEnum, DwString &aStr);
+int  DW_EXPORT DwToCrLfEol(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwToLfEol(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwToCrEol(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwToLocalEol(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwEncodeBase64(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwDecodeBase64(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwEncodeQuotedPrintable(const DwString &aSrcStr, DwString &aDestStr);
+int  DW_EXPORT DwDecodeQuotedPrintable(const DwString &aSrcStr, DwString &aDestStr);
 
 #endif

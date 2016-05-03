@@ -36,21 +36,21 @@ class QDomDocument;
   QListView item representing a modem command.
 */
 class CommandItem : public QListViewItem {
-  public:
-    CommandItem(QListView *listView,ATCommand *command);
+public:
+    CommandItem(QListView *listView, ATCommand *command);
     ~CommandItem();
-    
+
     ATCommand *command();
 
     void load(QDomElement *c);
-    void save(QDomDocument *doc,QDomElement *parent);
-    
+    void save(QDomDocument *doc, QDomElement *parent);
+
     void setItemText();
 
-  protected:
-    void saveParameter(ATParameter *p, QDomDocument *doc,QDomElement *parent);
-  
-  private:
+protected:
+    void saveParameter(ATParameter *p, QDomDocument *doc, QDomElement *parent);
+
+private:
     ATCommand *mCommand;
 };
 

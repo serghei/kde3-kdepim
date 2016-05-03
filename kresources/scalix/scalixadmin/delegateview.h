@@ -29,19 +29,18 @@ class Delegate;
 
 class DelegateManager;
 
-class DelegateView : public KListView
-{
-  Q_OBJECT
+class DelegateView : public KListView {
+    Q_OBJECT
 
-  public:
-    DelegateView( DelegateManager *manager, QWidget *parent = 0 );
+public:
+    DelegateView(DelegateManager *manager, QWidget *parent = 0);
 
     Scalix::Delegate selectedDelegate() const;
 
-  private slots:
+private slots:
     void delegateChanged();
 
-  private:
+private:
     DelegateManager *mManager;
 };
 

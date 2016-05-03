@@ -37,22 +37,20 @@
  * Provides the KonsoleKalendarExports class definition.
  */
 
-namespace KCal
-{
-  /**
-   * Class to manage the Export functionality.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarExports
-  {
-  public:
+namespace KCal {
+/**
+ * Class to manage the Export functionality.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarExports {
+public:
 
     /**
      * Constructs a KonsoleKalendarChange object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    KonsoleKalendarExports( KonsoleKalendarVariables *vars = 0 );
+    KonsoleKalendarExports(KonsoleKalendarVariables *vars = 0);
     /**
      * Destructor
      */
@@ -64,7 +62,7 @@ namespace KCal
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsTxt( QTextStream *ts, Event *event, QDate date );
+    bool exportAsTxt(QTextStream *ts, Event *event, QDate date);
     /**
      * Export the Event in Short Text Mode.
      * @param ts pointer to the output QTextStream.
@@ -73,17 +71,17 @@ namespace KCal
      * @param sameday flags that this Event is on the same date as the
      * previously exported Event.
      */
-    bool exportAsTxtShort( QTextStream *ts, Event *event, QDate date,
-                           bool sameday );
+    bool exportAsTxtShort(QTextStream *ts, Event *event, QDate date,
+                          bool sameday);
     /**
      * Export the Event in Comma-Separated Values (CSV) Mode.
      * @param ts pointer to the output QTextStream.
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsCSV( QTextStream *ts, Event *event, QDate date );
+    bool exportAsCSV(QTextStream *ts, Event *event, QDate date);
 
-  private:
+private:
     KonsoleKalendarVariables *m_variables;
     bool m_firstEntry;
     /**
@@ -93,9 +91,9 @@ namespace KCal
      * @param field is the field value to be processed.
      * @param dquote is a QString containing the double quote character.
      */
-    QString processField( QString field, QString dquote );
+    QString processField(QString field, QString dquote);
 
-  };
+};
 
 }
 #endif

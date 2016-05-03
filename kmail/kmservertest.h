@@ -38,51 +38,50 @@
 #include <qstringlist.h>
 
 namespace KIO {
-  class Job;
-  class Slave;
-  class SimpleJob;
-  class MetaData;
+class Job;
+class Slave;
+class SimpleJob;
+class MetaData;
 }
 
-class KMServerTest : public QObject
-{
-  Q_OBJECT
+class KMServerTest : public QObject {
+    Q_OBJECT
 
 public:
-  KMServerTest( const QString & protocol, const QString & host, int port );
-  virtual ~KMServerTest();
+    KMServerTest(const QString &protocol, const QString &host, int port);
+    virtual ~KMServerTest();
 
 signals:
-  void capabilities( const QStringList & capaNormal,
-                     const QStringList & capaSSL );
-  void capabilities( const QStringList & capaNormal,
-                     const QStringList & capaSSL,
-                     const QString & authNone, const QString & authSSL,
-                     const QString & authTLS );
+    void capabilities(const QStringList &capaNormal,
+                      const QStringList &capaSSL);
+    void capabilities(const QStringList &capaNormal,
+                      const QStringList &capaSSL,
+                      const QString &authNone, const QString &authSSL,
+                      const QString &authTLS);
 
 protected slots:
-  void slotData(KIO::Job *job, const QString &data);
-  void slotResult(KIO::Job *job);
-  void slotMetaData( const KIO::MetaData & );
-  void slotSlaveResult(KIO::Slave *aSlave, int error,
-    const QString &errorText = QString::null);
+    void slotData(KIO::Job *job, const QString &data);
+    void slotResult(KIO::Job *job);
+    void slotMetaData(const KIO::MetaData &);
+    void slotSlaveResult(KIO::Slave *aSlave, int error,
+                         const QString &errorText = QString::null);
 
 protected:
-  KIO::MetaData slaveConfig() const;
-  void startOffSlave( int port=0 );
+    KIO::MetaData slaveConfig() const;
+    void startOffSlave(int port = 0);
 
 protected:
-  const QString  mProtocol;
-  const QString  mHost;
-  bool           mSSL;
-  QStringList    mListNormal;
-  QStringList    mListSSL;
-  QString        mAuthNone;
-  QString        mAuthSSL;
-  QString        mAuthTLS;
-  KIO::SimpleJob *mJob;
-  KIO::Slave     *mSlave;
-  int            mConnectionErrorCount;
+    const QString  mProtocol;
+    const QString  mHost;
+    bool           mSSL;
+    QStringList    mListNormal;
+    QStringList    mListSSL;
+    QString        mAuthNone;
+    QString        mAuthSSL;
+    QString        mAuthTLS;
+    KIO::SimpleJob *mJob;
+    KIO::Slave     *mSlave;
+    int            mConnectionErrorCount;
 };
 
 #endif

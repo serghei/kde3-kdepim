@@ -34,11 +34,11 @@
 namespace Akregator {
 namespace Backend {
 
-Storage* StorageFactoryMK4Impl::createStorage(const QStringList& params) const
+Storage *StorageFactoryMK4Impl::createStorage(const QStringList &params) const
 {
- 	Storage* storage = new StorageMK4Impl;
-	storage->initialize(params);
-	return storage;
+    Storage *storage = new StorageMK4Impl;
+    storage->initialize(params);
+    return storage;
 }
 
 QString StorageFactoryMK4Impl::key() const
@@ -48,23 +48,24 @@ QString StorageFactoryMK4Impl::key() const
 
 QString StorageFactoryMK4Impl::name() const
 {
-   return i18n("Metakit");
+    return i18n("Metakit");
 }
 
 
 void StorageFactoryMK4Impl::configure()
-{ /*
-    MK4ConfWidgetBase* confWidget = new MK4ConfWidget();
-    // fill with Settings
-    
-    
-    if (confWidget->exec() == QDialog::Accepted)
-    {
-        // store and apply settings
-    }
+{
+    /*
+      MK4ConfWidgetBase* confWidget = new MK4ConfWidget();
+      // fill with Settings
 
-    delete confWidget;
-  */
+
+      if (confWidget->exec() == QDialog::Accepted)
+      {
+          // store and apply settings
+      }
+
+      delete confWidget;
+    */
 }
 
 }

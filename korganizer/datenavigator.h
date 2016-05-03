@@ -33,53 +33,52 @@
   date are sent to the DateNavigator. The DateNavigator processes the new
   selection of dates and emits the required signals for the views.
 */
-class DateNavigator : public QObject
-{
+class DateNavigator : public QObject {
     Q_OBJECT
-  public:
-    DateNavigator( QObject *parent = 0, const char *name = 0 );
+public:
+    DateNavigator(QObject *parent = 0, const char *name = 0);
     ~DateNavigator();
 
     KCal::DateList selectedDates();
 
     int datesCount() const;
 
-  public slots:
-    void selectDates( const KCal::DateList & );
-    void selectDate( const QDate & );
+public slots:
+    void selectDates(const KCal::DateList &);
+    void selectDate(const QDate &);
 
-    void selectDates( int count );
-    void selectDates( const QDate &, int count );
+    void selectDates(int count);
+    void selectDates(const QDate &, int count);
 
     void selectWeek();
-    void selectWeek( const QDate & );
+    void selectWeek(const QDate &);
 
     void selectWorkWeek();
-    void selectWorkWeek( const QDate & );
+    void selectWorkWeek(const QDate &);
 
-    void selectWeekByDay( int weekDay, const QDate & );
-   
+    void selectWeekByDay(int weekDay, const QDate &);
+
     void selectToday();
-   
+
     void selectPreviousYear();
     void selectPreviousMonth();
     void selectPreviousWeek();
     void selectNextWeek();
     void selectNextMonth();
     void selectNextYear();
-   
+
     void selectPrevious();
     void selectNext();
 
     void selectMonth(int month);
-   
-  signals:
-    void datesSelected( const KCal::DateList & );
 
-  protected:
+signals:
+    void datesSelected(const KCal::DateList &);
+
+protected:
     void emitSelected();
 
-  private:
+private:
     KCal::DateList mSelectedDates;
 };
 

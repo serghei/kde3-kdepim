@@ -47,279 +47,297 @@
 
 #include "imagewidget.h"
 
-ImageLoader::ImageLoader( QWidget *parent )
-  : QObject( 0, "ImageLoader" ), mParent( parent )
+ImageLoader::ImageLoader(QWidget *parent)
+    : QObject(0, "ImageLoader"), mParent(parent)
 {
 }
 
-KABC::Picture ImageLoader::loadPicture( const KURL &url, bool *ok )
+KABC::Picture ImageLoader::loadPicture(const KURL &url, bool *ok)
 {
-  KABC::Picture picture;
-  QString tempFile;
+    KABC::Picture picture;
+    QString tempFile;
 
-  if ( url.isEmpty() )
-    return picture;
+    if(url.isEmpty())
+        return picture;
 
-  (*ok) = false;
-
-  QImage image;
-  if ( url.isLocalFile() ) {
-    image.load( url.path() );
-    picture.setData( image );
-    (*ok) = true;
-  } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
-    image.load( tempFile );
-    picture.setData( image );
-    (*ok) = true;
-    KIO::NetAccess::removeTempFile( tempFile );
-  }
-
-  if ( !(*ok) ) {
-    // image does not exist (any more)
-    KMessageBox::sorry( mParent, i18n( "This contact's image cannot be found." ) );
-    return picture;
-  }
-
-  QPixmap pixmap = picture.data();
-
-  QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
-  if ( selectedPixmap.isNull() ) {
     (*ok) = false;
+
+    QImage image;
+    if(url.isLocalFile())
+    {
+        image.load(url.path());
+        picture.setData(image);
+        (*ok) = true;
+    }
+    else if(KIO::NetAccess::download(url, tempFile, mParent))
+    {
+        image.load(tempFile);
+        picture.setData(image);
+        (*ok) = true;
+        KIO::NetAccess::removeTempFile(tempFile);
+    }
+
+    if(!(*ok))
+    {
+        // image does not exist (any more)
+        KMessageBox::sorry(mParent, i18n("This contact's image cannot be found."));
+        return picture;
+    }
+
+    QPixmap pixmap = picture.data();
+
+    QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage(pixmap, 100, 140, mParent);
+    if(selectedPixmap.isNull())
+    {
+        (*ok) = false;
+        return picture;
+    }
+
+    image = selectedPixmap;
+    if(image.height() != 140 || image.width() != 100)
+    {
+        if(image.height() > image.width())
+            image = image.scaleHeight(140);
+        else
+            image = image.scaleWidth(100);
+    }
+
+    picture.setData(image);
+    (*ok) = true;
+
     return picture;
-  }
-
-  image = selectedPixmap;
-  if ( image.height() != 140 || image.width() != 100 ) {
-    if ( image.height() > image.width() )
-      image = image.scaleHeight( 140 );
-    else
-      image = image.scaleWidth( 100 );
-  }
-
-  picture.setData( image );
-  (*ok) = true;
-
-  return picture;
 }
 
 
-ImageButton::ImageButton( const QString &title, QWidget *parent )
-  : QPushButton( title, parent ),
-    mReadOnly( false ), mImageLoader( 0 )
+ImageButton::ImageButton(const QString &title, QWidget *parent)
+    : QPushButton(title, parent),
+      mReadOnly(false), mImageLoader(0)
 {
-  setAcceptDrops( true );
+    setAcceptDrops(true);
 
-  connect( this, SIGNAL( clicked() ), SLOT( load() ) );
+    connect(this, SIGNAL(clicked()), SLOT(load()));
 }
 
-void ImageButton::setReadOnly( bool readOnly )
+void ImageButton::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
+    mReadOnly = readOnly;
 }
 
-void ImageButton::setPicture( const KABC::Picture &picture )
+void ImageButton::setPicture(const KABC::Picture &picture)
 {
-  mPicture = picture;
-  updateGUI();
+    mPicture = picture;
+    updateGUI();
 }
 
 KABC::Picture ImageButton::picture() const
 {
-  return mPicture;
+    return mPicture;
 }
 
-void ImageButton::setImageLoader( ImageLoader *loader )
+void ImageButton::setImageLoader(ImageLoader *loader)
 {
-  mImageLoader = loader;
+    mImageLoader = loader;
 }
 
 void ImageButton::startDrag()
 {
-  if ( !mPicture.data().isNull() ) {
-    QImageDrag *drag = new QImageDrag( mPicture.data(), this );
-    drag->dragCopy();
-  }
+    if(!mPicture.data().isNull())
+    {
+        QImageDrag *drag = new QImageDrag(mPicture.data(), this);
+        drag->dragCopy();
+    }
 }
 
 void ImageButton::updateGUI()
 {
-  if ( mPicture.data().isNull() )
-    setPixmap( KGlobal::iconLoader()->iconPath( "personal", KIcon::Desktop ) );
-  else
-    setPixmap( mPicture.data() );
+    if(mPicture.data().isNull())
+        setPixmap(KGlobal::iconLoader()->iconPath("personal", KIcon::Desktop));
+    else
+        setPixmap(mPicture.data());
 }
 
-void ImageButton::dragEnterEvent( QDragEnterEvent *event )
+void ImageButton::dragEnterEvent(QDragEnterEvent *event)
 {
-  bool accepted = false;
+    bool accepted = false;
 
-  if ( QImageDrag::canDecode( event ) )
-    accepted = true;
+    if(QImageDrag::canDecode(event))
+        accepted = true;
 
-  if ( QUriDrag::canDecode( event ) )
-    accepted = true;
+    if(QUriDrag::canDecode(event))
+        accepted = true;
 
-  event->accept( accepted );
+    event->accept(accepted);
 }
 
-void ImageButton::dropEvent( QDropEvent *event )
+void ImageButton::dropEvent(QDropEvent *event)
 {
-  if ( mReadOnly )
-    return;
-
-  if ( QImageDrag::canDecode( event ) ) {
-    QPixmap pm;
-
-    if ( QImageDrag::decode( event, pm ) ) {
-      mPicture.setData( pm.convertToImage() );
-      updateGUI();
-      emit changed();
-    }
-  }
-
-  if ( QUriDrag::canDecode( event ) ) {
-    KURL::List urls;
-    if ( KURLDrag::decode( event, urls ) ) {
-      if ( urls.isEmpty() ) { // oops, no data
-        event->accept( false );
+    if(mReadOnly)
         return;
-      }
+
+    if(QImageDrag::canDecode(event))
+    {
+        QPixmap pm;
+
+        if(QImageDrag::decode(event, pm))
+        {
+            mPicture.setData(pm.convertToImage());
+            updateGUI();
+            emit changed();
+        }
     }
 
-    if ( mImageLoader ) {
-      bool ok = false;
-      KABC::Picture pic = mImageLoader->loadPicture( urls[ 0 ], &ok );
-      if ( ok ) {
-        mPicture = pic;
-        updateGUI();
-        emit changed();
-      }
+    if(QUriDrag::canDecode(event))
+    {
+        KURL::List urls;
+        if(KURLDrag::decode(event, urls))
+        {
+            if(urls.isEmpty())      // oops, no data
+            {
+                event->accept(false);
+                return;
+            }
+        }
+
+        if(mImageLoader)
+        {
+            bool ok = false;
+            KABC::Picture pic = mImageLoader->loadPicture(urls[ 0 ], &ok);
+            if(ok)
+            {
+                mPicture = pic;
+                updateGUI();
+                emit changed();
+            }
+        }
     }
-  }
 }
 
-void ImageButton::mousePressEvent( QMouseEvent *event )
+void ImageButton::mousePressEvent(QMouseEvent *event)
 {
-  mDragStartPos = event->pos();
-  QPushButton::mousePressEvent( event );
+    mDragStartPos = event->pos();
+    QPushButton::mousePressEvent(event);
 }
 
-void ImageButton::mouseMoveEvent( QMouseEvent *event )
+void ImageButton::mouseMoveEvent(QMouseEvent *event)
 {
-  if ( (event->state() & LeftButton) &&
-       (event->pos() - mDragStartPos).manhattanLength() >
-       KGlobalSettings::dndEventDelay() ) {
-    startDrag();
-  }
+    if((event->state() & LeftButton) &&
+            (event->pos() - mDragStartPos).manhattanLength() >
+            KGlobalSettings::dndEventDelay())
+    {
+        startDrag();
+    }
 }
 
-void ImageButton::contextMenuEvent( QContextMenuEvent *event )
+void ImageButton::contextMenuEvent(QContextMenuEvent *event)
 {
-  QPopupMenu menu( this );
-  menu.insertItem( i18n( "Reset" ), this, SLOT( clear() ) );
-  menu.exec( event->globalPos() );
+    QPopupMenu menu(this);
+    menu.insertItem(i18n("Reset"), this, SLOT(clear()));
+    menu.exec(event->globalPos());
 }
 
 void ImageButton::load()
 {
-  KURL url = KFileDialog::getOpenURL( QString(), KImageIO::pattern(), this );
-  if ( url.isValid() ) {
-    if ( mImageLoader ) {
-      bool ok = false;
-      KABC::Picture pic = mImageLoader->loadPicture( url, &ok );
-      if ( ok ) {
-        mPicture = pic;
-        updateGUI();
-        emit changed();
-      }
+    KURL url = KFileDialog::getOpenURL(QString(), KImageIO::pattern(), this);
+    if(url.isValid())
+    {
+        if(mImageLoader)
+        {
+            bool ok = false;
+            KABC::Picture pic = mImageLoader->loadPicture(url, &ok);
+            if(ok)
+            {
+                mPicture = pic;
+                updateGUI();
+                emit changed();
+            }
+        }
     }
-  }
 }
 
 void ImageButton::clear()
 {
-  mPicture = KABC::Picture();
-  updateGUI();
+    mPicture = KABC::Picture();
+    updateGUI();
 
-  emit changed();
+    emit changed();
 }
 
-ImageBaseWidget::ImageBaseWidget( const QString &title,
-                                  QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( false )
+ImageBaseWidget::ImageBaseWidget(const QString &title,
+                                 QWidget *parent, const char *name)
+    : QWidget(parent, name), mReadOnly(false)
 {
-  mImageLoader = new ImageLoader( this );
+    mImageLoader = new ImageLoader(this);
 
-  QVBoxLayout *topLayout = new QVBoxLayout( this, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
-  QGroupBox *box = new QGroupBox( 0, Qt::Vertical, title, this );
-  QVBoxLayout *layout = new QVBoxLayout( box->layout(), KDialog::spacingHint() );
+    QVBoxLayout *topLayout = new QVBoxLayout(this, KDialog::marginHint(),
+            KDialog::spacingHint());
+    QGroupBox *box = new QGroupBox(0, Qt::Vertical, title, this);
+    QVBoxLayout *layout = new QVBoxLayout(box->layout(), KDialog::spacingHint());
 
-  mImageButton = new ImageButton( i18n( "Picture" ), box );
-  mImageButton->setFixedSize( 100, 140 );
-  mImageButton->setImageLoader( mImageLoader );
-  layout->addWidget( mImageButton );
+    mImageButton = new ImageButton(i18n("Picture"), box);
+    mImageButton->setFixedSize(100, 140);
+    mImageButton->setImageLoader(mImageLoader);
+    layout->addWidget(mImageButton);
 
-  topLayout->addWidget( box );
+    topLayout->addWidget(box);
 
-  connect( mImageButton, SIGNAL( changed() ), SIGNAL( changed() ) );
+    connect(mImageButton, SIGNAL(changed()), SIGNAL(changed()));
 }
 
 ImageBaseWidget::~ImageBaseWidget()
 {
-  delete mImageLoader;
-  mImageLoader = 0;
+    delete mImageLoader;
+    mImageLoader = 0;
 }
 
-void ImageBaseWidget::setReadOnly( bool readOnly )
+void ImageBaseWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
-  mImageButton->setReadOnly( mReadOnly );
+    mReadOnly = readOnly;
+    mImageButton->setReadOnly(mReadOnly);
 }
 
-void ImageBaseWidget::setImage( const KABC::Picture &photo )
+void ImageBaseWidget::setImage(const KABC::Picture &photo)
 {
-  mImageButton->setPicture( photo );
+    mImageButton->setPicture(photo);
 }
 
 KABC::Picture ImageBaseWidget::image() const
 {
-  return mImageButton->picture();
+    return mImageButton->picture();
 }
 
 
-ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+ImageWidget::ImageWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::ContactEditorWidget(ab, parent, name)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+    QHBoxLayout *layout = new QHBoxLayout(this, KDialog::marginHint(),
+                                          KDialog::spacingHint());
 
-  mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
-  layout->addWidget( mPhotoWidget );
+    mPhotoWidget = new ImageBaseWidget(KABC::Addressee::photoLabel(), this);
+    layout->addWidget(mPhotoWidget);
 
-  mLogoWidget = new ImageBaseWidget( KABC::Addressee::logoLabel(), this );
-  layout->addWidget( mLogoWidget );
+    mLogoWidget = new ImageBaseWidget(KABC::Addressee::logoLabel(), this);
+    layout->addWidget(mLogoWidget);
 
-  connect( mPhotoWidget, SIGNAL( changed() ), SLOT( setModified() ) );
-  connect( mLogoWidget, SIGNAL( changed() ), SLOT( setModified() ) );
+    connect(mPhotoWidget, SIGNAL(changed()), SLOT(setModified()));
+    connect(mLogoWidget, SIGNAL(changed()), SLOT(setModified()));
 }
 
-void ImageWidget::loadContact( KABC::Addressee *addr )
+void ImageWidget::loadContact(KABC::Addressee *addr)
 {
-  mPhotoWidget->setImage( addr->photo() );
-  mLogoWidget->setImage( addr->logo() );
+    mPhotoWidget->setImage(addr->photo());
+    mLogoWidget->setImage(addr->logo());
 }
 
-void ImageWidget::storeContact( KABC::Addressee *addr )
+void ImageWidget::storeContact(KABC::Addressee *addr)
 {
-  addr->setPhoto( mPhotoWidget->image() );
-  addr->setLogo( mLogoWidget->image() );
+    addr->setPhoto(mPhotoWidget->image());
+    addr->setLogo(mLogoWidget->image());
 }
 
-void ImageWidget::setReadOnly( bool readOnly )
+void ImageWidget::setReadOnly(bool readOnly)
 {
-  mPhotoWidget->setReadOnly( readOnly );
-  mLogoWidget->setReadOnly( readOnly );
+    mPhotoWidget->setReadOnly(readOnly);
+    mLogoWidget->setReadOnly(readOnly);
 }
 
 #include "imagewidget.moc"

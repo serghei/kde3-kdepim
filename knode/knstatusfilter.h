@@ -28,21 +28,24 @@ class KNRemoteArticle;
 
 class KNStatusFilter {
 
-  friend class KNStatusFilterWidget;
+    friend class KNStatusFilterWidget;
 
-  public:
+public:
     KNStatusFilter();
     ~KNStatusFilter();
 
-    KNStatusFilter& operator=(const KNStatusFilter &sf)
-      { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
+    KNStatusFilter &operator=(const KNStatusFilter &sf)
+    {
+        for(int i = 0; i < 8; i++) data.setBit(i, sf.data.at(i));
+        return (*this);
+    }
 
     void load(KSimpleConfig *conf);
     void save(KSimpleConfig *conf);
 
     bool doFilter(KNRemoteArticle *a);
 
-  protected:
+protected:
     QBitArray data;
 
 };
@@ -53,9 +56,9 @@ class KNStatusFilter {
 
 class KNStatusFilterWidget : public QButtonGroup  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNStatusFilterWidget(QWidget *parent);
     ~KNStatusFilterWidget();
 
@@ -64,22 +67,29 @@ class KNStatusFilterWidget : public QButtonGroup  {
     void clear();
 
 
-  protected:
+protected:
 
     class TFCombo : public QComboBox {
 
-      public:
+    public:
         TFCombo(QWidget *parent);
         ~TFCombo();
-        void setValue(bool b) { if(b) setCurrentItem(0); else setCurrentItem(1); }
-        bool value() const         { return (currentItem()==0); }
+        void setValue(bool b)
+        {
+            if(b) setCurrentItem(0);
+            else setCurrentItem(1);
+        }
+        bool value() const
+        {
+            return (currentItem() == 0);
+        }
     };
 
 
     QCheckBox *enR, *enN, *enUS, *enNS;
     TFCombo *rCom, *nCom, *usCom, *nsCom;
 
-  protected slots:
+protected slots:
     void slotEnabled(int c);
 
 };

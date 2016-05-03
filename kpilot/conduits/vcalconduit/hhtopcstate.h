@@ -37,19 +37,18 @@ class VCalConduitBase;
 /**
  * State to test the vcal-conduit. @see vcal-conduitstate.h
  */
-class HHToPCState : public ConduitState
-{
+class HHToPCState : public ConduitState {
 private:
-	ConduitState *fNextState;
-	int fPilotindex;
+    ConduitState *fNextState;
+    int fPilotindex;
 
 public:
-	HHToPCState();
-	virtual ~HHToPCState();
+    HHToPCState();
+    virtual ~HHToPCState();
 
-	virtual void startSync( ConduitAction* );
-	virtual void handleRecord( ConduitAction* );
-	virtual void finishSync( ConduitAction* );
+    virtual void startSync(ConduitAction *);
+    virtual void handleRecord(ConduitAction *);
+    virtual void finishSync(ConduitAction *);
 };
 
 #endif

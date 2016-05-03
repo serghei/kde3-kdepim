@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -152,13 +152,14 @@
 
 class DW_EXPORT DwNntpClient : public DwProtocolClient {
 
-friend class NNTP;
-friend class NNTPObserver;
-    
+    friend class NNTP;
+    friend class NNTPObserver;
+
 public:
 
-    enum {
-        kCmdNoCommand=0,
+    enum
+    {
+        kCmdNoCommand = 0,
         kCmdArticle,
         kCmdBody,
         kCmdHead,
@@ -186,7 +187,7 @@ public:
 
     virtual ~DwNntpClient();
 
-    virtual int Open(const char* aServer, DwUint16 aPort=119);
+    virtual int Open(const char *aServer, DwUint16 aPort = 119);
     //. Opens a TCP connection to the server {\tt aServer} at port {\tt aPort}.
     //. {\tt aServer} may be either a host name, such as "news.acme.com" or
     //. an IP number in dotted decimal format, such as "147.81.64.60".  The
@@ -204,7 +205,7 @@ public:
     //. a failure also occurred, call the inherited member function
     //. {\tt DwProtocolClient::LastFailure()}.
 
-    DwObserver* SetObserver(DwObserver* aObserver);
+    DwObserver *SetObserver(DwObserver *aObserver);
     //. Sets the observer object that interacts with the {\tt DwNntpClient}
     //. object to retrieve a multi-line text response.  If an observer is set,
     //. {\tt DwNntpClient} will call the observer's {\tt Notify()} method
@@ -218,19 +219,19 @@ public:
     //. from the server in response to the last client command.  If no
     //. response was received, {\tt ReplyCode()} returns zero.
 
-    const DwString& StatusResponse() const;
+    const DwString &StatusResponse() const;
     //. Returns the entire status response last received from the server.
     //. If no response was received, perhaps because of a communications
     //. failure, {\tt StatusResponse()} returns an empty string.
 
-    const DwString& TextResponse() const;
+    const DwString &TextResponse() const;
     //. If no observer is set for this object, {\tt TextResponse()} returns
     //. a string that comprises the entire sequence of lines received from
     //. the server.  Otherwise, if an observer {\tt is} set for this object,
     //. {\tt TextResponse()} returns only the most recent line received.
 
-    int Article(int aNumber=(-1));
-    int Article(const char* aMsgid);
+    int Article(int aNumber = (-1));
+    int Article(const char *aMsgid);
     //. Sends the NNTP ARTICLE command and returns the reply code received
     //. from the server. If no response is received, the function returns
     //. zero.
@@ -239,8 +240,8 @@ public:
     //. argument, the ARTICLE command is sent to the server with no argument.
     //. {\tt aMsgId} specifies the message id of an article to retrieve.
 
-    int Body(int aNumber=(-1));
-    int Body(const char* aMsgid);
+    int Body(int aNumber = (-1));
+    int Body(const char *aMsgid);
     //. Sends the NNTP BODY command and returns the reply code received
     //. from the server. If no response is received, the function returns
     //. zero.
@@ -250,8 +251,8 @@ public:
     //. with no argument. {\tt aMsgId} specifies the message id of the
     //. article to access.
 
-    int Head(int aNumber=(-1));
-    int Head(const char* aMsgid);
+    int Head(int aNumber = (-1));
+    int Head(const char *aMsgid);
     //. Sends the NNTP HEAD command and returns the reply code received
     //. from the server. If no response is received, the function returns
     //. zero.
@@ -261,8 +262,8 @@ public:
     //. the server with no argument. {\tt aMsgId} specifies the message id
     //. of the article to access.
 
-    int Stat(int aNumber=(-1));
-    int Stat(const char* aMsgid);
+    int Stat(int aNumber = (-1));
+    int Stat(const char *aMsgid);
     //. Sends the NNTP STAT command and returns the reply code received
     //. from the server. If no response is received, the function returns
     //. zero.
@@ -271,7 +272,7 @@ public:
     //. argument, the STAT command is sent to the server with no argument.
     //. {\tt aMsgId} specifies the message id of the article to access.
 
-    int Group(const char* aNewsgroupName);
+    int Group(const char *aNewsgroupName);
     //. Sends the NNTP GROUP command and returns the reply code received from
     //. the server.  The argument {\tt aNewsgroupName} specifies the newgroup
     //. to be selected. If no response is received, the function returns zero.
@@ -280,7 +281,7 @@ public:
     //. Sends the NNTP HELP command and returns the reply code received from
     //. the server.  If no response is received, the function returns zero.
 
-    int Ihave(const char* aMsgId);
+    int Ihave(const char *aMsgId);
     //. Sends the NNTP IHAVE command and returns the reply code received from
     //. the server.  {\tt aMsgId} specifies the message id of the article
     //. to be sent.  If no response is received, the function returns zero.
@@ -293,8 +294,8 @@ public:
     //. Sends the NNTP LIST command and returns the reply code received from
     //. the server.  If no response is received, the function returns zero.
 
-    int Newgroups(const char* aDate, const char* aTime,
-        DwBool aIsGmt=DwFalse, const char* aDistributions=0);
+    int Newgroups(const char *aDate, const char *aTime,
+                  DwBool aIsGmt = DwFalse, const char *aDistributions = 0);
     //. Sends the NNTP NEWGROUPS command and returns the reply code received
     //. from the server.  If no response is received, the function returns
     //. zero.
@@ -305,8 +306,8 @@ public:
     //. the optional GMT argument will be sent. {\tt aDistributions}
     //. specifies the optional list of distribution groups.
 
-    int Newnews(const char* aNewsgroups, const char* aDate,
-        const char* aTime, DwBool aIsGmt=DwFalse, const char* aDistribution=0);
+    int Newnews(const char *aNewsgroups, const char *aDate,
+                const char *aTime, DwBool aIsGmt = DwFalse, const char *aDistribution = 0);
     //. Sends the NNTP NEWNEWS command and returns the reply code received
     //. from the server.  If no response is received, the function returns
     //. zero.
@@ -338,8 +339,8 @@ public:
     //. the server.  If no response is received, perhaps because of an error,
     //. the function returns zero.
 
-    int SendData(const DwString& aStr);
-    int SendData(const char* aBuf, int aBufLen);
+    int SendData(const DwString &aStr);
+    int SendData(const char *aBuf, int aBufLen);
     //. Sends bulk data to the server and returns the reply code received.
     //. A bulk data transfer follows a POST or IHAVE command and is used to
     //. send a complete article to the server.
@@ -356,8 +357,8 @@ public:
 
 private:
 
-    char*       mSendBuffer;
-    char*       mRecvBuffer;
+    char       *mSendBuffer;
+    char       *mRecvBuffer;
     int         mLastChar;
     int         mLastLastChar;
     int         mNumRecvBufferChars;
@@ -365,9 +366,9 @@ private:
     int         mReplyCode;
     DwString    mStatusResponse;
     DwString    mTextResponse;
-    DwObserver* mObserver;
+    DwObserver *mObserver;
 
-    virtual int PGetLine(char** aPtr, int* aLen);
+    virtual int PGetLine(char **aPtr, int *aLen);
     virtual void PGetStatusResponse();
     virtual void PGetTextResponse();
 

@@ -30,29 +30,30 @@ static KStaticDeleter<GlobalSettings> staticGlobalSettingsDeleter;
 
 GlobalSettings *GlobalSettings::self()
 {
-  if ( !mSelf ) {
-    staticGlobalSettingsDeleter.setObject( mSelf, new GlobalSettings() );
-    mSelf->readConfig();
-  }
+    if(!mSelf)
+    {
+        staticGlobalSettingsDeleter.setObject(mSelf, new GlobalSettings());
+        mSelf->readConfig();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 GlobalSettings::GlobalSettings()
 {
-  mConfigSyncTimer = new QTimer( this, "mConfigSyncTimer" );
-  connect( mConfigSyncTimer, SIGNAL( timeout() ), this, SLOT( slotSyncNow() ) );
+    mConfigSyncTimer = new QTimer(this, "mConfigSyncTimer");
+    connect(mConfigSyncTimer, SIGNAL(timeout()), this, SLOT(slotSyncNow()));
 }
 
 void GlobalSettings::requestSync()
 {
- if ( !mConfigSyncTimer->isActive() )
-   mConfigSyncTimer->start( 0, true /*single shot*/ );
+    if(!mConfigSyncTimer->isActive())
+        mConfigSyncTimer->start(0, true /*single shot*/);
 }
 
 void GlobalSettings::slotSyncNow()
 {
-  config()->sync();
+    config()->sync();
 }
 
 GlobalSettings::~GlobalSettings()

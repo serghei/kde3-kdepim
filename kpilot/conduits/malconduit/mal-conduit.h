@@ -35,31 +35,30 @@
 
 #include <plugin.h>
 
-class MALConduit : public ConduitAction
-{
-Q_OBJECT
+class MALConduit : public ConduitAction {
+    Q_OBJECT
 public:
-	MALConduit(
-		KPilotLink *o,
-		const char *n = 0L,
-		const QStringList &a = QStringList() );
-	virtual ~MALConduit();
-	void printLogMessage(QString msg);
-	virtual bool exec();
+    MALConduit(
+        KPilotLink *o,
+        const char *n = 0L,
+        const QStringList &a = QStringList());
+    virtual ~MALConduit();
+    void printLogMessage(QString msg);
+    virtual bool exec();
 
 protected:
-	/**
-	 * Read in the config from the KPilot config files and fill the member variables accordingly
-	 */
-	void readConfig();
-	/**
-	 * Store the sync time in the KPilot configuration
-	 */
-	void saveConfig();
-	/**
-	 * Check if the last sync was not so long ago that according to MALConduitSettings::syncFrequency() we can skip the sync this time
-	 */
-	bool skip();
+    /**
+     * Read in the config from the KPilot config files and fill the member variables accordingly
+     */
+    void readConfig();
+    /**
+     * Store the sync time in the KPilot configuration
+     */
+    void saveConfig();
+    /**
+     * Check if the last sync was not so long ago that according to MALConduitSettings::syncFrequency() we can skip the sync this time
+     */
+    bool skip();
 } ;
 
 

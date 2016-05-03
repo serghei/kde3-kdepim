@@ -30,20 +30,19 @@ namespace KIO {
 class Job;
 }
 
-class PasswordPage : public QWidget
-{
-  Q_OBJECT
+class PasswordPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    PasswordPage( QWidget *parent = 0 );
+public:
+    PasswordPage(QWidget *parent = 0);
 
-  private slots:
+private slots:
     void buttonClicked();
-    void finished( KIO::Job* );
+    void finished(KIO::Job *);
     void textChanged();
 
-  private:
-    void updateState( bool );
+private:
+    void updateState(bool);
 
     QLineEdit *mPassword;
     QLineEdit *mPasswordRetype;

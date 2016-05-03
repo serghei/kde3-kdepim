@@ -23,59 +23,60 @@
 
 #include "timeinputfield.h"
 
-TimeInputField::TimeInputField( const QString &name, const Schema::SimpleType *type )
-  : SimpleInputField( name, type ),
-    mValue( QTime::currentTime() )
+TimeInputField::TimeInputField(const QString &name, const Schema::SimpleType *type)
+    : SimpleInputField(name, type),
+      mValue(QTime::currentTime())
 {
 }
 
-void TimeInputField::setXMLData( const QDomElement &element )
+void TimeInputField::setXMLData(const QDomElement &element)
 {
-  if ( mName != element.tagName() ) {
-    qDebug( "TimeInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1() );
-    return;
-  }
+    if(mName != element.tagName())
+    {
+        qDebug("TimeInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1());
+        return;
+    }
 
-  setData( element.text() );
+    setData(element.text());
 }
 
-void TimeInputField::xmlData( QDomDocument &document, QDomElement &parent )
+void TimeInputField::xmlData(QDomDocument &document, QDomElement &parent)
 {
-  QDomElement element = document.createElement( mName );
-  element.setAttribute( "xsi:type", "xsd:time" );
-  QDomText text = document.createTextNode( data() );
-  element.appendChild( text );
+    QDomElement element = document.createElement(mName);
+    element.setAttribute("xsi:type", "xsd:time");
+    QDomText text = document.createTextNode(data());
+    element.appendChild(text);
 
-  parent.appendChild( element );
+    parent.appendChild(element);
 }
 
-void TimeInputField::setData( const QString &data )
+void TimeInputField::setData(const QString &data)
 {
-  mValue = QTime::fromString( data, Qt::ISODate );
+    mValue = QTime::fromString(data, Qt::ISODate);
 }
 
 QString TimeInputField::data() const
 {
-  return mValue.toString( Qt::ISODate );
+    return mValue.toString(Qt::ISODate);
 }
 
-QWidget *TimeInputField::createWidget( QWidget *parent )
+QWidget *TimeInputField::createWidget(QWidget *parent)
 {
-  mInputWidget = new KTimeWidget( parent );
+    mInputWidget = new KTimeWidget(parent);
 
-  mInputWidget->setTime( mValue );
+    mInputWidget->setTime(mValue);
 
-  connect( mInputWidget, SIGNAL( valueChanged( const QTime& ) ),
-           this, SLOT( inputChanged( const QTime& ) ) );
+    connect(mInputWidget, SIGNAL(valueChanged(const QTime &)),
+            this, SLOT(inputChanged(const QTime &)));
 
-  return mInputWidget;
+    return mInputWidget;
 }
 
-void TimeInputField::inputChanged( const QTime &time )
+void TimeInputField::inputChanged(const QTime &time)
 {
-  mValue = time;
+    mValue = time;
 
-  emit modified();
+    emit modified();
 }
 
 #include "timeinputfield.moc"

@@ -37,56 +37,74 @@
 
 class KConfig;
 
-class KDE_EXPORT KAccount
-{
-  public:
+class KDE_EXPORT KAccount {
+public:
     /** Type information */
-    enum Type {
-      Imap,
-      MBox,
-      Maildir,
-      News,
-      DImap,
-      Other
+    enum Type
+    {
+        Imap,
+        MBox,
+        Maildir,
+        News,
+        DImap,
+        Other
     };
 
-    KAccount( const uint id = 0, const QString &name = QString::null,
-       const Type type = Other );
-    
+    KAccount(const uint id = 0, const QString &name = QString::null,
+             const Type type = Other);
+
     /**
      * Get/Set name
-     */ 
-    QString name() const { return mName; }
-    void setName( const QString& name ) { mName = name; }
-    
+     */
+    QString name() const
+    {
+        return mName;
+    }
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
+
     /**
      * Get/Set id
-     */ 
-    uint id() const { return mId; }
-    void setId( const uint id ) { mId = id; }
+     */
+    uint id() const
+    {
+        return mId;
+    }
+    void setId(const uint id)
+    {
+        mId = id;
+    }
 
     /**
      * Get/Set type
-     */ 
-    Type type() const { return mType; }
-    void setType( const Type type ) { mType = type; }
+     */
+    Type type() const
+    {
+        return mType;
+    }
+    void setType(const Type type)
+    {
+        mType = type;
+    }
 
     /**
      * Save the settings
      * If the group is empty it must be preset in the KConfig
      */
-    void writeConfig( KConfig &config, const QString &group = QString::null ); 
+    void writeConfig(KConfig &config, const QString &group = QString::null);
 
     /**
      * Read the settings
      * If the group is empty it must be preset in the KConfig
      */
-    void readConfig( KConfig &config, const QString &group = QString::null ); 
+    void readConfig(KConfig &config, const QString &group = QString::null);
 
-  protected:
+protected:
     uint mId;
     QString mName;
-    Type mType; 
+    Type mType;
 };
 
 #endif

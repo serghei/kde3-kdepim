@@ -33,46 +33,46 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kabconfig( QWidget *parent, const char * ) {
-    return new KCMKabConfig( parent, "kcmkabconfig" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_kabconfig(QWidget *parent, const char *)
+    {
+        return new KCMKabConfig(parent, "kcmkabconfig");
+    }
 }
 
-KCMKabConfig::KCMKabConfig( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+KCMKabConfig::KCMKabConfig(QWidget *parent, const char *name)
+    : KCModule(parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );
-  layout->addWidget( mConfigWidget );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    mConfigWidget = new KABConfigWidget(this, "mConfigWidget");
+    layout->addWidget(mConfigWidget);
 
-  connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
+    connect(mConfigWidget, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
 
-  load();
+    load();
 
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabconfig" ),
-                                      I18N_NOOP( "KAddressBook Configure Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 - 2004 Tobias Koenig" ) );
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkabconfig"),
+                                       I18N_NOOP("KAddressBook Configure Dialog"),
+                                       0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c), 2003 - 2004 Tobias Koenig"));
 
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-  setAboutData( about );
+    about->addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
+    setAboutData(about);
 }
 
 void KCMKabConfig::load()
 {
-  mConfigWidget->restoreSettings();
+    mConfigWidget->restoreSettings();
 }
 
 void KCMKabConfig::save()
 {
-  mConfigWidget->saveSettings();
+    mConfigWidget->saveSettings();
 }
 
 void KCMKabConfig::defaults()
 {
-  mConfigWidget->defaults();
+    mConfigWidget->defaults();
 }
 
 #include "kcmkabconfig.moc"

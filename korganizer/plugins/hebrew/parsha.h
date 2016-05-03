@@ -17,17 +17,16 @@
 /**
 @author Jonathan Singer
 */
-class Parsha
-{
+class Parsha {
 public:
 
-  Parsha();
-  ~Parsha();
-  static QString FindParshaName(int daynumber, int kvia, bool leap_p,
-                                bool israel_p);
+    Parsha();
+    ~Parsha();
+    static QString FindParshaName(int daynumber, int kvia, bool leap_p,
+                                  bool israel_p);
 
 private:
-  static QStringList parshiot_names;
+    static QStringList parshiot_names;
 };
 
 #endif

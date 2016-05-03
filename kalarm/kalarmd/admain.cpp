@@ -33,27 +33,27 @@
 
 static const KCmdLineOptions options[] =
 {
-	{ "autostart", "", 0 },
-	KCmdLineLastOption
+    { "autostart", "", 0 },
+    KCmdLineLastOption
 };
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	KAboutData aboutData(DAEMON_APP_NAME, I18N_NOOP("KAlarm Daemon"),
-	                     DAEMON_VERSION, I18N_NOOP("KAlarm Alarm Daemon"), KAboutData::License_GPL,
-	                     "Copyright 1997-1999 Preston Brown\nCopyright 2000-2001 Cornelius Schumacher\nCopyright 2001,2004-2007 David Jarvie", 0,
-	                     "http://www.astrojar.org.uk/kalarm");
-	aboutData.addAuthor("David Jarvie", I18N_NOOP("Maintainer"), "software@astrojar.org.uk");
-	aboutData.addAuthor("Cornelius Schumacher", I18N_NOOP("Author"), "schumacher@kde.org");
-	aboutData.addAuthor("Preston Brown", I18N_NOOP("Original Author"), "pbrown@kde.org");
+    KAboutData aboutData(DAEMON_APP_NAME, I18N_NOOP("KAlarm Daemon"),
+                         DAEMON_VERSION, I18N_NOOP("KAlarm Alarm Daemon"), KAboutData::License_GPL,
+                         "Copyright 1997-1999 Preston Brown\nCopyright 2000-2001 Cornelius Schumacher\nCopyright 2001,2004-2007 David Jarvie", 0,
+                         "http://www.astrojar.org.uk/kalarm");
+    aboutData.addAuthor("David Jarvie", I18N_NOOP("Maintainer"), "software@astrojar.org.uk");
+    aboutData.addAuthor("Cornelius Schumacher", I18N_NOOP("Author"), "schumacher@kde.org");
+    aboutData.addAuthor("Preston Brown", I18N_NOOP("Original Author"), "pbrown@kde.org");
 
-	KCmdLineArgs::init(argc, argv, &aboutData);
-	KCmdLineArgs::addCmdLineOptions(options);
-	KUniqueApplication::addCmdLineOptions();
-	KStartupInfo::disableAutoAppStartedSending();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
+    KStartupInfo::disableAutoAppStartedSending();
 
-	if (!AlarmDaemonApp::start())
-		exit(0);
-	AlarmDaemonApp app;
-	return app.exec();
+    if(!AlarmDaemonApp::start())
+        exit(0);
+    AlarmDaemonApp app;
+    return app.exec();
 }

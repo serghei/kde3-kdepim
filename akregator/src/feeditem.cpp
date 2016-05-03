@@ -34,23 +34,23 @@
 
 namespace Akregator {
 
-FeedItem::FeedItem(FolderItem* parent, Feed* node) : TreeNodeItem(parent, node)
+FeedItem::FeedItem(FolderItem *parent, Feed *node) : TreeNodeItem(parent, node)
 {
     initialize(node);
 }
 
-FeedItem::FeedItem(KListView* parent, Feed* node) : TreeNodeItem(parent, node)
+FeedItem::FeedItem(KListView *parent, Feed *node) : TreeNodeItem(parent, node)
 {
     initialize(node);
 }
 
-FeedItem::FeedItem(KListView* parent, TreeNodeItem* after, Feed* node) : TreeNodeItem(parent, after, node)
+FeedItem::FeedItem(KListView *parent, TreeNodeItem *after, Feed *node) : TreeNodeItem(parent, after, node)
 {
     initialize(node);
 }
 
 
-FeedItem::FeedItem(FolderItem* parent, TreeNodeItem* after, Feed* node) : TreeNodeItem(parent, after, node)
+FeedItem::FeedItem(FolderItem *parent, TreeNodeItem *after, Feed *node) : TreeNodeItem(parent, after, node)
 {
     initialize(node);
 }
@@ -59,26 +59,26 @@ FeedItem::~FeedItem()
 {
 }
 
-Feed* FeedItem::node() 
-{ 
-    return static_cast<Feed*> (m_node); 
+Feed *FeedItem::node()
+{
+    return static_cast<Feed *>(m_node);
 }
 
 void FeedItem::nodeChanged()
 {
-    if ( node()->fetchErrorOccurred() )
+    if(node()->fetchErrorOccurred())
         setPixmap(0, errorPixmap());
     else
     {
-        if (!node()->favicon().isNull())
-             setPixmap(0, node()->favicon());
+        if(!node()->favicon().isNull())
+            setPixmap(0, node()->favicon());
         else
         {
-            setPixmap( 0, defaultPixmap() );
+            setPixmap(0, defaultPixmap());
             node()->loadFavicon();
         }
     }
-    
+
     TreeNodeItem::nodeChanged();
 }
 
@@ -92,26 +92,26 @@ QPixmap FeedItem::defaultPixmap()
     return KGlobal::iconLoader()->loadIcon("txt", KIcon::Small);
 }
 
-void FeedItem::initialize(Feed* node)
+void FeedItem::initialize(Feed *node)
 {
     setExpandable(false);
-    if (node)
+    if(node)
     {
         setText(0, node->title());
-        if (!node->favicon().isNull())
-            setPixmap( 0, node->favicon() );
+        if(!node->favicon().isNull())
+            setPixmap(0, node->favicon());
         else
         {
-            setPixmap( 0, defaultPixmap() );
+            setPixmap(0, defaultPixmap());
             node->loadFavicon();
         }
     }
 }
 
-void FeedItem::showContextMenu(const QPoint& p)
+void FeedItem::showContextMenu(const QPoint &p)
 {
-    QWidget* w = ActionManager::getInstance()->container("feeds_popup");
-    if (w)
+    QWidget *w = ActionManager::getInstance()->container("feeds_popup");
+    if(w)
         static_cast<QPopupMenu *>(w)->exec(p);
 }
 

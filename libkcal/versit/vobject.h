@@ -1,44 +1,44 @@
 /***************************************************************************
-(C) Copyright 1996 Apple Computer, Inc., AT&T Corp., International             
-Business Machines Corporation and Siemens Rolm Communications Inc.             
-                                                                               
-For purposes of this license notice, the term Licensors shall mean,            
-collectively, Apple Computer, Inc., AT&T Corp., International                  
-Business Machines Corporation and Siemens Rolm Communications Inc.             
-The term Licensor shall mean any of the Licensors.                             
-                                                                               
-Subject to acceptance of the following conditions, permission is hereby        
-granted by Licensors without the need for written agreement and without        
-license or royalty fees, to use, copy, modify and distribute this              
-software for any purpose.                                                      
-                                                                               
-The above copyright notice and the following four paragraphs must be           
-reproduced in all copies of this software and any software including           
-this software.                                                                 
-                                                                               
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS AND NO LICENSOR SHALL HAVE       
-ANY OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS OR       
-MODIFICATIONS.                                                                 
-                                                                               
-IN NO EVENT SHALL ANY LICENSOR BE LIABLE TO ANY PARTY FOR DIRECT,              
-INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES OR LOST PROFITS ARISING OUT         
-OF THE USE OF THIS SOFTWARE EVEN IF ADVISED OF THE POSSIBILITY OF SUCH         
-DAMAGE.                                                                        
-                                                                               
-EACH LICENSOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, EXPRESS OR IMPLIED,       
-INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF NONINFRINGEMENT OR THE            
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR             
-PURPOSE.                                                                       
+(C) Copyright 1996 Apple Computer, Inc., AT&T Corp., International
+Business Machines Corporation and Siemens Rolm Communications Inc.
 
-The software is provided with RESTRICTED RIGHTS.  Use, duplication, or         
-disclosure by the government are subject to restrictions set forth in          
-DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.                         
+For purposes of this license notice, the term Licensors shall mean,
+collectively, Apple Computer, Inc., AT&T Corp., International
+Business Machines Corporation and Siemens Rolm Communications Inc.
+The term Licensor shall mean any of the Licensors.
+
+Subject to acceptance of the following conditions, permission is hereby
+granted by Licensors without the need for written agreement and without
+license or royalty fees, to use, copy, modify and distribute this
+software for any purpose.
+
+The above copyright notice and the following four paragraphs must be
+reproduced in all copies of this software and any software including
+this software.
+
+THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS AND NO LICENSOR SHALL HAVE
+ANY OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS OR
+MODIFICATIONS.
+
+IN NO EVENT SHALL ANY LICENSOR BE LIABLE TO ANY PARTY FOR DIRECT,
+INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES OR LOST PROFITS ARISING OUT
+OF THE USE OF THIS SOFTWARE EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.
+
+EACH LICENSOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY OF NONINFRINGEMENT OR THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.
+
+The software is provided with RESTRICTED RIGHTS.  Use, duplication, or
+disclosure by the government are subject to restrictions set forth in
+DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
 
 ***************************************************************************/
 
 /*
- 
-The vCard/vCalendar C interface is implemented in the set 
+
+The vCard/vCalendar C interface is implemented in the set
 of files as follows:
 
 vcc.y, yacc source, and vcc.c, the yacc output you will use
@@ -58,10 +58,10 @@ test.c is a standalone test driver that exercises some of
 the features of the APIs provided. Invoke test.exe on a
 VCARD/VCALENDAR input text file and you will see the pretty
 print output of the internal representation (this pretty print
-output should give you a good idea of how the internal 
-representation looks like -- there is one such output in the 
-following too). Also, a file with the .out suffix is generated 
-to show that the internal representation can be written back 
+output should give you a good idea of how the internal
+representation looks like -- there is one such output in the
+following too). Also, a file with the .out suffix is generated
+to show that the internal representation can be written back
 in the original text format.
 
 For more information on this API see the readme.txt file
@@ -247,132 +247,136 @@ extern "C" {
 #define VCX509Prop				"X509"
 #define VCXRuleProp				"XRULE"
 
-/* extensions for KOrganizer / KPilot */
+    /* extensions for KOrganizer / KPilot */
 #define KPilotIdProp                            "X-PILOTID"
 #define KPilotStatusProp                        "X-PILOTSTAT"
 
-/* extensions for iMIP / iTIP */
+    /* extensions for iMIP / iTIP */
 #define ICOrganizerProp                         "X-ORGANIZER"
 #define ICMethodProp                            "X-METHOD"
 #define ICRequestStatusProp                     "X-REQUEST-STATUS"
 
-typedef struct VObject VObject;
+    typedef struct VObject VObject;
 
-typedef union ValueItem {
-    const char *strs;
-    const wchar_t *ustrs;
-    unsigned int i;
-    unsigned long l;
-    void *any;
-    VObject *vobj;
+    typedef union ValueItem
+    {
+        const char *strs;
+        const wchar_t *ustrs;
+        unsigned int i;
+        unsigned long l;
+        void *any;
+        VObject *vobj;
     } ValueItem;
 
-struct VObject {
-    VObject *next;
-    const char *id;
-    VObject *prop;
-    unsigned short valType;
-    ValueItem val;
+    struct VObject
+    {
+        VObject *next;
+        const char *id;
+        VObject *prop;
+        unsigned short valType;
+        ValueItem val;
     };
 
-typedef struct StrItem StrItem;
+    typedef struct StrItem StrItem;
 
-struct StrItem {
-    StrItem *next;
-    const char *s;
-    unsigned int refCnt;
+    struct StrItem
+    {
+        StrItem *next;
+        const char *s;
+        unsigned int refCnt;
     };
 
-typedef struct VObjectIterator {
-    VObject* start;
-    VObject* next;
+    typedef struct VObjectIterator
+    {
+        VObject *start;
+        VObject *next;
     } VObjectIterator;
 
-extern VObject* newVObject(const char *id);
-extern void deleteVObject(VObject *p);
-extern char* dupStr(const char *s, unsigned int size);
-extern void deleteStr(const char *p);
-extern void unUseStr(const char *s);
+    extern VObject *newVObject(const char *id);
+    extern void deleteVObject(VObject *p);
+    extern char *dupStr(const char *s, unsigned int size);
+    extern void deleteStr(const char *p);
+    extern void unUseStr(const char *s);
 
-extern void setVObjectName(VObject *o, const char* id);
-extern void setVObjectStringZValue(VObject *o, const char *s);
-extern void setVObjectStringZValue_(VObject *o, const char *s);
-extern void setVObjectUStringZValue(VObject *o, const wchar_t *s);
-extern void setVObjectUStringZValue_(VObject *o, const wchar_t *s);
-extern void setVObjectIntegerValue(VObject *o, unsigned int i);
-extern void setVObjectLongValue(VObject *o, unsigned long l);
-extern void setVObjectAnyValue(VObject *o, void *t);
-extern VObject* setValueWithSize(VObject *prop, void *val, unsigned int size);
-extern VObject* setValueWithSize_(VObject *prop, void *val, unsigned int size);
+    extern void setVObjectName(VObject *o, const char *id);
+    extern void setVObjectStringZValue(VObject *o, const char *s);
+    extern void setVObjectStringZValue_(VObject *o, const char *s);
+    extern void setVObjectUStringZValue(VObject *o, const wchar_t *s);
+    extern void setVObjectUStringZValue_(VObject *o, const wchar_t *s);
+    extern void setVObjectIntegerValue(VObject *o, unsigned int i);
+    extern void setVObjectLongValue(VObject *o, unsigned long l);
+    extern void setVObjectAnyValue(VObject *o, void *t);
+    extern VObject *setValueWithSize(VObject *prop, void *val, unsigned int size);
+    extern VObject *setValueWithSize_(VObject *prop, void *val, unsigned int size);
 
-extern const char* vObjectName(VObject *o);
-extern const char* vObjectStringZValue(VObject *o);
-extern const wchar_t* vObjectUStringZValue(VObject *o);
-extern unsigned int vObjectIntegerValue(VObject *o);
-extern unsigned long vObjectLongValue(VObject *o);
-extern void* vObjectAnyValue(VObject *o);
-extern VObject* vObjectVObjectValue(VObject *o);
-extern void setVObjectVObjectValue(VObject *o, VObject *p);
+    extern const char *vObjectName(VObject *o);
+    extern const char *vObjectStringZValue(VObject *o);
+    extern const wchar_t *vObjectUStringZValue(VObject *o);
+    extern unsigned int vObjectIntegerValue(VObject *o);
+    extern unsigned long vObjectLongValue(VObject *o);
+    extern void *vObjectAnyValue(VObject *o);
+    extern VObject *vObjectVObjectValue(VObject *o);
+    extern void setVObjectVObjectValue(VObject *o, VObject *p);
 
-extern VObject* addVObjectProp(VObject *o, VObject *p);
-extern VObject* addProp(VObject *o, const char *id);
-extern VObject* addProp_(VObject *o, const char *id);
-extern VObject* addPropValue(VObject *o, const char *p, const char *v);
-extern VObject* addPropSizedValue_(VObject *o, const char *p, const char *v, unsigned int size);
-extern VObject* addPropSizedValue(VObject *o, const char *p, const char *v, unsigned int size);
-extern VObject* addGroup(VObject *o, const char *g);
-extern void addList(VObject **o, VObject *p);
+    extern VObject *addVObjectProp(VObject *o, VObject *p);
+    extern VObject *addProp(VObject *o, const char *id);
+    extern VObject *addProp_(VObject *o, const char *id);
+    extern VObject *addPropValue(VObject *o, const char *p, const char *v);
+    extern VObject *addPropSizedValue_(VObject *o, const char *p, const char *v, unsigned int size);
+    extern VObject *addPropSizedValue(VObject *o, const char *p, const char *v, unsigned int size);
+    extern VObject *addGroup(VObject *o, const char *g);
+    extern void addList(VObject **o, VObject *p);
 
-extern VObject* isAPropertyOf(VObject *o, const char *id);
+    extern VObject *isAPropertyOf(VObject *o, const char *id);
 
-extern VObject* nextVObjectInList(VObject *o);
-extern void initPropIterator(VObjectIterator *i, VObject *o);
-extern int moreIteration(VObjectIterator *i);
-extern VObject* nextVObject(VObjectIterator *i);
+    extern VObject *nextVObjectInList(VObject *o);
+    extern void initPropIterator(VObjectIterator *i, VObject *o);
+    extern int moreIteration(VObjectIterator *i);
+    extern VObject *nextVObject(VObjectIterator *i);
 
-extern char* writeMemVObject(char *s, int *len, VObject *o);
-extern char* writeMemVObjects(char *s, int *len, VObject *list);
+    extern char *writeMemVObject(char *s, int *len, VObject *o);
+    extern char *writeMemVObjects(char *s, int *len, VObject *list);
 
-extern const char* lookupStr(const char *s);
-extern void cleanStrTbl();
+    extern const char *lookupStr(const char *s);
+    extern void cleanStrTbl();
 
-extern void cleanVObject(VObject *o);
-extern void cleanVObjects(VObject *list);
+    extern void cleanVObject(VObject *o);
+    extern void cleanVObjects(VObject *list);
 
-extern const char* lookupProp(const char* str);
-extern const char* lookupProp_(const char* str);
+    extern const char *lookupProp(const char *str);
+    extern const char *lookupProp_(const char *str);
 
-extern wchar_t* fakeUnicode(const char *ps, int *bytes);
-extern int uStrLen(const wchar_t *u);
-extern char* fakeCString(const wchar_t *u);
+    extern wchar_t *fakeUnicode(const char *ps, int *bytes);
+    extern int uStrLen(const wchar_t *u);
+    extern char *fakeCString(const wchar_t *u);
 
-extern void printVObjectToFile(char *fname,VObject *o);
-extern void printVObjectsToFile(char *fname,VObject *list);
-extern void writeVObjectToFile(char *fname, VObject *o);
-extern void writeVObjectsToFile(char *fname, VObject *list);
+    extern void printVObjectToFile(char *fname, VObject *o);
+    extern void printVObjectsToFile(char *fname, VObject *list);
+    extern void writeVObjectToFile(char *fname, VObject *o);
+    extern void writeVObjectsToFile(char *fname, VObject *list);
 
-extern int vObjectValueType(VObject *o);
+    extern int vObjectValueType(VObject *o);
 
-/* return type of vObjectValueType: */
+    /* return type of vObjectValueType: */
 #define VCVT_NOVALUE	0
-	/* if the VObject has no value associated with it. */
+    /* if the VObject has no value associated with it. */
 #define VCVT_STRINGZ	1
-	/* if the VObject has value set by setVObjectStringZValue. */
+    /* if the VObject has value set by setVObjectStringZValue. */
 #define VCVT_USTRINGZ	2
-	/* if the VObject has value set by setVObjectUStringZValue. */
+    /* if the VObject has value set by setVObjectUStringZValue. */
 #define VCVT_UINT		3
-	/* if the VObject has value set by setVObjectIntegerValue. */
+    /* if the VObject has value set by setVObjectIntegerValue. */
 #define VCVT_ULONG		4
-	/* if the VObject has value set by setVObjectLongValue. */
+    /* if the VObject has value set by setVObjectLongValue. */
 #define VCVT_RAW		5
-	/* if the VObject has value set by setVObjectAnyValue. */
+    /* if the VObject has value set by setVObjectAnyValue. */
 #define VCVT_VOBJECT	6
-	/* if the VObject has value set by setVObjectVObjectValue. */
+    /* if the VObject has value set by setVObjectVObjectValue. */
 
-extern const char** fieldedProp;
+    extern const char **fieldedProp;
 
-extern void printVObject(FILE *fp,VObject *o);
-extern void writeVObject(FILE *fp, VObject *o);
+    extern void printVObject(FILE *fp, VObject *o);
+    extern void writeVObject(FILE *fp, VObject *o);
 
 
 #if defined(__CPLUSPLUS__) || defined(__cplusplus)

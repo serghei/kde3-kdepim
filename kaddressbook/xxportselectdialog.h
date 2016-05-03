@@ -42,34 +42,33 @@ class Core;
 
 class KComboBox;
 
-class XXPortSelectDialog : public KDialogBase
-{
-  Q_OBJECT
+class XXPortSelectDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    XXPortSelectDialog( KAB::Core *core, bool sort, QWidget* parent,
-                        const char* name = 0 );
+public:
+    XXPortSelectDialog(KAB::Core *core, bool sort, QWidget *parent,
+                       const char *name = 0);
 
     KABC::AddresseeList contacts();
 
-  private slots:
-    void filterChanged( int );
-    void categoryClicked( QListViewItem * i );
+private slots:
+    void filterChanged(int);
+    void categoryClicked(QListViewItem *i);
 
-  protected slots:
+protected slots:
     void slotHelp();
 
-  private:
+private:
     void initGUI();
     QStringList categories() const;
 
-    QButtonGroup* mButtonGroup;
-    QRadioButton* mUseCategories;
-    QRadioButton* mUseFilters;
-    QRadioButton* mUseWholeBook;
-    QRadioButton* mUseSelection;
-    QComboBox* mFiltersCombo;
-    QListView* mCategoriesView;
+    QButtonGroup *mButtonGroup;
+    QRadioButton *mUseCategories;
+    QRadioButton *mUseFilters;
+    QRadioButton *mUseWholeBook;
+    QRadioButton *mUseSelection;
+    QComboBox *mFiltersCombo;
+    QListView *mCategoriesView;
 
     KComboBox *mFieldCombo;
     KComboBox *mSortTypeCombo;

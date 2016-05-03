@@ -1,5 +1,5 @@
 /*  Message Property
-    
+
     This file is part of KMail, the KDE mail client.
     Copyright (c) Don Sanders <sanders@kde.org>
 
@@ -38,136 +38,137 @@ using namespace KMail;
 QMap<Q_UINT32, QGuardedPtr<KMFolder> > MessageProperty::sFolders;
 QMap<Q_UINT32, QGuardedPtr<ActionScheduler> > MessageProperty::sHandlers;
 QMap<Q_UINT32, int > MessageProperty::sTransfers;
-QMap<const KMMsgBase*, long > MessageProperty::sSerialCache;
+QMap<const KMMsgBase *, long > MessageProperty::sSerialCache;
 
-bool MessageProperty::filtering( Q_UINT32 serNum )
+bool MessageProperty::filtering(Q_UINT32 serNum)
 {
-  return sFolders.contains( serNum );
+    return sFolders.contains(serNum);
 }
 
-void MessageProperty::setFiltering( Q_UINT32 serNum, bool filter )
+void MessageProperty::setFiltering(Q_UINT32 serNum, bool filter)
 {
-  assert(!filtering(serNum) || !filter);
-  if (filter && !filtering(serNum))
-    sFolders.replace(serNum, QGuardedPtr<KMFolder>(0) );
-  else if (!filter)
-    sFolders.remove(serNum);
+    assert(!filtering(serNum) || !filter);
+    if(filter && !filtering(serNum))
+        sFolders.replace(serNum, QGuardedPtr<KMFolder>(0));
+    else if(!filter)
+        sFolders.remove(serNum);
 }
 
-bool MessageProperty::filtering( const KMMsgBase *msgBase )
+bool MessageProperty::filtering(const KMMsgBase *msgBase)
 {
-  return filtering( msgBase->getMsgSerNum() );
+    return filtering(msgBase->getMsgSerNum());
 }
 
-void MessageProperty::setFiltering( const KMMsgBase *msgBase, bool filter )
+void MessageProperty::setFiltering(const KMMsgBase *msgBase, bool filter)
 {
-  setFiltering( msgBase->getMsgSerNum(), filter );
+    setFiltering(msgBase->getMsgSerNum(), filter);
 }
 
-KMFolder* MessageProperty::filterFolder( Q_UINT32 serNum )
+KMFolder *MessageProperty::filterFolder(Q_UINT32 serNum)
 {
-  if (sFolders.contains(serNum))
-    return sFolders[serNum].operator->();
-  return 0;
+    if(sFolders.contains(serNum))
+        return sFolders[serNum].operator->();
+    return 0;
 }
 
-void MessageProperty::setFilterFolder( Q_UINT32 serNum, KMFolder* folder )
+void MessageProperty::setFilterFolder(Q_UINT32 serNum, KMFolder *folder)
 {
-  sFolders.replace(serNum, QGuardedPtr<KMFolder>(folder) );
+    sFolders.replace(serNum, QGuardedPtr<KMFolder>(folder));
 }
 
-KMFolder* MessageProperty::filterFolder( const KMMsgBase *msgBase )
+KMFolder *MessageProperty::filterFolder(const KMMsgBase *msgBase)
 {
-  return filterFolder( msgBase->getMsgSerNum() );
+    return filterFolder(msgBase->getMsgSerNum());
 }
 
-void MessageProperty::setFilterFolder( const KMMsgBase *msgBase, KMFolder* folder )
+void MessageProperty::setFilterFolder(const KMMsgBase *msgBase, KMFolder *folder)
 {
-  setFilterFolder( msgBase->getMsgSerNum(), folder );
+    setFilterFolder(msgBase->getMsgSerNum(), folder);
 }
 
-ActionScheduler* MessageProperty::filterHandler( Q_UINT32 serNum )
+ActionScheduler *MessageProperty::filterHandler(Q_UINT32 serNum)
 {
-  if ( sHandlers.contains( serNum ))
-    return sHandlers[serNum].operator->();
-  return 0;
+    if(sHandlers.contains(serNum))
+        return sHandlers[serNum].operator->();
+    return 0;
 }
 
-void MessageProperty::setFilterHandler( Q_UINT32 serNum, ActionScheduler* handler )
+void MessageProperty::setFilterHandler(Q_UINT32 serNum, ActionScheduler *handler)
 {
-  if (handler)
-    sHandlers.replace( serNum, QGuardedPtr<ActionScheduler>(handler) );
-  else
-    sHandlers.remove( serNum );
+    if(handler)
+        sHandlers.replace(serNum, QGuardedPtr<ActionScheduler>(handler));
+    else
+        sHandlers.remove(serNum);
 }
 
-ActionScheduler* MessageProperty::filterHandler( const KMMsgBase *msgBase )
+ActionScheduler *MessageProperty::filterHandler(const KMMsgBase *msgBase)
 {
-  return filterHandler( msgBase->getMsgSerNum() );
+    return filterHandler(msgBase->getMsgSerNum());
 }
 
-void MessageProperty::setFilterHandler( const KMMsgBase *msgBase, ActionScheduler* handler )
+void MessageProperty::setFilterHandler(const KMMsgBase *msgBase, ActionScheduler *handler)
 {
-  setFilterHandler( msgBase->getMsgSerNum(), handler );
+    setFilterHandler(msgBase->getMsgSerNum(), handler);
 }
 
-bool MessageProperty::transferInProgress( Q_UINT32 serNum )
+bool MessageProperty::transferInProgress(Q_UINT32 serNum)
 {
-  if (sTransfers.contains(serNum))
-    return sTransfers[serNum];
-  return false;
+    if(sTransfers.contains(serNum))
+        return sTransfers[serNum];
+    return false;
 }
 
-void MessageProperty::setTransferInProgress( Q_UINT32 serNum, bool transfer, bool force )
+void MessageProperty::setTransferInProgress(Q_UINT32 serNum, bool transfer, bool force)
 {
-  int transferInProgress = 0;
-  if (sTransfers.contains(serNum))
-    transferInProgress = sTransfers[serNum];
-  if ( force && !transfer )
-    transferInProgress = 0;
-  else
-    transfer ? ++transferInProgress : --transferInProgress;
-  if ( transferInProgress < 0 )
-    transferInProgress = 0;
-  if (transferInProgress)
-    sTransfers.replace( serNum, transferInProgress );
-  else
-    sTransfers.remove( serNum );
+    int transferInProgress = 0;
+    if(sTransfers.contains(serNum))
+        transferInProgress = sTransfers[serNum];
+    if(force && !transfer)
+        transferInProgress = 0;
+    else
+        transfer ? ++transferInProgress : --transferInProgress;
+    if(transferInProgress < 0)
+        transferInProgress = 0;
+    if(transferInProgress)
+        sTransfers.replace(serNum, transferInProgress);
+    else
+        sTransfers.remove(serNum);
 }
 
-bool MessageProperty::transferInProgress( const KMMsgBase *msgBase )
+bool MessageProperty::transferInProgress(const KMMsgBase *msgBase)
 {
-  return transferInProgress( msgBase->getMsgSerNum() );
+    return transferInProgress(msgBase->getMsgSerNum());
 }
 
-void MessageProperty::setTransferInProgress( const KMMsgBase *msgBase, bool transfer, bool force )
+void MessageProperty::setTransferInProgress(const KMMsgBase *msgBase, bool transfer, bool force)
 {
-  setTransferInProgress( msgBase->getMsgSerNum(), transfer, force );
+    setTransferInProgress(msgBase->getMsgSerNum(), transfer, force);
 }
 
-Q_UINT32 MessageProperty::serialCache( const KMMsgBase *msgBase )
+Q_UINT32 MessageProperty::serialCache(const KMMsgBase *msgBase)
 {
-  if (sSerialCache.contains( msgBase ))
-    return sSerialCache[msgBase];
-  return 0;
+    if(sSerialCache.contains(msgBase))
+        return sSerialCache[msgBase];
+    return 0;
 }
 
-void MessageProperty::setSerialCache( const KMMsgBase *msgBase, Q_UINT32 serNum )
+void MessageProperty::setSerialCache(const KMMsgBase *msgBase, Q_UINT32 serNum)
 {
-  if (serNum)
-    sSerialCache.replace( msgBase, serNum );
-  else
-    sSerialCache.remove( msgBase );
+    if(serNum)
+        sSerialCache.replace(msgBase, serNum);
+    else
+        sSerialCache.remove(msgBase);
 }
 
-void MessageProperty::forget( const KMMsgBase *msgBase )
+void MessageProperty::forget(const KMMsgBase *msgBase)
 {
-  Q_UINT32 serNum = serialCache( msgBase );
-  if (serNum) {
-    Q_ASSERT( !transferInProgress( serNum ) );
-    sTransfers.remove( serNum );
-    sSerialCache.remove( msgBase );
-  }
+    Q_UINT32 serNum = serialCache(msgBase);
+    if(serNum)
+    {
+        Q_ASSERT(!transferInProgress(serNum));
+        sTransfers.remove(serNum);
+        sSerialCache.remove(msgBase);
+    }
 }
 
 #include "messageproperty.moc"

@@ -30,29 +30,29 @@
 #include "knotebutton.h"
 
 
-KNoteButton::KNoteButton( const QString& icon, QWidget *parent, const char *name )
-    : QPushButton( parent, name )
+KNoteButton::KNoteButton(const QString &icon, QWidget *parent, const char *name)
+    : QPushButton(parent, name)
 {
-    setFocusPolicy( NoFocus );
-    setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
+    setFocusPolicy(NoFocus);
+    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     m_flat = true;
 
-    if ( !icon.isEmpty() )
-        setIconSet( KGlobal::iconLoader()->loadIconSet( icon, KIcon::Small, 10 ) );
+    if(!icon.isEmpty())
+        setIconSet(KGlobal::iconLoader()->loadIconSet(icon, KIcon::Small, 10));
 }
 
 KNoteButton::~KNoteButton()
 {
 }
 
-void KNoteButton::enterEvent( QEvent * )
+void KNoteButton::enterEvent(QEvent *)
 {
     m_flat = false;
-    repaint( false );
+    repaint(false);
 }
 
-void KNoteButton::leaveEvent( QEvent * )
+void KNoteButton::leaveEvent(QEvent *)
 {
     m_flat = true;
     repaint();
@@ -60,52 +60,52 @@ void KNoteButton::leaveEvent( QEvent * )
 
 QSize KNoteButton::sizeHint() const
 {
-    return QSize( QPushButton::sizeHint().height(), QPushButton::sizeHint().height() );
+    return QSize(QPushButton::sizeHint().height(), QPushButton::sizeHint().height());
 }
 
-void KNoteButton::drawButton( QPainter* p )
+void KNoteButton::drawButton(QPainter *p)
 {
     QStyle::SFlags flags = QStyle::Style_Default;
 
-    if ( isEnabled() )
+    if(isEnabled())
         flags |= QStyle::Style_Enabled;
-    if ( isDown() )
+    if(isDown())
         flags |= QStyle::Style_Down;
-    if ( isOn() )
+    if(isOn())
         flags |= QStyle::Style_On;
-    if ( !isFlat() && !isDown() )
+    if(!isFlat() && !isDown())
         flags |= QStyle::Style_Raised;
-    if ( !m_flat )
+    if(!m_flat)
         flags |= QStyle::Style_MouseOver;
 
-    style().drawPrimitive( QStyle::PE_ButtonTool, p, rect(), colorGroup(), flags );
-    drawButtonLabel( p );
+    style().drawPrimitive(QStyle::PE_ButtonTool, p, rect(), colorGroup(), flags);
+    drawButtonLabel(p);
 }
 
-void KNoteButton::drawButtonLabel( QPainter* p )
+void KNoteButton::drawButtonLabel(QPainter *p)
 {
-    if ( iconSet() && !iconSet()->isNull() )
+    if(iconSet() && !iconSet()->isNull())
     {
         QIconSet::Mode  mode  = QIconSet::Disabled;
         QIconSet::State state = QIconSet::Off;
 
-        if ( isEnabled() )
+        if(isEnabled())
             mode = hasFocus() ? QIconSet::Active : QIconSet::Normal;
-        if ( isToggleButton() && isOn() )
+        if(isToggleButton() && isOn())
             state = QIconSet::On;
 
-        QPixmap pix = iconSet()->pixmap( QIconSet::Small, mode, state );
+        QPixmap pix = iconSet()->pixmap(QIconSet::Small, mode, state);
 
-        int dx = ( width() - pix.width() ) / 2;
-        int dy = ( height() - pix.height() ) / 2;
+        int dx = (width() - pix.width()) / 2;
+        int dy = (height() - pix.height()) / 2;
 
         // Shift button contents if pushed.
-        if ( isOn() || isDown() )
+        if(isOn() || isDown())
         {
-            dx += style().pixelMetric( QStyle::PM_ButtonShiftHorizontal, this );
-            dy += style().pixelMetric( QStyle::PM_ButtonShiftVertical, this );
+            dx += style().pixelMetric(QStyle::PM_ButtonShiftHorizontal, this);
+            dy += style().pixelMetric(QStyle::PM_ButtonShiftVertical, this);
         }
 
-        p->drawPixmap( dx, dy, pix );
+        p->drawPixmap(dx, dy, pix);
     }
 }

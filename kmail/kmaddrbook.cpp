@@ -34,54 +34,58 @@
 
 #include <qregexp.h>
 
-void KabcBridge::addresses(QStringList& result) // includes lists
+void KabcBridge::addresses(QStringList &result) // includes lists
 {
-  KCursorSaver busy(KBusyPtr::busy()); // loading might take a while
+    KCursorSaver busy(KBusyPtr::busy()); // loading might take a while
 
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  KABC::AddressBook::ConstIterator it;
-  for( it = addressBook->begin(); it != addressBook->end(); ++it ) {
-    const QStringList emails = (*it).emails();
-    QString n = (*it).prefix() + " " +
-		(*it).givenName() + " " +
-		(*it).additionalName() + " " +
-	        (*it).familyName() + " " +
-		(*it).suffix();
-    n = n.simplifyWhiteSpace();
+    KABC::AddressBook *addressBook = KABC::StdAddressBook::self(true);
+    KABC::AddressBook::ConstIterator it;
+    for(it = addressBook->begin(); it != addressBook->end(); ++it)
+    {
+        const QStringList emails = (*it).emails();
+        QString n = (*it).prefix() + " " +
+                    (*it).givenName() + " " +
+                    (*it).additionalName() + " " +
+                    (*it).familyName() + " " +
+                    (*it).suffix();
+        n = n.simplifyWhiteSpace();
 
-    QRegExp needQuotes("[^ 0-9A-Za-z\\x0080-\\xFFFF]");
-    QString endQuote = "\" ";
-    QStringList::ConstIterator mit;
-    QString addr, email;
+        QRegExp needQuotes("[^ 0-9A-Za-z\\x0080-\\xFFFF]");
+        QString endQuote = "\" ";
+        QStringList::ConstIterator mit;
+        QString addr, email;
 
-    for ( mit = emails.begin(); mit != emails.end(); ++mit ) {
-      email = *mit;
-      if (!email.isEmpty()) {
-	if (n.isEmpty() || (email.find( '<' ) != -1))
-	  addr = QString::null;
-	else { // do we really need quotes around this name ?
-          if (n.find(needQuotes) != -1)
-	    addr = '"' + n + endQuote;
-	  else
-	    addr = n + ' ';
-	}
+        for(mit = emails.begin(); mit != emails.end(); ++mit)
+        {
+            email = *mit;
+            if(!email.isEmpty())
+            {
+                if(n.isEmpty() || (email.find('<') != -1))
+                    addr = QString::null;
+                else   // do we really need quotes around this name ?
+                {
+                    if(n.find(needQuotes) != -1)
+                        addr = '"' + n + endQuote;
+                    else
+                        addr = n + ' ';
+                }
 
-	if (!addr.isEmpty() && (email.find( '<' ) == -1)
-	    && (email.find( '>' ) == -1)
-	    && (email.find( ',' ) == -1))
-	  addr += '<' + email + '>';
-	else
-	  addr += email;
-	addr = addr.stripWhiteSpace();
-	result.append( addr );
-      }
+                if(!addr.isEmpty() && (email.find('<') == -1)
+                        && (email.find('>') == -1)
+                        && (email.find(',') == -1))
+                    addr += '<' + email + '>';
+                else
+                    addr += email;
+                addr = addr.stripWhiteSpace();
+                result.append(addr);
+            }
+        }
     }
-  }
-  KABC::DistributionListManager manager( addressBook );
-  manager.load();
-  result += manager.listNames();
+    KABC::DistributionListManager manager(addressBook);
+    manager.load();
+    result += manager.listNames();
 
-  result.sort();
+    result.sort();
 }
 
 QStringList KabcBridge::addresses()
@@ -89,27 +93,29 @@ QStringList KabcBridge::addresses()
     QStringList entries;
     KABC::AddressBook::ConstIterator it;
 
-    const KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-    for( it = addressBook->begin(); it != addressBook->end(); ++it ) {
+    const KABC::AddressBook *addressBook = KABC::StdAddressBook::self(true);
+    for(it = addressBook->begin(); it != addressBook->end(); ++it)
+    {
         entries += (*it).fullEmail();
     }
     return entries;
 }
 
 //-----------------------------------------------------------------------------
-QString KabcBridge::expandNickName( const QString& nickName )
+QString KabcBridge::expandNickName(const QString &nickName)
 {
-  if ( nickName.isEmpty() )
-    return QString::null;
+    if(nickName.isEmpty())
+        return QString::null;
 
-  const QString lowerNickName = nickName.lower();
-  const KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  for( KABC::AddressBook::ConstIterator it = addressBook->begin();
-       it != addressBook->end(); ++it ) {
-    if ( (*it).nickName().lower() == lowerNickName )
-      return (*it).fullEmail();
-  }
-  return QString::null;
+    const QString lowerNickName = nickName.lower();
+    const KABC::AddressBook *addressBook = KABC::StdAddressBook::self(true);
+    for(KABC::AddressBook::ConstIterator it = addressBook->begin();
+            it != addressBook->end(); ++it)
+    {
+        if((*it).nickName().lower() == lowerNickName)
+            return (*it).fullEmail();
+    }
+    return QString::null;
 }
 
 
@@ -117,19 +123,21 @@ QString KabcBridge::expandNickName( const QString& nickName )
 
 QStringList KabcBridge::categories()
 {
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  KABC::Addressee::List addresses = addressBook->allAddressees();
-  QStringList allcategories, aux;
+    KABC::AddressBook *addressBook = KABC::StdAddressBook::self(true);
+    KABC::Addressee::List addresses = addressBook->allAddressees();
+    QStringList allcategories, aux;
 
-  for ( KABC::Addressee::List::Iterator it = addresses.begin();
-        it != addresses.end(); ++it ) {
-    aux = ( *it ).categories();
-    for ( QStringList::ConstIterator itAux = aux.begin();
-          itAux != aux.end(); ++itAux ) {
-      // don't have duplicates in allcategories
-      if ( allcategories.find( *itAux ) == allcategories.end() )
-        allcategories += *itAux;
+    for(KABC::Addressee::List::Iterator it = addresses.begin();
+            it != addresses.end(); ++it)
+    {
+        aux = (*it).categories();
+        for(QStringList::ConstIterator itAux = aux.begin();
+                itAux != aux.end(); ++itAux)
+        {
+            // don't have duplicates in allcategories
+            if(allcategories.find(*itAux) == allcategories.end())
+                allcategories += *itAux;
+        }
     }
-  }
-  return allcategories;
+    return allcategories;
 }

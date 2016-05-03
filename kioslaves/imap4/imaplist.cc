@@ -45,91 +45,91 @@
 
 #include <kdebug.h>
 
-imapList::imapList (): parser_(0), noInferiors_ (false),
-noSelect_ (false), marked_ (false), unmarked_ (false), 
-hasChildren_ (false), hasNoChildren_ (false)
+imapList::imapList(): parser_(0), noInferiors_(false),
+    noSelect_(false), marked_(false), unmarked_(false),
+    hasChildren_(false), hasNoChildren_(false)
 {
 }
 
-imapList::imapList (const imapList & lr):parser_(lr.parser_),
-hierarchyDelimiter_ (lr.hierarchyDelimiter_),
-name_ (lr.name_),
-noInferiors_ (lr.noInferiors_),
-noSelect_ (lr.noSelect_), marked_ (lr.marked_), unmarked_ (lr.unmarked_),
-hasChildren_ (lr.hasChildren_), hasNoChildren_ (lr.hasNoChildren_),
-attributes_ (lr.attributes_)  
+imapList::imapList(const imapList &lr): parser_(lr.parser_),
+    hierarchyDelimiter_(lr.hierarchyDelimiter_),
+    name_(lr.name_),
+    noInferiors_(lr.noInferiors_),
+    noSelect_(lr.noSelect_), marked_(lr.marked_), unmarked_(lr.unmarked_),
+    hasChildren_(lr.hasChildren_), hasNoChildren_(lr.hasNoChildren_),
+    attributes_(lr.attributes_)
 {
 }
 
-imapList & imapList::operator = (const imapList & lr)
+imapList &imapList::operator = (const imapList &lr)
 {
-  // Avoid a = a.
-  if (this == &lr)
+    // Avoid a = a.
+    if(this == &lr)
+        return *this;
+
+    parser_ = lr.parser_;
+    hierarchyDelimiter_ = lr.hierarchyDelimiter_;
+    name_ = lr.name_;
+    noInferiors_ = lr.noInferiors_;
+    noSelect_ = lr.noSelect_;
+    marked_ = lr.marked_;
+    unmarked_ = lr.unmarked_;
+    hasChildren_ = lr.hasChildren_;
+    hasNoChildren_ = lr.hasNoChildren_;
+    attributes_ = lr.attributes_;
+
     return *this;
-
-  parser_ = lr.parser_;
-  hierarchyDelimiter_ = lr.hierarchyDelimiter_;
-  name_ = lr.name_;
-  noInferiors_ = lr.noInferiors_;
-  noSelect_ = lr.noSelect_;
-  marked_ = lr.marked_;
-  unmarked_ = lr.unmarked_;
-  hasChildren_ = lr.hasChildren_;
-  hasNoChildren_ = lr.hasNoChildren_;
-  attributes_ = lr.attributes_;
-
-  return *this;
 }
 
-imapList::imapList (const QString & inStr, imapParser &parser)
-: parser_(&parser),
-noInferiors_ (false),
-noSelect_ (false),
-marked_ (false), unmarked_ (false), hasChildren_ (false),
-hasNoChildren_ (false)  
+imapList::imapList(const QString &inStr, imapParser &parser)
+    : parser_(&parser),
+      noInferiors_(false),
+      noSelect_(false),
+      marked_(false), unmarked_(false), hasChildren_(false),
+      hasNoChildren_(false)
 {
-  parseString s;
-  s.data.duplicate(inStr.latin1(), inStr.length());
+    parseString s;
+    s.data.duplicate(inStr.latin1(), inStr.length());
 
-  if (s[0] != '(')
-    return;                     //not proper format for us
+    if(s[0] != '(')
+        return;                     //not proper format for us
 
-  s.pos++;  // tie off (
+    s.pos++;  // tie off (
 
-  parseAttributes( s );
+    parseAttributes(s);
 
-  s.pos++;  // tie off )
-  parser_->skipWS (s);
+    s.pos++;  // tie off )
+    parser_->skipWS(s);
 
-  hierarchyDelimiter_ = parser_->parseOneWordC(s);
-  if (hierarchyDelimiter_ == "NIL")
-    hierarchyDelimiter_ = QString::null;
-  name_ = rfcDecoder::fromIMAP (parser_->parseLiteral (s));  // decode modified UTF7
+    hierarchyDelimiter_ = parser_->parseOneWordC(s);
+    if(hierarchyDelimiter_ == "NIL")
+        hierarchyDelimiter_ = QString::null;
+    name_ = rfcDecoder::fromIMAP(parser_->parseLiteral(s));    // decode modified UTF7
 }
 
-void imapList::parseAttributes( parseString & str )
+void imapList::parseAttributes(parseString &str)
 {
-  QCString attribute, orig;
+    QCString attribute, orig;
 
-  while ( !str.isEmpty () && str[0] != ')' )
-  {
-    orig = parser_->parseOneWordC(str);
-    attributes_ << orig;
-    attribute = orig.lower();
-    if (-1 != attribute.find ("\\noinferiors"))
-      noInferiors_ = true;
-    else if (-1 != attribute.find ("\\noselect"))
-      noSelect_ = true;
-    else if (-1 != attribute.find ("\\marked"))
-      marked_ = true;
-    else if (-1 != attribute.find ("\\unmarked"))
-      unmarked_ = true;
-    else if (-1 != attribute.find ("\\haschildren"))
-      hasChildren_ = true;
-    else if (-1 != attribute.find ("\\hasnochildren"))
-      hasNoChildren_ = true;
-    else
-      kdDebug(7116) << "imapList::imapList: bogus attribute " << attribute << endl;
-  }
+    while(!str.isEmpty() && str[0] != ')')
+    {
+        orig = parser_->parseOneWordC(str);
+        attributes_ << orig;
+        attribute = orig.lower();
+        if(-1 != attribute.find("\\noinferiors"))
+            noInferiors_ = true;
+        else if(-1 != attribute.find("\\noselect"))
+            noSelect_ = true;
+        else if(-1 != attribute.find("\\marked"))
+            marked_ = true;
+        else if(-1 != attribute.find("\\unmarked"))
+            unmarked_ = true;
+        else if(-1 != attribute.find("\\haschildren"))
+            hasChildren_ = true;
+        else if(-1 != attribute.find("\\hasnochildren"))
+            hasNoChildren_ = true;
+        else
+            kdDebug(7116) << "imapList::imapList: bogus attribute " << attribute << endl;
+    }
 }
 

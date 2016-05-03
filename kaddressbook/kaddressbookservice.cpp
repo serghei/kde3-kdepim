@@ -25,17 +25,17 @@
 
 #include "kaddressbookservice.h"
 
-KAddressBookService::KAddressBookService( KAB::Core *core )
-  : DCOPObject( "AddressBookServiceIface" ), mCore( core )
+KAddressBookService::KAddressBookService(KAB::Core *core)
+    : DCOPObject("AddressBookServiceIface"), mCore(core)
 {
 }
 
-void KAddressBookService::importVCardFromData( const QString& vCard )
+void KAddressBookService::importVCardFromData(const QString &vCard)
 {
-  mCore->importVCardFromData( vCard );
+    mCore->importVCardFromData(vCard);
 }
 
-void KAddressBookService::importVCard( const KURL& url )
+void KAddressBookService::importVCard(const KURL &url)
 {
-  mCore->importVCard( url );
+    mCore->importVCard(url);
 }

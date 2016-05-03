@@ -34,48 +34,49 @@
 
 
 typedef KGenericFactory< KNotesPlugin, Kontact::Core > KNotesPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_knotesplugin,
-                            KNotesPluginFactory( "kontact_knotesplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_knotesplugin,
+                           KNotesPluginFactory("kontact_knotesplugin"))
 
 
-KNotesPlugin::KNotesPlugin( Kontact::Core *core, const char *, const QStringList & )
-  : Kontact::Plugin( core, core, "knotes" ),
-    mAboutData( 0 )
+KNotesPlugin::KNotesPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "knotes"),
+      mAboutData(0)
 {
-  setInstance( KNotesPluginFactory::instance() );
+    setInstance(KNotesPluginFactory::instance());
 
-  insertNewAction( new KAction( i18n( "New Note..." ), "knotes", CTRL+SHIFT+Key_N,
-                   this, SLOT( slotNewNote() ), actionCollection(), "new_note" ) );
-  insertSyncAction( new KAction( i18n( "Synchronize Notes" ), "reload", 0,
-                   this, SLOT( slotSyncNotes() ), actionCollection(), "knotes_sync" ) );
+    insertNewAction(new KAction(i18n("New Note..."), "knotes", CTRL + SHIFT + Key_N,
+                                this, SLOT(slotNewNote()), actionCollection(), "new_note"));
+    insertSyncAction(new KAction(i18n("Synchronize Notes"), "reload", 0,
+                                 this, SLOT(slotSyncNotes()), actionCollection(), "knotes_sync"));
 }
 
 KNotesPlugin::~KNotesPlugin()
 {
 }
 
-KParts::ReadOnlyPart* KNotesPlugin::createPart()
+KParts::ReadOnlyPart *KNotesPlugin::createPart()
 {
-  return new KNotesPart( this, "notes" );
+    return new KNotesPart(this, "notes");
 }
 
-Kontact::Summary *KNotesPlugin::createSummaryWidget( QWidget *parentWidget )
+Kontact::Summary *KNotesPlugin::createSummaryWidget(QWidget *parentWidget)
 {
-  return new KNotesSummaryWidget( this, parentWidget );
+    return new KNotesSummaryWidget(this, parentWidget);
 }
 
 const KAboutData *KNotesPlugin::aboutData()
 {
-  if ( !mAboutData ) {
-    mAboutData = new KAboutData( "knotes", I18N_NOOP( "Notes Management" ),
-                                 "0.5", I18N_NOOP( "Notes Management" ),
-                                  KAboutData::License_GPL_V2,
-                                  "(c) 2003-2004 The Kontact developers" );
-    mAboutData->addAuthor( "Michael Brade", "Current Maintainer", "brade@kde.org" );
-    mAboutData->addAuthor( "Tobias Koenig", "", "tokoe@kde.org" );
-  }
+    if(!mAboutData)
+    {
+        mAboutData = new KAboutData("knotes", I18N_NOOP("Notes Management"),
+                                    "0.5", I18N_NOOP("Notes Management"),
+                                    KAboutData::License_GPL_V2,
+                                    "(c) 2003-2004 The Kontact developers");
+        mAboutData->addAuthor("Michael Brade", "Current Maintainer", "brade@kde.org");
+        mAboutData->addAuthor("Tobias Koenig", "", "tokoe@kde.org");
+    }
 
-  return mAboutData;
+    return mAboutData;
 }
 
 
@@ -83,14 +84,14 @@ const KAboutData *KNotesPlugin::aboutData()
 
 void KNotesPlugin::slotNewNote()
 {
-  if ( part() )
-      static_cast<KNotesPart *>( part() )->newNote();
+    if(part())
+        static_cast<KNotesPart *>(part())->newNote();
 }
 
 void KNotesPlugin::slotSyncNotes()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", QString("Note") );
+    DCOPRef ref("kmail", "KMailICalIface");
+    ref.send("triggerSync", QString("Note"));
 }
 
 #include "knotes_plugin.moc"

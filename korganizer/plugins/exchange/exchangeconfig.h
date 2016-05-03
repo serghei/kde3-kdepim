@@ -27,32 +27,31 @@
 
 #include <exchangeaccount.h>
 
-class ExchangeConfig : public KDialogBase
-{
+class ExchangeConfig : public KDialogBase {
     Q_OBJECT
-  public:
-    ExchangeConfig(KPIM::ExchangeAccount* account, QWidget *parent=0);
+public:
+    ExchangeConfig(KPIM::ExchangeAccount *account, QWidget *parent = 0);
     virtual ~ExchangeConfig();
 
-//  protected:
-//    void load();
-//    void save();
+    //  protected:
+    //    void load();
+    //    void save();
 
-  protected slots:
-    void slotToggleAuto( bool on );
-    void slotUserChanged( const QString& text );
+protected slots:
+    void slotToggleAuto(bool on);
+    void slotUserChanged(const QString &text);
     void slotFindClicked();
     void slotOk();
 
-  private:
-  public:
-    KPIM::ExchangeAccount* mAccount;
+private:
+public:
+    KPIM::ExchangeAccount *mAccount;
     KLineEdit *m_host;
     KLineEdit *m_port;
     KLineEdit *m_user;
     QCheckBox *m_autoMailbox;
     KLineEdit *m_mailbox;
-    QPushButton* m_tryFindMailbox;
+    QPushButton *m_tryFindMailbox;
     KLineEdit *m_password;
 };
 

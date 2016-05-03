@@ -31,23 +31,28 @@ namespace KCal {
 /**
   This class represents a person. A person has a name and an email address.
 */
-class LIBKCAL_EXPORT Person
-{
-  public:
+class LIBKCAL_EXPORT Person {
+public:
     Person() {}
-    Person( const QString &fullName );
-    Person( const QString &name, const QString &email );
+    Person(const QString &fullName);
+    Person(const QString &name, const QString &email);
     bool isEmpty() const;
 
-    QString fullName( ) const;
+    QString fullName() const;
 
     void setName(const QString &);
-    QString name() const { return mName; }
-    
-    void setEmail(const QString &);
-    QString email() const { return mEmail; }
+    QString name() const
+    {
+        return mName;
+    }
 
-  private:
+    void setEmail(const QString &);
+    QString email() const
+    {
+        return mEmail;
+    }
+
+private:
     QString mName;
     QString mEmail;
 
@@ -55,7 +60,7 @@ class LIBKCAL_EXPORT Person
     Private *d;
 };
 
-bool operator==( const Person& p1, const Person& p2 );
+bool operator==(const Person &p1, const Person &p2);
 
 }
 

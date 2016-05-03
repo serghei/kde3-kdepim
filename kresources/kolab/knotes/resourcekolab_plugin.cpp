@@ -32,19 +32,18 @@
 
 #include "resourcekolab.h"
 
-class KolabFactory : public KRES::PluginFactoryBase
-{
+class KolabFactory : public KRES::PluginFactoryBase {
 public:
-  KRES::Resource *resource( const KConfig *config )
-  {
-    return new Kolab::ResourceKolab( config );
-  }
+    KRES::Resource *resource(const KConfig *config)
+    {
+        return new Kolab::ResourceKolab(config);
+    }
 
-  KRES::ConfigWidget *configWidget( QWidget* )
-  {
-    return 0;
-  }
+    KRES::ConfigWidget *configWidget(QWidget *)
+    {
+        return 0;
+    }
 };
 
-K_EXPORT_COMPONENT_FACTORY(knotes_kolab,KolabFactory())
+K_EXPORT_COMPONENT_FACTORY(knotes_kolab, KolabFactory())
 

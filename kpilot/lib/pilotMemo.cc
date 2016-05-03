@@ -35,101 +35,101 @@
 
 
 
-PilotMemo::PilotMemo(const PilotRecord * rec) : PilotRecordBase(rec)
+PilotMemo::PilotMemo(const PilotRecord *rec) : PilotRecordBase(rec)
 {
-	FUNCTIONSETUP;
-	fText = Pilot::fromPilot((const char *)(rec->data()),rec->size());
+    FUNCTIONSETUP;
+    fText = Pilot::fromPilot((const char *)(rec->data()), rec->size());
 }
 
 PilotRecord *PilotMemo::pack()
 {
-	FUNCTIONSETUPL(4);
-	int i;
-	
-	int len = fText.length() + 8;
-	struct Memo buf;
-	buf.text = new char[len];
+    FUNCTIONSETUPL(4);
+    int i;
 
-	// put our text into buf
-	i = Pilot::toPilot(fText, buf.text, len);
+    int len = fText.length() + 8;
+    struct Memo buf;
+    buf.text = new char[len];
 
-	pi_buffer_t *b = pi_buffer_new(len);
-	i = pack_Memo(&buf, b, memo_v1);
+    // put our text into buf
+    i = Pilot::toPilot(fText, buf.text, len);
 
-	DEBUGKPILOT << fname << ": original text: [" << fText 
-		<< "], buf.text: [" << buf.text 
-		<< "], b->data: [" << b->data << "]" << endl;
+    pi_buffer_t *b = pi_buffer_new(len);
+    i = pack_Memo(&buf, b, memo_v1);
 
-	if (i<0)
-	{
-		// Generic error from the pack_*() functions.
-		delete[] buf.text;
-		return 0;
-	}
+    DEBUGKPILOT << fname << ": original text: [" << fText
+                << "], buf.text: [" << buf.text
+                << "], b->data: [" << b->data << "]" << endl;
 
-	// pack_Appointment sets b->used
-	PilotRecord *r = new PilotRecord(b, this);
-	delete[] buf.text;
-	return r;
+    if(i < 0)
+    {
+        // Generic error from the pack_*() functions.
+        delete[] buf.text;
+        return 0;
+    }
+
+    // pack_Appointment sets b->used
+    PilotRecord *r = new PilotRecord(b, this);
+    delete[] buf.text;
+    return r;
 }
 
 
 QString PilotMemo::getTextRepresentation(Qt::TextFormat richText)
 {
-	if (richText==Qt::RichText)
-	{
-		return i18n("<i>Title:</i> %1<br>\n<i>MemoText:</i><br>%2").
-			arg(rtExpand(getTitle(), richText)).arg(rtExpand(text(), richText));
-	}
-	else
-	{
-		return i18n("Title: %1\nMemoText:\n%2").arg(getTitle()).arg(text());
-	}
+    if(richText == Qt::RichText)
+    {
+        return i18n("<i>Title:</i> %1<br>\n<i>MemoText:</i><br>%2").
+               arg(rtExpand(getTitle(), richText)).arg(rtExpand(text(), richText));
+    }
+    else
+    {
+        return i18n("Title: %1\nMemoText:\n%2").arg(getTitle()).arg(text());
+    }
 }
 
 
 QString PilotMemo::getTitle() const
 {
-	if (fText.isEmpty()) return QString::null;
+    if(fText.isEmpty()) return QString::null;
 
-	int memoTitleLen = fText.find('\n');
-	if (-1 == memoTitleLen) memoTitleLen=fText.length();
-	return fText.left(memoTitleLen);
+    int memoTitleLen = fText.find('\n');
+    if(-1 == memoTitleLen) memoTitleLen = fText.length();
+    return fText.left(memoTitleLen);
 }
 
 QString PilotMemo::shortTitle() const
 {
-	FUNCTIONSETUP;
-	QString t = QString(getTitle()).simplifyWhiteSpace();
+    FUNCTIONSETUP;
+    QString t = QString(getTitle()).simplifyWhiteSpace();
 
-	if (t.length() < 32)
-		return t;
-	t.truncate(40);
+    if(t.length() < 32)
+        return t;
+    t.truncate(40);
 
-	int spaceIndex = t.findRev(' ');
+    int spaceIndex = t.findRev(' ');
 
-	if (spaceIndex > 32)
-	{
-		t.truncate(spaceIndex);
-	}
+    if(spaceIndex > 32)
+    {
+        t.truncate(spaceIndex);
+    }
 
-	t += CSL1("...");
+    t += CSL1("...");
 
-	return t;
+    return t;
 }
 
 QString PilotMemo::sensibleTitle() const
 {
-	FUNCTIONSETUP;
-	QString s = getTitle();
+    FUNCTIONSETUP;
+    QString s = getTitle();
 
-	if (!s.isEmpty())
-	{
-		return s;
-	}
-	else
-	{
-		return i18n("[unknown]");
-	}
+    if(!s.isEmpty())
+    {
+        return s;
+    }
+    else
+    {
+        return i18n("[unknown]");
+    }
 }
 

@@ -33,21 +33,20 @@
 
 #include "koalarmclient.h"
 
-class MyApp : public KUniqueApplication
-{
-  public:
-    MyApp() : mClient( 0 ) {}
+class MyApp : public KUniqueApplication {
+public:
+    MyApp() : mClient(0) {}
     int newInstance()
     {
-      // Check if we already have a running alarm daemon widget
-      if ( mClient ) return 0;
+        // Check if we already have a running alarm daemon widget
+        if(mClient) return 0;
 
-      mClient = new KOAlarmClient;
+        mClient = new KOAlarmClient;
 
-      return 0;
+        return 0;
     }
 
-  private:
+private:
     KOAlarmClient *mClient;
 };
 
@@ -56,31 +55,31 @@ static const char korgacVersion[] = "0.9";
 
 static const KCmdLineOptions options[] =
 {
-  { 0, 0, 0 }
+    { 0, 0, 0 }
 };
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KLocale::setMainCatalogue( "korganizer" );
-  KAboutData aboutData( "korgac", I18N_NOOP("KOrganizer Reminder Daemon"),
-                        korgacVersion, I18N_NOOP("KOrganizer Reminder Daemon"),
-                        KAboutData::License_GPL,
-                        "(c) 2003 Cornelius Schumacher",
-                        0, "http://pim.kde.org" );
-  aboutData.addAuthor( "Cornelius Schumacher", I18N_NOOP("Maintainer"),
-                       "schumacher@kde.org" );
-  aboutData.addAuthor( "Reinhold Kainhofer", I18N_NOOP("Maintainer"),
-                       "kainhofer@kde.org" );
+    KLocale::setMainCatalogue("korganizer");
+    KAboutData aboutData("korgac", I18N_NOOP("KOrganizer Reminder Daemon"),
+                         korgacVersion, I18N_NOOP("KOrganizer Reminder Daemon"),
+                         KAboutData::License_GPL,
+                         "(c) 2003 Cornelius Schumacher",
+                         0, "http://pim.kde.org");
+    aboutData.addAuthor("Cornelius Schumacher", I18N_NOOP("Maintainer"),
+                        "schumacher@kde.org");
+    aboutData.addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"),
+                        "kainhofer@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
 
-  if ( !MyApp::start() ) exit( 0 );
+    if(!MyApp::start()) exit(0);
 
-  MyApp app;
-  app.disableSessionManagement();
-  KGlobal::locale()->insertCatalogue( "libkcal" );
+    MyApp app;
+    app.disableSessionManagement();
+    KGlobal::locale()->insertCatalogue("libkcal");
 
-  return app.exec();
+    return app.exec();
 }

@@ -32,53 +32,52 @@
 #include <qstring.h>
 #include <qptrcollection.h>
 
-class IDMapperXml : public QXmlDefaultHandler
-{
+class IDMapperXml : public QXmlDefaultHandler {
 public:
-	IDMapperXml( const QString &file );
-	
-	~IDMapperXml();
-	
-	/**
-	 * Opens and parses the file or creates a new one if the file does not exist.
-	 */
-	bool open();
-	
-	/**
-	 * Saves the current mappings to the xml-file. Note this function must be
-	 * called after changes and before deleting the IDMapperXml object. Otherwise
-	 * the changes won't be saved.
-	 */
-	void save();
-	
-	/**
-	 * Adds a mapping to the collection of mappings.
-	 */
-	void addMapping( const IDMapping &mapping );
-	
-	/**
-	 * Returns the collection of mappings.
-	 */
-	QValueList<IDMapping> &mappings();
-	 
-	/**
-	 * Overloaded function to parse the xml file.
-	 */
-	bool startElement( const QString &namespaceURI, const QString &localName
-		, const QString &qName, const QXmlAttributes &attribs );
-		
-	/**
-	 * Overloaded function to parse the xml file.
-	 */
-	bool endElement( const QString &namespaceURI, const QString &localName
-		, const QString &qName );
+    IDMapperXml(const QString &file);
+
+    ~IDMapperXml();
+
+    /**
+     * Opens and parses the file or creates a new one if the file does not exist.
+     */
+    bool open();
+
+    /**
+     * Saves the current mappings to the xml-file. Note this function must be
+     * called after changes and before deleting the IDMapperXml object. Otherwise
+     * the changes won't be saved.
+     */
+    void save();
+
+    /**
+     * Adds a mapping to the collection of mappings.
+     */
+    void addMapping(const IDMapping &mapping);
+
+    /**
+     * Returns the collection of mappings.
+     */
+    QValueList<IDMapping> &mappings();
+
+    /**
+     * Overloaded function to parse the xml file.
+     */
+    bool startElement(const QString &namespaceURI, const QString &localName
+                      , const QString &qName, const QXmlAttributes &attribs);
+
+    /**
+     * Overloaded function to parse the xml file.
+     */
+    bool endElement(const QString &namespaceURI, const QString &localName
+                    , const QString &qName);
 
 private:
-	QFile fFile;
-	QDomDocument doc;
-	QDomElement root;
-	IDMapping *fCurrentMapping;
-	QValueList<IDMapping> fMappings;
+    QFile fFile;
+    QDomDocument doc;
+    QDomElement root;
+    IDMapping *fCurrentMapping;
+    QValueList<IDMapping> fMappings;
 };
 
 #endif

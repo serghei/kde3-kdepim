@@ -26,11 +26,11 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif 
+#endif
 
 #include <kapplication.h>
 #include <kmainwindow.h>
- 
+
 #include "kandyview.h"
 
 class QPrinter;
@@ -45,10 +45,9 @@ class KandyPrefsDialog;
  * @author Cornelius Schumacher <schumacher@kde.org>
  * @version 0.1
  */
-class Kandy : public KMainWindow
-{
+class Kandy : public KMainWindow {
     Q_OBJECT
-  public:
+public:
     /**
      * Default Constructor
      */
@@ -62,30 +61,30 @@ class Kandy : public KMainWindow
     /**
      * Use this method to load whatever file/URL you have
      */
-    void load(const QString& url);
-    void save(const QString& url);
+    void load(const QString &url);
+    void save(const QString &url);
 
-  public slots:
+public slots:
     void setTitle();
 
     void modemConnect();
 
-    void showErrorMessage( const QString & );
+    void showErrorMessage(const QString &);
 
-  signals:
+signals:
     void showMobileWin();
     void connectStateChanged(bool);
 
-  protected:
+protected:
     /**
      * Overridden virtuals for Qt drag 'n drop (XDND)
      */
     virtual void dragEnterEvent(QDragEnterEvent *event);
     virtual void dropEvent(QDropEvent *event);
-    
+
     bool queryClose();
 
-  protected:
+protected:
     /**
      * This function is called when it is time for the app to save its
      * properties for session management purposes.
@@ -100,7 +99,7 @@ class Kandy : public KMainWindow
     void readProperties(KConfig *);
 
 
-  private slots:
+private slots:
     void fileOpen();
     void fileSave();
     void fileSaveAs();
@@ -112,24 +111,24 @@ class Kandy : public KMainWindow
     void showMobileGui();
     void newToolbarConfig();
 
-    void changeStatusbar(const QString& text);
-    void changeCaption(const QString& text);
+    void changeStatusbar(const QString &text);
+    void changeCaption(const QString &text);
 
 
-  private:
+private:
     void setupAccel();
     void setupActions();
 
-  private:
+private:
     CommandScheduler *mScheduler;
-  
+
     KandyView *mView;
 
     QPrinter   *mPrinter;
 
     KAction *mConnectAction;
     KAction *mDisconnectAction;
-    
+
     QString mFilename;
 
     KandyPrefsDialog *mPreferencesDialog;

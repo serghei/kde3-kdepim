@@ -47,13 +47,12 @@ namespace KCal {
    design pattern.  Instead of passing a 0 pointer and checking for 0 with
    each access a CalendarNull object can be passed.
 */
-class LIBKCAL_EXPORT CalendarNull : public Calendar
-{
-  public:
+class LIBKCAL_EXPORT CalendarNull : public Calendar {
+public:
     /**
        Constructor.
     */
-    CalendarNull( const QString &timeZoneId );
+    CalendarNull(const QString &timeZoneId);
 
     /**
        Destructor.
@@ -76,9 +75,12 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     */
     void save() {}
 
-    bool reload( const QString & ) { return true;}
-    
-// Event Specific Methods //
+    bool reload(const QString &)
+    {
+        return true;
+    }
+
+    // Event Specific Methods //
 
     /**
        Insert an Evenet into the Calendar.
@@ -87,8 +89,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns false.
     */
-    bool addEvent( Event * /*event*/ )
-      { return false; }
+    bool addEvent(Event * /*event*/)
+    {
+        return false;
+    }
 
     /**
        Remove an Event from the Calendar.
@@ -97,8 +101,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns false.
     */
-    bool deleteEvent( Event * /*event*/ )
-      { return false; }
+    bool deleteEvent(Event * /*event*/)
+    {
+        return false;
+    }
 
     /**
        Return a sorted, unfiltered list of all Events for this Calendar.
@@ -108,9 +114,11 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Event List.
     */
-    Event::List rawEvents( EventSortField /*sortField*/,
-                           SortDirection /*sortDirection*/ )
-      { return Event::List(); }
+    Event::List rawEvents(EventSortField /*sortField*/,
+                          SortDirection /*sortDirection*/)
+    {
+        return Event::List();
+    }
 
     /**
        Return an unfiltered list of all Events occurring within a date range.
@@ -122,9 +130,11 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Event List.
     */
-    Event::List rawEvents( const QDate & /*start*/, const QDate & /*end*/,
-                           bool /*inclusive*/ )
-      { return Event::List(); }
+    Event::List rawEvents(const QDate & /*start*/, const QDate & /*end*/,
+                          bool /*inclusive*/)
+    {
+        return Event::List();
+    }
 
     /**
        Return an unfiltered list of all Events which occur on the given
@@ -134,8 +144,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Event List.
     */
-    Event::List rawEventsForDate( const QDateTime & /*qdt*/ )
-      { return Event::List(); }
+    Event::List rawEventsForDate(const QDateTime & /*qdt*/)
+    {
+        return Event::List();
+    }
 
     /**
        Return a sorted, unfiltered list of all Events which occur on the given
@@ -149,10 +161,12 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
        Returns an empty Event List.
     */
     Event::List rawEventsForDate(
-      const QDate & /*date*/,
-      EventSortField /*sortField=EventSortUnsorted*/,
-      SortDirection /*sortDirection=SortDirectionAscending*/ )
-      { return Event::List(); }
+        const QDate & /*date*/,
+        EventSortField /*sortField=EventSortUnsorted*/,
+        SortDirection /*sortDirection=SortDirectionAscending*/)
+    {
+        return Event::List();
+    }
 
     /**
        Returns the Event associated with the given unique identifier.
@@ -161,10 +175,12 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Return a null Event pointer.
     */
-    Event *event( const QString & /*uid*/ )
-      { return 0; }
+    Event *event(const QString & /*uid*/)
+    {
+        return 0;
+    }
 
-// Todo Specific Methods //
+    // Todo Specific Methods //
 
     /**
        Insert a Todo into the Calendar.
@@ -173,8 +189,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns false.
     */
-    bool addTodo( Todo * /*todo*/ )
-      { return false; }
+    bool addTodo(Todo * /*todo*/)
+    {
+        return false;
+    }
 
     /**
        Remove a Todo from the Calendar.
@@ -183,8 +201,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns false.
     */
-    bool deleteTodo( Todo * /*todo*/ )
-      { return false; }
+    bool deleteTodo(Todo * /*todo*/)
+    {
+        return false;
+    }
 
     /**
        Return a sorted, unfiltered list of all Todos for this Calendar.
@@ -194,9 +214,11 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Todo List.
     */
-    Todo::List rawTodos( TodoSortField /*sortField*/,
-                         SortDirection /*sortDirection*/ )
-      { return Todo::List(); }
+    Todo::List rawTodos(TodoSortField /*sortField*/,
+                        SortDirection /*sortDirection*/)
+    {
+        return Todo::List();
+    }
 
     /**
        Return an unfiltered list of all Todos for this Calendar which
@@ -206,8 +228,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Todo List.
     */
-    Todo::List rawTodosForDate( const QDate & /*date*/ )
-      { return Todo::List(); }
+    Todo::List rawTodosForDate(const QDate & /*date*/)
+    {
+        return Todo::List();
+    }
 
     /**
        Returns the Todo associated with the given unique identifier.
@@ -216,10 +240,12 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns a null Todo pointer.
     */
-    Todo *todo( const QString & /*uid*/ )
-      { return 0; }
+    Todo *todo(const QString & /*uid*/)
+    {
+        return 0;
+    }
 
-// Journal Specific Methods //
+    // Journal Specific Methods //
 
     /**
        Insert a Journal into the Calendar.
@@ -228,8 +254,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns false.
     */
-    bool addJournal( Journal * /*journal*/ )
-      { return false; }
+    bool addJournal(Journal * /*journal*/)
+    {
+        return false;
+    }
 
     /**
        Remove a Journal from the Calendar.
@@ -238,8 +266,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns false.
     */
-    bool deleteJournal( Journal * /*journal*/ )
-      { return false; }
+    bool deleteJournal(Journal * /*journal*/)
+    {
+        return false;
+    }
 
     /**
        Return a sorted, filtered list of all Journals for this Calendar.
@@ -249,9 +279,11 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Journal List.
     */
-    Journal::List rawJournals( JournalSortField /*sortField*/,
-                               SortDirection /*sortDirection*/ )
-      { return Journal::List(); }
+    Journal::List rawJournals(JournalSortField /*sortField*/,
+                              SortDirection /*sortDirection*/)
+    {
+        return Journal::List();
+    }
 
     /**
        Return an unfiltered list of all Journals for on the specifed date.
@@ -260,8 +292,10 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an empty Journal List.
     */
-    Journal::List rawJournalsForDate( const QDate & /*date*/ )
-      { return Journal::List(); }
+    Journal::List rawJournalsForDate(const QDate & /*date*/)
+    {
+        return Journal::List();
+    }
 
     /**
        Returns the Journal associated with the given unique identifier.
@@ -270,10 +304,12 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
        Returns an null Journal pointer.
     */
-    Journal *journal( const QString & /*uid*/ )
-      { return 0; }
+    Journal *journal(const QString & /*uid*/)
+    {
+        return 0;
+    }
 
-// Alarm Specific Methods //
+    // Alarm Specific Methods //
 
     /**
        Return a list of Alarms within a time range for this Calendar.
@@ -284,20 +320,22 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
        Returns an empty Alarm List.
     */
 
-    Alarm::List alarms( const QDateTime & /*from*/, const QDateTime & /*to*/ )
-      { return Alarm::List(); }
+    Alarm::List alarms(const QDateTime & /*from*/, const QDateTime & /*to*/)
+    {
+        return Alarm::List();
+    }
 
-// Observer Specific Methods //
+    // Observer Specific Methods //
 
     /**
        The Observer interface. So far not implemented.
        First parameter is a pointer an IncidenceBase object.
     */
-    void incidenceUpdated( IncidenceBase * /*incidenceBase*/ ) {}
+    void incidenceUpdated(IncidenceBase * /*incidenceBase*/) {}
 
-    void setTimeZoneIdViewOnly( const QString& ) {};
-    
-  private:
+    void setTimeZoneIdViewOnly(const QString &) {};
+
+private:
     static CalendarNull *mSelf;
 
     class Private;

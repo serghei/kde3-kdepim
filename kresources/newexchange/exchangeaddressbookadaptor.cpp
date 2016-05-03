@@ -29,67 +29,70 @@
 
 using namespace KABC;
 
-ExchangeAddressBookUploadItem::ExchangeAddressBookUploadItem( AddressBookAdaptor *adaptor, KABC::Addressee addr, KPIM::GroupwareUploadItem::UploadType type )
-    : GroupwareUploadItem( type )
+ExchangeAddressBookUploadItem::ExchangeAddressBookUploadItem(AddressBookAdaptor *adaptor, KABC::Addressee addr,
+        KPIM::GroupwareUploadItem::UploadType type)
+    : GroupwareUploadItem(type)
 {
-  if ( adaptor && !addr.isEmpty() ) {
-    mItemType = KPIM::FolderLister::Contact;
+    if(adaptor && !addr.isEmpty())
+    {
+        mItemType = KPIM::FolderLister::Contact;
 
-    setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
-    setUid( addr.uid() );
+        setUrl(addr.custom(adaptor->identifier(), "storagelocation"));
+        setUid(addr.uid());
 
-    ExchangeConverterContact format;
-    mDavData = format.createWebDAV( addr );
-  }
+        ExchangeConverterContact format;
+        mDavData = format.createWebDAV(addr);
+    }
 }
 
-KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/ )
+KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadJob(KPIM::GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/)
 {
-kdDebug()<<"ExchangeAddressBookUploadItem::createUploadJob"<<endl;
-  Q_ASSERT( adaptor );
-  if ( !adaptor ) return 0;
-  KURL upUrl( url() );
-  adaptor->adaptUploadUrl( upUrl );
-  kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
-  KIO::DavJob *job = KIO::davPropPatch( upUrl, mDavData, false );
-  return job;
+    kdDebug() << "ExchangeAddressBookUploadItem::createUploadJob" << endl;
+    Q_ASSERT(adaptor);
+    if(!adaptor) return 0;
+    KURL upUrl(url());
+    adaptor->adaptUploadUrl(upUrl);
+    kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
+    KIO::DavJob *job = KIO::davPropPatch(upUrl, mDavData, false);
+    return job;
 }
 
-KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadNewJob(KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl)
 {
-kdDebug()<<"ExchangeAddressBookUploadItem::createUploadNewJob"<<endl;
-  KURL url( baseurl );
-  // TODO: Check that this URL doesn't exist yet
-  url.addPath( uid() + ".EML" );
-  setUrl( url );
-//url.addPath("newItem.EML");
-kdDebug()<<"Upload path: "<<url.url()<<endl;
-  return createUploadJob( adaptor, url );
+    kdDebug() << "ExchangeAddressBookUploadItem::createUploadNewJob" << endl;
+    KURL url(baseurl);
+    // TODO: Check that this URL doesn't exist yet
+    url.addPath(uid() + ".EML");
+    setUrl(url);
+    //url.addPath("newItem.EML");
+    kdDebug() << "Upload path: " << url.url() << endl;
+    return createUploadJob(adaptor, url);
 }
 
 ExchangeAddressBookAdaptor::ExchangeAddressBookAdaptor() : DavAddressBookAdaptor()
 {
 }
 
-void ExchangeAddressBookAdaptor::customAdaptDownloadUrl( KURL &url )
+void ExchangeAddressBookAdaptor::customAdaptDownloadUrl(KURL &url)
 {
-  url = WebdavHandler::toDAV( url );
+    url = WebdavHandler::toDAV(url);
 }
 
-void ExchangeAddressBookAdaptor::customAdaptUploadUrl( KURL &url )
+void ExchangeAddressBookAdaptor::customAdaptUploadUrl(KURL &url)
 {
-  url = WebdavHandler::toDAV( url );
-//   url.setPath( url.path() + "/NewItem.EML" );
+    url = WebdavHandler::toDAV(url);
+    //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
-QString ExchangeAddressBookAdaptor::defaultNewItemName( KPIM::GroupwareUploadItem *item ) {
-  if ( item ) return item->uid()+".EML";
-  else return QString::null;
+QString ExchangeAddressBookAdaptor::defaultNewItemName(KPIM::GroupwareUploadItem *item)
+{
+    if(item) return item->uid() + ".EML";
+    else return QString::null;
 }
 
 
-KPIM::GroupwareUploadItem *ExchangeAddressBookAdaptor::newUploadItem( KABC::Addressee addr,
-           KPIM::GroupwareUploadItem::UploadType type )
+KPIM::GroupwareUploadItem *ExchangeAddressBookAdaptor::newUploadItem(KABC::Addressee addr,
+        KPIM::GroupwareUploadItem::UploadType type)
 {
-  return new ExchangeAddressBookUploadItem( this, addr, type );
+    return new ExchangeAddressBookUploadItem(this, addr, type);
 }

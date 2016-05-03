@@ -4,10 +4,9 @@
 #include <dcopobject.h>
 #include <kurl.h>
 
-class KNodeComposerIface : virtual public DCOPObject
-{
+class KNodeComposerIface : virtual public DCOPObject {
     K_DCOP
-  k_dcop:
+k_dcop:
     virtual void initData(const QString &text) = 0;
 };
 

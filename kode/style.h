@@ -31,16 +31,15 @@
 
 namespace KODE {
 
-class KDE_EXPORT Style
-{
-  public:
+class KDE_EXPORT Style {
+public:
     Style();
     virtual ~Style();
 
-    virtual QString className( const QString &str );
+    virtual QString className(const QString &str);
 
-    static QString upperFirst( const QString &str );
-    static QString lowerFirst( const QString &str );
+    static QString upperFirst(const QString &str);
+    static QString lowerFirst(const QString &str);
 };
 
 }

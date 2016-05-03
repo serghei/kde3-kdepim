@@ -26,19 +26,18 @@
 
 namespace KODE {
 
-class KDE_EXPORT License
-{
-  public:
+class KDE_EXPORT License {
+public:
     enum Type { GPL, LGPL };
 
     License();
-    License( Type );
+    License(Type);
 
-    void setQtException( bool );
+    void setQtException(bool);
 
     QString text();
 
-  private:
+private:
     Type mType;
 
     bool mQtException;

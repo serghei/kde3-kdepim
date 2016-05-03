@@ -54,108 +54,107 @@
 * actions in the queue in sequence.
 *
 */
-KDE_EXPORT class ActionQueue : public SyncAction
-{
-Q_OBJECT
+KDE_EXPORT class ActionQueue : public SyncAction {
+    Q_OBJECT
 public:
-	/**
-	* Constructor. Pass in a KPilot device link for it to act on.
-	* It is legal to pass in 0 (NULL) as a device. Ownership of
-	* the device is unchanged.
-	*/
-	ActionQueue(KPilotLink *device);
+    /**
+    * Constructor. Pass in a KPilot device link for it to act on.
+    * It is legal to pass in 0 (NULL) as a device. Ownership of
+    * the device is unchanged.
+    */
+    ActionQueue(KPilotLink *device);
 
-	/** Destructor. */
-	virtual ~ActionQueue();
+    /** Destructor. */
+    virtual ~ActionQueue();
 
-	/** Is the queue empty? Returns @c true if it is. */
-	bool isEmpty() const
-	{
-		return SyncActionQueue.isEmpty();
-	};
+    /** Is the queue empty? Returns @c true if it is. */
+    bool isEmpty() const
+    {
+        return SyncActionQueue.isEmpty();
+    };
 
-	/**
-	* You can push your own action @p a onto the queue. Ownership
-	* of the action is given to the ActionQueue object.
-	*/
-	void addAction(SyncAction *a)
-	{
-		SyncActionQueue.enqueue(a);
-	};
+    /**
+    * You can push your own action @p a onto the queue. Ownership
+    * of the action is given to the ActionQueue object.
+    */
+    void addAction(SyncAction *a)
+    {
+        SyncActionQueue.enqueue(a);
+    };
 
 public:
-	/*
-	* Call these queue*() functions to append standard functional
-	* blocks. You should at least call queueInit() and
-	* queueCleanup() to add the welcome and cleanup actions to
-	* the queue (unless you do that yourself.)
-	*
-	* For queueInit, a WelcomeAction is added.
-	* For queueConduits, whatever is relevant for the conduits
-	*   can be used, usually things in the FlagMask and ActionMask.
-	*   The list of conduits in @p conduits is queued automatically.
-	*/
+    /*
+    * Call these queue*() functions to append standard functional
+    * blocks. You should at least call queueInit() and
+    * queueCleanup() to add the welcome and cleanup actions to
+    * the queue (unless you do that yourself.)
+    *
+    * For queueInit, a WelcomeAction is added.
+    * For queueConduits, whatever is relevant for the conduits
+    *   can be used, usually things in the FlagMask and ActionMask.
+    *   The list of conduits in @p conduits is queued automatically.
+    */
 
-	/**
-	* Initialize the queue. This empties it out and adds a
-	* welcome action (see WelcomeAction in actions.h) so that
-	* the user knows what is happening when the ActionQueue
-	* begins to execute. Equivalent to
-	* @code
-	* clear(); addAction(new WelcomeAction);
-	* @endcode
-	*/
-	void queueInit();
+    /**
+    * Initialize the queue. This empties it out and adds a
+    * welcome action (see WelcomeAction in actions.h) so that
+    * the user knows what is happening when the ActionQueue
+    * begins to execute. Equivalent to
+    * @code
+    * clear(); addAction(new WelcomeAction);
+    * @endcode
+    */
+    void queueInit();
 
-	/**
-	* Queue a (series) of conduits @p conduits with a given
-	* sync mode @p mode. Each of the conduits named is called
-	* through a ConduitProxy object which handles loading the
-	* conduit's shared library and creating the actual SyncAction
-	* for that conduit. Actions named "internal_*" are silently
-	* ignored since those names are used by KPilot internally
-	* for administrative purposes.
-	*/
-	void queueConduits(const QStringList &conduits,
-		const SyncAction::SyncMode &mode);
+    /**
+    * Queue a (series) of conduits @p conduits with a given
+    * sync mode @p mode. Each of the conduits named is called
+    * through a ConduitProxy object which handles loading the
+    * conduit's shared library and creating the actual SyncAction
+    * for that conduit. Actions named "internal_*" are silently
+    * ignored since those names are used by KPilot internally
+    * for administrative purposes.
+    */
+    void queueConduits(const QStringList &conduits,
+                       const SyncAction::SyncMode &mode);
 
-	/**
-	* Convenience function for adding a cleanup action (see
-	* CleanupAction in actions.h) to the queue. Should be the
-	* last action added to the queue because a HotSync can only
-	* have @em one cleanup.
-	*/
-	void queueCleanup();
+    /**
+    * Convenience function for adding a cleanup action (see
+    * CleanupAction in actions.h) to the queue. Should be the
+    * last action added to the queue because a HotSync can only
+    * have @em one cleanup.
+    */
+    void queueCleanup();
 
 protected:
-	/**
-	* Remove all the actions from the queue and delete them
-	* (the queue owns the actions, after all).
-	*/
-	void clear();
+    /**
+    * Remove all the actions from the queue and delete them
+    * (the queue owns the actions, after all).
+    */
+    void clear();
 
-	/**
-	* Dequeue the next action in the queue, ready for processing.
-	* This takes the action off the queue, so remember to delete it
-	* eventually.
-	*/
-	SyncAction *nextAction()
-	{
-		return SyncActionQueue.dequeue();
-	};
+    /**
+    * Dequeue the next action in the queue, ready for processing.
+    * This takes the action off the queue, so remember to delete it
+    * eventually.
+    */
+    SyncAction *nextAction()
+    {
+        return SyncActionQueue.dequeue();
+    };
 
-	/** Reimplemented from SyncAction. */
-	virtual bool exec();
+    /** Reimplemented from SyncAction. */
+    virtual bool exec();
 
 protected slots:
-	/**
-	* When one action finishes, start the next one.
-	*/
-	void actionCompleted(SyncAction *);
+    /**
+    * When one action finishes, start the next one.
+    */
+    void actionCompleted(SyncAction *);
 
 private:
-	/** A queue of actions to take. */
-	QPtrQueue < SyncAction > SyncActionQueue;
+    /** A queue of actions to take. */
+    QPtrQueue < SyncAction > SyncActionQueue;
 };
 
 

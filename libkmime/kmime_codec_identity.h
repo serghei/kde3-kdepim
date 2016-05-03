@@ -38,76 +38,90 @@ namespace KMime {
 
 class IdentityCodec : public Codec {
 protected:
-  friend class Codec;
-  IdentityCodec() : Codec() {}
+    friend class Codec;
+    IdentityCodec() : Codec() {}
 
 public:
-  ~IdentityCodec() {}
+    ~IdentityCodec() {}
 
-  QByteArray encode( const QByteArray & src, bool withCRLF ) const;
-  QCString encodeToQCString( const QByteArray & src, bool withCRLF ) const;
-  QByteArray decode( const QByteArray & src, bool withCRLF ) const;
+    QByteArray encode(const QByteArray &src, bool withCRLF) const;
+    QCString encodeToQCString(const QByteArray &src, bool withCRLF) const;
+    QByteArray decode(const QByteArray &src, bool withCRLF) const;
 
-  int maxEncodedSizeFor( int insize, bool withCRLF ) const {
-    if ( withCRLF )
-      return 2 * insize;
-    else
-      return insize;
-  }
+    int maxEncodedSizeFor(int insize, bool withCRLF) const
+    {
+        if(withCRLF)
+            return 2 * insize;
+        else
+            return insize;
+    }
 
-  int maxDecodedSizeFor( int insize, bool withCRLF ) const {
-    if ( withCRLF )
-      return 2 * insize;
-    else
-      return insize;
-  }
+    int maxDecodedSizeFor(int insize, bool withCRLF) const
+    {
+        if(withCRLF)
+            return 2 * insize;
+        else
+            return insize;
+    }
 
-  Encoder * makeEncoder( bool withCRLF=false ) const;
-  Decoder * makeDecoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 class SevenBitCodec : public IdentityCodec {
 protected:
-  friend class Codec;
-  SevenBitCodec() : IdentityCodec() {}
+    friend class Codec;
+    SevenBitCodec() : IdentityCodec() {}
 
 public:
-  ~SevenBitCodec() {}
+    ~SevenBitCodec() {}
 
-  const char * name() const { return "7bit"; }
+    const char *name() const
+    {
+        return "7bit";
+    }
 };
 
 class EightBitCodec : public IdentityCodec {
 protected:
-  friend class Codec;
-  EightBitCodec() : IdentityCodec() {}
+    friend class Codec;
+    EightBitCodec() : IdentityCodec() {}
 
 public:
-  ~EightBitCodec() {}
+    ~EightBitCodec() {}
 
-  const char * name() const { return "8bit"; }
+    const char *name() const
+    {
+        return "8bit";
+    }
 };
 
 class BinaryCodec : public IdentityCodec {
 protected:
-  friend class Codec;
-  BinaryCodec() : IdentityCodec() {}
+    friend class Codec;
+    BinaryCodec() : IdentityCodec() {}
 
 public:
-  ~BinaryCodec() {}
+    ~BinaryCodec() {}
 
-  const char * name() const { return "binary"; }
+    const char *name() const
+    {
+        return "binary";
+    }
 
-  int maxEncodedSizeFor( int insize, bool ) {
-    return insize;
-  }
-  int maxDecodedSizeFor( int insize, bool ) const {
-    return insize;
-  }
+    int maxEncodedSizeFor(int insize, bool)
+    {
+        return insize;
+    }
+    int maxDecodedSizeFor(int insize, bool) const
+    {
+        return insize;
+    }
 
-  QCString encodeToQCString( const QByteArray &, bool ) const {
-    return QCString();
-  }
+    QCString encodeToQCString(const QByteArray &, bool) const
+    {
+        return QCString();
+    }
 
 };
 

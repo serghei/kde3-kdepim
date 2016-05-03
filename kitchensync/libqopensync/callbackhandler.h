@@ -40,34 +40,34 @@ namespace QSync {
 
 class Engine;
 
-class CallbackHandler : public QObject
-{
-  Q_OBJECT
+class CallbackHandler : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     CallbackHandler();
     ~CallbackHandler();
 
-    void setEngine( Engine *engine );
-    Engine* engine() const;
+    void setEngine(Engine *engine);
+    Engine *engine() const;
 
-  signals:
-    void conflict( QSync::SyncMapping mapping );
-    void change( const QSync::SyncChangeUpdate &update );
-    void mapping( const QSync::SyncMappingUpdate &update );
-    void engine( const QSync::SyncEngineUpdate &update );
-    void member( const QSync::SyncMemberUpdate &update );
+signals:
+    void conflict(QSync::SyncMapping mapping);
+    void change(const QSync::SyncChangeUpdate &update);
+    void mapping(const QSync::SyncMappingUpdate &update);
+    void engine(const QSync::SyncEngineUpdate &update);
+    void member(const QSync::SyncMemberUpdate &update);
 
-  protected:
-    virtual void customEvent( QCustomEvent *event );
+protected:
+    virtual void customEvent(QCustomEvent *event);
 
-  private:
-    enum EventType {
-      ConflictEventType = 4044,
-      ChangeEventType,
-      MappingEventType,
-      EngineEventType,
-      MemberEventType
+private:
+    enum EventType
+    {
+        ConflictEventType = 4044,
+        ChangeEventType,
+        MappingEventType,
+        EngineEventType,
+        MemberEventType
     };
 
     class ConflictEvent;
@@ -76,13 +76,13 @@ class CallbackHandler : public QObject
     class EngineEvent;
     class MemberEvent;
 
-    static void conflict_callback( OSyncEngine*, OSyncMapping*, void* );
-    static void change_callback( OSyncEngine*, OSyncChangeUpdate*, void* );
-    static void mapping_callback( OSyncMappingUpdate*, void* );
-    static void engine_callback( OSyncEngine*, OSyncEngineUpdate*, void* );
-    static void member_callback( OSyncMemberUpdate*, void* );
+    static void conflict_callback(OSyncEngine *, OSyncMapping *, void *);
+    static void change_callback(OSyncEngine *, OSyncChangeUpdate *, void *);
+    static void mapping_callback(OSyncMappingUpdate *, void *);
+    static void engine_callback(OSyncEngine *, OSyncEngineUpdate *, void *);
+    static void member_callback(OSyncMemberUpdate *, void *);
 
-    Engine* mEngine;
+    Engine *mEngine;
 };
 
 }

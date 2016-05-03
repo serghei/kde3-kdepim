@@ -42,38 +42,48 @@ class QString;
 namespace Kleo {
 
 class SymCryptRunProcessBase : public KProcess {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum Operation {
-    Encrypt, Decrypt
-  };
-  SymCryptRunProcessBase( const QString & class_, const QString & program,
-                          const QString & keyFile, const QString& options,
-                          Operation op,
-                          QObject * parent=0, const char * name=0 );
-  ~SymCryptRunProcessBase();
+    enum Operation
+    {
+        Encrypt, Decrypt
+    };
+    SymCryptRunProcessBase(const QString &class_, const QString &program,
+                           const QString &keyFile, const QString &options,
+                           Operation op,
+                           QObject *parent = 0, const char *name = 0);
+    ~SymCryptRunProcessBase();
 
-  bool launch( const QByteArray & input, RunMode rm=NotifyOnExit );
+    bool launch(const QByteArray &input, RunMode rm = NotifyOnExit);
 
-  const QByteArray & output() const { return mOutput; }
-  const QString & stdErr() const { return mStderr; }
+    const QByteArray &output() const
+    {
+        return mOutput;
+    }
+    const QString &stdErr() const
+    {
+        return mStderr;
+    }
 
 public slots:
-  /*! upgraded to slot */
-  void closeStdin() { KProcess::closeStdin(); }
+    /*! upgraded to slot */
+    void closeStdin()
+    {
+        KProcess::closeStdin();
+    }
 
 private slots:
-  void slotReceivedStdout( KProcess *, char *, int );
-  void slotReceivedStderr( KProcess *, char *, int );
+    void slotReceivedStdout(KProcess *, char *, int);
+    void slotReceivedStderr(KProcess *, char *, int);
 
 private:
-  void addOptions();
+    void addOptions();
 
-  QByteArray mInput;
-  QByteArray mOutput;
-  QString mStderr;
-  const Operation mOperation;
-  QString mOptions;
+    QByteArray mInput;
+    QByteArray mOutput;
+    QString mStderr;
+    const Operation mOperation;
+    QString mOptions;
 };
 
 }

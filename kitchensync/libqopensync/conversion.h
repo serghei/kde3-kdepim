@@ -28,11 +28,10 @@ class OSyncEnv;
 
 namespace QSync {
 
-class Conversion
-{
-  friend class Environment;
+class Conversion {
+    friend class Environment;
 
-  public:
+public:
     Conversion();
     ~Conversion();
 
@@ -46,7 +45,7 @@ class Conversion
      */
     QStringList objectTypes() const;
 
-  private:
+private:
     OSyncEnv *mEnvironment;
 };
 

@@ -26,28 +26,27 @@ class AboutPage;
 class SyncProcess;
 class QVBoxLayout;
 
-class GroupView : public QWidget
-{
-  Q_OBJECT
+class GroupView : public QWidget {
+    Q_OBJECT
 
-  public:
-    GroupView( QWidget *parent );
+public:
+    GroupView(QWidget *parent);
 
-    SyncProcess* selectedSyncProcess() const;
+    SyncProcess *selectedSyncProcess() const;
 
     void clear();
 
-  public slots:
+public slots:
     void updateView();
-    void updateSyncProcess( SyncProcess *process );
+    void updateSyncProcess(SyncProcess *process);
 
-  signals:
+signals:
     void addGroup();
-    void synchronizeGroup( SyncProcess *syncProcess );
-    void abortSynchronizeGroup( SyncProcess *syncProcess );
-    void configureGroup( SyncProcess *syncProcess );
+    void synchronizeGroup(SyncProcess *syncProcess);
+    void abortSynchronizeGroup(SyncProcess *syncProcess);
+    void configureGroup(SyncProcess *syncProcess);
 
-  private:
+private:
     AboutPage *mAboutPage;
     KWidgetList *mWidgetList;
 

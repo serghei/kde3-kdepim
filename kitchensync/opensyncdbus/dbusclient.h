@@ -28,28 +28,27 @@
 class QDBusMessage;
 class QDBusConnection;
 
-class OpenSyncService : public QDBusObjectBase
-{
-  public:
+class OpenSyncService : public QDBusObjectBase {
+public:
     OpenSyncService();
 
-    void setConnection( QDBusConnection *connection );
+    void setConnection(QDBusConnection *connection);
 
-  protected:
-    virtual bool handleMethodCall( const QDBusMessage &message );
+protected:
+    virtual bool handleMethodCall(const QDBusMessage &message);
 
-    QDBusMessage hello( const QDBusMessage & );
-    QDBusMessage randomNumber( const QDBusMessage & );
+    QDBusMessage hello(const QDBusMessage &);
+    QDBusMessage randomNumber(const QDBusMessage &);
 
-    QDBusMessage listGroups( const QDBusMessage &message );
-    QDBusMessage listPlugins( const QDBusMessage &message );
-    QDBusMessage showGroup( const QDBusMessage &message );
-    QDBusMessage showMember( const QDBusMessage &message );
+    QDBusMessage listGroups(const QDBusMessage &message);
+    QDBusMessage listPlugins(const QDBusMessage &message);
+    QDBusMessage showGroup(const QDBusMessage &message);
+    QDBusMessage showMember(const QDBusMessage &message);
 
-    QDBusMessage error( const QDBusMessage &, const QString &errorCode,
-      const QString &errorMessage );
+    QDBusMessage error(const QDBusMessage &, const QString &errorCode,
+                       const QString &errorMessage);
 
-  private:
+private:
     QDBusConnection *mConnection;
 };
 

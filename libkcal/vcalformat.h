@@ -41,9 +41,8 @@ namespace KCal {
 
   @short vCalendar format implementation
 */
-class LIBKCAL_EXPORT VCalFormat : public CalFormat
-{
-  public:
+class LIBKCAL_EXPORT VCalFormat : public CalFormat {
+public:
     VCalFormat();
     virtual ~VCalFormat();
 
@@ -54,7 +53,7 @@ class LIBKCAL_EXPORT VCalFormat : public CalFormat
       @param fileName Name of the vCalendar file on disk.
       @return true on success, otherwise false
     */
-    bool load( Calendar *calendar, const QString &fileName );
+    bool load(Calendar *calendar, const QString &fileName);
     /**
       Writes out the given calendar to disk in vCalendar format.
 
@@ -67,13 +66,13 @@ class LIBKCAL_EXPORT VCalFormat : public CalFormat
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( Calendar *, const QString & );
+    bool fromString(Calendar *, const QString &);
     /**
       Return calendar information as string.
     */
-    QString toString( Calendar * );
+    QString toString(Calendar *);
 
-  protected:
+protected:
     /** translates a VObject of the TODO type into a Event */
     Todo *VTodoToEvent(VObject *vtodo);
     /** translates a VObject into a Event and returns a pointer to it. */
@@ -81,18 +80,18 @@ class LIBKCAL_EXPORT VCalFormat : public CalFormat
     /** translate a Event into a VTodo-type VObject and return pointer */
     VObject *eventToVTodo(const Todo *anEvent);
     /** translate a Event into a VObject and returns a pointer to it. */
-    VObject* eventToVEvent(const Event *anEvent);
+    VObject *eventToVEvent(const Event *anEvent);
 
     /** takes a QDate and returns a string in the format YYYYMMDDTHHMMSS */
     QString qDateToISO(const QDate &);
     /** takes a QDateTime and returns a string in format YYYYMMDDTHHMMSS */
-    QString qDateTimeToISO(const QDateTime &, bool zulu=TRUE);
+    QString qDateTimeToISO(const QDateTime &, bool zulu = TRUE);
     /** takes a string in the format YYYYMMDDTHHMMSS and returns a
      * valid QDateTime. */
-    QDateTime ISOToQDateTime(const QString & dtStr);
+    QDateTime ISOToQDateTime(const QString &dtStr);
     /** takes a string in the format YYYYMMDD and returns a
      * valid QDate. */
-    QDate ISOToQDate(const QString & dtStr);
+    QDate ISOToQDate(const QString &dtStr);
     /** takes a vCalendar tree of VObjects, and puts all of them that have
      * the "event" property into the dictionary, todos in the todo-list, etc. */
     void populate(VObject *vcal);
@@ -106,7 +105,7 @@ class LIBKCAL_EXPORT VCalFormat : public CalFormat
     Attendee::PartStat readStatus(const char *s) const;
     QCString writeStatus(Attendee::PartStat status) const;
 
-  private:
+private:
     Calendar *mCalendar;
 
     Event::List mEventsRelate;           // events with relations

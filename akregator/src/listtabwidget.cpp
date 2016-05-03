@@ -41,109 +41,108 @@
 
 namespace Akregator {
 
-class ListTabWidget::ListTabWidgetPrivate
-{
+class ListTabWidget::ListTabWidgetPrivate {
 
 public:
     int idCounter;
-    KMultiTabBar* tabBar;
-    QWidgetStack* stack;
-    NodeListView* current;
+    KMultiTabBar *tabBar;
+    QWidgetStack *stack;
+    NodeListView *current;
     int currentID;
-    QValueList<NodeListView*> views;
-    QMap<int, NodeListView*> idToView;
-    QHBoxLayout* layout;
+    QValueList<NodeListView *> views;
+    QMap<int, NodeListView *> idToView;
+    QHBoxLayout *layout;
     ViewMode viewMode;
-    QMap<QWidget*, QString> captions;
+    QMap<QWidget *, QString> captions;
 };
 
 
 void ListTabWidget::slotItemUp()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotItemUp();
 }
 
 void ListTabWidget::slotItemDown()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotItemDown();
 }
 
 void ListTabWidget::slotItemBegin()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotItemBegin();
 }
 
 void ListTabWidget::slotItemEnd()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotItemEnd();
 }
 
 void ListTabWidget::slotItemLeft()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotItemLeft();
 }
 
 void ListTabWidget::slotItemRight()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotItemRight();
 }
 
 void ListTabWidget::slotPrevFeed()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotPrevFeed();
 }
 
 void ListTabWidget::slotNextFeed()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotNextFeed();
 }
 
 void ListTabWidget::slotPrevUnreadFeed()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotPrevUnreadFeed();
 }
 
 void ListTabWidget::slotNextUnreadFeed()
 {
-    if (d->current)
+    if(d->current)
         d->current->slotNextUnreadFeed();
 }
 
-void ListTabWidget::slotRootNodeChanged(NodeListView* view, TreeNode* node)
+void ListTabWidget::slotRootNodeChanged(NodeListView *view, TreeNode *node)
 {
-/*
-    int unread = node->unread();
-    if (unread > 0)
-    {
-        //uncomment this to append unread count
-        //d->tabWidget->changeTab(view,  QString("<qt>%1 (%2)").arg(d->captions[view]).arg(node->unread()));
-        d->tabWidget->changeTab(view, d->captions[view]);
-    }
-    else
-    {
-        d->tabWidget->changeTab(view, d->captions[view]);
-    }
-*/
+    /*
+        int unread = node->unread();
+        if (unread > 0)
+        {
+            //uncomment this to append unread count
+            //d->tabWidget->changeTab(view,  QString("<qt>%1 (%2)").arg(d->captions[view]).arg(node->unread()));
+            d->tabWidget->changeTab(view, d->captions[view]);
+        }
+        else
+        {
+            d->tabWidget->changeTab(view, d->captions[view]);
+        }
+    */
 }
 
 void ListTabWidget::slotTabClicked(int id)
 {
-    NodeListView* view = d->idToView[id];
-    if (view)
+    NodeListView *view = d->idToView[id];
+    if(view)
     {
         d->stack->raiseWidget(view);
         d->current = view;
 
-        if (d->currentID >= 0)
+        if(d->currentID >= 0)
             d->tabBar->setTab(d->currentID, false);
         d->currentID = id;
         d->tabBar->setTab(d->currentID, true);
@@ -152,7 +151,7 @@ void ListTabWidget::slotTabClicked(int id)
     }
 }
 
-ListTabWidget::ListTabWidget(QWidget* parent, const char* name) : QWidget(parent, name), d(new ListTabWidgetPrivate)
+ListTabWidget::ListTabWidget(QWidget *parent, const char *name) : QWidget(parent, name), d(new ListTabWidgetPrivate)
 {
     d->idCounter = 0;
     d->current = 0;
@@ -160,7 +159,7 @@ ListTabWidget::ListTabWidget(QWidget* parent, const char* name) : QWidget(parent
     d->viewMode = verticalTabs;
     d->layout = new QHBoxLayout(this);
     //d->layout = new QGridLayout(this, 1, 2);
-    d->tabBar = new KMultiTabBar(KMultiTabBar::Vertical, this); 
+    d->tabBar = new KMultiTabBar(KMultiTabBar::Vertical, this);
     d->tabBar->setStyle(KMultiTabBar::KDEV3ICON);
     //d->tabBar->setStyle(KMultiTabBar::KDEV3);
     d->tabBar->showActiveTabTexts(true);
@@ -169,8 +168,8 @@ ListTabWidget::ListTabWidget(QWidget* parent, const char* name) : QWidget(parent
 
     d->stack = new QWidgetStack(this);
     d->layout->addWidget(d->stack/*, 0, 1*/);
-    
-//    connect(d->tabBar, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentChanged(QWidget*)));
+
+    //    connect(d->tabBar, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentChanged(QWidget*)));
 }
 
 ListTabWidget::~ListTabWidget()
@@ -182,7 +181,7 @@ ListTabWidget::~ListTabWidget()
 
 void ListTabWidget::setViewMode(ViewMode mode)
 {
-    if (mode == d->viewMode)
+    if(mode == d->viewMode)
         return;
 
     d->viewMode = mode;
@@ -196,24 +195,24 @@ ListTabWidget::ViewMode ListTabWidget::viewMode() const
     return d->viewMode;
 }
 
-void ListTabWidget::addView(NodeListView* view, const QString& caption, const QPixmap& icon)
+void ListTabWidget::addView(NodeListView *view, const QString &caption, const QPixmap &icon)
 {
-    d->captions[view] = caption;    
+    d->captions[view] = caption;
 
-    view->reparent(d->stack, QPoint(0,0));
+    view->reparent(d->stack, QPoint(0, 0));
     d->stack->addWidget(view);
-   
+
     int tabId = d->idCounter++;
     d->tabBar->appendTab(icon, tabId, caption);
     d->idToView[tabId] = view;
     connect(d->tabBar->tab(tabId), SIGNAL(clicked(int)), this, SLOT(slotTabClicked(int)));
 
-    
-    connect(view, SIGNAL(signalNodeSelected(TreeNode*)), this, SIGNAL(signalNodeSelected(TreeNode*)));
-    connect(view, SIGNAL(signalRootNodeChanged(NodeListView*, TreeNode*)), this, SLOT(slotRootNodeChanged(NodeListView*, TreeNode*)));
+
+    connect(view, SIGNAL(signalNodeSelected(TreeNode *)), this, SIGNAL(signalNodeSelected(TreeNode *)));
+    connect(view, SIGNAL(signalRootNodeChanged(NodeListView *, TreeNode *)), this, SLOT(slotRootNodeChanged(NodeListView *, TreeNode *)));
 
 
-    if (tabId == 0) // first widget
+    if(tabId == 0)  // first widget
     {
         d->current = view;
         d->currentID = tabId;
@@ -222,7 +221,7 @@ void ListTabWidget::addView(NodeListView* view, const QString& caption, const QP
     }
 }
 
-NodeListView* ListTabWidget::activeView() const
+NodeListView *ListTabWidget::activeView() const
 {
     return d->current;
 }

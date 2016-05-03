@@ -28,21 +28,20 @@ class QEvent;
 class QResizeEvent;
 
 
-class KNoteButton: public QPushButton
-{
+class KNoteButton: public QPushButton {
     Q_OBJECT
 public:
-    KNoteButton( const QString& icon, QWidget *parent=0, const char *name=0 );
+    KNoteButton(const QString &icon, QWidget *parent = 0, const char *name = 0);
     ~KNoteButton();
 
     virtual QSize sizeHint() const;
 
 protected:
-    virtual void enterEvent( QEvent * );
-    virtual void leaveEvent( QEvent * );
+    virtual void enterEvent(QEvent *);
+    virtual void leaveEvent(QEvent *);
 
-    virtual void drawButton( QPainter *p );
-    virtual void drawButtonLabel( QPainter *p );
+    virtual void drawButton(QPainter *p);
+    virtual void drawButtonLabel(QPainter *p);
 
 private:
     bool m_flat;

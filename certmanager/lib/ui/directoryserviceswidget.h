@@ -41,40 +41,39 @@ namespace Kleo {
 
 class CryptoConfigEntry;
 
-class KDE_EXPORT DirectoryServicesWidget : public DirectoryServicesWidgetBase
-{
-  Q_OBJECT
+class KDE_EXPORT DirectoryServicesWidget : public DirectoryServicesWidgetBase {
+    Q_OBJECT
 
 public:
-  DirectoryServicesWidget(
-    Kleo::CryptoConfigEntry* configEntry,
-    QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
-  ~DirectoryServicesWidget();
+    DirectoryServicesWidget(
+        Kleo::CryptoConfigEntry *configEntry,
+        QWidget *parent = 0, const char *name = 0, WFlags fl = 0);
+    ~DirectoryServicesWidget();
 
-  void load();
-  void save();
+    void load();
+    void save();
 
-  void enableDisable( CryptPlugWrapper* wrapper ); // unused?
-  void setInitialServices( const KURL::List& urls );
-  KURL::List urlList() const;
-  void clear();
+    void enableDisable(CryptPlugWrapper *wrapper);   // unused?
+    void setInitialServices(const KURL::List &urls);
+    KURL::List urlList() const;
+    void clear();
 
 public slots:
-  void defaults();
+    void defaults();
 
 signals:
-  void changed();
+    void changed();
 
 protected slots:
-  void slotServiceChanged( QListViewItem* );
-  void slotServiceSelected( QListViewItem* );
-  void slotAddService();
-  void slotDeleteService();
-  void slotMoveUp();
-  void slotMoveDown();
+    void slotServiceChanged(QListViewItem *);
+    void slotServiceSelected(QListViewItem *);
+    void slotAddService();
+    void slotDeleteService();
+    void slotMoveUp();
+    void slotMoveDown();
 
 private:
-  Kleo::CryptoConfigEntry* mConfigEntry;
+    Kleo::CryptoConfigEntry *mConfigEntry;
 };
 
 }

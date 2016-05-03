@@ -39,7 +39,7 @@
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
 namespace Kleo {
-  //typedef CryptoBackendFactory CryptPlugFactory KDE_DEPRECATED;
+//typedef CryptoBackendFactory CryptPlugFactory KDE_DEPRECATED;
 }
 
 class CryptPlugWrapper;
@@ -47,35 +47,38 @@ class CryptPlugWrapperList;
 
 namespace KMail {
 
-  class KDE_EXPORT CryptPlugFactory : public Kleo::CryptoBackendFactory {
+class KDE_EXPORT CryptPlugFactory : public Kleo::CryptoBackendFactory {
     Q_OBJECT
-  protected:
+protected:
     CryptPlugFactory();
     ~CryptPlugFactory();
 
-  public:
-    static CryptPlugFactory * instance();
+public:
+    static CryptPlugFactory *instance();
 
-    CryptPlugWrapper * active() const;
-    CryptPlugWrapper * smime() const;
-    CryptPlugWrapper * openpgp() const;
+    CryptPlugWrapper *active() const;
+    CryptPlugWrapper *smime() const;
+    CryptPlugWrapper *openpgp() const;
 
-    CryptPlugWrapperList & list() const { return *mCryptPlugWrapperList; }
+    CryptPlugWrapperList &list() const
+    {
+        return *mCryptPlugWrapperList;
+    }
 
-    CryptPlugWrapper * createForProtocol( const QString & proto ) const;
+    CryptPlugWrapper *createForProtocol(const QString &proto) const;
 
-    void scanForBackends( QStringList * reason );
+    void scanForBackends(QStringList *reason);
 
-  private:
+private:
     void updateCryptPlugWrapperList();
 
-  private:
-    CryptPlugFactory( const CryptPlugFactory & );
-    void operator=( const CryptPlugFactory & );
-    CryptPlugWrapperList * mCryptPlugWrapperList;
+private:
+    CryptPlugFactory(const CryptPlugFactory &);
+    void operator=(const CryptPlugFactory &);
+    CryptPlugWrapperList *mCryptPlugWrapperList;
 
-    static CryptPlugFactory * mSelf;
-  };
+    static CryptPlugFactory *mSelf;
+};
 
 }
 #endif

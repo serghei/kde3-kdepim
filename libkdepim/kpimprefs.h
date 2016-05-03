@@ -28,23 +28,22 @@
 
 class QString;
 
-class KDE_EXPORT KPimPrefs : public KConfigSkeleton
-{
-  public:
-    KPimPrefs( const QString &name = QString::null );
+class KDE_EXPORT KPimPrefs : public KConfigSkeleton {
+public:
+    KPimPrefs(const QString &name = QString::null);
 
     virtual ~KPimPrefs();
 
     /** Set preferences to default values */
     void usrSetDefaults();
-  
+
     /** Read preferences from config file */
     void usrReadConfig();
 
     /** Write preferences to config file */
     void usrWriteConfig();
 
-    /** 
+    /**
      * Get user's timezone.
      *
      * This will first look for whatever timezone is stored in KOrganizer's
@@ -66,20 +65,20 @@ class KDE_EXPORT KPimPrefs : public KConfigSkeleton
       Convert time given in UTC to local time at timezone specified by given
       timezone id.
     */
-    static QDateTime utcToLocalTime( const QDateTime &dt,
-                                     const QString &timeZoneId );
+    static QDateTime utcToLocalTime(const QDateTime &dt,
+                                    const QString &timeZoneId);
 
     /**
       Convert time given in local time at timezone specified by given
       timezone id to UTC.
     */
-    static QDateTime localTimeToUtc( const QDateTime &dt,
-                                     const QString &timeZoneId );
+    static QDateTime localTimeToUtc(const QDateTime &dt,
+                                    const QString &timeZoneId);
 
-  public:
+public:
     QStringList mCustomCategories;
-  
-  protected:
+
+protected:
     virtual void setCategoryDefaults() {}
 };
 

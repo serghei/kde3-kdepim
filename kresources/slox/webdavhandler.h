@@ -34,9 +34,8 @@ class Incidence;
 
 class SloxBase;
 
-class KDE_EXPORT SloxItem
-{
-  public:
+class KDE_EXPORT SloxItem {
+public:
     enum Status { Invalid, Delete, Create, New };
 
     SloxItem();
@@ -49,41 +48,43 @@ class KDE_EXPORT SloxItem
     QString responseDescription;
 };
 
-class KDE_EXPORT WebdavHandler
-{
-  public:
+class KDE_EXPORT WebdavHandler {
+public:
     WebdavHandler();
 
-    void setUserId( const QString & );
+    void setUserId(const QString &);
     QString userId() const;
-    void setResource( SloxBase *res ) { mRes = res; }
+    void setResource(SloxBase *res)
+    {
+        mRes = res;
+    }
 
-    void log( const QString & );
+    void log(const QString &);
 
-    static QDomElement addElement( QDomDocument &, QDomNode &,
-                                   const QString &tag );
-    static QDomElement addDavElement( QDomDocument &, QDomNode &,
-                                      const QString &tag );
-    static QDomElement addSloxElement( SloxBase *res,
-                                       QDomDocument &, QDomNode &,
-                                       const QString &tag,
-                                       const QString &text = QString::null );
+    static QDomElement addElement(QDomDocument &, QDomNode &,
+                                  const QString &tag);
+    static QDomElement addDavElement(QDomDocument &, QDomNode &,
+                                     const QString &tag);
+    static QDomElement addSloxElement(SloxBase *res,
+                                      QDomDocument &, QDomNode &,
+                                      const QString &tag,
+                                      const QString &text = QString::null);
 
-    static QDateTime sloxToQDateTime( const QString &str );
-    static QDateTime sloxToQDateTime( const QString &str,
-                                      const QString &timeZoneId );
-    static QString qDateTimeToSlox( const QDateTime &dt );
-    static QString qDateTimeToSlox( const QDateTime &dt,
-                                    const QString &timeZoneId );
+    static QDateTime sloxToQDateTime(const QString &str);
+    static QDateTime sloxToQDateTime(const QString &str,
+                                     const QString &timeZoneId);
+    static QString qDateTimeToSlox(const QDateTime &dt);
+    static QString qDateTimeToSlox(const QDateTime &dt,
+                                   const QString &timeZoneId);
 
-    static QValueList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
+    static QValueList<SloxItem> getSloxItems(SloxBase *res, const QDomDocument &doc);
 
     void clearSloxAttributeStatus();
-    void parseSloxAttribute( const QDomElement & );
-    void setSloxAttributes( KCal::Incidence * );
-    void setSloxAttributes( KABC::Addressee & );
+    void parseSloxAttribute(const QDomElement &);
+    void setSloxAttributes(KCal::Incidence *);
+    void setSloxAttributes(KABC::Addressee &);
 
-  private:
+private:
     QString mLogFile;
     int mLogCount;
     SloxBase *mRes;

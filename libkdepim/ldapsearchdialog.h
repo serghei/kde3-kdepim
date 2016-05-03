@@ -35,56 +35,61 @@ class QPushButton;
 
 namespace KPIM {
 
-class KDE_EXPORT LDAPSearchDialog : public KDialogBase
-{ 
-  Q_OBJECT
+class KDE_EXPORT LDAPSearchDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    LDAPSearchDialog( QWidget* parent, const char* name = 0 );
+public:
+    LDAPSearchDialog(QWidget *parent, const char *name = 0);
     ~LDAPSearchDialog();
 
-    bool isOK() const { return mIsOK; }
+    bool isOK() const
+    {
+        return mIsOK;
+    }
 
     void restoreSettings();
 
-    void setSearchText( const QString &text ) { mSearchEdit->setText( text ); }
+    void setSearchText(const QString &text)
+    {
+        mSearchEdit->setText(text);
+    }
     QString selectedEMails() const;
-  signals:
+signals:
     void addresseesAdded();
 
-  protected slots:
-    void slotAddResult( const KPIM::LdapObject& obj );
-    void slotSetScope( bool rec );
+protected slots:
+    void slotAddResult(const KPIM::LdapObject &obj);
+    void slotSetScope(bool rec);
     void slotStartSearch();
     void slotStopSearch();
     void slotSearchDone();
-    void slotError( const QString& );
+    void slotError(const QString &);
     virtual void slotHelp();
     virtual void slotUser1();
     virtual void slotUser2();
     virtual void slotUser3();
 
-  protected:
+protected:
 
-    virtual void closeEvent( QCloseEvent* );
+    virtual void closeEvent(QCloseEvent *);
 
-  private:
+private:
     void saveSettings();
 
-    QString makeFilter( const QString& query, const QString& attr, bool startsWith );
+    QString makeFilter(const QString &query, const QString &attr, bool startsWith);
 
     void cancelQuery();
 
     int mNumHosts;
     QPtrList<KPIM::LdapClient> mLdapClientList;
     bool mIsOK;
-    KComboBox* mFilterCombo;
-    KComboBox* mSearchType;
-    KLineEdit* mSearchEdit;
+    KComboBox *mFilterCombo;
+    KComboBox *mSearchType;
+    KLineEdit *mSearchEdit;
 
-    QCheckBox* mRecursiveCheckbox;
-    QListView* mResultListView;
-    QPushButton* mSearchButton;
+    QCheckBox *mRecursiveCheckbox;
+    QListView *mResultListView;
+    QPushButton *mSearchButton;
 };
 
 

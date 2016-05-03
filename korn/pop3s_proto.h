@@ -23,18 +23,29 @@
 
 #include "pop3_proto.h"
 
-class Pop3s_Protocol : public Pop3_Protocol
-{
+class Pop3s_Protocol : public Pop3_Protocol {
 public:
-	Pop3s_Protocol()  {}
-	virtual ~Pop3s_Protocol() {}
+    Pop3s_Protocol()  {}
+    virtual ~Pop3s_Protocol() {}
 
-	virtual KIO_Protocol * clone() const { return new Pop3s_Protocol; }
-	
-	virtual QString protocol() const { return "pop3s"; }
-	virtual QString configName() const { return "pop3s"; }
+    virtual KIO_Protocol *clone() const
+    {
+        return new Pop3s_Protocol;
+    }
 
-	virtual unsigned short defaultPort() const { return 995; }
+    virtual QString protocol() const
+    {
+        return "pop3s";
+    }
+    virtual QString configName() const
+    {
+        return "pop3s";
+    }
+
+    virtual unsigned short defaultPort() const
+    {
+        return 995;
+    }
 };
 
 #endif

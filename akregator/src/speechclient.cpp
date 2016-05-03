@@ -37,24 +37,22 @@
 #include <qstring.h>
 #include <qvaluelist.h>
 
-namespace Akregator 
-{
+namespace Akregator {
 
-class SpeechClient::SpeechClientPrivate
-{
-    public:
+class SpeechClient::SpeechClientPrivate {
+public:
 
     bool isTextSpeechInstalled;
     QValueList<uint> pendingJobs;
 };
 
-SpeechClient* SpeechClient::m_self = 0;
+SpeechClient *SpeechClient::m_self = 0;
 
 static KStaticDeleter<SpeechClient> speechclsd;
 
-SpeechClient* SpeechClient::self()
+SpeechClient *SpeechClient::self()
 {
-    if (!m_self)
+    if(!m_self)
         m_self = speechclsd.setObject(m_self, new SpeechClient);
     return m_self;
 }
@@ -72,46 +70,46 @@ SpeechClient::~SpeechClient()
     d = 0;
 }
 
-void SpeechClient::slotSpeak(const QString& text, const QString& language)
+void SpeechClient::slotSpeak(const QString &text, const QString &language)
 {
-    if (!isTextToSpeechInstalled() || text.isEmpty())
+    if(!isTextToSpeechInstalled() || text.isEmpty())
         return;
     uint jobNum = setText(text, language);
     startText(jobNum);
     d->pendingJobs.append(jobNum);
-    if (d->pendingJobs.count() == 1)
+    if(d->pendingJobs.count() == 1)
     {
         emit signalJobsStarted();
         emit signalActivated(true);
     }
 }
 
-void SpeechClient::slotSpeak(const Article& article)
+void SpeechClient::slotSpeak(const Article &article)
 {
-    if (!isTextToSpeechInstalled() || article.isNull())
+    if(!isTextToSpeechInstalled() || article.isNull())
         return;
-    
+
     QString speakMe;
-    speakMe += KCharsets::resolveEntities(Utils::stripTags((article).title())) 
-    + ". . . . " 
-    + KCharsets::resolveEntities(Utils::stripTags((article).description()));
+    speakMe += KCharsets::resolveEntities(Utils::stripTags((article).title()))
+               + ". . . . "
+               + KCharsets::resolveEntities(Utils::stripTags((article).description()));
     slotSpeak(speakMe, "en");
 }
 
-void SpeechClient::slotSpeak(const QValueList<Article>& articles)
+void SpeechClient::slotSpeak(const QValueList<Article> &articles)
 {
-    if (!isTextToSpeechInstalled() || articles.isEmpty())
+    if(!isTextToSpeechInstalled() || articles.isEmpty())
         return;
 
     QString speakMe;
 
-    for (QValueList<Article>::ConstIterator it = articles.begin(); it != articles.end(); ++it)
+    for(QValueList<Article>::ConstIterator it = articles.begin(); it != articles.end(); ++it)
     {
-        if (!speakMe.isEmpty())
+        if(!speakMe.isEmpty())
             speakMe += ". . . . . . " + i18n("Next Article: ");
-        speakMe += KCharsets::resolveEntities(Utils::stripTags((*it).title())) 
-        + ". . . . " 
-        + KCharsets::resolveEntities(Utils::stripTags((*it).description()));
+        speakMe += KCharsets::resolveEntities(Utils::stripTags((*it).title()))
+                   + ". . . . "
+                   + KCharsets::resolveEntities(Utils::stripTags((*it).description()));
     }
 
     SpeechClient::self()->slotSpeak(speakMe, "en");
@@ -119,9 +117,9 @@ void SpeechClient::slotSpeak(const QValueList<Article>& articles)
 
 void SpeechClient::slotAbortJobs()
 {
-    if (!d->pendingJobs.isEmpty())
+    if(!d->pendingJobs.isEmpty())
     {
-        for (QValueList<uint>::ConstIterator it = d->pendingJobs.begin(); it != d->pendingJobs.end(); ++it)
+        for(QValueList<uint>::ConstIterator it = d->pendingJobs.begin(); it != d->pendingJobs.end(); ++it)
         {
             removeText(*it);
         }
@@ -132,13 +130,13 @@ void SpeechClient::slotAbortJobs()
     }
 }
 
-ASYNC SpeechClient::textRemoved(const QCString& /*appId*/, uint jobNum)
+ASYNC SpeechClient::textRemoved(const QCString & /*appId*/, uint jobNum)
 {
     kdDebug() << "SpeechClient::textRemoved() called" << endl;
-    if (d->pendingJobs.contains(jobNum))
+    if(d->pendingJobs.contains(jobNum))
     {
         d->pendingJobs.remove(jobNum);
-        if (d->pendingJobs.isEmpty())
+        if(d->pendingJobs.isEmpty())
         {
             emit signalJobsDone();
             emit signalActivated(false);
@@ -154,23 +152,23 @@ bool SpeechClient::isTextToSpeechInstalled() const
 void SpeechClient::setupSpeechSystem()
 {
     KTrader::OfferList offers = KTrader::self()->query("DCOP/Text-to-Speech", "Name == 'KTTSD'");
-    if (offers.count() == 0)
+    if(offers.count() == 0)
     {
         kdDebug() << "KTTSD not installed, disable support" << endl;
         d->isTextSpeechInstalled = false;
     }
     else
     {
-        DCOPClient* client = dcopClient();
+        DCOPClient *client = dcopClient();
         //client->attach();
-        if (client->isApplicationRegistered("kttsd")) 
+        if(client->isApplicationRegistered("kttsd"))
         {
             d->isTextSpeechInstalled = true;
         }
         else
         {
             QString error;
-            if (KApplication::startServiceByDesktopName("kttsd", QStringList(), &error))
+            if(KApplication::startServiceByDesktopName("kttsd", QStringList(), &error))
             {
                 kdDebug() << "Starting KTTSD failed with message " << error << endl;
                 d->isTextSpeechInstalled = false;
@@ -181,19 +179,19 @@ void SpeechClient::setupSpeechSystem()
             }
         }
     }
-    if (d->isTextSpeechInstalled)
+    if(d->isTextSpeechInstalled)
     {
 
         bool c = connectDCOPSignal("kttsd", "KSpeech",
-                "textRemoved(QCString, uint)",
-                "textRemoved(QCString, uint)",
-                false);
-        if (!c)
+                                   "textRemoved(QCString, uint)",
+                                   "textRemoved(QCString, uint)",
+                                   false);
+        if(!c)
             kdDebug() << "SpeechClient::setupSpeechSystem(): connecting signals failed" << endl;
         c = connectDCOPSignal("kttsd", "KSpeech",
-                "textFinished(QCString, uint)",
-                "textRemoved(QCString, uint)",
-                false);
+                              "textFinished(QCString, uint)",
+                              "textRemoved(QCString, uint)",
+                              false);
     }
 }
 

@@ -48,92 +48,98 @@
 
 #include "ldif_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_ldif_xxport, LDIFXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER(libkaddrbk_ldif_xxport, LDIFXXPort)
 
-LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::XXPort( ab, parent, name )
+LDIFXXPort::LDIFXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::XXPort(ab, parent, name)
 {
-  createImportAction( i18n( "Import LDIF Addressbook..." ) );
-  createExportAction( i18n( "Export LDIF Addressbook..." ) );
+    createImportAction(i18n("Import LDIF Addressbook..."));
+    createExportAction(i18n("Export LDIF Addressbook..."));
 }
 
 /* import */
 
-KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
+KABC::AddresseeList LDIFXXPort::importContacts(const QString &) const
 {
-  KABC::AddresseeList addrList;
+    KABC::AddresseeList addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
-                      "text/x-ldif", 0 );
-  if ( fileName.isEmpty() )
+    QString fileName = KFileDialog::getOpenFileName(QDir::homeDirPath(),
+                       "text/x-ldif", 0);
+    if(fileName.isEmpty())
+        return addrList;
+
+    QFile file(fileName);
+    if(!file.open(IO_ReadOnly))
+    {
+        QString msg = i18n("<qt>Unable to open <b>%1</b> for reading.</qt>");
+        KMessageBox::error(parentWidget(), msg.arg(fileName));
+        return addrList;
+    }
+
+    QTextStream t(&file);
+    t.setEncoding(QTextStream::Latin1);
+    QString wholeFile = t.read();
+    QDateTime dtDefault = QFileInfo(file).lastModified();
+    file.close();
+
+    KABC::LDIFConverter::LDIFToAddressee(wholeFile, addrList, dtDefault);
+
     return addrList;
-
-  QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) ) {
-    QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
-    KMessageBox::error( parentWidget(), msg.arg( fileName ) );
-    return addrList;
-  }
-
-  QTextStream t( &file );
-  t.setEncoding( QTextStream::Latin1 );
-  QString wholeFile = t.read();
-  QDateTime dtDefault = QFileInfo(file).lastModified();
-  file.close();
-
-  KABC::LDIFConverter::LDIFToAddressee( wholeFile, addrList, dtDefault );
-
-  return addrList;
 }
 
 
 /* export */
 
-bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
+bool LDIFXXPort::exportContacts(const KABC::AddresseeList &list, const QString &)
 {
-  KURL url = KFileDialog::getSaveURL( QDir::homeDirPath() + "/addressbook.ldif",
-			"text/x-ldif" );
-  if ( url.isEmpty() )
-      return true;
+    KURL url = KFileDialog::getSaveURL(QDir::homeDirPath() + "/addressbook.ldif",
+                                       "text/x-ldif");
+    if(url.isEmpty())
+        return true;
 
-  if ( !url.isLocalFile() ) {
-    KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.url() )
-                          .arg( strerror( tmpFile.status() ) ) );
-      return false;
+    if(!url.isLocalFile())
+    {
+        KTempFile tmpFile;
+        if(tmpFile.status() != 0)
+        {
+            QString txt = i18n("<qt>Unable to open file <b>%1</b>.%2.</qt>");
+            KMessageBox::error(parentWidget(), txt.arg(url.url())
+                               .arg(strerror(tmpFile.status())));
+            return false;
+        }
+
+        doExport(tmpFile.file(), list);
+        tmpFile.close();
+
+        return KIO::NetAccess::upload(tmpFile.name(), url, parentWidget());
     }
+    else
+    {
+        QString filename = url.path();
+        QFile file(filename);
 
-    doExport( tmpFile.file(), list );
-    tmpFile.close();
+        if(!file.open(IO_WriteOnly))
+        {
+            QString txt = i18n("<qt>Unable to open file <b>%1</b>.</qt>");
+            KMessageBox::error(parentWidget(), txt.arg(filename));
+            return false;
+        }
 
-    return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
-  } else {
-    QString filename = url.path();
-    QFile file( filename );
+        doExport(&file, list);
+        file.close();
 
-    if ( !file.open( IO_WriteOnly ) ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( filename ) );
-      return false;
+        return true;
     }
-
-    doExport( &file, list );
-    file.close();
-
-    return true;
-  }
 }
 
-void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
+void LDIFXXPort::doExport(QFile *fp, const KABC::AddresseeList &list)
 {
-  QString str;
-  KABC::LDIFConverter::addresseeToLDIF( list, str );
+    QString str;
+    KABC::LDIFConverter::addresseeToLDIF(list, str);
 
-  QTextStream t( fp );
-  t.setEncoding( QTextStream::UnicodeUTF8 );
-  t << str;
+    QTextStream t(fp);
+    t.setEncoding(QTextStream::UnicodeUTF8);
+    t << str;
 }
 
 #include "ldif_xxport.moc"

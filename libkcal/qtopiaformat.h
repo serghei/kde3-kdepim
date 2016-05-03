@@ -33,19 +33,18 @@ namespace KCal {
 /**
   This class implements the calendar format used by Qtopia.
 */
-class LIBKCAL_EXPORT QtopiaFormat : public CalFormat
-{
-  public:
+class LIBKCAL_EXPORT QtopiaFormat : public CalFormat {
+public:
     QtopiaFormat();
     virtual ~QtopiaFormat();
 
-    bool load( Calendar *, const QString &fileName );
-    bool save( Calendar *, const QString &fileName );
+    bool load(Calendar *, const QString &fileName);
+    bool save(Calendar *, const QString &fileName);
 
-    bool fromString( Calendar *, const QString & );  
-    QString toString( Calendar * );
+    bool fromString(Calendar *, const QString &);
+    QString toString(Calendar *);
 
-  private:
+private:
     class Private;
     Private *d;
 };

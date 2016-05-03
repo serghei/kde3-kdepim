@@ -35,22 +35,24 @@ namespace KMail {
   as the edited file are watched to work with as many as possible
   editors.
 */
-class EditorWatcher : public QObject
-{
-  Q_OBJECT
-  public:
-    EditorWatcher( const KURL &url, const QString &mimeType, bool openWith, QObject *parent = 0 );
+class EditorWatcher : public QObject {
+    Q_OBJECT
+public:
+    EditorWatcher(const KURL &url, const QString &mimeType, bool openWith, QObject *parent = 0);
     bool start();
-    bool fileChanged() const { return mFileModified; }
-  signals:
-    void editDone( KMail::EditorWatcher* watcher );
+    bool fileChanged() const
+    {
+        return mFileModified;
+    }
+signals:
+    void editDone(KMail::EditorWatcher *watcher);
 
-  private slots:
+private slots:
     void editorExited();
     void inotifyEvent();
     void checkEditDone();
 
-  private:
+private:
     KURL mUrl;
     QString mMimeType;
     bool mOpenWith;

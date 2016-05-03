@@ -31,47 +31,47 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kabcustomfields( QWidget *parent, const char * ) {
-    return new KCMKabCustomFields( parent, "kcmkabcustomfields" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_kabcustomfields(QWidget *parent, const char *)
+    {
+        return new KCMKabCustomFields(parent, "kcmkabcustomfields");
+    }
 }
 
-KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const char *name )
-  : KCMDesignerFields( parent, name )
+KCMKabCustomFields::KCMKabCustomFields(QWidget *parent, const char *name)
+    : KCMDesignerFields(parent, name)
 {
 }
 
 QString KCMKabCustomFields::localUiDir()
 {
-  return kabLocalDir() + "contacteditorpages/";
+    return kabLocalDir() + "contacteditorpages/";
 }
 
 QString KCMKabCustomFields::uiPath()
 {
-  return "kaddressbook/contacteditorpages/";
+    return "kaddressbook/contacteditorpages/";
 }
 
-void KCMKabCustomFields::writeActivePages( const QStringList &activePages )
+void KCMKabCustomFields::writeActivePages(const QStringList &activePages)
 {
-  KABPrefs::instance()->setAdvancedCustomFields( activePages );
-  KABPrefs::instance()->writeConfig();
+    KABPrefs::instance()->setAdvancedCustomFields(activePages);
+    KABPrefs::instance()->writeConfig();
 }
 
 QStringList KCMKabCustomFields::readActivePages()
 {
-  return KABPrefs::instance()->advancedCustomFields();
+    return KABPrefs::instance()->advancedCustomFields();
 }
 
 QString KCMKabCustomFields::applicationName()
 {
-  return "KADDRESSBOOK";
+    return "KADDRESSBOOK";
 }
 
 QString KCMKabCustomFields::kabLocalDir()
 {
-  QStringList kabdirs = locateLocal("data", "kaddressbook/");
-  return kabdirs.grep( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
+    QStringList kabdirs = locateLocal("data", "kaddressbook/");
+    return kabdirs.grep(QRegExp("^" + KGlobal::dirs()->localkdedir())).first();
 }
 

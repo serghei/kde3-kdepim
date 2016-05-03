@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -23,32 +23,32 @@
 
 using namespace Schema;
 
-void Types::setSimpleTypes( const SimpleType::List &simpleTypes )
+void Types::setSimpleTypes(const SimpleType::List &simpleTypes)
 {
-  mSimpleTypes = simpleTypes;
+    mSimpleTypes = simpleTypes;
 }
 
 SimpleType::List Types::simpleTypes() const
 {
-  return mSimpleTypes;
+    return mSimpleTypes;
 }
 
-void Types::setComplexTypes( const ComplexType::List &complexTypes )
+void Types::setComplexTypes(const ComplexType::List &complexTypes)
 {
-  mComplexTypes = complexTypes;
+    mComplexTypes = complexTypes;
 }
 
 ComplexType::List Types::complexTypes() const
 {
-  return mComplexTypes;
+    return mComplexTypes;
 }
 
-void Types::setElements( const Element::List &elements )
+void Types::setElements(const Element::List &elements)
 {
-  mElements = elements;
+    mElements = elements;
 }
 
 Element::List Types::elements() const
 {
-  return mElements;
+    return mElements;
 }

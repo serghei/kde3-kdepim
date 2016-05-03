@@ -38,47 +38,47 @@
 #include <qcstring.h>
 
 namespace Kleo {
-  class GnuPGProcessBase;
+class GnuPGProcessBase;
 }
 
 namespace GpgME {
-  class Error;
-  class Data;
+class Error;
+class Data;
 }
 
 namespace QGpgME {
-  class QByteArrayDataProvider;
+class QByteArrayDataProvider;
 }
 
 class KProcess;
 
 namespace Kleo {
 
-  class QGpgMESecretKeyExportJob : public ExportJob {
+class QGpgMESecretKeyExportJob : public ExportJob {
     Q_OBJECT
-  public:
-    QGpgMESecretKeyExportJob( bool armour, const QString& charset );
+public:
+    QGpgMESecretKeyExportJob(bool armour, const QString &charset);
     ~QGpgMESecretKeyExportJob();
 
     /*! \reimp from ExportJob */
-    GpgME::Error start( const QStringList & patterns );
+    GpgME::Error start(const QStringList &patterns);
 
-  private slots:
+private slots:
     /*! \reimp from Job */
     void slotCancel();
 
-    void slotStatus( Kleo::GnuPGProcessBase *, const QString &, const QStringList & );
-    void slotStdout( KProcess *, char *, int );
-    void slotStderr( KProcess *, char *, int );
-    void slotProcessExited( KProcess * );
+    void slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &);
+    void slotStdout(KProcess *, char *, int);
+    void slotStderr(KProcess *, char *, int);
+    void slotProcessExited(KProcess *);
 
-  private:
-    GnuPGProcessBase * mProcess;
+private:
+    GnuPGProcessBase *mProcess;
     QByteArray mKeyData;
     int mError;
     bool mArmour;
     QString mCharset;
-  };
+};
 
 }
 

@@ -48,64 +48,77 @@
 #include "kpgpwrapper.h"
 
 Kleo::KpgpBackendBase::KpgpBackendBase()
-  : Kleo::CryptoBackend(),
-    mOpenPGPProtocol( 0 )
+    : Kleo::CryptoBackend(),
+      mOpenPGPProtocol(0)
 {
 }
 
 Kleo::KpgpBackendBase::~KpgpBackendBase()
 {
-  delete mOpenPGPProtocol; mOpenPGPProtocol = 0;
+    delete mOpenPGPProtocol;
+    mOpenPGPProtocol = 0;
 }
 
-QString Kleo::GPG1Backend::name() const {
-  return GPG1_BACKEND_NAME;
+QString Kleo::GPG1Backend::name() const
+{
+    return GPG1_BACKEND_NAME;
 }
 
-QString Kleo::GPG1Backend::displayName() const {
-  return i18n("Kpgp/gpg");
+QString Kleo::GPG1Backend::displayName() const
+{
+    return i18n("Kpgp/gpg");
 }
 
-QString Kleo::PGP2Backend::name() const {
-  return PGP2_BACKEND_NAME;
+QString Kleo::PGP2Backend::name() const
+{
+    return PGP2_BACKEND_NAME;
 }
 
-QString Kleo::PGP2Backend::displayName() const {
-  return i18n("Kpgp/pgp v2");
+QString Kleo::PGP2Backend::displayName() const
+{
+    return i18n("Kpgp/pgp v2");
 }
 
-QString Kleo::PGP5Backend::name() const {
-  return PGP5_BACKEND_NAME;
+QString Kleo::PGP5Backend::name() const
+{
+    return PGP5_BACKEND_NAME;
 }
 
-QString Kleo::PGP5Backend::displayName() const {
-  return i18n("Kpgp/pgp v5");
+QString Kleo::PGP5Backend::displayName() const
+{
+    return i18n("Kpgp/pgp v5");
 }
 
-QString Kleo::PGP6Backend::name() const {
-  return PGP6_BACKEND_NAME;
+QString Kleo::PGP6Backend::name() const
+{
+    return PGP6_BACKEND_NAME;
 }
 
-QString Kleo::PGP6Backend::displayName() const {
-  return i18n("Kpgp/pgp v6");
+QString Kleo::PGP6Backend::displayName() const
+{
+    return i18n("Kpgp/pgp v6");
 }
 
-static const QString notSupported() {
-  return i18n("This backend does not support S/MIME");
+static const QString notSupported()
+{
+    return i18n("This backend does not support S/MIME");
 }
 
-bool Kleo::KpgpBackendBase::checkForOpenPGP( QString * /*reason*/ ) const {
-  return true;
+bool Kleo::KpgpBackendBase::checkForOpenPGP(QString * /*reason*/) const
+{
+    return true;
 }
 
-bool Kleo::KpgpBackendBase::checkForSMIME( QString * reason ) const {
-  if ( reason ) *reason = notSupported();
-  return false;
+bool Kleo::KpgpBackendBase::checkForSMIME(QString *reason) const
+{
+    if(reason) *reason = notSupported();
+    return false;
 }
 
-Kleo::CryptoBackend::Protocol * Kleo::KpgpBackendBase::openpgp() const {
-  if ( !mOpenPGPProtocol )
-    if ( checkForOpenPGP() )
-      mOpenPGPProtocol = new KpgpWrapper( name() );
-  return mOpenPGPProtocol;
+Kleo::CryptoBackend::Protocol *Kleo::KpgpBackendBase::openpgp() const
+{
+    if(!mOpenPGPProtocol)
+        if(checkForOpenPGP())
+            mOpenPGPProtocol = new KpgpWrapper(name());
+    return mOpenPGPProtocol;
 }

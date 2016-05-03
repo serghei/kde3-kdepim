@@ -39,10 +39,9 @@
 
 namespace Akregator {
 
-class FeedIconManager::FeedIconManagerPrivate
-{
-    public:
-    QValueList<Feed*> registeredFeeds;
+class FeedIconManager::FeedIconManagerPrivate {
+public:
+    QValueList<Feed *> registeredFeeds;
     QDict<Feed> urlDict;
 };
 
@@ -50,27 +49,27 @@ FeedIconManager *FeedIconManager::m_instance = 0;
 
 static KStaticDeleter<FeedIconManager> feediconmanagersd;
 
-FeedIconManager* FeedIconManager::self()
+FeedIconManager *FeedIconManager::self()
 {
-    if (!m_instance)
+    if(!m_instance)
         m_instance = feediconmanagersd.setObject(m_instance, new FeedIconManager);
     return m_instance;
 }
 
-void FeedIconManager::fetchIcon(Feed* feed)
+void FeedIconManager::fetchIcon(Feed *feed)
 {
-    if (!d->registeredFeeds.contains(feed))
+    if(!d->registeredFeeds.contains(feed))
     {
         d->registeredFeeds.append(feed);
-        connect(feed, SIGNAL(signalDestroyed(TreeNode*)), this, SLOT(slotFeedDestroyed(TreeNode*)));
+        connect(feed, SIGNAL(signalDestroyed(TreeNode *)), this, SLOT(slotFeedDestroyed(TreeNode *)));
     }
     QString iconURL = getIconURL(KURL(feed->xmlUrl()));
     d->urlDict.insert(iconURL, feed);
     loadIcon(iconURL);
 }
 
-FeedIconManager::FeedIconManager(QObject * parent, const char *name)
-:  QObject(parent, name), DCOPObject("FeedIconManager"), d(new FeedIconManagerPrivate)
+FeedIconManager::FeedIconManager(QObject *parent, const char *name)
+    :  QObject(parent, name), DCOPObject("FeedIconManager"), d(new FeedIconManagerPrivate)
 {
     connectDCOPSignal("kded",
                       "favicons", "iconChanged(bool, QString, QString)",
@@ -84,13 +83,13 @@ FeedIconManager::~FeedIconManager()
     d = 0;
 }
 
-void FeedIconManager::loadIcon(const QString & url)
+void FeedIconManager::loadIcon(const QString &url)
 {
     KURL u(url);
 
     QString iconFile = iconLocation(u);
-    
-    if (iconFile.isNull())
+
+    if(iconFile.isNull())
     {
         QByteArray data;
         QDataStream ds(data, IO_WriteOnly);
@@ -103,12 +102,12 @@ void FeedIconManager::loadIcon(const QString & url)
 
 }
 
-QString FeedIconManager::getIconURL(const KURL& url)
+QString FeedIconManager::getIconURL(const KURL &url)
 {
-    return "http://" +url.host() + "/";
+    return "http://" + url.host() + "/";
 }
 
-QString FeedIconManager::iconLocation(const KURL & url) const
+QString FeedIconManager::iconLocation(const KURL &url) const
 {
     QByteArray data, reply;
     QCString replyType;
@@ -119,7 +118,8 @@ QString FeedIconManager::iconLocation(const KURL & url) const
     kapp->dcopClient()->call("kded", "favicons", "iconForURL(KURL)", data,
                              replyType, reply);
 
-    if (replyType == "QString") {
+    if(replyType == "QString")
+    {
         QDataStream replyStream(reply, IO_ReadOnly);
         QString result;
         replyStream >> result;
@@ -129,25 +129,25 @@ QString FeedIconManager::iconLocation(const KURL & url) const
     return QString::null;
 }
 
-void FeedIconManager::slotFeedDestroyed(TreeNode* node)
+void FeedIconManager::slotFeedDestroyed(TreeNode *node)
 {
-    Feed* feed = dynamic_cast<Feed*>(node);
-    if (feed)
-        while (d->registeredFeeds.contains(feed))
+    Feed *feed = dynamic_cast<Feed *>(node);
+    if(feed)
+        while(d->registeredFeeds.contains(feed))
             d->registeredFeeds.remove(d->registeredFeeds.find(feed));
 }
 
-void FeedIconManager::slotIconChanged(bool /*isHost*/, const QString& hostOrURL,
-                                  const QString& iconName)
+void FeedIconManager::slotIconChanged(bool /*isHost*/, const QString &hostOrURL,
+                                      const QString &iconName)
 {
     QString iconFile = KGlobal::dirs()->findResource("cache",
-                                 iconName+".png");
-    Feed* f;
+                       iconName + ".png");
+    Feed *f;
     QPixmap p = QPixmap(iconFile);
-    if (!p.isNull()) // we don't set null pixmaps, as feed checks pixmap.isNull() to find out whether the icon was already loaded or not. It would request the icon another time, resulting an infinite loop (until stack overflow that is
+    if(!p.isNull())  // we don't set null pixmaps, as feed checks pixmap.isNull() to find out whether the icon was already loaded or not. It would request the icon another time, resulting an infinite loop (until stack overflow that is
     {
-        while (( f = d->urlDict.take(hostOrURL) ))
-            if (d->registeredFeeds.contains(f))
+        while((f = d->urlDict.take(hostOrURL)))
+            if(d->registeredFeeds.contains(f))
                 f->setFavicon(p);
     }
     emit signalIconChanged(hostOrURL, iconFile);

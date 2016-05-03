@@ -26,8 +26,7 @@
 
 #include <kdemacros.h>
 
-namespace Akregator 
-{
+namespace Akregator {
 
 class TreeNode;
 class Folder;
@@ -35,15 +34,29 @@ class Feed;
 class TagNode;
 class TagFolder;
 
-class KDE_EXPORT TreeNodeVisitor
-{
-    public:
-        virtual bool visit(TreeNode* node);
-        virtual bool visitTreeNode(TreeNode* /*node*/) { return false; }
-        virtual bool visitFolder(Folder* /*node*/) { return false; }
-        virtual bool visitTagFolder(TagFolder* /*node*/) { return false; }
-        virtual bool visitFeed(Feed* /*node*/) { return false; }
-        virtual bool visitTagNode(TagNode* /*node*/) { return false; }
+class KDE_EXPORT TreeNodeVisitor {
+public:
+    virtual bool visit(TreeNode *node);
+    virtual bool visitTreeNode(TreeNode * /*node*/)
+    {
+        return false;
+    }
+    virtual bool visitFolder(Folder * /*node*/)
+    {
+        return false;
+    }
+    virtual bool visitTagFolder(TagFolder * /*node*/)
+    {
+        return false;
+    }
+    virtual bool visitFeed(Feed * /*node*/)
+    {
+        return false;
+    }
+    virtual bool visitTagNode(TagNode * /*node*/)
+    {
+        return false;
+    }
 };
 
 }

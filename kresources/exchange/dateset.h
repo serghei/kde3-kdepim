@@ -47,41 +47,42 @@ class DateRange {
 */
 
 class RangeList : public QPtrList< QPair<QDate, QDate> > {
-  protected:
-    virtual int compareItems(QPtrCollection::Item item1, QPtrCollection::Item item2) {
-       QPair<QDate,QDate> *i1 = static_cast<QPair<QDate,QDate> *> (item1);
-       QPair<QDate,QDate> *i2 = static_cast<QPair<QDate,QDate> *> (item2);
-       if ( *i1 < *i2 ) return -1;
-       if ( *i2 < *i1 ) return 1;
-       return 0;
+protected:
+    virtual int compareItems(QPtrCollection::Item item1, QPtrCollection::Item item2)
+    {
+        QPair<QDate, QDate> *i1 = static_cast<QPair<QDate, QDate> *>(item1);
+        QPair<QDate, QDate> *i2 = static_cast<QPair<QDate, QDate> *>(item2);
+        if(*i1 < *i2) return -1;
+        if(*i2 < *i1) return 1;
+        return 0;
     }
 };
 
 class DateSet {
-  public:
+public:
     DateSet();
     ~DateSet();
 
-    void add( QDate const& date );
-    void add( QDate const& from, QDate const& to );
+    void add(QDate const &date);
+    void add(QDate const &from, QDate const &to);
 
-    void remove( QDate const& date );
-    void remove( QDate const& from, QDate const& to );
-    
-    bool contains( QDate const& date );
+    void remove(QDate const &date);
+    void remove(QDate const &from, QDate const &to);
+
+    bool contains(QDate const &date);
     // returns true if and only if the whole range is in the set
-    bool contains( QDate const& from, QDate const& to );
+    bool contains(QDate const &from, QDate const &to);
 
-    int find( QDate const &date );
+    int find(QDate const &date);
     void print();
 
-  protected:
-  private:
-    bool tryMerge( int i );
-    RangeList *mDates; 
+protected:
+private:
+    bool tryMerge(int i);
+    RangeList *mDates;
 
     QDate mOldestDate;
     QDate mNewestDate;
-};  
+};
 
 #endif

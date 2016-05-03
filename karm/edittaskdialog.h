@@ -40,33 +40,32 @@ class KArmTimeWidget;
  * Dialog to add a new task or edit an existing task.
  */
 
-class EditTaskDialog : public KDialogBase
-{
-  Q_OBJECT
+class EditTaskDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    EditTaskDialog(QString caption, bool editDlg, DesktopList* desktopList=0);
+public:
+    EditTaskDialog(QString caption, bool editDlg, DesktopList *desktopList = 0);
     void setTask(const QString &name, long time, long sessionTime);
     QString taskName() const;
 
     // return user choices
-    void status( long *time, long *timeDiff, 
-                 long *session, long *sessionDiff, 
-                 DesktopList *desktopList) const;
-    
-  private slots:
+    void status(long *time, long *timeDiff,
+                long *session, long *sessionDiff,
+                DesktopList *desktopList) const;
+
+private slots:
     void slotAbsolutePressed();
     void slotRelativePressed();
     void slotAutoTrackingPressed();
 
-  private:
-    QLineEdit* _name;
-    KArmTimeWidget* _timeTW;
-    KArmTimeWidget* _sessionTW;
-    KArmTimeWidget* _diffTW;
-    QComboBox* _operator;
-    std::vector<QCheckBox*> _deskBox; // we only need an array, but ISO forbids
-                                 // passing an array as a function argument
+private:
+    QLineEdit *_name;
+    KArmTimeWidget *_timeTW;
+    KArmTimeWidget *_sessionTW;
+    KArmTimeWidget *_diffTW;
+    QComboBox *_operator;
+    std::vector<QCheckBox *> _deskBox; // we only need an array, but ISO forbids
+    // passing an array as a function argument
 
     long origTime;
     long origSession;
@@ -77,8 +76,8 @@ class EditTaskDialog : public KDialogBase
     QCheckBox *_desktopCB;
     int desktopCount;
 
-    QLabel* _timeLA;
-    QLabel* _sessionLA;
+    QLabel *_timeLA;
+    QLabel *_sessionLA;
 };
 
 

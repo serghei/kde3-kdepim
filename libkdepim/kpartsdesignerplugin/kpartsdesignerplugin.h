@@ -23,7 +23,9 @@
 
 #include <qwidgetplugin.h>
 #include <qwidget.h>
-namespace KParts { class ReadOnlyPart; }
+namespace KParts {
+class ReadOnlyPart;
+}
 
 /**
  * Generic part loader, able to view any kind of file for which
@@ -31,17 +33,31 @@ namespace KParts { class ReadOnlyPart; }
  */
 class KPartsGenericPart : public QWidget {
     Q_OBJECT
-    Q_PROPERTY( QString url READ url WRITE setURL )
-    Q_PROPERTY( QString mimetype READ mimetype WRITE setMimetype )
+    Q_PROPERTY(QString url READ url WRITE setURL)
+    Q_PROPERTY(QString mimetype READ mimetype WRITE setMimetype)
 public:
-    KPartsGenericPart( QWidget* parentWidget, const char* name );
+    KPartsGenericPart(QWidget *parentWidget, const char *name);
 
-    QString url() const { return m_url; }
-    void setURL( const QString& url ) { m_url = url; load(); }
+    QString url() const
+    {
+        return m_url;
+    }
+    void setURL(const QString &url)
+    {
+        m_url = url;
+        load();
+    }
 
     // The mimetype, or "auto" if unknown
-    QString mimetype() const { return m_mimetype; }
-    void setMimetype( const QString& mimetype ) { m_mimetype = mimetype; load(); }
+    QString mimetype() const
+    {
+        return m_mimetype;
+    }
+    void setMimetype(const QString &mimetype)
+    {
+        m_mimetype = mimetype;
+        load();
+    }
 
 private:
     void load();
@@ -49,7 +65,7 @@ private:
 private:
     QString m_mimetype;
     QString m_url;
-    KParts::ReadOnlyPart* m_part;
+    KParts::ReadOnlyPart *m_part;
 };
 
 /**
@@ -57,14 +73,14 @@ private:
  */
 class KPartsWidgetPlugin : public QWidgetPlugin {
 public:
-  QStringList keys() const;
-  QWidget * create( const QString & key, QWidget * parent, const char * name );
-  QString group( const QString & key ) const;
-  //QIconSet iconSet( const QString & key ) const;
-  QString includeFile( const QString & key ) const;
-  QString toolTip( const QString & key ) const;
-  QString whatsThis( const QString & key ) const;
-  bool isContainer( const QString & key ) const;
+    QStringList keys() const;
+    QWidget *create(const QString &key, QWidget *parent, const char *name);
+    QString group(const QString &key) const;
+    //QIconSet iconSet( const QString & key ) const;
+    QString includeFile(const QString &key) const;
+    QString toolTip(const QString &key) const;
+    QString whatsThis(const QString &key) const;
+    bool isContainer(const QString &key) const;
 };
 
 #endif

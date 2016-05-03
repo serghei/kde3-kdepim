@@ -21,7 +21,7 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
- 
+
 #include <qregexp.h>
 #include <qstring.h>
 #include <qstringlist.h>
@@ -34,7 +34,7 @@
 
 using namespace RSS;
 
-FeedDetectorEntryList FeedDetector::extractFromLinkTags(const QString& s)	
+FeedDetectorEntryList FeedDetector::extractFromLinkTags(const QString &s)
 {
     //reduce all sequences of spaces, newlines etc. to one space:
     QString str = s.simplifyWhiteSpace();
@@ -55,62 +55,62 @@ FeedDetectorEntryList FeedDetector::extractFromLinkTags(const QString& s)
     // get all <link> tags
     QStringList linkTags;
     //int strlength = str.length();
-    while ( matchpos != -1 )
+    while(matchpos != -1)
     {
         matchpos = reLinkTag.search(str, pos);
-        if (matchpos != -1)
+        if(matchpos != -1)
         {
-            linkTags.append( str.mid(matchpos, reLinkTag.matchedLength()) );
+            linkTags.append(str.mid(matchpos, reLinkTag.matchedLength()));
             pos = matchpos + reLinkTag.matchedLength();
         }
     }
 
     FeedDetectorEntryList list;
 
-    for ( QStringList::Iterator it = linkTags.begin(); it != linkTags.end(); ++it )
+    for(QStringList::Iterator it = linkTags.begin(); it != linkTags.end(); ++it)
     {
         QString type;
         int pos = reType.search(*it, 0);
-        if (pos != -1)
+        if(pos != -1)
             type = reType.cap(1).lower();
 
         // we accept only type attributes indicating a feed
-        if ( type != "application/rss+xml" && type != "application/rdf+xml"
-	      && type != "application/atom+xml" && type != "text/xml" )
+        if(type != "application/rss+xml" && type != "application/rdf+xml"
+                && type != "application/atom+xml" && type != "text/xml")
             continue;
-                
+
         QString title;
         pos = reTitle.search(*it, 0);
-        if (pos != -1)
-        title = reTitle.cap(1);
+        if(pos != -1)
+            title = reTitle.cap(1);
 
         title = KCharsets::resolveEntities(title);
 
         QString url;
         pos = reHref.search(*it, 0);
-        if (pos != -1)
+        if(pos != -1)
             url = reHref.cap(1);
 
         url = KCharsets::resolveEntities(url);
 
         // if feed has no title, use the url as preliminary title (until feed is parsed)
-        if ( title.isEmpty() )
+        if(title.isEmpty())
             title = url;
 
-        if ( !url.isEmpty() )
-            list.append(FeedDetectorEntry(url, title) );		
+        if(!url.isEmpty())
+            list.append(FeedDetectorEntry(url, title));
     }
 
 
     return list;
 }
 
-QStringList FeedDetector::extractBruteForce(const QString& s)
+QStringList FeedDetector::extractBruteForce(const QString &s)
 {
     QString str = s.simplifyWhiteSpace();
-    
+
     QRegExp reAhrefTag("<[\\s]?A[^>]?HREF=[\\s]?\\\"[^\\\"]*\\\"[^>]*>", false);
-    
+
     // extracts the URL (href="url")
     QRegExp reHref("HREF[\\s]?=[\\s]?\\\"([^\\\"]*)\\\"", false);
 
@@ -118,51 +118,51 @@ QStringList FeedDetector::extractBruteForce(const QString& s)
 
     int pos = 0;
     int matchpos = 0;
-    
+
     // get all <a href> tags and capture url
     QStringList list;
     //int strlength = str.length();
-    while ( matchpos != -1 )
+    while(matchpos != -1)
     {
         matchpos = reAhrefTag.search(str, pos);
-        if ( matchpos != -1 )
+        if(matchpos != -1)
         {
             QString ahref = str.mid(matchpos, reAhrefTag.matchedLength());
             int hrefpos = reHref.search(ahref, 0);
-            if ( hrefpos != -1 )
+            if(hrefpos != -1)
             {
                 QString url = reHref.cap(1);
 
                 url = KCharsets::resolveEntities(url);
 
-                if ( rssrdfxml.exactMatch(url) )
+                if(rssrdfxml.exactMatch(url))
                     list.append(url);
             }
 
             pos = matchpos + reAhrefTag.matchedLength();
         }
     }
-    
+
     return list;
 }
 
 QString FeedDetector::fixRelativeURL(const QString &s, const KURL &baseurl)
 {
-    QString s2=s;
+    QString s2 = s;
     KURL u;
-    if (KURL::isRelativeURL(s2))
+    if(KURL::isRelativeURL(s2))
     {
-        if (s2.startsWith("//"))
+        if(s2.startsWith("//"))
         {
-            s2=s2.prepend(baseurl.protocol()+":");
-            u=s2;
+            s2 = s2.prepend(baseurl.protocol() + ":");
+            u = s2;
         }
-        else if (s2.startsWith("/"))
+        else if(s2.startsWith("/"))
         {
             KURL b2(baseurl);
             b2.setPath(QString()); // delete path and query, so that only protocol://host remains
             b2.setQuery(QString());
-            u = KURL(b2, s2.remove(0,1)); // remove leading "/" 
+            u = KURL(b2, s2.remove(0, 1)); // remove leading "/"
         }
         else
         {
@@ -170,10 +170,10 @@ QString FeedDetector::fixRelativeURL(const QString &s, const KURL &baseurl)
         }
     }
     else
-        u=s2;
+        u = s2;
 
     u.cleanPath();
-    //kdDebug() << "AKREGATOR_PLUGIN_FIXURL: " << "url=" << s << " baseurl=" << baseurl.url() << " fixed=" << u.url() << 
+    //kdDebug() << "AKREGATOR_PLUGIN_FIXURL: " << "url=" << s << " baseurl=" << baseurl.url() << " fixed=" << u.url() <<
     //endl;
     return u.url();
 }

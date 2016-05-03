@@ -7,18 +7,19 @@ void program_errors()
 {
     /*Most routines will set icalerrno on errors. This is an
       enumeration defined in icalerror.h */
-    
-    icalcomponent *c; 
+
+    icalcomponent *c;
 
     icalerror_clear_errno();
 
     c = icalcomponent_new(ICAL_VEVENT_COMPONENT);
 
-    if (icalerrno != ICAL_NO_ERROR){
+    if(icalerrno != ICAL_NO_ERROR)
+    {
 
-	fprintf(stderr,"Horrible libical error: %s\n",
-		icalerror_strerror(icalerrno));
-		
+        fprintf(stderr, "Horrible libical error: %s\n",
+                icalerror_strerror(icalerrno));
+
     }
 
 }
@@ -38,12 +39,12 @@ void component_errors(icalcomponent *comp)
        correct, because it does not descend into any sub-components,
        as icalcomponent_count_errors() does. */
 
-    for(p = icalcomponent_get_first_property(comp,ICAL_XLICERROR_PROPERTY);
-	p != 0;
-	p = icalcomponent_get_next_property(comp,ICAL_XLICERROR_PROPERTY))
+    for(p = icalcomponent_get_first_property(comp, ICAL_XLICERROR_PROPERTY);
+            p != 0;
+            p = icalcomponent_get_next_property(comp, ICAL_XLICERROR_PROPERTY))
     {
-	
-	printf("-- The error is %s:\n",icalproperty_get_xlicerror(p));
+
+        printf("-- The error is %s:\n", icalproperty_get_xlicerror(p));
     }
 
 
@@ -51,11 +52,12 @@ void component_errors(icalcomponent *comp)
     /* Check the component for iTIP compilance, and add more
        X-LIC-ERROR properties if it is non-compilant. */
     icalrestriction_check(comp);
-    
+
 
     /* Count the new errors.  */
-    if(errors != icalcomponent_count_errors(comp)){
-       printf(" -- The component also has iTIP restriction errors \n");	
+    if(errors != icalcomponent_count_errors(comp))
+    {
+        printf(" -- The component also has iTIP restriction errors \n");
     }
 
     /* Since there are iTIP restriction errors, it may be impossible

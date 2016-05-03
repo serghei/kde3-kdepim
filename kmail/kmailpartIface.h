@@ -24,12 +24,11 @@
 #include <dcopobject.h>
 #include <kurl.h>
 
-class KMailPartIface : virtual public DCOPObject
-{
+class KMailPartIface : virtual public DCOPObject {
     K_DCOP
-  k_dcop:
-  virtual void save() = 0;
-  virtual void exit() = 0;
+k_dcop:
+    virtual void save() = 0;
+    virtual void exit() = 0;
 };
 
 #endif

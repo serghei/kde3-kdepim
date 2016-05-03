@@ -28,7 +28,9 @@
 class QHBox;
 class QPushButton;
 class KArtsDispatcher;
-namespace KDE { class PlayObject; }
+namespace KDE {
+class PlayObject;
+}
 class LineEdit;
 class PushButton;
 class CheckBox;
@@ -36,62 +38,70 @@ class SpinBox;
 class Slider;
 
 
-class SoundDlg : public KDialogBase
-{
-		Q_OBJECT
-	public:
-		SoundDlg(const QString& file, float volume, float fadeVolume, int fadeSeconds, bool repeat,
-		         const QString& caption, QWidget* parent, const char* name = 0);
-		~SoundDlg();
-		void           setReadOnly(bool);
-		bool           isReadOnly() const    { return mReadOnly; }
-		QString        getFile() const       { return mFileName; }
-		bool           getSettings(float& volume, float& fadeVolume, int& fadeSeconds) const;
-		QString        defaultDir() const    { return mDefaultDir; }
+class SoundDlg : public KDialogBase {
+    Q_OBJECT
+public:
+    SoundDlg(const QString &file, float volume, float fadeVolume, int fadeSeconds, bool repeat,
+             const QString &caption, QWidget *parent, const char *name = 0);
+    ~SoundDlg();
+    void           setReadOnly(bool);
+    bool           isReadOnly() const
+    {
+        return mReadOnly;
+    }
+    QString        getFile() const
+    {
+        return mFileName;
+    }
+    bool           getSettings(float &volume, float &fadeVolume, int &fadeSeconds) const;
+    QString        defaultDir() const
+    {
+        return mDefaultDir;
+    }
 
-		static QString i18n_SetVolume();   // plain text of Set volume checkbox
-		static QString i18n_v_SetVolume(); // text of Set volume checkbox, with 'V' shortcut
-		static QString i18n_Repeat();      // plain text of Repeat checkbox
-		static QString i18n_p_Repeat();    // text of Repeat checkbox, with 'P' shortcut
+    static QString i18n_SetVolume();   // plain text of Set volume checkbox
+    static QString i18n_v_SetVolume(); // text of Set volume checkbox, with 'V' shortcut
+    static QString i18n_Repeat();      // plain text of Repeat checkbox
+    static QString i18n_p_Repeat();    // text of Repeat checkbox, with 'P' shortcut
 
-	protected:
-		virtual void   showEvent(QShowEvent*);
-		virtual void   resizeEvent(QResizeEvent*);
+protected:
+    virtual void   showEvent(QShowEvent *);
+    virtual void   resizeEvent(QResizeEvent *);
 
-	protected slots:
-		virtual void   slotOk();
+protected slots:
+    virtual void   slotOk();
 
-	private slots:
-		void           slotPickFile();
-		void           slotVolumeToggled(bool on);
-		void           slotFadeToggled(bool on);
-		void           playSound();
-		void           checkAudioPlay();
+private slots:
+    void           slotPickFile();
+    void           slotVolumeToggled(bool on);
+    void           slotFadeToggled(bool on);
+    void           playSound();
+    void           checkAudioPlay();
 
-	private:
-		void           stopPlay();
-		bool           checkFile();
+private:
+    void           stopPlay();
+    bool           checkFile();
 
-		QPushButton*   mFilePlay;
-		LineEdit*      mFileEdit;
-		PushButton*    mFileBrowseButton;
-		CheckBox*      mRepeatCheckbox;
-		CheckBox*      mVolumeCheckbox;
-		Slider*        mVolumeSlider;
-		CheckBox*      mFadeCheckbox;
-		QHBox*         mFadeBox;
-		SpinBox*       mFadeTime;
-		QHBox*         mFadeVolumeBox;
-		Slider*        mFadeSlider;
-		QString        mDefaultDir;     // current default directory for mFileEdit
-		QString        mFileName;
-		bool           mReadOnly;
-		// Sound file playing
-		KArtsDispatcher* mArtsDispatcher;
-		KDE::PlayObject* mPlayObject;
-		QTimer*          mPlayTimer;       // timer for playing the sound file
-		QString          mLocalAudioFile;  // local copy of audio file
-		bool             mPlayStarted;      // the sound file has started playing
+    QPushButton   *mFilePlay;
+    LineEdit      *mFileEdit;
+    PushButton    *mFileBrowseButton;
+    CheckBox      *mRepeatCheckbox;
+    CheckBox      *mVolumeCheckbox;
+    Slider        *mVolumeSlider;
+    CheckBox      *mFadeCheckbox;
+    QHBox         *mFadeBox;
+    SpinBox       *mFadeTime;
+    QHBox         *mFadeVolumeBox;
+    Slider        *mFadeSlider;
+    QString        mDefaultDir;     // current default directory for mFileEdit
+    QString        mFileName;
+    bool           mReadOnly;
+    // Sound file playing
+    KArtsDispatcher *mArtsDispatcher;
+    KDE::PlayObject *mPlayObject;
+    QTimer          *mPlayTimer;       // timer for playing the sound file
+    QString          mLocalAudioFile;  // local copy of audio file
+    bool             mPlayStarted;      // the sound file has started playing
 };
 
 #endif

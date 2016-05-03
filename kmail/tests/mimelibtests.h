@@ -23,21 +23,20 @@
 #include <kunittest/tester.h>
 class DwString;
 
-class MimeLibTester : public KUnitTest::SlotTester
-{
-  Q_OBJECT
+class MimeLibTester : public KUnitTest::SlotTester {
+    Q_OBJECT
 
 public slots:
-  void setUp();
-  void tearDown();
-  void test_dwMessage_AsString();
+    void setUp();
+    void tearDown();
+    void test_dwMessage_AsString();
 
 private:
-  QCString readFile(const QString& fileName);
-  bool test_dwMessage_AsString( const DwString& );
+    QCString readFile(const QString &fileName);
+    bool test_dwMessage_AsString(const DwString &);
 
-  QCString mMultipartMixedMail;
-  QCString mSignedMail;
+    QCString mMultipartMixedMail;
+    QCString mSignedMail;
 };
 
 #endif /* MIMELIBTEST_H */

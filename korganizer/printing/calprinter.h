@@ -50,27 +50,27 @@ class QLabel;
   different formats (day, week, month).  It also provides a way for setting
   up the printer and remembering these preferences.
 */
-class KDE_EXPORT CalPrinter : public QObject, public KOrg::CalPrinterBase
-{
+class KDE_EXPORT CalPrinter : public QObject, public KOrg::CalPrinterBase {
     Q_OBJECT
 
-  public:
-    enum ePrintOrientation {
-      eOrientPlugin=0,
-      eOrientPrinter,
-      eOrientPortrait,
-      eOrientLandscape
+public:
+    enum ePrintOrientation
+    {
+        eOrientPlugin = 0,
+        eOrientPrinter,
+        eOrientPortrait,
+        eOrientLandscape
     };
-  public:
+public:
     /**
       \param par parent widget for dialogs
       \param cal calendar to be printed
       \param helper is a pointer to the KOrg::CoreHelper object
     */
-    CalPrinter( QWidget *par, Calendar *cal, KOrg::CoreHelper *helper );
+    CalPrinter(QWidget *par, Calendar *cal, KOrg::CoreHelper *helper);
     virtual ~CalPrinter();
 
-    void init( Calendar *calendar );
+    void init(Calendar *calendar);
 
     /**
       Set date range to be printed.
@@ -78,53 +78,55 @@ class KDE_EXPORT CalPrinter : public QObject, public KOrg::CalPrinterBase
       \param start Start date
       \param end   End date
     */
-    void setDateRange( const QDate &start, const QDate &end );
+    void setDateRange(const QDate &start, const QDate &end);
 
-  public slots:
+public slots:
     void updateConfig();
 
-  private slots:
-    void doPrint( KOrg::PrintPlugin *selectedStyle, CalPrinter::ePrintOrientation dlgorientation, bool preview = false );
+private slots:
+    void doPrint(KOrg::PrintPlugin *selectedStyle, CalPrinter::ePrintOrientation dlgorientation, bool preview = false);
 
-  public:
-    void print( int type, const QDate &fd, const QDate &td, 
-                Incidence::List selectedIncidences = Incidence::List(), bool preview = false );
+public:
+    void print(int type, const QDate &fd, const QDate &td,
+               Incidence::List selectedIncidences = Incidence::List(), bool preview = false);
 
     Calendar *calendar() const;
     KConfig *config() const;
 
-  protected:
+protected:
     KOrg::PrintPlugin::List mPrintPlugins;
 
-  private:
+private:
     Calendar *mCalendar;
     QWidget *mParent;
     KConfig *mConfig;
     KOrg::CoreHelper *mCoreHelper;
 };
 
-class CalPrintDialog : public KDialogBase
-{
+class CalPrintDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    CalPrintDialog( KOrg::PrintPlugin::List plugins,
-                    QWidget *parent = 0, const char *name = 0 );
+public:
+    CalPrintDialog(KOrg::PrintPlugin::List plugins,
+                   QWidget *parent = 0, const char *name = 0);
     virtual ~CalPrintDialog();
     KOrg::PrintPlugin *selectedPlugin();
-    void setOrientation( CalPrinter::ePrintOrientation orientation );
-    CalPrinter::ePrintOrientation orientation() { return mOrientation; }
+    void setOrientation(CalPrinter::ePrintOrientation orientation);
+    CalPrinter::ePrintOrientation orientation()
+    {
+        return mOrientation;
+    }
 
-  public slots:
-    void setPrintType( int );
-    void setPreview( bool );
+public slots:
+    void setPrintType(int);
+    void setPreview(bool);
 
-  protected slots:
+protected slots:
     void slotOk();
 
-  private:
+private:
     QVButtonGroup *mTypeGroup;
     QWidgetStack *mConfigArea;
-    QMap<int, KOrg::PrintPlugin*> mPluginIDs;
+    QMap<int, KOrg::PrintPlugin *> mPluginIDs;
     QString mPreviewText;
     QComboBox *mOrientationSelection;
 

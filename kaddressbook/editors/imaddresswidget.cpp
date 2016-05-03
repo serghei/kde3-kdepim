@@ -33,105 +33,108 @@
 
 #include "imaddresswidget.h"
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols )
-  : IMAddressBase( parent )
+IMAddressWidget::IMAddressWidget(QWidget *parent, QValueList<KPluginInfo *> protocols)
+    : IMAddressBase(parent)
 {
-  mProtocols = protocols;
-  populateProtocols();
-  init();
+    mProtocols = protocols;
+    populateProtocols();
+    init();
 }
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
-                                  KPluginInfo *protocol, const QString& address,
-                                  const IMContext& context )
-  : IMAddressBase( parent )
+IMAddressWidget::IMAddressWidget(QWidget *parent, QValueList<KPluginInfo *> protocols,
+                                 KPluginInfo *protocol, const QString &address,
+                                 const IMContext &context)
+    : IMAddressBase(parent)
 {
-  Q_UNUSED( context );
+    Q_UNUSED(context);
 
-  mProtocols = protocols;
-  populateProtocols();
-  cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
+    mProtocols = protocols;
+    populateProtocols();
+    cmbProtocol->setCurrentItem(mProtocols.findIndex(protocol));
 
-  edtAddress->setText( address.section( QChar( 0xE120 ), 0, 0 ) );
-  edtNetwork->setText( address.section( QChar( 0xE120 ), 1 ) );
+    edtAddress->setText(address.section(QChar(0xE120), 0, 0));
+    edtNetwork->setText(address.section(QChar(0xE120), 1));
 
-  init();
+    init();
 }
 
 void IMAddressWidget::init()
 {
-  connect( cmbProtocol, SIGNAL( activated( const QString& ) ),
-           this, SLOT( slotProtocolChanged() ) );
-  connect( edtAddress, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotAddressChanged( const QString& ) ) );
+    connect(cmbProtocol, SIGNAL(activated(const QString &)),
+            this, SLOT(slotProtocolChanged()));
+    connect(edtAddress, SIGNAL(textChanged(const QString &)),
+            this, SLOT(slotAddressChanged(const QString &)));
 
-  slotProtocolChanged();
+    slotProtocolChanged();
 }
 
-void IMAddressWidget::slotAddressChanged( const QString &text )
+void IMAddressWidget::slotAddressChanged(const QString &text)
 {
-  emit inValidState( !text.stripWhiteSpace().isEmpty() );
+    emit inValidState(!text.stripWhiteSpace().isEmpty());
 }
 
-KPluginInfo * IMAddressWidget::protocol() const
+KPluginInfo *IMAddressWidget::protocol() const
 {
-  int protocolIndex = cmbProtocol->currentItem();
+    int protocolIndex = cmbProtocol->currentItem();
 
-  return mProtocols[ protocolIndex ];
+    return mProtocols[ protocolIndex ];
 }
 
 IMContext IMAddressWidget::context() const
 {
-  IMContext context = Any;
-/*  if ( cmbContext->currentItem() )
-  {
+    IMContext context = Any;
+    /*  if ( cmbContext->currentItem() )
+      {
 
-    int contextIndex = cmbContext->currentItem();
-    switch ( contextIndex )
-    {
-    case 0:
-      context = Any;
-      break;
-    case 1:
-      context = Home;
-      break;
-    case 2:
-      context = Work;
-      break;
-    }
-  }
-  */
+        int contextIndex = cmbContext->currentItem();
+        switch ( contextIndex )
+        {
+        case 0:
+          context = Any;
+          break;
+        case 1:
+          context = Home;
+          break;
+        case 2:
+          context = Work;
+          break;
+        }
+      }
+      */
 
-  return context;
+    return context;
 }
 
 QString IMAddressWidget::address() const
 {
-  // The protocol irc is a special case and hard coded in.
-  // It's not nice, but the simplest way that I can see.
-  if ( protocol()->name() == "IRC" && !edtNetwork->text().stripWhiteSpace().isEmpty() )
-    return edtAddress->text().stripWhiteSpace() + QChar( 0xE120 ) + edtNetwork->text().stripWhiteSpace();
-  else
-    return edtAddress->text().stripWhiteSpace();
+    // The protocol irc is a special case and hard coded in.
+    // It's not nice, but the simplest way that I can see.
+    if(protocol()->name() == "IRC" && !edtNetwork->text().stripWhiteSpace().isEmpty())
+        return edtAddress->text().stripWhiteSpace() + QChar(0xE120) + edtNetwork->text().stripWhiteSpace();
+    else
+        return edtAddress->text().stripWhiteSpace();
 }
 
 void IMAddressWidget::populateProtocols()
 {
-  // insert the protocols in order
-  QValueList<KPluginInfo *>::ConstIterator it;
-  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
-    cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
+    // insert the protocols in order
+    QValueList<KPluginInfo *>::ConstIterator it;
+    for(it = mProtocols.begin(); it != mProtocols.end(); ++it)
+        cmbProtocol->insertItem(SmallIcon((*it)->icon()), (*it)->name());
 }
 
 void IMAddressWidget::slotProtocolChanged()
 {
-  if ( protocol()->name() == "IRC" ) {
-    edtNetwork->show();
-    labelNetwork->show();
-  } else {
-    edtNetwork->hide();
-    labelNetwork->hide();
-  }
+    if(protocol()->name() == "IRC")
+    {
+        edtNetwork->show();
+        labelNetwork->show();
+    }
+    else
+    {
+        edtNetwork->hide();
+        labelNetwork->hide();
+    }
 }
 
 #include "imaddresswidget.moc"

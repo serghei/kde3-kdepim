@@ -45,37 +45,40 @@
 #include <qstring.h>
 
 class KDHorizontalLine : public QFrame {
-  Q_OBJECT
-  Q_PROPERTY( QString title READ title WRITE setTitle )
+    Q_OBJECT
+    Q_PROPERTY(QString title READ title WRITE setTitle)
 public:
-  KDHorizontalLine( QWidget * parent=0, const char * name=0,  WFlags f=0 );
-  KDHorizontalLine( const QString & title, QWidget * parent=0, const char * name=0,  WFlags f=0 );
-  ~KDHorizontalLine();
+    KDHorizontalLine(QWidget *parent = 0, const char *name = 0,  WFlags f = 0);
+    KDHorizontalLine(const QString &title, QWidget *parent = 0, const char *name = 0,  WFlags f = 0);
+    ~KDHorizontalLine();
 
-  QString title() const { return mTitle; }
+    QString title() const
+    {
+        return mTitle;
+    }
 
-  /*! \reimp to hard-code the frame shape */
-  void setFrameStyle( int style );
+    /*! \reimp to hard-code the frame shape */
+    void setFrameStyle(int style);
 
-  QSize sizeHint() const;
-  QSize minimumSizeHint() const;
-  QSizePolicy sizePolicy() const;
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+    QSizePolicy sizePolicy() const;
 
-  static int indentHint();
+    static int indentHint();
 
 public slots:
-  virtual void setTitle( const QString & title );
+    virtual void setTitle(const QString &title);
 
 protected:
-  void paintEvent( QPaintEvent * );
+    void paintEvent(QPaintEvent *);
 
 private:
-  void calculateFrame();
+    void calculateFrame();
 
 private:
-  QString mTitle;
-  Qt::AlignmentFlags mAlign;
-  int mLenVisible;
+    QString mTitle;
+    Qt::AlignmentFlags mAlign;
+    int mLenVisible;
 };
 
 #endif /* __KDTOOLS__KDHORIZONTALLINE_H__ */

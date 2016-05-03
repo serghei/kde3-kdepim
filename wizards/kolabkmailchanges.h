@@ -23,6 +23,6 @@
 
 #include <kconfigpropagator.h>
 
-void createKMailChanges( KConfigPropagator::Change::List& );
+void createKMailChanges(KConfigPropagator::Change::List &);
 
 #endif

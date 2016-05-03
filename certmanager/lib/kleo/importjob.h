@@ -38,45 +38,45 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Key;
-  class ImportResult;
+class Error;
+class Key;
+class ImportResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous importers
+/**
+   @short An abstract base class for asynchronous importers
 
-     To use a ImportJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the import with a call
-     to start(). This call might fail, in which case the ImportJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a ImportJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the import with a call
+   to start(). This call might fail, in which case the ImportJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the ImportJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class ImportJob : public Job {
+   After result() is emitted, the ImportJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class ImportJob : public Job {
     Q_OBJECT
-  protected:
-    ImportJob( QObject * parent, const char * name );
-  public:
+protected:
+    ImportJob(QObject *parent, const char *name);
+public:
     ~ImportJob();
 
     /**
        Starts the importing operation. \a keyData contains the data to
        import from.
     */
-    virtual GpgME::Error start( const QByteArray & keyData ) = 0;
+    virtual GpgME::Error start(const QByteArray &keyData) = 0;
 
-    virtual GpgME::ImportResult exec( const QByteArray & keyData ) = 0;
+    virtual GpgME::ImportResult exec(const QByteArray &keyData) = 0;
 
-  signals:
-    void result( const GpgME::ImportResult & result );
-  };
+signals:
+    void result(const GpgME::ImportResult &result);
+};
 
 }
 

@@ -34,80 +34,80 @@
 class NoteAndMemo;
 class PilotMemo;
 
-class KNotesAction : public ConduitAction
-{
-Q_OBJECT
+class KNotesAction : public ConduitAction {
+    Q_OBJECT
 public:
-	KNotesAction(
-		KPilotLink *o,
-		const char *n = 0L,
-		const QStringList &a = QStringList() );
-	virtual ~KNotesAction();
+    KNotesAction(
+        KPilotLink *o,
+        const char *n = 0L,
+        const QStringList &a = QStringList());
+    virtual ~KNotesAction();
 
-	enum Status { Init,
-		ModifiedNotesToPilot,
-		DeleteNotesOnPilot,
-		NewNotesToPilot,
-		MemosToKNotes,
-		Cleanup,
-		Done } ;
-	virtual QString statusString() const;
-
-protected:
-	virtual bool exec();
+    enum Status { Init,
+                  ModifiedNotesToPilot,
+                  DeleteNotesOnPilot,
+                  NewNotesToPilot,
+                  MemosToKNotes,
+                  Cleanup,
+                  Done
+                } ;
+    virtual QString statusString() const;
 
 protected:
-	/**
-	* For test mode -- just list the notes KNotes has.
-	*/
-	void listNotes();
+    virtual bool exec();
 
-	/** Run a test on the conduit. */
-	void test();
+protected:
+    /**
+    * For test mode -- just list the notes KNotes has.
+    */
+    void listNotes();
 
-	/**
-	* Loads the KNotes resource and retrieve the list of notes it
-	* has. @return false if the the resource could not be opened and a new
-	* resource could not be created. Modifies fP to store the notes in.
-	*/
-	bool openKNotesResource();
+    /** Run a test on the conduit. */
+    void test();
 
-	/**
-	* For actual processing. These are called by process
-	* and it is critical that fP->fIndex is set properly.
-	*
-	* Each returns true when it is completely finished processing,
-	* if it returns a bool. Void functions need only be called once.
-	*/
-	void getAppInfo();
-	void getConfigInfo();
-	bool modifyNoteOnPilot();
-	bool deleteNoteOnPilot();
-	bool addNewNoteToPilot();
-	bool syncMemoToKNotes();
-	void cleanupMemos();
+    /**
+    * Loads the KNotes resource and retrieve the list of notes it
+    * has. @return false if the the resource could not be opened and a new
+    * resource could not be created. Modifies fP to store the notes in.
+    */
+    bool openKNotesResource();
 
-	void updateNote(const NoteAndMemo &,const PilotMemo *);
+    /**
+    * For actual processing. These are called by process
+    * and it is critical that fP->fIndex is set properly.
+    *
+    * Each returns true when it is completely finished processing,
+    * if it returns a bool. Void functions need only be called once.
+    */
+    void getAppInfo();
+    void getConfigInfo();
+    bool modifyNoteOnPilot();
+    bool deleteNoteOnPilot();
+    bool addNewNoteToPilot();
+    bool syncMemoToKNotes();
+    void cleanupMemos();
 
-	/**
-	* Add the Memo to KNotes.
-	*/
-	void addMemoToKNotes(const PilotMemo *);
-	/**
-	* Add the Note currently being processed to the
-	* pilot as a new memo. Returns the id of the record.
-	*/
-	int addNoteToPilot();
+    void updateNote(const NoteAndMemo &, const PilotMemo *);
+
+    /**
+    * Add the Memo to KNotes.
+    */
+    void addMemoToKNotes(const PilotMemo *);
+    /**
+    * Add the Note currently being processed to the
+    * pilot as a new memo. Returns the id of the record.
+    */
+    int addNoteToPilot();
 
 
-	void resetIndexes();
+    void resetIndexes();
 
 protected slots:
-	void process();
+    void process();
 
 private:
-	class KNotesActionPrivate;
-	KNotesActionPrivate *fP;
+    class KNotesActionPrivate;
+    KNotesActionPrivate *fP;
 } ;
 
 #endif

@@ -34,8 +34,7 @@ namespace Akregator {
 /**
 @author Teemu Rytilahti
 */
-class KDE_EXPORT AboutData : public KAboutData
-{
+class KDE_EXPORT AboutData : public KAboutData {
 public:
     AboutData();
     ~AboutData();

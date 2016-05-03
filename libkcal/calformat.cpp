@@ -33,46 +33,46 @@ QString CalFormat::mProductId = QString::fromLatin1("-//K Desktop Environment//N
 
 CalFormat::CalFormat()
 {
-  mException = 0;
+    mException = 0;
 }
 
 CalFormat::~CalFormat()
 {
-  delete mException;
+    delete mException;
 }
 
 void CalFormat::clearException()
 {
-  delete mException;
-  mException = 0;
+    delete mException;
+    mException = 0;
 }
 
 void CalFormat::setException(ErrorFormat *exception)
 {
-  delete mException;
-  mException = exception;
+    delete mException;
+    mException = exception;
 }
 
 ErrorFormat *CalFormat::exception()
 {
-  return mException;
+    return mException;
 }
 
-void CalFormat::setApplication(const QString& application, const QString& productID)
+void CalFormat::setApplication(const QString &application, const QString &productID)
 {
-  mApplication = application;
-  mProductId = productID;
+    mApplication = application;
+    mProductId = productID;
 }
 
 QString CalFormat::createUniqueId()
 {
-  int hashTime = QTime::currentTime().hour() +
-                 QTime::currentTime().minute() + QTime::currentTime().second() +
-                 QTime::currentTime().msec();
-  QString uidStr = QString("%1-%2.%3")
-                           .arg(mApplication)
-                           .arg(KApplication::random())
-                           .arg(hashTime);
-  return uidStr;
+    int hashTime = QTime::currentTime().hour() +
+                   QTime::currentTime().minute() + QTime::currentTime().second() +
+                   QTime::currentTime().msec();
+    QString uidStr = QString("%1-%2.%3")
+                     .arg(mApplication)
+                     .arg(KApplication::random())
+                     .arg(hashTime);
+    return uidStr;
 }
 

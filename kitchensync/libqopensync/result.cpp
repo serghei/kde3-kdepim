@@ -26,124 +26,125 @@
 using namespace QSync;
 
 Result::Result()
-  : mType( NoError )
+    : mType(NoError)
 {
 }
 
-Result::Result( Type type )
-  : mType( type )
+Result::Result(Type type)
+    : mType(type)
 {
 }
 
-Result::Result( OSyncError **error, bool deleteError )
+Result::Result(OSyncError **error, bool deleteError)
 {
-  OSyncErrorType otype = osync_error_get_type( error );
-  Type type;
+    OSyncErrorType otype = osync_error_get_type(error);
+    Type type;
 
-  switch ( otype ) {
-    case OSYNC_NO_ERROR:
-      type = NoError;
-      break;
-    default:
-    case OSYNC_ERROR_GENERIC:
-      type = GenericError;
-      break;
-    case OSYNC_ERROR_IO_ERROR:
-      type = IOError;
-      break;
-    case OSYNC_ERROR_NOT_SUPPORTED:
-      type = NotSupported;
-      break;
-    case OSYNC_ERROR_TIMEOUT:
-      type = Timeout;
-      break;
-    case OSYNC_ERROR_DISCONNECTED:
-      type = Disconnected;
-      break;
-    case OSYNC_ERROR_FILE_NOT_FOUND:
-      type = FileNotFound;
-      break;
-    case OSYNC_ERROR_EXISTS:
-      type = Exists;
-      break;
-    case OSYNC_ERROR_CONVERT:
-      type = Convert;
-      break;
-    case OSYNC_ERROR_MISCONFIGURATION:
-      type = Misconfiguration;
-      break;
-    case OSYNC_ERROR_INITIALIZATION:
-      type = Initialization;
-      break;
-    case OSYNC_ERROR_PARAMETER:
-      type = Parameter;
-      break;
-    case OSYNC_ERROR_EXPECTED:
-      type = Expected;
-      break;
-    case OSYNC_ERROR_NO_CONNECTION:
-      type = NoConnection;
-      break;
-    case OSYNC_ERROR_TEMPORARY:
-      type = Temporary;
-      break;
-    case OSYNC_ERROR_LOCKED:
-      type = Locked;
-      break;
-    case OSYNC_ERROR_PLUGIN_NOT_FOUND:
-      type = PluginNotFound;
-      break;
-  }
+    switch(otype)
+    {
+        case OSYNC_NO_ERROR:
+            type = NoError;
+            break;
+        default:
+        case OSYNC_ERROR_GENERIC:
+            type = GenericError;
+            break;
+        case OSYNC_ERROR_IO_ERROR:
+            type = IOError;
+            break;
+        case OSYNC_ERROR_NOT_SUPPORTED:
+            type = NotSupported;
+            break;
+        case OSYNC_ERROR_TIMEOUT:
+            type = Timeout;
+            break;
+        case OSYNC_ERROR_DISCONNECTED:
+            type = Disconnected;
+            break;
+        case OSYNC_ERROR_FILE_NOT_FOUND:
+            type = FileNotFound;
+            break;
+        case OSYNC_ERROR_EXISTS:
+            type = Exists;
+            break;
+        case OSYNC_ERROR_CONVERT:
+            type = Convert;
+            break;
+        case OSYNC_ERROR_MISCONFIGURATION:
+            type = Misconfiguration;
+            break;
+        case OSYNC_ERROR_INITIALIZATION:
+            type = Initialization;
+            break;
+        case OSYNC_ERROR_PARAMETER:
+            type = Parameter;
+            break;
+        case OSYNC_ERROR_EXPECTED:
+            type = Expected;
+            break;
+        case OSYNC_ERROR_NO_CONNECTION:
+            type = NoConnection;
+            break;
+        case OSYNC_ERROR_TEMPORARY:
+            type = Temporary;
+            break;
+        case OSYNC_ERROR_LOCKED:
+            type = Locked;
+            break;
+        case OSYNC_ERROR_PLUGIN_NOT_FOUND:
+            type = PluginNotFound;
+            break;
+    }
 
-  mType = type;
-  mName = QString::fromUtf8( osync_error_get_name( error ) );
-  mMessage = QString::fromUtf8( osync_error_print( error ) );
+    mType = type;
+    mName = QString::fromUtf8(osync_error_get_name(error));
+    mMessage = QString::fromUtf8(osync_error_print(error));
 
-  if ( deleteError )
-    osync_error_free( error );
+    if(deleteError)
+        osync_error_free(error);
 }
 
 Result::~Result()
 {
 }
 
-void Result::setName( const QString &name )
+void Result::setName(const QString &name)
 {
-  mName = name;
+    mName = name;
 }
 
 QString Result::name() const
 {
-  return mName;
+    return mName;
 }
 
-void Result::setMessage( const QString &message )
+void Result::setMessage(const QString &message)
 {
-  mMessage = message;
+    mMessage = message;
 }
 
 QString Result::message() const
 {
-  return mMessage;
+    return mMessage;
 }
 
-void Result::setType( Type type )
+void Result::setType(Type type)
 {
-  mType = type;
+    mType = type;
 }
 
 Result::Type Result::type() const
 {
-  return mType;
+    return mType;
 }
 
 bool Result::isError() const
 {
-  return mType != NoError;
+    return mType != NoError;
 }
 
 Result::operator bool () const
 {
-  return ( mType != NoError );
+    return (mType != NoError);
 }
 

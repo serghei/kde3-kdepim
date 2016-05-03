@@ -32,35 +32,36 @@
 #include "plugin.h"
 #include <uniqueapphandler.h>
 
-class KNodeUniqueAppHandler : public Kontact::UniqueAppHandler
-{
+class KNodeUniqueAppHandler : public Kontact::UniqueAppHandler {
 public:
-    KNodeUniqueAppHandler( Kontact::Plugin* plugin ) : Kontact::UniqueAppHandler( plugin ) {}
+    KNodeUniqueAppHandler(Kontact::Plugin *plugin) : Kontact::UniqueAppHandler(plugin) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
 };
 
-class KNodePlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KNodePlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KNodePlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    KNodePlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~KNodePlugin();
 
-    virtual bool createDCOPInterface( const QString& serviceType );
+    virtual bool createDCOPInterface(const QString &serviceType);
     virtual bool isRunningStandalone();
-    int weight() const { return 500; }
+    int weight() const
+    {
+        return 500;
+    }
 
     virtual QStringList invisibleToolbarActions() const;
 
-  protected:
-    virtual KParts::ReadOnlyPart* createPart();
+protected:
+    virtual KParts::ReadOnlyPart *createPart();
 
-  protected slots:
+protected slots:
     void slotPostArticle();
 
-  private:
+private:
     KNodeIface_stub *mStub;
     Kontact::UniqueAppWatcher *mUniqueAppWatcher;
 };

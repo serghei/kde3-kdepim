@@ -22,31 +22,46 @@
 #include <kdepimmacros.h>
 
 class KDE_EXPORT KQCStringSplitter {
-  
-  public:
+
+public:
     KQCStringSplitter();
     ~KQCStringSplitter();
-        
-    void reset()                  { start=0; end=0; sep=""; incSep=false;}
-    
+
+    void reset()
+    {
+        start = 0;
+        end = 0;
+        sep = "";
+        incSep = false;
+    }
+
     void init(const QCString &str, const char *s);
     void init(const char *str, const char *s);
-    void setIncludeSep(bool inc)  { incSep=inc; }
-    
+    void setIncludeSep(bool inc)
+    {
+        incSep = inc;
+    }
+
     bool first();
     bool last();
-    
+
     bool next();
-    bool prev();  
-      
-    QCString& string()              { return dst; }
-    const QCString& source()        { return src; }
-          
-  private:
+    bool prev();
+
+    QCString &string()
+    {
+        return dst;
+    }
+    const QCString &source()
+    {
+        return src;
+    }
+
+private:
     QCString src, dst, sep;
-    int start,end;
+    int start, end;
     bool incSep;
-      
+
 };
 
 #endif

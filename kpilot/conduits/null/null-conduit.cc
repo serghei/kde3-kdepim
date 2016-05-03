@@ -53,46 +53,46 @@
 //
 //
 NullConduit::NullConduit(KPilotLink *d,
-	const char *n,
-	const QStringList &l) :
-	ConduitAction(d,n,l),
-	fDatabase(0L),
-	fFailImmediately( l.contains( CSL1("--fail") ))
+                         const char *n,
+                         const QStringList &l) :
+    ConduitAction(d, n, l),
+    fDatabase(0L),
+    fFailImmediately(l.contains(CSL1("--fail")))
 {
-	FUNCTIONSETUP;
-	fConduitName=i18n("Null");
+    FUNCTIONSETUP;
+    fConduitName = i18n("Null");
 }
 
 NullConduit::~NullConduit()
 {
-	FUNCTIONSETUP;
-	KPILOT_DELETE(fDatabase);
+    FUNCTIONSETUP;
+    KPILOT_DELETE(fDatabase);
 }
 
 /* virtual */ bool NullConduit::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname << ": Mode " << syncMode().name() << endl;
+    DEBUGKPILOT << fname << ": Mode " << syncMode().name() << endl;
 
-	if ( fFailImmediately )
-	{
-		DEBUGKPILOT << fname << ": Config says to fail now." << endl;
-		emit logError(i18n("NULL conduit is programmed to fail."));
-		return false;
-	}
+    if(fFailImmediately)
+    {
+        DEBUGKPILOT << fname << ": Config says to fail now." << endl;
+        emit logError(i18n("NULL conduit is programmed to fail."));
+        return false;
+    }
 
-	QString m(NullConduitSettings::logMessage());
-	if (!m.isEmpty())
-	{
-		addSyncLogEntry(m);
-	}
+    QString m(NullConduitSettings::logMessage());
+    if(!m.isEmpty())
+    {
+        addSyncLogEntry(m);
+    }
 
-	DEBUGKPILOT << fname
-		<< ": Message from null-conduit: "
-		<< m
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Message from null-conduit: "
+                << m
+                << endl;
 
-	emit syncDone(this);
-	return true;
+    emit syncDone(this);
+    return true;
 }

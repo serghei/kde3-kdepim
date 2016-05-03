@@ -25,17 +25,17 @@
 
 class TimespanView : public KOrg::Part {
     Q_OBJECT
-  public:
+public:
     TimespanView(KOrg::MainWindow *, const char *);
     ~TimespanView();
-    
+
     QString info();
     QString shortInfo();
 
-  private slots:
+private slots:
     void showView();
 
-  private:
+private:
     KOrg::BaseView *mView;
 };
 

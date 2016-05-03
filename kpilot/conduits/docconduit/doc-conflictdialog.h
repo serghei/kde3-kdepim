@@ -42,41 +42,41 @@ class QTimer;
 class KPilotLink;
 
 
-typedef struct conflictEntry {
-	QLabel*dbname;
-	QComboBox* resolution;
-	QPushButton*info;
-	int index;
-	bool conflict;
+typedef struct conflictEntry
+{
+    QLabel *dbname;
+    QComboBox *resolution;
+    QPushButton *info;
+    int index;
+    bool conflict;
 };
 
 
-class ResolutionDialog : public KDialogBase
-{
-	Q_OBJECT
+class ResolutionDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-	ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotLink*lnk=0L);
-	~ResolutionDialog();
+    ResolutionDialog(QWidget *parent = 0, const QString &caption = i18n("Resolution Dialog"), syncInfoList *sinfo = 0L, KPilotLink *lnk = 0L);
+    ~ResolutionDialog();
 
-	bool hasConflicts;
+    bool hasConflicts;
 public slots:
-	void _tickle();
+    void _tickle();
 protected:
-	QTimer* tickleTimer;
-	KPilotLink* fHandle;
+    QTimer *tickleTimer;
+    KPilotLink *fHandle;
 
 protected:
-	QGroupBox* resolutionGroupBox;
-	QGridLayout*resolutionGroupBoxLayout;
+    QGroupBox *resolutionGroupBox;
+    QGridLayout *resolutionGroupBoxLayout;
 
-	syncInfoList*syncInfo;
-	QValueList<conflictEntry> conflictEntries;
-	QLabel *textLabel1,*textLabel2;
+    syncInfoList *syncInfo;
+    QValueList<conflictEntry> conflictEntries;
+    QLabel *textLabel1, *textLabel2;
 
 protected slots:
-	virtual void slotOk();
-	void slotInfo(int index);
+    virtual void slotOk();
+    void slotInfo(int index);
 
 };
 

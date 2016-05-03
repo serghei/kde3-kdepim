@@ -45,51 +45,56 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( GpgME::Context * context )
-  : VerifyDetachedJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyDetachedJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob(GpgME::Context *context)
+    : VerifyDetachedJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyDetachedJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {
+Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob()
+{
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::setup( const QByteArray & signature, const QByteArray & signedData ) {
-  assert( !mInData );
-  assert( !mOutData );
+void Kleo::QGpgMEVerifyDetachedJob::setup(const QByteArray &signature, const QByteArray &signedData)
+{
+    assert(!mInData);
+    assert(!mOutData);
 
-  createInData( signature );
+    createInData(signature);
 
-  // two "in" data objects - (mis|re)use the "out" data object for the second...
-  mOutDataDataProvider = new QGpgME::QByteArrayDataProvider( signedData );
-  mOutData = new GpgME::Data( mOutDataDataProvider );
-  assert( !mOutData->isNull() );
+    // two "in" data objects - (mis|re)use the "out" data object for the second...
+    mOutDataDataProvider = new QGpgME::QByteArrayDataProvider(signedData);
+    mOutData = new GpgME::Data(mOutDataDataProvider);
+    assert(!mOutData->isNull());
 }
 
-GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
-						   const QByteArray & signedData ) {
-  setup( signature, signedData );
+GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start(const QByteArray &signature,
+        const QByteArray &signedData)
+{
+    setup(signature, signedData);
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startDetachedSignatureVerification(*mInData, *mOutData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray & signature,
-							       const QByteArray & signedData ) {
-  setup( signature, signedData );
-  const GpgME::VerificationResult r = mCtx->verifyDetachedSignature( *mInData, *mOutData );
-  getAuditLog();
-  return r;
+GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec(const QByteArray &signature,
+        const QByteArray &signedData)
+{
+    setup(signature, signedData);
+    const GpgME::VerificationResult r = mCtx->verifyDetachedSignature(*mInData, *mOutData);
+    getAuditLog();
+    return r;
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult() );
+void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mCtx->verificationResult());
 }
 
 

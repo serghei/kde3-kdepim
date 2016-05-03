@@ -39,26 +39,26 @@
 #include "deferdlg.moc"
 
 
-DeferAlarmDlg::DeferAlarmDlg(const QString& caption, const DateTime& initialDT,
-                             bool cancelButton, QWidget* parent, const char* name)
-	: KDialogBase(parent, name, true, caption, Ok|Cancel|User1, Ok, false, i18n("Cancel &Deferral"))
+DeferAlarmDlg::DeferAlarmDlg(const QString &caption, const DateTime &initialDT,
+                             bool cancelButton, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, caption, Ok | Cancel | User1, Ok, false, i18n("Cancel &Deferral"))
 {
-	if (!cancelButton)
-		showButton(User1, false);
+    if(!cancelButton)
+        showButton(User1, false);
 
-	QWidget* page = new QWidget(this);
-	setMainWidget(page);
-	QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout *layout = new QVBoxLayout(page, 0, spacingHint());
 
-	mTimeWidget = new AlarmTimeWidget(AlarmTimeWidget::DEFER_TIME, page, "timeGroup");
-	mTimeWidget->setDateTime(initialDT);
-	mTimeWidget->setMinDateTimeIsCurrent();
-	connect(mTimeWidget, SIGNAL(pastMax()), SLOT(slotPastLimit()));
-	layout->addWidget(mTimeWidget);
-	layout->addSpacing(spacingHint());
+    mTimeWidget = new AlarmTimeWidget(AlarmTimeWidget::DEFER_TIME, page, "timeGroup");
+    mTimeWidget->setDateTime(initialDT);
+    mTimeWidget->setMinDateTimeIsCurrent();
+    connect(mTimeWidget, SIGNAL(pastMax()), SLOT(slotPastLimit()));
+    layout->addWidget(mTimeWidget);
+    layout->addSpacing(spacingHint());
 
-	setButtonWhatsThis(Ok, i18n("Defer the alarm until the specified time."));
-	setButtonWhatsThis(User1, i18n("Cancel the deferred alarm. This does not affect future recurrences."));
+    setButtonWhatsThis(Ok, i18n("Defer the alarm until the specified time."));
+    setButtonWhatsThis(User1, i18n("Cancel the deferred alarm. This does not affect future recurrences."));
 }
 
 
@@ -67,50 +67,50 @@ DeferAlarmDlg::DeferAlarmDlg(const QString& caption, const DateTime& initialDT,
 */
 void DeferAlarmDlg::slotOk()
 {
-	mAlarmDateTime = mTimeWidget->getDateTime(&mDeferMinutes);
-	if (!mAlarmDateTime.isValid())
-		return;
-	KAEvent::DeferLimitType limitType;
-	DateTime endTime;
-	if (!mLimitEventID.isEmpty())
-	{
-		// Get the event being deferred
-		const KCal::Event* kcalEvent = AlarmCalendar::getEvent(mLimitEventID);
-		if (kcalEvent)
-		{
-			KAEvent event(*kcalEvent);
-			endTime = event.deferralLimit(&limitType);
-		}
-	}
-	else
-	{
-		endTime = mLimitDateTime;
-		limitType = mLimitDateTime.isValid() ? KAEvent::LIMIT_MAIN : KAEvent::LIMIT_NONE;
-	}
-	if (endTime.isValid()  &&  mAlarmDateTime > endTime)
-	{
-		QString text;
-		switch (limitType)
-		{
-			case KAEvent::LIMIT_REPETITION:
-				text = i18n("Cannot defer past the alarm's next sub-repetition (currently %1)");
-				break;
-			case KAEvent::LIMIT_RECURRENCE:
-				text = i18n("Cannot defer past the alarm's next recurrence (currently %1)");
-				break;
-			case KAEvent::LIMIT_REMINDER:
-				text = i18n("Cannot defer past the alarm's next reminder (currently %1)");
-				break;
-			case KAEvent::LIMIT_MAIN:
-				text = i18n("Cannot defer reminder past the main alarm time (%1)");
-				break;
-			case KAEvent::LIMIT_NONE:
-				break;   // can't happen with a valid endTime
-		}
-		KMessageBox::sorry(this, text.arg(endTime.formatLocale()));
-	}
-	else
-		accept();
+    mAlarmDateTime = mTimeWidget->getDateTime(&mDeferMinutes);
+    if(!mAlarmDateTime.isValid())
+        return;
+    KAEvent::DeferLimitType limitType;
+    DateTime endTime;
+    if(!mLimitEventID.isEmpty())
+    {
+        // Get the event being deferred
+        const KCal::Event *kcalEvent = AlarmCalendar::getEvent(mLimitEventID);
+        if(kcalEvent)
+        {
+            KAEvent event(*kcalEvent);
+            endTime = event.deferralLimit(&limitType);
+        }
+    }
+    else
+    {
+        endTime = mLimitDateTime;
+        limitType = mLimitDateTime.isValid() ? KAEvent::LIMIT_MAIN : KAEvent::LIMIT_NONE;
+    }
+    if(endTime.isValid()  &&  mAlarmDateTime > endTime)
+    {
+        QString text;
+        switch(limitType)
+        {
+            case KAEvent::LIMIT_REPETITION:
+                text = i18n("Cannot defer past the alarm's next sub-repetition (currently %1)");
+                break;
+            case KAEvent::LIMIT_RECURRENCE:
+                text = i18n("Cannot defer past the alarm's next recurrence (currently %1)");
+                break;
+            case KAEvent::LIMIT_REMINDER:
+                text = i18n("Cannot defer past the alarm's next reminder (currently %1)");
+                break;
+            case KAEvent::LIMIT_MAIN:
+                text = i18n("Cannot defer reminder past the main alarm time (%1)");
+                break;
+            case KAEvent::LIMIT_NONE:
+                break;   // can't happen with a valid endTime
+        }
+        KMessageBox::sorry(this, text.arg(endTime.formatLocale()));
+    }
+    else
+        accept();
 }
 
 /******************************************************************************
@@ -118,7 +118,7 @@ void DeferAlarmDlg::slotOk()
 */
 void DeferAlarmDlg::setDeferMinutes(int minutes)
 {
-	mTimeWidget->selectTimeFromNow(minutes);
+    mTimeWidget->selectTimeFromNow(minutes);
 }
 
 /******************************************************************************
@@ -126,37 +126,37 @@ void DeferAlarmDlg::setDeferMinutes(int minutes)
 */
 void DeferAlarmDlg::slotPastLimit()
 {
-	enableButtonOK(false);
+    enableButtonOK(false);
 }
 
 /******************************************************************************
 * Set the time limit for deferral based on the next occurrence of the alarm
 * with the specified ID.
 */
-void DeferAlarmDlg::setLimit(const DateTime& limit)
+void DeferAlarmDlg::setLimit(const DateTime &limit)
 {
-	mLimitEventID  = QString::null;
-	mLimitDateTime = limit;
-	mTimeWidget->setMaxDateTime(mLimitDateTime);
+    mLimitEventID  = QString::null;
+    mLimitDateTime = limit;
+    mTimeWidget->setMaxDateTime(mLimitDateTime);
 }
 
 /******************************************************************************
 * Set the time limit for deferral based on the next occurrence of the alarm
 * with the specified ID.
 */
-DateTime DeferAlarmDlg::setLimit(const QString& eventID)
+DateTime DeferAlarmDlg::setLimit(const QString &eventID)
 {
-	mLimitEventID = eventID;
-	const KCal::Event* kcalEvent = AlarmCalendar::getEvent(mLimitEventID);
-	if (kcalEvent)
-	{
-		KAEvent event(*kcalEvent);
-		mLimitDateTime = event.deferralLimit();
-	}
-	else
-		mLimitDateTime = DateTime();
-	mTimeWidget->setMaxDateTime(mLimitDateTime);
-	return mLimitDateTime;
+    mLimitEventID = eventID;
+    const KCal::Event *kcalEvent = AlarmCalendar::getEvent(mLimitEventID);
+    if(kcalEvent)
+    {
+        KAEvent event(*kcalEvent);
+        mLimitDateTime = event.deferralLimit();
+    }
+    else
+        mLimitDateTime = DateTime();
+    mTimeWidget->setMaxDateTime(mLimitDateTime);
+    return mLimitDateTime;
 }
 
 /******************************************************************************
@@ -164,8 +164,8 @@ DateTime DeferAlarmDlg::setLimit(const QString& eventID)
 */
 void DeferAlarmDlg::slotUser1()
 {
-	mAlarmDateTime = DateTime();
-	accept();
+    mAlarmDateTime = DateTime();
+    accept();
 }
 
 /******************************************************************************
@@ -173,5 +173,5 @@ void DeferAlarmDlg::slotUser1()
 */
 void DeferAlarmDlg::slotCancel()
 {
-	reject();
+    reject();
 }

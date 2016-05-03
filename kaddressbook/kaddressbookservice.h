@@ -30,26 +30,25 @@ namespace KAB {
 class Core;
 }
 
-class KAddressBookService : virtual public KPIM::AddressBookServiceIface
-{
-  public:
-    KAddressBookService( KAB::Core *core );
+class KAddressBookService : virtual public KPIM::AddressBookServiceIface {
+public:
+    KAddressBookService(KAB::Core *core);
 
     /**
       This method will add a vcard to the address book.
 
       @param vCard The vCard in string representation.
      */
-    void importVCardFromData( const QString& vCard );
+    void importVCardFromData(const QString &vCard);
 
     /**
       This method will add a vcard to the address book.
 
       @param url The url where the vcard is located.
      */
-    void importVCard( const KURL& url );
+    void importVCard(const KURL &url);
 
-  private:
+private:
     KAB::Core *mCore;
 };
 

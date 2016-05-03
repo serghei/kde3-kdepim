@@ -44,55 +44,56 @@
 #include <qpushbutton.h>
 #include <qtooltip.h>
 
-KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : KListBox( parent )
+KAB::DistributionListNg::ListBox::ListBox(QWidget *parent) : KListBox(parent)
 {
-    setAcceptDrops( true );
+    setAcceptDrops(true);
 }
 
-void KAB::DistributionListNg::ListBox::dragMoveEvent( QDragMoveEvent *event )
+void KAB::DistributionListNg::ListBox::dragMoveEvent(QDragMoveEvent *event)
 {
-    QListBoxItem *item = itemAt( event->pos() );
-    if ( !item ) {
+    QListBoxItem *item = itemAt(event->pos());
+    if(!item)
+    {
         event->ignore();
     }
-    else {
-        event->accept( itemRect( item ) );
+    else
+    {
+        event->accept(itemRect(item));
     }
 }
 
-void KAB::DistributionListNg::ListBox::dragEnterEvent( QDragEnterEvent *event )
+void KAB::DistributionListNg::ListBox::dragEnterEvent(QDragEnterEvent *event)
 {
-    KListBox::dragEnterEvent( event );
+    KListBox::dragEnterEvent(event);
 }
 
-void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
+void KAB::DistributionListNg::ListBox::dropEvent(QDropEvent *event)
 {
-    QListBoxItem *item = itemAt( event->pos() );
-    if ( !item || index( item ) == 0 )
+    QListBoxItem *item = itemAt(event->pos());
+    if(!item || index(item) == 0)
         return;
 
     QString vcards;
-    if ( !KVCardDrag::decode( event, vcards ) )
+    if(!KVCardDrag::decode(event, vcards))
         return;
 
     KABC::VCardConverter converter;
-    emit dropped( item->text(), converter.parseVCards( vcards ) );
+    emit dropped(item->text(), converter.parseVCards(vcards));
 }
 
 namespace KAB {
 namespace DistributionListNg {
 
-class Factory : public KAB::ExtensionFactory
-{
-  public:
-    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
+class Factory : public KAB::ExtensionFactory {
+public:
+    KAB::ExtensionWidget *extension(KAB::Core *core, QWidget *parent, const char *name)
     {
-      return new KAB::DistributionListNg::MainWidget( core, parent, name );
+        return new KAB::DistributionListNg::MainWidget(core, parent, name);
     }
 
     QString identifier() const
     {
-      return "distribution_list_editor";
+        return "distribution_list_editor";
     }
 };
 
@@ -100,15 +101,15 @@ class Factory : public KAB::ExtensionFactory
 }
 
 extern "C" {
-  void *init_libkaddrbk_distributionlistng()
-  {
-    return ( new KAB::DistributionListNg::Factory );
-  }
+    void *init_libkaddrbk_distributionlistng()
+    {
+        return (new KAB::DistributionListNg::Factory);
+    }
 }
 
 QString KAB::DistributionListNg::MainWidget::title() const
 {
-    return i18n( "Distribution List Editor NG" );
+    return i18n("Distribution List Editor NG");
 }
 
 QString KAB::DistributionListNg::MainWidget::identifier() const
@@ -116,134 +117,135 @@ QString KAB::DistributionListNg::MainWidget::identifier() const
     return "distribution_list_editor_ng";
 }
 
-KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *parent, const char *name ) : KAB::ExtensionWidget( core, parent, name )
+KAB::DistributionListNg::MainWidget::MainWidget(KAB::Core *core, QWidget *parent, const char *name) : KAB::ExtensionWidget(core, parent, name)
 {
-    QVBoxLayout *layout = new QVBoxLayout( this );
-    layout->setSpacing( KDialog::spacingHint() );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setSpacing(KDialog::spacingHint());
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    layout->addLayout( buttonLayout );
+    layout->addLayout(buttonLayout);
 
-    QLabel *label = new QLabel( this );
-    label->setText( i18n( "Distribution Lists" ) );
-    buttonLayout->addWidget( label );
-    buttonLayout->addStretch( 1 );
+    QLabel *label = new QLabel(this);
+    label->setText(i18n("Distribution Lists"));
+    buttonLayout->addWidget(label);
+    buttonLayout->addStretch(1);
 
-    mAddButton = new QPushButton( this );
-    mAddButton->setIconSet( SmallIconSet( "add" ) );
-    QToolTip::add( mAddButton, i18n( "Add distribution list" ) );
-    connect( mAddButton, SIGNAL(clicked()), core, SLOT(newDistributionList()) );
-    buttonLayout->addWidget( mAddButton );
+    mAddButton = new QPushButton(this);
+    mAddButton->setIconSet(SmallIconSet("add"));
+    QToolTip::add(mAddButton, i18n("Add distribution list"));
+    connect(mAddButton, SIGNAL(clicked()), core, SLOT(newDistributionList()));
+    buttonLayout->addWidget(mAddButton);
 
-    mEditButton = new QPushButton( this );
-    mEditButton->setIconSet( SmallIconSet( "edit" ) );
-    QToolTip::add( mEditButton, i18n( "Edit distribution list" ) );
-    connect( mEditButton, SIGNAL(clicked()), this, SLOT(editSelectedDistributionList()) );
-    buttonLayout->addWidget( mEditButton );
+    mEditButton = new QPushButton(this);
+    mEditButton->setIconSet(SmallIconSet("edit"));
+    QToolTip::add(mEditButton, i18n("Edit distribution list"));
+    connect(mEditButton, SIGNAL(clicked()), this, SLOT(editSelectedDistributionList()));
+    buttonLayout->addWidget(mEditButton);
 
-    mRemoveButton = new QPushButton( this );
-    mRemoveButton->setIconSet( SmallIconSet( "remove" ) );
-    QToolTip::add( mRemoveButton, i18n( "Remove distribution list" ) );
-    connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(deleteSelectedDistributionList()) );
-    buttonLayout->addWidget( mRemoveButton );
+    mRemoveButton = new QPushButton(this);
+    mRemoveButton->setIconSet(SmallIconSet("remove"));
+    QToolTip::add(mRemoveButton, i18n("Remove distribution list"));
+    connect(mRemoveButton, SIGNAL(clicked()), this, SLOT(deleteSelectedDistributionList()));
+    buttonLayout->addWidget(mRemoveButton);
 
-    mListBox = new ListBox( this );
-    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ),
-             this, SLOT( contextMenuRequested( QListBoxItem*, const QPoint& ) ) );
-    connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ),
-             this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
-    connect( mListBox, SIGNAL( highlighted( int ) ),
-             this, SLOT( itemSelected( int ) ) );
-    layout->addWidget( mListBox );
+    mListBox = new ListBox(this);
+    connect(mListBox, SIGNAL(contextMenuRequested(QListBoxItem *, const QPoint &)),
+            this, SLOT(contextMenuRequested(QListBoxItem *, const QPoint &)));
+    connect(mListBox, SIGNAL(dropped(const QString &, const KABC::Addressee::List &)),
+            this, SLOT(contactsDropped(const QString &, const KABC::Addressee::List &)));
+    connect(mListBox, SIGNAL(highlighted(int)),
+            this, SLOT(itemSelected(int)));
+    layout->addWidget(mListBox);
 
-    connect( core, SIGNAL( contactsUpdated() ),
-             this, SLOT( updateEntries() ) );
-    connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
-             this, SLOT( updateEntries() ) );
+    connect(core, SIGNAL(contactsUpdated()),
+            this, SLOT(updateEntries()));
+    connect(core->addressBook(), SIGNAL(addressBookChanged(AddressBook *)),
+            this, SLOT(updateEntries()));
 
     // When contacts are changed, update both distr list combo and contents of displayed distr list
-    connect( core, SIGNAL( contactsUpdated() ),
-             this, SLOT( updateEntries() ) );
+    connect(core, SIGNAL(contactsUpdated()),
+            this, SLOT(updateEntries()));
 
-    QTimer::singleShot( 0, this, SLOT( updateEntries() ) );
+    QTimer::singleShot(0, this, SLOT(updateEntries()));
 }
 
-void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListBoxItem *item, const QPoint &point )
+void KAB::DistributionListNg::MainWidget::contextMenuRequested(QListBoxItem *item, const QPoint &point)
 {
-    QGuardedPtr<KPopupMenu> menu = new KPopupMenu( this );
-    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
-    if ( item )
+    QGuardedPtr<KPopupMenu> menu = new KPopupMenu(this);
+    menu->insertItem(i18n("New Distribution List..."), core(), SLOT(newDistributionList()));
+    if(item)
     {
-        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
-        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
+        menu->insertItem(i18n("Edit..."), this, SLOT(editSelectedDistributionList()));
+        menu->insertItem(i18n("Delete"), this, SLOT(deleteSelectedDistributionList()));
     }
-    menu->exec( point );
+    menu->exec(point);
     delete menu;
 }
 
 void KAB::DistributionListNg::MainWidget::editSelectedDistributionList()
 {
-    const QListBoxItem* const item = mListBox->selectedItem();
-    if ( !item )
+    const QListBoxItem *const item = mListBox->selectedItem();
+    if(!item)
         return;
-    core()->editDistributionList( item->text() );
+    core()->editDistributionList(item->text());
 }
 
 void KAB::DistributionListNg::MainWidget::deleteSelectedDistributionList()
 {
-    const QListBoxItem* const item = mListBox->selectedItem();
+    const QListBoxItem *const item = mListBox->selectedItem();
     const QString name = item ? item->text() : QString();
-    if ( name.isNull() )
+    if(name.isNull())
         return;
     const KPIM::DistributionList list = KPIM::DistributionList::findByName(
-    core()->addressBook(), name );
-    if ( list.isEmpty() )
+                                            core()->addressBook(), name);
+    if(list.isEmpty())
         return;
-    core()->deleteDistributionLists( name );
+    core()->deleteDistributionLists(name);
 }
 
-void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listName, const KABC::Addressee::List &addressees )
+void KAB::DistributionListNg::MainWidget::contactsDropped(const QString &listName, const KABC::Addressee::List &addressees)
 {
-    if ( addressees.isEmpty() )
+    if(addressees.isEmpty())
         return;
 
     KPIM::DistributionList list = KPIM::DistributionList::findByName(
-    core()->addressBook(), listName );
-    if ( list.isEmpty() ) // not found [should be impossible]
+                                      core()->addressBook(), listName);
+    if(list.isEmpty())    // not found [should be impossible]
         return;
 
-    for ( KABC::Addressee::List::ConstIterator it = addressees.begin(); it != addressees.end(); ++it ) {
-        list.insertEntry( *it );
+    for(KABC::Addressee::List::ConstIterator it = addressees.begin(); it != addressees.end(); ++it)
+    {
+        list.insertEntry(*it);
     }
 
-    core()->addressBook()->insertAddressee( list );
-    changed( list );
+    core()->addressBook()->insertAddressee(list);
+    changed(list);
 }
 
-void KAB::DistributionListNg::MainWidget::changed( const KABC::Addressee& dist )
+void KAB::DistributionListNg::MainWidget::changed(const KABC::Addressee &dist)
 {
-    emit modified( KABC::Addressee::List() << dist );
+    emit modified(KABC::Addressee::List() << dist);
 }
 
 void KAB::DistributionListNg::MainWidget::updateEntries()
 {
     const bool hadSelection = mListBox->selectedItem() != 0;
     const QStringList newEntries = core()->distributionListNames();
-    if ( !mCurrentEntries.isEmpty() && newEntries == mCurrentEntries )
+    if(!mCurrentEntries.isEmpty() && newEntries == mCurrentEntries)
         return;
     mCurrentEntries = newEntries;
     mListBox->clear();
-    mListBox->insertItem( i18n( "All Contacts" ), 0 );
-    mListBox->insertStringList( mCurrentEntries );
-    if ( !hadSelection )
-        mListBox->setSelected( 0, true );
+    mListBox->insertItem(i18n("All Contacts"), 0);
+    mListBox->insertStringList(mCurrentEntries);
+    if(!hadSelection)
+        mListBox->setSelected(0, true);
 }
 
-void KAB::DistributionListNg::MainWidget::itemSelected( int index )
+void KAB::DistributionListNg::MainWidget::itemSelected(int index)
 {
-    core()->setSelectedDistributionList( index == 0 ? QString() : mListBox->item( index )->text()  );
-    mEditButton->setEnabled( index > 0 );
-    mRemoveButton->setEnabled( index > 0 );
+    core()->setSelectedDistributionList(index == 0 ? QString() : mListBox->item(index)->text());
+    mEditButton->setEnabled(index > 0);
+    mRemoveButton->setEnabled(index > 0);
 }
 
 #include "distributionlistngwidget.moc"

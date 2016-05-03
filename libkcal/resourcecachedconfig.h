@@ -33,23 +33,22 @@ class ResourceCached;
 
 /**
   Configuration widget for reload policy
-  
+
   @see ResourceCached
 */
-class KDE_EXPORT ResourceCachedReloadConfig : public QWidget
-{ 
+class KDE_EXPORT ResourceCachedReloadConfig : public QWidget {
     Q_OBJECT
-  public:
-    ResourceCachedReloadConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceCachedReloadConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( ResourceCached *resource );
-    void saveSettings( ResourceCached *resource );
+public slots:
+    void loadSettings(ResourceCached *resource);
+    void saveSettings(ResourceCached *resource);
 
-  protected slots:
-    void slotIntervalStateChanged( int );
+protected slots:
+    void slotIntervalStateChanged(int);
 
-  private:
+private:
     QButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 
@@ -59,23 +58,22 @@ class KDE_EXPORT ResourceCachedReloadConfig : public QWidget
 
 /**
   Configuration widget for save policy
-  
+
   @see ResourceCached
 */
-class KDE_EXPORT ResourceCachedSaveConfig : public QWidget
-{ 
+class KDE_EXPORT ResourceCachedSaveConfig : public QWidget {
     Q_OBJECT
-  public:
-    ResourceCachedSaveConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceCachedSaveConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( ResourceCached *resource );
-    void saveSettings( ResourceCached *resource );
+public slots:
+    void loadSettings(ResourceCached *resource);
+    void saveSettings(ResourceCached *resource);
 
-  protected slots:
-    void slotIntervalStateChanged( int );
+protected slots:
+    void slotIntervalStateChanged(int);
 
-  private:
+private:
     QButtonGroup *mGroup;
     QSpinBox *mIntervalSpin;
 

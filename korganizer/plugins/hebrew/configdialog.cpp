@@ -26,30 +26,30 @@
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 
-ConfigDialog::ConfigDialog(QWidget * parent):KDialogBase(Plain, i18n("Configure Holidays"), Ok|Cancel, Ok,
+ConfigDialog::ConfigDialog(QWidget *parent): KDialogBase(Plain, i18n("Configure Holidays"), Ok | Cancel, Ok,
             parent)
 {
-  QFrame *topFrame = plainPage();
-  QVBoxLayout *topLayout =
-    new QVBoxLayout(topFrame, 0, spacingHint());
+    QFrame *topFrame = plainPage();
+    QVBoxLayout *topLayout =
+        new QVBoxLayout(topFrame, 0, spacingHint());
 
-  israel_box = new QCheckBox(topFrame);
-  israel_box->setText(i18n("Use Israeli holidays"));
-  topLayout->addWidget(israel_box);
+    israel_box = new QCheckBox(topFrame);
+    israel_box->setText(i18n("Use Israeli holidays"));
+    topLayout->addWidget(israel_box);
 
-  parsha_box = new QCheckBox(topFrame);
-  parsha_box->setText(i18n("Show weekly parsha"));
-  topLayout->addWidget(parsha_box);
+    parsha_box = new QCheckBox(topFrame);
+    parsha_box->setText(i18n("Show weekly parsha"));
+    topLayout->addWidget(parsha_box);
 
-  omer_box = new QCheckBox(topFrame);
-  omer_box->setText(i18n("Show day of Omer"));
-  topLayout->addWidget(omer_box);
+    omer_box = new QCheckBox(topFrame);
+    omer_box->setText(i18n("Show day of Omer"));
+    topLayout->addWidget(omer_box);
 
-  chol_box = new QCheckBox(topFrame);
-  chol_box->setText(i18n("Show Chol HaMoed"));
-  topLayout->addWidget(chol_box);
+    chol_box = new QCheckBox(topFrame);
+    chol_box->setText(i18n("Show Chol HaMoed"));
+    topLayout->addWidget(chol_box);
 
-  load();
+    load();
 }
 
 ConfigDialog::~ConfigDialog()
@@ -58,34 +58,34 @@ ConfigDialog::~ConfigDialog()
 
 void ConfigDialog::load()
 {
-  KConfig config("korganizerrc", true, false); // Open read-only, no kdeglobals
+    KConfig config("korganizerrc", true, false); // Open read-only, no kdeglobals
 
-  config.setGroup("Calendar/Hebrew Calendar Plugin");
-  israel_box->setChecked(config.
-                         readBoolEntry("Israel",
-                                       (KGlobal::locale()->
-                                        country() == ".il")));
-  parsha_box->setChecked(config.readBoolEntry("Parsha", true));
-  chol_box->setChecked(config.readBoolEntry("Chol_HaMoed", true));
-  omer_box->setChecked(config.readBoolEntry("Omer", true));
+    config.setGroup("Calendar/Hebrew Calendar Plugin");
+    israel_box->setChecked(config.
+                           readBoolEntry("Israel",
+                                         (KGlobal::locale()->
+                                          country() == ".il")));
+    parsha_box->setChecked(config.readBoolEntry("Parsha", true));
+    chol_box->setChecked(config.readBoolEntry("Chol_HaMoed", true));
+    omer_box->setChecked(config.readBoolEntry("Omer", true));
 
 }
 
 void ConfigDialog::save()
 {
-  KConfig config("korganizerrc", false, false); // Open read-write, no kdeglobals
+    KConfig config("korganizerrc", false, false); // Open read-write, no kdeglobals
 
-  config.setGroup("Calendar/Hebrew Calendar Plugin");
-  config.writeEntry("Israel", israel_box->isChecked());
-  config.writeEntry("Parsha", parsha_box->isChecked());
-  config.writeEntry("Chol_HaMoed", chol_box->isChecked());
-  config.writeEntry("Omer", omer_box->isChecked());
-  config.sync();
+    config.setGroup("Calendar/Hebrew Calendar Plugin");
+    config.writeEntry("Israel", israel_box->isChecked());
+    config.writeEntry("Parsha", parsha_box->isChecked());
+    config.writeEntry("Chol_HaMoed", chol_box->isChecked());
+    config.writeEntry("Omer", omer_box->isChecked());
+    config.sync();
 }
 
 void ConfigDialog::slotOk()
 {
-  save();
+    save();
 
-  accept();
+    accept();
 }

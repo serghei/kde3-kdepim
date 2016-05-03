@@ -50,191 +50,200 @@ using namespace KMime;
 namespace KMime {
 
 // global list of KMime::Codec's
-QAsciiDict<Codec>* Codec::all = 0;
+QAsciiDict<Codec> *Codec::all = 0;
 static KStaticDeleter<QAsciiDict<Codec> > sdAll;
 #if defined(QT_THREAD_SUPPORT)
-QMutex* Codec::dictLock = 0;
+QMutex *Codec::dictLock = 0;
 static KStaticDeleter<QMutex> sdDictLock;
 #endif
 
-void Codec::fillDictionary() {
+void Codec::fillDictionary()
+{
 
-  all->setAutoDelete(true);
+    all->setAutoDelete(true);
 
-  //all->insert( "7bit", new SevenBitCodec() );
-  //all->insert( "8bit", new EightBitCodec() );
-  all->insert( "base64", new Base64Codec() );
-  all->insert( "quoted-printable", new QuotedPrintableCodec() );
-  all->insert( "b", new Rfc2047BEncodingCodec() );
-  all->insert( "q", new Rfc2047QEncodingCodec() );
-  all->insert( "x-kmime-rfc2231", new Rfc2231EncodingCodec() );
-  all->insert( "x-uuencode", new UUCodec() );
-  //all->insert( "binary", new BinaryCodec() );
+    //all->insert( "7bit", new SevenBitCodec() );
+    //all->insert( "8bit", new EightBitCodec() );
+    all->insert("base64", new Base64Codec());
+    all->insert("quoted-printable", new QuotedPrintableCodec());
+    all->insert("b", new Rfc2047BEncodingCodec());
+    all->insert("q", new Rfc2047QEncodingCodec());
+    all->insert("x-kmime-rfc2231", new Rfc2231EncodingCodec());
+    all->insert("x-uuencode", new UUCodec());
+    //all->insert( "binary", new BinaryCodec() );
 
 }
 
-Codec * Codec::codecForName( const char * name ) {
+Codec *Codec::codecForName(const char *name)
+{
 #if defined(QT_THREAD_SUPPORT)
-  if ( !dictLock )
-    sdDictLock.setObject( dictLock, new QMutex );
-  dictLock->lock(); // protect "all"
+    if(!dictLock)
+        sdDictLock.setObject(dictLock, new QMutex);
+    dictLock->lock(); // protect "all"
 #endif
-  if ( !all ) {
-    sdAll.setObject( all, new QAsciiDict<Codec>( 11, false /* case-insensitive */) );
-    fillDictionary();
-  }
-  Codec * codec = (*all)[ name ];
+    if(!all)
+    {
+        sdAll.setObject(all, new QAsciiDict<Codec>(11, false /* case-insensitive */));
+        fillDictionary();
+    }
+    Codec *codec = (*all)[ name ];
 #if defined(QT_THREAD_SUPPORT)
-  dictLock->unlock();
+    dictLock->unlock();
 #endif
 
-  if ( !codec )
-    kdDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
+    if(!codec)
+        kdDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
 
-  return codec;
+    return codec;
 }
 
-Codec * Codec::codecForName( const QCString & name ) {
-  return codecForName( name.data() );
-}
-
-bool Codec::encode( const char* & scursor, const char * const send,
-		    char* & dcursor, const char * const dend,
-		    bool withCRLF ) const
+Codec *Codec::codecForName(const QCString &name)
 {
-  // get an encoder:
-  Encoder * enc = makeEncoder( withCRLF );
-  assert( enc );
-
-  // encode and check for output buffer overflow:
-  while ( !enc->encode( scursor, send, dcursor, dend ) )
-    if ( dcursor == dend ) {
-      delete enc;
-      return false; // not enough space in output buffer
-    }
-
-  // finish and check for output buffer overflow:
-  while ( !enc->finish( dcursor, dend ) )
-    if ( dcursor == dend ) {
-      delete enc;
-      return false; // not enough space in output buffer
-    }
-
-  // cleanup and return:
-  delete enc;
-  return true; // successfully encoded.
+    return codecForName(name.data());
 }
 
-QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
+bool Codec::encode(const char *&scursor, const char *const send,
+                   char *&dcursor, const char *const dend,
+                   bool withCRLF) const
 {
-  // allocate buffer for the worst case:
-  QByteArray result( maxEncodedSizeFor( src.size(), withCRLF ) );
+    // get an encoder:
+    Encoder *enc = makeEncoder(withCRLF);
+    assert(enc);
 
-  // set up iterators:
-  QByteArray::ConstIterator iit = src.begin();
-  QByteArray::ConstIterator iend = src.end();
-  QByteArray::Iterator oit = result.begin();
-  QByteArray::ConstIterator oend = result.end();
+    // encode and check for output buffer overflow:
+    while(!enc->encode(scursor, send, dcursor, dend))
+        if(dcursor == dend)
+        {
+            delete enc;
+            return false; // not enough space in output buffer
+        }
 
-  // encode
-  if ( !encode( iit, iend, oit, oend, withCRLF ) )
-    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
-	      << endl;
+    // finish and check for output buffer overflow:
+    while(!enc->finish(dcursor, dend))
+        if(dcursor == dend)
+        {
+            delete enc;
+            return false; // not enough space in output buffer
+        }
 
-  // shrink result to actual size:
-  result.truncate( oit - result.begin() );
-
-  return result;
+    // cleanup and return:
+    delete enc;
+    return true; // successfully encoded.
 }
 
-QCString Codec::encodeToQCString( const QByteArray & src, bool withCRLF ) const
+QByteArray Codec::encode(const QByteArray &src, bool withCRLF) const
 {
-  // allocate buffer for the worst case (remember to add one for the trailing NUL)
-  QCString result( maxEncodedSizeFor( src.size(), withCRLF ) + 1 );
+    // allocate buffer for the worst case:
+    QByteArray result(maxEncodedSizeFor(src.size(), withCRLF));
 
-  // set up iterators:
-  QByteArray::ConstIterator iit = src.begin();
-  QByteArray::ConstIterator iend = src.end();
-  QByteArray::Iterator oit = result.begin();
-  QByteArray::ConstIterator oend = result.end() - 1;
+    // set up iterators:
+    QByteArray::ConstIterator iit = src.begin();
+    QByteArray::ConstIterator iend = src.end();
+    QByteArray::Iterator oit = result.begin();
+    QByteArray::ConstIterator oend = result.end();
 
-  // encode
-  if ( !encode( iit, iend, oit, oend, withCRLF ) )
-    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
-	      << endl;
+    // encode
+    if(!encode(iit, iend, oit, oend, withCRLF))
+        kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
+                  << endl;
 
-  // shrink result to actual size:
-  result.truncate( oit - result.begin() );
+    // shrink result to actual size:
+    result.truncate(oit - result.begin());
 
-  return result;
+    return result;
 }
 
-QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
+QCString Codec::encodeToQCString(const QByteArray &src, bool withCRLF) const
 {
-  // allocate buffer for the worst case:
-  QByteArray result( maxDecodedSizeFor( src.size(), withCRLF ) );
+    // allocate buffer for the worst case (remember to add one for the trailing NUL)
+    QCString result(maxEncodedSizeFor(src.size(), withCRLF) + 1);
 
-  // set up iterators:
-  QByteArray::ConstIterator iit = src.begin();
-  QByteArray::ConstIterator iend = src.end();
-  QByteArray::Iterator oit = result.begin();
-  QByteArray::ConstIterator oend = result.end();
+    // set up iterators:
+    QByteArray::ConstIterator iit = src.begin();
+    QByteArray::ConstIterator iend = src.end();
+    QByteArray::Iterator oit = result.begin();
+    QByteArray::ConstIterator oend = result.end() - 1;
 
-  // decode
-  if ( !decode( iit, iend, oit, oend, withCRLF ) )
-    kdFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
-	      << endl;
+    // encode
+    if(!encode(iit, iend, oit, oend, withCRLF))
+        kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
+                  << endl;
 
-  // shrink result to actual size:
-  result.truncate( oit - result.begin() );
+    // shrink result to actual size:
+    result.truncate(oit - result.begin());
 
-  return result;
+    return result;
 }
 
-bool Codec::decode( const char* & scursor, const char * const send,
-		    char* & dcursor, const char * const dend,
-		    bool withCRLF ) const
+QByteArray Codec::decode(const QByteArray &src, bool withCRLF) const
 {
-  // get a decoder:
-  Decoder * dec = makeDecoder( withCRLF );
-  assert( dec );
+    // allocate buffer for the worst case:
+    QByteArray result(maxDecodedSizeFor(src.size(), withCRLF));
 
-  // decode and check for output buffer overflow:
-  while ( !dec->decode( scursor, send, dcursor, dend ) )
-    if ( dcursor == dend ) {
-      delete dec;
-      return false; // not enough space in output buffer
-    }
+    // set up iterators:
+    QByteArray::ConstIterator iit = src.begin();
+    QByteArray::ConstIterator iend = src.end();
+    QByteArray::Iterator oit = result.begin();
+    QByteArray::ConstIterator oend = result.end();
 
-  // finish and check for output buffer overflow:
-  while ( !dec->finish( dcursor, dend ) )
-    if ( dcursor == dend ) {
-      delete dec;
-      return false; // not enough space in output buffer
-    }
+    // decode
+    if(!decode(iit, iend, oit, oend, withCRLF))
+        kdFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
+                  << endl;
 
-  // cleanup and return:
-  delete dec;
-  return true; // successfully encoded.
+    // shrink result to actual size:
+    result.truncate(oit - result.begin());
+
+    return result;
+}
+
+bool Codec::decode(const char *&scursor, const char *const send,
+                   char *&dcursor, const char *const dend,
+                   bool withCRLF) const
+{
+    // get a decoder:
+    Decoder *dec = makeDecoder(withCRLF);
+    assert(dec);
+
+    // decode and check for output buffer overflow:
+    while(!dec->decode(scursor, send, dcursor, dend))
+        if(dcursor == dend)
+        {
+            delete dec;
+            return false; // not enough space in output buffer
+        }
+
+    // finish and check for output buffer overflow:
+    while(!dec->finish(dcursor, dend))
+        if(dcursor == dend)
+        {
+            delete dec;
+            return false; // not enough space in output buffer
+        }
+
+    // cleanup and return:
+    delete dec;
+    return true; // successfully encoded.
 }
 
 // write as much as possible off the output buffer. Return true if
 // flushing was complete, false if some chars could not be flushed.
-bool Encoder::flushOutputBuffer( char* & dcursor, const char * const dend ) {
-  int i;
-  // copy output buffer to output stream:
-  for ( i = 0 ; dcursor != dend && i < mOutputBufferCursor ; ++i )
-    *dcursor++ = mOutputBuffer[i];
+bool Encoder::flushOutputBuffer(char *&dcursor, const char *const dend)
+{
+    int i;
+    // copy output buffer to output stream:
+    for(i = 0 ; dcursor != dend && i < mOutputBufferCursor ; ++i)
+        *dcursor++ = mOutputBuffer[i];
 
-  // calculate the number of missing chars:
-  int numCharsLeft = mOutputBufferCursor - i;
-  // push the remaining chars to the begin of the buffer:
-  if ( numCharsLeft )
-    qmemmove( mOutputBuffer, mOutputBuffer + i, numCharsLeft );
-  // adjust cursor:
-  mOutputBufferCursor = numCharsLeft;
+    // calculate the number of missing chars:
+    int numCharsLeft = mOutputBufferCursor - i;
+    // push the remaining chars to the begin of the buffer:
+    if(numCharsLeft)
+        qmemmove(mOutputBuffer, mOutputBuffer + i, numCharsLeft);
+    // adjust cursor:
+    mOutputBufferCursor = numCharsLeft;
 
-  return !numCharsLeft;
+    return !numCharsLeft;
 }
 
 

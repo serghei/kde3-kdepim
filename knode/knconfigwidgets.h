@@ -36,8 +36,8 @@ class KSpellConfig;
 class KURLCompletion;
 
 namespace Kpgp {
-  class Config;
-  class SecretKeyRequester;
+class Config;
+class SecretKeyRequester;
 }
 
 class KNAccountManager;
@@ -48,33 +48,33 @@ class KNNntpAccount;
 class KNServerInfo;
 
 namespace KNConfig {
-  class Appearance;
-  class Cleanup;
-  class Identity;
-  class DisplayedHeaders;
-  class GroupCleanupWidget;
-  class PostNewsTechnical;
-  class ReadNewsGeneral;
-  class ReadNewsNavigation;
-  class PostNewsComposer;
-  class ReadNewsViewer;
-  class Scoring;
+class Appearance;
+class Cleanup;
+class Identity;
+class DisplayedHeaders;
+class GroupCleanupWidget;
+class PostNewsTechnical;
+class ReadNewsGeneral;
+class ReadNewsNavigation;
+class PostNewsComposer;
+class ReadNewsViewer;
+class Scoring;
 }
 
 namespace KNConfig {
 
 class KDE_EXPORT IdentityWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    IdentityWidget(Identity *d, QWidget *p=0, const char *n=0);
+public:
+    IdentityWidget(Identity *d, QWidget *p = 0, const char *n = 0);
     ~IdentityWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     QLabel          *f_ileName;
     KLineEdit       *n_ame,
                     *o_rga,
@@ -90,12 +90,12 @@ class KDE_EXPORT IdentityWidget : public KCModule {
     QTextEdit       *s_igEditor;
     QButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
-                    *s_igningKey;
+    *s_igningKey;
     KURLCompletion  *c_ompletion;
 
     Identity        *d_ata;
 
-  protected slots:
+protected slots:
     void slotSignatureType(int type);
     void slotSignatureChoose();
     void slotSignatureEdit();
@@ -106,19 +106,19 @@ class KDE_EXPORT IdentityWidget : public KCModule {
 
 class KDE_EXPORT NntpAccountListWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    NntpAccountListWidget(QWidget *p=0, const char *n=0);
+public:
+    NntpAccountListWidget(QWidget *p = 0, const char *n = 0);
     ~NntpAccountListWidget();
 
     void load();
 
-  protected:
+protected:
     class LBoxItem : public KNListBoxItem {
-      public:
-        LBoxItem(KNNntpAccount *a, const QString &t, QPixmap *p=0)
-          : KNListBoxItem(t, p) , account(a)  {}
+    public:
+        LBoxItem(KNNntpAccount *a, const QString &t, QPixmap *p = 0)
+            : KNListBoxItem(t, p) , account(a)  {}
         ~LBoxItem() {}
         KNNntpAccount *account;
     };
@@ -135,12 +135,12 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule {
     KNAccountManager *a_ccManager;
 
 
-  public slots:
+public slots:
     void slotAddItem(KNNntpAccount *a);
     void slotRemoveItem(KNNntpAccount *a);
     void slotUpdateItem(KNNntpAccount *a);
 
-  protected slots:
+protected slots:
     void slotSelectionChanged();
     void slotItemSelected(int id);
     void slotAddBtnClicked();
@@ -153,13 +153,13 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule {
 
 class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    NntpAccountConfDialog(KNNntpAccount* acc, QWidget *p=0, const char *n=0);
+public:
+    NntpAccountConfDialog(KNNntpAccount *acc, QWidget *p = 0, const char *n = 0);
     ~NntpAccountConfDialog();
 
-  protected:
+protected:
     KLineEdit   *n_ame,
                 *s_erver,
                 *u_ser,
@@ -175,50 +175,50 @@ class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
                 *a_uth,
                 *u_seDiskCache,
                 *i_nterval;
-    KNConfig::IdentityWidget* i_dWidget;
+    KNConfig::IdentityWidget *i_dWidget;
 
     KNNntpAccount *a_ccount;
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotAuthChecked(bool b);
     void slotIntervalChecked(bool b);
 
-  private slots:
+private slots:
     void slotPasswordChanged();
 
-  private:
+private:
     GroupCleanupWidget *mCleanupWidget;
 };
 
 
 class KDE_EXPORT SmtpAccountWidget : public SmtpAccountWidgetBase {
 
-Q_OBJECT
+    Q_OBJECT
 
-  public:
-    SmtpAccountWidget(QWidget *p=0, const char *n=0);
+public:
+    SmtpAccountWidget(QWidget *p = 0, const char *n = 0);
     ~SmtpAccountWidget() {}
 
     virtual void load();
     virtual void save();
 
-  protected slots:
-    virtual void useExternalMailerToggled( bool b );
-    virtual void loginToggled( bool b );
+protected slots:
+    virtual void useExternalMailerToggled(bool b);
+    virtual void loginToggled(bool b);
     void slotPasswordChanged();
 
-  protected:
+protected:
     KNServerInfo  *mAccount;
 };
 
 
 class KDE_EXPORT AppearanceWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    AppearanceWidget(QWidget *p=0, const char *n=0);
+public:
+    AppearanceWidget(QWidget *p = 0, const char *n = 0);
     ~AppearanceWidget();
 
     void load();
@@ -230,18 +230,24 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
     class KDE_EXPORT ColorListItem : public QListBoxText {
 
-      public:
-        ColorListItem( const QString &text, const QColor &color=Qt::black );
+    public:
+        ColorListItem(const QString &text, const QColor &color = Qt::black);
         ~ColorListItem();
-        const QColor& color()                     { return mColor; }
-        void  setColor( const QColor &color )     { mColor = color; }
+        const QColor &color()
+        {
+            return mColor;
+        }
+        void  setColor(const QColor &color)
+        {
+            mColor = color;
+        }
 
-      protected:
-        virtual void paint( QPainter * );
-        virtual int height( const QListBox * ) const;
-        virtual int width( const QListBox * ) const;
+    protected:
+        virtual void paint(QPainter *);
+        virtual int height(const QListBox *) const;
+        virtual int width(const QListBox *) const;
 
-      private:
+    private:
         QColor mColor;
     };
 
@@ -249,17 +255,20 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
     class KDE_EXPORT FontListItem : public QListBoxText {
 
-      public:
-        FontListItem( const QString &name, const QFont & );
+    public:
+        FontListItem(const QString &name, const QFont &);
         ~FontListItem();
-        const QFont& font()                     { return f_ont; }
-        void setFont( const QFont &);
+        const QFont &font()
+        {
+            return f_ont;
+        }
+        void setFont(const QFont &);
 
-      protected:
-        virtual void paint( QPainter * );
-        virtual int width( const QListBox * ) const;
+    protected:
+        virtual void paint(QPainter *);
+        virtual int width(const QListBox *) const;
 
-      private:
+    private:
         QFont f_ont;
         QString fontInfo;
     };
@@ -267,7 +276,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
     //===================================================================================
 
     KNDialogListBox *c_List,
-              *f_List;
+                    *f_List;
     QCheckBox *c_olorCB,
               *f_ontCB;
     QPushButton *c_olChngBtn,
@@ -275,7 +284,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
     Appearance *d_ata;
 
-  protected slots:
+protected slots:
     //colors
     void slotColCheckBoxToggled(bool b);
     void slotColItemSelected(QListBoxItem *);   // show color dialog for the entry
@@ -293,14 +302,14 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
 class KDE_EXPORT ReadNewsGeneralWidget : public KCModule {
 
-  public:
-    ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
+public:
+    ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p = 0, const char *n = 0);
     ~ReadNewsGeneralWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     QCheckBox   *a_utoCB,
                 *m_arkCB,
                 *m_arkCrossCB,
@@ -322,14 +331,14 @@ class KDE_EXPORT ReadNewsGeneralWidget : public KCModule {
 
 class KDE_EXPORT ReadNewsNavigationWidget : public KCModule {
 
-  public:
-    ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p=0, const char *n=0);
+public:
+    ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p = 0, const char *n = 0);
     ~ReadNewsNavigationWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     QCheckBox   *m_arkAllReadGoNextCB,
                 *m_arkThreadReadGoNextCB,
                 *m_arkThreadReadCloseThreadCB,
@@ -343,16 +352,16 @@ class KDE_EXPORT ReadNewsNavigationWidget : public KCModule {
 
 class KDE_EXPORT ReadNewsViewerWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p=0, const char *n=0);
+public:
+    ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p = 0, const char *n = 0);
     ~ReadNewsViewerWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     QCheckBox   *r_ewrapCB,
                 *r_emoveTrailingCB,
                 *s_igCB,
@@ -369,27 +378,27 @@ class KDE_EXPORT ReadNewsViewerWidget : public KCModule {
 
 class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p=0, const char *n=0);
+public:
+    DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p = 0, const char *n = 0);
     ~DisplayedHeadersWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
 
-     class HdrItem : public QListBoxText {
+    class HdrItem : public QListBoxText {
 
-      public:
-        HdrItem( const QString &t, KNDisplayedHeader *h ) : QListBoxText(t), hdr(h) {}
+    public:
+        HdrItem(const QString &t, KNDisplayedHeader *h) : QListBoxText(t), hdr(h) {}
         ~HdrItem() {}
 
         KNDisplayedHeader *hdr;
     };
 
-    HdrItem* generateItem(KNDisplayedHeader *);
+    HdrItem *generateItem(KNDisplayedHeader *);
 
     KNDialogListBox *l_box;
     QPushButton *a_ddBtn,
@@ -401,7 +410,7 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
     DisplayedHeaders *d_ata;
 
-  protected slots:
+protected slots:
     void slotItemSelected(int);
     void slotSelectionChanged();
     void slotAddBtnClicked();
@@ -415,14 +424,14 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
 class KDE_EXPORT DisplayedHeaderConfDialog : public KDialogBase {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    DisplayedHeaderConfDialog(KNDisplayedHeader *h, QWidget *p=0, char *n=0);
+public:
+    DisplayedHeaderConfDialog(KNDisplayedHeader *h, QWidget *p = 0, char *n = 0);
     ~DisplayedHeaderConfDialog();
 
 
-  protected:
+protected:
     KNDisplayedHeader *h_dr;
     KComboBox *h_drC;
     KLineEdit *n_ameE;
@@ -430,25 +439,25 @@ class KDE_EXPORT DisplayedHeaderConfDialog : public KDialogBase {
               *v_alueCB[4];
 
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotActivated(int);
-    void slotNameChanged(const QString&);
+    void slotNameChanged(const QString &);
 };
 
 
 class KDE_EXPORT ScoringWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    ScoringWidget(Scoring *d, QWidget *p=0, const char *n=0);
+public:
+    ScoringWidget(Scoring *d, QWidget *p = 0, const char *n = 0);
     ~ScoringWidget();
 
     void load();
     void save();
 
-  private:
+private:
     KScoringEditorWidget *ksc;
     KIntSpinBox *i_gnored,
                 *w_atched;
@@ -459,10 +468,10 @@ class KDE_EXPORT ScoringWidget : public KCModule {
 
 class KDE_EXPORT FilterListWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    FilterListWidget(QWidget *p=0, const char *n=0);
+public:
+    FilterListWidget(QWidget *p = 0, const char *n = 0);
     ~FilterListWidget();
 
     void load();
@@ -476,11 +485,11 @@ class KDE_EXPORT FilterListWidget : public KCModule {
     QValueList<int> menuOrder();
 
 
-  protected:
+protected:
     class LBoxItem : public KNListBoxItem {
-      public:
-        LBoxItem(KNArticleFilter *f, const QString &t, QPixmap *p=0)
-          : KNListBoxItem(t, p) , filter(f) {}
+    public:
+        LBoxItem(KNArticleFilter *f, const QString &t, QPixmap *p = 0)
+            : KNListBoxItem(t, p) , filter(f) {}
         ~LBoxItem() {}
 
         KNArticleFilter *filter;
@@ -506,7 +515,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
     KNFilterManager *f_ilManager;
 
 
-  protected slots:
+protected slots:
     void slotAddBtnClicked();
     void slotDelBtnClicked();
     void slotEditBtnClicked();
@@ -524,16 +533,16 @@ class KDE_EXPORT FilterListWidget : public KCModule {
 
 class KDE_EXPORT PostNewsTechnicalWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    PostNewsTechnicalWidget(PostNewsTechnical *d, QWidget *p=0, const char *n=0);
+public:
+    PostNewsTechnicalWidget(PostNewsTechnical *d, QWidget *p = 0, const char *n = 0);
     ~PostNewsTechnicalWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     QComboBox   *c_harset,
                 *e_ncoding;
     QCheckBox   *u_seOwnCSCB,
@@ -548,7 +557,7 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule {
 
     PostNewsTechnical *d_ata;
 
-  protected slots:
+protected slots:
     void slotGenMIdCBToggled(bool b);
     void slotSelectionChanged();
     void slotItemSelected(int id);
@@ -561,14 +570,14 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule {
 
 class KDE_EXPORT XHeaderConfDialog : public KDialogBase {
 
-  public:
-    XHeaderConfDialog(const QString &h=QString::null, QWidget *p=0, const char *n=0);
+public:
+    XHeaderConfDialog(const QString &h = QString::null, QWidget *p = 0, const char *n = 0);
     ~XHeaderConfDialog();
 
     QString result();
 
 
-  protected:
+protected:
     KLineEdit *n_ame,
               *v_alue;
 
@@ -577,16 +586,16 @@ class KDE_EXPORT XHeaderConfDialog : public KDialogBase {
 
 class KDE_EXPORT PostNewsComposerWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    PostNewsComposerWidget(PostNewsComposer *d, QWidget *p=0, const char *n=0);
+public:
+    PostNewsComposerWidget(PostNewsComposer *d, QWidget *p = 0, const char *n = 0);
     ~PostNewsComposerWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     KIntSpinBox *m_axLen;
     QCheckBox   *w_ordWrapCB,
                 *o_wnSigCB,
@@ -599,7 +608,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule {
 
     PostNewsComposer *d_ata;
 
-  protected slots:
+protected slots:
     void slotChooseEditor();
 
 };
@@ -607,14 +616,14 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule {
 
 class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
-  public:
-    PostNewsSpellingWidget(QWidget *p=0, const char *n=0);
+public:
+    PostNewsSpellingWidget(QWidget *p = 0, const char *n = 0);
     ~PostNewsSpellingWidget();
 
     void save();
 
-  protected:
-     KSpellConfig *c_onf;
+protected:
+    KSpellConfig *c_onf;
 
 };
 
@@ -622,15 +631,15 @@ class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
 class KDE_EXPORT PrivacyWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    PrivacyWidget(QWidget *p=0, const char *n=0);
+public:
+    PrivacyWidget(QWidget *p = 0, const char *n = 0);
     ~PrivacyWidget();
 
     void save();
 
-  protected:
+protected:
     Kpgp::Config *c_onf;
 };
 
@@ -641,44 +650,44 @@ class KDE_EXPORT PrivacyWidget : public KCModule {
 /** Configuration widget for group expireration */
 class KDE_EXPORT GroupCleanupWidget : public QWidget {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    GroupCleanupWidget( Cleanup *data, QWidget *parent = 0, const char *name = 0 );
+public:
+    GroupCleanupWidget(Cleanup *data, QWidget *parent = 0, const char *name = 0);
 
     void load();
     void save();
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     QCheckBox *mDefault, *mExpEnabled, *mExpUnavailable, *mPreserveThreads;
     KIntSpinBox *mExpDays, *mExpReadDays, *mExpUnreadDays;
     QGroupBox *mExpGroup;
     Cleanup *mData;
 
-  private slots:
-    void slotDefaultToggled( bool state );
-    void expDaysChanged( int value );
-    void expReadDaysChanged( int value );
-    void expUnreadDaysChanged( int value );
+private slots:
+    void slotDefaultToggled(bool state);
+    void expDaysChanged(int value);
+    void expReadDaysChanged(int value);
+    void expUnreadDaysChanged(int value);
 };
 
 
 /** Global cleanup configuration widget */
 class KDE_EXPORT CleanupWidget : public KCModule {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    CleanupWidget(QWidget *p=0, const char *n=0);
+public:
+    CleanupWidget(QWidget *p = 0, const char *n = 0);
     ~CleanupWidget();
 
     void load();
     void save();
 
-  protected:
+protected:
     QCheckBox   *f_olderCB;
     KIntSpinBox *f_olderDays;
     QLabel      *f_olderDaysL;
@@ -686,11 +695,11 @@ class KDE_EXPORT CleanupWidget : public KCModule {
     Cleanup *d_ata;
 
 
-  protected slots:
+protected slots:
     void slotFolderCBtoggled(bool b);
     void slotFolderDaysChanged(int value);
 
-  private:
+private:
     GroupCleanupWidget *mGroupCleanup;
 
 };

@@ -32,35 +32,52 @@
 
 namespace KODE {
 
-class KDE_EXPORT File
-{
-  public:
+class KDE_EXPORT File {
+public:
     File();
 
-    void setFilename( const QString & );
+    void setFilename(const QString &);
     QString filename() const;
 
-    void setNameSpace( const QString & );
-    QString nameSpace() const { return mNameSpace; }
+    void setNameSpace(const QString &);
+    QString nameSpace() const
+    {
+        return mNameSpace;
+    }
 
-    void setProject( const QString &project );
-    QString project() const { return mProject; }
+    void setProject(const QString &project);
+    QString project() const
+    {
+        return mProject;
+    }
 
-    void addCopyright( int year, const QString &name, const QString &email );
-    QStringList copyrightStrings() const { return mCopyrightStrings; }
+    void addCopyright(int year, const QString &name, const QString &email);
+    QStringList copyrightStrings() const
+    {
+        return mCopyrightStrings;
+    }
 
-    void setLicense( const License & );
-    License license() const { return mLicense; }
+    void setLicense(const License &);
+    License license() const
+    {
+        return mLicense;
+    }
 
-    void addInclude( const QString &include );
-    QStringList includes() const { return mIncludes; }
+    void addInclude(const QString &include);
+    QStringList includes() const
+    {
+        return mIncludes;
+    }
 
-    void insertClass( const Class & );
-    Class::List classes() const { return mClasses; }
+    void insertClass(const Class &);
+    Class::List classes() const
+    {
+        return mClasses;
+    }
 
-    bool hasClass( const QString &className );
+    bool hasClass(const QString &className);
 
-    Class findClass( const QString &name );
+    Class findClass(const QString &name);
 
     void clearClasses();
     void clearFileFunctions();
@@ -68,19 +85,31 @@ class KDE_EXPORT File
 
     void clearCode();
 
-    void addFileVariable( const Variable & );
-    Variable::List fileVariables() const { return mFileVariables; }
+    void addFileVariable(const Variable &);
+    Variable::List fileVariables() const
+    {
+        return mFileVariables;
+    }
 
-    void addFileFunction( const Function & );
-    Function::List fileFunctions() const { return mFileFunctions; }
+    void addFileFunction(const Function &);
+    Function::List fileFunctions() const
+    {
+        return mFileFunctions;
+    }
 
-    void addExternCDeclaration( const QString & );
-    QStringList externCDeclarations() const { return mExternCDeclarations; }
+    void addExternCDeclaration(const QString &);
+    QStringList externCDeclarations() const
+    {
+        return mExternCDeclarations;
+    }
 
-    void addFileCode( const Code & );
-    Code fileCode() const { return mFileCode; }
+    void addFileCode(const Code &);
+    Code fileCode() const
+    {
+        return mFileCode;
+    }
 
-  private:
+private:
     QString mFilename;
     QString mNameSpace;
     QString mProject;

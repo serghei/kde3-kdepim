@@ -13,12 +13,11 @@ class KURLRequester;
  * Provide an interface to the configuration options for the program.
  */
 
-class KDE_EXPORT Preferences :public KDialogBase
-{
-  Q_OBJECT
+class KDE_EXPORT Preferences : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    static Preferences *instance( const QString& icsfile = "" );
+public:
+    static Preferences *instance(const QString &icsfile = "");
     void disableIdleDetection();
 
     // Retrive information about settings
@@ -30,21 +29,21 @@ class KDE_EXPORT Preferences :public KDialogBase
     bool logging() const;
     int autoSavePeriod() const;
     bool promptDelete() const;
-    QString setPromptDelete( bool prompt );
+    QString setPromptDelete(bool prompt);
     bool displayColumn(int n) const;
     QString userRealName() const;
 
     void emitSignals();
-    bool readBoolEntry( const QString& uid );
-    void writeEntry( const QString &key, bool value );
-    void deleteEntry( const QString &key );
+    bool readBoolEntry(const QString &uid);
+    void writeEntry(const QString &key, bool value);
+    void deleteEntry(const QString &key);
 
-  public slots:
+public slots:
     void showDialog();
     void load();
     void save();
 
-  signals:
+signals:
     void detectIdleness(bool on);
     void idlenessTimeout(int minutes);
     void iCalFile(QString);
@@ -52,18 +51,18 @@ class KDE_EXPORT Preferences :public KDialogBase
     void autoSavePeriod(int minutes);
     void setupChanged();
 
-  protected slots:
+protected slots:
     virtual void slotOk();
     virtual void slotCancel();
     void idleDetectCheckBoxChanged();
     void autoSaveCheckBoxChanged();
 
-  private:
+private:
     void makeDisplayPage();
     void makeBehaviorPage();
     void makeStoragePage();
 
-    Preferences( const QString& icsfile = "" );
+    Preferences(const QString &icsfile = "");
     static Preferences *_instance;
     bool _unsavedChanges;
 

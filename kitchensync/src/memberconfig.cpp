@@ -30,13 +30,13 @@
 #include <qlayout.h>
 #include <qtabwidget.h>
 
-MemberConfig::MemberConfig( QWidget *parent, const QSync::Member &member )
-  : QWidget( parent ), mMember( member )
+MemberConfig::MemberConfig(QWidget *parent, const QSync::Member &member)
+    : QWidget(parent), mMember(member)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
 
-  mGui = ConfigGui::Factory::create( member, this );
-  topLayout->addWidget( mGui );
+    mGui = ConfigGui::Factory::create(member, this);
+    topLayout->addWidget(mGui);
 }
 
 MemberConfig::~MemberConfig()
@@ -45,35 +45,41 @@ MemberConfig::~MemberConfig()
 
 void MemberConfig::loadData()
 {
-  QByteArray cfg;
-  QSync::Result error = mMember.configuration( cfg );
+    QByteArray cfg;
+    QSync::Result error = mMember.configuration(cfg);
 
-  if ( error ) {
-    KMessageBox::error( this,
-      i18n("Unable to read config from plugin '%1':\n%2")
-      .arg( mMember.pluginName() ).arg( error.message() ) );
-  } else {
-    QString txt = QString::fromUtf8( cfg.data(), cfg.size() );
-    mGui->load( txt );
-    MemberInfo mi( mMember );
-    mGui->setInstanceName( mi.name() );
-  }
+    if(error)
+    {
+        KMessageBox::error(this,
+                           i18n("Unable to read config from plugin '%1':\n%2")
+                           .arg(mMember.pluginName()).arg(error.message()));
+    }
+    else
+    {
+        QString txt = QString::fromUtf8(cfg.data(), cfg.size());
+        mGui->load(txt);
+        MemberInfo mi(mMember);
+        mGui->setInstanceName(mi.name());
+    }
 }
 
 void MemberConfig::saveData()
 {
-  QString txt = mGui->save();
+    QString txt = mGui->save();
 
-  if ( txt.isEmpty() ) {
-    KMessageBox::sorry( this, i18n("Configuration of %1 is empty.").arg( mMember.pluginName() ) );
-  } else {
-    QByteArray cfg = txt.utf8();
-    cfg.truncate(cfg.size() - 1); /* discard NUL terminator */
-    mMember.setConfiguration( cfg );
-    mMember.setName( mGui->instanceName() );
-    // TODO: Check for save() error.
-    mMember.save();
-  }
+    if(txt.isEmpty())
+    {
+        KMessageBox::sorry(this, i18n("Configuration of %1 is empty.").arg(mMember.pluginName()));
+    }
+    else
+    {
+        QByteArray cfg = txt.utf8();
+        cfg.truncate(cfg.size() - 1); /* discard NUL terminator */
+        mMember.setConfiguration(cfg);
+        mMember.setName(mGui->instanceName());
+        // TODO: Check for save() error.
+        mMember.save();
+    }
 }
 
 #include "memberconfig.moc"

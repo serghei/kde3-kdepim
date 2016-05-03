@@ -30,7 +30,7 @@ CustomProperties::CustomProperties()
 }
 
 CustomProperties::CustomProperties(const CustomProperties &cp)
-  : mProperties(cp.mProperties)
+    : mProperties(cp.mProperties)
 {
 }
 
@@ -38,105 +38,111 @@ CustomProperties::~CustomProperties()
 {
 }
 
-bool CustomProperties::operator==( const CustomProperties &other ) const
+bool CustomProperties::operator==(const CustomProperties &other) const
 {
-  if ( mProperties.count() != other.mProperties.count() ) return false;
-  QMap<QCString, QString>::ConstIterator it;
-  for( it = mProperties.begin(); it != mProperties.end(); ++it ) {
-    QMap<QCString, QString>::ConstIterator itOther =
-      other.mProperties.find( it.key() );
+    if(mProperties.count() != other.mProperties.count()) return false;
+    QMap<QCString, QString>::ConstIterator it;
+    for(it = mProperties.begin(); it != mProperties.end(); ++it)
+    {
+        QMap<QCString, QString>::ConstIterator itOther =
+            other.mProperties.find(it.key());
 
-    if ( itOther == other.mProperties.end() ) {
-      return false;
+        if(itOther == other.mProperties.end())
+        {
+            return false;
+        }
+        if(itOther.data() != it.data()) return false;
     }
-    if ( itOther.data() != it.data() ) return false;
-  }
 
-  return true;
+    return true;
 }
 
 void CustomProperties::setCustomProperty(const QCString &app, const QCString &key,
-                                         const QString &value)
+        const QString &value)
 {
-  if (value.isNull() || key.isEmpty() || app.isEmpty())
-    return;
-  QCString property = "X-KDE-" + app + "-" + key;
-  if (!checkName(property))
-    return;
-  mProperties[property] = value;
-  customPropertyUpdated();
+    if(value.isNull() || key.isEmpty() || app.isEmpty())
+        return;
+    QCString property = "X-KDE-" + app + "-" + key;
+    if(!checkName(property))
+        return;
+    mProperties[property] = value;
+    customPropertyUpdated();
 }
 
 void CustomProperties::removeCustomProperty(const QCString &app, const QCString &key)
 {
-  removeNonKDECustomProperty(QCString("X-KDE-" + app + "-" + key));
+    removeNonKDECustomProperty(QCString("X-KDE-" + app + "-" + key));
 }
 
 QString CustomProperties::customProperty(const QCString &app, const QCString &key) const
 {
-  return nonKDECustomProperty(QCString("X-KDE-" + app + "-" + key));
+    return nonKDECustomProperty(QCString("X-KDE-" + app + "-" + key));
 }
 
 void CustomProperties::setNonKDECustomProperty(const QCString &name, const QString &value)
 {
-  if (value.isNull() || !checkName(name))
-    return;
-  mProperties[name] = value;
-  customPropertyUpdated();
+    if(value.isNull() || !checkName(name))
+        return;
+    mProperties[name] = value;
+    customPropertyUpdated();
 }
 
 void CustomProperties::removeNonKDECustomProperty(const QCString &name)
 {
-  QMap<QCString, QString>::Iterator it = mProperties.find(name);
-  if (it != mProperties.end()) {
-    mProperties.remove(it);
-    customPropertyUpdated();
-  }
+    QMap<QCString, QString>::Iterator it = mProperties.find(name);
+    if(it != mProperties.end())
+    {
+        mProperties.remove(it);
+        customPropertyUpdated();
+    }
 }
 
 QString CustomProperties::nonKDECustomProperty(const QCString &name) const
 {
-  QMap<QCString, QString>::ConstIterator it = mProperties.find(name);
-  if (it == mProperties.end())
-    return QString::null;
-  return it.data();
+    QMap<QCString, QString>::ConstIterator it = mProperties.find(name);
+    if(it == mProperties.end())
+        return QString::null;
+    return it.data();
 }
 
 void CustomProperties::setCustomProperties(const QMap<QCString, QString> &properties)
 {
-  bool changed = false;
-  for (QMap<QCString, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
-    // Validate the property name and convert any null string to empty string
-    if (checkName(it.key())) {
-      mProperties[it.key()] = it.data().isNull() ? QString("") : it.data();
-      changed = true;
+    bool changed = false;
+    for(QMap<QCString, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it)
+    {
+        // Validate the property name and convert any null string to empty string
+        if(checkName(it.key()))
+        {
+            mProperties[it.key()] = it.data().isNull() ? QString("") : it.data();
+            changed = true;
+        }
     }
-  }
-  if (changed)
-    customPropertyUpdated();
+    if(changed)
+        customPropertyUpdated();
 }
 
 QMap<QCString, QString> CustomProperties::customProperties() const
 {
-  return mProperties;
+    return mProperties;
 }
 
 bool CustomProperties::checkName(const QCString &name)
 {
-  // Check that the property name starts with 'X-' and contains
-  // only the permitted characters
-  const char* n = name;
-  int len = name.length();
-  if (len < 2 ||  n[0] != 'X' || n[1] != '-')
-    return false;
-  for (int i = 2;  i < len;  ++i) {
-    char ch = n[i];
-    if (ch >= 'A' && ch <= 'Z'
-    ||  ch >= 'a' && ch <= 'z'
-    ||  ch >= '0' && ch <= '9'
-    ||  ch == '-')
-      continue;
-    return false;   // invalid character found
-  }
-  return true;
+    // Check that the property name starts with 'X-' and contains
+    // only the permitted characters
+    const char *n = name;
+    int len = name.length();
+    if(len < 2 ||  n[0] != 'X' || n[1] != '-')
+        return false;
+    for(int i = 2;  i < len;  ++i)
+    {
+        char ch = n[i];
+        if(ch >= 'A' && ch <= 'Z'
+                ||  ch >= 'a' && ch <= 'z'
+                ||  ch >= '0' && ch <= '9'
+                ||  ch == '-')
+            continue;
+        return false;   // invalid character found
+    }
+    return true;
 }

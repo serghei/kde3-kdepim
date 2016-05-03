@@ -41,11 +41,11 @@
 using namespace Scalix;
 
 
-ScalixBase::ScalixBase( const QString& tz )
-  : mCreationDate( QDateTime::currentDateTime() ),
-    mLastModified( QDateTime::currentDateTime() ),
-    mSensitivity( Public ), mTimeZoneId( tz ),
-    mHasPilotSyncId( false ),  mHasPilotSyncStatus( false )
+ScalixBase::ScalixBase(const QString &tz)
+    : mCreationDate(QDateTime::currentDateTime()),
+      mLastModified(QDateTime::currentDateTime()),
+      mSensitivity(Public), mTimeZoneId(tz),
+      mHasPilotSyncId(false),  mHasPilotSyncStatus(false)
 {
 }
 
@@ -53,394 +53,410 @@ ScalixBase::~ScalixBase()
 {
 }
 
-void ScalixBase::setFields( const KCal::Incidence* incidence )
+void ScalixBase::setFields(const KCal::Incidence *incidence)
 {
-  // So far unhandled KCal::IncidenceBase fields:
-  // mPilotID, mSyncStatus, mFloats
+    // So far unhandled KCal::IncidenceBase fields:
+    // mPilotID, mSyncStatus, mFloats
 
-  setUid( incidence->uid() );
-  setBody( incidence->description() );
-  setCategories( incidence->categoriesStr() );
-  setCreationDate( localToUTC( incidence->created() ) );
-  setLastModified( localToUTC( incidence->lastModified() ) );
-  setSensitivity( static_cast<Sensitivity>( incidence->secrecy() ) );
-  // TODO: Attachments
+    setUid(incidence->uid());
+    setBody(incidence->description());
+    setCategories(incidence->categoriesStr());
+    setCreationDate(localToUTC(incidence->created()));
+    setLastModified(localToUTC(incidence->lastModified()));
+    setSensitivity(static_cast<Sensitivity>(incidence->secrecy()));
+    // TODO: Attachments
 }
 
-void ScalixBase::saveTo( KCal::Incidence* incidence ) const
+void ScalixBase::saveTo(KCal::Incidence *incidence) const
 {
-  incidence->setUid( uid() );
-  incidence->setDescription( body() );
-  incidence->setCategories( categories() );
-  incidence->setCreated( utcToLocal( creationDate() ) );
-  incidence->setLastModified( utcToLocal( lastModified() ) );
-  incidence->setSecrecy( sensitivity() );
-  // TODO: Attachments
+    incidence->setUid(uid());
+    incidence->setDescription(body());
+    incidence->setCategories(categories());
+    incidence->setCreated(utcToLocal(creationDate()));
+    incidence->setLastModified(utcToLocal(lastModified()));
+    incidence->setSecrecy(sensitivity());
+    // TODO: Attachments
 }
 
-void ScalixBase::setFields( const KABC::Addressee* addressee )
+void ScalixBase::setFields(const KABC::Addressee *addressee)
 {
-  // An addressee does not have a creation date, so somehow we should
-  // make one, if this is a new entry
+    // An addressee does not have a creation date, so somehow we should
+    // make one, if this is a new entry
 
-  setUid( addressee->uid() );
-  setBody( addressee->note() );
-  setCategories( addressee->categories().join( "," ) );
+    setUid(addressee->uid());
+    setBody(addressee->note());
+    setCategories(addressee->categories().join(","));
 
-  // Set creation-time and last-modification-time
-  const QString creationString = addressee->custom( "KOLAB", "CreationDate" );
-  kdDebug(5006) << "Creation time string: " << creationString << endl;
-  QDateTime creationDate;
-  if ( creationString.isEmpty() ) {
-    creationDate = QDateTime::currentDateTime();
-    kdDebug(5006) << "Creation date set to current time\n";
-  }
-  else {
-    creationDate = stringToDateTime( creationString );
-    kdDebug(5006) << "Creation date loaded\n";
-  }
-  QDateTime modified = addressee->revision();
-  if ( !modified.isValid() )
-    modified = QDateTime::currentDateTime();
-  setLastModified( modified );
-  if ( modified < creationDate ) {
-    // It's not possible that the modification date is earlier than creation
-    creationDate = modified;
-    kdDebug(5006) << "Creation date set to modification date\n";
-  }
-  setCreationDate( creationDate );
-  const QString newCreationDate = dateTimeToString( creationDate );
-  if ( creationString != newCreationDate ) {
-    // We modified the creation date, so store it for future reference
-    const_cast<KABC::Addressee*>( addressee )
-      ->insertCustom( "KOLAB", "CreationDate", newCreationDate );
-    kdDebug(5006) << "Creation date modified. New one: " << newCreationDate << endl;
-  }
+    // Set creation-time and last-modification-time
+    const QString creationString = addressee->custom("KOLAB", "CreationDate");
+    kdDebug(5006) << "Creation time string: " << creationString << endl;
+    QDateTime creationDate;
+    if(creationString.isEmpty())
+    {
+        creationDate = QDateTime::currentDateTime();
+        kdDebug(5006) << "Creation date set to current time\n";
+    }
+    else
+    {
+        creationDate = stringToDateTime(creationString);
+        kdDebug(5006) << "Creation date loaded\n";
+    }
+    QDateTime modified = addressee->revision();
+    if(!modified.isValid())
+        modified = QDateTime::currentDateTime();
+    setLastModified(modified);
+    if(modified < creationDate)
+    {
+        // It's not possible that the modification date is earlier than creation
+        creationDate = modified;
+        kdDebug(5006) << "Creation date set to modification date\n";
+    }
+    setCreationDate(creationDate);
+    const QString newCreationDate = dateTimeToString(creationDate);
+    if(creationString != newCreationDate)
+    {
+        // We modified the creation date, so store it for future reference
+        const_cast<KABC::Addressee *>(addressee)
+        ->insertCustom("KOLAB", "CreationDate", newCreationDate);
+        kdDebug(5006) << "Creation date modified. New one: " << newCreationDate << endl;
+    }
 
-  switch( addressee->secrecy().type() ) {
-  case KABC::Secrecy::Private:
-    setSensitivity( Private );
-    break;
-  case KABC::Secrecy::Confidential:
-    setSensitivity( Confidential );
-    break;
-  default:
-    setSensitivity( Public );
-  }
+    switch(addressee->secrecy().type())
+    {
+        case KABC::Secrecy::Private:
+            setSensitivity(Private);
+            break;
+        case KABC::Secrecy::Confidential:
+            setSensitivity(Confidential);
+            break;
+        default:
+            setSensitivity(Public);
+    }
 
-  // TODO: Attachments
+    // TODO: Attachments
 }
 
-void ScalixBase::saveTo( KABC::Addressee* addressee ) const
+void ScalixBase::saveTo(KABC::Addressee *addressee) const
 {
-  addressee->setUid( uid() );
-  addressee->setNote( body() );
-  addressee->setCategories( QStringList::split( ',', categories() ) );
-  addressee->setRevision( lastModified() );
-  addressee->insertCustom( "KOLAB", "CreationDate",
-                           dateTimeToString( creationDate() ) );
+    addressee->setUid(uid());
+    addressee->setNote(body());
+    addressee->setCategories(QStringList::split(',', categories()));
+    addressee->setRevision(lastModified());
+    addressee->insertCustom("KOLAB", "CreationDate",
+                            dateTimeToString(creationDate()));
 
-  switch( sensitivity() ) {
-  case Private:
-    addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Private ) );
-    break;
-  case Confidential:
-    addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Confidential ) );
-    break;
-  default:
-    addressee->setSecrecy( KABC::Secrecy( KABC::Secrecy::Public ) );
-    break;
-  }
+    switch(sensitivity())
+    {
+        case Private:
+            addressee->setSecrecy(KABC::Secrecy(KABC::Secrecy::Private));
+            break;
+        case Confidential:
+            addressee->setSecrecy(KABC::Secrecy(KABC::Secrecy::Confidential));
+            break;
+        default:
+            addressee->setSecrecy(KABC::Secrecy(KABC::Secrecy::Public));
+            break;
+    }
 
-  // TODO: Attachments
+    // TODO: Attachments
 }
 
-void ScalixBase::setUid( const QString& uid )
+void ScalixBase::setUid(const QString &uid)
 {
-  mUid = uid;
+    mUid = uid;
 }
 
 QString ScalixBase::uid() const
 {
-  return mUid;
+    return mUid;
 }
 
-void ScalixBase::setBody( const QString& body )
+void ScalixBase::setBody(const QString &body)
 {
-  mBody = body;
+    mBody = body;
 }
 
 QString ScalixBase::body() const
 {
-  return mBody;
+    return mBody;
 }
 
-void ScalixBase::setCategories( const QString& categories )
+void ScalixBase::setCategories(const QString &categories)
 {
-  mCategories = categories;
+    mCategories = categories;
 }
 
 QString ScalixBase::categories() const
 {
-  return mCategories;
+    return mCategories;
 }
 
-void ScalixBase::setCreationDate( const QDateTime& date )
+void ScalixBase::setCreationDate(const QDateTime &date)
 {
-  mCreationDate = date;
+    mCreationDate = date;
 }
 
 QDateTime ScalixBase::creationDate() const
 {
-  return mCreationDate;
+    return mCreationDate;
 }
 
-void ScalixBase::setLastModified( const QDateTime& date )
+void ScalixBase::setLastModified(const QDateTime &date)
 {
-  mLastModified = date;
+    mLastModified = date;
 }
 
 QDateTime ScalixBase::lastModified() const
 {
-  return mLastModified;
+    return mLastModified;
 }
 
-void ScalixBase::setSensitivity( Sensitivity sensitivity )
+void ScalixBase::setSensitivity(Sensitivity sensitivity)
 {
-  mSensitivity = sensitivity;
+    mSensitivity = sensitivity;
 }
 
 ScalixBase::Sensitivity ScalixBase::sensitivity() const
 {
-  return mSensitivity;
+    return mSensitivity;
 }
 
-void ScalixBase::setPilotSyncId( unsigned long id )
+void ScalixBase::setPilotSyncId(unsigned long id)
 {
-  mHasPilotSyncId = true;
-  mPilotSyncId = id;
+    mHasPilotSyncId = true;
+    mPilotSyncId = id;
 }
 
 bool ScalixBase::hasPilotSyncId() const
 {
-  return mHasPilotSyncId;
+    return mHasPilotSyncId;
 }
 
 unsigned long ScalixBase::pilotSyncId() const
 {
-  return mPilotSyncId;
+    return mPilotSyncId;
 }
 
-void ScalixBase::setPilotSyncStatus( int status )
+void ScalixBase::setPilotSyncStatus(int status)
 {
-  mHasPilotSyncStatus = true;
-  mPilotSyncStatus = status;
+    mHasPilotSyncStatus = true;
+    mPilotSyncStatus = status;
 }
 
 bool ScalixBase::hasPilotSyncStatus() const
 {
-  return mHasPilotSyncStatus;
+    return mHasPilotSyncStatus;
 }
 
 int ScalixBase::pilotSyncStatus() const
 {
-  return mPilotSyncStatus;
+    return mPilotSyncStatus;
 }
 
-bool ScalixBase::loadEmailAttribute( QDomElement& element, Email& email )
+bool ScalixBase::loadEmailAttribute(QDomElement &element, Email &email)
 {
-  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    if ( n.isComment() )
-      continue;
-    if ( n.isElement() ) {
-      QDomElement e = n.toElement();
-      QString tagName = e.tagName();
+    for(QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        if(n.isComment())
+            continue;
+        if(n.isElement())
+        {
+            QDomElement e = n.toElement();
+            QString tagName = e.tagName();
 
-      if ( tagName == "display-name" )
-        email.displayName = e.text();
-      else if ( tagName == "smtp-address" )
-        email.smtpAddress = e.text();
-      else
-        // TODO: Unhandled tag - save for later storage
-        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
-    } else
-      kdDebug() << "Node is not a comment or an element???" << endl;
-  }
+            if(tagName == "display-name")
+                email.displayName = e.text();
+            else if(tagName == "smtp-address")
+                email.smtpAddress = e.text();
+            else
+                // TODO: Unhandled tag - save for later storage
+                kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        }
+        else
+            kdDebug() << "Node is not a comment or an element???" << endl;
+    }
 
-  return true;
+    return true;
 }
 
-void ScalixBase::saveEmailAttribute( QDomElement& element, const Email& email,
-                                    const QString& tagName ) const
+void ScalixBase::saveEmailAttribute(QDomElement &element, const Email &email,
+                                    const QString &tagName) const
 {
-  QDomElement e = element.ownerDocument().createElement( tagName );
-  element.appendChild( e );
-  writeString( e, "display-name", email.displayName );
-  writeString( e, "smtp-address", email.smtpAddress );
+    QDomElement e = element.ownerDocument().createElement(tagName);
+    element.appendChild(e);
+    writeString(e, "display-name", email.displayName);
+    writeString(e, "smtp-address", email.smtpAddress);
 }
 
-bool ScalixBase::loadAttribute( QDomElement& element )
+bool ScalixBase::loadAttribute(QDomElement &element)
 {
-  QString tagName = element.tagName();
+    QString tagName = element.tagName();
 
-  if ( tagName == "uid" )
-    setUid( element.text() );
-  else if ( tagName == "body" )
-    setBody( element.text() );
-  else if ( tagName == "categories" )
-    setCategories( element.text() );
-  else if ( tagName == "creation-date" )
-    setCreationDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "last-modification-date" )
-    setLastModified( stringToDateTime( element.text() ) );
-  else if ( tagName == "sensitivity" )
-    setSensitivity( stringToSensitivity( element.text() ) );
-  else if ( tagName == "product-id" )
-    return true; // ignore this field
-  else if ( tagName == "pilot-sync-id" )
-    setPilotSyncId( element.text().toULong() );
-  else if ( tagName == "pilot-sync-status" )
-    setPilotSyncStatus( element.text().toInt() );
-  else
-    return false;
+    if(tagName == "uid")
+        setUid(element.text());
+    else if(tagName == "body")
+        setBody(element.text());
+    else if(tagName == "categories")
+        setCategories(element.text());
+    else if(tagName == "creation-date")
+        setCreationDate(stringToDateTime(element.text()));
+    else if(tagName == "last-modification-date")
+        setLastModified(stringToDateTime(element.text()));
+    else if(tagName == "sensitivity")
+        setSensitivity(stringToSensitivity(element.text()));
+    else if(tagName == "product-id")
+        return true; // ignore this field
+    else if(tagName == "pilot-sync-id")
+        setPilotSyncId(element.text().toULong());
+    else if(tagName == "pilot-sync-status")
+        setPilotSyncStatus(element.text().toInt());
+    else
+        return false;
 
-  // Handled here
-  return true;
+    // Handled here
+    return true;
 }
 
-bool ScalixBase::saveAttributes( QDomElement& element ) const
+bool ScalixBase::saveAttributes(QDomElement &element) const
 {
-  writeString( element, "product-id", productID() );
-  writeString( element, "uid", uid() );
-  writeString( element, "body", body() );
-  writeString( element, "categories", categories() );
-  writeString( element, "creation-date", dateTimeToString( creationDate() ) );
-  writeString( element, "last-modification-date",
-               dateTimeToString( lastModified() ) );
-  writeString( element, "sensitivity", sensitivityToString( sensitivity() ) );
-  if ( hasPilotSyncId() )
-    writeString( element, "pilot-sync-id", QString::number( pilotSyncId() ) );
-  if ( hasPilotSyncStatus() )
-    writeString( element, "pilot-sync-status", QString::number( pilotSyncStatus() ) );
-  return true;
+    writeString(element, "product-id", productID());
+    writeString(element, "uid", uid());
+    writeString(element, "body", body());
+    writeString(element, "categories", categories());
+    writeString(element, "creation-date", dateTimeToString(creationDate()));
+    writeString(element, "last-modification-date",
+                dateTimeToString(lastModified()));
+    writeString(element, "sensitivity", sensitivityToString(sensitivity()));
+    if(hasPilotSyncId())
+        writeString(element, "pilot-sync-id", QString::number(pilotSyncId()));
+    if(hasPilotSyncStatus())
+        writeString(element, "pilot-sync-status", QString::number(pilotSyncStatus()));
+    return true;
 }
 
-bool ScalixBase::load( const QString& xml )
+bool ScalixBase::load(const QString &xml)
 {
-  QString errorMsg;
-  int errorLine, errorColumn;
-  QDomDocument document;
-  bool ok = document.setContent( xml, &errorMsg, &errorLine, &errorColumn );
+    QString errorMsg;
+    int errorLine, errorColumn;
+    QDomDocument document;
+    bool ok = document.setContent(xml, &errorMsg, &errorLine, &errorColumn);
 
-  if ( !ok ) {
-    qWarning( "Error loading document: %s, line %d, column %d",
-              errorMsg.latin1(), errorLine, errorColumn );
-    return false;
-  }
+    if(!ok)
+    {
+        qWarning("Error loading document: %s, line %d, column %d",
+                 errorMsg.latin1(), errorLine, errorColumn);
+        return false;
+    }
 
-  // XML file loaded into tree. Now parse it
-  return loadXML( document );
+    // XML file loaded into tree. Now parse it
+    return loadXML(document);
 }
 
-bool ScalixBase::load( QFile& xml )
+bool ScalixBase::load(QFile &xml)
 {
-  QString errorMsg;
-  int errorLine, errorColumn;
-  QDomDocument document;
-  bool ok = document.setContent( &xml, &errorMsg, &errorLine, &errorColumn );
+    QString errorMsg;
+    int errorLine, errorColumn;
+    QDomDocument document;
+    bool ok = document.setContent(&xml, &errorMsg, &errorLine, &errorColumn);
 
-  if ( !ok ) {
-    qWarning( "Error loading document: %s, line %d, column %d",
-              errorMsg.latin1(), errorLine, errorColumn );
-    return false;
-  }
+    if(!ok)
+    {
+        qWarning("Error loading document: %s, line %d, column %d",
+                 errorMsg.latin1(), errorLine, errorColumn);
+        return false;
+    }
 
-  // XML file loaded into tree. Now parse it
-  return loadXML( document );
+    // XML file loaded into tree. Now parse it
+    return loadXML(document);
 }
 
 QDomDocument ScalixBase::domTree()
 {
-  QDomDocument document;
+    QDomDocument document;
 
-  QString p = "version=\"1.0\" encoding=\"UTF-8\"";
-  document.appendChild(document.createProcessingInstruction( "xml", p ) );
+    QString p = "version=\"1.0\" encoding=\"UTF-8\"";
+    document.appendChild(document.createProcessingInstruction("xml", p));
 
-  return document;
+    return document;
 }
 
 
-QString ScalixBase::dateTimeToString( const QDateTime& time )
+QString ScalixBase::dateTimeToString(const QDateTime &time)
 {
-  return time.toString( Qt::ISODate ) + 'Z';
+    return time.toString(Qt::ISODate) + 'Z';
 }
 
-QString ScalixBase::dateToString( const QDate& date )
+QString ScalixBase::dateToString(const QDate &date)
 {
-  return date.toString( Qt::ISODate );
+    return date.toString(Qt::ISODate);
 }
 
-QDateTime ScalixBase::stringToDateTime( const QString& _date )
+QDateTime ScalixBase::stringToDateTime(const QString &_date)
 {
-  QString date( _date );
-  if ( date.endsWith( "Z" ) )
-    date.truncate( date.length() - 1 );
-  return QDateTime::fromString( date, Qt::ISODate );
+    QString date(_date);
+    if(date.endsWith("Z"))
+        date.truncate(date.length() - 1);
+    return QDateTime::fromString(date, Qt::ISODate);
 }
 
-QDate ScalixBase::stringToDate( const QString& date )
+QDate ScalixBase::stringToDate(const QString &date)
 {
-  return QDate::fromString( date, Qt::ISODate );
+    return QDate::fromString(date, Qt::ISODate);
 }
 
-QString ScalixBase::sensitivityToString( Sensitivity s )
+QString ScalixBase::sensitivityToString(Sensitivity s)
 {
-  switch( s ) {
-  case Private: return "private";
-  case Confidential: return "confidential";
-  case Public: return "public";
-  }
+    switch(s)
+    {
+        case Private:
+            return "private";
+        case Confidential:
+            return "confidential";
+        case Public:
+            return "public";
+    }
 
-  return "What what what???";
+    return "What what what???";
 }
 
-ScalixBase::Sensitivity ScalixBase::stringToSensitivity( const QString& s )
+ScalixBase::Sensitivity ScalixBase::stringToSensitivity(const QString &s)
 {
-  if ( s == "private" )
-    return Private;
-  if ( s == "confidential" )
-    return Confidential;
-  return Public;
+    if(s == "private")
+        return Private;
+    if(s == "confidential")
+        return Confidential;
+    return Public;
 }
 
-QString ScalixBase::colorToString( const QColor& color )
+QString ScalixBase::colorToString(const QColor &color)
 {
-  // Color is in the format "#RRGGBB"
-  return color.name();
+    // Color is in the format "#RRGGBB"
+    return color.name();
 }
 
-QColor ScalixBase::stringToColor( const QString& s )
+QColor ScalixBase::stringToColor(const QString &s)
 {
-  return QColor( s );
+    return QColor(s);
 }
 
-void ScalixBase::writeString( QDomElement& element, const QString& tag,
-                             const QString& tagString )
+void ScalixBase::writeString(QDomElement &element, const QString &tag,
+                             const QString &tagString)
 {
-  if ( !tagString.isEmpty() ) {
-    QDomElement e = element.ownerDocument().createElement( tag );
-    QDomText t = element.ownerDocument().createTextNode( tagString );
-    e.appendChild( t );
-    element.appendChild( e );
-  }
+    if(!tagString.isEmpty())
+    {
+        QDomElement e = element.ownerDocument().createElement(tag);
+        QDomText t = element.ownerDocument().createTextNode(tagString);
+        e.appendChild(t);
+        element.appendChild(e);
+    }
 }
 
-QDateTime ScalixBase::localToUTC( const QDateTime& time ) const
+QDateTime ScalixBase::localToUTC(const QDateTime &time) const
 {
-  return KPimPrefs::localTimeToUtc( time, mTimeZoneId );
+    return KPimPrefs::localTimeToUtc(time, mTimeZoneId);
 }
 
-QDateTime ScalixBase::utcToLocal( const QDateTime& time ) const
+QDateTime ScalixBase::utcToLocal(const QDateTime &time) const
 {
-  return KPimPrefs::utcToLocalTime( time, mTimeZoneId );
+    return KPimPrefs::utcToLocalTime(time, mTimeZoneId);
 }

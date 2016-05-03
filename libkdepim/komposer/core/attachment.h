@@ -26,20 +26,18 @@
 #include <qcstring.h>
 #include <qvaluelist.h>
 
-namespace Komposer
-{
+namespace Komposer {
 
-  class Attachment
-  {
-  public:
-    Attachment( const QString &name,
-                const QCString &cte,
-                const QByteArray &data,
-                const QCString &type,
-                const QCString &subType,
-                const QCString &paramAttr,
-                const QString &paramValue,
-                const QCString &contDisp );
+class Attachment {
+public:
+    Attachment(const QString &name,
+               const QCString &cte,
+               const QByteArray &data,
+               const QCString &type,
+               const QCString &subType,
+               const QCString &paramAttr,
+               const QString &paramValue,
+               const QCString &contDisp);
     ~Attachment();
 
     QString name() const;
@@ -51,11 +49,11 @@ namespace Komposer
     QString paramValue() const;
     QCString contentDisposition() const;
 
-  private:
+private:
     class Private;
     Private *d;
-  };
-  typedef QValueList<Attachment> AttachmentList;
+};
+typedef QValueList<Attachment> AttachmentList;
 }
 
 #endif

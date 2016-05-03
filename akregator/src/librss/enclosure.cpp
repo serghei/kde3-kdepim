@@ -30,13 +30,11 @@
 
 #include <kdebug.h>
 
-namespace RSS
-{
+namespace RSS {
 
 
-class Enclosure::EnclosurePrivate : public Shared
-{
-    public:
+class Enclosure::EnclosurePrivate : public Shared {
+public:
 
     bool isNull;
     QString url;
@@ -45,28 +43,28 @@ class Enclosure::EnclosurePrivate : public Shared
 
     bool operator==(const EnclosurePrivate &other) const
     {
-        return ( isNull == other.isNull || (url == other.url &&
-                length == other.length &&
-                type == other.type));
+        return (isNull == other.isNull || (url == other.url &&
+                                           length == other.length &&
+                                           type == other.type));
     }
 };
 
 
-Enclosure Enclosure::fromXML(const QDomElement& e)
+Enclosure Enclosure::fromXML(const QDomElement &e)
 {
     QString url, type;
     int length = -1;
 
-    if (e.hasAttribute(QString::fromLatin1("url")))
+    if(e.hasAttribute(QString::fromLatin1("url")))
         url = e.attribute(QString::fromLatin1("url"));
-    
-    if (e.hasAttribute(QString::fromLatin1("length")))
+
+    if(e.hasAttribute(QString::fromLatin1("length")))
     {
         bool ok;
         int c = e.attribute(QString::fromLatin1("length")).toInt(&ok);
         length = ok ? c : -1;
     }
-    if (e.hasAttribute(QString::fromLatin1("type")))
+    if(e.hasAttribute(QString::fromLatin1("type")))
         type = e.attribute(QString::fromLatin1("type"));
 
     return Enclosure(url, length, type);
@@ -75,11 +73,11 @@ Enclosure Enclosure::fromXML(const QDomElement& e)
 QDomElement Enclosure::toXML(QDomDocument document) const
 {
     QDomElement e = document.createElement(QString::fromLatin1("enclosure"));
-    if (!d->url.isNull())
+    if(!d->url.isNull())
         e.setAttribute(QString::fromLatin1("url"), d->url);
-    if (d->length != -1)
+    if(d->length != -1)
         e.setAttribute(QString::fromLatin1("length"), QString::number(d->length));
-    if (!d->type.isNull())
+    if(!d->type.isNull())
         e.setAttribute(QString::fromLatin1("type"), d->type);
 
     return e;
@@ -91,12 +89,12 @@ Enclosure::Enclosure() : d(new EnclosurePrivate)
     d->length = -1;
 }
 
-Enclosure::Enclosure(const Enclosure& other) : d(0)
+Enclosure::Enclosure(const Enclosure &other) : d(0)
 {
-     *this = other;
+    *this = other;
 }
 
-Enclosure::Enclosure(const QString& url, int length, const QString& type) : d(new EnclosurePrivate)
+Enclosure::Enclosure(const QString &url, int length, const QString &type) : d(new EnclosurePrivate)
 {
     d->isNull = false;
     d->url = url;
@@ -106,19 +104,19 @@ Enclosure::Enclosure(const QString& url, int length, const QString& type) : d(ne
 
 Enclosure::~Enclosure()
 {
-    if (d->deref())
+    if(d->deref())
     {
         delete d;
         d = 0;
     }
 }
 
-Enclosure& Enclosure::operator=(const Enclosure& other)
+Enclosure &Enclosure::operator=(const Enclosure &other)
 {
-    if (d != other.d)
+    if(d != other.d)
     {
         other.d->ref();
-        if (d && d->deref())
+        if(d && d->deref())
             delete d;
         d = other.d;
     }

@@ -30,23 +30,23 @@ namespace KPIM {
  * @author Marc Mutz <mutz@kde.org>
  **/
 class KDE_EXPORT ConfigManager : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /** Commit changes to disk and emit changed() if necessary. */
-  virtual void commit() = 0;
-  /** Re-read the config from disk and forget changes. */
-  virtual void rollback() = 0;
+    /** Commit changes to disk and emit changed() if necessary. */
+    virtual void commit() = 0;
+    /** Re-read the config from disk and forget changes. */
+    virtual void rollback() = 0;
 
-  /** Check whether there are any unsaved changes. */
-  virtual bool hasPendingChanges() const = 0;
+    /** Check whether there are any unsaved changes. */
+    virtual bool hasPendingChanges() const = 0;
 
 signals:
-  /** Emitted whenever a commit changes any configure option */
-  void changed();
+    /** Emitted whenever a commit changes any configure option */
+    void changed();
 
 protected:
-  ConfigManager( QObject * parent=0, const char * name=0 );
-  virtual ~ConfigManager();
+    ConfigManager(QObject *parent = 0, const char *name = 0);
+    virtual ~ConfigManager();
 };
 
 }

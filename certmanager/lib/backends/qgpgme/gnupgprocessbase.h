@@ -37,54 +37,54 @@
 
 namespace Kleo {
 
-  /**
-   * @short a base class for GPG and GPGSM processes.
-   *
-   * This KProcess subclass implements the status-fd handling common
-   * to GPG and GPGSM.
-   *
-   * @author Marc Mutz <mutz@kde.org>
-   */
-  class GnuPGProcessBase : public KProcess {
+/**
+ * @short a base class for GPG and GPGSM processes.
+ *
+ * This KProcess subclass implements the status-fd handling common
+ * to GPG and GPGSM.
+ *
+ * @author Marc Mutz <mutz@kde.org>
+ */
+class GnuPGProcessBase : public KProcess {
     Q_OBJECT
-  public:
-    GnuPGProcessBase( QObject * parent=0, const char * name=0 );
+public:
+    GnuPGProcessBase(QObject *parent = 0, const char *name = 0);
     ~GnuPGProcessBase();
 
-    void setUseStatusFD( bool use );
+    void setUseStatusFD(bool use);
 
     /*! reimplementation */
-    bool start( RunMode runmode, Communication comm );
+    bool start(RunMode runmode, Communication comm);
 
     bool closeStatus();
 
-  signals:
-    void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
+signals:
+    void status(Kleo::GnuPGProcessBase *proc, const QString &type, const QStringList &args);
 
-  protected:
+protected:
     /*! reimplementation */
-    int setupCommunication( Communication comm );
+    int setupCommunication(Communication comm);
     /*! reimplementation */
     int commSetupDoneP();
     /*! reimplementation */
     int commSetupDoneC();
 
-    int childStatus( int fd );
+    int childStatus(int fd);
 
 
-  private slots:
-    void slotChildStatus( int fd );
+private slots:
+    void slotChildStatus(int fd);
 
-  private:
+private:
     void parseStatusOutput();
 
-  private:
+private:
     class Private;
-    Private * d;
-  protected:
+    Private *d;
+protected:
     /*! reimplementation */
-    void virtual_hook( int id, void * data );
-  };
+    void virtual_hook(int id, void *data);
+};
 
 }
 

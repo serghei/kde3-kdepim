@@ -21,32 +21,58 @@
 
 #include "kio_proto.h"
 
-class Nntp_Protocol : public KIO_Protocol
-{
+class Nntp_Protocol : public KIO_Protocol {
 public:
-	Nntp_Protocol() { }
-	virtual ~Nntp_Protocol() { }
+    Nntp_Protocol() { }
+    virtual ~Nntp_Protocol() { }
 
-	virtual KIO_Protocol * clone() const { return new Nntp_Protocol; }
+    virtual KIO_Protocol *clone() const
+    {
+        return new Nntp_Protocol;
+    }
 
-	virtual bool connectionBased() const { return true; }
+    virtual bool connectionBased() const
+    {
+        return true;
+    }
 
-	virtual QString protocol() const { return "nntp"; }
-	virtual QString configName() const { return "nntp"; }
+    virtual QString protocol() const
+    {
+        return "nntp";
+    }
+    virtual QString configName() const
+    {
+        return "nntp";
+    }
 
-	virtual bool canReadSubjects() const { return true; }
-	virtual bool canDeleteMail() const { return false; }
-	virtual bool canReadMail() const { return true; }
-	virtual bool fullMessage() const { return true; }
+    virtual bool canReadSubjects() const
+    {
+        return true;
+    }
+    virtual bool canDeleteMail() const
+    {
+        return false;
+    }
+    virtual bool canReadMail() const
+    {
+        return true;
+    }
+    virtual bool fullMessage() const
+    {
+        return true;
+    }
 
-	//virtual int fields() const { return server | port | username | password | mailbox; }
-	//virtual int urlFields() const { return no_fields; }
-	virtual unsigned short defaultPort( bool ) const { return 119; }
+    //virtual int fields() const { return server | port | username | password | mailbox; }
+    //virtual int urlFields() const { return no_fields; }
+    virtual unsigned short defaultPort(bool) const
+    {
+        return 119;
+    }
 
-	virtual void configFillGroupBoxes( QStringList* ) const;
-        virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
-        virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
-        virtual void writeEntries( QMap< QString, QString >* ) const;
+    virtual void configFillGroupBoxes(QStringList *) const;
+    virtual void configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *) const;
+    virtual void readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const;
+    virtual void writeEntries(QMap< QString, QString > *) const;
 };
 
 #endif

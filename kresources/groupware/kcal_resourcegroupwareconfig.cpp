@@ -38,68 +38,75 @@
 
 using namespace KCal;
 
-ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceGroupwareConfig::ResourceGroupwareConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+    resize(245, 115);
+    QGridLayout *mainLayout = new QGridLayout(this, 2, 2);
 
-  QLabel *label = new QLabel( i18n("URL:"), this );
-  mainLayout->addWidget( label, 1, 0 );
-  mUrl = new KLineEdit( this );
-  mainLayout->addWidget( mUrl, 1, 1 );
-  
-  label = new QLabel( i18n("User:"), this );
-  mainLayout->addWidget( label, 2, 0 );
-  mUserEdit = new KLineEdit( this );
-  mainLayout->addWidget( mUserEdit, 2, 1 );
-  
-  label = new QLabel( i18n("Password:"), this );
-  mainLayout->addWidget( label, 3, 0 );
-  mPasswordEdit = new KLineEdit( this );
-  mainLayout->addWidget( mPasswordEdit, 3, 1 );
-  mPasswordEdit->setEchoMode( KLineEdit::Password );
+    QLabel *label = new QLabel(i18n("URL:"), this);
+    mainLayout->addWidget(label, 1, 0);
+    mUrl = new KLineEdit(this);
+    mainLayout->addWidget(mUrl, 1, 1);
 
-  mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
+    label = new QLabel(i18n("User:"), this);
+    mainLayout->addWidget(label, 2, 0);
+    mUserEdit = new KLineEdit(this);
+    mainLayout->addWidget(mUserEdit, 2, 1);
 
-  mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
+    label = new QLabel(i18n("Password:"), this);
+    mainLayout->addWidget(label, 3, 0);
+    mPasswordEdit = new KLineEdit(this);
+    mainLayout->addWidget(mPasswordEdit, 3, 1);
+    mPasswordEdit->setEchoMode(KLineEdit::Password);
+
+    mReloadConfig = new KCal::ResourceCachedReloadConfig(this);
+    mainLayout->addMultiCellWidget(mReloadConfig, 5, 5, 0, 1);
+
+    mSaveConfig = new KCal::ResourceCachedSaveConfig(this);
+    mainLayout->addMultiCellWidget(mSaveConfig, 6, 6, 0, 1);
 }
 
-void ResourceGroupwareConfig::loadSettings( KRES::Resource *resource )
+void ResourceGroupwareConfig::loadSettings(KRES::Resource *resource)
 {
-  kdDebug() << "KCal::ResourceGroupwareConfig::loadSettings()" << endl;
+    kdDebug() << "KCal::ResourceGroupwareConfig::loadSettings()" << endl;
 
-  ResourceGroupware *res = static_cast<ResourceGroupware *>( resource );
-  if ( res ) {
-    if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
-      return;
+    ResourceGroupware *res = static_cast<ResourceGroupware *>(resource);
+    if(res)
+    {
+        if(!res->prefs())
+        {
+            kdError() << "No PREF" << endl;
+            return;
+        }
+
+        mUrl->setText(res->prefs()->url());
+        mUserEdit->setText(res->prefs()->user());
+        mPasswordEdit->setText(res->prefs()->password());
+        mReloadConfig->loadSettings(res);
+        mSaveConfig->loadSettings(res);
     }
-  
-    mUrl->setText( res->prefs()->url() );
-    mUserEdit->setText( res->prefs()->user() );
-    mPasswordEdit->setText( res->prefs()->password() );
-    mReloadConfig->loadSettings( res );
-    mSaveConfig->loadSettings( res );
-  } else {
-    kdError(5700) << "KCalResourceGroupwareConfig::loadSettings(): no KCalResourceGroupware, cast failed" << endl;
-  }
+    else
+    {
+        kdError(5700) << "KCalResourceGroupwareConfig::loadSettings(): no KCalResourceGroupware, cast failed" << endl;
+    }
 }
 
-void ResourceGroupwareConfig::saveSettings( KRES::Resource *resource )
+void ResourceGroupwareConfig::saveSettings(KRES::Resource *resource)
 {
-  ResourceGroupware *res = static_cast<ResourceGroupware*>( resource );
-  if ( res ) {
-    res->prefs()->setUrl( mUrl->text() );
-    res->prefs()->setUser( mUserEdit->text() );
-    res->prefs()->setPassword( mPasswordEdit->text() );
-    mReloadConfig->saveSettings( res );
-    mSaveConfig->saveSettings( res );
-  } else {
-    kdError(5700) << "KCalResourceGroupwareConfig::saveSettings(): no KCalResourceGroupware, cast failed" << endl;
-  }
+    ResourceGroupware *res = static_cast<ResourceGroupware *>(resource);
+    if(res)
+    {
+        res->prefs()->setUrl(mUrl->text());
+        res->prefs()->setUser(mUserEdit->text());
+        res->prefs()->setPassword(mPasswordEdit->text());
+        mReloadConfig->saveSettings(res);
+        mSaveConfig->saveSettings(res);
+    }
+    else
+    {
+        kdError(5700) << "KCalResourceGroupwareConfig::saveSettings(): no KCalResourceGroupware, cast failed" << endl;
+    }
 }
 
 #include "kcal_resourcegroupwareconfig.moc"

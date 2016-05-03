@@ -35,34 +35,32 @@
 
 
 class LocalNotesFactory
-    : public KRES::PluginFactoryBase
-{
+    : public KRES::PluginFactoryBase {
 public:
-    KRES::Resource *resource( const KConfig *config )
+    KRES::Resource *resource(const KConfig *config)
     {
-        return new ResourceLocal( config );
+        return new ResourceLocal(config);
     }
 
-    KRES::ConfigWidget *configWidget( QWidget *parent )
+    KRES::ConfigWidget *configWidget(QWidget *parent)
     {
         return new ResourceLocalConfig(parent);
     }
 };
 
-extern "C"
-{
+extern "C" {
     void *init_knotes_local()
     {
         return new LocalNotesFactory();
     }
 
-    KRES::ConfigWidget *config_widget( QWidget* parent )
+    KRES::ConfigWidget *config_widget(QWidget *parent)
     {
-        return new ResourceLocalConfig( parent, "Configure Local Resource" );
+        return new ResourceLocalConfig(parent, "Configure Local Resource");
     }
 
-    KRES::Resource *resource( const KConfig* config )
+    KRES::Resource *resource(const KConfig *config)
     {
-        return new ResourceLocal( config );
+        return new ResourceLocal(config);
     }
 }

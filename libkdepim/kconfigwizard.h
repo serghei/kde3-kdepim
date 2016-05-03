@@ -30,20 +30,19 @@ class QListView;
 /**
   @short Configuration wizard base class
 */
-class KDE_EXPORT KConfigWizard : public KDialogBase
-{
+class KDE_EXPORT KConfigWizard : public KDialogBase {
     Q_OBJECT
-  public:
+public:
     /**
       Create wizard. You have to set a propgator with setPropagator() later.
     */
-    KConfigWizard( QWidget *parent = 0, char *name = 0, bool modal = false );
+    KConfigWizard(QWidget *parent = 0, char *name = 0, bool modal = false);
     /**
       Create wizard for given KConfigPropagator. The wizard takes ownership of
       the propagator.
     */
-    KConfigWizard( KConfigPropagator *propagator, QWidget *parent = 0,
-                   char *name = 0, bool modal = false );
+    KConfigWizard(KConfigPropagator *propagator, QWidget *parent = 0,
+                  char *name = 0, bool modal = false);
     /**
       Destructor.
     */
@@ -52,16 +51,19 @@ class KDE_EXPORT KConfigWizard : public KDialogBase
     /**
       Set propagator the wizard operates on.
     */
-    void setPropagator( KConfigPropagator * );
+    void setPropagator(KConfigPropagator *);
     /**
       Return propagator the wizard operates on.
     */
-    KConfigPropagator *propagator() { return mPropagator; }
+    KConfigPropagator *propagator()
+    {
+        return mPropagator;
+    }
 
     /**
       Create wizard page with given title.
     */
-    QFrame *createWizardPage( const QString &title );
+    QFrame *createWizardPage(const QString &title);
 
     /**
       Use this function to read the configuration from the KConfigSkeleton
@@ -80,16 +82,19 @@ class KDE_EXPORT KConfigWizard : public KDialogBase
       Validates the supplied data. Returns a appropiate error when some data
       is invalid. Return QString::null if all data is valid.
     */
-    virtual QString validate() { return QString::null; }
+    virtual QString validate()
+    {
+        return QString::null;
+    }
 
-  protected slots:
+protected slots:
     void readConfig();
 
     void slotOk();
 
-    void slotAboutToShowPage( QWidget *page );
+    void slotAboutToShowPage(QWidget *page);
 
-  protected:
+protected:
     void init();
 
     void setupRulesPage();
@@ -97,7 +102,7 @@ class KDE_EXPORT KConfigWizard : public KDialogBase
     void setupChangesPage();
     void updateChanges();
 
-  private:
+private:
     KConfigPropagator *mPropagator;
 
     QListView *mRuleView;

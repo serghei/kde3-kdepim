@@ -25,20 +25,20 @@
 #include "knode_options.h"
 using KNode::AboutData;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  AboutData aboutData;
+    AboutData aboutData;
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( knode_options );
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(knode_options);
+    KUniqueApplication::addCmdLineOptions();
 
-  if (!KNApplication::start())
-    return 0;
+    if(!KNApplication::start())
+        return 0;
 
-  KNApplication app;
-  KGlobal::locale()->insertCatalogue("libkdepim");
-  KGlobal::locale()->insertCatalogue("libkpgp");
-  return app.exec();
+    KNApplication app;
+    KGlobal::locale()->insertCatalogue("libkdepim");
+    KGlobal::locale()->insertCatalogue("libkpgp");
+    return app.exec();
 }
 

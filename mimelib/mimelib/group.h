@@ -70,8 +70,8 @@ class DW_EXPORT DwGroup : public DwAddress {
 public:
 
     DwGroup();
-    DwGroup(const DwGroup& aGroup);
-    DwGroup(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwGroup(const DwGroup &aGroup);
+    DwGroup(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwGroup} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -89,7 +89,7 @@ public:
 
     virtual ~DwGroup();
 
-    const DwGroup& operator = (const DwGroup& aGroup);
+    const DwGroup &operator = (const DwGroup &aGroup);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aGroup}.  The parent node of the {\tt DwGroup} object
     //. is not changed.
@@ -126,32 +126,32 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwGroup} on the free store that has the same
     //. value as this {\tt DwGroup} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    const DwString& GroupName() const;
+    const DwString &GroupName() const;
     //. Returns the name of the group.
 
-    const DwString& Phrase() const;
+    const DwString &Phrase() const;
     //. Returns the name of the phrase part of a group as described in
     //. RFC-822.  The phrase is the same as the group name.
 
-    void SetGroupName(const DwString& aName);
+    void SetGroupName(const DwString &aName);
     //. Sets the name of the group.
 
-    void SetPhrase(const DwString& aPhrase);
+    void SetPhrase(const DwString &aPhrase);
     //. Sets the name of the phrase part of a group as described in RFC-822.
     //. The phrase is the same as the group name.
 
-    DwMailboxList& MailboxList() const;
+    DwMailboxList &MailboxList() const;
     //. Provides access to the list of mailboxes that is part of a group as
     //. described in RFC-822.
 
-    static DwGroup* NewGroup(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwGroup *NewGroup(const DwString &aStr,
+                             DwMessageComponent *aParent);
     //. Creates a new {\tt DwGroup} object on the free store.
     //. If the static data member {\tt sNewGroup} is {\tt NULL},
     //. this member function will create a new {\tt DwGroup}
@@ -161,25 +161,25 @@ public:
     //. {\tt DwGroup}, and return that object.
 
     //+ Var sNewGroup
-    static DwGroup* (*sNewGroup)(const DwString&, DwMessageComponent*);
+    static DwGroup *(*sNewGroup)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewGroup} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived from
     //. {\tt DwGroup}.
 
 protected:
 
-    DwMailboxList* mMailboxList;
+    DwMailboxList *mMailboxList;
     //. Points to the {\tt DwMailboxList} object.
 
 
 private:
 
     DwString mGroupName;
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -197,7 +197,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

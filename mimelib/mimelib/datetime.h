@@ -52,8 +52,8 @@ class DW_EXPORT DwDateTime : public DwFieldBody {
 public:
 
     DwDateTime();
-    DwDateTime(const DwDateTime& aDateTime);
-    DwDateTime(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwDateTime(const DwDateTime &aDateTime);
+    DwDateTime(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which assigns
     //. the current date and time as reported by the operating system.
     //.
@@ -69,7 +69,7 @@ public:
 
     virtual ~DwDateTime();
 
-    const DwDateTime& operator = (const DwDateTime& aDateTime);
+    const DwDateTime &operator = (const DwDateTime &aDateTime);
     //. This is the assignment operator, which sets this {\tt DwDateTime}
     //. object to the same value as {\tt aDateTime}.
 
@@ -94,7 +94,7 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwDateTime} on the free store that has the same
     //. value as this {\tt DwDateTime} object.  The basic idea is that of
@@ -193,7 +193,7 @@ public:
     //. (UTC, or GMT).  The value is used to set the time zone for any
     //. objects created using the default constructor.
 
-    static DwDateTime* NewDateTime(const DwString&, DwMessageComponent*);
+    static DwDateTime *NewDateTime(const DwString &, DwMessageComponent *);
     //. Creates a new {\tt DwDateTime} object on the free store.
     //. If the static data member {\tt sNewDateTime} is {\tt NULL},
     //. this member function will create a new {\tt DwDateTime}
@@ -203,7 +203,7 @@ public:
     //. {\tt DwDateTime}, and return that object.
 
     //+ Var sNewDateTime
-    static DwDateTime* (*sNewDateTime)(const DwString&, DwMessageComponent*);
+    static DwDateTime *(*sNewDateTime)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewDateTime} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived
     //. from {\tt DwDateTime}.
@@ -229,14 +229,14 @@ protected:
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
     void Init();
     //. Initialization code common to all constructors.
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //.
@@ -252,7 +252,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

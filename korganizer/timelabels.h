@@ -36,12 +36,11 @@ class KOAgenda;
 class KOAgendaItem;
 class KConfig;
 
-class TimeLabels : public QScrollView
-{
+class TimeLabels : public QScrollView {
     Q_OBJECT
-  public:
-    TimeLabels( int rows, QWidget *parent = 0, const char *name = 0,
-                WFlags f = 0 );
+public:
+    TimeLabels(int rows, QWidget *parent = 0, const char *name = 0,
+               WFlags f = 0);
 
     /** Calculates the minimum width */
     virtual int minimumWidth() const;
@@ -50,33 +49,33 @@ class TimeLabels : public QScrollView
     void updateConfig();
 
     /**  */
-    void setAgenda( KOAgenda *agenda );
+    void setAgenda(KOAgenda *agenda);
 
     /**  */
-    virtual void paintEvent( QPaintEvent *e );
+    virtual void paintEvent(QPaintEvent *e);
 
-  public slots:
+public slots:
     /** update time label positions */
     void positionChanged();
-    void positionChanged( int pos );
+    void positionChanged(int pos);
 
-  protected:
-    void drawContents( QPainter *p, int cx, int cy, int cw, int ch );
+protected:
+    void drawContents(QPainter *p, int cx, int cy, int cw, int ch);
 
-  private slots:
+private slots:
     /** update the position of the marker showing the mouse position */
     void mousePosChanged(const QPoint &pos);
 
     void showMousePos();
     void hideMousePos();
 
-    void setCellHeight( double height );
+    void setCellHeight(double height);
 
-  private:
+private:
     int mRows;
     double mCellHeight;
     int mMiniWidth;
-    KOAgenda* mAgenda;
+    KOAgenda *mAgenda;
 
     QFrame *mMousePos;  // shows a marker for the current mouse position in y direction
 };

@@ -46,45 +46,46 @@
 
 #include <kdepimmacros.h>
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
+class Error;
+class Context;
+class Key;
 }
 
 namespace Kleo {
 
-  class KDE_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+class KDE_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMESignEncryptJob( GpgME::Context * context );
+public:
+    QGpgMESignEncryptJob(GpgME::Context *context);
     ~QGpgMESignEncryptJob();
 
     /*! \reimp from SignEncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+    GpgME::Error start(const std::vector<GpgME::Key> &signers,
+                       const std::vector<GpgME::Key> &recipients,
+                       const QByteArray &plainText, bool alwaysTrust);
 
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
+    std::pair<GpgME::SigningResult, GpgME::EncryptionResult>
+    exec(const std::vector<GpgME::Key> &signers,
+         const std::vector<GpgME::Key> &recipients,
+         const QByteArray &plainText, bool alwaysTrust,
+         QByteArray &cipherText);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    GpgME::Error setup( const std::vector<GpgME::Key> &,
-			const QByteArray & );
-  private:
-    std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    GpgME::Error setup(const std::vector<GpgME::Key> &,
+                       const QByteArray &);
+private:
+    std::pair<GpgME::SigningResult, GpgME::EncryptionResult> mResult;
+};
 
 }
 

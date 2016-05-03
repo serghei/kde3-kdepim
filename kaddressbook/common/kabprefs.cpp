@@ -31,14 +31,14 @@ KABPrefs *KABPrefs::mInstance = 0;
 static KStaticDeleter<KABPrefs> staticDeleter;
 
 KABPrefs::KABPrefs()
-  : KABPrefsBase()
+    : KABPrefsBase()
 {
-  KConfigSkeleton::setCurrentGroup( "General" );
+    KConfigSkeleton::setCurrentGroup("General");
 
-  QStringList defaultMap;
-  defaultMap << "http://maps.google.com/maps?f=q&hl=%1&q=%n,%l,%s";
-  addItemString( "LocationMapURL", mLocationMapURL, defaultMap[ 0 ] );
-  addItemStringList( "LocationMapURLs", mLocationMapURLs, defaultMap );
+    QStringList defaultMap;
+    defaultMap << "http://maps.google.com/maps?f=q&hl=%1&q=%n,%l,%s";
+    addItemString("LocationMapURL", mLocationMapURL, defaultMap[ 0 ]);
+    addItemStringList("LocationMapURLs", mLocationMapURLs, defaultMap);
 }
 
 KABPrefs::~KABPrefs()
@@ -47,36 +47,37 @@ KABPrefs::~KABPrefs()
 
 KABPrefs *KABPrefs::instance()
 {
-  if ( !mInstance ) {
-    staticDeleter.setObject( mInstance, new KABPrefs() );
-    mInstance->readConfig();
-  }
+    if(!mInstance)
+    {
+        staticDeleter.setObject(mInstance, new KABPrefs());
+        mInstance->readConfig();
+    }
 
-  return mInstance;
+    return mInstance;
 }
 
 void KABPrefs::setCategoryDefaults()
 {
-  mCustomCategories.clear();
-  mCustomCategories << i18n( "Business" ) << i18n( "Family" ) << i18n( "School" )
-                    << i18n( "Customer" ) << i18n( "Friend" );
+    mCustomCategories.clear();
+    mCustomCategories << i18n("Business") << i18n("Family") << i18n("School")
+                      << i18n("Customer") << i18n("Friend");
 }
 
 void KABPrefs::usrReadConfig()
 {
-  config()->setGroup( "General" );
-  mCustomCategories = config()->readListEntry( "Custom Categories" );
-  if ( mCustomCategories.isEmpty() )
-    setCategoryDefaults();
+    config()->setGroup("General");
+    mCustomCategories = config()->readListEntry("Custom Categories");
+    if(mCustomCategories.isEmpty())
+        setCategoryDefaults();
 
-  KPimPrefs::usrReadConfig();
+    KPimPrefs::usrReadConfig();
 }
 
 
 void KABPrefs::usrWriteConfig()
 {
-  config()->setGroup( "General" );
-  config()->writeEntry( "Custom Categories", mCustomCategories );
+    config()->setGroup("General");
+    config()->writeEntry("Custom Categories", mCustomCategories);
 
-  KPimPrefs::usrWriteConfig();
+    KPimPrefs::usrWriteConfig();
 }

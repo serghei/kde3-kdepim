@@ -37,49 +37,54 @@ namespace KABC {
 
 class GroupwisePrefs;
 
-class KDE_EXPORT ResourceGroupwise : public ResourceCached
-{
-  friend class ResourceGroupwiseConfig;
+class KDE_EXPORT ResourceGroupwise : public ResourceCached {
+    friend class ResourceGroupwiseConfig;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    ResourceGroupwise( const KConfig * );
-    ResourceGroupwise( const KURL &url,
-                       const QString &user, const QString &password,
-                       const QStringList &readAddressBooks,
-                       const QString &writeAddressBook );
+public:
+    ResourceGroupwise(const KConfig *);
+    ResourceGroupwise(const KURL &url,
+                      const QString &user, const QString &password,
+                      const QStringList &readAddressBooks,
+                      const QString &writeAddressBook);
     ~ResourceGroupwise();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig(const KConfig *);
+    void writeConfig(KConfig *);
 
     void readAddressBooks();
     void writeAddressBooks();
 
     void retrieveAddressBooks();
 
-    GroupwisePrefs *prefs() const { return mPrefs; }
+    GroupwisePrefs *prefs() const
+    {
+        return mPrefs;
+    }
 
-    GroupWise::AddressBook::List addressBooks() const { return mAddressBooks; }
+    GroupWise::AddressBook::List addressBooks() const
+    {
+        return mAddressBooks;
+    }
 
     bool doOpen();
     void doClose();
 
     Ticket *requestSaveTicket();
-    void releaseSaveTicket( Ticket* );
+    void releaseSaveTicket(Ticket *);
 
     bool load();
     bool asyncLoad();
-    bool save( Ticket * );
-    bool asyncSave( Ticket * );
+    bool save(Ticket *);
+    bool asyncSave(Ticket *);
     enum SABState { Error, Stale, InSync, RefreshNeeded };
 
     /**
      * Clears the cached data, in memory and on disk
      */
     void clearCache();
-  protected:
+protected:
     enum ResourceState { Start, FetchingSAB, SABUptodate, FetchingUAB, Uptodate };
     enum BookType { System, User };
     enum AccessMode { Fetch, Update };
@@ -90,7 +95,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     /**
     * Begin asynchronously fetching the system address book , replacing the cached copy
     */
-    void fetchAddressBooks( const BookType booktype );
+    void fetchAddressBooks(const BookType booktype);
     /**
     *  Asynchronously update the system address book
     */
@@ -121,7 +126,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     * To just update an addressbook, use mode = Update and give the ast sequence number already held
     * If Update is given without a sequence number, the mode falls back to Fetch
     */
-    KURL createAccessUrl( BookType bookType, AccessMode mode, unsigned long lastSequenceNumber = 0, unsigned long lastPORebuildTime = 0 );
+    KURL createAccessUrl(BookType bookType, AccessMode mode, unsigned long lastSequenceNumber = 0, unsigned long lastPORebuildTime = 0);
 
     /**
     * Persist the last known delta info.  Call after the SAB is up to date.
@@ -134,19 +139,19 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     */
     bool appIsWhiteListedForSAB();
 
-  private slots:
+private slots:
     /** STATE CHANGING SLOTS **/
-    void fetchSABResult( KIO::Job * );
-    void fetchUABResult( KIO::Job * );
-    void updateSABResult( KIO::Job * );
+    void fetchSABResult(KIO::Job *);
+    void fetchUABResult(KIO::Job *);
+    void updateSABResult(KIO::Job *);
     /** DATA PROCESSING SLOTS **/
-    void slotReadJobData( KIO::Job *, const QByteArray & );
-    void slotUpdateJobData( KIO::Job *, const QByteArray & );
+    void slotReadJobData(KIO::Job *, const QByteArray &);
+    void slotUpdateJobData(KIO::Job *, const QByteArray &);
     /** HELPER SLOT **/
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
+    void slotJobPercent(KIO::Job *job, unsigned long percent);
 
     void cancelLoad();
-  private:
+private:
     GroupwisePrefs *mPrefs;
     GroupWise::AddressBook::List mAddressBooks;
 

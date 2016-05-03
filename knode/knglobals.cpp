@@ -32,83 +32,84 @@
 #include "knmainwidget.h"
 #include "knwidgets.h"
 
-KConfig* KNGlobals::config()
+KConfig *KNGlobals::config()
 {
-  if (!c_onfig) {
-      c_onfig = KSharedConfig::openConfig( "knoderc" );
-  }
-  return c_onfig;
+    if(!c_onfig)
+    {
+        c_onfig = KSharedConfig::openConfig("knoderc");
+    }
+    return c_onfig;
 }
 
-KNConfigManager* KNGlobals::configManager()
+KNConfigManager *KNGlobals::configManager()
 {
-  if (!mCfgManager)
-    mCfgManager = new KNConfigManager();
-  return mCfgManager;
+    if(!mCfgManager)
+        mCfgManager = new KNConfigManager();
+    return mCfgManager;
 }
 
-KNNetAccess* KNGlobals::netAccess()
+KNNetAccess *KNGlobals::netAccess()
 {
-  if(!mNetAccess)
-    mNetAccess = new KNNetAccess();
-  return mNetAccess;
+    if(!mNetAccess)
+        mNetAccess = new KNNetAccess();
+    return mNetAccess;
 }
 
-KNAccountManager* KNGlobals::accountManager()
+KNAccountManager *KNGlobals::accountManager()
 {
-  if(!mAccManager)
-    mAccManager = new KNAccountManager(groupManager());
-  return mAccManager;
+    if(!mAccManager)
+        mAccManager = new KNAccountManager(groupManager());
+    return mAccManager;
 }
 
-KNGroupManager* KNGlobals::groupManager()
+KNGroupManager *KNGlobals::groupManager()
 {
-  if(!mGrpManager)
-    mGrpManager = new KNGroupManager();
-  return mGrpManager;
+    if(!mGrpManager)
+        mGrpManager = new KNGroupManager();
+    return mGrpManager;
 }
 
-KNArticleManager* KNGlobals::articleManager()
+KNArticleManager *KNGlobals::articleManager()
 {
-  if(!mArtManager)
-    mArtManager = new KNArticleManager();
-  return mArtManager;
+    if(!mArtManager)
+        mArtManager = new KNArticleManager();
+    return mArtManager;
 }
 
-KNFilterManager* KNGlobals::filterManager()
+KNFilterManager *KNGlobals::filterManager()
 {
-  if (!mFilManager)
-    mFilManager = new KNFilterManager();
-  return mFilManager;
+    if(!mFilManager)
+        mFilManager = new KNFilterManager();
+    return mFilManager;
 }
 
-KNFolderManager* KNGlobals::folderManager()
+KNFolderManager *KNGlobals::folderManager()
 {
-  if(!mFolManager)
-    mFolManager = new KNFolderManager(articleManager());
-  return mFolManager;
+    if(!mFolManager)
+        mFolManager = new KNFolderManager(articleManager());
+    return mFolManager;
 }
 
-KNScoringManager* KNGlobals::mScoreManager = 0;
+KNScoringManager *KNGlobals::mScoreManager = 0;
 
-KNScoringManager* KNGlobals::scoringManager()
+KNScoringManager *KNGlobals::scoringManager()
 {
-  static  KStaticDeleter<KNScoringManager> sd;
-  if (!mScoreManager)
-    sd.setObject(mScoreManager, new KNScoringManager());
-  return mScoreManager;
+    static  KStaticDeleter<KNScoringManager> sd;
+    if(!mScoreManager)
+        sd.setObject(mScoreManager, new KNScoringManager());
+    return mScoreManager;
 }
 
-KNMemoryManager* KNGlobals::memoryManager()
+KNMemoryManager *KNGlobals::memoryManager()
 {
-  if(!mMemManager)
-    mMemManager = new KNMemoryManager();
-  return mMemManager;
+    if(!mMemManager)
+        mMemManager = new KNMemoryManager();
+    return mMemManager;
 }
 
 
 void KNGlobals::setStatusMsg(const QString &text, int id)
 {
-  if(top)
-    top->setStatusMsg(text, id);
+    if(top)
+        top->setStatusMsg(text, id);
 }

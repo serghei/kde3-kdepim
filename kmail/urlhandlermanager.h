@@ -42,45 +42,46 @@ class KMReaderWin;
 
 namespace KMail {
 
-  class URLHandler;
+class URLHandler;
 
-  namespace Interface {
-    class BodyPartURLHandler;
-  }
+namespace Interface {
+class BodyPartURLHandler;
+}
 
-  /**
-   * @short Singleton to manage the list of URLHandlers
-   * @author Marc Mutz <mutz@kde.org>
-   */
-  class URLHandlerManager {
-    static URLHandlerManager * self;
+/**
+ * @short Singleton to manage the list of URLHandlers
+ * @author Marc Mutz <mutz@kde.org>
+ */
+class URLHandlerManager {
+    static URLHandlerManager *self;
 
     URLHandlerManager();
-  public:
+public:
     ~URLHandlerManager();
 
-    static URLHandlerManager * instance() {
-      if ( !self )
-	self = new URLHandlerManager();
-      return self;
+    static URLHandlerManager *instance()
+    {
+        if(!self)
+            self = new URLHandlerManager();
+        return self;
     }
 
-    void registerHandler( const URLHandler * handler );
-    void unregisterHandler( const URLHandler * handler );
+    void registerHandler(const URLHandler *handler);
+    void unregisterHandler(const URLHandler *handler);
 
-    void registerHandler( const Interface::BodyPartURLHandler * handler );
-    void unregisterHandler( const Interface::BodyPartURLHandler * handler );
+    void registerHandler(const Interface::BodyPartURLHandler *handler);
+    void unregisterHandler(const Interface::BodyPartURLHandler *handler);
 
-    bool handleClick( const KURL & url, KMReaderWin * w=0 ) const;
-    bool handleContextMenuRequest( const KURL & url, const QPoint & p, KMReaderWin * w=0 ) const;
-    QString statusBarMessage( const KURL & url, KMReaderWin * w=0 ) const;
+    bool handleClick(const KURL &url, KMReaderWin *w = 0) const;
+    bool handleContextMenuRequest(const KURL &url, const QPoint &p, KMReaderWin *w = 0) const;
+    QString statusBarMessage(const KURL &url, KMReaderWin *w = 0) const;
 
-  private:
-    typedef QValueVector<const URLHandler*> HandlerList;
+private:
+    typedef QValueVector<const URLHandler *> HandlerList;
     HandlerList mHandlers;
     class BodyPartURLHandlerManager;
-    BodyPartURLHandlerManager * mBodyPartURLHandlerManager;
-  };
+    BodyPartURLHandlerManager *mBodyPartURLHandlerManager;
+};
 
 } // namespace KMail
 

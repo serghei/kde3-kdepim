@@ -32,60 +32,76 @@
 
 #include "kocore.h"
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("korgplugins",I18N_NOOP("KOrgPlugins"),"0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("korgplugins", I18N_NOOP("KOrgPlugins"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
-  
-  KTrader::OfferList plugins = KOCore::self()->availablePlugins();
-  KTrader::OfferList::ConstIterator it;
-  for(it = plugins.begin(); it != plugins.end(); ++it) {
-    kdDebug(5850) << "Plugin: " << (*it)->desktopEntryName() << " ("
-              << (*it)->name() << ")" << endl;
-    KOrg::Plugin *p = KOCore::self()->loadPlugin(*it);
-    if (!p) {
-      kdDebug(5850) << "Plugin loading failed." << endl;
-    } else {
-      kdDebug(5850) << "PLUGIN INFO: " << p->info() << endl;
+    KApplication app;
+
+    KTrader::OfferList plugins = KOCore::self()->availablePlugins();
+    KTrader::OfferList::ConstIterator it;
+    for(it = plugins.begin(); it != plugins.end(); ++it)
+    {
+        kdDebug(5850) << "Plugin: " << (*it)->desktopEntryName() << " ("
+                      << (*it)->name() << ")" << endl;
+        KOrg::Plugin *p = KOCore::self()->loadPlugin(*it);
+        if(!p)
+        {
+            kdDebug(5850) << "Plugin loading failed." << endl;
+        }
+        else
+        {
+            kdDebug(5850) << "PLUGIN INFO: " << p->info() << endl;
+        }
     }
-  }
-  
-  plugins = KOCore::self()->availablePrintPlugins();
-  for(it = plugins.begin(); it != plugins.end(); ++it) {
-    kdDebug(5850) << "Print plugin: " << (*it)->desktopEntryName() << " ("
-              << (*it)->name() << ")" << endl;
-    KOrg::PrintPlugin *p = KOCore::self()->loadPrintPlugin(*it);
-    if (!p) {
-      kdDebug(5850) << "Print plugin loading failed." << endl;
-    } else {
-      kdDebug(5850) << "PRINT PLUGIN INFO: " << p->info() << endl;
+
+    plugins = KOCore::self()->availablePrintPlugins();
+    for(it = plugins.begin(); it != plugins.end(); ++it)
+    {
+        kdDebug(5850) << "Print plugin: " << (*it)->desktopEntryName() << " ("
+                      << (*it)->name() << ")" << endl;
+        KOrg::PrintPlugin *p = KOCore::self()->loadPrintPlugin(*it);
+        if(!p)
+        {
+            kdDebug(5850) << "Print plugin loading failed." << endl;
+        }
+        else
+        {
+            kdDebug(5850) << "PRINT PLUGIN INFO: " << p->info() << endl;
+        }
     }
-  }
-  
-  plugins = KOCore::self()->availableParts();
-  for(it = plugins.begin(); it != plugins.end(); ++it) {
-    kdDebug(5850) << "Part: " << (*it)->desktopEntryName() << " ("
-              << (*it)->name() << ")" << endl;
-    KOrg::Part *p = KOCore::self()->loadPart(*it,0);
-    if (!p) {
-      kdDebug(5850) << "Part loading failed." << endl;
-    } else {
-      kdDebug(5850) << "PART INFO: " << p->info() << endl;
+
+    plugins = KOCore::self()->availableParts();
+    for(it = plugins.begin(); it != plugins.end(); ++it)
+    {
+        kdDebug(5850) << "Part: " << (*it)->desktopEntryName() << " ("
+                      << (*it)->name() << ")" << endl;
+        KOrg::Part *p = KOCore::self()->loadPart(*it, 0);
+        if(!p)
+        {
+            kdDebug(5850) << "Part loading failed." << endl;
+        }
+        else
+        {
+            kdDebug(5850) << "PART INFO: " << p->info() << endl;
+        }
     }
-  }
-  
-  plugins = KOCore::self()->availableCalendarDecorations();
-  for(it = plugins.begin(); it != plugins.end(); ++it) {
-    kdDebug(5850) << "CalendarDecoration: " << (*it)->desktopEntryName() << " ("
-              << (*it)->name() << ")" << endl;
-    KOrg::CalendarDecoration *p = KOCore::self()->loadCalendarDecoration(*it);
-    if (!p) {
-      kdDebug(5850) << "Calendar decoration loading failed." << endl;
-    } else {
-      kdDebug(5850) << "CALENDAR DECORATION INFO: " << p->info() << endl;
+
+    plugins = KOCore::self()->availableCalendarDecorations();
+    for(it = plugins.begin(); it != plugins.end(); ++it)
+    {
+        kdDebug(5850) << "CalendarDecoration: " << (*it)->desktopEntryName() << " ("
+                      << (*it)->name() << ")" << endl;
+        KOrg::CalendarDecoration *p = KOCore::self()->loadCalendarDecoration(*it);
+        if(!p)
+        {
+            kdDebug(5850) << "Calendar decoration loading failed." << endl;
+        }
+        else
+        {
+            kdDebug(5850) << "CALENDAR DECORATION INFO: " << p->info() << endl;
+        }
     }
-  }
 
 }

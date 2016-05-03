@@ -43,16 +43,17 @@ typedef std::string DwString;
 // DwStringRep is an implementation class that should not be used externally.
 //=============================================================================
 
-struct DW_EXPORT DwStringRep {
-    DwStringRep(char* aBuf, size_t aSize);
-    DwStringRep(FILE* aFile, size_t aSize);
+struct DW_EXPORT DwStringRep
+{
+    DwStringRep(char *aBuf, size_t aSize);
+    DwStringRep(FILE *aFile, size_t aSize);
     ~DwStringRep();
     // void* operator new(size_t);
     // void operator delete(void*, size_t);
     size_t mSize;
-    char* mBuffer;
+    char *mBuffer;
     int mRefCount, mPageMod;
-//private:
+    //private:
     // memory management
     // DwStringRep* mNext;
     // static DwStringRep* theirPool;
@@ -101,12 +102,12 @@ public:
     //. {\tt npos} is assigned the value (size_t)-1.
 
     DwString();
-    DwString(const DwString& aStr, size_t aPos=0, size_t aLen=npos);
-    DwString(const char* aBuf, size_t aLen);
-    DwString(FILE* aFile , size_t aLen);
-    DwString(const char* aCstr);
+    DwString(const DwString &aStr, size_t aPos = 0, size_t aLen = npos);
+    DwString(const char *aBuf, size_t aLen);
+    DwString(FILE *aFile , size_t aLen);
+    DwString(const char *aCstr);
     DwString(size_t aLen, char aChar);
-    DwString(char* aBuf, size_t aSize, size_t aStart, size_t aLen);
+    DwString(char *aBuf, size_t aSize, size_t aStart, size_t aLen);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwString} object's contents to be empty.
     //.
@@ -141,9 +142,9 @@ public:
 
     virtual ~DwString();
 
-    DwString& operator = (const DwString& aStr);
-    DwString& operator = (const char* aCstr);
-    DwString& operator = (char aChar);
+    DwString &operator = (const DwString &aStr);
+    DwString &operator = (const char *aCstr);
+    DwString &operator = (char aChar);
     //. Assigns the contents of the operand to this string.
     //. {\tt aCstr} must point to a NUL-terminated array of characters
     //. (a C string).
@@ -182,34 +183,34 @@ public:
     //. Returns a true value if and only if the contents of this string
     //. are empty.
 
-    const char& operator [] (size_t aPos) const;
-    char& operator [] (size_t aPos);
+    const char &operator [](size_t aPos) const;
+    char &operator [](size_t aPos);
     //. Returns {\tt DwString::at(aPos) const} or {\tt DwString::at(aPos)}.
     //. Note that the non-const version always assumes that the contents
     //. will be modified and therefore always copies a shared internal
     //. buffer before it returns.
 
-    const char& at(size_t aPos) const;
-    char& at(size_t aPos);
+    const char &at(size_t aPos) const;
+    char &at(size_t aPos);
     //. Returns the character at position {\tt aPos} in the string's contents.
     //. The non-const version returns an lvalue that may be assigned to.
     //. Note that the non-const version always assumes that the contents
     //. will be modified and therefore always copies a shared internal
     //. buffer before it returns.
 
-    DwString& operator += (const DwString& aStr);
-    DwString& operator += (const char* aCstr);
-    DwString& operator += (char aChar);
+    DwString &operator += (const DwString &aStr);
+    DwString &operator += (const char *aCstr);
+    DwString &operator += (char aChar);
     //. Appends the contents of the operand to this string.
     //. {\tt aCstr} must point to a NUL-terminated array of characters
     //. (a C string).
     //. Returns {\tt *this}.
 
-    DwString& append(const DwString& aStr);
-    DwString& append(const DwString& aStr, size_t aPos, size_t aLen);
-    DwString& append(const char* aBuf, size_t aLen);
-    DwString& append(const char* aCstr);
-    DwString& append(size_t aLen, char aChar);
+    DwString &append(const DwString &aStr);
+    DwString &append(const DwString &aStr, size_t aPos, size_t aLen);
+    DwString &append(const char *aBuf, size_t aLen);
+    DwString &append(const char *aCstr);
+    DwString &append(size_t aLen, char aChar);
     //. Appends characters to (the end of) this string.
     //. Returns {\tt *this}.
     //.
@@ -229,11 +230,11 @@ public:
     //.
     //. The fifth version appends {\tt aChar} repeated {\tt aLen} times.
 
-    DwString& assign(const DwString& aStr);
-    DwString& assign(const DwString& aStr, size_t aPos, size_t aLen);
-    DwString& assign(const char* aBuf, size_t aLen);
-    DwString& assign(const char* aCstr);
-    DwString& assign(size_t aLen, char aChar);
+    DwString &assign(const DwString &aStr);
+    DwString &assign(const DwString &aStr, size_t aPos, size_t aLen);
+    DwString &assign(const char *aBuf, size_t aLen);
+    DwString &assign(const char *aCstr);
+    DwString &assign(size_t aLen, char aChar);
     //. Assigns characters to this string.
     //. Returns {\tt *this}.
     //.
@@ -253,12 +254,12 @@ public:
     //.
     //. The fifth version assigns {\tt aChar} repeated {\tt aLen} times.
 
-    DwString& insert(size_t aPos1, const DwString& aStr);
-    DwString& insert(size_t aPos1, const DwString& aStr, size_t aPos2,
-        size_t aLen2);
-    DwString& insert(size_t aPos1, const char* aBuf, size_t aLen2);
-    DwString& insert(size_t aPos1, const char* aCstr);
-    DwString& insert(size_t aPos1, size_t aLen2, char aChar);
+    DwString &insert(size_t aPos1, const DwString &aStr);
+    DwString &insert(size_t aPos1, const DwString &aStr, size_t aPos2,
+                     size_t aLen2);
+    DwString &insert(size_t aPos1, const char *aBuf, size_t aLen2);
+    DwString &insert(size_t aPos1, const char *aCstr);
+    DwString &insert(size_t aPos1, size_t aLen2, char aChar);
     //. Inserts characters into this string beginning at position {\tt aPos1}.
     //. Returns {\tt *this}.
     //.
@@ -278,20 +279,20 @@ public:
     //.
     //. The fifth version inserts {\tt aChar} repeated {\tt aLen2} times.
 
-    DwString& erase(size_t aPos=0, size_t aLen=npos);
+    DwString &erase(size_t aPos = 0, size_t aLen = npos);
     //. Erases (removes) at most {\tt aLen} characters beginning at position
     //. {\tt aPos} from this string.
     //. The function will not erase more characters than what are
     //. available.
     //. Returns {\tt *this}.
 
-    DwString& replace(size_t aPos1, size_t aLen1, const DwString& aStr);
-    DwString& replace(size_t aPos1, size_t aLen1, const DwString& aStr,
-        size_t aPos2, size_t aLen2);
-    DwString& replace(size_t aPos1, size_t aLen1, const char* aBuf,
-        size_t aLen2);
-    DwString& replace(size_t aPos1, size_t aLen1, const char* aCstr);
-    DwString& replace(size_t aPos1, size_t aLen1, size_t aLen2, char aChar);
+    DwString &replace(size_t aPos1, size_t aLen1, const DwString &aStr);
+    DwString &replace(size_t aPos1, size_t aLen1, const DwString &aStr,
+                      size_t aPos2, size_t aLen2);
+    DwString &replace(size_t aPos1, size_t aLen1, const char *aBuf,
+                      size_t aLen2);
+    DwString &replace(size_t aPos1, size_t aLen1, const char *aCstr);
+    DwString &replace(size_t aPos1, size_t aLen1, size_t aLen2, char aChar);
     //. Removes {\tt aLen1} characters beginning at position {\tt aPos1}
     //. and inserts other characters.
     //. Returns {\tt *this}.
@@ -312,16 +313,16 @@ public:
     //.
     //. The fifth version inserts {\tt aChar} repeated {\tt aLen2} times.
 
-    size_t copy(char* aBuf, size_t aLen, size_t aPos=0) const;
+    size_t copy(char *aBuf, size_t aLen, size_t aPos = 0) const;
     //. Copies at most {\tt aLen} characters beginning at position {\tt aPos}
     //. from this string to the buffer pointed to by {\tt aBuf}.
     //. Returns the number of characters copied.
 
-    void swap(DwString& aStr);
+    void swap(DwString &aStr);
     //. Swaps the contents of this string and {\tt aStr}.
 
-    const char* c_str() const;
-    const char* data() const;
+    const char *c_str() const;
+    const char *data() const;
     //. These member functions permit access to the internal buffer used
     //. by the {\tt DwString} object.  {\tt c_str()} returns a NUL-terminated
     //. string suitable for use in C library functions.  {\tt data()}
@@ -338,10 +339,10 @@ public:
     //. should be considered invalid after any call to a non-const member
     //. function or another call to {\tt c_str()}.
 
-    size_t find(const DwString& aStr, size_t aPos=0) const;
-    size_t find(const char* aBuf, size_t aPos, size_t aLen) const;
-    size_t find(const char* aCstr, size_t aPos=0) const;
-    size_t find(char aChar, size_t aPos=0) const;
+    size_t find(const DwString &aStr, size_t aPos = 0) const;
+    size_t find(const char *aBuf, size_t aPos, size_t aLen) const;
+    size_t find(const char *aCstr, size_t aPos = 0) const;
+    size_t find(char aChar, size_t aPos = 0) const;
     //. Performs a forward search for a sequence of characters in the
     //. {\tt DwString} object.  The return value is the position of the
     //. sequence in the string if found, or {\tt DwString::npos} if not
@@ -360,10 +361,10 @@ public:
     //. The fourth version searches beginning at position {\tt aPos} for
     //. the character {\tt aChar}.
 
-    size_t rfind(const DwString& aStr, size_t aPos=npos) const;
-    size_t rfind(const char* aBuf, size_t aPos, size_t aLen) const;
-    size_t rfind(const char* aCstr, size_t aPos=npos) const;
-    size_t rfind(char aChar, size_t aPos=npos) const;
+    size_t rfind(const DwString &aStr, size_t aPos = npos) const;
+    size_t rfind(const char *aBuf, size_t aPos, size_t aLen) const;
+    size_t rfind(const char *aCstr, size_t aPos = npos) const;
+    size_t rfind(char aChar, size_t aPos = npos) const;
     //. Performs a reverse search for a sequence of characters in the
     //. {\tt DwString} object.  The return value is the position of the
     //. sequence in the string if found, or {\tt DwString::npos} if not
@@ -382,9 +383,9 @@ public:
     //. The fourth version searches beginning at position {\tt aPos} for
     //. the character {\tt aChar}.
 
-    size_t find_first_of(const DwString& aStr, size_t aPos=0) const;
-    size_t find_first_of(const char* aBuf, size_t aPos, size_t aLen) const;
-    size_t find_first_of(const char* aCstr, size_t aPos=0) const;
+    size_t find_first_of(const DwString &aStr, size_t aPos = 0) const;
+    size_t find_first_of(const char *aBuf, size_t aPos, size_t aLen) const;
+    size_t find_first_of(const char *aCstr, size_t aPos = 0) const;
     //. Performs a forward search beginning at position {\tt aPos} for
     //. the first occurrence of any character from a specified set of
     //. characters.  The return value is the position of the character
@@ -398,9 +399,9 @@ public:
     //. The third version searches for any character in the NUL-terminated
     //. string {\tt aCstr}.
 
-    size_t find_last_of(const DwString& aStr, size_t aPos=npos) const;
-    size_t find_last_of(const char* aBuf, size_t aPos, size_t aLen) const;
-    size_t find_last_of(const char* aCstr, size_t aPos=npos) const;
+    size_t find_last_of(const DwString &aStr, size_t aPos = npos) const;
+    size_t find_last_of(const char *aBuf, size_t aPos, size_t aLen) const;
+    size_t find_last_of(const char *aCstr, size_t aPos = npos) const;
     //. Performs a reverse search beginning at position {\tt aPos} for
     //. the first occurrence of any character from a specified set of
     //. characters.  If {\tt aPos} is greater than or equal to the number
@@ -416,9 +417,9 @@ public:
     //. The third version searches for any character in the NUL-terminated
     //. string {\tt aCstr}.
 
-    size_t find_first_not_of(const DwString& aStr, size_t aPos=0) const;
-    size_t find_first_not_of(const char* aBuf, size_t aPos, size_t aLen) const;
-    size_t find_first_not_of(const char* aCstr, size_t aPos=0) const;
+    size_t find_first_not_of(const DwString &aStr, size_t aPos = 0) const;
+    size_t find_first_not_of(const char *aBuf, size_t aPos, size_t aLen) const;
+    size_t find_first_not_of(const char *aCstr, size_t aPos = 0) const;
     //. Performs a forward search beginning at position {\tt aPos} for
     //. the first occurrence of any character {\it not} in a specified set
     //. of characters.  The return value is the position of the character
@@ -433,9 +434,9 @@ public:
     //. The third version searches for any character not in the NUL-terminated
     //. string {\tt aCstr}.
 
-    size_t find_last_not_of(const DwString& aStr, size_t aPos=npos) const;
-    size_t find_last_not_of(const char* aBuf, size_t aPos, size_t aLen) const;
-    size_t find_last_not_of(const char* aCstr, size_t aPos=npos) const;
+    size_t find_last_not_of(const DwString &aStr, size_t aPos = npos) const;
+    size_t find_last_not_of(const char *aBuf, size_t aPos, size_t aLen) const;
+    size_t find_last_not_of(const char *aCstr, size_t aPos = npos) const;
     //. Performs a reverse search beginning at position {\tt aPos} for
     //. the first occurrence of any character {\it not} in a specified set
     //. of characters.  If {\tt aPos} is greater than or equal to the number
@@ -452,19 +453,19 @@ public:
     //. The third version searches for any character not in the NUL-terminated
     //. string {\tt aCstr}.
 
-    DwString substr(size_t aPos=0, size_t aLen=npos) const;
+    DwString substr(size_t aPos = 0, size_t aLen = npos) const;
     //. Returns a string that contains at most {\tt aLen} characters from
     //. the {\tt DwString} object beginning at position {\tt aPos}.  The
     //. returned substring will not contain more characters than what are
     //. available in the superstring {\tt DwString} object.
 
-    int compare(const DwString& aStr) const;
-    int compare(size_t aPos1, size_t aLen1, const DwString& aStr) const;
-    int compare(size_t aPos1, size_t aLen1, const DwString& aStr,
-        size_t aPos2, size_t aLen2) const;
-    int compare(const char* aCstr) const;
-    int compare(size_t aPos1, size_t aLen1, const char* aBuf,
-        size_t aLen2=npos) const;
+    int compare(const DwString &aStr) const;
+    int compare(size_t aPos1, size_t aLen1, const DwString &aStr) const;
+    int compare(size_t aPos1, size_t aLen1, const DwString &aStr,
+                size_t aPos2, size_t aLen2) const;
+    int compare(const char *aCstr) const;
+    int compare(size_t aPos1, size_t aLen1, const char *aBuf,
+                size_t aLen2 = npos) const;
     //. These member functions compare a sequence of characters to this
     //. {\tt DwString} object, or a segment of this {\tt DwString} object.
     //. They return -1, 0, or 1, depending on whether this {\tt DwString}
@@ -489,7 +490,7 @@ public:
 
     // Non-ANSI member functions
 
-    virtual const char* ClassName() const;
+    virtual const char *ClassName() const;
     //. This virtual function returns the name of the class as a NUL-terminated
     //. char string.
 
@@ -506,7 +507,7 @@ public:
     //. {\tt DwString} object.  White space characters include ASCII HT,
     //. LF, and SPACE.
 
-    void WriteTo(std::ostream& aStrm) const;
+    void WriteTo(std::ostream &aStrm) const;
     //. Writes the contents of this {\tt DwString} object to the stream
     //. {\tt aStrm}.
 
@@ -514,7 +515,7 @@ public:
     //. This {\it advanced} member function returns the number of
     //. references to the internal buffer used by the {\tt DwString} object.
 
-    void TakeBuffer(char* aBuf, size_t aSize, size_t aStart, size_t aLen);
+    void TakeBuffer(char *aBuf, size_t aSize, size_t aStart, size_t aLen);
     //. This {\it advanced} member function sets the contents of the
     //. {\tt DwString} object to the {\tt aLen} characters starting at
     //. offset {\tt aStart} in the buffer {\tt aBuf}.  {\tt aSize} is
@@ -528,7 +529,7 @@ public:
     //. buffer should have been allocated using {\tt new}.
     //. See also: ReleaseBuffer().
 
-    void ReleaseBuffer(char** aBuf, size_t* aSize, size_t* aStart, size_t* aLen);
+    void ReleaseBuffer(char **aBuf, size_t *aSize, size_t *aStart, size_t *aLen);
     //. This {\it advanced} member function is the symmetric opposite of
     //. {\tt TakeBuffer()}, to the extent that such an opposite is possible.
     //. It provides a way to ``export'' the buffer used internally by the
@@ -543,7 +544,7 @@ public:
     //. It is recommended that you use this function only on rare occasions
     //. where you need to export efficiently a large buffer.
 
-    void CopyTo(DwString* aStr) const;
+    void CopyTo(DwString *aStr) const;
     //. This {\it advanced} member function copies this {\tt DwString}
     //. object to {\tt aStr}.  This member
     //. function is different from the assignment operator, because it
@@ -552,23 +553,23 @@ public:
 
 protected:
 
-    DwStringRep* mRep;
+    DwStringRep *mRep;
     size_t  mStart;
     size_t  mLength;
 
     void _copy();
-    void _replace(size_t aPos1, size_t aLen1, const char* aBuf, size_t aLen2);
+    void _replace(size_t aPos1, size_t aLen1, const char *aBuf, size_t aLen2);
     void _replace(size_t aPos1, size_t aLen1, size_t aLen2, char aChar);
 
 private:
     static const size_t kEmptyBufferSize;
     static char sEmptyBuffer[];
-    static DwStringRep* sEmptyRep;
-    friend void mem_free(char*);
+    static DwStringRep *sEmptyRep;
+    friend void mem_free(char *);
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm) const;
     //. Prints debugging information about the object to {\tt aStrm}.
     //.
     //. This member function is available only in the debug version of
@@ -613,16 +614,17 @@ inline int DwString::RefCount() const
     return mRep->mRefCount;
 }
 
-inline const char* DwString::c_str() const
+inline const char *DwString::c_str() const
 {
-    if (mRep->mRefCount > 1 && mRep != sEmptyRep) {
-        DwString* xthis = (DwString*) this;
+    if(mRep->mRefCount > 1 && mRep != sEmptyRep)
+    {
+        DwString *xthis = (DwString *) this;
         xthis->_copy();
     }
     return &mRep->mBuffer[mStart];
 }
 
-inline const char* DwString::data() const
+inline const char *DwString::data() const
 {
     return &mRep->mBuffer[mStart];
 }
@@ -630,16 +632,19 @@ inline const char* DwString::data() const
 // Returning const char& instead of char will allow us to use DwString::at()
 // in the following way:
 //    if (&s.at(1) == ' ') { /* ... */ }
-inline const char& DwString::at(size_t aPos) const
+inline const char &DwString::at(size_t aPos) const
 {
     assert(aPos <= mLength);
-    if (aPos < mLength) {
+    if(aPos < mLength)
+    {
         return data()[aPos];
     }
-    else if (aPos == mLength) {
+    else if(aPos == mLength)
+    {
         return sEmptyRep->mBuffer[0];
     }
-    else {
+    else
+    {
         // This "undefined behavior"
         // Normally, this will not occur.  The assert() macro will catch it,
         // or at some point we may throw an exception.
@@ -647,126 +652,128 @@ inline const char& DwString::at(size_t aPos) const
     }
 }
 
-inline char& DwString::at(size_t aPos)
+inline char &DwString::at(size_t aPos)
 {
     assert(aPos < mLength);
-    if (aPos < mLength) {
-        return (char&) c_str()[aPos];
+    if(aPos < mLength)
+    {
+        return (char &) c_str()[aPos];
     }
-    else {
+    else
+    {
         // This is "undefined behavior"
         assert(0);
-        return (char&) c_str()[0];
+        return (char &) c_str()[0];
     }
 }
 
 // Returning const char& instead of char will allow us to use operator[]
 // in the following way:
 //    if (&s[1] == ' ') { /* ... */ }
-inline const char& DwString::operator [] (size_t aPos) const
+inline const char &DwString::operator [](size_t aPos) const
 {
     return at(aPos);
 }
 
-inline char& DwString::operator [] (size_t aPos)
+inline char &DwString::operator [](size_t aPos)
 {
     return at(aPos);
 }
 
-inline DwString& DwString::operator = (const DwString& aStr)
+inline DwString &DwString::operator = (const DwString &aStr)
 {
     return assign(aStr);
 }
 
-inline DwString& DwString::operator = (const char* aCstr)
+inline DwString &DwString::operator = (const char *aCstr)
 {
     return assign(aCstr);
 }
 
-inline DwString& DwString::operator = (char aChar)
+inline DwString &DwString::operator = (char aChar)
 {
     return assign(1, aChar);
 }
 
-inline DwString& DwString::operator += (const DwString& aStr)
+inline DwString &DwString::operator += (const DwString &aStr)
 {
     return append(aStr);
 }
 
-inline DwString& DwString::operator += (const char* aCstr)
+inline DwString &DwString::operator += (const char *aCstr)
 {
     return append(aCstr);
 }
 
-inline DwString& DwString::operator += (char aChar)
+inline DwString &DwString::operator += (char aChar)
 {
     return append(1, aChar);
 }
 
 #endif // ! defined(DW_USE_ANSI_STRING)
 
-DW_EXPORT DwString operator + (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwString operator + (const char* aCstr, const DwString& aStr2);
-DW_EXPORT DwString operator + (char aChar, const DwString& aStr2);
-DW_EXPORT DwString operator + (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwString operator + (const DwString& aStr1, char aChar);
+DW_EXPORT DwString operator + (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwString operator + (const char *aCstr, const DwString &aStr2);
+DW_EXPORT DwString operator + (char aChar, const DwString &aStr2);
+DW_EXPORT DwString operator + (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwString operator + (const DwString &aStr1, char aChar);
 
-DW_EXPORT DwBool operator == (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwBool operator == (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwBool operator == (const char* aCstr, const DwString& aStr2);
+DW_EXPORT DwBool operator == (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwBool operator == (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwBool operator == (const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT DwBool operator != (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwBool operator != (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwBool operator != (const char* aCstr, const DwString& aStr2);
+DW_EXPORT DwBool operator != (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwBool operator != (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwBool operator != (const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT DwBool operator < (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwBool operator < (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwBool operator < (const char* aCstr, const DwString& aStr2);
+DW_EXPORT DwBool operator < (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwBool operator < (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwBool operator < (const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT DwBool operator > (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwBool operator > (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwBool operator > (const char* aCstr, const DwString& aStr2);
+DW_EXPORT DwBool operator > (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwBool operator > (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwBool operator > (const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT DwBool operator <= (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwBool operator <= (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwBool operator <= (const char* aCstr, const DwString& aStr2);
+DW_EXPORT DwBool operator <= (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwBool operator <= (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwBool operator <= (const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT DwBool operator >= (const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT DwBool operator >= (const DwString& aStr1, const char* aCstr);
-DW_EXPORT DwBool operator >= (const char* aCstr, const DwString& aStr2);
+DW_EXPORT DwBool operator >= (const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT DwBool operator >= (const DwString &aStr1, const char *aCstr);
+DW_EXPORT DwBool operator >= (const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT std::ostream& operator << (std::ostream& aOstrm, const DwString& aStr);
+DW_EXPORT std::ostream &operator << (std::ostream &aOstrm, const DwString &aStr);
 //. Writes the contents of {\tt aStr} to the stream {\tt aOstrm}.
 
-DW_EXPORT std::istream& getline (std::istream& aIstrm, DwString& aStr, char aDelim);
-DW_EXPORT std::istream& getline (std::istream& aIstrm, DwString& aStr);
+DW_EXPORT std::istream &getline(std::istream &aIstrm, DwString &aStr, char aDelim);
+DW_EXPORT std::istream &getline(std::istream &aIstrm, DwString &aStr);
 
-DW_EXPORT int DwStrcasecmp(const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT int DwStrcasecmp(const DwString& aStr1, const char* aCstr);
-DW_EXPORT int DwStrcasecmp(const char* aCstr, const DwString& aStr2);
+DW_EXPORT int DwStrcasecmp(const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT int DwStrcasecmp(const DwString &aStr1, const char *aCstr);
+DW_EXPORT int DwStrcasecmp(const char *aCstr, const DwString &aStr2);
 
-DW_EXPORT int DwStrncasecmp(const DwString& aStr1, const DwString& aStr2,
-    size_t aLen);
-DW_EXPORT int DwStrncasecmp(const DwString& aStr, const char* aCstr, size_t aLen);
-DW_EXPORT int DwStrncasecmp(const char* aCstr, const DwString& aStr, size_t aLen);
+DW_EXPORT int DwStrncasecmp(const DwString &aStr1, const DwString &aStr2,
+                            size_t aLen);
+DW_EXPORT int DwStrncasecmp(const DwString &aStr, const char *aCstr, size_t aLen);
+DW_EXPORT int DwStrncasecmp(const char *aCstr, const DwString &aStr, size_t aLen);
 
-DW_EXPORT int DwStrcmp(const DwString& aStr1, const DwString& aStr2);
-DW_EXPORT int DwStrcmp(const DwString& aStr, const char* aCstr);
-DW_EXPORT int DwStrcmp(const char* aCstr, const DwString& aStr);
+DW_EXPORT int DwStrcmp(const DwString &aStr1, const DwString &aStr2);
+DW_EXPORT int DwStrcmp(const DwString &aStr, const char *aCstr);
+DW_EXPORT int DwStrcmp(const char *aCstr, const DwString &aStr);
 
-DW_EXPORT int DwStrncmp(const DwString& aStr1, const DwString& aStr2, size_t aLen);
-DW_EXPORT int DwStrncmp(const DwString& aStr, const char* aCstr, size_t aLen);
-DW_EXPORT int DwStrncmp(const char* aCstr, const DwString& aStr, size_t aLen);
+DW_EXPORT int DwStrncmp(const DwString &aStr1, const DwString &aStr2, size_t aLen);
+DW_EXPORT int DwStrncmp(const DwString &aStr, const char *aCstr, size_t aLen);
+DW_EXPORT int DwStrncmp(const char *aCstr, const DwString &aStr, size_t aLen);
 
-DW_EXPORT void DwStrcpy(DwString& aStrDest, const DwString& aStrSrc);
-DW_EXPORT void DwStrcpy(DwString& aStrDest, const char* aCstrSrc);
-DW_EXPORT void DwStrcpy(char* aCstrDest, const DwString& aStrSrc);
+DW_EXPORT void DwStrcpy(DwString &aStrDest, const DwString &aStrSrc);
+DW_EXPORT void DwStrcpy(DwString &aStrDest, const char *aCstrSrc);
+DW_EXPORT void DwStrcpy(char *aCstrDest, const DwString &aStrSrc);
 
-DW_EXPORT void DwStrncpy(DwString& aStrDest, const DwString& aStrSrc, size_t aLen);
-DW_EXPORT void DwStrncpy(DwString& aStrDest, const char* aCstrSrc, size_t aLen);
-DW_EXPORT void DwStrncpy(char* aCstrDest, const DwString& aStrSrc, size_t aLen);
+DW_EXPORT void DwStrncpy(DwString &aStrDest, const DwString &aStrSrc, size_t aLen);
+DW_EXPORT void DwStrncpy(DwString &aStrDest, const char *aCstrSrc, size_t aLen);
+DW_EXPORT void DwStrncpy(char *aCstrDest, const DwString &aStrSrc, size_t aLen);
 
-DW_EXPORT char* DwStrdup(const DwString& aStr);
+DW_EXPORT char *DwStrdup(const DwString &aStr);
 
 #endif
 

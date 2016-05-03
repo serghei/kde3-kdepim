@@ -26,7 +26,7 @@
 using namespace QSync;
 
 Plugin::Plugin()
-  : mPlugin( 0 )
+    : mPlugin(0)
 {
 }
 
@@ -36,27 +36,27 @@ Plugin::~Plugin()
 
 bool Plugin::isValid() const
 {
-  return ( mPlugin != 0 );
+    return (mPlugin != 0);
 }
 
 QString Plugin::name() const
 {
-  Q_ASSERT( mPlugin );
+    Q_ASSERT(mPlugin);
 
-  return QString::fromLatin1( osync_plugin_get_name( mPlugin ) );
+    return QString::fromLatin1(osync_plugin_get_name(mPlugin));
 }
 
 QString Plugin::longName() const
 {
-  Q_ASSERT( mPlugin );
+    Q_ASSERT(mPlugin);
 
-  return QString::fromLatin1( osync_plugin_get_longname( mPlugin ) );
+    return QString::fromLatin1(osync_plugin_get_longname(mPlugin));
 }
 
 QString Plugin::description() const
 {
-  Q_ASSERT( mPlugin );
+    Q_ASSERT(mPlugin);
 
-  return QString::fromLatin1( osync_plugin_get_description( mPlugin ) );
+    return QString::fromLatin1(osync_plugin_get_description(mPlugin));
 }
 

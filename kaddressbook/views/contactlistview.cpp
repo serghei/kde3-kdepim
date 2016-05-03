@@ -47,334 +47,350 @@
 /////////////////////////////////
 // DynamicTip Methods
 
-DynamicTip::DynamicTip( ContactListView *parent)
-  : QToolTip( parent )
+DynamicTip::DynamicTip(ContactListView *parent)
+    : QToolTip(parent)
 {
 }
 
-void DynamicTip::maybeTip( const QPoint &pos )
+void DynamicTip::maybeTip(const QPoint &pos)
 {
-  if (!parentWidget()->inherits( "ContactListView" ))
-    return;
+    if(!parentWidget()->inherits("ContactListView"))
+        return;
 
-  ContactListView *plv = (ContactListView*)parentWidget();
-  if (!plv->tooltips())
-    return;
+    ContactListView *plv = (ContactListView *)parentWidget();
+    if(!plv->tooltips())
+        return;
 
-  QPoint posVp = plv->viewport()->pos();
+    QPoint posVp = plv->viewport()->pos();
 
-  QListViewItem *lvi = plv->itemAt( pos - posVp );
-  if (!lvi)
-    return;
+    QListViewItem *lvi = plv->itemAt(pos - posVp);
+    if(!lvi)
+        return;
 
-  ContactListViewItem *plvi = dynamic_cast< ContactListViewItem* >(lvi);
-  if (!plvi)
-    return;
+    ContactListViewItem *plvi = dynamic_cast< ContactListViewItem * >(lvi);
+    if(!plvi)
+        return;
 
-  QString s;
-  QRect r = plv->itemRect( lvi );
-  r.moveBy( posVp.x(), posVp.y() );
+    QString s;
+    QRect r = plv->itemRect(lvi);
+    r.moveBy(posVp.x(), posVp.y());
 
     //kdDebug(5720) << "Tip rec: " << r.x() << "," << r.y() << "," << r.width()
     //          << "," << r.height() << endl;
 
-  KABC::Addressee a = plvi->addressee();
-  if (a.isEmpty())
-    return;
+    KABC::Addressee a = plvi->addressee();
+    if(a.isEmpty())
+        return;
 
-  s += i18n("label: value", "%1: %2").arg(a.formattedNameLabel())
-                                     .arg(a.formattedName());
+    s += i18n("label: value", "%1: %2").arg(a.formattedNameLabel())
+         .arg(a.formattedName());
 
-  s += '\n';
-  s += i18n("label: value", "%1: %2").arg(a.organizationLabel())
-                                       .arg(a.organization());
+    s += '\n';
+    s += i18n("label: value", "%1: %2").arg(a.organizationLabel())
+         .arg(a.organization());
 
-  QString notes = a.note().stripWhiteSpace();
-  if ( !notes.isEmpty() ) {
-    notes += '\n';
-    s += '\n' + i18n("label: value", "%1: \n").arg(a.noteLabel());
-    QFontMetrics fm( font() );
+    QString notes = a.note().stripWhiteSpace();
+    if(!notes.isEmpty())
+    {
+        notes += '\n';
+        s += '\n' + i18n("label: value", "%1: \n").arg(a.noteLabel());
+        QFontMetrics fm(font());
 
-    // Begin word wrap code based on QMultiLineEdit code
-    int i = 0;
-    bool doBreak = false;
-    int linew = 0;
-    int lastSpace = -1;
-    int a = 0;
-    int lastw = 0;
+        // Begin word wrap code based on QMultiLineEdit code
+        int i = 0;
+        bool doBreak = false;
+        int linew = 0;
+        int lastSpace = -1;
+        int a = 0;
+        int lastw = 0;
 
-    while ( i < int(notes.length()) ) {
-      doBreak = false;
-      if ( notes[i] != '\n' )
-        linew += fm.width( notes[i] );
+        while(i < int(notes.length()))
+        {
+            doBreak = false;
+            if(notes[i] != '\n')
+                linew += fm.width(notes[i]);
 
-      if ( lastSpace >= a && notes[i] != '\n' )
-        if  (linew >= parentWidget()->width()) {
-          doBreak = true;
-          if ( lastSpace > a ) {
-            i = lastSpace;
-            linew = lastw;
-          }
-          else
-            i = QMAX( a, i-1 );
+            if(lastSpace >= a && notes[i] != '\n')
+                if(linew >= parentWidget()->width())
+                {
+                    doBreak = true;
+                    if(lastSpace > a)
+                    {
+                        i = lastSpace;
+                        linew = lastw;
+                    }
+                    else
+                        i = QMAX(a, i - 1);
+                }
+
+            if(notes[i] == '\n' || doBreak)
+            {
+                s += notes.mid(a, i - a + (doBreak ? 1 : 0)) + "\n";
+
+                a = i + 1;
+                lastSpace = a;
+                linew = 0;
+            }
+
+            if(notes[i].isSpace())
+            {
+                lastSpace = i;
+                lastw = linew;
+            }
+
+            if(lastSpace <= a)
+            {
+                lastw = linew;
+            }
+
+            ++i;
         }
-
-      if ( notes[i] == '\n' || doBreak ) {
-        s += notes.mid( a, i - a + (doBreak?1:0) ) +"\n";
-
-        a = i + 1;
-        lastSpace = a;
-        linew = 0;
-      }
-
-      if ( notes[i].isSpace() ) {
-        lastSpace = i;
-        lastw = linew;
-      }
-
-      if ( lastSpace <= a ) {
-        lastw = linew;
-      }
-
-      ++i;
     }
-  }
 
-  tip( r, s );
+    tip(r, s);
 }
 
 ///////////////////////////
 // ContactListViewItem Methods
 
 ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
-                                         ContactListView *parent,
-                                         KABC::AddressBook *doc,
-                                         const KABC::Field::List &fields,
-                                         KIMProxy *proxy )
-  : KListViewItem(parent), mAddressee(a), mFields( fields ),
-    parentListView( parent ), mDocument(doc), mIMProxy( proxy )
+        ContactListView *parent,
+        KABC::AddressBook *doc,
+        const KABC::Field::List &fields,
+        KIMProxy *proxy)
+    : KListViewItem(parent), mAddressee(a), mFields(fields),
+      parentListView(parent), mDocument(doc), mIMProxy(proxy)
 {
-  if ( mIMProxy )
-    mHasIM = mIMProxy->isPresent( mAddressee.uid() );
-  else
-    mHasIM = false;
-  refresh();
+    if(mIMProxy)
+        mHasIM = mIMProxy->isPresent(mAddressee.uid());
+    else
+        mHasIM = false;
+    refresh();
 }
 
 QString ContactListViewItem::key(int column, bool ascending) const
 {
-  // Preserve behaviour of QListViewItem::key(), otherwise we cause a crash if the column does not exist
-  if ( column >= parentListView->columns() )
-    return QString::null;
+    // Preserve behaviour of QListViewItem::key(), otherwise we cause a crash if the column does not exist
+    if(column >= parentListView->columns())
+        return QString::null;
 
 #if KDE_VERSION >= 319
-  Q_UNUSED( ascending )
-  if ( parentListView->showIM() ) {
-    // in this case, one column is reserved for IM presence
-    // so we have to process it differently
-    if ( column == parentListView->imColumn() ) {
-      // increment by one before converting to string so that -1 is not greater than 1
-      // create the sort key by taking the numeric status 0 low, 5 high, and subtracting it from 5
-      // so that the default ascending gives online before offline, etc.
-      QString key = QString::number( 5 - ( mIMProxy->presenceNumeric( mAddressee.uid() ) + 1 ) );
-      return key;
+    Q_UNUSED(ascending)
+    if(parentListView->showIM())
+    {
+        // in this case, one column is reserved for IM presence
+        // so we have to process it differently
+        if(column == parentListView->imColumn())
+        {
+            // increment by one before converting to string so that -1 is not greater than 1
+            // create the sort key by taking the numeric status 0 low, 5 high, and subtracting it from 5
+            // so that the default ascending gives online before offline, etc.
+            QString key = QString::number(5 - (mIMProxy->presenceNumeric(mAddressee.uid()) + 1));
+            return key;
+        }
+        else
+        {
+            return mFields[ column ]->sortKey(mAddressee);
+        }
     }
-    else {
-      return mFields[ column ]->sortKey( mAddressee );
-    }
-  }
-  else
-    return mFields[ column ]->sortKey( mAddressee );
+    else
+        return mFields[ column ]->sortKey(mAddressee);
 #else
-  return QListViewItem::key( column, ascending ).lower();
+    return QListViewItem::key(column, ascending).lower();
 #endif
 }
 
-void ContactListViewItem::paintCell(QPainter * p,
-                                    const QColorGroup & cg,
+void ContactListViewItem::paintCell(QPainter *p,
+                                    const QColorGroup &cg,
                                     int column,
                                     int width,
                                     int align)
 {
-  KListViewItem::paintCell(p, cg, column, width, align);
+    KListViewItem::paintCell(p, cg, column, width, align);
 
-  if ( !p )
-    return;
+    if(!p)
+        return;
 
-  if (parentListView->singleLine()) {
-    p->setPen( parentListView->alternateColor() );
-    p->drawLine( 0, height() - 1, width, height() - 1 );
-  }
+    if(parentListView->singleLine())
+    {
+        p->setPen(parentListView->alternateColor());
+        p->drawLine(0, height() - 1, width, height() - 1);
+    }
 }
 
 
 ContactListView *ContactListViewItem::parent()
 {
-  return parentListView;
+    return parentListView;
 }
 
 
 void ContactListViewItem::refresh()
 {
-  // Update our addressee, since it may have changed else were
-  mAddressee = mDocument->findByUid(mAddressee.uid());
-  if (mAddressee.isEmpty())
-    return;
+    // Update our addressee, since it may have changed else were
+    mAddressee = mDocument->findByUid(mAddressee.uid());
+    if(mAddressee.isEmpty())
+        return;
 
-  int i = 0;
-  // don't show unknown presence, it's not interesting
-  if ( mHasIM ) {
-    if ( mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
-      setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
-    else
-      setPixmap( parentListView->imColumn(), QPixmap() );
-  }
+    int i = 0;
+    // don't show unknown presence, it's not interesting
+    if(mHasIM)
+    {
+        if(mIMProxy->presenceNumeric(mAddressee.uid()) > 0)
+            setPixmap(parentListView->imColumn(), mIMProxy->presenceIcon(mAddressee.uid()));
+        else
+            setPixmap(parentListView->imColumn(), QPixmap());
+    }
 
-  KABC::Field::List::ConstIterator it;
-  for ( it = mFields.begin(); it != mFields.end(); ++it ) {
-    if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
-      QDate date = mAddressee.birthday().date();
-      if ( date.isValid() )
-        setText( i++, KGlobal::locale()->formatDate( date, true ) );
-      else
-        setText( i++, "" );
-    } else
-      setText( i++, (*it)->value( mAddressee ) );
-  }
+    KABC::Field::List::ConstIterator it;
+    for(it = mFields.begin(); it != mFields.end(); ++it)
+    {
+        if((*it)->label() == KABC::Addressee::birthdayLabel())
+        {
+            QDate date = mAddressee.birthday().date();
+            if(date.isValid())
+                setText(i++, KGlobal::locale()->formatDate(date, true));
+            else
+                setText(i++, "");
+        }
+        else
+            setText(i++, (*it)->value(mAddressee));
+    }
 }
 
-void ContactListViewItem::setHasIM( bool hasIM )
+void ContactListViewItem::setHasIM(bool hasIM)
 {
-  mHasIM = hasIM;
+    mHasIM = hasIM;
 }
 
 ///////////////////////////////
 // ContactListView
 
 ContactListView::ContactListView(KAddressBookTableView *view,
-                                 KABC::AddressBook* /* doc */,
+                                 KABC::AddressBook * /* doc */,
                                  QWidget *parent,
-                                 const char *name )
-  : KListView( parent, name ),
-    pabWidget( view ),
-    oldColumn( 0 )
+                                 const char *name)
+    : KListView(parent, name),
+      pabWidget(view),
+      oldColumn(0)
 {
-  mABackground = true;
-  mSingleLine = false;
-  mToolTips = true;
-  mShowIM = true;
-  mAlternateColor = KGlobalSettings::alternateBackgroundColor();
+    mABackground = true;
+    mSingleLine = false;
+    mToolTips = true;
+    mShowIM = true;
+    mAlternateColor = KGlobalSettings::alternateBackgroundColor();
 
-  setAlternateBackgroundEnabled(mABackground);
-  setAcceptDrops( true );
-  viewport()->setAcceptDrops( true );
-  setAllColumnsShowFocus( true );
-  setShowSortIndicator(true);
-  setSelectionModeExt( KListView::Extended );
-  setDropVisualizer(false);
+    setAlternateBackgroundEnabled(mABackground);
+    setAcceptDrops(true);
+    viewport()->setAcceptDrops(true);
+    setAllColumnsShowFocus(true);
+    setShowSortIndicator(true);
+    setSelectionModeExt(KListView::Extended);
+    setDropVisualizer(false);
 
-  connect(this, SIGNAL(dropped(QDropEvent*)),
-          this, SLOT(itemDropped(QDropEvent*)));
+    connect(this, SIGNAL(dropped(QDropEvent *)),
+            this, SLOT(itemDropped(QDropEvent *)));
 
-  new DynamicTip( this );
+    new DynamicTip(this);
 }
 
-void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
+void ContactListView::paintEmptyArea(QPainter *p, const QRect &rect)
 {
-  QBrush b = palette().brush(QPalette::Active, QColorGroup::Base);
+    QBrush b = palette().brush(QPalette::Active, QColorGroup::Base);
 
-  // Get the brush, which will have the background pixmap if there is one.
-  if (b.pixmap())
-  {
-    p->drawTiledPixmap( rect.left(), rect.top(), rect.width(), rect.height(),
-      *(b.pixmap()),
-      rect.left() + contentsX(),
-      rect.top() + contentsY() );
-  }
+    // Get the brush, which will have the background pixmap if there is one.
+    if(b.pixmap())
+    {
+        p->drawTiledPixmap(rect.left(), rect.top(), rect.width(), rect.height(),
+                           *(b.pixmap()),
+                           rect.left() + contentsX(),
+                           rect.top() + contentsY());
+    }
 
-  else
-  {
-    // Do a normal paint
-    KListView::paintEmptyArea(p, rect);
-  }
+    else
+    {
+        // Do a normal paint
+        KListView::paintEmptyArea(p, rect);
+    }
 }
 
-void ContactListView::contentsMousePressEvent(QMouseEvent* e)
+void ContactListView::contentsMousePressEvent(QMouseEvent *e)
 {
-  presspos = e->pos();
-  KListView::contentsMousePressEvent(e);
+    presspos = e->pos();
+    KListView::contentsMousePressEvent(e);
 }
 
 
 // To initiate a drag operation
-void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
+void ContactListView::contentsMouseMoveEvent(QMouseEvent *e)
 {
-  if ((e->state() & LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
-    emit startAddresseeDrag();
-  }
-  else
-    KListView::contentsMouseMoveEvent( e );
+    if((e->state() & LeftButton) && (e->pos() - presspos).manhattanLength() > 4)
+    {
+        emit startAddresseeDrag();
+    }
+    else
+        KListView::contentsMouseMoveEvent(e);
 }
 
 bool ContactListView::acceptDrag(QDropEvent *e) const
 {
-  return QTextDrag::canDecode(e);
+    return QTextDrag::canDecode(e);
 }
 
 void ContactListView::itemDropped(QDropEvent *e)
 {
-  contentsDropEvent(e);
+    contentsDropEvent(e);
 }
 
-void ContactListView::contentsDropEvent( QDropEvent *e )
+void ContactListView::contentsDropEvent(QDropEvent *e)
 {
-  emit addresseeDropped(e);
+    emit addresseeDropped(e);
 }
 
 void ContactListView::setAlternateBackgroundEnabled(bool enabled)
 {
-  mABackground = enabled;
+    mABackground = enabled;
 
-  if (mABackground)
-  {
-    setAlternateBackground(mAlternateColor);
-  }
-  else
-  {
-    setAlternateBackground(QColor());
-  }
+    if(mABackground)
+    {
+        setAlternateBackground(mAlternateColor);
+    }
+    else
+    {
+        setAlternateBackground(QColor());
+    }
 }
 
 void ContactListView::setBackgroundPixmap(const QString &filename)
 {
-  if (filename.isEmpty())
-  {
-    unsetPalette();
-  }
-  else
-  {
-    setPaletteBackgroundPixmap(QPixmap(filename));
-  }
+    if(filename.isEmpty())
+    {
+        unsetPalette();
+    }
+    else
+    {
+        setPaletteBackgroundPixmap(QPixmap(filename));
+    }
 }
 
-void ContactListView::setShowIM( bool enabled )
+void ContactListView::setShowIM(bool enabled)
 {
-  mShowIM = enabled;
+    mShowIM = enabled;
 }
 
 bool ContactListView::showIM()
 {
-  return mShowIM;
+    return mShowIM;
 }
 
-void ContactListView::setIMColumn( int column )
+void ContactListView::setIMColumn(int column)
 {
-  mInstantMsgColumn = column;
+    mInstantMsgColumn = column;
 }
 
 int ContactListView::imColumn()
 {
-  return mInstantMsgColumn;
+    return mInstantMsgColumn;
 }
 
 #include "contactlistview.moc"

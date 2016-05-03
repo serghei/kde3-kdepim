@@ -38,25 +38,25 @@
 			"/dev/ircomm0 /dev/ircomm1 /dev/irda /dev/rfcomm0 /dev/rfcomm1"
 #else
 #define AVAILABLE_PORTS	"/dev/ttyS0"
-#endif 
+#endif
 
 #define BAUDRATES	"57600 38400 19200 14400 9600 4800 2400"
 
 
-GnokiiConfig::GnokiiConfig( QWidget* parent, const char* name, bool modal, WFlags fl )
-	: GnokiiConfigUI(parent, name, modal, fl)
+GnokiiConfig::GnokiiConfig(QWidget *parent, const char *name, bool modal, WFlags fl)
+    : GnokiiConfigUI(parent, name, modal, fl)
 {
-   QStringList list = QStringList::split(" ", MODELS);
-   cb_Model->insertStringList(list);
+    QStringList list = QStringList::split(" ", MODELS);
+    cb_Model->insertStringList(list);
 
-   list = QStringList::split(" ", CONNECTIONS);
-   cb_Connection->insertStringList(list);
+    list = QStringList::split(" ", CONNECTIONS);
+    cb_Connection->insertStringList(list);
 
-   list = QStringList::split(" ", AVAILABLE_PORTS);
-   cb_Port->insertStringList(list);
+    list = QStringList::split(" ", AVAILABLE_PORTS);
+    cb_Port->insertStringList(list);
 
-   list = QStringList::split(" ", BAUDRATES);
-   cb_Baud->insertStringList(list);
+    list = QStringList::split(" ", BAUDRATES);
+    cb_Baud->insertStringList(list);
 }
 
 GnokiiConfig::~GnokiiConfig()
@@ -65,34 +65,34 @@ GnokiiConfig::~GnokiiConfig()
 
 void GnokiiConfig::setValues(const QString &model, const QString &connection, const QString &port, const QString &baud)
 {
-   cb_Model->setCurrentText(model);
-   cb_Connection->setCurrentText(connection);
-   cb_Port->setCurrentText(port);
-   cb_Baud->setCurrentText(baud);
+    cb_Model->setCurrentText(model);
+    cb_Connection->setCurrentText(connection);
+    cb_Port->setCurrentText(port);
+    cb_Baud->setCurrentText(baud);
 
-   slotCheckValues();
+    slotCheckValues();
 
-   connect( cb_Connection, SIGNAL(textChanged(const QString &)), this, SLOT(slotCheckValues(const QString &)) );
+    connect(cb_Connection, SIGNAL(textChanged(const QString &)), this, SLOT(slotCheckValues(const QString &)));
 }
 
 void GnokiiConfig::getValues(QString &model, QString &connection, QString &port, QString &baud) const
 {
-   model = cb_Model->currentText();
-   connection = cb_Connection->currentText();
-   port = cb_Port->currentText();
-   baud = cb_Baud->currentText();
+    model = cb_Model->currentText();
+    connection = cb_Connection->currentText();
+    port = cb_Port->currentText();
+    baud = cb_Baud->currentText();
 }
 
 void GnokiiConfig::slotCheckValues(const QString &txt)
 {
-   bool disable_serial = (QString("infrared irda").find(txt,0,false)>=0);
-   textLabelBaudRate->setDisabled(disable_serial);
-   cb_Baud->setDisabled(disable_serial);
+    bool disable_serial = (QString("infrared irda").find(txt, 0, false) >= 0);
+    textLabelBaudRate->setDisabled(disable_serial);
+    cb_Baud->setDisabled(disable_serial);
 }
 
 void GnokiiConfig::slotCheckValues()
 {
-   slotCheckValues(cb_Connection->currentText());
+    slotCheckValues(cb_Connection->currentText());
 }
 
 #include "gnokiiconfig.moc"

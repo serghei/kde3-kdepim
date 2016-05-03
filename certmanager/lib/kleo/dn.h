@@ -41,101 +41,112 @@ class QStringList;
 class QWidget;
 
 namespace Kleo {
-  class DNAttributeOrderConfigWidget;
+class DNAttributeOrderConfigWidget;
 }
 
 namespace Kleo {
 
-  /**
-     @short DN Attribute mapper
-  */
-  class KDE_EXPORT DNAttributeMapper {
+/**
+   @short DN Attribute mapper
+*/
+class KDE_EXPORT DNAttributeMapper {
     DNAttributeMapper();
     ~DNAttributeMapper();
-  public:
-    static const DNAttributeMapper * instance();
+public:
+    static const DNAttributeMapper *instance();
 
-    QString name2label( const QString & s ) const;
+    QString name2label(const QString &s) const;
     QStringList names() const;
 
-    const QStringList & attributeOrder() const;
+    const QStringList &attributeOrder() const;
 
-    void setAttributeOrder( const QStringList & order );
+    void setAttributeOrder(const QStringList &order);
 
-    DNAttributeOrderConfigWidget * configWidget( QWidget * parent=0, const char * name=0 ) const;
+    DNAttributeOrderConfigWidget *configWidget(QWidget *parent = 0, const char *name = 0) const;
 
-  private:
+private:
     class Private;
-    Private * d;
-    static DNAttributeMapper * mSelf;
-  };
+    Private *d;
+    static DNAttributeMapper *mSelf;
+};
 
-  /**
-     @short DN parser and reorderer
-  */
-  class KDE_EXPORT DN  {
-  public:
+/**
+   @short DN parser and reorderer
+*/
+class KDE_EXPORT DN  {
+public:
     class Attribute;
     typedef QValueVector<Attribute> AttributeList;
     typedef AttributeList::const_iterator const_iterator;
 
     DN();
-    DN( const QString & dn );
-    DN( const char * utf8DN );
-    DN( const DN & other );
+    DN(const QString &dn);
+    DN(const char *utf8DN);
+    DN(const DN &other);
     ~DN();
 
-    const DN & operator=( const DN & other );
+    const DN &operator=(const DN &other);
 
     /** @return the value in rfc-2253-escaped form */
-    static QString escape( const QString & value );
+    static QString escape(const QString &value);
 
     /** @return the DN in a reordered form, according to the settings in
-	the [DN] group of the application's config file */
+    the [DN] group of the application's config file */
     QString prettyDN() const;
     /** @return the DN in the original form */
     QString dn() const;
 
-    QString operator[]( const QString & attr ) const;
+    QString operator[](const QString &attr) const;
 
-    void append( const Attribute & attr );
+    void append(const Attribute &attr);
 
     const_iterator begin() const;
     const_iterator end() const;
 
-  private:
+private:
     void detach();
-  private:
+private:
     class Private;
-    Private * d;
-  };
+    Private *d;
+};
 
-  class KDE_EXPORT DN::Attribute {
-  public:
+class KDE_EXPORT DN::Attribute {
+public:
     typedef DN::AttributeList List;
 
-    Attribute( const QString & name=QString::null, const QString & value=QString::null )
-      : mName( name.upper() ), mValue( value ) {}
-    Attribute( const Attribute & other )
-      : mName( other.name() ), mValue( other.value() ) {}
+    Attribute(const QString &name = QString::null, const QString &value = QString::null)
+        : mName(name.upper()), mValue(value) {}
+    Attribute(const Attribute &other)
+        : mName(other.name()), mValue(other.value()) {}
 
-    const Attribute & operator=( const Attribute & other ) {
-      if ( this != &other ) {
-	mName = other.name();
-	mValue = other.value();
-      }
-      return *this;
+    const Attribute &operator=(const Attribute &other)
+    {
+        if(this != &other)
+        {
+            mName = other.name();
+            mValue = other.value();
+        }
+        return *this;
     }
 
-    const QString & name() const { return mName; }
-    const QString & value() const { return mValue; }
+    const QString &name() const
+    {
+        return mName;
+    }
+    const QString &value() const
+    {
+        return mValue;
+    }
 
-    void setValue( const QString & value ) { mValue = value; }
-    
-  private:
+    void setValue(const QString &value)
+    {
+        mValue = value;
+    }
+
+private:
     QString mName;
     QString mValue;
-  };
+};
 
 }
 

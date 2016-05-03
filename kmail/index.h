@@ -50,169 +50,176 @@ class KMSearchRule;
 class KMSearchPattern;
 
 class KMMsgIndex : public QObject {
-	Q_OBJECT
-	public:
-		explicit KMMsgIndex( QObject* parent );
-		~KMMsgIndex();
+    Q_OBJECT
+public:
+    explicit KMMsgIndex(QObject *parent);
+    ~KMMsgIndex();
 
-	public:
+public:
 
-		/**
-		 * Starts a query.
-		 * Results will be returned assyncronously by signals.
-		 *
-		 * @return false if the query cannot be handled
-		 */
-		bool startQuery( KMSearch* );
-		/**
-		 * Stops a query. nop if the query isn't running anymore.
-		 *
-		 * @return true if the query was found
-		 */
-		bool stopQuery( KMSearch* );
+    /**
+     * Starts a query.
+     * Results will be returned assyncronously by signals.
+     *
+     * @return false if the query cannot be handled
+     */
+    bool startQuery(KMSearch *);
+    /**
+     * Stops a query. nop if the query isn't running anymore.
+     *
+     * @return true if the query was found
+     */
+    bool stopQuery(KMSearch *);
 
-		/**
-		 * Just return all the uids where the pattern exists
-		 */
-		std::vector<Q_UINT32> simpleSearch( QString, bool* ) const;
+    /**
+     * Just return all the uids where the pattern exists
+     */
+    std::vector<Q_UINT32> simpleSearch(QString, bool *) const;
 
-		/**
-		 * Returns whether the folder is indexable. Only local and dimap
-		 * folders are currently indexable.
-		 *
-		 * Note that a folder might be indexable and not indexed if the user has
-		 * disabled it. @see isIndexed
-		 */
-		bool isIndexable( KMFolder* folder ) const;
+    /**
+     * Returns whether the folder is indexable. Only local and dimap
+     * folders are currently indexable.
+     *
+     * Note that a folder might be indexable and not indexed if the user has
+     * disabled it. @see isIndexed
+     */
+    bool isIndexable(KMFolder *folder) const;
 
-		/**
-		 * Returns whether the folder has indexing enabled.
-		 *
-		 * This returns true immediatelly after indexing has been enabled
-		 * even though the folder is probably still being indexed in the background.
-		 */
-		bool isIndexed( KMFolder* folder ) const;
+    /**
+     * Returns whether the folder has indexing enabled.
+     *
+     * This returns true immediatelly after indexing has been enabled
+     * even though the folder is probably still being indexed in the background.
+     */
+    bool isIndexed(KMFolder *folder) const;
 
-		/**
-		 * Returns whether the index is enabled
-		 */
-		bool isEnabled() const { return mState != s_disabled; }
-	public slots:
-		/**
-		 * Either enable or disable indexing.
-		 *
-		 * Calling setEnabled( true ) will start building the whole index,
-		 * which is an expensive operation (time and disk-space).
-		 *
-		 * Calling setEnabled( false ) will remove the index immediatelly,
-		 * freeing up disk-space.
-		 */
-		void setEnabled( bool );
+    /**
+     * Returns whether the index is enabled
+     */
+    bool isEnabled() const
+    {
+        return mState != s_disabled;
+    }
+public slots:
+    /**
+     * Either enable or disable indexing.
+     *
+     * Calling setEnabled( true ) will start building the whole index,
+     * which is an expensive operation (time and disk-space).
+     *
+     * Calling setEnabled( false ) will remove the index immediatelly,
+     * freeing up disk-space.
+     */
+    void setEnabled(bool);
 
-		/**
-		 * Change the indexing override for a given folder
-		 *
-		 * If called with true, will start indexing all the messages in the folder
-		 * If called with false will remove all the messages in the folder
-		 */
-		void setIndexingEnabled( KMFolder*, bool );
+    /**
+     * Change the indexing override for a given folder
+     *
+     * If called with true, will start indexing all the messages in the folder
+     * If called with false will remove all the messages in the folder
+     */
+    void setIndexingEnabled(KMFolder *, bool);
 
-	private slots:
-		/**
-		 * Removes the index.
-		 *
-		 * If the index is enabled, then creation will start on the next time
-		 * KMMsgIndex is constructed.
-		 */
-		void clear();
-		void create();
-		void maintenance();
+private slots:
+    /**
+     * Removes the index.
+     *
+     * If the index is enabled, then creation will start on the next time
+     * KMMsgIndex is constructed.
+     */
+    void clear();
+    void create();
+    void maintenance();
 
-		void act();
-		void removeSearch( QObject* );
+    void act();
+    void removeSearch(QObject *);
 
-		void continueCreation();
+    void continueCreation();
 
-		void slotAddMessage( Q_UINT32 message );
-		void slotRemoveMessage( Q_UINT32 message );
-	private:
-		static QString defaultPath();
+    void slotAddMessage(Q_UINT32 message);
+    void slotRemoveMessage(Q_UINT32 message);
+private:
+    static QString defaultPath();
 
-		bool canHandleQuery( const KMSearchPattern* ) const;
-		int addMessage( Q_UINT32 );
-		void removeMessage( Q_UINT32 );
+    bool canHandleQuery(const KMSearchPattern *) const;
+    int addMessage(Q_UINT32);
+    void removeMessage(Q_UINT32);
 
-		void scheduleAction();
-		bool creating() const;
+    void scheduleAction();
+    bool creating() const;
 
-	public:
-		/**
-		 * @internal
-		 * DO NOT USE THIS CLASS
-		 *
-		 * It is conceptually a private class.
-		 * Just needs to be public because of moc limitations
-		 */
-		class Search;
-	private:
+public:
+    /**
+     * @internal
+     * DO NOT USE THIS CLASS
+     *
+     * It is conceptually a private class.
+     * Just needs to be public because of moc limitations
+     */
+    class Search;
+private:
 
-		std::vector<Q_UINT32> mPendingMsgs;
-		std::vector<KMFolder*> mPendingFolders;
-		std::vector<Q_UINT32> mAddedMsgs;
-		std::vector<Q_UINT32> mRemovedMsgs;
-		std::vector<Q_UINT32> mExisting;
+    std::vector<Q_UINT32> mPendingMsgs;
+    std::vector<KMFolder *> mPendingFolders;
+    std::vector<Q_UINT32> mAddedMsgs;
+    std::vector<Q_UINT32> mRemovedMsgs;
+    std::vector<Q_UINT32> mExisting;
 
-		enum e_state {
-			s_idle, // doing nothing, index waiting
-			s_willcreate, // just constructed, create() scheduled (mIndex == 0)
-			s_creating, // creating the index from the messages
-			s_processing, // has messages to process
-			s_error, // an error occurred
-			s_disabled // disabled: the index is not working
-		} mState;
+    enum e_state
+    {
+        s_idle, // doing nothing, index waiting
+        s_willcreate, // just constructed, create() scheduled (mIndex == 0)
+        s_creating, // creating the index from the messages
+        s_processing, // has messages to process
+        s_error, // an error occurred
+        s_disabled // disabled: the index is not working
+    } mState;
 
-		unsigned mMaintenanceCount;
+    unsigned mMaintenanceCount;
 
 #ifdef HAVE_INDEXLIB
-		/**
-		 * The lock below should be moved down into libindex itself
-		 * where things can be handled with a lot more granularity
-		 */
-		indexlib::detail::lockfile mLockFile;
-		//enum e_syncState { ss_none, ss_started, ss_synced } mSyncState;
-		//QTimer* mSyncTimer;
+    /**
+     * The lock below should be moved down into libindex itself
+     * where things can be handled with a lot more granularity
+     */
+    indexlib::detail::lockfile mLockFile;
+    //enum e_syncState { ss_none, ss_started, ss_synced } mSyncState;
+    //QTimer* mSyncTimer;
 
-		indexlib::index* mIndex;
+    indexlib::index *mIndex;
 #endif
-		std::set<KMFolder*> mOpenedFolders;
-		std::vector<Search*> mSearches;
-		QCString mIndexPath;
-		QTimer* mTimer;
-		bool mSlowDown;
+    std::set<KMFolder *> mOpenedFolders;
+    std::vector<Search *> mSearches;
+    QCString mIndexPath;
+    QTimer *mTimer;
+    bool mSlowDown;
 };
 
 
 class KMMsgIndex::Search : public QObject {
-	Q_OBJECT
-	public:
-		explicit Search( KMSearch* s );
-		~Search();
-		KMSearch* search() const { return mSearch; }
-	signals:
-		void found( Q_UINT32 );
-		void finished( bool );
-	private slots:
-		void act();
-	private:
-		KMSearch* mSearch;
-		QTimer* mTimer;
-		/**
-		 * mResidual is the part of the pattern which is not
-		 * handled by the index
-		 */
-		KMSearchPattern* mResidual;
-		std::vector<Q_UINT32> mValues;
-		enum { s_none = 0, s_starting, s_emitting, s_emitstopped, s_done } mState;
+    Q_OBJECT
+public:
+    explicit Search(KMSearch *s);
+    ~Search();
+    KMSearch *search() const
+    {
+        return mSearch;
+    }
+signals:
+    void found(Q_UINT32);
+    void finished(bool);
+private slots:
+    void act();
+private:
+    KMSearch *mSearch;
+    QTimer *mTimer;
+    /**
+     * mResidual is the part of the pattern which is not
+     * handled by the index
+     */
+    KMSearchPattern *mResidual;
+    std::vector<Q_UINT32> mValues;
+    enum { s_none = 0, s_starting, s_emitting, s_emitstopped, s_done } mState;
 };
 
 #endif /* LPC_INDEX_H1110724080_INCLUDE_GUARD_ */

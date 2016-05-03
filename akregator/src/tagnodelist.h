@@ -34,60 +34,59 @@ template <class T> class QValueList;
 
 namespace Akregator {
 
-   class FeedList;
-   class Folder;
-   class TagFolder;
-   class TagNode;
-   class TreeNode;
-   class Tag;
-   class TagSet;
-   
-   
-   class KDE_EXPORT TagNodeList : public NodeList
-   {
-       Q_OBJECT
-       public:
+class FeedList;
+class Folder;
+class TagFolder;
+class TagNode;
+class TreeNode;
+class Tag;
+class TagSet;
 
 
-       TagNodeList(FeedList* feedList, TagSet* tagSet);
-       virtual ~TagNodeList();
-       
-       FeedList* feedList() const;
-       bool insert(TagNode* tagNode);
-       bool remove(TagNode* tagNode);
-       bool containsTagId(const QString& tagId);
-       QValueList<TagNode*> toList() const;
-       
-       TagNode* findByTagID(const QString& tagID);
+class KDE_EXPORT TagNodeList : public NodeList {
+    Q_OBJECT
+public:
 
-       virtual bool readFromXML(const QDomDocument& doc);
-       virtual QDomDocument toXML() const;
 
-       virtual TagFolder* rootNode() const;
-       
-       public slots:
+    TagNodeList(FeedList *feedList, TagSet *tagSet);
+    virtual ~TagNodeList();
 
-       void slotTagAdded(const Tag& tag);
-       void slotTagUpdated(const Tag& tag);
-       void slotTagRemoved(const Tag& tag);
-       
-       signals:
+    FeedList *feedList() const;
+    bool insert(TagNode *tagNode);
+    bool remove(TagNode *tagNode);
+    bool containsTagId(const QString &tagId);
+    QValueList<TagNode *> toList() const;
 
-       void signalDestroyed(TagNodeList*);
-       void signalTagNodeAdded(TagNode* node);
-       void signalTagNodeRemoved(TagNode* node);
+    TagNode *findByTagID(const QString &tagID);
 
-       protected slots:
+    virtual bool readFromXML(const QDomDocument &doc);
+    virtual QDomDocument toXML() const;
 
-       virtual void slotNodeDestroyed(TreeNode* node);
-       virtual void slotNodeAdded(TreeNode* node);
-       virtual void slotNodeRemoved(Folder* parent, TreeNode* node);
+    virtual TagFolder *rootNode() const;
 
-       private:
-       
-       class TagNodeListPrivate;
-       TagNodeListPrivate* d;
-   };
+public slots:
+
+    void slotTagAdded(const Tag &tag);
+    void slotTagUpdated(const Tag &tag);
+    void slotTagRemoved(const Tag &tag);
+
+signals:
+
+    void signalDestroyed(TagNodeList *);
+    void signalTagNodeAdded(TagNode *node);
+    void signalTagNodeRemoved(TagNode *node);
+
+protected slots:
+
+    virtual void slotNodeDestroyed(TreeNode *node);
+    virtual void slotNodeAdded(TreeNode *node);
+    virtual void slotNodeRemoved(Folder *parent, TreeNode *node);
+
+private:
+
+    class TagNodeListPrivate;
+    TagNodeListPrivate *d;
+};
 
 } // namespace Akregator
 

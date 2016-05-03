@@ -46,113 +46,125 @@ static const char version[] = "0.5.1";
 
 static KCmdLineOptions options[] =
 {
-   { "terminal", I18N_NOOP("Show terminal window"), 0 },
-   { "mobilegui", I18N_NOOP("Show mobile GUI"), 0 },
-   { "nogui", I18N_NOOP("Do not show GUI"), 0 },
-   { "+[profile]", I18N_NOOP("Filename of command profile file"), 0 },
-   KCmdLineLastOption // End of options.
+    { "terminal", I18N_NOOP("Show terminal window"), 0 },
+    { "mobilegui", I18N_NOOP("Show mobile GUI"), 0 },
+    { "nogui", I18N_NOOP("Do not show GUI"), 0 },
+    { "+[profile]", I18N_NOOP("Filename of command profile file"), 0 },
+    KCmdLineLastOption // End of options.
 };
 
 void initModem(Modem *modem)
 {
-  kdDebug() << "Opening serial Device: "
-            << KandyPrefs::serialDevice()
-            << endl;
+    kdDebug() << "Opening serial Device: "
+              << KandyPrefs::serialDevice()
+              << endl;
 
-  modem->setSpeed( KandyPrefs::baudRate().toUInt() );
-  modem->setData(8);
-  modem->setParity('N');
-  modem->setStop(1);
+    modem->setSpeed(KandyPrefs::baudRate().toUInt());
+    modem->setData(8);
+    modem->setParity('N');
+    modem->setStop(1);
 
 #if 0
-  if (!modem->dsrOn()) {
-    KMessageBox::sorry(this, i18n("Modem is off."), i18n("Modem Error"));
-    modem->close();
-    return;
-  }
-  if (!modem->ctsOn()) {
-    KMessageBox::sorry(this, i18n("Modem is busy."), i18n("Modem Error"));
-    modem->close();
-    return;
-  }
+    if(!modem->dsrOn())
+    {
+        KMessageBox::sorry(this, i18n("Modem is off."), i18n("Modem Error"));
+        modem->close();
+        return;
+    }
+    if(!modem->ctsOn())
+    {
+        KMessageBox::sorry(this, i18n("Modem is busy."), i18n("Modem Error"));
+        modem->close();
+        return;
+    }
 #endif
 
 #if 0
-  modem->writeLine("");
-  usleep(250000);
-  modem->flush();
-  modem->writeLine("ATZ");
+    modem->writeLine("");
+    usleep(250000);
+    modem->flush();
+    modem->writeLine("ATZ");
 #endif
 }
 
 int main(int argc, char **argv)
 {
-  KAboutData about("kandy", I18N_NOOP("Kandy"), version, description,
-                   KAboutData::License_GPL, "(C) 2001 Cornelius Schumacher",0,
-                   "http://kandy.kde.org/");
-  about.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
-  about.addAuthor( "Heiko Falk", 0, "hf2@ls12.cs.uni-dortmund.de" );
-  KCmdLineArgs::init(argc,argv,&about);
-  KCmdLineArgs::addCmdLineOptions(options);
+    KAboutData about("kandy", I18N_NOOP("Kandy"), version, description,
+                     KAboutData::License_GPL, "(C) 2001 Cornelius Schumacher", 0,
+                     "http://kandy.kde.org/");
+    about.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
+    about.addAuthor("Heiko Falk", 0, "hf2@ls12.cs.uni-dortmund.de");
+    KCmdLineArgs::init(argc, argv, &about);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KApplication app;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  // register ourselves as a dcop client
-  app.dcopClient()->registerAs(app.name(),false);
+    // register ourselves as a dcop client
+    app.dcopClient()->registerAs(app.name(), false);
 
-  Modem *modem = new Modem(KandyPrefs::self());
-  CommandScheduler *scheduler = new CommandScheduler(modem);
+    Modem *modem = new Modem(KandyPrefs::self());
+    CommandScheduler *scheduler = new CommandScheduler(modem);
 
-  // see if we are starting with session management
-  if (app.isRestored()) {
-    // TODO: do session management
-//      RESTORE(Kandy)
-  } else
-  {
-    // no session.. just start up normally
-    Kandy *k = new Kandy(scheduler);
+    // see if we are starting with session management
+    if(app.isRestored())
+    {
+        // TODO: do session management
+        //      RESTORE(Kandy)
+    }
+    else
+    {
+        // no session.. just start up normally
+        Kandy *k = new Kandy(scheduler);
 
-    MobileMain *m = new MobileMain(scheduler, KandyPrefs::self());
-    
-    if (!args->isSet("gui")) {
-    } else {
-      if (KandyPrefs::startupTerminalWin() ||
-          args->isSet("terminal")) {
-        k->show();
-      }
-      if (KandyPrefs::startupMobileWin() ||
-          args->isSet("mobilegui")) {
-        m->show();
-      }
+        MobileMain *m = new MobileMain(scheduler, KandyPrefs::self());
+
+        if(!args->isSet("gui"))
+        {
+        }
+        else
+        {
+            if(KandyPrefs::startupTerminalWin() ||
+                    args->isSet("terminal"))
+            {
+                k->show();
+            }
+            if(KandyPrefs::startupMobileWin() ||
+                    args->isSet("mobilegui"))
+            {
+                m->show();
+            }
+        }
+
+        if(args->count() == 1)
+        {
+            k->load(QFile::decodeName(args->arg(0)));
+        }
+        else if(args->count() > 1)
+        {
+            args->usage();
+        }
+
+        args->clear();
+
+        QObject::connect(k, SIGNAL(showMobileWin()), m, SLOT(show()));
+        QObject::connect(m, SIGNAL(showTerminalWin()), k, SLOT(show()));
+        QObject::connect(m, SIGNAL(showPreferencesWin()),
+                         k, SLOT(optionsPreferences()));
+
+        QObject::connect(m->view(), SIGNAL(connectModem()), k,
+                         SLOT(modemConnect()));
+        QObject::connect(m->view(), SIGNAL(disconnectModem()), k,
+                         SLOT(modemDisconnect()));
+
+        QObject::connect(modem, SIGNAL(errorMessage(const QString &)),
+                         k, SLOT(showErrorMessage(const QString &)));
+
+        initModem(modem);
+
+        if(KandyPrefs::startupModem())
+            m->view()->toggleConnection();
     }
 
-    if (args->count() == 1) {
-      k->load(QFile::decodeName(args->arg(0)));
-    } else if (args->count() > 1) {
-      args->usage();
-    }
-
-    args->clear();
-
-    QObject::connect(k,SIGNAL(showMobileWin()),m,SLOT(show()));
-    QObject::connect(m,SIGNAL(showTerminalWin()),k,SLOT(show()));
-    QObject::connect(m,SIGNAL(showPreferencesWin()),
-                     k,SLOT(optionsPreferences()));
-
-    QObject::connect( m->view(), SIGNAL( connectModem() ), k,
-                      SLOT( modemConnect() ) );
-    QObject::connect( m->view(), SIGNAL( disconnectModem() ), k,
-                      SLOT( modemDisconnect() ) );
-
-    QObject::connect( modem, SIGNAL( errorMessage( const QString & ) ),
-                      k, SLOT( showErrorMessage( const QString & ) ) );
-
-    initModem( modem );
-
-    if ( KandyPrefs::startupModem() )
-      m->view()->toggleConnection();
-  }
-
-  return app.exec();
+    return app.exec();
 }

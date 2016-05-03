@@ -33,28 +33,28 @@
 some improvements by Mikolaj Machowski
 */
 
-void KOIncidenceToolTip::add ( QWidget * widget, Incidence *incidence,
-        QToolTipGroup * group, const QString & longText )
+void KOIncidenceToolTip::add(QWidget *widget, Incidence *incidence,
+                             QToolTipGroup *group, const QString &longText)
 {
-  if ( !widget || !incidence ) return;
-  QToolTip::add(widget, IncidenceFormatter::toolTipString( incidence ), group, longText);
+    if(!widget || !incidence) return;
+    QToolTip::add(widget, IncidenceFormatter::toolTipString(incidence), group, longText);
 }
 
-void KOIncidenceToolTip::add(KOAgendaItem * item, Incidence * incidence, QToolTipGroup * group)
+void KOIncidenceToolTip::add(KOAgendaItem *item, Incidence *incidence, QToolTipGroup *group)
 {
-  Q_UNUSED( incidence );
-  Q_UNUSED( group );
-  QToolTip::remove( item );
-  new KOIncidenceToolTip( item );
+    Q_UNUSED(incidence);
+    Q_UNUSED(group);
+    QToolTip::remove(item);
+    new KOIncidenceToolTip(item);
 }
 
-void KOIncidenceToolTip::maybeTip(const QPoint & pos)
+void KOIncidenceToolTip::maybeTip(const QPoint &pos)
 {
-  Q_UNUSED( pos );
-  KOAgendaItem *item = dynamic_cast<KOAgendaItem*>( parentWidget() );
-  if ( !item )
-    return;
-  if ( mText.isEmpty() )
-    mText = IncidenceFormatter::toolTipString( item->incidence() );
-  tip( QRect( QPoint( 0, 0 ), item->size() ), mText );
+    Q_UNUSED(pos);
+    KOAgendaItem *item = dynamic_cast<KOAgendaItem *>(parentWidget());
+    if(!item)
+        return;
+    if(mText.isEmpty())
+        mText = IncidenceFormatter::toolTipString(item->incidence());
+    tip(QRect(QPoint(0, 0), item->size()), mText);
 }

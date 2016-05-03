@@ -20,7 +20,7 @@
 
 #include "conflictdialog.h"
 
-ConflictDialog::ConflictDialog( QSync::SyncMapping &mapping, QWidget *parent )
-  : QDialog( parent ), mMapping( mapping )
+ConflictDialog::ConflictDialog(QSync::SyncMapping &mapping, QWidget *parent)
+    : QDialog(parent), mMapping(mapping)
 {
 }

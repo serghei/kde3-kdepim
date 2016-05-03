@@ -26,7 +26,7 @@
 using namespace QSync;
 
 Conversion::Conversion()
-  : mEnvironment( 0 )
+    : mEnvironment(0)
 {
 }
 
@@ -36,23 +36,24 @@ Conversion::~Conversion()
 
 bool Conversion::isValid() const
 {
-  return mEnvironment != 0;
+    return mEnvironment != 0;
 }
 
 QStringList Conversion::objectTypes() const
 {
-  Q_ASSERT( mEnvironment );
+    Q_ASSERT(mEnvironment);
 
-  OSyncFormatEnv *formatEnv = osync_conv_env_new( mEnvironment );
-  Q_ASSERT( formatEnv );
+    OSyncFormatEnv *formatEnv = osync_conv_env_new(mEnvironment);
+    Q_ASSERT(formatEnv);
 
-  QStringList types;	
-  for ( int i = 0; i < osync_conv_num_objtypes( formatEnv ); i++ ) {
-    OSyncObjType *type = osync_conv_nth_objtype( formatEnv, i );
-    types.append( QString::fromUtf8( osync_objtype_get_name( type ) ) );
-  }
+    QStringList types;
+    for(int i = 0; i < osync_conv_num_objtypes(formatEnv); i++)
+    {
+        OSyncObjType *type = osync_conv_nth_objtype(formatEnv, i);
+        types.append(QString::fromUtf8(osync_objtype_get_name(type)));
+    }
 
-  osync_conv_env_free( formatEnv );
+    osync_conv_env_free(formatEnv);
 
-  return types;
+    return types;
 }

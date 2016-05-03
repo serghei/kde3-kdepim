@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
- * USA. 
+ * USA.
  */
 
 #include <config.h>
@@ -53,23 +53,23 @@
 	               + strlen ((ptr)->sun_path))
 #endif
 
- 
+
 static int
-do_finish (assuan_context_t ctx)
+do_finish(assuan_context_t ctx)
 {
-  if (ctx->inbound.fd != -1)
+    if(ctx->inbound.fd != -1)
     {
-      _assuan_close (ctx->inbound.fd);
+        _assuan_close(ctx->inbound.fd);
     }
-  ctx->inbound.fd = -1;
-  ctx->outbound.fd = -1;
-  return 0;
+    ctx->inbound.fd = -1;
+    ctx->outbound.fd = -1;
+    return 0;
 }
 
 static void
-do_deinit (assuan_context_t ctx)
+do_deinit(assuan_context_t ctx)
 {
-  do_finish (ctx);
+    do_finish(ctx);
 }
 
 
@@ -77,10 +77,10 @@ do_deinit (assuan_context_t ctx)
    Assuan context in CTX.  SERVER_PID is currently not used but may
    become handy in the future.  */
 assuan_error_t
-assuan_socket_connect (assuan_context_t *r_ctx,
-                       const char *name, pid_t server_pid)
+assuan_socket_connect(assuan_context_t *r_ctx,
+                      const char *name, pid_t server_pid)
 {
-  return assuan_socket_connect_ext (r_ctx, name, server_pid, 0);
+    return assuan_socket_connect_ext(r_ctx, name, server_pid, 0);
 }
 
 
@@ -89,96 +89,97 @@ assuan_socket_connect (assuan_context_t *r_ctx,
    become handy in the future.  With flags set to 1 sendmsg and
    recvmesg are used. */
 assuan_error_t
-assuan_socket_connect_ext (assuan_context_t *r_ctx,
-                           const char *name, pid_t server_pid,
-                           unsigned int flags)
+assuan_socket_connect_ext(assuan_context_t *r_ctx,
+                          const char *name, pid_t server_pid,
+                          unsigned int flags)
 {
-  static struct assuan_io io = { _assuan_simple_read,
-				 _assuan_simple_write };
+    static struct assuan_io io = { _assuan_simple_read,
+               _assuan_simple_write
+    };
 
-  assuan_error_t err;
-  assuan_context_t ctx;
-  int fd;
-  struct sockaddr_un srvr_addr;
-  size_t len;
-  const char *s;
+    assuan_error_t err;
+    assuan_context_t ctx;
+    int fd;
+    struct sockaddr_un srvr_addr;
+    size_t len;
+    const char *s;
 
-  if (!r_ctx || !name)
-    return _assuan_error (ASSUAN_Invalid_Value);
-  *r_ctx = NULL;
+    if(!r_ctx || !name)
+        return _assuan_error(ASSUAN_Invalid_Value);
+    *r_ctx = NULL;
 
-  /* We require that the name starts with a slash, so that we
-     eventually can reuse this function for other socket types.  To
-     make things easier we allow an optional dirver prefix.  */
-  s = name;
-  if (*s && s[1] == ':')
-    s += 2;
-  if (*s != DIRSEP_C && *s != '/')
-    return _assuan_error (ASSUAN_Invalid_Value);
+    /* We require that the name starts with a slash, so that we
+       eventually can reuse this function for other socket types.  To
+       make things easier we allow an optional dirver prefix.  */
+    s = name;
+    if(*s && s[1] == ':')
+        s += 2;
+    if(*s != DIRSEP_C && *s != '/')
+        return _assuan_error(ASSUAN_Invalid_Value);
 
-  if (strlen (name)+1 >= sizeof srvr_addr.sun_path)
-    return _assuan_error (ASSUAN_Invalid_Value);
+    if(strlen(name) + 1 >= sizeof srvr_addr.sun_path)
+        return _assuan_error(ASSUAN_Invalid_Value);
 
-  err = _assuan_new_context (&ctx); 
-  if (err)
-      return err;
-  ctx->deinit_handler = ((flags&1))? _assuan_uds_deinit :  do_deinit;
-  ctx->finish_handler = do_finish;
+    err = _assuan_new_context(&ctx);
+    if(err)
+        return err;
+    ctx->deinit_handler = ((flags & 1)) ? _assuan_uds_deinit :  do_deinit;
+    ctx->finish_handler = do_finish;
 
-  fd = _assuan_sock_new (PF_LOCAL, SOCK_STREAM, 0);
-  if (fd == -1)
+    fd = _assuan_sock_new(PF_LOCAL, SOCK_STREAM, 0);
+    if(fd == -1)
     {
-      _assuan_log_printf ("can't create socket: %s\n", strerror (errno));
-      _assuan_release_context (ctx);
-      return _assuan_error (ASSUAN_General_Error);
+        _assuan_log_printf("can't create socket: %s\n", strerror(errno));
+        _assuan_release_context(ctx);
+        return _assuan_error(ASSUAN_General_Error);
     }
 
-  memset (&srvr_addr, 0, sizeof srvr_addr);
-  srvr_addr.sun_family = AF_LOCAL;
-  strncpy (srvr_addr.sun_path, name, sizeof (srvr_addr.sun_path) - 1);
-  srvr_addr.sun_path[sizeof (srvr_addr.sun_path) - 1] = 0;
-  len = SUN_LEN (&srvr_addr);
+    memset(&srvr_addr, 0, sizeof srvr_addr);
+    srvr_addr.sun_family = AF_LOCAL;
+    strncpy(srvr_addr.sun_path, name, sizeof(srvr_addr.sun_path) - 1);
+    srvr_addr.sun_path[sizeof(srvr_addr.sun_path) - 1] = 0;
+    len = SUN_LEN(&srvr_addr);
 
 
-  if (_assuan_sock_connect (fd, (struct sockaddr *) &srvr_addr, len) == -1)
+    if(_assuan_sock_connect(fd, (struct sockaddr *) &srvr_addr, len) == -1)
     {
-      _assuan_log_printf ("can't connect to `%s': %s\n",
-                          name, strerror (errno));
-      _assuan_release_context (ctx);
-      _assuan_close (fd);
-      return _assuan_error (ASSUAN_Connect_Failed);
+        _assuan_log_printf("can't connect to `%s': %s\n",
+                           name, strerror(errno));
+        _assuan_release_context(ctx);
+        _assuan_close(fd);
+        return _assuan_error(ASSUAN_Connect_Failed);
     }
 
-  ctx->inbound.fd = fd;
-  ctx->outbound.fd = fd;
-  ctx->io = &io;
-  if ((flags&1))
-    _assuan_init_uds_io (ctx);
- 
-  /* initial handshake */
-  {
-    int okay, off;
+    ctx->inbound.fd = fd;
+    ctx->outbound.fd = fd;
+    ctx->io = &io;
+    if((flags & 1))
+        _assuan_init_uds_io(ctx);
 
-    err = _assuan_read_from_server (ctx, &okay, &off);
-    if (err)
-      _assuan_log_printf ("can't connect to server: %s\n",
-                          assuan_strerror (err));
-    else if (okay != 1)
-      {
-        /*LOG ("can't connect to server: `");*/
-	_assuan_log_sanitized_string (ctx->inbound.line);
-	fprintf (assuan_get_assuan_log_stream (), "'\n");
-	err = _assuan_error (ASSUAN_Connect_Failed);
-      }
-  }
-
-  if (err)
+    /* initial handshake */
     {
-      assuan_disconnect (ctx); 
+        int okay, off;
+
+        err = _assuan_read_from_server(ctx, &okay, &off);
+        if(err)
+            _assuan_log_printf("can't connect to server: %s\n",
+                               assuan_strerror(err));
+        else if(okay != 1)
+        {
+            /*LOG ("can't connect to server: `");*/
+            _assuan_log_sanitized_string(ctx->inbound.line);
+            fprintf(assuan_get_assuan_log_stream(), "'\n");
+            err = _assuan_error(ASSUAN_Connect_Failed);
+        }
     }
-  else
-    *r_ctx = ctx;
-  return 0;
+
+    if(err)
+    {
+        assuan_disconnect(ctx);
+    }
+    else
+        *r_ctx = ctx;
+    return 0;
 }
 
 

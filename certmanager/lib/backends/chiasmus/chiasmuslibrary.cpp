@@ -50,66 +50,77 @@
 #include <cstdlib>
 #include <cstring>
 
-Kleo::ChiasmusLibrary * Kleo::ChiasmusLibrary::self = 0;
+Kleo::ChiasmusLibrary *Kleo::ChiasmusLibrary::self = 0;
 
-Kleo::ChiasmusLibrary::ChiasmusLibrary() : mXiaLibrary( 0 ) {
-  self = this;
+Kleo::ChiasmusLibrary::ChiasmusLibrary() : mXiaLibrary(0)
+{
+    self = this;
 }
 
-Kleo::ChiasmusLibrary::~ChiasmusLibrary() {
-  //delete mXiaLibrary; // hmm, how to get rid of it, then?
+Kleo::ChiasmusLibrary::~ChiasmusLibrary()
+{
+    //delete mXiaLibrary; // hmm, how to get rid of it, then?
 }
 
-Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reason ) const {
-  assert( ChiasmusBackend::instance() );
-  assert( ChiasmusBackend::instance()->config() );
-  const CryptoConfigEntry * lib = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "lib" );
-  assert( lib );
-  const QString libfile = lib->urlValue().path();
-  if ( !mXiaLibrary )
-    mXiaLibrary = KLibLoader::self()->library( QFile::encodeName( libfile ) );
-  if ( !mXiaLibrary ) {
-    if ( reason )
-      *reason = i18n( "Failed to load %1: %2" )
-                .arg( libfile,KLibLoader::self()->lastErrorMessage() );
-    kdDebug(5150) << "ChiasmusLibrary: loading \"" << libfile
-                  << "\" failed: " << KLibLoader::self()->lastErrorMessage() << endl;
-    return 0;
-  }
-  if ( !mXiaLibrary->hasSymbol( "Chiasmus" ) ) {
-    if ( reason )
-      *reason = i18n( "Failed to load %1: %2" )
-                .arg( libfile, i18n( "Library does not contain the symbol \"Chiasmus\"." ) );
-    kdDebug(5150) << "ChiasmusLibrary: loading \"" << libfile
-                  << "\" failed: " << "Library does not contain the symbol \"Chiasmus\"." << endl;
-    return 0;
-  }
-  void * symbol = mXiaLibrary->symbol( "Chiasmus" );
-  assert( symbol );
-  return ( main_func )symbol;
+Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus(QString *reason) const
+{
+    assert(ChiasmusBackend::instance());
+    assert(ChiasmusBackend::instance()->config());
+    const CryptoConfigEntry *lib = ChiasmusBackend::instance()->config()->entry("Chiasmus", "General", "lib");
+    assert(lib);
+    const QString libfile = lib->urlValue().path();
+    if(!mXiaLibrary)
+        mXiaLibrary = KLibLoader::self()->library(QFile::encodeName(libfile));
+    if(!mXiaLibrary)
+    {
+        if(reason)
+            *reason = i18n("Failed to load %1: %2")
+                      .arg(libfile, KLibLoader::self()->lastErrorMessage());
+        kdDebug(5150) << "ChiasmusLibrary: loading \"" << libfile
+                      << "\" failed: " << KLibLoader::self()->lastErrorMessage() << endl;
+        return 0;
+    }
+    if(!mXiaLibrary->hasSymbol("Chiasmus"))
+    {
+        if(reason)
+            *reason = i18n("Failed to load %1: %2")
+                      .arg(libfile, i18n("Library does not contain the symbol \"Chiasmus\"."));
+        kdDebug(5150) << "ChiasmusLibrary: loading \"" << libfile
+                      << "\" failed: " << "Library does not contain the symbol \"Chiasmus\"." << endl;
+        return 0;
+    }
+    void *symbol = mXiaLibrary->symbol("Chiasmus");
+    assert(symbol);
+    return (main_func)symbol;
 }
 
 namespace {
-  class ArgvProvider {
-    char ** mArgv;
+class ArgvProvider {
+    char **mArgv;
     int mArgc;
-  public:
-    ArgvProvider( const QValueVector<QCString> & args ) {
-      mArgv = new char * [args.size()];
-      for ( unsigned int i = 0 ; i < args.size() ; ++i )
-        mArgv[i] = strdup( args[i].data() );
+public:
+    ArgvProvider(const QValueVector<QCString> &args)
+    {
+        mArgv = new char *[args.size()];
+        for(unsigned int i = 0 ; i < args.size() ; ++i)
+            mArgv[i] = strdup(args[i].data());
     }
-    ~ArgvProvider() {
-      std::for_each( mArgv, mArgv + mArgc, std::free );
-      delete[] mArgv;
+    ~ArgvProvider()
+    {
+        std::for_each(mArgv, mArgv + mArgc, std::free);
+        delete[] mArgv;
     }
-    char ** argv() const { return mArgv; }
-  };
+    char **argv() const
+    {
+        return mArgv;
+    }
+};
 }
 
-int Kleo::ChiasmusLibrary::perform( const QValueVector<QCString> & args ) const {
-  if ( main_func func = chiasmus() )
-    return func( args.size(), ArgvProvider( args ).argv() );
-  else
-    return -1;
+int Kleo::ChiasmusLibrary::perform(const QValueVector<QCString> &args) const
+{
+    if(main_func func = chiasmus())
+        return func(args.size(), ArgvProvider(args).argv());
+    else
+        return -1;
 }

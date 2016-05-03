@@ -40,9 +40,8 @@ namespace KPIM {
  *
  * @author David Faure <faure@kde.org>
  */
-class KDE_EXPORT DistributionList : public KABC::Addressee
-{
-  public:
+class KDE_EXPORT DistributionList : public KABC::Addressee {
+public:
     /**
      * @short Distribution List Entry
      *
@@ -52,14 +51,14 @@ class KDE_EXPORT DistributionList : public KABC::Addressee
      */
     struct Entry
     {
-      typedef QValueList<Entry> List;
+        typedef QValueList<Entry> List;
 
-      Entry() {}
-      Entry( const Addressee &_addressee, const QString &_email ) :
-          addressee( _addressee ), email( _email ) {}
+        Entry() {}
+        Entry(const Addressee &_addressee, const QString &_email) :
+            addressee(_addressee), email(_email) {}
 
-      Addressee addressee;
-      QString email;
+        Addressee addressee;
+        QString email;
     };
 
     typedef QValueList<DistributionList> List;
@@ -72,7 +71,7 @@ class KDE_EXPORT DistributionList : public KABC::Addressee
      * Create a distribution list from an addressee object
      * (this is a kind of down-cast)
      */
-    DistributionList( const KABC::Addressee& addr );
+    DistributionList(const KABC::Addressee &addr);
 
     /**
      * Destructor.
@@ -80,27 +79,30 @@ class KDE_EXPORT DistributionList : public KABC::Addressee
     ~DistributionList() {}
 
     /// HACK: reimplemented from Addressee, but it's NOT virtual there
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /// HACK: reimplemented from Addressee, but it's NOT virtual there
-    QString name() const { return formattedName(); }
+    QString name() const
+    {
+        return formattedName();
+    }
 
     /**
       Insert an entry into this distribution list. If the entry already exists
       nothing happens.
     */
-    void insertEntry( const Addressee &, const QString &email=QString::null );
+    void insertEntry(const Addressee &, const QString &email = QString::null);
 
     /**
       Remove an entry from this distribution list. If the entry doesn't exist
       nothing happens.
     */
-    void removeEntry( const Addressee &, const QString &email=QString::null );
+    void removeEntry(const Addressee &, const QString &email = QString::null);
 
     /// Overload, used by resources to avoid looking up the addressee
-    void insertEntry( const QString& uid, const QString& email=QString::null );
+    void insertEntry(const QString &uid, const QString &email = QString::null);
     /// Overload, used by resources to avoid looking up the addressee
-    void removeEntry( const QString& uid, const QString& email=QString::null );
+    void removeEntry(const QString &uid, const QString &email = QString::null);
 
 
     /**
@@ -108,29 +110,29 @@ class KDE_EXPORT DistributionList : public KABC::Addressee
       These addresses can be directly used by e.g. a mail client.
       @param book necessary to look up entries
     */
-    QStringList emails( KABC::AddressBook* book ) const;
+    QStringList emails(KABC::AddressBook *book) const;
 
     /**
       Return list of entries belonging to this distribution list. This function
       is mainly useful for a distribution list editor.
       @param book necessary to look up entries
     */
-    Entry::List entries( KABC::AddressBook* book ) const;
+    Entry::List entries(KABC::AddressBook *book) const;
 
     // KDE4: should be a method of Addressee
-    static bool isDistributionList( const KABC::Addressee& addr );
+    static bool isDistributionList(const KABC::Addressee &addr);
 
     // KDE4: should be a method of AddressBook
-    static DistributionList findByName( KABC::AddressBook* book,
-                                        const QString& name,
-                                        bool caseSensitive = true );
+    static DistributionList findByName(KABC::AddressBook *book,
+                                       const QString &name,
+                                       bool caseSensitive = true);
     // KDE4: should be a method of AddressBook
     // A bit slow (but no more than findByName).
     // From KAddressbook, use Core::distributionLists() instead.
-    static QValueList<DistributionList> allDistributionLists( KABC::AddressBook* book );
+    static QValueList<DistributionList> allDistributionLists(KABC::AddressBook *book);
 
 
-  private:
+private:
     // can't have any data here, use Addressee's methods instead
 };
 

@@ -35,17 +35,16 @@
 class AbbrowserWidget;
 class KAboutData;
 
-class AbbrowserWidgetSetup : public ConduitConfigBase
-{
+class AbbrowserWidgetSetup : public ConduitConfigBase {
 public:
-	AbbrowserWidgetSetup(QWidget *,const char *);
-	virtual ~AbbrowserWidgetSetup();
-	virtual void load();
-	virtual void commit();
-	static ConduitConfigBase *create(QWidget *,const char *);
+    AbbrowserWidgetSetup(QWidget *, const char *);
+    virtual ~AbbrowserWidgetSetup();
+    virtual void load();
+    virtual void commit();
+    static ConduitConfigBase *create(QWidget *, const char *);
 private:
-	AbbrowserWidget *fConfigWidget;
-	KAboutData *fAbout;
+    AbbrowserWidget *fConfigWidget;
+    KAboutData *fAbout;
 } ;
 
 #endif

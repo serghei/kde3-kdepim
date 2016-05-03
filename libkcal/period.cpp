@@ -28,65 +28,65 @@ using namespace KCal;
 
 Period::Period()
 {
-  mHasDuration = false;
+    mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const QDateTime &end )
+Period::Period(const QDateTime &start, const QDateTime &end)
 {
-  mStart = start;
-  mEnd = end;
-  mHasDuration = false;
+    mStart = start;
+    mEnd = end;
+    mHasDuration = false;
 }
 
-Period::Period( const QDateTime &start, const Duration &duration )
+Period::Period(const QDateTime &start, const Duration &duration)
 {
-  mStart = start;
-  mEnd = duration.end( start );
-  mHasDuration = true;
+    mStart = start;
+    mEnd = duration.end(start);
+    mHasDuration = true;
 }
 
 
-bool Period::operator<( const Period& other )
+bool Period::operator<(const Period &other)
 {
-  return start() < other.start();
+    return start() < other.start();
 }
 
 QDateTime Period::start() const
 {
-  return mStart;
+    return mStart;
 }
 
 QDateTime Period::end()const
 {
-  return mEnd;
+    return mEnd;
 }
 
 Duration Period::duration()
 {
-  return Duration( mStart, mEnd );
+    return Duration(mStart, mEnd);
 }
 
 bool Period::hasDuration()const
 {
-  return mHasDuration;
+    return mHasDuration;
 }
 
 QString KCal::Period::summary() const
 {
-  return mSummary;
+    return mSummary;
 }
 
-void KCal::Period::setSummary(const QString & summary)
+void KCal::Period::setSummary(const QString &summary)
 {
-  mSummary = summary;
+    mSummary = summary;
 }
 
 QString KCal::Period::location() const
 {
-  return mLocation;
+    return mLocation;
 }
 
-void KCal::Period::setLocation(const QString & location)
+void KCal::Period::setLocation(const QString &location)
 {
-  mLocation = location;
+    mLocation = location;
 }

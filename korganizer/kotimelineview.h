@@ -31,52 +31,54 @@
 class KDGanttViewItem;
 
 namespace KCal {
-  class ResourceCalendar;
+class ResourceCalendar;
 }
 
 namespace KOrg {
-  class TimelineItem;
+class TimelineItem;
 }
 
 /**
   This class provides a view ....
 */
-class KOTimelineView : public KOEventView
-{
+class KOTimelineView : public KOEventView {
     Q_OBJECT
-  public:
+public:
     KOTimelineView(Calendar *calendar, QWidget *parent = 0,
-                    const char *name = 0);
+                   const char *name = 0);
     ~KOTimelineView();
 
     virtual KCal::ListBase<KCal::Incidence> selectedIncidences();
     virtual KCal::DateList selectedDates();
     virtual int currentDateCount();
-    virtual void showDates(const QDate&, const QDate&);
-    virtual void showIncidences(const KCal::ListBase<KCal::Incidence>&);
+    virtual void showDates(const QDate &, const QDate &);
+    virtual void showIncidences(const KCal::ListBase<KCal::Incidence> &);
     virtual void updateView();
-    virtual void changeIncidenceDisplay(KCal::Incidence* incidence, int mode);
-    virtual int maxDatesHint() { return 0; }
+    virtual void changeIncidenceDisplay(KCal::Incidence *incidence, int mode);
+    virtual int maxDatesHint()
+    {
+        return 0;
+    }
 
     virtual bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay);
 
-  private:
-    KOrg::TimelineItem* calendarItemForIncidence( KCal::Incidence* incidence );
-    void insertIncidence( KCal::Incidence* incidence );
-    void insertIncidence( KCal::Incidence* incidence, const QDate &day );
-    void removeIncidence( KCal::Incidence* incidence );
+private:
+    KOrg::TimelineItem *calendarItemForIncidence(KCal::Incidence *incidence);
+    void insertIncidence(KCal::Incidence *incidence);
+    void insertIncidence(KCal::Incidence *incidence, const QDate &day);
+    void removeIncidence(KCal::Incidence *incidence);
 
-  private slots:
-    void itemSelected( KDGanttViewItem *item );
-    void itemDoubleClicked( KDGanttViewItem *item );
-    void itemRightClicked( KDGanttViewItem *item );
-    void itemMoved( KDGanttViewItem *item );
-    void overscale( KDGanttView::Scale scale );
-    void newEventWithHint( const QDateTime & );
+private slots:
+    void itemSelected(KDGanttViewItem *item);
+    void itemDoubleClicked(KDGanttViewItem *item);
+    void itemRightClicked(KDGanttViewItem *item);
+    void itemMoved(KDGanttViewItem *item);
+    void overscale(KDGanttView::Scale scale);
+    void newEventWithHint(const QDateTime &);
 
-  private:
-    KDGanttView* mGantt;
-    QMap<KCal::ResourceCalendar*, QMap<QString, KOrg::TimelineItem*> > mCalendarItemMap;
+private:
+    KDGanttView *mGantt;
+    QMap<KCal::ResourceCalendar *, QMap<QString, KOrg::TimelineItem *> > mCalendarItemMap;
     KOEventPopupMenu *mEventPopup;
     QDate mStartDate, mEndDate;
     QDateTime mHintDate;

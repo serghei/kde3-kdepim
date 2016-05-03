@@ -7,10 +7,10 @@
 
 #include "lockerthread.h"
 
-LockerThread::LockerThread( const QString &icsfile )
+LockerThread::LockerThread(const QString &icsfile)
 {
-  m_gotlock = false;
-  m_icsfile = icsfile;
+    m_gotlock = false;
+    m_icsfile = icsfile;
 }
 
 /*
@@ -22,23 +22,23 @@ void LockerThread::setIcsFile( const QString &filename )
 
 void LockerThread::run()
 {
-  KCal::CalendarResources         *calendars = 0;
-  KCal::ResourceCalendar          *calendar  = 0;
-  KCal::CalendarResources::Ticket *lock      = 0;
+    KCal::CalendarResources         *calendars = 0;
+    KCal::ResourceCalendar          *calendar  = 0;
+    KCal::CalendarResources::Ticket *lock      = 0;
 
-  calendars = new KCal::CalendarResources( QString::fromLatin1( "UTC" ) );
-  calendar  = new KCal::ResourceLocal( m_icsfile );
-  lock      = calendars->requestSaveTicket( calendar );
-  if ( lock )
-  {
-    m_gotlock = true;
-    calendars->releaseSaveTicket( lock );
-  }
-  else
-  {
-    m_gotlock = false;
-  }
+    calendars = new KCal::CalendarResources(QString::fromLatin1("UTC"));
+    calendar  = new KCal::ResourceLocal(m_icsfile);
+    lock      = calendars->requestSaveTicket(calendar);
+    if(lock)
+    {
+        m_gotlock = true;
+        calendars->releaseSaveTicket(lock);
+    }
+    else
+    {
+        m_gotlock = false;
+    }
 
-  delete calendar;
-  delete calendars;
+    delete calendar;
+    delete calendars;
 }

@@ -37,17 +37,17 @@ class QPushButton;
 
 namespace Kontact {
 
-class ProfileDialog : public KDialogBase
-{
-Q_OBJECT
+class ProfileDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-    explicit ProfileDialog( QWidget* parent = 0, WFlags f = 0 );
+    explicit ProfileDialog(QWidget *parent = 0, WFlags f = 0);
 
 private:
-    enum ListColumn {
-        NameColumn=0,
-        DescriptionColumn=1
+    enum ListColumn
+    {
+        NameColumn = 0,
+        DescriptionColumn = 1
     };
 
     QString selectedProfile() const;
@@ -67,22 +67,22 @@ private slots:
     void exportSelectedProfile();
     void addNewProfile();
     void listSelectionChanged();
-    void listItemRenamed( QListViewItem* item, const QString& text, int col );
+    void listItemRenamed(QListViewItem *item, const QString &text, int col);
 
-    void profileAdded( const QString& id );
-    void profileRemoved( const QString& id );
-    void profileUpdated( const QString& id );
-    void profileLoaded( const QString& id );
+    void profileAdded(const QString &id);
+    void profileRemoved(const QString &id);
+    void profileUpdated(const QString &id);
+    void profileLoaded(const QString &id);
 
 private:
-    KListView* m_list;
-    QPushButton* m_newProfileButton;
-    QPushButton* m_deleteProfileButton;
-    QPushButton* m_saveProfileButton;
-    QPushButton* m_importProfileButton;
-    QPushButton* m_exportProfileButton;
-    QMap<QListViewItem*, QString> m_itemToProfile;
-    QMap<QString, QListViewItem*> m_profileToItem;
+    KListView *m_list;
+    QPushButton *m_newProfileButton;
+    QPushButton *m_deleteProfileButton;
+    QPushButton *m_saveProfileButton;
+    QPushButton *m_importProfileButton;
+    QPushButton *m_exportProfileButton;
+    QMap<QListViewItem *, QString> m_itemToProfile;
+    QMap<QString, QListViewItem *> m_profileToItem;
 };
 
 } // Kontact

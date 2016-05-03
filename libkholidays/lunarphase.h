@@ -62,13 +62,12 @@
 
 #include <time.h>
 
-class LunarPhase
-{
-  public:
+class LunarPhase {
+public:
     enum Phase { New,  FirstQ, LastQ, Full, None };
     enum Hemisphere { Northern,  Southern };
 
-    LunarPhase( Hemisphere hemisphere = Northern );
+    LunarPhase(Hemisphere hemisphere = Northern);
     ~LunarPhase();
 
     /**
@@ -78,7 +77,7 @@ class LunarPhase
 
        @param date compute the lunar phase for the specified Gregorian date.
     */
-    Phase phase( const QDate &date ) const;
+    Phase phase(const QDate &date) const;
 
     /**
        Return the lunar phase as a text string for the specified date.
@@ -87,14 +86,14 @@ class LunarPhase
 
        @param date compute the lunar phase for the specified Gregorian date.
     */
-    QString phaseStr( const QDate &date ) const;
+    QString phaseStr(const QDate &date) const;
 
-   /**
-      Set the hemisphere.
+    /**
+       Set the hemisphere.
 
-      @param hemisphere Hemisphere
-   */
-    void setHemisphere( Hemisphere hemisphere = Northern );
+       @param hemisphere Hemisphere
+    */
+    void setHemisphere(Hemisphere hemisphere = Northern);
 
     /**
        Return the hemisphere.
@@ -109,14 +108,14 @@ class LunarPhase
     /**
        Return the string representation of hemisphere.
     */
-    static QString hemisphereName( Hemisphere hemisphere );
+    static QString hemisphereName(Hemisphere hemisphere);
 
     /**
        Return the string representation of phase.
 
        @param phase the lunar phase.
     */
-    static QString phaseName( Phase phase );
+    static QString phaseName(Phase phase);
 
 private:
     /**
@@ -126,7 +125,7 @@ private:
 
        @return the percent fullness [0,100] of the moon.
     */
-    double percentFull( uint t ) const;
+    double percentFull(uint t) const;
     /**
        Convert degrees to radians.
 
@@ -134,13 +133,13 @@ private:
 
        @return degrees in radians.
     */
-    double degreesToRadians( double degree ) const;
+    double degreesToRadians(double degree) const;
     /**
        Adjust value so that 0 <= degree <= 360.
 
        @param degree a pointer to the degree value.
     */
-    void adj360( double *degree ) const;
+    void adj360(double *degree) const;
 
     Hemisphere mHemisphere;
 };

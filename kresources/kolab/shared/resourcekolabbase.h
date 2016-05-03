@@ -73,121 +73,121 @@ class KMailConnection;
 */
 class ResourceKolabBase {
 public:
-  ResourceKolabBase( const QCString& objId );
-  virtual ~ResourceKolabBase();
+    ResourceKolabBase(const QCString &objId);
+    virtual ~ResourceKolabBase();
 
-  // These are the methods called by KMail when the resource changes
-  virtual bool fromKMailAddIncidence( const QString& type,
-                                      const QString& resource,
-                                      Q_UINT32 sernum,
-                                      int format,
-                                      const QString& data ) = 0;
-  virtual void fromKMailDelIncidence( const QString& type,
-                                      const QString& resource,
-                                      const QString& xml ) = 0;
-  virtual void fromKMailRefresh( const QString& type,
-                                 const QString& resource ) = 0;
-  virtual void fromKMailAddSubresource( const QString& type,
-                                        const QString& resource,
-                                        const QString& label,
-                                        bool writable,
-                                        bool alarmRelevant ) = 0;
-  virtual void fromKMailDelSubresource( const QString& type,
-                                        const QString& resource ) = 0;
+    // These are the methods called by KMail when the resource changes
+    virtual bool fromKMailAddIncidence(const QString &type,
+                                       const QString &resource,
+                                       Q_UINT32 sernum,
+                                       int format,
+                                       const QString &data) = 0;
+    virtual void fromKMailDelIncidence(const QString &type,
+                                       const QString &resource,
+                                       const QString &xml) = 0;
+    virtual void fromKMailRefresh(const QString &type,
+                                  const QString &resource) = 0;
+    virtual void fromKMailAddSubresource(const QString &type,
+                                         const QString &resource,
+                                         const QString &label,
+                                         bool writable,
+                                         bool alarmRelevant) = 0;
+    virtual void fromKMailDelSubresource(const QString &type,
+                                         const QString &resource) = 0;
 
-  virtual void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
-                                         const QString& type,
-                                         const QString& folder ) = 0;
+    virtual void fromKMailAsyncLoadResult(const QMap<Q_UINT32, QString> &map,
+                                          const QString &type,
+                                          const QString &folder) = 0;
 protected:
-  /// Do the connection to KMail.
-  bool connectToKMail() const;
+    /// Do the connection to KMail.
+    bool connectToKMail() const;
 
-  // These are the KMail dcop function connections. The docs here say
-  // "Get", which here means that the first argument is the return arg
+    // These are the KMail dcop function connections. The docs here say
+    // "Get", which here means that the first argument is the return arg
 
-  /// List all folders with a certain contentsType. Returns a QMap with
-  /// resourcename/writable pairs
-  bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
-                          const QString& contentsType ) const;
+    /// List all folders with a certain contentsType. Returns a QMap with
+    /// resourcename/writable pairs
+    bool kmailSubresources(QValueList<KMailICalIface::SubResource> &lst,
+                           const QString &contentsType) const;
 
-  /// Get the number of messages in this folder.
-  /// Used to iterate over kmailIncidences by chunks
-  bool kmailIncidencesCount( int& count, const QString& mimetype,
-                             const QString& resource ) const;
+    /// Get the number of messages in this folder.
+    /// Used to iterate over kmailIncidences by chunks
+    bool kmailIncidencesCount(int &count, const QString &mimetype,
+                              const QString &resource) const;
 
-  /// Get the mimetype attachments from a chunk of messages from this folder.
-  /// Returns a QMap with serialNumber/attachment pairs.
-  bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
-                        const QString& resource,
-                        int startIndex,
-                        int nbMessages ) const;
+    /// Get the mimetype attachments from a chunk of messages from this folder.
+    /// Returns a QMap with serialNumber/attachment pairs.
+    bool kmailIncidences(QMap<Q_UINT32, QString> &lst, const QString &mimetype,
+                         const QString &resource,
+                         int startIndex,
+                         int nbMessages) const;
 
-  bool kmailTriggerSync( const QString& contentType ) const;
+    bool kmailTriggerSync(const QString &contentType) const;
 
 public: // for Contact
-  /// Get an attachment from a mail. Returns a URL to it. This can
-  /// be called by the resource after obtaining the incidence.
-  /// The resource must delete the temp file.
-  bool kmailGetAttachment( KURL& url, const QString& resource,
-                           Q_UINT32 sernum,
-                           const QString& filename ) const;
+    /// Get an attachment from a mail. Returns a URL to it. This can
+    /// be called by the resource after obtaining the incidence.
+    /// The resource must delete the temp file.
+    bool kmailGetAttachment(KURL &url, const QString &resource,
+                            Q_UINT32 sernum,
+                            const QString &filename) const;
 
-  /** Get the mimetype of the specified attachment. */
-  bool kmailAttachmentMimetype( QString &mimeType, QString &resource,
-                                Q_UINT32 sernum, const QString &filename ) const;
+    /** Get the mimetype of the specified attachment. */
+    bool kmailAttachmentMimetype(QString &mimeType, QString &resource,
+                                 Q_UINT32 sernum, const QString &filename) const;
 
-  /// List all attachments of a mail.
-  bool kmailListAttachments( QStringList &list, const QString &resource,
-                             Q_UINT32 sernum ) const;
+    /// List all attachments of a mail.
+    bool kmailListAttachments(QStringList &list, const QString &resource,
+                              Q_UINT32 sernum) const;
 
 protected:
-  /// Delete an incidence.
-  bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
+    /// Delete an incidence.
+    bool kmailDeleteIncidence(const QString &resource, Q_UINT32 sernum);
 
-  KMailICalIface::StorageFormat kmailStorageFormat( const QString& folder ) const;
+    KMailICalIface::StorageFormat kmailStorageFormat(const QString &folder) const;
 
-  typedef QMap<QCString, QString> CustomHeaderMap;
+    typedef QMap<QCString, QString> CustomHeaderMap;
 
-  /// Update an incidence. The list of attachments are URLs.
-  /// The parameter sernum is updated with the right KMail serial number
-  bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
-                    const QString& xml,
-                    const QString& mimetype,
-                    const QString& subject,
-                    const CustomHeaderMap& customHeaders = CustomHeaderMap(),
-                    const QStringList& attachmentURLs = QStringList(),
-                    const QStringList& attachmentMimetypes = QStringList(),
-                    const QStringList& attachmentNames = QStringList(),
-                    const QStringList& deletedAttachments = QStringList() );
+    /// Update an incidence. The list of attachments are URLs.
+    /// The parameter sernum is updated with the right KMail serial number
+    bool kmailUpdate(const QString &resource, Q_UINT32 &sernum,
+                     const QString &xml,
+                     const QString &mimetype,
+                     const QString &subject,
+                     const CustomHeaderMap &customHeaders = CustomHeaderMap(),
+                     const QStringList &attachmentURLs = QStringList(),
+                     const QStringList &attachmentMimetypes = QStringList(),
+                     const QStringList &attachmentNames = QStringList(),
+                     const QStringList &deletedAttachments = QStringList());
 
-  bool kmailAddSubresource( const QString& resource, const QString& parent,
-                            const QString& contentsType );
-  bool kmailRemoveSubresource( const QString& resource );
+    bool kmailAddSubresource(const QString &resource, const QString &parent,
+                             const QString &contentsType);
+    bool kmailRemoveSubresource(const QString &resource);
 
-  /// Get the full path of the config file.
-  QString configFile( const QString& type ) const;
+    /// Get the full path of the config file.
+    QString configFile(const QString &type) const;
 
-  /// If only one of these is writable, return that. Otherwise return null.
-  QString findWritableResource( const ResourceMap& resources,
-                                const QString& text = QString::null );
+    /// If only one of these is writable, return that. Otherwise return null.
+    QString findWritableResource(const ResourceMap &resources,
+                                 const QString &text = QString::null);
 
-  bool mSilent;
+    bool mSilent;
 
-  /**
-   * This is used to store a mapping from the XML UID to the KMail
-   * serial number of the mail it's stored in. That provides a quick way
-   * to access the storage in KMail.
-   */
-  UidMap mUidMap;
+    /**
+     * This is used to store a mapping from the XML UID to the KMail
+     * serial number of the mail it's stored in. That provides a quick way
+     * to access the storage in KMail.
+     */
+    UidMap mUidMap;
 
-  /// This is used to distinguish operations triggered by the user,
-  /// from operations triggered by KMail
-  QStringList mUidsPendingAdding;
-  QStringList mUidsPendingDeletion;
-  QStringList mUidsPendingUpdate;
+    /// This is used to distinguish operations triggered by the user,
+    /// from operations triggered by KMail
+    QStringList mUidsPendingAdding;
+    QStringList mUidsPendingDeletion;
+    QStringList mUidsPendingUpdate;
 
 private:
-  mutable KMailConnection* mConnection;
+    mutable KMailConnection *mConnection;
 };
 
 }

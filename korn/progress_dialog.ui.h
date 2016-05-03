@@ -29,35 +29,35 @@
 *****************************************************************************/
 
 
-void DoubleProgressDialog::setText( const QString & str )
+void DoubleProgressDialog::setText(const QString &str)
 {
-    lbText->setText( str );
+    lbText->setText(str);
 }
 
 
-void DoubleProgressDialog::setNumberOfBoxes( int number )
+void DoubleProgressDialog::setNumberOfBoxes(int number)
 {
-    pbBoxes->setTotalSteps( number );
-    pbBoxes->setProgress( 0 );
+    pbBoxes->setTotalSteps(number);
+    pbBoxes->setProgress(0);
 }
 
 
-void DoubleProgressDialog::setProgressOfBoxes( int number )
+void DoubleProgressDialog::setProgressOfBoxes(int number)
 {
-    pbBoxes->setProgress( number );
+    pbBoxes->setProgress(number);
 }
 
 
-void DoubleProgressDialog::setNumberOfSteps( int number )
+void DoubleProgressDialog::setNumberOfSteps(int number)
 {
-    pbProgress->setTotalSteps( number );
-    pbProgress->setProgress( 0 );
+    pbProgress->setTotalSteps(number);
+    pbProgress->setProgress(0);
 }
 
 
-void DoubleProgressDialog::setProgress( int number )
+void DoubleProgressDialog::setProgress(int number)
 {
-    pbProgress->setProgress( number );
+    pbProgress->setProgress(number);
 }
 
 

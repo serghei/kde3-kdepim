@@ -41,27 +41,27 @@ class QSpinBox;
 class KURLRequester;
 
 class KWatchGnuPGConfig : public KDialogBase {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KWatchGnuPGConfig( QWidget* parent, const char* name = 0 );
+    KWatchGnuPGConfig(QWidget *parent, const char *name = 0);
 
-  void loadConfig();
-  void saveConfig();
+    void loadConfig();
+    void saveConfig();
 
 signals:
-  void reconfigure();
+    void reconfigure();
 
 private slots:
-  void slotChanged();
-  void slotSave();
-  void slotSetHistorySizeUnlimited();
+    void slotChanged();
+    void slotSave();
+    void slotSetHistorySizeUnlimited();
 
 private:
-  KURLRequester* mExeED;
-  KURLRequester* mSocketED;
-  QComboBox* mLogLevelCB;
-  QSpinBox* mLoglenSB;
-  QCheckBox* mWordWrapCB;
+    KURLRequester *mExeED;
+    KURLRequester *mSocketED;
+    QComboBox *mLogLevelCB;
+    QSpinBox *mLoglenSB;
+    QCheckBox *mWordWrapCB;
 };
 
 #endif /* KWATCHGNUPGCONFIG_H */

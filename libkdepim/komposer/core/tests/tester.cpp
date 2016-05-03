@@ -21,8 +21,8 @@
 #include "tester.h"
 
 
-Tester::Tester( QObject* parent )
-    : QObject( parent )
+Tester::Tester(QObject *parent)
+    : QObject(parent)
 {
 }
 

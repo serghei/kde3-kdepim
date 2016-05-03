@@ -46,298 +46,311 @@
 
 #include "phoneeditwidget.h"
 
-PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
-  : KComboBox( parent, "TypeCombo" ),
-    mType( KABC::PhoneNumber::Home ),
-    mLastSelected( 0 ),
-    mTypeList( KABC::PhoneNumber::typeList() )
+PhoneTypeCombo::PhoneTypeCombo(QWidget *parent)
+    : KComboBox(parent, "TypeCombo"),
+      mType(KABC::PhoneNumber::Home),
+      mLastSelected(0),
+      mTypeList(KABC::PhoneNumber::typeList())
 {
-  mTypeList.append( -1 ); // Others...
+    mTypeList.append(-1);   // Others...
 
-  update();
+    update();
 
-  connect( this, SIGNAL( activated( int ) ),
-           this, SLOT( selected( int ) ) );
-  connect( this, SIGNAL( activated( int ) ),
-           this, SIGNAL( modified() ) );
+    connect(this, SIGNAL(activated(int)),
+            this, SLOT(selected(int)));
+    connect(this, SIGNAL(activated(int)),
+            this, SIGNAL(modified()));
 }
 
 PhoneTypeCombo::~PhoneTypeCombo()
 {
 }
 
-void PhoneTypeCombo::setType( int type )
+void PhoneTypeCombo::setType(int type)
 {
-  if ( !mTypeList.contains( type ) )
-    mTypeList.insert( mTypeList.at( mTypeList.count() - 1 ), type );
+    if(!mTypeList.contains(type))
+        mTypeList.insert(mTypeList.at(mTypeList.count() - 1), type);
 
-  mType = type;
-  update();
+    mType = type;
+    update();
 }
 
 int PhoneTypeCombo::type() const
 {
-  return mType;
+    return mType;
 }
 
 void PhoneTypeCombo::update()
 {
-  bool blocked = signalsBlocked();
-  blockSignals( true );
+    bool blocked = signalsBlocked();
+    blockSignals(true);
 
-  clear();
-  QValueList<int>::ConstIterator it;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it ) {
-    if ( *it == -1 ) { // "Other..." entry
-      insertItem( i18n( "Other..." ) );
-    } else {
-      KABC::PhoneNumber number;
-      number.setType( *it );
-      insertItem( number.typeLabel() );
+    clear();
+    QValueList<int>::ConstIterator it;
+    for(it = mTypeList.begin(); it != mTypeList.end(); ++it)
+    {
+        if(*it == -1)      // "Other..." entry
+        {
+            insertItem(i18n("Other..."));
+        }
+        else
+        {
+            KABC::PhoneNumber number;
+            number.setType(*it);
+            insertItem(number.typeLabel());
+        }
     }
-  }
 
-  setCurrentItem( mLastSelected = mTypeList.findIndex( mType ) );
+    setCurrentItem(mLastSelected = mTypeList.findIndex(mType));
 
-  blockSignals( blocked );
+    blockSignals(blocked);
 }
 
-void PhoneTypeCombo::selected( int pos )
+void PhoneTypeCombo::selected(int pos)
 {
-  if ( mTypeList[ pos ] == -1 )
-    otherSelected();
-  else {
-    mType = mTypeList[ pos ];
-    mLastSelected = pos;
-  }
+    if(mTypeList[ pos ] == -1)
+        otherSelected();
+    else
+    {
+        mType = mTypeList[ pos ];
+        mLastSelected = pos;
+    }
 }
 
 void PhoneTypeCombo::otherSelected()
 {
-  PhoneTypeDialog dlg( mType, this );
-  if ( dlg.exec() ) {
-    mType = dlg.type();
-    if ( !mTypeList.contains( mType ) )
-      mTypeList.insert( mTypeList.at( mTypeList.count() - 1 ), mType );
-  } else {
-    setType( mTypeList[ mLastSelected ] );
-  }
+    PhoneTypeDialog dlg(mType, this);
+    if(dlg.exec())
+    {
+        mType = dlg.type();
+        if(!mTypeList.contains(mType))
+            mTypeList.insert(mTypeList.at(mTypeList.count() - 1), mType);
+    }
+    else
+    {
+        setType(mTypeList[ mLastSelected ]);
+    }
 
-  update();
+    update();
 }
 
-PhoneNumberWidget::PhoneNumberWidget( QWidget *parent )
-  : QWidget( parent )
+PhoneNumberWidget::PhoneNumberWidget(QWidget *parent)
+    : QWidget(parent)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, 6, 11 );
+    QHBoxLayout *layout = new QHBoxLayout(this, 6, 11);
 
-  mTypeCombo = new PhoneTypeCombo( this );
-  mNumberEdit = new KLineEdit( this );
+    mTypeCombo = new PhoneTypeCombo(this);
+    mNumberEdit = new KLineEdit(this);
 
-  layout->addWidget( mTypeCombo );
-  layout->addWidget( mNumberEdit );
+    layout->addWidget(mTypeCombo);
+    layout->addWidget(mNumberEdit);
 
-  connect( mTypeCombo, SIGNAL( modified() ), SIGNAL( modified() ) );
-  connect( mNumberEdit, SIGNAL( textChanged( const QString& ) ), SIGNAL( modified() ) );
+    connect(mTypeCombo, SIGNAL(modified()), SIGNAL(modified()));
+    connect(mNumberEdit, SIGNAL(textChanged(const QString &)), SIGNAL(modified()));
 }
 
-void PhoneNumberWidget::setNumber( const KABC::PhoneNumber &number )
+void PhoneNumberWidget::setNumber(const KABC::PhoneNumber &number)
 {
-  mNumber = number;
+    mNumber = number;
 
-  mTypeCombo->setType( number.type() );
-  mNumberEdit->setText( number.number() );
+    mTypeCombo->setType(number.type());
+    mNumberEdit->setText(number.number());
 }
 
 KABC::PhoneNumber PhoneNumberWidget::number() const
 {
-  KABC::PhoneNumber number( mNumber );
+    KABC::PhoneNumber number(mNumber);
 
-  number.setType( mTypeCombo->type() );
-  number.setNumber( mNumberEdit->text() );
+    number.setType(mTypeCombo->type());
+    number.setNumber(mNumberEdit->text());
 
-  return number;
+    return number;
 }
 
-void PhoneNumberWidget::setReadOnly( bool readOnly )
+void PhoneNumberWidget::setReadOnly(bool readOnly)
 {
-  mTypeCombo->setEnabled( !readOnly );
-  mNumberEdit->setReadOnly( readOnly );
+    mTypeCombo->setEnabled(!readOnly);
+    mNumberEdit->setReadOnly(readOnly);
 }
 
 
-PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( false )
+PhoneEditWidget::PhoneEditWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name), mReadOnly(false)
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 2 );
-  layout->setSpacing( KDialog::spacingHint() );
+    QGridLayout *layout = new QGridLayout(this, 2, 2);
+    layout->setSpacing(KDialog::spacingHint());
 
-  mWidgetLayout = new QVBoxLayout( layout );
-  layout->addMultiCellLayout( mWidgetLayout, 0, 0, 0, 1 );
+    mWidgetLayout = new QVBoxLayout(layout);
+    layout->addMultiCellLayout(mWidgetLayout, 0, 0, 0, 1);
 
-  mAddButton = new QPushButton( i18n( "Add" ), this );
-  mAddButton->setMaximumSize( mAddButton->sizeHint() );
-  layout->addWidget( mAddButton, 1, 0, Qt::AlignRight );
+    mAddButton = new QPushButton(i18n("Add"), this);
+    mAddButton->setMaximumSize(mAddButton->sizeHint());
+    layout->addWidget(mAddButton, 1, 0, Qt::AlignRight);
 
-  mRemoveButton = new QPushButton( i18n( "Remove" ), this );
-  mRemoveButton->setMaximumSize( mRemoveButton->sizeHint() );
-  layout->addWidget( mRemoveButton, 1, 1 );
+    mRemoveButton = new QPushButton(i18n("Remove"), this);
+    mRemoveButton->setMaximumSize(mRemoveButton->sizeHint());
+    layout->addWidget(mRemoveButton, 1, 1);
 
-  mMapper = new QSignalMapper( this );
-  connect( mMapper, SIGNAL( mapped( int ) ), SLOT( changed( int ) ) );
+    mMapper = new QSignalMapper(this);
+    connect(mMapper, SIGNAL(mapped(int)), SLOT(changed(int)));
 
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( add() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
+    connect(mAddButton, SIGNAL(clicked()), SLOT(add()));
+    connect(mRemoveButton, SIGNAL(clicked()), SLOT(remove()));
 }
 
 PhoneEditWidget::~PhoneEditWidget()
 {
 }
 
-void PhoneEditWidget::setReadOnly( bool readOnly )
+void PhoneEditWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
-  mAddButton->setEnabled( !readOnly );
-  mRemoveButton->setEnabled( !readOnly && mPhoneNumberList.count() > 3 );
+    mReadOnly = readOnly;
+    mAddButton->setEnabled(!readOnly);
+    mRemoveButton->setEnabled(!readOnly && mPhoneNumberList.count() > 3);
 
-  QPtrListIterator<PhoneNumberWidget> it( mWidgets );
-  while ( it.current() ) {
-    it.current()->setReadOnly( readOnly );
-    ++it;
-  }
+    QPtrListIterator<PhoneNumberWidget> it(mWidgets);
+    while(it.current())
+    {
+        it.current()->setReadOnly(readOnly);
+        ++it;
+    }
 }
 
-void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
+void PhoneEditWidget::setPhoneNumbers(const KABC::PhoneNumber::List &list)
 {
-  mPhoneNumberList = list;
+    mPhoneNumberList = list;
 
-  KABC::PhoneNumber::TypeList types;
-  types << KABC::PhoneNumber::Home;
-  types << KABC::PhoneNumber::Work;
-  types << KABC::PhoneNumber::Cell;
+    KABC::PhoneNumber::TypeList types;
+    types << KABC::PhoneNumber::Home;
+    types << KABC::PhoneNumber::Work;
+    types << KABC::PhoneNumber::Cell;
 
-  // add an empty entry per default
-  if ( mPhoneNumberList.count() < 3 )
-    for ( int i = mPhoneNumberList.count(); i < 3; ++i )
-      mPhoneNumberList.append( KABC::PhoneNumber( "", types[ i ] ) );
+    // add an empty entry per default
+    if(mPhoneNumberList.count() < 3)
+        for(int i = mPhoneNumberList.count(); i < 3; ++i)
+            mPhoneNumberList.append(KABC::PhoneNumber("", types[ i ]));
 
-  recreateNumberWidgets();
+    recreateNumberWidgets();
 }
 
 KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
 {
-  KABC::PhoneNumber::List list;
+    KABC::PhoneNumber::List list;
 
-  KABC::PhoneNumber::List::ConstIterator it;
-  for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it )
-    if ( !(*it).number().isEmpty() )
-      list.append( *it );
+    KABC::PhoneNumber::List::ConstIterator it;
+    for(it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it)
+        if(!(*it).number().isEmpty())
+            list.append(*it);
 
-  return list;
+    return list;
 }
 
 void PhoneEditWidget::changed()
 {
-  if ( !mReadOnly )
-    emit modified();
+    if(!mReadOnly)
+        emit modified();
 }
 
 void PhoneEditWidget::add()
 {
-  mPhoneNumberList.append( KABC::PhoneNumber() );
+    mPhoneNumberList.append(KABC::PhoneNumber());
 
-  recreateNumberWidgets();
+    recreateNumberWidgets();
 }
 
 void PhoneEditWidget::remove()
 {
-  mPhoneNumberList.remove( mPhoneNumberList.last() );
-  changed();
+    mPhoneNumberList.remove(mPhoneNumberList.last());
+    changed();
 
-  recreateNumberWidgets();
+    recreateNumberWidgets();
 }
 
 void PhoneEditWidget::recreateNumberWidgets()
 {
-  for ( QWidget *w = mWidgets.first(); w; w = mWidgets.next() ) {
-    mWidgetLayout->remove( w );
-    w->deleteLater();
-  }
-  mWidgets.clear();
+    for(QWidget *w = mWidgets.first(); w; w = mWidgets.next())
+    {
+        mWidgetLayout->remove(w);
+        w->deleteLater();
+    }
+    mWidgets.clear();
 
-  KABC::PhoneNumber::List::ConstIterator it;
-  int counter = 0;
-  for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it ) {
-    PhoneNumberWidget *wdg = new PhoneNumberWidget( this );
-    wdg->setNumber( *it );
+    KABC::PhoneNumber::List::ConstIterator it;
+    int counter = 0;
+    for(it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it)
+    {
+        PhoneNumberWidget *wdg = new PhoneNumberWidget(this);
+        wdg->setNumber(*it);
 
-    mMapper->setMapping( wdg, counter );
-    connect( wdg, SIGNAL( modified() ), mMapper, SLOT( map() ) );
+        mMapper->setMapping(wdg, counter);
+        connect(wdg, SIGNAL(modified()), mMapper, SLOT(map()));
 
-    mWidgetLayout->addWidget( wdg );
-    mWidgets.append( wdg );
-    wdg->show();
+        mWidgetLayout->addWidget(wdg);
+        mWidgets.append(wdg);
+        wdg->show();
 
-    ++counter;
-  }
-  setReadOnly(mReadOnly);
+        ++counter;
+    }
+    setReadOnly(mReadOnly);
 }
 
-void PhoneEditWidget::changed( int pos )
+void PhoneEditWidget::changed(int pos)
 {
-  mPhoneNumberList[ pos ] = mWidgets.at( pos )->number();
-  changed();
+    mPhoneNumberList[ pos ] = mWidgets.at(pos)->number();
+    changed();
 }
 
 ///////////////////////////////////////////
 // PhoneTypeDialog
-PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
-  : KDialogBase( Plain, i18n( "Edit Phone Number" ), Ok | Cancel, Ok,
-                 parent, "PhoneTypeDialog", true ),
-    mType( type )
+PhoneTypeDialog::PhoneTypeDialog(int type, QWidget *parent)
+    : KDialogBase(Plain, i18n("Edit Phone Number"), Ok | Cancel, Ok,
+                  parent, "PhoneTypeDialog", true),
+      mType(type)
 {
-  QWidget *page = plainPage();
+    QWidget *page = plainPage();
 
-  QVBoxLayout *layout = new QVBoxLayout( page, spacingHint() );
+    QVBoxLayout *layout = new QVBoxLayout(page, spacingHint());
 
-  mPreferredBox = new QCheckBox( i18n( "This is the preferred phone number" ), page );
-  layout->addWidget( mPreferredBox );
+    mPreferredBox = new QCheckBox(i18n("This is the preferred phone number"), page);
+    layout->addWidget(mPreferredBox);
 
-  mGroup = new QButtonGroup( 2, Horizontal, i18n( "Types" ), page );
-  layout->addWidget( mGroup );
+    mGroup = new QButtonGroup(2, Horizontal, i18n("Types"), page);
+    layout->addWidget(mGroup);
 
-  // fill widgets
-  mTypeList = KABC::PhoneNumber::typeList();
-  mTypeList.remove( KABC::PhoneNumber::Pref );
+    // fill widgets
+    mTypeList = KABC::PhoneNumber::typeList();
+    mTypeList.remove(KABC::PhoneNumber::Pref);
 
-  KABC::PhoneNumber::TypeList::ConstIterator it;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it )
-    new QCheckBox( KABC::PhoneNumber::typeLabel( *it ), mGroup );
+    KABC::PhoneNumber::TypeList::ConstIterator it;
+    for(it = mTypeList.begin(); it != mTypeList.end(); ++it)
+        new QCheckBox(KABC::PhoneNumber::typeLabel(*it), mGroup);
 
-  for ( int i = 0; i < mGroup->count(); ++i ) {
-    QCheckBox *box = (QCheckBox*)mGroup->find( i );
-    box->setChecked( mType & mTypeList[ i ] );
-  }
+    for(int i = 0; i < mGroup->count(); ++i)
+    {
+        QCheckBox *box = (QCheckBox *)mGroup->find(i);
+        box->setChecked(mType & mTypeList[ i ]);
+    }
 
-  mPreferredBox->setChecked( mType & KABC::PhoneNumber::Pref );
+    mPreferredBox->setChecked(mType & KABC::PhoneNumber::Pref);
 }
 
 int PhoneTypeDialog::type() const
 {
-  int type = 0;
+    int type = 0;
 
-  for ( int i = 0; i < mGroup->count(); ++i ) {
-    QCheckBox *box = (QCheckBox*)mGroup->find( i );
-    if ( box->isChecked() )
-      type += mTypeList[ i ];
-  }
+    for(int i = 0; i < mGroup->count(); ++i)
+    {
+        QCheckBox *box = (QCheckBox *)mGroup->find(i);
+        if(box->isChecked())
+            type += mTypeList[ i ];
+    }
 
-  if ( mPreferredBox->isChecked() )
-    type = type | KABC::PhoneNumber::Pref;
-  else
-    type = type & ~KABC::PhoneNumber::Pref;
+    if(mPreferredBox->isChecked())
+        type = type | KABC::PhoneNumber::Pref;
+    else
+        type = type & ~KABC::PhoneNumber::Pref;
 
-  return type;
+    return type;
 }
 
 

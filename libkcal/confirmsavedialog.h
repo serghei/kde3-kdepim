@@ -29,16 +29,15 @@ class KListView;
 
 namespace KCal {
 
-class KDE_EXPORT ConfirmSaveDialog : public KDialogBase
-{
-  public:
-    ConfirmSaveDialog( const QString &destination, QWidget *parent,
-                       const char *name = 0 );
+class KDE_EXPORT ConfirmSaveDialog : public KDialogBase {
+public:
+    ConfirmSaveDialog(const QString &destination, QWidget *parent,
+                      const char *name = 0);
 
-    void addIncidences( const Incidence::List &incidences,
-                        const QString &operation );
+    void addIncidences(const Incidence::List &incidences,
+                       const QString &operation);
 
-  private:
+private:
     KListView *mListView;
 };
 

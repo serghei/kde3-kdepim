@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -131,8 +131,9 @@ class DW_EXPORT DwPopClient : public DwProtocolClient {
 
 public:
 
-    enum {
-        kCmdNoCommand=0,
+    enum
+    {
+        kCmdNoCommand = 0,
         kCmdUser,
         kCmdPass,
         kCmdQuit,
@@ -157,7 +158,7 @@ public:
 
     virtual ~DwPopClient();
 
-    virtual int Open(const char* aServer, DwUint16 aPort=110);
+    virtual int Open(const char *aServer, DwUint16 aPort = 110);
     //. Opens a TCP connection to the server {\tt aServer} at port {\tt aPort}.
     //. {\tt aServer} may be either a host name, such as "news.acme.com" or
     //. an IP number in dotted decimal format, such as "147.81.64.60".  The
@@ -175,7 +176,7 @@ public:
     //. a failure also occurred, call the inherited member function
     //. {\tt DwProtocolClient::LastFailure()}.
 
-    DwObserver* SetObserver(DwObserver* aObserver);
+    DwObserver *SetObserver(DwObserver *aObserver);
     //. Sets the observer object that interacts with the {\tt DwPopClient}
     //. object to retrieve a multi-line response. If an observer is set,
     //. {\tt DwPopClient} will call the observer's {\tt Notify()} method
@@ -190,24 +191,24 @@ public:
     //. success, and '-', indicating failure. If no response was received,
     //. {\tt StatusCode()} returns zero.
 
-    const DwString& SingleLineResponse() const;
+    const DwString &SingleLineResponse() const;
     //. Returns the single line status response last received from the server.
     //. If no response was received, perhaps because of a communications
     //. failure, {\tt SingleLineResponse()} returns an empty string.
 
-    const DwString& MultiLineResponse() const;
+    const DwString &MultiLineResponse() const;
     //. If no observer is set for this object, {\tt MultiLineResponse()}
     //. returns a string that comprises the entire sequence of lines
     //. received from the server.  Otherwise, if an observer {\it is} set
     //. for this object, {\tt MultiLineResponse()} returns only the most
     //. recent line received.
 
-    int User(const char* aName);
+    int User(const char *aName);
     //. Sends the USER command and returns the status code received from
     //. the server.  If no response is received, the function returns zero.
     //. {\tt aName} is the name of the user, which is sent in the command.
 
-    int Pass(const char* aPasswd);
+    int Pass(const char *aPasswd);
     //. Sends the PASS command and returns the status code received from
     //. the server.  If no response is received, the function returns zero.
     //. {\tt aPasswd} is the password, which is sent in the command.
@@ -244,7 +245,7 @@ public:
     //. Sends the RSET command and returns the status code received from
     //. the server.  If no response is received, the function returns zero.
 
-    int Apop(const char* aName, const char* aDigest);
+    int Apop(const char *aName, const char *aDigest);
     //. Sends the APOP command and returns the status code received from
     //. the server.  If no response is received, the function returns zero.
     //. {\tt aName} is the name of the user, which is sent in the command.
@@ -268,16 +269,16 @@ public:
 
 private:
 
-    char*       mSendBuffer;
-    char*       mRecvBuffer;
+    char       *mSendBuffer;
+    char       *mRecvBuffer;
     int         mNumRecvBufferChars;
     int         mRecvBufferPos;
     int         mStatusCode;
     DwString    mSingleLineResponse;
     DwString    mMultiLineResponse;
-    DwObserver* mObserver;
+    DwObserver *mObserver;
 
-    int PGetLine(char** aPtr, int* aLen);
+    int PGetLine(char **aPtr, int *aLen);
     // Tries to get one complete line of input from the socket.  On success,
     // the function sets {\tt *aPtr} to point to the beginning of the line in
     // the object's internal buffer, sets {\tt *aLen} to the length of the

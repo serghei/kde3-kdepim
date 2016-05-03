@@ -69,21 +69,21 @@ class ViewManager;
 class XXPortManager;
 
 namespace KAB {
-    class DistributionListEntryView;
+class DistributionListEntryView;
 }
 
-typedef struct {
-  KABC::Ticket *ticket;
-  int counter;
+typedef struct
+{
+    KABC::Ticket *ticket;
+    int counter;
 } ResourceMapEntry;
 
-class KDE_EXPORT KABCore : public KAB::Core
-{
-  Q_OBJECT
+class KDE_EXPORT KABCore : public KAB::Core {
+    Q_OBJECT
 
-  public:
-    KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
-             const QString &file = QString::null, const char *name = 0 );
+public:
+    KABCore(KXMLGUIClient *client, bool readWrite, QWidget *parent,
+            const QString &file = QString::null, const char *name = 0);
     ~KABCore();
 
     /**
@@ -127,7 +127,7 @@ class KDE_EXPORT KABCore : public KAB::Core
       resource or a null pointer if no resource was selected by
       the user.
      */
-    KABC::Resource *requestResource( QWidget *parent );
+    KABC::Resource *requestResource(QWidget *parent);
 
     /**
       Returns the parent widget.
@@ -136,13 +136,19 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     static KAboutData *createAboutData();
 
-    void setStatusBar( KStatusBar *statusBar );
+    void setStatusBar(KStatusBar *statusBar);
 
     KStatusBar *statusBar() const;
 
-    KAB::SearchManager *searchManager() const { return mSearchManager; }
+    KAB::SearchManager *searchManager() const
+    {
+        return mSearchManager;
+    }
 
-    KCommandHistory *commandHistory() const { return mCommandHistory; }
+    KCommandHistory *commandHistory() const
+    {
+        return mCommandHistory;
+    }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
@@ -157,16 +163,16 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     /**
       sets the distribution list to display. If null, the regular
-      address book is to be displayed.  
+      address book is to be displayed.
      */
-    virtual void setSelectedDistributionList( const QString &name );
+    virtual void setSelectedDistributionList(const QString &name);
 #endif
 
-  public slots:
+public slots:
     /**
       Is called whenever a contact is selected in the view.
      */
-    void setContactSelected( const QString &uid );
+    void setContactSelected(const QString &uid);
 
     /**
       Opens the preferred mail composer with all selected contacts as
@@ -178,11 +184,11 @@ class KDE_EXPORT KABCore : public KAB::Core
       Opens the preferred mail composer with the given contacts as
       arguments.
      */
-    void sendMail( const QString& email );
+    void sendMail(const QString &email);
 
 
     void mailVCard();
-    void mailVCard(const QStringList& uids);
+    void mailVCard(const QStringList &uids);
 
     /**
      * Start an Instant Messaging chat with the selected contacts
@@ -192,7 +198,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     /**
       Starts the preferred web browser with the given URL as argument.
      */
-    void browse( const QString& url );
+    void browse(const QString &url);
 
     /**
       Select all contacts in the view.
@@ -209,14 +215,14 @@ class KDE_EXPORT KABCore : public KAB::Core
 
       @param uids The uids of the contacts, which shall be deleted.
      */
-    void deleteContacts( const QStringList &uids );
+    void deleteContacts(const QStringList &uids);
 
     /**
       Deletes given distribution lists from the address book.
 
       @param uids The names of the distribution lists which shall be deleted.
      */
-    void deleteDistributionLists( const QStringList &names );
+    void deleteDistributionLists(const QStringList &names);
 
 
     /**
@@ -239,7 +245,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
       @param list The list of addressee, which shall be pasted.
      */
-    void pasteContacts( KABC::Addressee::List &list );
+    void pasteContacts(KABC::Addressee::List &list);
 
 
     /**
@@ -263,9 +269,9 @@ class KDE_EXPORT KABCore : public KAB::Core
       Search with the current search field for a contact, that matches
       the given text, and selects it in the view.
      */
-    void incrementalTextSearch( const QString& text );
+    void incrementalTextSearch(const QString &text);
 
-    void incrementalJumpButtonSearch( const QString& characters );
+    void incrementalJumpButtonSearch(const QString &characters);
 
     /**
       Marks the address book as modified.
@@ -275,7 +281,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     /**
       Marks the address book as modified concerning the argument.
      */
-    void setModified( bool modified );
+    void setModified(bool modified);
 
     /**
       Returns whether the address book is modified.
@@ -286,29 +292,29 @@ class KDE_EXPORT KABCore : public KAB::Core
       Called whenever an contact is modified in the contact editor
       dialog or the quick edit.
      */
-    void contactModified( const KABC::Addressee &addr );
+    void contactModified(const KABC::Addressee &addr);
 
     /**
       DCOP METHOD: Adds the given email address to address book.
      */
-    virtual void addEmail( const QString& addr );
+    virtual void addEmail(const QString &addr);
 
     /**
       DCOP METHOD: Imports the vCard, located at the given url.
      */
-    virtual void importVCard( const KURL& url );
+    virtual void importVCard(const KURL &url);
 
     /**
       DCOP METHOD: Imports the given vCard.
      */
-    virtual void importVCardFromData( const QString& vCard );
+    virtual void importVCardFromData(const QString &vCard);
 
     /**
       DCOP METHOD: Opens contact editor to input a new contact.
      */
     virtual void newContact();
 
-    /** 
+    /**
      DCOP METHOD: Opens distribution list editor to create a new distribution list
     */
     virtual void newDistributionList();
@@ -317,13 +323,13 @@ class KDE_EXPORT KABCore : public KAB::Core
       DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
-    virtual QString getNameByPhone( const QString& phone );
+    virtual QString getNameByPhone(const QString &phone);
 
     /**
       DCOP METHOD: Handle command line arguments, return true if handled
       and false if no args was given. The iface is either the mainwin or the part.
      */
-    bool handleCommandLine( KAddressBookIface* iface );
+    bool handleCommandLine(KAddressBookIface *iface);
 
 
     /**
@@ -335,14 +341,14 @@ class KDE_EXPORT KABCore : public KAB::Core
       Shows the edit dialog for the given uid. If the uid is QString::null,
       the method will try to find a selected addressee in the view.
      */
-    void editContact( const QString &uid = QString::null );
+    void editContact(const QString &uid = QString::null);
 
     /**
      * Let the user chose a different resource for the selected contacts.
      * If the adding to the new resource is successfull, the contact is
      * removed from the old one, unless the Copy flag is given. */
-    void storeContactIn( const QString &uid = QString::null, bool copy = false );
-    
+    void storeContactIn(const QString &uid = QString::null, bool copy = false);
+
     /**
      * Lets the user chose a different resource for the selected contacts and
      * copies it there.
@@ -371,9 +377,9 @@ class KDE_EXPORT KABCore : public KAB::Core
      */
     void print();
 
-    void detailsHighlighted( const QString& );
+    void detailsHighlighted(const QString &);
 
-    void showContactsAddress( const QString &uid );
+    void showContactsAddress(const QString &uid);
 
     void configurationChanged();
 
@@ -384,41 +390,41 @@ class KDE_EXPORT KABCore : public KAB::Core
      */
     void reinitXMLGUI();
 
-  private:
+private:
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-    void editDistributionList( const KPIM::DistributionList &list );
-    void showDistributionListEntry( const QString &uid );
+    void editDistributionList(const KPIM::DistributionList &list);
+    void showDistributionListEntry(const QString &uid);
 #endif
 
-  private slots:
-    void setJumpButtonBarVisible( bool visible );
-    void setDetailsVisible( bool visible );
+private slots:
+    void setJumpButtonBarVisible(bool visible);
+    void setDetailsVisible(bool visible);
 
-    void extensionModified( const KABC::Addressee::List &list );
-    void extensionDeleted( const QStringList &uidList );
+    void extensionModified(const KABC::Addressee::List &list);
+    void extensionDeleted(const QStringList &uidList);
     void clipboardDataChanged();
     void updateIncSearchWidget();
 
-    void slotEditorDestroyed( const QString &uid );
+    void slotEditorDestroyed(const QString &uid);
     void delayedAddressBookChanged();
     void addressBookChanged();
 
-    void categoriesSelected( const QStringList& );
+    void categoriesSelected(const QStringList &);
     void editCategories();
     void slotClearSearchBar();
     void slotContactsUpdated();
 
-    void activateDetailsWidget( QWidget *widget );
-    void deactivateDetailsWidget( QWidget *widget );
+    void activateDetailsWidget(QWidget *widget);
+    void deactivateDetailsWidget(QWidget *widget);
 
-    void editDistributionList( const QString &name );
+    void editDistributionList(const QString &name);
 
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
-    void sendMailToDistributionList( const QString &id ); 
+    void sendMailToDistributionList(const QString &id);
 
-  private:
+private:
     void initGUI();
     void createJumpButtonBar();
     void initActions();
@@ -426,8 +432,8 @@ class KDE_EXPORT KABCore : public KAB::Core
     void updateCategories();
     QStringList allCategories() const;
 
-    AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
-                                                        const char *name = 0 );
+    AddresseeEditorDialog *createAddresseeEditorDialog(QWidget *parent,
+            const char *name = 0);
 
     QWidget *mWidget;
     KABC::AddressBook *mAddressBook;
@@ -447,7 +453,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     JumpButtonBar *mJumpButtonBar;
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
-    KAB::DistributionListEntryView* mDistListEntryView;
+    KAB::DistributionListEntryView *mDistListEntryView;
     KPIM::AddresseeView *mDetailsViewer;
     KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;

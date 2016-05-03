@@ -45,7 +45,7 @@
 
 #include <assert.h>
 
-KMail::CryptPlugFactory * KMail::CryptPlugFactory::mSelf = 0;
+KMail::CryptPlugFactory *KMail::CryptPlugFactory::mSelf = 0;
 
 //
 //
@@ -55,65 +55,75 @@ KMail::CryptPlugFactory * KMail::CryptPlugFactory::mSelf = 0;
 
 
 KMail::CryptPlugFactory::CryptPlugFactory()
-  : Kleo::CryptoBackendFactory(),
-    mCryptPlugWrapperList( 0 )
+    : Kleo::CryptoBackendFactory(),
+      mCryptPlugWrapperList(0)
 {
-  mSelf = this;
+    mSelf = this;
 
-  mCryptPlugWrapperList = new CryptPlugWrapperList();
-  mCryptPlugWrapperList->setAutoDelete( false );
-  updateCryptPlugWrapperList();
+    mCryptPlugWrapperList = new CryptPlugWrapperList();
+    mCryptPlugWrapperList->setAutoDelete(false);
+    updateCryptPlugWrapperList();
 }
 
-KMail::CryptPlugFactory::~CryptPlugFactory() {
-  mSelf = 0;
-  delete mCryptPlugWrapperList; mCryptPlugWrapperList = 0;
+KMail::CryptPlugFactory::~CryptPlugFactory()
+{
+    mSelf = 0;
+    delete mCryptPlugWrapperList;
+    mCryptPlugWrapperList = 0;
 }
 
-KMail::CryptPlugFactory * KMail::CryptPlugFactory::instance() {
-  if ( !mSelf )
-    mSelf = new CryptPlugFactory();
-  return mSelf;
+KMail::CryptPlugFactory *KMail::CryptPlugFactory::instance()
+{
+    if(!mSelf)
+        mSelf = new CryptPlugFactory();
+    return mSelf;
 }
 
-CryptPlugWrapper * KMail::CryptPlugFactory::active() const {
-  if ( smime() && smime()->active() )
-    return smime();
-  if ( openpgp() && openpgp()->active() )
-    return openpgp();
-  return 0;
+CryptPlugWrapper *KMail::CryptPlugFactory::active() const
+{
+    if(smime() && smime()->active())
+        return smime();
+    if(openpgp() && openpgp()->active())
+        return openpgp();
+    return 0;
 }
 
-CryptPlugWrapper * KMail::CryptPlugFactory::createForProtocol( const QString & proto ) const {
-  QString p = proto.lower();
-  if ( p == "application/pkcs7-signature" || p == "application/x-pkcs7-signature" )
-    return smime();
-  if ( p == "application/pgp-signature" || p == "application/x-pgp-signature" )
-    return openpgp();
-  return 0;
+CryptPlugWrapper *KMail::CryptPlugFactory::createForProtocol(const QString &proto) const
+{
+    QString p = proto.lower();
+    if(p == "application/pkcs7-signature" || p == "application/x-pkcs7-signature")
+        return smime();
+    if(p == "application/pgp-signature" || p == "application/x-pgp-signature")
+        return openpgp();
+    return 0;
 }
 
-CryptPlugWrapper * KMail::CryptPlugFactory::smime() const {
-  return mCryptPlugWrapperList->findForLibName( "smime" );
+CryptPlugWrapper *KMail::CryptPlugFactory::smime() const
+{
+    return mCryptPlugWrapperList->findForLibName("smime");
 }
 
-CryptPlugWrapper * KMail::CryptPlugFactory::openpgp() const {
-  return mCryptPlugWrapperList->findForLibName( "openpgp" );
+CryptPlugWrapper *KMail::CryptPlugFactory::openpgp() const
+{
+    return mCryptPlugWrapperList->findForLibName("openpgp");
 }
 
-void KMail::CryptPlugFactory::scanForBackends( QStringList * reason ) {
-  Kleo::CryptoBackendFactory::scanForBackends( reason );
-  updateCryptPlugWrapperList();
+void KMail::CryptPlugFactory::scanForBackends(QStringList *reason)
+{
+    Kleo::CryptoBackendFactory::scanForBackends(reason);
+    updateCryptPlugWrapperList();
 }
 
-void KMail::CryptPlugFactory::updateCryptPlugWrapperList() {
-  mCryptPlugWrapperList->clear();
-  for ( std::vector<Kleo::CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    if ( CryptPlugWrapper * w = dynamic_cast<CryptPlugWrapper*>( (*it)->openpgp() ) )
-      mCryptPlugWrapperList->append( w );
-    if ( CryptPlugWrapper * w = dynamic_cast<CryptPlugWrapper*>( (*it)->smime() ) )
-      mCryptPlugWrapperList->append( w );
-  }
+void KMail::CryptPlugFactory::updateCryptPlugWrapperList()
+{
+    mCryptPlugWrapperList->clear();
+    for(std::vector<Kleo::CryptoBackend *>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it)
+    {
+        if(CryptPlugWrapper *w = dynamic_cast<CryptPlugWrapper *>((*it)->openpgp()))
+            mCryptPlugWrapperList->append(w);
+        if(CryptPlugWrapper *w = dynamic_cast<CryptPlugWrapper *>((*it)->smime()))
+            mCryptPlugWrapperList->append(w);
+    }
 }
 
 #include "cryptplugfactory.moc"

@@ -32,92 +32,100 @@
 
 #include "singleconflictdialog.h"
 
-SingleConflictDialog::SingleConflictDialog( QSync::SyncMapping &mapping, QWidget *parent )
-  : ConflictDialog( mapping, parent ), mDiffAlgo( 0 )
+SingleConflictDialog::SingleConflictDialog(QSync::SyncMapping &mapping, QWidget *parent)
+    : ConflictDialog(mapping, parent), mDiffAlgo(0)
 {
-  initGUI();
+    initGUI();
 
-  QString format = mapping.changeAt( 0 ).objectFormatName();
-  QSync::SyncChange leftChange = mapping.changeAt( 0 );
-  QSync::SyncChange rightChange = mapping.changeAt( 1 );
+    QString format = mapping.changeAt(0).objectFormatName();
+    QSync::SyncChange leftChange = mapping.changeAt(0);
+    QSync::SyncChange rightChange = mapping.changeAt(1);
 
-  if ( format == "file" ) {
-    mDiffAlgo = new KSync::GenericDiffAlgo( leftChange.data(), rightChange.data() );
-  } else if ( format == "vcard" ) {
-  } else if ( format == "calendar" ) {
-  } else if ( format == "xml-contact" ) {
-    mDiffAlgo = new KSync::AddresseeDiffAlgo( leftChange.data(), rightChange.data() );
-  }
+    if(format == "file")
+    {
+        mDiffAlgo = new KSync::GenericDiffAlgo(leftChange.data(), rightChange.data());
+    }
+    else if(format == "vcard")
+    {
+    }
+    else if(format == "calendar")
+    {
+    }
+    else if(format == "xml-contact")
+    {
+        mDiffAlgo = new KSync::AddresseeDiffAlgo(leftChange.data(), rightChange.data());
+    }
 
-  MemberInfo miLeft( leftChange.member() );
-  mDiffAlgoDisplay->setLeftSourceTitle( miLeft.name() );
-  MemberInfo miRight( rightChange.member() );
-  mDiffAlgoDisplay->setRightSourceTitle( miRight.name() );
+    MemberInfo miLeft(leftChange.member());
+    mDiffAlgoDisplay->setLeftSourceTitle(miLeft.name());
+    MemberInfo miRight(rightChange.member());
+    mDiffAlgoDisplay->setRightSourceTitle(miRight.name());
 
-  if ( mDiffAlgo ) {
-    mDiffAlgo->addDisplay( mDiffAlgoDisplay );
-    mDiffAlgo->run();
-  }
+    if(mDiffAlgo)
+    {
+        mDiffAlgo->addDisplay(mDiffAlgoDisplay);
+        mDiffAlgo->run();
+    }
 }
 
 SingleConflictDialog::~SingleConflictDialog()
 {
-  delete mDiffAlgo;
-  mDiffAlgo = 0;
+    delete mDiffAlgo;
+    mDiffAlgo = 0;
 }
 
 void SingleConflictDialog::useFirstChange()
 {
-  mMapping.solve( mMapping.changeAt( 0 ) );
+    mMapping.solve(mMapping.changeAt(0));
 
-  accept();
+    accept();
 }
 
 void SingleConflictDialog::useSecondChange()
 {
-  mMapping.solve( mMapping.changeAt( 1 ) );
+    mMapping.solve(mMapping.changeAt(1));
 
-  accept();
+    accept();
 }
 
 void SingleConflictDialog::duplicateChange()
 {
-  mMapping.duplicate();
+    mMapping.duplicate();
 
-  accept();
+    accept();
 }
 
 void SingleConflictDialog::ignoreChange()
 {
-  mMapping.ignore();
+    mMapping.ignore();
 
-  accept();
+    accept();
 }
 
 void SingleConflictDialog::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 3, 4, KDialog::marginHint(), KDialog::spacingHint() );
+    QGridLayout *layout = new QGridLayout(this, 3, 4, KDialog::marginHint(), KDialog::spacingHint());
 
-  layout->addMultiCellWidget( new QLabel( i18n( "A conflict has appeared, please solve it manually." ), this ), 0, 0, 0, 3 );
-  mDiffAlgoDisplay = new KSync::HTMLDiffAlgoDisplay( this );
+    layout->addMultiCellWidget(new QLabel(i18n("A conflict has appeared, please solve it manually."), this), 0, 0, 0, 3);
+    mDiffAlgoDisplay = new KSync::HTMLDiffAlgoDisplay(this);
 
-  layout->addMultiCellWidget( mDiffAlgoDisplay, 1, 1, 0, 3 );
+    layout->addMultiCellWidget(mDiffAlgoDisplay, 1, 1, 0, 3);
 
-  QPushButton *button = new QPushButton( i18n( "Use Item" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( useFirstChange() ) );
-  layout->addWidget( button, 2, 0 );
+    QPushButton *button = new QPushButton(i18n("Use Item"), this);
+    connect(button, SIGNAL(clicked()), SLOT(useFirstChange()));
+    layout->addWidget(button, 2, 0);
 
-  button = new QPushButton( i18n( "Duplicate Items" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( duplicateChange() ) );
-  layout->addWidget( button, 2, 1 );
+    button = new QPushButton(i18n("Duplicate Items"), this);
+    connect(button, SIGNAL(clicked()), SLOT(duplicateChange()));
+    layout->addWidget(button, 2, 1);
 
-  button = new QPushButton( i18n( "Ignore Conflict" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( ignoreChange() ) );
-  layout->addWidget( button, 2, 2 );
+    button = new QPushButton(i18n("Ignore Conflict"), this);
+    connect(button, SIGNAL(clicked()), SLOT(ignoreChange()));
+    layout->addWidget(button, 2, 2);
 
-  button = new QPushButton( i18n( "Use Item" ), this );
-  connect( button, SIGNAL( clicked() ), SLOT( useSecondChange() ) );
-  layout->addWidget( button, 2, 3 );
+    button = new QPushButton(i18n("Use Item"), this);
+    connect(button, SIGNAL(clicked()), SLOT(useSecondChange()));
+    layout->addWidget(button, 2, 3);
 }
 
 #include "singleconflictdialog.moc"

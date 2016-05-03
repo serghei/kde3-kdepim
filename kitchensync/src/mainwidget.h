@@ -36,27 +36,26 @@ namespace QSync {
 class Environment;
 }
 
-class KDE_EXPORT MainWidget : public QWidget
-{
+class KDE_EXPORT MainWidget : public QWidget {
     Q_OBJECT
-  public:
-    MainWidget( KXMLGUIClient *guiClient, QWidget *widget = 0, const char *name = 0 );
+public:
+    MainWidget(KXMLGUIClient *guiClient, QWidget *widget = 0, const char *name = 0);
     ~MainWidget();
 
     virtual KXMLGUIClient *guiClient() const;
     static KAboutData *aboutData();
 
-  public slots:
+public slots:
     void addGroup();
     void deleteGroup();
     void editGroup();
-    void editGroup( SyncProcess *syncProcess );
+    void editGroup(SyncProcess *syncProcess);
 
     void sync();
-    void sync( SyncProcess *syncProcess );
-    void abortSync( SyncProcess *syncProcess );
+    void sync(SyncProcess *syncProcess);
+    void abortSync(SyncProcess *syncProcess);
 
-  private:
+private:
     void initGUI();
     void initActions();
     void enableActions();

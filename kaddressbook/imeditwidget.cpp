@@ -43,101 +43,106 @@
 #include "imeditwidget.h"
 #include "imeditorwidget.h"
 
-IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *name )
-  : QWidget( parent, name ), mAddressee(addr)
+IMEditWidget::IMEditWidget(QWidget *parent, KABC::Addressee &addr, const char *name)
+    : QWidget(parent, name), mAddressee(addr)
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(this, 2, 2, KDialog::marginHint(),
+            KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "IM address:" ), this );
-  topLayout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel(i18n("IM address:"), this);
+    topLayout->addWidget(label, 0, 0);
 
-  mIMEdit = new KLineEdit( this );
-  connect( mIMEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
-  connect( mIMEdit, SIGNAL( textChanged( const QString& ) ),
-           SIGNAL( modified() ) );
-  label->setBuddy( mIMEdit );
-  topLayout->addWidget( mIMEdit, 0, 1 );
+    mIMEdit = new KLineEdit(this);
+    connect(mIMEdit, SIGNAL(textChanged(const QString &)),
+            SLOT(textChanged(const QString &)));
+    connect(mIMEdit, SIGNAL(textChanged(const QString &)),
+            SIGNAL(modified()));
+    label->setBuddy(mIMEdit);
+    topLayout->addWidget(mIMEdit, 0, 1);
 
-  mEditButton = new QPushButton( i18n( "Edit IM Addresses..." ), this);
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  topLayout->addMultiCellWidget( mEditButton, 1, 1, 0, 1 );
+    mEditButton = new QPushButton(i18n("Edit IM Addresses..."), this);
+    connect(mEditButton, SIGNAL(clicked()), SLOT(edit()));
+    topLayout->addMultiCellWidget(mEditButton, 1, 1, 0, 1);
 
-  topLayout->activate();
+    topLayout->activate();
 }
 
 IMEditWidget::~IMEditWidget()
 {
 }
 
-void IMEditWidget::setReadOnly( bool readOnly )
+void IMEditWidget::setReadOnly(bool readOnly)
 {
-  mIMEdit->setReadOnly( readOnly );
-  mReadOnly = readOnly;
-//  mEditButton->setEnabled( !readOnly );
+    mIMEdit->setReadOnly(readOnly);
+    mReadOnly = readOnly;
+    //  mEditButton->setEnabled( !readOnly );
 }
-void IMEditWidget::setPreferredIM( const QString &addr )
+void IMEditWidget::setPreferredIM(const QString &addr)
 {
-  bool blocked = mIMEdit->signalsBlocked();
-  mIMEdit->blockSignals( true );
-  mIMEdit->setText( addr );
-  mIMEdit->blockSignals( blocked );
+    bool blocked = mIMEdit->signalsBlocked();
+    mIMEdit->blockSignals(true);
+    mIMEdit->setText(addr);
+    mIMEdit->blockSignals(blocked);
 }
-void IMEditWidget::setIMs( const QStringList &list )
+void IMEditWidget::setIMs(const QStringList &list)
 {
-  mIMList = list;
+    mIMList = list;
 
-  bool blocked = mIMEdit->signalsBlocked();
-  mIMEdit->blockSignals( true );
-  if ( list.count() > 0 )
-    mIMEdit->setText( list[ 0 ] );
-  else
-    mIMEdit->setText( "" );
-  mIMEdit->blockSignals( blocked );
+    bool blocked = mIMEdit->signalsBlocked();
+    mIMEdit->blockSignals(true);
+    if(list.count() > 0)
+        mIMEdit->setText(list[ 0 ]);
+    else
+        mIMEdit->setText("");
+    mIMEdit->blockSignals(blocked);
 }
 
 QStringList IMEditWidget::ims()
 {
-  if ( mIMEdit->text().isEmpty() ) {
-    if ( mIMList.count() > 0 )
-      mIMList.remove( mIMList.begin() );
-  } else {
-    if ( mIMList.count() > 0 )
-      mIMList.remove( mIMList.begin() );
+    if(mIMEdit->text().isEmpty())
+    {
+        if(mIMList.count() > 0)
+            mIMList.remove(mIMList.begin());
+    }
+    else
+    {
+        if(mIMList.count() > 0)
+            mIMList.remove(mIMList.begin());
 
-    mIMList.prepend( mIMEdit->text() );
-  }
+        mIMList.prepend(mIMEdit->text());
+    }
 
-  return mIMList;
+    return mIMList;
 }
 QString IMEditWidget::preferredIM()
 {
-  return mIMEdit->text();
+    return mIMEdit->text();
 }
 void IMEditWidget::edit()
 {
-  IMEditorWidget dlg(this, mIMEdit->text());
-  dlg.loadContact(&mAddressee);
-  dlg.setReadOnly(mReadOnly);
+    IMEditorWidget dlg(this, mIMEdit->text());
+    dlg.loadContact(&mAddressee);
+    dlg.setReadOnly(mReadOnly);
 
-  if ( dlg.exec() ) {
-    if ( dlg.isModified() ) {
-      //Stores the changes into mAddressee.  mAddressee isn't actually saved to the addressbook
-      //until we save the record.
-      dlg.storeContact(&mAddressee);
-      mIMEdit->setText( dlg.preferred() );
-      emit modified();
+    if(dlg.exec())
+    {
+        if(dlg.isModified())
+        {
+            //Stores the changes into mAddressee.  mAddressee isn't actually saved to the addressbook
+            //until we save the record.
+            dlg.storeContact(&mAddressee);
+            mIMEdit->setText(dlg.preferred());
+            emit modified();
+        }
     }
-  }
 }
 
-void IMEditWidget::textChanged( const QString &text )
+void IMEditWidget::textChanged(const QString &text)
 {
-  if ( mIMList.count() > 0 )
-    mIMList.remove( mIMList.begin() );
+    if(mIMList.count() > 0)
+        mIMList.remove(mIMList.begin());
 
-  mIMList.prepend( text );
+    mIMList.prepend(text);
 }
 
 

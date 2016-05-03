@@ -47,18 +47,17 @@ namespace KABPrinting {
   The PrintingWizard combines pages common for all print styles
   and those provided by the respective style.
 */
-class PrintingWizard : public KWizard
-{
-  Q_OBJECT
+class PrintingWizard : public KWizard {
+    Q_OBJECT
 
-  public:
+public:
     /**
       Construct a printing wizard. Give the addressbook instance to print.
      */
-    PrintingWizard( KPrinter *printer,
-                    KABC::AddressBook* ab,
-                    const QStringList& selection,
-                    QWidget *parent = 0, const char *name = 0 );
+    PrintingWizard(KPrinter *printer,
+                   KABC::AddressBook *ab,
+                   const QStringList &selection,
+                   QWidget *parent = 0, const char *name = 0);
     ~PrintingWizard();
 
     /**
@@ -79,16 +78,16 @@ class PrintingWizard : public KWizard
     /**
       Retrieve the printer to be used.
      */
-    KPrinter* printer();
+    KPrinter *printer();
 
-  protected slots:
+protected slots:
     /**
       A print style has been selected. The argument is the index
       in the cbStyle combo and in styles.
      */
     void slotStyleSelected(int);
 
-  protected:
+protected:
     QPtrList<PrintStyleFactory> mStyleFactories;
     QPtrList<PrintStyle> mStyleList;
     Filter::List mFilters;

@@ -40,26 +40,26 @@
 = Button to display the Special Alarm Actions dialogue.
 =============================================================================*/
 
-SpecialActionsButton::SpecialActionsButton(const QString& caption, QWidget* parent, const char* name)
-	: QPushButton(caption, parent, name),
-	  mReadOnly(false)
+SpecialActionsButton::SpecialActionsButton(const QString &caption, QWidget *parent, const char *name)
+    : QPushButton(caption, parent, name),
+      mReadOnly(false)
 {
-	setToggleButton(true);
-	setOn(false);
-	connect(this, SIGNAL(clicked()), SLOT(slotButtonPressed()));
-	QWhatsThis::add(this,
-	      i18n("Specify actions to execute before and after the alarm is displayed."));
+    setToggleButton(true);
+    setOn(false);
+    connect(this, SIGNAL(clicked()), SLOT(slotButtonPressed()));
+    QWhatsThis::add(this,
+                    i18n("Specify actions to execute before and after the alarm is displayed."));
 }
 
 /******************************************************************************
 *  Set the pre- and post-alarm actions.
 *  The button's pressed state is set to reflect whether any actions are set.
 */
-void SpecialActionsButton::setActions(const QString& pre, const QString& post)
+void SpecialActionsButton::setActions(const QString &pre, const QString &post)
 {
-	mPreAction  = pre;
-	mPostAction = post;
-	setOn(!mPreAction.isEmpty() || !mPostAction.isEmpty());
+    mPreAction  = pre;
+    mPostAction = post;
+    setOn(!mPreAction.isEmpty() || !mPostAction.isEmpty());
 }
 
 /******************************************************************************
@@ -68,16 +68,16 @@ void SpecialActionsButton::setActions(const QString& pre, const QString& post)
 */
 void SpecialActionsButton::slotButtonPressed()
 {
-	SpecialActionsDlg dlg(mPreAction, mPostAction,
-	                  i18n("Special Alarm Actions"), this, "actionsDlg");
-	dlg.setReadOnly(mReadOnly);
-	if (dlg.exec() == QDialog::Accepted)
-	{
-		mPreAction  = dlg.preAction();
-		mPostAction = dlg.postAction();
-		emit selected();
-	}
-	setOn(!mPreAction.isEmpty() || !mPostAction.isEmpty());
+    SpecialActionsDlg dlg(mPreAction, mPostAction,
+                          i18n("Special Alarm Actions"), this, "actionsDlg");
+    dlg.setReadOnly(mReadOnly);
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        mPreAction  = dlg.preAction();
+        mPostAction = dlg.postAction();
+        emit selected();
+    }
+    setOn(!mPreAction.isEmpty() || !mPostAction.isEmpty());
 }
 
 
@@ -89,22 +89,22 @@ void SpecialActionsButton::slotButtonPressed()
 static const char SPEC_ACT_DIALOG_NAME[] = "SpecialActionsDialog";
 
 
-SpecialActionsDlg::SpecialActionsDlg(const QString& preAction, const QString& postAction,
-                                     const QString& caption, QWidget* parent, const char* name)
-	: KDialogBase(parent, name, true, caption, Ok|Cancel, Ok, false)
+SpecialActionsDlg::SpecialActionsDlg(const QString &preAction, const QString &postAction,
+                                     const QString &caption, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, caption, Ok | Cancel, Ok, false)
 {
-	QWidget* page = new QWidget(this);
-	setMainWidget(page);
-	QVBoxLayout* layout = new QVBoxLayout(page, 0, spacingHint());
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout *layout = new QVBoxLayout(page, 0, spacingHint());
 
-	mActions = new SpecialActions(page);
-	mActions->setActions(preAction, postAction);
-	layout->addWidget(mActions);
-	layout->addSpacing(KDialog::spacingHint());
+    mActions = new SpecialActions(page);
+    mActions->setActions(preAction, postAction);
+    layout->addWidget(mActions);
+    layout->addSpacing(KDialog::spacingHint());
 
-	QSize s;
-	if (KAlarm::readConfigWindowSize(SPEC_ACT_DIALOG_NAME, s))
-		resize(s);
+    QSize s;
+    if(KAlarm::readConfigWindowSize(SPEC_ACT_DIALOG_NAME, s))
+        resize(s);
 }
 
 /******************************************************************************
@@ -112,20 +112,20 @@ SpecialActionsDlg::SpecialActionsDlg(const QString& preAction, const QString& po
 */
 void SpecialActionsDlg::slotOk()
 {
-	if (mActions->isReadOnly())
-		reject();
-	accept();
+    if(mActions->isReadOnly())
+        reject();
+    accept();
 }
 
 /******************************************************************************
 *  Called when the dialog's size has changed.
 *  Records the new size in the config file.
 */
-void SpecialActionsDlg::resizeEvent(QResizeEvent* re)
+void SpecialActionsDlg::resizeEvent(QResizeEvent *re)
 {
-	if (isVisible())
-		KAlarm::writeConfigWindowSize(SPEC_ACT_DIALOG_NAME, re->size());
-	KDialog::resizeEvent(re);
+    if(isVisible())
+        KAlarm::writeConfigWindowSize(SPEC_ACT_DIALOG_NAME, re->size());
+    KDialog::resizeEvent(re);
 }
 
 
@@ -134,59 +134,59 @@ void SpecialActionsDlg::resizeEvent(QResizeEvent* re)
 = Pre- and post-alarm actions widget.
 =============================================================================*/
 
-SpecialActions::SpecialActions(QWidget* parent, const char* name)
-	: QWidget(parent, name),
-	  mReadOnly(false)
+SpecialActions::SpecialActions(QWidget *parent, const char *name)
+    : QWidget(parent, name),
+      mReadOnly(false)
 {
-	QBoxLayout* topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    QBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-	// Pre-alarm action
-	QLabel* label = new QLabel(i18n("Pre-a&larm action:"), this);
-	label->setFixedSize(label->sizeHint());
-	topLayout->addWidget(label, 0, Qt::AlignAuto);
+    // Pre-alarm action
+    QLabel *label = new QLabel(i18n("Pre-a&larm action:"), this);
+    label->setFixedSize(label->sizeHint());
+    topLayout->addWidget(label, 0, Qt::AlignAuto);
 
-	mPreAction = new KLineEdit(this);
-	label->setBuddy(mPreAction);
-	QWhatsThis::add(mPreAction,
-	      i18n("Enter a shell command to execute before the alarm is displayed.\n"
-                   "Note that it is executed only when the alarm proper is displayed, not when a reminder or deferred alarm is displayed.\n"
-	           "N.B. KAlarm will wait for the command to complete before displaying the alarm."));
-	topLayout->addWidget(mPreAction);
-	topLayout->addSpacing(KDialog::spacingHint());
+    mPreAction = new KLineEdit(this);
+    label->setBuddy(mPreAction);
+    QWhatsThis::add(mPreAction,
+                    i18n("Enter a shell command to execute before the alarm is displayed.\n"
+                         "Note that it is executed only when the alarm proper is displayed, not when a reminder or deferred alarm is displayed.\n"
+                         "N.B. KAlarm will wait for the command to complete before displaying the alarm."));
+    topLayout->addWidget(mPreAction);
+    topLayout->addSpacing(KDialog::spacingHint());
 
-	// Post-alarm action
-	label = new QLabel(i18n("Post-alar&m action:"), this);
-	label->setFixedSize(label->sizeHint());
-	topLayout->addWidget(label, 0, Qt::AlignAuto);
+    // Post-alarm action
+    label = new QLabel(i18n("Post-alar&m action:"), this);
+    label->setFixedSize(label->sizeHint());
+    topLayout->addWidget(label, 0, Qt::AlignAuto);
 
-	mPostAction = new KLineEdit(this);
-	label->setBuddy(mPostAction);
-	QWhatsThis::add(mPostAction,
-	      i18n("Enter a shell command to execute after the alarm window is closed.\n"
-	           "Note that it is not executed after closing a reminder window. If you defer "
-	           "the alarm, it is not executed until the alarm is finally acknowledged or closed."));
-	topLayout->addWidget(mPostAction);
+    mPostAction = new KLineEdit(this);
+    label->setBuddy(mPostAction);
+    QWhatsThis::add(mPostAction,
+                    i18n("Enter a shell command to execute after the alarm window is closed.\n"
+                         "Note that it is not executed after closing a reminder window. If you defer "
+                         "the alarm, it is not executed until the alarm is finally acknowledged or closed."));
+    topLayout->addWidget(mPostAction);
 }
 
-void SpecialActions::setActions(const QString& pre, const QString& post)
+void SpecialActions::setActions(const QString &pre, const QString &post)
 {
-	mPreAction->setText(pre);
-	mPostAction->setText(post);
+    mPreAction->setText(pre);
+    mPostAction->setText(post);
 }
 
 QString SpecialActions::preAction() const
 {
-	return mPreAction->text();
+    return mPreAction->text();
 }
 
 QString SpecialActions::postAction() const
 {
-	return mPostAction->text();
+    return mPostAction->text();
 }
 
 void SpecialActions::setReadOnly(bool ro)
 {
-	mReadOnly = ro;
-	mPreAction->setReadOnly(mReadOnly);
-	mPostAction->setReadOnly(mReadOnly);
+    mReadOnly = ro;
+    mPreAction->setReadOnly(mReadOnly);
+    mPostAction->setReadOnly(mReadOnly);
 }

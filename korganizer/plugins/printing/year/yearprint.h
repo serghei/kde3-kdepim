@@ -34,27 +34,38 @@ class Calendar;
 
 using namespace KCal;
 
-class CalPrintYear : public CalPrintPluginBase
-{
-  public:
-    CalPrintYear():CalPrintPluginBase() {}
+class CalPrintYear : public CalPrintPluginBase {
+public:
+    CalPrintYear(): CalPrintPluginBase() {}
     virtual ~CalPrintYear() {}
-    virtual QString description() { return i18n("Print &Year"); }
-    virtual QString info() { return i18n("Prints a calendar for an entire year"); }
-    virtual int sortID() { return 900; }
-    virtual bool enabled() { return true; }
-    virtual QWidget *createConfigWidget( QWidget* );
+    virtual QString description()
+    {
+        return i18n("Print &Year");
+    }
+    virtual QString info()
+    {
+        return i18n("Prints a calendar for an entire year");
+    }
+    virtual int sortID()
+    {
+        return 900;
+    }
+    virtual bool enabled()
+    {
+        return true;
+    }
+    virtual QWidget *createConfigWidget(QWidget *);
     virtual KPrinter::Orientation defaultOrientation();
 
-  public:
+public:
     virtual void print(QPainter &p, int width, int height);
     virtual void readSettingsWidget();
     virtual void setSettingsWidget();
     virtual void loadConfig();
     virtual void saveConfig();
-    virtual void setDateRange( const QDate& from, const QDate& to );
+    virtual void setDateRange(const QDate &from, const QDate &to);
 
-  protected:
+protected:
     int mYear;
     int mPages;
     int mSubDaysEvents, mHolidaysEvents;

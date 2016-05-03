@@ -22,25 +22,25 @@
 #include <klistview.h>
 #include <klocale.h>
 
-MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
-	: KDialogBase( parent, "MessagePropertyDialog", true, i18n( "Message Properties" ),
-			KDialogBase::Close|KDialogBase::User1, KDialogBase::Close, false,
-			KStdGuiItem::save() )
+MessagePropertyDialog::MessagePropertyDialog(QWidget *parent, KTNEFMessage *msg)
+    : KDialogBase(parent, "MessagePropertyDialog", true, i18n("Message Properties"),
+                  KDialogBase::Close | KDialogBase::User1, KDialogBase::Close, false,
+                  KStdGuiItem::save())
 {
-	m_message = msg;
+    m_message = msg;
 
-	m_listview = new KListView( this );
-	m_listview->addColumn( i18n( "Name" ) );
-	m_listview->addColumn( i18n( "Value" ) );
-	m_listview->setAllColumnsShowFocus( true );
-	setMainWidget( m_listview );
+    m_listview = new KListView(this);
+    m_listview->addColumn(i18n("Name"));
+    m_listview->addColumn(i18n("Value"));
+    m_listview->setAllColumnsShowFocus(true);
+    setMainWidget(m_listview);
 
-	formatPropertySet( m_message, m_listview );
+    formatPropertySet(m_message, m_listview);
 }
 
 void MessagePropertyDialog::slotUser1()
 {
-	saveProperty( m_listview, m_message, this );
+    saveProperty(m_listview, m_message, this);
 }
 
 #include "messagepropertydialog.moc"

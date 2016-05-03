@@ -1,6 +1,6 @@
 /***************************************************************************
  *   snippet feature from kdevelop/plugins/snippet/                        *
- *                                                                         * 
+ *                                                                         *
  *   Copyright (C) 2007 by Robert Gruber                                   *
  *   rgruber@users.sourceforge.net                                         *
  *                                                                         *
@@ -42,51 +42,56 @@ It inherits KListView and QToolTip which is needed for showing the
 tooltips which contains the text of the snippet
 @author Robert Gruber
 */
-class SnippetWidget : public KListView, public QToolTip
-{
-  Q_OBJECT
+class SnippetWidget : public KListView, public QToolTip {
+    Q_OBJECT
 
 public:
-    SnippetWidget(KMEdit* editor, KActionCollection* actionCollection, QWidget* parent = 0);
+    SnippetWidget(KMEdit *editor, KActionCollection *actionCollection, QWidget *parent = 0);
     ~SnippetWidget();
-    QPtrList<SnippetItem> * getList() { return (&_list); }
+    QPtrList<SnippetItem> *getList()
+    {
+        return (&_list);
+    }
     void writeConfig();
-    SnippetConfig *  getSnippetConfig() { return (&_SnippetConfig); }
+    SnippetConfig   *getSnippetConfig()
+    {
+        return (&_SnippetConfig);
+    }
 
 
 private slots:
     void initConfig();
 
 protected:
-    void maybeTip( const QPoint & );
-    bool acceptDrag (QDropEvent *event) const;
+    void maybeTip(const QPoint &);
+    bool acceptDrag(QDropEvent *event) const;
 
 private:
-    void insertIntoActiveView( const QString &text );
-    QString parseText(QString text, QString del="$");
-    bool showMultiVarDialog(QMap<QString, QString> * map, QMap<QString, QString> * mapSave,
-                            int & iWidth, int & iBasicHeight, int & iOneHeight);
-    QString showSingleVarDialog(QString var, QMap<QString, QString> * mapSave, QRect & dlgSize);
-    SnippetItem* makeItem( SnippetItem* parent, const QString& name, const QString& text, const KShortcut& shortcut );
+    void insertIntoActiveView(const QString &text);
+    QString parseText(QString text, QString del = "$");
+    bool showMultiVarDialog(QMap<QString, QString> *map, QMap<QString, QString> *mapSave,
+                            int &iWidth, int &iBasicHeight, int &iOneHeight);
+    QString showSingleVarDialog(QString var, QMap<QString, QString> *mapSave, QRect &dlgSize);
+    SnippetItem *makeItem(SnippetItem *parent, const QString &name, const QString &text, const KShortcut &shortcut);
 
     QPtrList<SnippetItem> _list;
     QMap<QString, QString> _mapSaved;
-    KConfig * _cfg;
+    KConfig *_cfg;
     SnippetConfig _SnippetConfig;
-    KMEdit* mEditor;
-    KActionCollection* mActionCollection;
+    KMEdit *mEditor;
+    KActionCollection *mActionCollection;
 
 public slots:
     void slotRemove();
-    void slotEdit( QListViewItem* item_ = 0 );
+    void slotEdit(QListViewItem *item_ = 0);
     void slotEditGroup();
     void slotAdd();
     void slotAddGroup();
     void slotExecute();
 
 protected slots:
-    void showPopupMenu( QListViewItem * item, const QPoint & p, int );
-    void slotExecuted(QListViewItem * item =  0);
+    void showPopupMenu(QListViewItem *item, const QPoint &p, int);
+    void slotExecuted(QListViewItem *item =  0);
     void slotDropped(QDropEvent *e, QListViewItem *after);
     void startDrag();
 };

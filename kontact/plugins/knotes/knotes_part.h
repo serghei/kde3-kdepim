@@ -44,52 +44,51 @@ namespace KCal {
 class Journal;
 }
 
-class KNotesPart : public KParts::ReadOnlyPart, virtual public KNotesIface
-{
-  Q_OBJECT
+class KNotesPart : public KParts::ReadOnlyPart, virtual public KNotesIface {
+    Q_OBJECT
 
-  public:
-    KNotesPart( QObject *parent = 0, const char *name = 0 );
-   ~KNotesPart();
+public:
+    KNotesPart(QObject *parent = 0, const char *name = 0);
+    ~KNotesPart();
 
     bool openFile();
 
-  public slots:
-    QString newNote( const QString& name = QString::null,
-                     const QString& text = QString::null );
-    QString newNoteFromClipboard( const QString& name = QString::null );
+public slots:
+    QString newNote(const QString &name = QString::null,
+                    const QString &text = QString::null);
+    QString newNoteFromClipboard(const QString &name = QString::null);
 
-  public:
-    void killNote( const QString& id );
-    void killNote( const QString& id, bool force );
+public:
+    void killNote(const QString &id);
+    void killNote(const QString &id, bool force);
 
-    QString name( const QString& id ) const;
-    QString text( const QString& id ) const;
+    QString name(const QString &id) const;
+    QString text(const QString &id) const;
 
-    void setName( const QString& id, const QString& newName );
-    void setText( const QString& id, const QString& newText );
+    void setName(const QString &id, const QString &newName);
+    void setText(const QString &id, const QString &newText);
 
     QMap<QString, QString> notes() const;
 
-  private slots:
-    void createNote( KCal::Journal *journal );
-    void killNote( KCal::Journal *journal );
+private slots:
+    void createNote(KCal::Journal *journal);
+    void killNote(KCal::Journal *journal);
 
-    void editNote( QIconViewItem *item );
+    void editNote(QIconViewItem *item);
 
     void renameNote();
-    void renamedNote( QIconViewItem *item );
+    void renamedNote(QIconViewItem *item);
 
-    void slotOnItem( QIconViewItem *item );
+    void slotOnItem(QIconViewItem *item);
     void slotOnViewport();
-    void slotOnCurrentChanged( QIconViewItem *item );
+    void slotOnCurrentChanged(QIconViewItem *item);
 
-    void popupRMB( QIconViewItem *item, const QPoint& pos );
+    void popupRMB(QIconViewItem *item, const QPoint &pos);
     void killSelectedNotes();
 
     void printSelectedNotes();
 
-  private:
+private:
     KIconView *mNotesView;
     KNoteTip *mNoteTip;
     KNoteEditDlg *mNoteEditDlg;

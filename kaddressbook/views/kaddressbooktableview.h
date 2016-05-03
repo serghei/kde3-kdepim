@@ -47,7 +47,9 @@ class KIMProxy;
 class ContactListViewItem;
 class ContactListView;
 
-namespace KABC { class AddressBook; }
+namespace KABC {
+class AddressBook;
+}
 
 /**
  * This class is the table view for kaddressbook. This view is a KListView
@@ -57,34 +59,36 @@ namespace KABC { class AddressBook; }
  * @author Don Sanders <dsanders@kde.org>
  * @version 0.1
  */
-class KAddressBookTableView : public KAddressBookView
-{
-friend class ContactListView;
+class KAddressBookTableView : public KAddressBookView {
+    friend class ContactListView;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KAddressBookTableView( KAB::Core *core, QWidget *parent,
-                           const char *name = 0 );
+public:
+    KAddressBookTableView(KAB::Core *core, QWidget *parent,
+                          const char *name = 0);
     virtual ~KAddressBookTableView();
 
-    virtual void refresh( const QString &uid = QString() );
+    virtual void refresh(const QString &uid = QString());
     virtual QStringList selectedUids();
-    virtual void setSelected( const QString &uid = QString(), bool selected = false );
-    virtual void setFirstSelected( bool selected = true );
+    virtual void setSelected(const QString &uid = QString(), bool selected = false);
+    virtual void setFirstSelected(bool selected = true);
     virtual KABC::Field *sortField() const;
 
-    virtual void readConfig( KConfig *config );
-    virtual void writeConfig( KConfig *config );
-    virtual QString type() const { return "Table"; }
+    virtual void readConfig(KConfig *config);
+    virtual void writeConfig(KConfig *config);
+    virtual QString type() const
+    {
+        return "Table";
+    }
 
     void scrollUp();
     void scrollDown();
 
-  public slots:
+public slots:
     virtual void reconstructListView();
 
-  protected slots:
+protected slots:
     /**
       Called whenever the user selects an addressee in the list view.
     */
@@ -94,19 +98,19 @@ friend class ContactListView;
       Called whenever the user executes an addressee. In terms of the
       list view, this is probably a double click
     */
-    void addresseeExecuted( QListViewItem* );
+    void addresseeExecuted(QListViewItem *);
 
     /**
       RBM menu called.
      */
-    void rmbClicked( KListView*, QListViewItem*, const QPoint& );
+    void rmbClicked(KListView *, QListViewItem *, const QPoint &);
 
     /**
      * Called to update the presence of a single item
      */
-    void updatePresence( const QString &uid );
+    void updatePresence(const QString &uid);
 
-  private:
+private:
     QVBoxLayout *mMainLayout;
     ContactListView *mListView;
     KIMProxy *mIMProxy;

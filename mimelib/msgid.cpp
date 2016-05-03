@@ -52,23 +52,25 @@
 #include <mimelib/msgid.h>
 #include <mimelib/token.h>
 
-static void GetHostName(char* buf, int bufLen);
+static void GetHostName(char *buf, int bufLen);
 static DwUint32 GetPid();
 
 
-const char* const DwMsgId::sClassName = "DwMsgId";
-const char* DwMsgId::sHostName = 0;
+const char *const DwMsgId::sClassName = "DwMsgId";
+const char *DwMsgId::sHostName = 0;
 
 
-DwMsgId* (*DwMsgId::sNewMsgId)(const DwString&, DwMessageComponent*) = 0;
+DwMsgId *(*DwMsgId::sNewMsgId)(const DwString &, DwMessageComponent *) = 0;
 
 
-DwMsgId* DwMsgId::NewMsgId(const DwString& aStr, DwMessageComponent* aParent)
+DwMsgId *DwMsgId::NewMsgId(const DwString &aStr, DwMessageComponent *aParent)
 {
-    if (sNewMsgId) {
+    if(sNewMsgId)
+    {
         return sNewMsgId(aStr, aParent);
     }
-    else {
+    else
+    {
         return new DwMsgId(aStr, aParent);
     }
 }
@@ -81,18 +83,18 @@ DwMsgId::DwMsgId()
 }
 
 
-DwMsgId::DwMsgId(const DwMsgId& aMsgId)
-  : DwFieldBody(aMsgId),
-    mLocalPart(aMsgId.mLocalPart),
-    mDomain(aMsgId.mDomain)
+DwMsgId::DwMsgId(const DwMsgId &aMsgId)
+    : DwFieldBody(aMsgId),
+      mLocalPart(aMsgId.mLocalPart),
+      mDomain(aMsgId.mDomain)
 {
     mClassId = kCidMsgId;
     mClassName = sClassName;
 }
 
 
-DwMsgId::DwMsgId(const DwString& aStr, DwMessageComponent* aParent)
-  : DwFieldBody(aStr, aParent)
+DwMsgId::DwMsgId(const DwString &aStr, DwMessageComponent *aParent)
+    : DwFieldBody(aStr, aParent)
 {
     mClassId = kCidMsgId;
     mClassName = sClassName;
@@ -104,9 +106,9 @@ DwMsgId::~DwMsgId()
 }
 
 
-const DwMsgId& DwMsgId::operator = (const DwMsgId& aMsgId)
+const DwMsgId &DwMsgId::operator = (const DwMsgId &aMsgId)
 {
-    if (this == &aMsgId) return *this;
+    if(this == &aMsgId) return *this;
     DwFieldBody::operator = (aMsgId);
     mLocalPart = aMsgId.mLocalPart;
     mDomain = aMsgId.mDomain;
@@ -114,26 +116,26 @@ const DwMsgId& DwMsgId::operator = (const DwMsgId& aMsgId)
 }
 
 
-const DwString& DwMsgId::LocalPart() const
+const DwString &DwMsgId::LocalPart() const
 {
     return mLocalPart;
 }
 
 
-void DwMsgId::SetLocalPart(const DwString& aLocalPart)
+void DwMsgId::SetLocalPart(const DwString &aLocalPart)
 {
     mLocalPart = aLocalPart;
     SetModified();
 }
 
 
-const DwString& DwMsgId::Domain() const
+const DwString &DwMsgId::Domain() const
 {
     return mDomain;
 }
 
 
-void DwMsgId::SetDomain(const DwString& aDomain)
+void DwMsgId::SetDomain(const DwString &aDomain)
 {
     mDomain = aDomain;
     SetModified();
@@ -150,8 +152,10 @@ void DwMsgId::Parse()
     // Advance to '<'
     int type = tokenizer.Type();
     int found = 0;
-    while (!found && type != eTkNull) {
-        if (type == eTkSpecial && tokenizer.Token()[0] == '<') {
+    while(!found && type != eTkNull)
+    {
+        if(type == eTkSpecial && tokenizer.Token()[0] == '<')
+        {
             found = 1;
         }
         ++tokenizer;
@@ -159,48 +163,54 @@ void DwMsgId::Parse()
     }
     // Get the local part
     found = 0;
-    while (type != eTkNull && !found) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case '@':
-                found = 1;
+    while(type != eTkNull && !found)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case '@':
+                        found = 1;
+                        break;
+                    case '.':
+                        mLocalPart += tokenizer.Token();
+                        break;
+                }
                 break;
-            case '.':
+            case eTkAtom:
+            case eTkQuotedString:
                 mLocalPart += tokenizer.Token();
                 break;
-            }
-            break;
-        case eTkAtom:
-        case eTkQuotedString:
-            mLocalPart += tokenizer.Token();
-            break;
         }
         ++tokenizer;
         type = tokenizer.Type();
     }
     // Get the domain
     found = 0;
-    while (type != eTkNull && !found) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case '>':
-                found = 1;
+    while(type != eTkNull && !found)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case '>':
+                        found = 1;
+                        break;
+                    case '.':
+                        mDomain += tokenizer.Token();
+                        break;
+                }
                 break;
-            case '.':
+            case eTkAtom:
                 mDomain += tokenizer.Token();
                 break;
-            }
-            break;
-        case eTkAtom:
-            mDomain += tokenizer.Token();
-            break;
-        case eTkDomainLiteral:
-            mDomain += tokenizer.Token();
-            break;
+            case eTkDomainLiteral:
+                mDomain += tokenizer.Token();
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -210,7 +220,7 @@ void DwMsgId::Parse()
 
 void DwMsgId::Assemble()
 {
-    if (!mIsModified) return;
+    if(!mIsModified) return;
     mString = "<";
     mString += mLocalPart;
     mString += "@";
@@ -220,7 +230,7 @@ void DwMsgId::Assemble()
 }
 
 
-DwMessageComponent* DwMsgId::Clone() const
+DwMessageComponent *DwMsgId::Clone() const
 {
     return new DwMsgId(*this);
 }
@@ -258,8 +268,8 @@ void DwMsgId::CreateDefault()
     scratch[pos++] = char(n / 10 % 10 + '0');
     scratch[pos++] = char(n      % 10 + '0');
     static int counter = 0;
-    scratch[pos++] = base35chars[counter/35%35];
-    scratch[pos++] = base35chars[counter   %35];
+    scratch[pos++] = base35chars[counter / 35 % 35];
+    scratch[pos++] = base35chars[counter   % 35];
     ++counter;
     scratch[pos++] = '.';
     DwUint32 pid = GetPid();
@@ -269,8 +279,9 @@ void DwMsgId::CreateDefault()
     scratch[pos++] = char(pid / 10    % 10 + '0');
     scratch[pos++] = char(pid         % 10 + '0');
     scratch[pos++] = '@';
-    char* cp = hostname;
-    while (*cp && pos < 79) {
+    char *cp = hostname;
+    while(*cp && pos < 79)
+    {
         scratch[pos++] = *cp++;
     }
     scratch[pos++] = '>';
@@ -282,26 +293,26 @@ void DwMsgId::CreateDefault()
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwMsgId::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwMsgId::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "----------------- Debug info for DwMsgId class -----------------\n";
+          "----------------- Debug info for DwMsgId class -----------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwMsgId::PrintDebugInfo(std::ostream& , int ) const {}
+void DwMsgId::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwMsgId::_PrintDebugInfo(std::ostream& aStrm) const
+void DwMsgId::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwFieldBody::_PrintDebugInfo(aStrm);
     aStrm << "Local part:       " << mLocalPart << '\n';
     aStrm << "Domain:           " << mDomain    << '\n';
 }
 #else
-void DwMsgId::_PrintDebugInfo(std::ostream& ) const {}
+void DwMsgId::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
@@ -327,25 +338,29 @@ void DwMsgId::CheckInvariants() const
 
 // Winsock version
 
-static void GetHostName(char* buf, int bufLen)
+static void GetHostName(char *buf, int bufLen)
 {
     WORD wVersionRequested = MAKEWORD(1, 1);
     WSADATA wsaData;
     int err = WSAStartup(wVersionRequested, &wsaData);
     // check winsock version 1.1
-    if (LOBYTE(wsaData.wVersion) == 1 &&
-        HIBYTE(wsaData.wVersion) == 1 &&
-        err == 0) {
-	buf[0] = '\0';
-        if (!gethostname(buf, bufLen))
-	  buf[bufLen-1] = '\0';
+    if(LOBYTE(wsaData.wVersion) == 1 &&
+            HIBYTE(wsaData.wVersion) == 1 &&
+            err == 0)
+    {
+        buf[0] = '\0';
+        if(!gethostname(buf, bufLen))
+            buf[bufLen - 1] = '\0';
     }
-    else {
+    else
+    {
         // cannot find winsock
-        if (DwMsgId::sHostName) {
+        if(DwMsgId::sHostName)
+        {
             strcpy(hostname, DwMsgId::sHostName);
         }
-        else {
+        else
+        {
             strcpy(hostname, "noname");
         }
     }
@@ -356,13 +371,15 @@ static void GetHostName(char* buf, int bufLen)
 
 // Generic version (no Winsock).  Requires that DwMsgId::sHostName be set.
 
-static void GetHostName(char* buf, int bufLen)
+static void GetHostName(char *buf, int bufLen)
 {
-    if (DwMsgId::sHostName) {
+    if(DwMsgId::sHostName)
+    {
         strncpy(buf, DwMsgId::sHostName, bufLen);
-        buf[bufLen-1] = 0;
+        buf[bufLen - 1] = 0;
     }
-    else {
+    else
+    {
         strcpy(buf, "noname");
     }
 }
@@ -384,11 +401,11 @@ static DwUint32 GetPid()
 
 #if defined(DW_UNIX)
 
-static void GetHostName(char* buf, int bufLen)
+static void GetHostName(char *buf, int bufLen)
 {
-   buf[0] = '\0';
-   if (!gethostname(buf, bufLen))
-     buf[bufLen-1] = '\0';
+    buf[0] = '\0';
+    if(!gethostname(buf, bufLen))
+        buf[bufLen - 1] = '\0';
 }
 
 static DwUint32 GetPid()

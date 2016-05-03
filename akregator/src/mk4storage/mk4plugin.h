@@ -34,14 +34,13 @@ namespace Backend {
 
 class StorageFactory;
 
-class MK4Plugin : public Akregator::Plugin 
-{
-   public: 
-      virtual ~MK4Plugin();	
-      virtual bool init();
+class MK4Plugin : public Akregator::Plugin {
+public:
+    virtual ~MK4Plugin();
+    virtual bool init();
 
-   private:
-      StorageFactory* m_factory;
+private:
+    StorageFactory *m_factory;
 };
 
 }

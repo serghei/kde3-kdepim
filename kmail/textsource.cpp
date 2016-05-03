@@ -36,24 +36,30 @@
 #include "kmfolder.h"
 #include "kmfolderindex.h"
 
-KMTextSource::KMTextSource() : MailTextSource() {
+KMTextSource::KMTextSource() : MailTextSource()
+{
 }
 
 
-KMTextSource::~KMTextSource() {
+KMTextSource::~KMTextSource()
+{
 }
 
 
-QCString KMTextSource::text(Q_UINT32 serialNumber) const {
+QCString KMTextSource::text(Q_UINT32 serialNumber) const
+{
     QCString rc;
     KMFolder *folder = 0;
     int idx;
     KMMsgDict::instance()->getLocation(serialNumber, &folder, &idx);
-    if (folder) {
+    if(folder)
+    {
         KMMsgBase *msgBase = folder->getMsgBase(idx);
-        if (msgBase) {
+        if(msgBase)
+        {
             KMMessage *msg = msgBase->storage()->readTemporaryMsg(idx);
-            if (msg) {
+            if(msg)
+            {
                 rc = msg->asString();
                 delete msg;
             }

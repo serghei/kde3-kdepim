@@ -28,16 +28,26 @@
 class KDE_EXPORT BoolFlags {
 
 public:
-  BoolFlags()       { clear(); }
-  ~BoolFlags()      {}
+    BoolFlags()
+    {
+        clear();
+    }
+    ~BoolFlags()      {}
 
-  void set(unsigned int i, bool b=true);
-  bool get(unsigned int i);
-  void clear()            { bits[0]=0; bits[1]=0; }
-  unsigned char *data()   { return bits; }
+    void set(unsigned int i, bool b = true);
+    bool get(unsigned int i);
+    void clear()
+    {
+        bits[0] = 0;
+        bits[1] = 0;
+    }
+    unsigned char *data()
+    {
+        return bits;
+    }
 
 protected:
-  unsigned char bits[2];  //space for 16 flags
+    unsigned char bits[2];  //space for 16 flags
 };
 
 #endif // __KMIME_BOOLFLAGS_H__

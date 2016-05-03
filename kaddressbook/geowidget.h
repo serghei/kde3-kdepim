@@ -42,29 +42,29 @@ class QLabel;
 class QSpinBox;
 class QPushButton;
 
-typedef struct {
-  double latitude;
-  double longitude;
-  QString country;
+typedef struct
+{
+    double latitude;
+    double longitude;
+    QString country;
 } GeoData;
 
-class GeoWidget : public KAB::ContactEditorWidget
-{
-  Q_OBJECT
+class GeoWidget : public KAB::ContactEditorWidget {
+    Q_OBJECT
 
-  public:
-    GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    GeoWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~GeoWidget();
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  private slots:
+private slots:
     void editGeoData();
 
-  private:
+private:
     KDoubleSpinBox *mLatitudeBox;
     KDoubleSpinBox *mLongitudeBox;
 
@@ -74,31 +74,30 @@ class GeoWidget : public KAB::ContactEditorWidget
     bool mReadOnly;
 };
 
-class GeoDialog : public KDialogBase
-{
-  Q_OBJECT
+class GeoDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    GeoDialog( QWidget *parent, const char *name = 0 );
+public:
+    GeoDialog(QWidget *parent, const char *name = 0);
     ~GeoDialog();
 
-    void setLatitude( double latitude );
+    void setLatitude(double latitude);
     double latitude() const;
 
-    void setLongitude( double longitude );
+    void setLongitude(double longitude);
     double longitude() const;
 
-  private slots:
+private slots:
     void updateInputs();
 
     void sexagesimalInputChanged();
     void geoMapChanged();
     void cityInputChanged();
 
-  private:
+private:
     void loadCityList();
-    double calculateCoordinate( const QString& ) const;
-    int nearestCity( double, double ) const;
+    double calculateCoordinate(const QString &) const;
+    int nearestCity(double, double) const;
 
     GeoMapWidget *mMapWidget;
     KComboBox *mCityCombo;
@@ -119,41 +118,42 @@ class GeoDialog : public KDialogBase
     bool mUpdateSexagesimalInput;
 };
 
-class GeoMapWidget : public QWidget
-{
-  Q_OBJECT
+class GeoMapWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    GeoMapWidget( QWidget *parent, const char *name = 0 );
+public:
+    GeoMapWidget(QWidget *parent, const char *name = 0);
     ~GeoMapWidget();
 
-    void setLatitude( double latitude );
+    void setLatitude(double latitude);
     double latitude()const;
 
-    void setLongitude( double longitude );
+    void setLongitude(double longitude);
     double longitude()const;
 
-  signals:
+signals:
     void changed();
 
-  protected:
-    virtual void mousePressEvent( QMouseEvent* );
-    virtual void paintEvent( QPaintEvent* );
+protected:
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void paintEvent(QPaintEvent *);
 
-  private:
+private:
     double mLatitude;
     double mLongitude;
 };
 
-class GeoWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+class GeoWidgetFactory : public KAB::ContactEditorWidgetFactory {
+public:
+    KAB::ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
     {
-      return new GeoWidget( ab, parent, name );
+        return new GeoWidget(ab, parent, name);
     }
 
-    QString pageIdentifier() const { return "misc"; }
+    QString pageIdentifier() const
+    {
+        return "misc";
+    }
 };
 
 #endif

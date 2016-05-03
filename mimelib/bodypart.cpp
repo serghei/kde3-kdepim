@@ -36,23 +36,25 @@
 #include <mimelib/body.h>
 #include <mimelib/message.h>
 
-const char* const DwBodyPart::sClassName = "DwBodyPart";
+const char *const DwBodyPart::sClassName = "DwBodyPart";
 
 
-DwBodyPart* (*DwBodyPart::sNewBodyPart)(const DwString&,
-    DwMessageComponent*) = 0;
+DwBodyPart *(*DwBodyPart::sNewBodyPart)(const DwString &,
+                                        DwMessageComponent *) = 0;
 
 
-DwBodyPart* DwBodyPart::NewBodyPart(const DwString& aStr,
-    DwMessageComponent* aParent)
+DwBodyPart *DwBodyPart::NewBodyPart(const DwString &aStr,
+                                    DwMessageComponent *aParent)
 {
-    if (sNewBodyPart) {
-        DwBodyPart* newPart = sNewBodyPart(aStr, aParent);
+    if(sNewBodyPart)
+    {
+        DwBodyPart *newPart = sNewBodyPart(aStr, aParent);
         //if( newPart )
         //    newPart->mNext = 0;
         return newPart;
     }
-    else {
+    else
+    {
         return new DwBodyPart(aStr, aParent);
     }
 }
@@ -65,16 +67,16 @@ DwBodyPart::DwBodyPart()
 }
 
 
-DwBodyPart::DwBodyPart(const DwBodyPart& aPart)
-  : DwEntity(aPart)
+DwBodyPart::DwBodyPart(const DwBodyPart &aPart)
+    : DwEntity(aPart)
 {
     mNext = 0;
     mClassId = kCidBodyPart;
     mClassName = sClassName;
 }
 
-DwBodyPart::DwBodyPart(const DwEntity& aPart)
-  : DwEntity(aPart)
+DwBodyPart::DwBodyPart(const DwEntity &aPart)
+    : DwEntity(aPart)
 {
     mNext = 0;
     mClassId = kCidBodyPart;
@@ -82,8 +84,8 @@ DwBodyPart::DwBodyPart(const DwEntity& aPart)
 }
 
 
-DwBodyPart::DwBodyPart(const DwString& aStr, DwMessageComponent* aParent)
-  : DwEntity(aStr, aParent)
+DwBodyPart::DwBodyPart(const DwString &aStr, DwMessageComponent *aParent)
+    : DwEntity(aStr, aParent)
 {
     mNext = 0;
     mClassId = kCidBodyPart;
@@ -94,32 +96,32 @@ DwBodyPart::DwBodyPart(const DwString& aStr, DwMessageComponent* aParent)
 
 DwBodyPart::~DwBodyPart()
 {
-// fprintf( stderr, "\ndeleted a DwBodyPart\n");
+    // fprintf( stderr, "\ndeleted a DwBodyPart\n");
 }
 
 
-const DwBodyPart& DwBodyPart::operator = (const DwBodyPart& aPart)
+const DwBodyPart &DwBodyPart::operator = (const DwBodyPart &aPart)
 {
-    if (this == &aPart) return *this;
+    if(this == &aPart) return *this;
     DwEntity::operator = (aPart);
     mNext = aPart.Next();
     return *this;
 }
 
 
-DwBodyPart* DwBodyPart::Next() const
+DwBodyPart *DwBodyPart::Next() const
 {
-    return (DwBodyPart*) mNext;
+    return (DwBodyPart *) mNext;
 }
 
 
-void DwBodyPart::SetNext(const DwBodyPart* aPart)
+void DwBodyPart::SetNext(const DwBodyPart *aPart)
 {
     mNext = aPart;
 }
 
 
-DwMessageComponent* DwBodyPart::Clone() const
+DwMessageComponent *DwBodyPart::Clone() const
 {
     return new DwBodyPart(*this);
 }
@@ -127,36 +129,39 @@ DwMessageComponent* DwBodyPart::Clone() const
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwBodyPart::PrintDebugInfo(std::ostream& aStrm, int aDepth) const
+void DwBodyPart::PrintDebugInfo(std::ostream &aStrm, int aDepth) const
 {
     aStrm << "----------- Debug info for DwBodyPart class -----------\n";
     _PrintDebugInfo(aStrm);
     int depth = aDepth - 1;
     depth = (depth >= 0) ? depth : 0;
-    if (aDepth == 0 || depth > 0) {
+    if(aDepth == 0 || depth > 0)
+    {
         mHeaders->PrintDebugInfo(aStrm, depth);
         mBody->PrintDebugInfo(aStrm, depth);
     }
 }
 #else
-void DwBodyPart::PrintDebugInfo(std::ostream&, int) const {}
+void DwBodyPart::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwBodyPart::_PrintDebugInfo(std::ostream& aStrm) const
+void DwBodyPart::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwEntity::_PrintDebugInfo(aStrm);
     aStrm << "Next body part:   ";
-    if (mNext) {
+    if(mNext)
+    {
         aStrm << mNext->ObjectId() << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
 }
 #else
-void DwBodyPart::_PrintDebugInfo(std::ostream& ) const {}
+void DwBodyPart::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 

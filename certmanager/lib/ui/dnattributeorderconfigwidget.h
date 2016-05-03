@@ -36,34 +36,34 @@
 #include <qwidget.h>
 #include <kdepimmacros.h>
 namespace Kleo {
-  class DNAttributeMapper;
+class DNAttributeMapper;
 }
 
 class QListViewItem;
 
 namespace Kleo {
 
-  class KDE_EXPORT DNAttributeOrderConfigWidget : public QWidget {
+class KDE_EXPORT DNAttributeOrderConfigWidget : public QWidget {
     Q_OBJECT
-  public:
+public:
     /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, WFlags f=0 );
+    DNAttributeOrderConfigWidget(DNAttributeMapper *mapper, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
     ~DNAttributeOrderConfigWidget();
 
     void load();
     void save() const;
     void defaults();
 
-  signals:
+signals:
     void changed();
 
     //
     // only boring stuff below...
     //
 
-  private slots:
-    void slotAvailableSelectionChanged( QListViewItem * );
-    void slotCurrentOrderSelectionChanged( QListViewItem * );
+private slots:
+    void slotAvailableSelectionChanged(QListViewItem *);
+    void slotCurrentOrderSelectionChanged(QListViewItem *);
     void slotDoubleUpButtonClicked();
     void slotUpButtonClicked();
     void slotDownButtonClicked();
@@ -71,16 +71,16 @@ namespace Kleo {
     void slotLeftButtonClicked();
     void slotRightButtonClicked();
 
-  private:
+private:
     void takePlaceHolderItem();
-    void enableDisableButtons( QListViewItem * );
+    void enableDisableButtons(QListViewItem *);
 
-  private:
+private:
     class Private;
-    Private * d;
-  protected:
-    virtual void virtual_hook( int, void* );
-  };
+    Private *d;
+protected:
+    virtual void virtual_hook(int, void *);
+};
 
 }
 

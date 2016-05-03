@@ -44,21 +44,20 @@ class CacheSettingsDialog;
 
   @see KCalOpenGroupware
 */
-class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
-{
+class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    ResourceGroupwareBaseConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceGroupwareBaseConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource );
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  protected slots:
+protected slots:
     void updateFolders();
     void showCacheSettings();
 
-  private:
+private:
     KLineEdit *mUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;

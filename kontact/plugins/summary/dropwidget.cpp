@@ -23,22 +23,22 @@
 
 #include "dropwidget.h"
 
-DropWidget::DropWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+DropWidget::DropWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  setAcceptDrops( true );
+    setAcceptDrops(true);
 }
 
-void DropWidget::dragEnterEvent( QDragEnterEvent *event )
+void DropWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-  event->accept( QTextDrag::canDecode( event ) );
+    event->accept(QTextDrag::canDecode(event));
 }
 
-void DropWidget::dropEvent( QDropEvent *event )
+void DropWidget::dropEvent(QDropEvent *event)
 {
-  int alignment = ( event->pos().x() < (width() / 2) ? Qt::AlignLeft : Qt::AlignRight );
-  alignment |= ( event->pos().y() < (height() / 2) ? Qt::AlignTop : Qt::AlignBottom );
-  emit summaryWidgetDropped( this, event->source(), alignment );
+    int alignment = (event->pos().x() < (width() / 2) ? Qt::AlignLeft : Qt::AlignRight);
+    alignment |= (event->pos().y() < (height() / 2) ? Qt::AlignTop : Qt::AlignBottom);
+    emit summaryWidgetDropped(this, event->source(), alignment);
 }
 
 #include "dropwidget.moc"

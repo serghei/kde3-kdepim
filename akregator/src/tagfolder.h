@@ -34,20 +34,19 @@ namespace Akregator {
 
 class TreeNodeVisitor;
 
-class TagFolder : public Folder
-{
-    public:
+class TagFolder : public Folder {
+public:
 
-        TagFolder(const QString& title = QString::null);
+    TagFolder(const QString &title = QString::null);
 
-        virtual ~TagFolder();
-        virtual bool accept(TreeNodeVisitor* visitor);
+    virtual ~TagFolder();
+    virtual bool accept(TreeNodeVisitor *visitor);
 
-        virtual QDomElement toOPML( QDomElement parent, QDomDocument document ) const;
+    virtual QDomElement toOPML(QDomElement parent, QDomDocument document) const;
 
-    private:
-        class TagFolderPrivate;
-        TagFolderPrivate* d;
+private:
+    class TagFolderPrivate;
+    TagFolderPrivate *d;
 };
 
 } // namespace Akregator

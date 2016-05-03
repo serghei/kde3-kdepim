@@ -33,21 +33,20 @@ class KListView;
 class QCheckBox;
 class QCheckListItem;
 
-class KCMKMailSummary : public KCModule
-{
-  Q_OBJECT
+class KCMKMailSummary : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMKMailSummary( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMKMailSummary(QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
     virtual void save();
     virtual void defaults();
 
-  private slots:
+private slots:
     void modified();
 
-  private:
+private:
     void initGUI();
     void initFolders();
     void loadFolders();
@@ -55,7 +54,7 @@ class KCMKMailSummary : public KCModule
 
     KListView *mFolderView;
     QCheckBox *mFullPath;
-    QMap<QString, QListViewItem*> mFolderMap;
+    QMap<QString, QListViewItem *> mFolderMap;
 };
 
 #endif

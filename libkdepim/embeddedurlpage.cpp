@@ -32,40 +32,42 @@
 
 using namespace KPIM;
 
-EmbeddedURLPage::EmbeddedURLPage( const QString &url, const QString &mimetype,
-                                  QWidget *parent, const char *name )
-  : QWidget( parent, name ), mUri(url), mMimeType( mimetype ), mPart( 0 )
+EmbeddedURLPage::EmbeddedURLPage(const QString &url, const QString &mimetype,
+                                 QWidget *parent, const char *name)
+    : QWidget(parent, name), mUri(url), mMimeType(mimetype), mPart(0)
 {
-  initGUI( url, mimetype );
+    initGUI(url, mimetype);
 }
 
-void EmbeddedURLPage::initGUI( const QString &url, const QString &/*mimetype*/ )
+void EmbeddedURLPage::initGUI(const QString &url, const QString &/*mimetype*/)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  layout->setAutoAdd( true );
-  new QLabel( i18n("Showing URL %1").arg( url ), this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setAutoAdd(true);
+    new QLabel(i18n("Showing URL %1").arg(url), this);
 }
 
 void EmbeddedURLPage::loadContents()
 {
-  if ( !mPart ) {
-    if ( mMimeType.isEmpty() || mUri.isEmpty() )
-        return;
-    QString mimetype = mMimeType;
-    if ( mimetype == "auto" )
-        mimetype == KMimeType::findByURL( mUri )->name();
-    // "this" is both the parent widget and the parent object
-    mPart = KParts::ComponentFactory::createPartInstanceFromQuery<KParts::ReadOnlyPart>( mimetype, QString::null, this, 0, this, 0 );
-    if ( mPart ) {
-        mPart->openURL( mUri );
-        mPart->widget()->show();
+    if(!mPart)
+    {
+        if(mMimeType.isEmpty() || mUri.isEmpty())
+            return;
+        QString mimetype = mMimeType;
+        if(mimetype == "auto")
+            mimetype == KMimeType::findByURL(mUri)->name();
+        // "this" is both the parent widget and the parent object
+        mPart = KParts::ComponentFactory::createPartInstanceFromQuery<KParts::ReadOnlyPart>(mimetype, QString::null, this, 0, this, 0);
+        if(mPart)
+        {
+            mPart->openURL(mUri);
+            mPart->widget()->show();
+        }
+        //void KParts::BrowserExtension::openURLRequestDelayed( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() )
+        KParts::BrowserExtension *be = KParts::BrowserExtension::childObject(mPart);
+        connect(be, SIGNAL(openURLRequestDelayed(const KURL &, const KParts::URLArgs &)),
+                //              mPart, SLOT( openURL( const KURL & ) ) );
+                this, SIGNAL(openURL(const KURL &)));
     }
-//void KParts::BrowserExtension::openURLRequestDelayed( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() )
-    KParts::BrowserExtension* be = KParts::BrowserExtension::childObject( mPart );
-    connect( be, SIGNAL( openURLRequestDelayed( const KURL &, const KParts::URLArgs & ) ),
-//              mPart, SLOT( openURL( const KURL & ) ) );
-             this, SIGNAL( openURL( const KURL & ) ) );
-  }
 }
 
 #include "embeddedurlpage.moc"

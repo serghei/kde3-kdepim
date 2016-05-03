@@ -27,27 +27,31 @@
 
 void KMail::KorgHelper::ensureRunning()
 {
-  QString error;
-  QCString dcopService;
-  int result = KDCOPServiceStarter::self()->findServiceFor( "DCOP/Organizer", QString::null, QString::null, &error, &dcopService );
-  if ( result == 0 ) {
-    // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
-    // [that's not the case when kontact was already running, but korganizer not loaded into it...]
-    static const char* const dcopObjectId = "KOrganizerIface";
-    QCString dummy;
-    if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
-      DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
-      DCOPReply reply = ref.call( "load()" );
-      if ( reply.isValid() && (bool)reply ) {
-        kdDebug() << "Loaded " << dcopService << " successfully" << endl;
-        Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
-      } else
-        kdWarning() << "Error loading " << dcopService << endl;
-    }
+    QString error;
+    QCString dcopService;
+    int result = KDCOPServiceStarter::self()->findServiceFor("DCOP/Organizer", QString::null, QString::null, &error, &dcopService);
+    if(result == 0)
+    {
+        // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
+        // [that's not the case when kontact was already running, but korganizer not loaded into it...]
+        static const char *const dcopObjectId = "KOrganizerIface";
+        QCString dummy;
+        if(!kapp->dcopClient()->findObject(dcopService, dcopObjectId, "", QByteArray(), dummy, dummy))
+        {
+            DCOPRef ref(dcopService, dcopService);   // talk to the KUniqueApplication or its kontact wrapper
+            DCOPReply reply = ref.call("load()");
+            if(reply.isValid() && (bool)reply)
+            {
+                kdDebug() << "Loaded " << dcopService << " successfully" << endl;
+                Q_ASSERT(kapp->dcopClient()->findObject(dcopService, dcopObjectId, "", QByteArray(), dummy, dummy));
+            }
+            else
+                kdWarning() << "Error loading " << dcopService << endl;
+        }
 
-    // We don't do anything with it, we just need it to be running so that it handles
-    // the incoming directory.
-  }
-  else
-    kdWarning() << "Couldn't start DCOP/Organizer: " << dcopService << " " << error << endl;
+        // We don't do anything with it, we just need it to be running so that it handles
+        // the incoming directory.
+    }
+    else
+        kdWarning() << "Couldn't start DCOP/Organizer: " << dcopService << " " << error << endl;
 }

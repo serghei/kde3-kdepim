@@ -35,33 +35,33 @@
 #include "statusdialog.h"
 #include "statusdialog.moc"
 
-StatusDialog::StatusDialog(QWidget* parent, const char* name) :
-  KDialog(parent,name,true)
+StatusDialog::StatusDialog(QWidget *parent, const char *name) :
+    KDialog(parent, name, true)
 {
-  setCaption(i18n("Set Your Status"));
+    setCaption(i18n("Set Your Status"));
 
-  QBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( spacingHint() );
-  topLayout->setMargin( marginHint() );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setSpacing(spacingHint());
+    topLayout->setMargin(marginHint());
 
-  QBoxLayout *statusLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *statusLayout = new QHBoxLayout(topLayout);
 
-  QLabel *text = new QLabel(i18n("Set your status"),this);
-  statusLayout->addWidget( text );
+    QLabel *text = new QLabel(i18n("Set your status"), this);
+    statusLayout->addWidget(text);
 
-  mStatus = new QComboBox(false,this);
-  mStatus->insertStringList(Attendee::statusList());
-  statusLayout->addWidget( mStatus );
+    mStatus = new QComboBox(false, this);
+    mStatus->insertStringList(Attendee::statusList());
+    statusLayout->addWidget(mStatus);
 
-  QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *buttonLayout = new QHBoxLayout(topLayout);
 
-  QPushButton *ok = new KPushButton(KStdGuiItem::ok(), this);
-  connect ( ok,SIGNAL(clicked()), this,SLOT(accept()) );
-  buttonLayout->addWidget( ok );
+    QPushButton *ok = new KPushButton(KStdGuiItem::ok(), this);
+    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
+    buttonLayout->addWidget(ok);
 
-  QPushButton *cancel = new KPushButton(KStdGuiItem::cancel(), this);
-  connect ( cancel,SIGNAL(clicked()), this,SLOT(reject()) );
-  buttonLayout->addWidget( cancel );
+    QPushButton *cancel = new KPushButton(KStdGuiItem::cancel(), this);
+    connect(cancel, SIGNAL(clicked()), this, SLOT(reject()));
+    buttonLayout->addWidget(cancel);
 }
 
 StatusDialog::~StatusDialog()
@@ -70,5 +70,5 @@ StatusDialog::~StatusDialog()
 
 Attendee::PartStat StatusDialog::status()
 {
-  return Attendee::PartStat( mStatus->currentItem() ) ;
+    return Attendee::PartStat(mStatus->currentItem()) ;
 }

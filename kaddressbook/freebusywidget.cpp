@@ -32,47 +32,47 @@
 
 #include "freebusywidget.h"
 
-FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+FreeBusyWidget::FreeBusyWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::ContactEditorWidget(ab, parent, name)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+    QHBoxLayout *layout = new QHBoxLayout(this, KDialog::marginHint(),
+                                          KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Location of Free/Busy information:" ), this );
-  layout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Location of Free/Busy information:"), this);
+    layout->addWidget(label);
 
-  mURL = new KURLRequester( this );
-  label->setBuddy( mURL );
-  layout->addWidget( mURL );
+    mURL = new KURLRequester(this);
+    label->setBuddy(mURL);
+    layout->addWidget(mURL);
 
-  connect( mURL, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( setModified() ) );
+    connect(mURL, SIGNAL(textChanged(const QString &)),
+            this, SLOT(setModified()));
 }
 
 FreeBusyWidget::~FreeBusyWidget()
 {
 }
 
-void FreeBusyWidget::loadContact( KABC::Addressee *addr )
+void FreeBusyWidget::loadContact(KABC::Addressee *addr)
 {
-  if ( addr->preferredEmail().isEmpty() )
-    return;
+    if(addr->preferredEmail().isEmpty())
+        return;
 
-  mURL->setURL( KCal::FreeBusyUrlStore::self()->readUrl( addr->preferredEmail() ) );
+    mURL->setURL(KCal::FreeBusyUrlStore::self()->readUrl(addr->preferredEmail()));
 }
 
-void FreeBusyWidget::storeContact( KABC::Addressee *addr )
+void FreeBusyWidget::storeContact(KABC::Addressee *addr)
 {
-  if ( addr->preferredEmail().isEmpty() )
-    return;
+    if(addr->preferredEmail().isEmpty())
+        return;
 
-  KCal::FreeBusyUrlStore::self()->writeUrl( addr->preferredEmail(), mURL->url() );
-  KCal::FreeBusyUrlStore::self()->sync();
+    KCal::FreeBusyUrlStore::self()->writeUrl(addr->preferredEmail(), mURL->url());
+    KCal::FreeBusyUrlStore::self()->sync();
 }
 
-void FreeBusyWidget::setReadOnly( bool readOnly )
+void FreeBusyWidget::setReadOnly(bool readOnly)
 {
-  mURL->setEnabled( !readOnly );
+    mURL->setEnabled(!readOnly);
 }
 
 #include "freebusywidget.moc"

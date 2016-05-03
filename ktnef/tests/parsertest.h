@@ -20,9 +20,8 @@
 #ifndef PARSERTEST_H
 #define PARSERTEST_H
 
-class ParserTest
-{
-  public:
+class ParserTest {
+public:
     void testSingleAttachment();
     void testTwoAttachments();
     void testMAPIAttachments();

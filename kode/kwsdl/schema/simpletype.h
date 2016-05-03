@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -30,80 +30,79 @@
 
 namespace Schema {
 
-class SimpleType : public XSDType
-{
-  public:
+class SimpleType : public XSDType {
+public:
     typedef QValueList<SimpleType> List;
 
     enum FacetType
     {
-      NONE = 0,
-      LENGTH = 1,
-      MINLEN = 2,
-      MAXLEN = 4,
-      ENUM = 8,
-      WSP = 16,
-      MAXINC = 32,
-      MININC = 64,
-      MAXEX = 128,
-      MINEX = 256,
-      TOT = 512,
-      FRAC = 1024,
-      PATTERN = 2048
+        NONE = 0,
+        LENGTH = 1,
+        MINLEN = 2,
+        MAXLEN = 4,
+        ENUM = 8,
+        WSP = 16,
+        MAXINC = 32,
+        MININC = 64,
+        MAXEX = 128,
+        MINEX = 256,
+        TOT = 512,
+        FRAC = 1024,
+        PATTERN = 2048
     };
 
     enum WhiteSpaceType
     {
-      PRESERVE,
-      REPLACE,
-      COLLAPSE
+        PRESERVE,
+        REPLACE,
+        COLLAPSE
     };
 
     enum SubType
     {
-      TypeRestriction,
-      TypeList,
-      TypeUnion
+        TypeRestriction,
+        TypeList,
+        TypeUnion
     };
 
     SimpleType();
-    SimpleType( const QString &nameSpace );
+    SimpleType(const QString &nameSpace);
     ~SimpleType();
 
-    void setName( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
     QualifiedName qualifiedName() const;
 
-    void setDocumentation( const QString &documentation );
+    void setDocumentation(const QString &documentation);
     QString documentation() const;
 
-    void setType( int type );
+    void setType(int type);
     int type() const;
 
-    void setBaseType( int baseType );
+    void setBaseType(int baseType);
     int baseType() const;
 
-    void setBaseTypeName( const QString &baseTypeName );
+    void setBaseTypeName(const QString &baseTypeName);
     QString baseTypeName() const;
 
-    void setSubType( SubType subType );
+    void setSubType(SubType subType);
     SubType subType() const;
 
-    void setListType( int listType );
-    void setListTypeName( const QString &name );
+    void setListType(int listType);
+    void setListTypeName(const QString &name);
 
     int listType() const;
     QString listTypeName() const;
 
-    void setContentModel( int contentModel );
+    void setContentModel(int contentModel);
     int contentModel() const;
 
-    void setAnonymous( bool anonymous );
+    void setAnonymous(bool anonymous);
     bool isAnonymous() const;
 
-    bool isValidFacet( const QString &facet );
-    void setFacetValue( const QString &value );
+    bool isValidFacet(const QString &facet);
+    void setFacetValue(const QString &value);
 
     int facetType() const;
 
@@ -120,7 +119,7 @@ class SimpleType : public XSDType
     int facetFractionDigits() const;
     QString facetPattern() const;
 
-  private:
+private:
     QString mName;
     QString mNameSpace;
     QString mDocumentation;
@@ -139,19 +138,19 @@ class SimpleType : public XSDType
 
     typedef struct
     {
-      int length;
-      struct
-      {
-        int minlen, maxlen;
-      } lenRange;
-      WhiteSpaceType wsp;
-      struct
-      {
-        int maxinc, mininc, maxex, minex;
-      } valRange;
-      int tot;
-      int frac;
-      QString pattern;
+        int length;
+        struct
+        {
+            int minlen, maxlen;
+        } lenRange;
+        WhiteSpaceType wsp;
+        struct
+        {
+            int maxinc, mininc, maxex, minex;
+        } valRange;
+        int tot;
+        int frac;
+        QString pattern;
     } FacetValueType;
 
 

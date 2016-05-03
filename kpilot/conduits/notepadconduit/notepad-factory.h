@@ -28,10 +28,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_notepad();
+    void *init_conduit_notepad();
 
 }
 

@@ -37,249 +37,298 @@
 #include <qimage.h>
 
 namespace KABC {
-  class Addressee;
-  class ResourceKolab;
-  class Picture;
-  class Sound;
+class Addressee;
+class ResourceKolab;
+class Picture;
+class Sound;
 }
 
 namespace Kolab {
 
 class Contact : public KolabBase {
 public:
-  struct PhoneNumber {
-  public:
-    QString type;
-    QString number;
-  };
-
-  struct Address {
-  public:
-    Address() : kdeAddressType( -1 )
+    struct PhoneNumber
     {
+    public:
+        QString type;
+        QString number;
+    };
+
+    struct Address
+    {
+    public:
+        Address() : kdeAddressType(-1)
+        {
+        }
+        int kdeAddressType; // KABC::Address::Type
+        QString type;       // kolab-compliant address type: home, work or other
+        QString street;
+        QString pobox;
+        QString locality;
+        QString region;
+        QString postalCode;
+        QString country;
+    };
+
+    explicit Contact(const KABC::Addressee *address);
+    Contact(const QString &xml, KABC::ResourceKolab *resource, const QString &subResource, Q_UINT32 sernum);
+    ~Contact();
+
+    void saveTo(KABC::Addressee *address);
+
+    QString type() const
+    {
+        return "Contact";
     }
-    int kdeAddressType; // KABC::Address::Type
-    QString type;       // kolab-compliant address type: home, work or other
-    QString street;
-    QString pobox;
-    QString locality;
-    QString region;
-    QString postalCode;
-    QString country;
-  };
 
-  explicit Contact( const KABC::Addressee* address );
-  Contact( const QString& xml, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
-  ~Contact();
+    void setGivenName(const QString &name);
+    QString givenName() const;
 
-  void saveTo( KABC::Addressee* address );
+    void setMiddleNames(const QString &names);
+    QString middleNames() const;
 
-  QString type() const { return "Contact"; }
+    void setLastName(const QString &name);
+    QString lastName() const;
 
-  void setGivenName( const QString& name );
-  QString givenName() const;
+    void setFullName(const QString &name);
+    QString fullName() const;
 
-  void setMiddleNames( const QString& names );
-  QString middleNames() const;
+    void setInitials(const QString &initials);
+    QString initials() const;
 
-  void setLastName( const QString& name );
-  QString lastName() const;
+    void setPrefix(const QString &prefix);
+    QString prefix() const;
 
-  void setFullName( const QString& name );
-  QString fullName() const;
+    void setSuffix(const QString &suffix);
+    QString suffix() const;
 
-  void setInitials( const QString& initials );
-  QString initials() const;
+    void setRole(const QString &role);
+    QString role() const;
 
-  void setPrefix( const QString& prefix );
-  QString prefix() const;
+    void setFreeBusyUrl(const QString &fbUrl);
+    QString freeBusyUrl() const;
 
-  void setSuffix( const QString& suffix );
-  QString suffix() const;
+    void setOrganization(const QString &organization);
+    QString organization() const;
 
-  void setRole( const QString& role );
-  QString role() const;
+    void setWebPage(const QString &url);
+    QString webPage() const;
 
-  void setFreeBusyUrl( const QString& fbUrl );
-  QString freeBusyUrl() const;
+    void setIMAddress(const QString &imAddress);
+    QString imAddress() const;
 
-  void setOrganization( const QString& organization );
-  QString organization() const;
+    void setDepartment(const QString &department);
+    QString department() const;
 
-  void setWebPage( const QString& url );
-  QString webPage() const;
+    void setOfficeLocation(const QString &location);
+    QString officeLocation() const;
 
-  void setIMAddress( const QString& imAddress );
-  QString imAddress() const;
+    void setProfession(const QString &profession);
+    QString profession() const;
 
-  void setDepartment( const QString& department );
-  QString department() const;
+    // not shown in the kaddressbook GUI
+    //void setJobTitle( const QString& title );
+    //QString jobTitle() const;
 
-  void setOfficeLocation( const QString& location );
-  QString officeLocation() const;
+    void setManagerName(const QString &name);
+    QString managerName() const;
 
-  void setProfession( const QString& profession );
-  QString profession() const;
+    void setAssistant(const QString &name);
+    QString assistant() const;
 
-  // not shown in the kaddressbook GUI
-  //void setJobTitle( const QString& title );
-  //QString jobTitle() const;
+    void setNickName(const QString &name);
+    QString nickName() const;
 
-  void setManagerName( const QString& name );
-  QString managerName() const;
+    void setSpouseName(const QString &name);
+    QString spouseName() const;
 
-  void setAssistant( const QString& name );
-  QString assistant() const;
+    void setBirthday(const QDate &date);
+    QDate birthday() const;
 
-  void setNickName( const QString& name );
-  QString nickName() const;
+    void setAnniversary(const QDate &date);
+    QDate anniversary() const;
 
-  void setSpouseName( const QString& name );
-  QString spouseName() const;
+    void setPicture(const QImage &image)
+    {
+        mPicture = image;
+    }
+    QString pictureAttachmentName() const
+    {
+        return mPictureAttachmentName;
+    }
+    QImage picture() const
+    {
+        return mPicture;
+    }
 
-  void setBirthday( const QDate& date );
-  QDate birthday() const;
+    void setLogo(const QImage &image)
+    {
+        mLogo = image;
+    }
+    QString logoAttachmentName() const
+    {
+        return mLogoAttachmentName;
+    }
+    QImage logo() const
+    {
+        return mLogo;
+    }
 
-  void setAnniversary( const QDate& date );
-  QDate anniversary() const;
+    void setSound(const QByteArray &sound)
+    {
+        mSound = sound;
+    }
+    QString soundAttachmentName() const
+    {
+        return mSoundAttachmentName;
+    }
+    QByteArray sound() const
+    {
+        return mSound;
+    }
 
-  void setPicture( const QImage& image) { mPicture = image; }
-  QString pictureAttachmentName() const { return mPictureAttachmentName; }
-  QImage picture() const { return mPicture; }
+    void setChildren(const QString &children);
+    QString children() const;
 
-  void setLogo( const QImage& image ) { mLogo = image; }
-  QString logoAttachmentName() const { return mLogoAttachmentName; }
-  QImage logo() const { return mLogo; }
+    void setGender(const QString &gender);
+    QString gender() const;
 
-  void setSound( const QByteArray& sound ) { mSound = sound; }
-  QString soundAttachmentName() const { return mSoundAttachmentName; }
-  QByteArray sound() const { return mSound; }
+    void setLanguage(const QString &language);
+    QString language() const;
 
-  void setChildren( const QString& children );
-  QString children() const;
+    void addPhoneNumber(const PhoneNumber &number);
+    QValueList<PhoneNumber> &phoneNumbers();
+    const QValueList<PhoneNumber> &phoneNumbers() const;
 
-  void setGender( const QString& gender );
-  QString gender() const;
+    void addEmail(const Email &email);
+    QValueList<Email> &emails();
+    const QValueList<Email> &emails() const;
 
-  void setLanguage( const QString& language );
-  QString language() const;
+    void addAddress(const Address &address);
+    QValueList<Address> &addresses();
+    const QValueList<Address> &addresses() const;
 
-  void addPhoneNumber( const PhoneNumber& number );
-  QValueList<PhoneNumber>& phoneNumbers();
-  const QValueList<PhoneNumber>& phoneNumbers() const;
+    // which address is preferred: home or business or other
+    void setPreferredAddress(const QString &address);
+    QString preferredAddress() const;
 
-  void addEmail( const Email& email );
-  QValueList<Email>& emails();
-  const QValueList<Email>& emails() const;
+    float latitude() const
+    {
+        return mLatitude;
+    }
+    void setLatitude(float latitude)
+    {
+        mLatitude = latitude;
+    }
 
-  void addAddress( const Address& address );
-  QValueList<Address>& addresses();
-  const QValueList<Address>& addresses() const;
+    float longitude() const
+    {
+        return mLongitude;
+    }
+    void setLongitude(float longitude)
+    {
+        mLongitude = longitude;
+    }
 
-  // which address is preferred: home or business or other
-  void setPreferredAddress( const QString& address );
-  QString preferredAddress() const;
+    // Load the attributes of this class
+    bool loadAttribute(QDomElement &);
 
-  float latitude() const { return mLatitude; }
-  void setLatitude( float latitude ) { mLatitude = latitude; }
+    // Save the attributes of this class
+    bool saveAttributes(QDomElement &) const;
 
-  float longitude() const { return mLongitude; }
-  void setLongitude( float longitude ) { mLongitude = longitude; }
+    // Load this note by reading the XML file
+    bool loadXML(const QDomDocument &xml);
 
-  // Load the attributes of this class
-  bool loadAttribute( QDomElement& );
+    // Serialize this note to an XML string
+    QString saveXML() const;
 
-  // Save the attributes of this class
-  bool saveAttributes( QDomElement& ) const;
-
-  // Load this note by reading the XML file
-  bool loadXML( const QDomDocument& xml );
-
-  // Serialize this note to an XML string
-  QString saveXML() const;
-
-  // Return true if this contact is a distr list
-  bool isDistributionList() const { return mIsDistributionList; }
+    // Return true if this contact is a distr list
+    bool isDistributionList() const
+    {
+        return mIsDistributionList;
+    }
 
 protected:
-  void setFields( const KABC::Addressee* );
+    void setFields(const KABC::Addressee *);
 
 private:
-  bool loadNameAttribute( QDomElement& element );
-  void saveNameAttribute( QDomElement& element ) const;
+    bool loadNameAttribute(QDomElement &element);
+    void saveNameAttribute(QDomElement &element) const;
 
-  bool loadPhoneAttribute( QDomElement& element );
-  void savePhoneAttributes( QDomElement& element ) const;
+    bool loadPhoneAttribute(QDomElement &element);
+    void savePhoneAttributes(QDomElement &element) const;
 
-  void saveEmailAttributes( QDomElement& element ) const;
+    void saveEmailAttributes(QDomElement &element) const;
 
-  bool loadAddressAttribute( QDomElement& element );
-  void saveAddressAttributes( QDomElement& element ) const;
+    bool loadAddressAttribute(QDomElement &element);
+    void saveAddressAttributes(QDomElement &element) const;
 
-  void loadCustomAttributes( QDomElement& element );
-  void saveCustomAttributes( QDomElement& element ) const;
+    void loadCustomAttributes(QDomElement &element);
+    void saveCustomAttributes(QDomElement &element) const;
 
-  void loadDistrListMember( const QDomElement& element );
-  void saveDistrListMembers( QDomElement& element ) const;
+    void loadDistrListMember(const QDomElement &element);
+    void saveDistrListMembers(QDomElement &element) const;
 
-  QImage loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
-  QImage loadPictureFromAddressee( const KABC::Picture& picture );
+    QImage loadPictureFromKMail(const QString &attachmentName, KABC::ResourceKolab *resource, const QString &subResource, Q_UINT32 sernum);
+    QImage loadPictureFromAddressee(const KABC::Picture &picture);
 
-  QByteArray loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, Q_UINT32 sernum );
-  QByteArray loadSoundFromAddressee( const KABC::Sound& sound );
+    QByteArray loadDataFromKMail(const QString &attachmentName, KABC::ResourceKolab *resource, const QString &subResource, Q_UINT32 sernum);
+    QByteArray loadSoundFromAddressee(const KABC::Sound &sound);
 
-  QString productID() const;
+    QString productID() const;
 
-  QString mGivenName;
-  QString mMiddleNames;
-  QString mLastName;
-  QString mFullName;
-  QString mInitials;
-  QString mPrefix;
-  QString mSuffix;
-  QString mRole;
-  QString mFreeBusyUrl;
-  QString mOrganization;
-  QString mWebPage;
-  QString mIMAddress;
-  QString mDepartment;
-  QString mOfficeLocation;
-  QString mProfession;
-  //QString mJobTitle;
-  QString mManagerName;
-  QString mAssistant;
-  QString mNickName;
-  QString mSpouseName;
-  QDate mBirthday;
-  QDate mAnniversary;
-  QImage mPicture;
-  QImage mLogo;
-  QByteArray mSound;
-  QString mPictureAttachmentName;
-  QString mLogoAttachmentName;
-  QString mSoundAttachmentName;
-  QString mChildren;
-  QString mGender;
-  QString mLanguage;
-  QValueList<PhoneNumber> mPhoneNumbers;
-  QValueList<Email> mEmails;
-  QValueList<Address> mAddresses;
-  QString mPreferredAddress;
-  float mLatitude;
-  float mLongitude;
-  bool mHasGeo;
-  bool mIsDistributionList;
-  struct Custom {
-    QString app;
-    QString name;
-    QString value;
-  };
-  QValueList<Custom> mCustomList;
-  struct Member {
-    QString displayName;
-    QString email;
-  };
-  QValueList<Member> mDistrListMembers;
+    QString mGivenName;
+    QString mMiddleNames;
+    QString mLastName;
+    QString mFullName;
+    QString mInitials;
+    QString mPrefix;
+    QString mSuffix;
+    QString mRole;
+    QString mFreeBusyUrl;
+    QString mOrganization;
+    QString mWebPage;
+    QString mIMAddress;
+    QString mDepartment;
+    QString mOfficeLocation;
+    QString mProfession;
+    //QString mJobTitle;
+    QString mManagerName;
+    QString mAssistant;
+    QString mNickName;
+    QString mSpouseName;
+    QDate mBirthday;
+    QDate mAnniversary;
+    QImage mPicture;
+    QImage mLogo;
+    QByteArray mSound;
+    QString mPictureAttachmentName;
+    QString mLogoAttachmentName;
+    QString mSoundAttachmentName;
+    QString mChildren;
+    QString mGender;
+    QString mLanguage;
+    QValueList<PhoneNumber> mPhoneNumbers;
+    QValueList<Email> mEmails;
+    QValueList<Address> mAddresses;
+    QString mPreferredAddress;
+    float mLatitude;
+    float mLongitude;
+    bool mHasGeo;
+    bool mIsDistributionList;
+    struct Custom
+    {
+        QString app;
+        QString name;
+        QString value;
+    };
+    QValueList<Custom> mCustomList;
+    struct Member
+    {
+        QString displayName;
+        QString email;
+    };
+    QValueList<Member> mDistrListMembers;
 };
 
 }

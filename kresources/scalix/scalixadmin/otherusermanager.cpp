@@ -28,24 +28,25 @@ OtherUserManager::~OtherUserManager()
 {
 }
 
-void OtherUserManager::addOtherUser( const QString &email )
+void OtherUserManager::addOtherUser(const QString &email)
 {
-  if ( !mOtherUsers.contains( email ) ) {
-    mOtherUsers.append( email );
-    emit changed();
-  }
+    if(!mOtherUsers.contains(email))
+    {
+        mOtherUsers.append(email);
+        emit changed();
+    }
 }
 
 void OtherUserManager::clear()
 {
-  mOtherUsers.clear();
+    mOtherUsers.clear();
 
-  emit changed();
+    emit changed();
 }
 
 QStringList OtherUserManager::otherUsers() const
 {
-  return mOtherUsers;
+    return mOtherUsers;
 }
 
 #include "otherusermanager.moc"

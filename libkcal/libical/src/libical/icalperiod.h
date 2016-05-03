@@ -9,7 +9,7 @@
      http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
+ it under the terms of either:
 
     The LGPL as published by the Free Software Foundation, version
     2.1, available at: http://www.fsf.org/copyleft/lesser.html
@@ -31,16 +31,16 @@
 #include "icaltime.h"
 #include "icalduration.h"
 
-struct icalperiodtype 
+struct icalperiodtype
 {
-	struct icaltimetype start; 
-	struct icaltimetype end; 
-	struct icaldurationtype duration;
+    struct icaltimetype start;
+    struct icaltimetype end;
+    struct icaldurationtype duration;
 };
 
-struct icalperiodtype icalperiodtype_from_string (const char* str);
+struct icalperiodtype icalperiodtype_from_string(const char *str);
 
-const char* icalperiodtype_as_ical_string(struct icalperiodtype p);
+const char *icalperiodtype_as_ical_string(struct icalperiodtype p);
 
 struct icalperiodtype icalperiodtype_null_period(void);
 

@@ -27,24 +27,25 @@
 #include "synchronizer.h"
 
 Synchronizer::Synchronizer()
-  : mBlocked( false )
+    : mBlocked(false)
 {
 }
 
 void Synchronizer::start()
 {
-  mBlocked = true;
+    mBlocked = true;
 
-  while ( mBlocked ) {
-    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    while(mBlocked)
+    {
+        QApplication::eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
 
-    // use sleep here to reduce cpu usage
-    usleep( 100 );
-  }
+        // use sleep here to reduce cpu usage
+        usleep(100);
+    }
 }
 
 void Synchronizer::stop()
 {
-  mBlocked = false;
+    mBlocked = false;
 }
 

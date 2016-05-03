@@ -33,18 +33,17 @@
 
 #include "resourcescalix.h"
 
-class ScalixFactory : public KRES::PluginFactoryBase
-{
+class ScalixFactory : public KRES::PluginFactoryBase {
 public:
-  KRES::Resource *resource( const KConfig *config )
-  {
-    return new Scalix::ResourceScalix( config );
-  }
+    KRES::Resource *resource(const KConfig *config)
+    {
+        return new Scalix::ResourceScalix(config);
+    }
 
-  KRES::ConfigWidget *configWidget( QWidget* )
-  {
-    return 0;
-  }
+    KRES::ConfigWidget *configWidget(QWidget *)
+    {
+        return 0;
+    }
 };
 
-K_EXPORT_COMPONENT_FACTORY( knotes_scalix, ScalixFactory() )
+K_EXPORT_COMPONENT_FACTORY(knotes_scalix, ScalixFactory())

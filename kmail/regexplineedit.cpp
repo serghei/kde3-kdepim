@@ -49,87 +49,89 @@
 
 namespace KMail {
 
-  RegExpLineEdit::RegExpLineEdit( QWidget *parent, const char *name )
-    : QWidget( parent, name ),
-      mLineEdit( 0 ),
-      mRegExpEditButton( 0 ),
-      mRegExpEditDialog( 0 )
-  {
+RegExpLineEdit::RegExpLineEdit(QWidget *parent, const char *name)
+    : QWidget(parent, name),
+      mLineEdit(0),
+      mRegExpEditButton(0),
+      mRegExpEditDialog(0)
+{
     initWidget();
-  }
+}
 
-  RegExpLineEdit::RegExpLineEdit( const QString &str, QWidget *parent,
-                                  const char *name )
-    : QWidget( parent, name ),
-      mLineEdit( 0 ),
-      mRegExpEditButton( 0 ),
-      mRegExpEditDialog( 0 )
-  {
-    initWidget( str );
-  }
+RegExpLineEdit::RegExpLineEdit(const QString &str, QWidget *parent,
+                               const char *name)
+    : QWidget(parent, name),
+      mLineEdit(0),
+      mRegExpEditButton(0),
+      mRegExpEditDialog(0)
+{
+    initWidget(str);
+}
 
-  void RegExpLineEdit::initWidget( const QString &str )
-  {
-    QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
+void RegExpLineEdit::initWidget(const QString &str)
+{
+    QHBoxLayout *hlay = new QHBoxLayout(this, 0, KDialog::spacingHint());
 
-    mLineEdit = new KLineEdit( str, this );
-    setFocusProxy( mLineEdit );
-    hlay->addWidget( mLineEdit );
+    mLineEdit = new KLineEdit(str, this);
+    setFocusProxy(mLineEdit);
+    hlay->addWidget(mLineEdit);
 
-    connect( mLineEdit, SIGNAL( textChanged( const QString & ) ),
-             this, SIGNAL( textChanged( const QString & ) ) );
+    connect(mLineEdit, SIGNAL(textChanged(const QString &)),
+            this, SIGNAL(textChanged(const QString &)));
 
-    if( !KTrader::self()->query("KRegExpEditor/KRegExpEditor").isEmpty() ) {
-      mRegExpEditButton = new QPushButton( i18n("Edit..."), this,
-                                           "mRegExpEditButton" );
-      mRegExpEditButton->setSizePolicy( QSizePolicy::Minimum,
-                                        QSizePolicy::Fixed );
-      hlay->addWidget( mRegExpEditButton );
+    if(!KTrader::self()->query("KRegExpEditor/KRegExpEditor").isEmpty())
+    {
+        mRegExpEditButton = new QPushButton(i18n("Edit..."), this,
+                                            "mRegExpEditButton");
+        mRegExpEditButton->setSizePolicy(QSizePolicy::Minimum,
+                                         QSizePolicy::Fixed);
+        hlay->addWidget(mRegExpEditButton);
 
-      connect( mRegExpEditButton, SIGNAL( clicked() ),
-               this, SLOT( slotEditRegExp() ) );
+        connect(mRegExpEditButton, SIGNAL(clicked()),
+                this, SLOT(slotEditRegExp()));
     }
-  }
+}
 
-  void RegExpLineEdit::clear()
-  {
+void RegExpLineEdit::clear()
+{
     mLineEdit->clear();
-  }
+}
 
-  QString RegExpLineEdit::text() const
-  {
+QString RegExpLineEdit::text() const
+{
     return mLineEdit->text();
-  }
+}
 
-  void RegExpLineEdit::setText( const QString & str )
-  {
-    mLineEdit->setText( str );
-  }
+void RegExpLineEdit::setText(const QString &str)
+{
+    mLineEdit->setText(str);
+}
 
-  void RegExpLineEdit::showEditButton( bool show )
-  {
-    if ( !mRegExpEditButton )
-      return;
+void RegExpLineEdit::showEditButton(bool show)
+{
+    if(!mRegExpEditButton)
+        return;
 
-    if ( show )
-      mRegExpEditButton->show();
+    if(show)
+        mRegExpEditButton->show();
     else
-      mRegExpEditButton->hide();
-  }
+        mRegExpEditButton->hide();
+}
 
-  void RegExpLineEdit::slotEditRegExp()
-  {
-    if ( !mRegExpEditDialog )
-      mRegExpEditDialog = KParts::ComponentFactory::createInstanceFromQuery<QDialog>( "KRegExpEditor/KRegExpEditor", QString::null, this );
+void RegExpLineEdit::slotEditRegExp()
+{
+    if(!mRegExpEditDialog)
+        mRegExpEditDialog = KParts::ComponentFactory::createInstanceFromQuery<QDialog>("KRegExpEditor/KRegExpEditor", QString::null, this);
 
     KRegExpEditorInterface *iface =
-      static_cast<KRegExpEditorInterface *>( mRegExpEditDialog->qt_cast( "KRegExpEditorInterface" ) );
-    if( iface ) {
-      iface->setRegExp( mLineEdit->text() );
-      if( mRegExpEditDialog->exec() == QDialog::Accepted )
-        mLineEdit->setText( iface->regExp() );
+        static_cast<KRegExpEditorInterface *>(mRegExpEditDialog->qt_cast("KRegExpEditorInterface"));
+    if(iface)
+    {
+        iface->setRegExp(mLineEdit->text());
+        if(mRegExpEditDialog->exec() == QDialog::Accepted)
+            mLineEdit->setText(iface->regExp());
     }
-  }
+}
 
 } // namespace KMail
 

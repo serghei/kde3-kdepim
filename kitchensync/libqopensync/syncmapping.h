@@ -29,13 +29,12 @@ class OSyncMapping;
 
 namespace QSync {
 
-class SyncMapping
-{
-  friend class SyncMappingUpdate;
+class SyncMapping {
+    friend class SyncMappingUpdate;
 
-  public:
+public:
     SyncMapping();
-    SyncMapping( OSyncMapping*, OSyncEngine* );
+    SyncMapping(OSyncMapping *, OSyncEngine *);
     ~SyncMapping();
 
     bool isValid() const;
@@ -43,13 +42,13 @@ class SyncMapping
     long long id() const;
 
     void duplicate();
-    void solve( const SyncChange &change );
+    void solve(const SyncChange &change);
     void ignore();
 
     int changesCount() const;
-    SyncChange changeAt( int pos );
+    SyncChange changeAt(int pos);
 
-  private:
+private:
     OSyncEngine *mEngine;
     OSyncMapping *mMapping;
 };

@@ -30,20 +30,19 @@
 
 #include <plugin.h>
 
-class TimeConduit : public ConduitAction
-{
+class TimeConduit : public ConduitAction {
 public:
-	TimeConduit(
-		KPilotLink *o,
-		const char *n = 0L,
-		const QStringList &a = QStringList() );
-	virtual ~TimeConduit();
-	virtual bool exec();
+    TimeConduit(
+        KPilotLink *o,
+        const char *n = 0L,
+        const QStringList &a = QStringList());
+    virtual ~TimeConduit();
+    virtual bool exec();
 
-	void syncHHfromPC();
+    void syncHHfromPC();
 
 protected:
-	void readConfig();
+    void readConfig();
 } ;
 
 #endif

@@ -42,10 +42,9 @@
 
    @author Bram Schoenmakers <bram_s@softhome.net>
 */
-class KDE_EXPORT KDatePickerPopup: public QPopupMenu
-{
+class KDE_EXPORT KDatePickerPopup: public QPopupMenu {
     Q_OBJECT
-  public:
+public:
     enum { NoDate = 1, DatePicker = 2, Words = 4 };
 
     /**
@@ -56,8 +55,8 @@ class KDE_EXPORT KDatePickerPopup: public QPopupMenu
        @param parent The object's parent.
        @param name The object's name.
     */
-    KDatePickerPopup( int items = DatePicker, const QDate &date = QDate::currentDate(),
-                      QWidget *parent = 0, const char *name = 0 );
+    KDatePickerPopup(int items = DatePicker, const QDate &date = QDate::currentDate(),
+                     QWidget *parent = 0, const char *name = 0);
 
     /**
        @return A pointer to the private variable mDatePicker, an instance of
@@ -65,27 +64,30 @@ class KDE_EXPORT KDatePickerPopup: public QPopupMenu
     */
     KDatePicker *datePicker() const;
 
-    void setDate( const QDate &date );
+    void setDate(const QDate &date);
 
 #if 0
     /** Set items which should be shown and rebuilds the menu afterwards. Only if the menu is not visible.
     @param items List of all desirable items, separated with a bitwise OR.
     */
-    void setItems( int items = 1 );
+    void setItems(int items = 1);
 #endif
     /** @return Returns the bitwise result of the active items in the popup. */
-    int items() const { return mItems; }
+    int items() const
+    {
+        return mItems;
+    }
 
-  signals:
+signals:
 
     /**
       This signal emits the new date (selected with datepicker or other
       menu-items).
     */
-    void dateChanged ( QDate );
+    void dateChanged(QDate);
 
-  protected slots:
-    void slotDateChanged ( QDate );
+protected slots:
+    void slotDateChanged(QDate);
 
     void slotToday();
     void slotTomorrow();
@@ -93,7 +95,7 @@ class KDE_EXPORT KDatePickerPopup: public QPopupMenu
     void slotNextMonth();
     void slotNoDate();
 
-  private:
+private:
     void buildMenu();
 
     KDatePicker *mDatePicker;

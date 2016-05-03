@@ -31,90 +31,90 @@
 
 
 KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *name)
-  : KDialogBase(Plain, (f->id()==-1)? i18n("New Filter"):i18n("Properties of %1").arg(f->name()),
-                Ok|Cancel|Help, Ok, parent, name),
-    fltr(f)
+    : KDialogBase(Plain, (f->id() == -1) ? i18n("New Filter") : i18n("Properties of %1").arg(f->name()),
+                  Ok | Cancel | Help, Ok, parent, name),
+      fltr(f)
 {
-  QFrame* page=plainPage();
+    QFrame *page = plainPage();
 
-  QGroupBox *gb=new QGroupBox(page);
-  fname=new KLineEdit(gb);
-  QLabel *l1=new QLabel(fname, i18n("Na&me:"), gb);
-  apon=new QComboBox(gb);
-  apon->insertItem(i18n("Single Articles"));
-  apon->insertItem(i18n("Whole Threads"));
-  QLabel *l2=new QLabel(apon, i18n("Apply o&n:"), gb);
-  enabled=new QCheckBox(i18n("Sho&w in menu"), gb);
+    QGroupBox *gb = new QGroupBox(page);
+    fname = new KLineEdit(gb);
+    QLabel *l1 = new QLabel(fname, i18n("Na&me:"), gb);
+    apon = new QComboBox(gb);
+    apon->insertItem(i18n("Single Articles"));
+    apon->insertItem(i18n("Whole Threads"));
+    QLabel *l2 = new QLabel(apon, i18n("Apply o&n:"), gb);
+    enabled = new QCheckBox(i18n("Sho&w in menu"), gb);
 
-  fw=new KNFilterConfigWidget(page);
+    fw = new KNFilterConfigWidget(page);
 
-  QGridLayout *gbL=new QGridLayout(gb, 2,4,8,5);
-  gbL->addWidget(l1, 0,0);
-  gbL->addMultiCellWidget(fname, 0,0,1,3);
-  gbL->addWidget(enabled, 1,0);
-  gbL->addWidget(l2, 1,2);
-  gbL->addWidget(apon, 1,3);
-  gbL->setColStretch(1,1);
+    QGridLayout *gbL = new QGridLayout(gb, 2, 4, 8, 5);
+    gbL->addWidget(l1, 0, 0);
+    gbL->addMultiCellWidget(fname, 0, 0, 1, 3);
+    gbL->addWidget(enabled, 1, 0);
+    gbL->addWidget(l2, 1, 2);
+    gbL->addWidget(apon, 1, 3);
+    gbL->setColStretch(1, 1);
 
-  QVBoxLayout *topL=new QVBoxLayout(page,0,5);
+    QVBoxLayout *topL = new QVBoxLayout(page, 0, 5);
 
-  topL->addWidget(gb);
-  topL->addWidget(fw,1);
+    topL->addWidget(gb);
+    topL->addWidget(fw, 1);
 
-  enabled->setChecked(f->isEnabled());
-  apon->setCurrentItem((int) f->applyOn());
-  fname->setText(f->translatedName());
+    enabled->setChecked(f->isEnabled());
+    apon->setCurrentItem((int) f->applyOn());
+    fname->setText(f->translatedName());
 
-  fw->status->setFilter(f->status);
-  fw->lines->setFilter(f->lines);
-  fw->age->setFilter(f->age);
-  fw->score->setFilter(f->score);
-  fw->subject->setFilter(f->subject);
-  fw->from->setFilter(f->from);
-  fw->messageId->setFilter(f->messageId);
-  fw->references->setFilter(f->references);
+    fw->status->setFilter(f->status);
+    fw->lines->setFilter(f->lines);
+    fw->age->setFilter(f->age);
+    fw->score->setFilter(f->score);
+    fw->subject->setFilter(f->subject);
+    fw->from->setFilter(f->from);
+    fw->messageId->setFilter(f->messageId);
+    fw->references->setFilter(f->references);
 
-  setFixedHeight(sizeHint().height());
-  KNHelper::restoreWindowSize("filterDLG", this, sizeHint());
+    setFixedHeight(sizeHint().height());
+    KNHelper::restoreWindowSize("filterDLG", this, sizeHint());
 
-  setHelp("anc-using-filters");
-  connect( fname,  SIGNAL( textChanged ( const QString & )), this, SLOT( slotTextChanged( const QString & )));
-  slotTextChanged( fname->text() );
+    setHelp("anc-using-filters");
+    connect(fname,  SIGNAL(textChanged(const QString &)), this, SLOT(slotTextChanged(const QString &)));
+    slotTextChanged(fname->text());
 }
 
 
 
 KNFilterDialog::~KNFilterDialog()
 {
-  KNHelper::saveWindowSize("filterDLG", size());
+    KNHelper::saveWindowSize("filterDLG", size());
 }
 
-void KNFilterDialog::slotTextChanged( const QString &_text )
+void KNFilterDialog::slotTextChanged(const QString &_text)
 {
-    enableButtonOK( !_text.isEmpty() );
+    enableButtonOK(!_text.isEmpty());
 }
 
 void KNFilterDialog::slotOk()
 {
-  if (fname->text().isEmpty())
-    KMessageBox::sorry(this, i18n("Please provide a name for this filter."));
-  else
-    if (!knGlobals.filterManager()->newNameIsOK(fltr,fname->text()))
-      KMessageBox::sorry(this, i18n("A filter with this name exists already.\nPlease choose a different name."));
-    else {
-      fltr->setTranslatedName(fname->text());
-      fltr->setEnabled(enabled->isChecked());
-      fltr->status=fw->status->filter();
-      fltr->score=fw->score->filter();
-      fltr->age=fw->age->filter();
-      fltr->lines=fw->lines->filter();
-      fltr->subject=fw->subject->filter();
-      fltr->from=fw->from->filter();
-      fltr->messageId=fw->messageId->filter();
-      fltr->references=fw->references->filter();
-      fltr->setApplyOn(apon->currentItem());
+    if(fname->text().isEmpty())
+        KMessageBox::sorry(this, i18n("Please provide a name for this filter."));
+    else if(!knGlobals.filterManager()->newNameIsOK(fltr, fname->text()))
+        KMessageBox::sorry(this, i18n("A filter with this name exists already.\nPlease choose a different name."));
+    else
+    {
+        fltr->setTranslatedName(fname->text());
+        fltr->setEnabled(enabled->isChecked());
+        fltr->status = fw->status->filter();
+        fltr->score = fw->score->filter();
+        fltr->age = fw->age->filter();
+        fltr->lines = fw->lines->filter();
+        fltr->subject = fw->subject->filter();
+        fltr->from = fw->from->filter();
+        fltr->messageId = fw->messageId->filter();
+        fltr->references = fw->references->filter();
+        fltr->setApplyOn(apon->currentItem());
 
-      accept();
+        accept();
     }
 }
 

@@ -21,82 +21,82 @@
 #include "pushbutton.moc"
 
 
-PushButton::PushButton(QWidget* parent, const char* name)
-	: QPushButton(parent, name),
-	  mFocusPolicy(focusPolicy()),
-	  mReadOnly(false)
+PushButton::PushButton(QWidget *parent, const char *name)
+    : QPushButton(parent, name),
+      mFocusPolicy(focusPolicy()),
+      mReadOnly(false)
 { }
 
-PushButton::PushButton(const QString& text, QWidget* parent, const char* name)
-	: QPushButton(text, parent, name),
-	  mFocusPolicy(focusPolicy()),
-	  mReadOnly(false)
+PushButton::PushButton(const QString &text, QWidget *parent, const char *name)
+    : QPushButton(text, parent, name),
+      mFocusPolicy(focusPolicy()),
+      mReadOnly(false)
 { }
 
-PushButton::PushButton(const QIconSet& icon, const QString& text, QWidget* parent, const char* name)
-	: QPushButton(icon, text, parent, name),
-	  mFocusPolicy(focusPolicy()),
-	  mReadOnly(false)
+PushButton::PushButton(const QIconSet &icon, const QString &text, QWidget *parent, const char *name)
+    : QPushButton(icon, text, parent, name),
+      mFocusPolicy(focusPolicy()),
+      mReadOnly(false)
 { }
 
 void PushButton::setReadOnly(bool ro)
 {
-	if ((int)ro != (int)mReadOnly)
-	{
-		mReadOnly = ro;
-		setFocusPolicy(ro ? QWidget::NoFocus : mFocusPolicy);
-		if (ro)
-			clearFocus();
-	}
+    if((int)ro != (int)mReadOnly)
+    {
+        mReadOnly = ro;
+        setFocusPolicy(ro ? QWidget::NoFocus : mFocusPolicy);
+        if(ro)
+            clearFocus();
+    }
 }
 
-void PushButton::mousePressEvent(QMouseEvent* e)
+void PushButton::mousePressEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	QPushButton::mousePressEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    QPushButton::mousePressEvent(e);
 }
 
-void PushButton::mouseReleaseEvent(QMouseEvent* e)
+void PushButton::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	QPushButton::mouseReleaseEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    QPushButton::mouseReleaseEvent(e);
 }
 
-void PushButton::mouseMoveEvent(QMouseEvent* e)
+void PushButton::mouseMoveEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		QPushButton::mouseMoveEvent(e);
+    if(!mReadOnly)
+        QPushButton::mouseMoveEvent(e);
 }
 
-void PushButton::keyPressEvent(QKeyEvent* e)
+void PushButton::keyPressEvent(QKeyEvent *e)
 {
-	if (mReadOnly)
-		switch (e->key())
-		{
-			case Qt::Key_Up:
-			case Qt::Key_Left:
-			case Qt::Key_Right:
-			case Qt::Key_Down:
-				// Process keys which shift the focus
-				break;
-			default:
-				return;
-		}
-	QPushButton::keyPressEvent(e);
+    if(mReadOnly)
+        switch(e->key())
+        {
+            case Qt::Key_Up:
+            case Qt::Key_Left:
+            case Qt::Key_Right:
+            case Qt::Key_Down:
+                // Process keys which shift the focus
+                break;
+            default:
+                return;
+        }
+    QPushButton::keyPressEvent(e);
 }
 
-void PushButton::keyReleaseEvent(QKeyEvent* e)
+void PushButton::keyReleaseEvent(QKeyEvent *e)
 {
-	if (!mReadOnly)
-		QPushButton::keyReleaseEvent(e);
+    if(!mReadOnly)
+        QPushButton::keyReleaseEvent(e);
 }

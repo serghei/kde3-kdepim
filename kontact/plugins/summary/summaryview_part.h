@@ -32,15 +32,13 @@
 #include "core.h"
 #include "dropwidget.h"
 
-namespace Kontact
-{
-  class Plugin;
-  class Summary;
+namespace Kontact {
+class Plugin;
+class Summary;
 }
 
-namespace KParts
-{
-  class PartActivateEvent;
+namespace KParts {
+class PartActivateEvent;
 }
 
 class QFrame;
@@ -49,43 +47,42 @@ class QGridLayout;
 class KAction;
 class KCMultiDialog;
 
-class SummaryViewPart : public KParts::ReadOnlyPart
-{
-  Q_OBJECT
+class SummaryViewPart : public KParts::ReadOnlyPart {
+    Q_OBJECT
 
-  public:
-    SummaryViewPart( Kontact::Core *core, const char *widgetName,
-                     const KAboutData *aboutData,
-                     QObject *parent = 0, const char *name = 0 );
+public:
+    SummaryViewPart(Kontact::Core *core, const char *widgetName,
+                    const KAboutData *aboutData,
+                    QObject *parent = 0, const char *name = 0);
     ~SummaryViewPart();
 
-  public slots:
+public slots:
     void slotTextChanged();
     void slotAdjustPalette();
-    void setDate( const QDate& newDate );
+    void setDate(const QDate &newDate);
     void updateSummaries();
 
-  signals:
-    void textChanged( const QString& );
+signals:
+    void textChanged(const QString &);
 
-  protected:
+protected:
     virtual bool openFile();
-    virtual void partActivateEvent( KParts::PartActivateEvent *event );
+    virtual void partActivateEvent(KParts::PartActivateEvent *event);
 
-  protected slots:
+protected slots:
     void slotConfigure();
     void updateWidgets();
-    void summaryWidgetMoved( QWidget *target, QWidget *widget, int alignment );
+    void summaryWidgetMoved(QWidget *target, QWidget *widget, int alignment);
 
-  private:
-    void initGUI( Kontact::Core *core );
+private:
+    void initGUI(Kontact::Core *core);
     void loadLayout();
     void saveLayout();
-    QString widgetName( QWidget* ) const;
+    QString widgetName(QWidget *) const;
 
     QStringList configModules() const;
 
-    QMap<QString, Kontact::Summary*> mSummaries;
+    QMap<QString, Kontact::Summary *> mSummaries;
     Kontact::Core *mCore;
     DropWidget *mFrame;
     QFrame *mMainWidget;

@@ -30,40 +30,47 @@ class KIO_Protocol;
 class KornMailId;
 
 class KURL;
-namespace KIO { class MetaData; class Job; class Slave; }
+namespace KIO {
+class MetaData;
+class Job;
+class Slave;
+}
 
 template<class T> class QPtrList;
 
-class KIO_Delete : public QObject
-{ Q_OBJECT
+class KIO_Delete : public QObject {
+    Q_OBJECT
 public:
-	//constructors
-	KIO_Delete( QObject * parent = 0, const char * name = 0 );
-	~KIO_Delete( );
-	
-	//This function should be called if there are messages to be deleted.
-	bool deleteMails( QPtrList< const KornMailId > *, KKioDrop* );
-	
-	//This function should return false then and only then if an error occurred.
-	bool valid( ) { return _valid; }
-	
-public slots:
-	//If this slot is called, the whole deletion is canceled.
-	void canceled( );
-private slots:
-	void slotResult( KIO::Job* );
-	
-private:
-	void disConnect( );
-	bool setupSlave( KURL kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol );
-	void deleteItem( const KornMailId *item, KURL, KIO::MetaData, const KIO_Protocol *&);
-	void commitDelete( KURL, KIO::MetaData, const KIO_Protocol *& );
+    //constructors
+    KIO_Delete(QObject *parent = 0, const char *name = 0);
+    ~KIO_Delete();
 
-	KKioDrop *_kio;
-	unsigned int _total;
-	QPtrList< KIO::Job > *_jobs;
-	KIO::Slave *_slave;
-	bool _valid;
+    //This function should be called if there are messages to be deleted.
+    bool deleteMails(QPtrList< const KornMailId > *, KKioDrop *);
+
+    //This function should return false then and only then if an error occurred.
+    bool valid()
+    {
+        return _valid;
+    }
+
+public slots:
+    //If this slot is called, the whole deletion is canceled.
+    void canceled();
+private slots:
+    void slotResult(KIO::Job *);
+
+private:
+    void disConnect();
+    bool setupSlave(KURL kurl, KIO::MetaData metadata, const KIO_Protocol *&protocol);
+    void deleteItem(const KornMailId *item, KURL, KIO::MetaData, const KIO_Protocol *&);
+    void commitDelete(KURL, KIO::MetaData, const KIO_Protocol *&);
+
+    KKioDrop *_kio;
+    unsigned int _total;
+    QPtrList< KIO::Job > *_jobs;
+    KIO::Slave *_slave;
+    bool _valid;
 };
 
 #endif //MK_KIO_DELETE_H

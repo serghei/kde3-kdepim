@@ -30,28 +30,28 @@
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KLocale::setMainCatalogue( "kdepimwizards" );
+    KLocale::setMainCatalogue("kdepimwizards");
 
-  KAboutData aboutData( "kolabwizard", I18N_NOOP( "Kolab Configuration Wizard" ), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("kolabwizard", I18N_NOOP("Kolab Configuration Wizard"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+    KGlobal::locale()->insertCatalogue("libkdepim");
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
+    bool verbose = false;
+    if(args->isSet("verbose")) verbose = true;
 
-  KolabWizard wizard;
+    KolabWizard wizard;
 
-  wizard.exec();
+    wizard.exec();
 }

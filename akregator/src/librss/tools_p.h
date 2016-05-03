@@ -19,21 +19,26 @@ class QDomNode;
 class QDomElement;
 class QString;
 
-namespace RSS
+namespace RSS {
+struct Shared
 {
-	struct Shared
-	{
-		Shared() : count(1) { }
-		void ref() { count++; }
-		bool deref() { return !--count; }
-		unsigned int count;
-	};
+    Shared() : count(1) { }
+    void ref()
+    {
+        count++;
+    }
+    bool deref()
+    {
+        return !--count;
+    }
+    unsigned int count;
+};
 
-	QString extractNode(const QDomNode &parent, const QString &elemName, bool isInlined=true);
-	QString extractTitle(const QDomNode &parent);
-	QString childNodesAsXML(const QDomNode& parent);
-	time_t parseISO8601Date(const QString &s);
-        QString parseItemAuthor(const QDomElement& element, Format format, Version version);
+QString extractNode(const QDomNode &parent, const QString &elemName, bool isInlined = true);
+QString extractTitle(const QDomNode &parent);
+QString childNodesAsXML(const QDomNode &parent);
+time_t parseISO8601Date(const QString &s);
+QString parseItemAuthor(const QDomElement &element, Format format, Version version);
 }
 
 #endif // LIBRSS_TOOLS_P_H

@@ -29,16 +29,15 @@
 #include "fetchqueue.h"
 #include "tagset.h"
 
-namespace Akregator
-{
+namespace Akregator {
 
-Kernel* Kernel::m_self = 0;
+Kernel *Kernel::m_self = 0;
 
 static KStaticDeleter<Kernel> kernelsd;
 
-Kernel* Kernel::self()
+Kernel *Kernel::self()
 {
-    if (!m_self)
+    if(!m_self)
         m_self = kernelsd.setObject(m_self, new Kernel);
     return m_self;
 }
@@ -50,11 +49,11 @@ Kernel::Kernel()
     m_storage = 0;
     m_feedList = 0;
 }
- 
+
 Kernel::~Kernel()
 {
     delete m_fetchQueue;
 }
-         
+
 
 }

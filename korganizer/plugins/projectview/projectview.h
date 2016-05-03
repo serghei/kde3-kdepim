@@ -25,17 +25,17 @@
 
 class ProjectView : public KOrg::Part {
     Q_OBJECT
-  public:
+public:
     ProjectView(KOrg::MainWindow *, const char *);
     ~ProjectView();
-    
+
     QString info();
     QString shortInfo();
 
-  private slots:
+private slots:
     void showView();
 
-  private:
+private:
     KOrg::BaseView *mView;
 };
 

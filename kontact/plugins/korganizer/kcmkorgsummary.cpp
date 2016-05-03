@@ -39,162 +39,173 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_korgsummary( QWidget *parent, const char * )
-  {
-    return new KCMKOrgSummary( parent, "kcmkorgsummary" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_korgsummary(QWidget *parent, const char *)
+    {
+        return new KCMKOrgSummary(parent, "kcmkorgsummary");
+    }
 }
 
-KCMKOrgSummary::KCMKOrgSummary( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+KCMKOrgSummary::KCMKOrgSummary(QWidget *parent, const char *name)
+    : KCModule(parent, name)
 {
-  initGUI();
+    initGUI();
 
-  customDaysChanged( 1 );
+    customDaysChanged(1);
 
-  connect( mCalendarGroup, SIGNAL( clicked( int ) ), SLOT( modified() ) );
-  connect( mCalendarGroup, SIGNAL( clicked( int ) ), SLOT( buttonClicked( int ) ) );
-  connect( mTodoGroup, SIGNAL( clicked( int ) ), SLOT( modified() ) );
-  connect( mCustomDays, SIGNAL( valueChanged( int ) ), SLOT( modified() ) );
-  connect( mCustomDays, SIGNAL( valueChanged( int ) ), SLOT( customDaysChanged( int ) ) );
+    connect(mCalendarGroup, SIGNAL(clicked(int)), SLOT(modified()));
+    connect(mCalendarGroup, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
+    connect(mTodoGroup, SIGNAL(clicked(int)), SLOT(modified()));
+    connect(mCustomDays, SIGNAL(valueChanged(int)), SLOT(modified()));
+    connect(mCustomDays, SIGNAL(valueChanged(int)), SLOT(customDaysChanged(int)));
 
-  KAcceleratorManager::manage( this );
+    KAcceleratorManager::manage(this);
 
-  load();
+    load();
 
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkorgsummary" ),
-                                      I18N_NOOP( "Schedule Configuration Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c) 2003 - 2004 Tobias Koenig" ) );
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkorgsummary"),
+                                       I18N_NOOP("Schedule Configuration Dialog"),
+                                       0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2003 - 2004 Tobias Koenig"));
 
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-  setAboutData( about );
+    about->addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
+    setAboutData(about);
 }
 
 void KCMKOrgSummary::modified()
 {
-  emit changed( true );
+    emit changed(true);
 }
 
-void KCMKOrgSummary::buttonClicked( int id )
+void KCMKOrgSummary::buttonClicked(int id)
 {
-  mCustomDays->setEnabled( id == 4 );
+    mCustomDays->setEnabled(id == 4);
 }
 
-void KCMKOrgSummary::customDaysChanged( int value )
+void KCMKOrgSummary::customDaysChanged(int value)
 {
-  mCustomDays->setSuffix( i18n( " day",  " days", value ) );
+    mCustomDays->setSuffix(i18n(" day",  " days", value));
 }
 
 void KCMKOrgSummary::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+    QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-  mCalendarGroup = new QButtonGroup( 0, Vertical, i18n( "Appointments" ), this );
-  QVBoxLayout *boxLayout = new QVBoxLayout( mCalendarGroup->layout(),
-                                            KDialog::spacingHint() );
+    mCalendarGroup = new QButtonGroup(0, Vertical, i18n("Appointments"), this);
+    QVBoxLayout *boxLayout = new QVBoxLayout(mCalendarGroup->layout(),
+            KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "How many days should the calendar show at once?" ), mCalendarGroup );
-  boxLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("How many days should the calendar show at once?"), mCalendarGroup);
+    boxLayout->addWidget(label);
 
-  QRadioButton *button = new QRadioButton( i18n( "One day" ), mCalendarGroup );
-  boxLayout->addWidget( button );
+    QRadioButton *button = new QRadioButton(i18n("One day"), mCalendarGroup);
+    boxLayout->addWidget(button);
 
-  button = new QRadioButton( i18n( "Five days" ), mCalendarGroup );
-  boxLayout->addWidget( button );
+    button = new QRadioButton(i18n("Five days"), mCalendarGroup);
+    boxLayout->addWidget(button);
 
-  button = new QRadioButton( i18n( "One week" ), mCalendarGroup );
-  boxLayout->addWidget( button );
+    button = new QRadioButton(i18n("One week"), mCalendarGroup);
+    boxLayout->addWidget(button);
 
-  button = new QRadioButton( i18n( "One month" ), mCalendarGroup );
-  boxLayout->addWidget( button );
+    button = new QRadioButton(i18n("One month"), mCalendarGroup);
+    boxLayout->addWidget(button);
 
-  QHBoxLayout *hbox = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
+    QHBoxLayout *hbox = new QHBoxLayout(boxLayout, KDialog::spacingHint());
 
-  button = new QRadioButton( "", mCalendarGroup );
-  hbox->addWidget( button );
+    button = new QRadioButton("", mCalendarGroup);
+    hbox->addWidget(button);
 
-  mCustomDays = new QSpinBox( 1, 365, 1, mCalendarGroup );
-  mCustomDays->setEnabled( false );
-  hbox->addWidget( mCustomDays );
+    mCustomDays = new QSpinBox(1, 365, 1, mCalendarGroup);
+    mCustomDays->setEnabled(false);
+    hbox->addWidget(mCustomDays);
 
-  hbox->addStretch( 1 );
+    hbox->addStretch(1);
 
-  layout->addWidget( mCalendarGroup );
+    layout->addWidget(mCalendarGroup);
 
-  mTodoGroup = new QButtonGroup( 2, Horizontal, i18n( "To-dos" ), this );
-  new QRadioButton( i18n( "Show all to-dos" ), mTodoGroup );
-  new QRadioButton( i18n( "Show today's to-dos only" ), mTodoGroup );
+    mTodoGroup = new QButtonGroup(2, Horizontal, i18n("To-dos"), this);
+    new QRadioButton(i18n("Show all to-dos"), mTodoGroup);
+    new QRadioButton(i18n("Show today's to-dos only"), mTodoGroup);
 
-  layout->addWidget( mTodoGroup );
+    layout->addWidget(mTodoGroup);
 
-  layout->addStretch();
+    layout->addStretch();
 }
 
 void KCMKOrgSummary::load()
 {
-  KConfig config( "kcmkorgsummaryrc" );
+    KConfig config("kcmkorgsummaryrc");
 
-  config.setGroup( "Calendar" );
-  int days = config.readNumEntry( "DaysToShow", 1 );
-  if ( days == 1 )
-    mCalendarGroup->setButton( 0 );
-  else if ( days == 5 )
-    mCalendarGroup->setButton( 1 );
-  else if ( days == 7 )
-    mCalendarGroup->setButton( 2 );
-  else if ( days == 31 )
-    mCalendarGroup->setButton( 3 );
-  else {
-    mCalendarGroup->setButton( 4 );
-    mCustomDays->setValue( days );
-    mCustomDays->setEnabled( true );
-  }
+    config.setGroup("Calendar");
+    int days = config.readNumEntry("DaysToShow", 1);
+    if(days == 1)
+        mCalendarGroup->setButton(0);
+    else if(days == 5)
+        mCalendarGroup->setButton(1);
+    else if(days == 7)
+        mCalendarGroup->setButton(2);
+    else if(days == 31)
+        mCalendarGroup->setButton(3);
+    else
+    {
+        mCalendarGroup->setButton(4);
+        mCustomDays->setValue(days);
+        mCustomDays->setEnabled(true);
+    }
 
-  config.setGroup( "Todo" );
-  bool allTodos = config.readBoolEntry( "ShowAllTodos", false );
+    config.setGroup("Todo");
+    bool allTodos = config.readBoolEntry("ShowAllTodos", false);
 
-  if ( allTodos )
-    mTodoGroup->setButton( 0 );
-  else
-    mTodoGroup->setButton( 1 );
+    if(allTodos)
+        mTodoGroup->setButton(0);
+    else
+        mTodoGroup->setButton(1);
 
-  emit changed( false );
+    emit changed(false);
 }
 
 void KCMKOrgSummary::save()
 {
-  KConfig config( "kcmkorgsummaryrc" );
+    KConfig config("kcmkorgsummaryrc");
 
-  config.setGroup( "Calendar" );
+    config.setGroup("Calendar");
 
-  int days;
-  switch ( mCalendarGroup->selectedId() ) {
-    case 0: days = 1; break;
-    case 1: days = 5; break;
-    case 2: days = 7; break;
-    case 3: days = 31; break;
-    case 4:
-    default: days = mCustomDays->value(); break;
-  }
-  config.writeEntry( "DaysToShow", days );
+    int days;
+    switch(mCalendarGroup->selectedId())
+    {
+        case 0:
+            days = 1;
+            break;
+        case 1:
+            days = 5;
+            break;
+        case 2:
+            days = 7;
+            break;
+        case 3:
+            days = 31;
+            break;
+        case 4:
+        default:
+            days = mCustomDays->value();
+            break;
+    }
+    config.writeEntry("DaysToShow", days);
 
-  config.setGroup( "Todo" );
-  config.writeEntry( "ShowAllTodos", mTodoGroup->selectedId() == 0 );
+    config.setGroup("Todo");
+    config.writeEntry("ShowAllTodos", mTodoGroup->selectedId() == 0);
 
-  config.sync();
+    config.sync();
 
-  emit changed( false );
+    emit changed(false);
 }
 
 void KCMKOrgSummary::defaults()
 {
-  mCalendarGroup->setButton( 0 );
-  mTodoGroup->setButton( 1 );
+    mCalendarGroup->setButton(0);
+    mTodoGroup->setButton(1);
 
-  emit changed( true );
+    emit changed(true);
 }
 
 #include "kcmkorgsummary.moc"

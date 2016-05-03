@@ -7,16 +7,16 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-    
+
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
@@ -27,38 +27,38 @@
 #include <serializer.h>
 #include <qstring.h>
 
-void DirectoryCategory::setFullViewableName( QString* fullViewableName )
+void DirectoryCategory::setFullViewableName(QString *fullViewableName)
 {
-  mFullViewableName = fullViewableName;
+    mFullViewableName = fullViewableName;
 }
 
-QString*DirectoryCategory::fullViewableName() const
+QString *DirectoryCategory::fullViewableName() const
 {
-   return mFullViewableName;
+    return mFullViewableName;
 }
 
-void DirectoryCategory::setSpecialEncoding( QString* specialEncoding )
+void DirectoryCategory::setSpecialEncoding(QString *specialEncoding)
 {
-  mSpecialEncoding = specialEncoding;
+    mSpecialEncoding = specialEncoding;
 }
 
-QString*DirectoryCategory::specialEncoding() const
+QString *DirectoryCategory::specialEncoding() const
 {
-   return mSpecialEncoding;
+    return mSpecialEncoding;
 }
 
 DirectoryCategory::DirectoryCategory()
 {
-  mFullViewableName = 0;
-  mSpecialEncoding = 0;
+    mFullViewableName = 0;
+    mSpecialEncoding = 0;
 }
 
 DirectoryCategory::~DirectoryCategory()
 {
-  delete mFullViewableName;
-  mFullViewableName = 0;
-  delete mSpecialEncoding;
-  mSpecialEncoding = 0;
+    delete mFullViewableName;
+    mFullViewableName = 0;
+    delete mSpecialEncoding;
+    mSpecialEncoding = 0;
 }
 
 

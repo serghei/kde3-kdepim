@@ -43,81 +43,83 @@
 
 
 
-class Modem : public QObject
-{
-	Q_OBJECT
+class Modem : public QObject {
+    Q_OBJECT
 public:
-	Modem(KandyPrefs *kprefs, QObject *parent = 0, const char *name = 0);
-	virtual ~Modem();
+    Modem(KandyPrefs *kprefs, QObject *parent = 0, const char *name = 0);
+    virtual ~Modem();
 
-	void setSpeed(int speed);
-	void setData(int data);
-	void setParity(char parity);
-	void setStop(int stop);
+    void setSpeed(int speed);
+    void setData(int data);
+    void setParity(char parity);
+    void setStop(int stop);
 
-	bool open();
-	void close();
+    bool open();
+    void close();
 
-        bool isOpen() { return mOpen; }
+    bool isOpen()
+    {
+        return mOpen;
+    }
 
-	void flush();
+    void flush();
 
-	bool lockDevice();
-	void unlockDevice();
+    bool lockDevice();
+    void unlockDevice();
 
-	bool dsrOn();
-	bool ctsOn();
+    bool dsrOn();
+    bool ctsOn();
 
-	void writeChar(const char c);
-	void writeLine(const char *line);
+    void writeChar(const char c);
+    void writeLine(const char *line);
 
-	void timerStart(int msec);
+    void timerStart(int msec);
 
-	void receiveXModem(bool crc);
-	void abortXModem();
+    void receiveXModem(bool crc);
+    void abortXModem();
 
 private slots:
-	void timerDone();
+    void timerDone();
 
-	void readChar(int);
-	void readXChar(int);
+    void readChar(int);
+    void readXChar(int);
 
 private:
-  bool mOpen;
+    bool mOpen;
 
-	void init();
-	void xreset();
+    void init();
+    void xreset();
 
-	uchar calcChecksum();
-	ushort calcCRC();
+    uchar calcChecksum();
+    ushort calcCRC();
 
-	bool is_locked;
-	struct termios init_tty;
+    bool is_locked;
+    struct termios init_tty;
 
-	speed_t cspeed;
-	tcflag_t cflag;
+    speed_t cspeed;
+    tcflag_t cflag;
 
-	int fd;
-	QTimer *timer;
-	QSocketNotifier *sn;
+    int fd;
+    QTimer *timer;
+    QSocketNotifier *sn;
 
-	uchar buffer[1024];
-	int bufpos;
+    uchar buffer[1024];
+    int bufpos;
 
-	int xstate;
-	bool xcrc;
-	uchar xblock;
-	int xsize;
+    int xstate;
+    bool xcrc;
+    uchar xblock;
+    int xsize;
 
-        KandyPrefs *prefs;
+    KandyPrefs *prefs;
 
 signals:
-	void gotLine(const char *);
-	void gotXBlock(const uchar *, int);
-	void xmodemDone(bool);
-	void timeout();
+    void gotLine(const char *);
+    void gotXBlock(const uchar *, int);
+    void xmodemDone(bool);
+    void timeout();
 
-    void errorMessage( const QString & );
+    void errorMessage(const QString &);
 };
 
 

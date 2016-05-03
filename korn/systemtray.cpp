@@ -24,19 +24,19 @@
 
 #include <qmovie.h>
 
-SystemTray::SystemTray( QWidget * parent, const char * name )
-	: KSystemTray( parent, name )	
+SystemTray::SystemTray(QWidget *parent, const char *name)
+    : KSystemTray(parent, name)
 {
 }
 
 SystemTray::~SystemTray()
 {
 }
-	
-void SystemTray::mousePressEvent( QMouseEvent* ee )
+
+void SystemTray::mousePressEvent(QMouseEvent *ee)
 {
-	//Use the general function to determe what must be done
-	emit mouseButtonPressed( ee->button() );
+    //Use the general function to determe what must be done
+    emit mouseButtonPressed(ee->button());
 }
-	
+
 #include "systemtray.moc"

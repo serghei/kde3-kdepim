@@ -34,10 +34,10 @@
 #include "actionmanager.h"
 
 
-KOrganizerIfaceImpl::KOrganizerIfaceImpl( ActionManager* actionManager,
-                                          QObject* parent, const char* name )
-  : DCOPObject( "KOrganizerIface" ), QObject( parent, name ),
-    mActionManager( actionManager )
+KOrganizerIfaceImpl::KOrganizerIfaceImpl(ActionManager *actionManager,
+        QObject *parent, const char *name)
+    : DCOPObject("KOrganizerIface"), QObject(parent, name),
+      mActionManager(actionManager)
 {
 }
 
@@ -45,59 +45,59 @@ KOrganizerIfaceImpl::~KOrganizerIfaceImpl()
 {
 }
 
-bool KOrganizerIfaceImpl::openURL( const QString &url )
+bool KOrganizerIfaceImpl::openURL(const QString &url)
 {
-  return mActionManager->openURL( url );
+    return mActionManager->openURL(url);
 }
 
-bool KOrganizerIfaceImpl::mergeURL( const QString &url )
+bool KOrganizerIfaceImpl::mergeURL(const QString &url)
 {
-  return mActionManager->mergeURL( url );
+    return mActionManager->mergeURL(url);
 }
 
 void KOrganizerIfaceImpl::closeURL()
 {
-  return mActionManager->closeURL();
+    return mActionManager->closeURL();
 }
 
 bool KOrganizerIfaceImpl::saveURL()
 {
-  return mActionManager->saveURL();
+    return mActionManager->saveURL();
 }
 
-bool KOrganizerIfaceImpl::saveAsURL( const QString &url )
+bool KOrganizerIfaceImpl::saveAsURL(const QString &url)
 {
-  return mActionManager->saveAsURL( url );
+    return mActionManager->saveAsURL(url);
 }
 
 QString KOrganizerIfaceImpl::getCurrentURLasString() const
 {
-  return mActionManager->getCurrentURLasString();
+    return mActionManager->getCurrentURLasString();
 }
 
-bool KOrganizerIfaceImpl::deleteIncidence( const QString &uid, bool force )
+bool KOrganizerIfaceImpl::deleteIncidence(const QString &uid, bool force)
 {
-  return mActionManager->deleteIncidence( uid, force );
+    return mActionManager->deleteIncidence(uid, force);
 }
 
-bool KOrganizerIfaceImpl::editIncidence( const QString &uid )
+bool KOrganizerIfaceImpl::editIncidence(const QString &uid)
 {
-  return mActionManager->editIncidence( uid );
+    return mActionManager->editIncidence(uid);
 }
 
-bool KOrganizerIfaceImpl::addIncidence( const QString &ical )
+bool KOrganizerIfaceImpl::addIncidence(const QString &ical)
 {
-  return mActionManager->addIncidence( ical );
+    return mActionManager->addIncidence(ical);
 }
 
-void KOrganizerIfaceImpl::loadProfile( const QString& path )
+void KOrganizerIfaceImpl::loadProfile(const QString &path)
 {
-    mActionManager->loadProfile( path );
+    mActionManager->loadProfile(path);
 }
 
-void KOrganizerIfaceImpl::saveToProfile( const QString& path ) const
+void KOrganizerIfaceImpl::saveToProfile(const QString &path) const
 {
-    mActionManager->saveToProfile( path );
+    mActionManager->saveToProfile(path);
 }
 
 

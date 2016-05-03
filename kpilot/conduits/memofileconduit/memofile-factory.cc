@@ -43,86 +43,84 @@
 
 #include "pluginfactory.h"
 
-class MemofileConduitConfig : public ConduitConfigBase
-{
+class MemofileConduitConfig : public ConduitConfigBase {
 public:
-	MemofileConduitConfig(QWidget *parent=0L, const char *n=0L);
-	virtual void commit();
-	virtual void load();
+    MemofileConduitConfig(QWidget *parent = 0L, const char *n = 0L);
+    virtual void commit();
+    virtual void load();
 protected:
-	MemofileWidget *fConfigWidget;
+    MemofileWidget *fConfigWidget;
 } ;
 
 MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new MemofileWidget(p))
+    ConduitConfigBase(p, n),
+    fConfigWidget(new MemofileWidget(p))
 {
-	FUNCTIONSETUP;
-	fConduitName = i18n("Memofile");
-	KAboutData *about = new KAboutData("MemofileConduit",
-		I18N_NOOP("Memofile Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Memofile Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2004, Jason 'vanRijn' Kasper");
-	about->addAuthor("Jason 'vanRijn' Kasper",
-		I18N_NOOP("Primary Author"),
-		"vR@movingparts.net",
-		"http://www.cs.kun.nl/~adridg/kpilot");
+    FUNCTIONSETUP;
+    fConduitName = i18n("Memofile");
+    KAboutData *about = new KAboutData("MemofileConduit",
+                                       I18N_NOOP("Memofile Conduit for KPilot"),
+                                       KPILOT_VERSION,
+                                       I18N_NOOP("Configures the Memofile Conduit for KPilot"),
+                                       KAboutData::License_GPL,
+                                       "(C) 2004, Jason 'vanRijn' Kasper");
+    about->addAuthor("Jason 'vanRijn' Kasper",
+                     I18N_NOOP("Primary Author"),
+                     "vR@movingparts.net",
+                     "http://www.cs.kun.nl/~adridg/kpilot");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,about);
-	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fDirectory,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fSyncPrivate,SIGNAL(toggled(bool)),
-					 this,SLOT(modified()));
-	
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, about);
+    fWidget = fConfigWidget;
+    QObject::connect(fConfigWidget->fDirectory, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fSyncPrivate, SIGNAL(toggled(bool)),
+                     this, SLOT(modified()));
+
 }
 
 /* virtual */ void MemofileConduitConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Directory="
-		<< fConfigWidget->fDirectory->url()
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Directory="
+                << fConfigWidget->fDirectory->url()
+                << endl;
 
-	MemofileConduitSettings::setDirectory( fConfigWidget->fDirectory->url() );
-	MemofileConduitSettings::setSyncPrivate( fConfigWidget->fSyncPrivate->isChecked() );
-	MemofileConduitSettings::self()->writeConfig();
-	unmodified();
+    MemofileConduitSettings::setDirectory(fConfigWidget->fDirectory->url());
+    MemofileConduitSettings::setSyncPrivate(fConfigWidget->fSyncPrivate->isChecked());
+    MemofileConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 /* virtual */ void MemofileConduitConfig::load()
 {
-	FUNCTIONSETUP;
-	MemofileConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    MemofileConduitSettings::self()->readConfig();
 
-	fConfigWidget->fDirectory->setURL( MemofileConduitSettings::directory() );
-	fConfigWidget->fSyncPrivate->setChecked( MemofileConduitSettings::syncPrivate() );
+    fConfigWidget->fDirectory->setURL(MemofileConduitSettings::directory());
+    fConfigWidget->fSyncPrivate->setChecked(MemofileConduitSettings::syncPrivate());
 
-	DEBUGKPILOT << fname
-		<< ": Read Directory: ["
-		<< fConfigWidget->fDirectory->url()
-		<< "], sync private records: ["
-		<< fConfigWidget->fSyncPrivate
-		<< "]" << endl;
+    DEBUGKPILOT << fname
+                << ": Read Directory: ["
+                << fConfigWidget->fDirectory->url()
+                << "], sync private records: ["
+                << fConfigWidget->fSyncPrivate
+                << "]" << endl;
 
-	unmodified();
+    unmodified();
 }
 
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_memofile()
-{
-	return new ConduitFactory<MemofileConduitConfig,MemofileConduit>(0,"memofileconduit");
-}
+    void *init_conduit_memofile()
+    {
+        return new ConduitFactory<MemofileConduitConfig, MemofileConduit>(0, "memofileconduit");
+    }
 
-unsigned long version_conduit_memofile = Pilot::PLUGIN_API;
+    unsigned long version_conduit_memofile = Pilot::PLUGIN_API;
 
 }
 

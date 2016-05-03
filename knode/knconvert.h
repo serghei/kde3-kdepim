@@ -34,29 +34,35 @@ class KProcess;
 
 class KDE_EXPORT KNConvert : public QDialog {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     static bool needToConvert(const QString &oldVersion);
 
     KNConvert(const QString &version);
     ~KNConvert();
-    bool conversionDone()const { return c_onversionDone; }
+    bool conversionDone()const
+    {
+        return c_onversionDone;
+    }
 
 
-  protected:
+protected:
 
     //------------ <Converter-classes> ---------------
 
     //Base class for all converters
     class Converter {
 
-      public:
-        Converter(QStringList *log) { l_og=log; }
+    public:
+        Converter(QStringList *log)
+        {
+            l_og = log;
+        }
         virtual ~Converter() {}
-        virtual bool doConvert()=0;
+        virtual bool doConvert() = 0;
 
-      protected:
+    protected:
         QStringList *l_og;
     };
 
@@ -64,30 +70,32 @@ class KDE_EXPORT KNConvert : public QDialog {
     //Converter for version 0.4
     class Converter04 : public Converter {
 
-      public:
+    public:
         Converter04(QStringList *log) : Converter(log) {}
         ~Converter04() {}
         bool doConvert();
 
-      protected:
+    protected:
         int convertFolder(QString srcPrefix, QString dstPrefix);
 
-        struct OldFolderIndex {
-          int id,
-              status,
-              so,
-              eo,
-              sId;
-          time_t ti;
+        struct OldFolderIndex
+        {
+            int id,
+                status,
+                so,
+                eo,
+                sId;
+            time_t ti;
         };
 
-        struct NewFolderIndex {
-          int id,
-              so,
-              eo,
-              sId;
-          time_t ti;
-          bool flags[6];
+        struct NewFolderIndex
+        {
+            int id,
+                so,
+                eo,
+                sId;
+            time_t ti;
+            bool flags[6];
         };
     };
 
@@ -106,7 +114,7 @@ class KDE_EXPORT KNConvert : public QDialog {
                   *c_ancelBtn;
     QListBox      *l_ogList;
 
-    QValueList<Converter*> mConverters;
+    QValueList<Converter *> mConverters;
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;
@@ -114,7 +122,7 @@ class KDE_EXPORT KNConvert : public QDialog {
 
     void convert();
 
-  protected slots:
+protected slots:
     void slotStart();
     void slotCreateBkupToggled(bool b);
     void slotBrowse();

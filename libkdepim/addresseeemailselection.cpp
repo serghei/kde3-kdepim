@@ -31,234 +31,242 @@ using namespace KPIM;
 using KRecentAddress::RecentAddresses;
 
 AddresseeEmailSelection::AddresseeEmailSelection()
-  : Selection()
+    : Selection()
 {
 }
 
 uint AddresseeEmailSelection::fieldCount() const
 {
-  return 3;
+    return 3;
 }
 
-QString AddresseeEmailSelection::fieldTitle( uint index ) const
+QString AddresseeEmailSelection::fieldTitle(uint index) const
 {
-  switch ( index ) {
-    case 0:
-      return i18n( "To" );
-      break;
-    case 1:
-      return i18n( "Cc" );
-      break;
-    case 2:
-      return i18n( "Bcc" );
-      break;
-    default:
-      return QString::null;
-  }
+    switch(index)
+    {
+        case 0:
+            return i18n("To");
+            break;
+        case 1:
+            return i18n("Cc");
+            break;
+        case 2:
+            return i18n("Bcc");
+            break;
+        default:
+            return QString::null;
+    }
 }
 
 QStringList AddresseeEmailSelection::to() const
 {
-  return mToEmailList;
+    return mToEmailList;
 }
 
 QStringList AddresseeEmailSelection::cc() const
 {
-  return mCcEmailList;
+    return mCcEmailList;
 }
 
 QStringList AddresseeEmailSelection::bcc() const
 {
-  return mBccEmailList;
+    return mBccEmailList;
 }
 
 KABC::Addressee::List AddresseeEmailSelection::toAddresses() const
 {
-  return mToAddresseeList;
+    return mToAddresseeList;
 }
 
 KABC::Addressee::List AddresseeEmailSelection::ccAddresses() const
 {
-  return mCcAddresseeList;
+    return mCcAddresseeList;
 }
 
 KABC::Addressee::List AddresseeEmailSelection::bccAddresses() const
 {
-  return mBccAddresseeList;
+    return mBccAddresseeList;
 }
 
 QStringList AddresseeEmailSelection::toDistributionLists() const
 {
-  return mToDistributionList;
+    return mToDistributionList;
 }
 
 QStringList AddresseeEmailSelection::ccDistributionLists() const
 {
-  return mCcDistributionList;
+    return mCcDistributionList;
 }
 
 QStringList AddresseeEmailSelection::bccDistributionLists() const
 {
-  return mBccDistributionList;
+    return mBccDistributionList;
 }
 
-void AddresseeEmailSelection::setSelectedTo( const QStringList &emails )
+void AddresseeEmailSelection::setSelectedTo(const QStringList &emails)
 {
-  setSelectedItem( 0, emails );
+    setSelectedItem(0, emails);
 }
 
-void AddresseeEmailSelection::setSelectedCC( const QStringList &emails )
+void AddresseeEmailSelection::setSelectedCC(const QStringList &emails)
 {
-  setSelectedItem( 1, emails );
+    setSelectedItem(1, emails);
 }
 
-void AddresseeEmailSelection::setSelectedBCC( const QStringList &emails )
+void AddresseeEmailSelection::setSelectedBCC(const QStringList &emails)
 {
-  setSelectedItem( 2, emails );
+    setSelectedItem(2, emails);
 }
 
 
-uint AddresseeEmailSelection::itemCount( const KABC::Addressee &addressee ) const
+uint AddresseeEmailSelection::itemCount(const KABC::Addressee &addressee) const
 {
-  return addressee.emails().count();
+    return addressee.emails().count();
 }
 
-QString AddresseeEmailSelection::itemText( const KABC::Addressee &addressee, uint index ) const
+QString AddresseeEmailSelection::itemText(const KABC::Addressee &addressee, uint index) const
 {
-  return addressee.formattedName() + " " + email( addressee, index );
+    return addressee.formattedName() + " " + email(addressee, index);
 }
 
-QPixmap AddresseeEmailSelection::itemIcon( const KABC::Addressee &addressee, uint ) const
+QPixmap AddresseeEmailSelection::itemIcon(const KABC::Addressee &addressee, uint) const
 {
-  if ( !addressee.photo().data().isNull() )
-    return addressee.photo().data().smoothScale( 16, 16 );
-  else
-    return KGlobal::iconLoader()->loadIcon( "personal", KIcon::Small );
+    if(!addressee.photo().data().isNull())
+        return addressee.photo().data().smoothScale(16, 16);
+    else
+        return KGlobal::iconLoader()->loadIcon("personal", KIcon::Small);
 }
 
-bool AddresseeEmailSelection::itemEnabled( const KABC::Addressee &addressee, uint ) const
+bool AddresseeEmailSelection::itemEnabled(const KABC::Addressee &addressee, uint) const
 {
-  return addressee.emails().count() != 0;
+    return addressee.emails().count() != 0;
 }
 
-bool AddresseeEmailSelection::itemMatches( const KABC::Addressee &addressee, uint index, const QString &pattern ) const
+bool AddresseeEmailSelection::itemMatches(const KABC::Addressee &addressee, uint index, const QString &pattern) const
 {
-  return addressee.formattedName().startsWith( pattern, false ) ||
-         email( addressee, index ).startsWith( pattern, false );
+    return addressee.formattedName().startsWith(pattern, false) ||
+           email(addressee, index).startsWith(pattern, false);
 }
 
-bool AddresseeEmailSelection::itemEquals( const KABC::Addressee &addressee, uint index, const QString &pattern ) const
+bool AddresseeEmailSelection::itemEquals(const KABC::Addressee &addressee, uint index, const QString &pattern) const
 {
-  return (pattern == addressee.formattedName() + " " + email( addressee, index )) ||
-         (addressee.emails().contains( pattern ));
+    return (pattern == addressee.formattedName() + " " + email(addressee, index)) ||
+           (addressee.emails().contains(pattern));
 }
 
-QString AddresseeEmailSelection::distributionListText( const KABC::DistributionList *distributionList ) const
+QString AddresseeEmailSelection::distributionListText(const KABC::DistributionList *distributionList) const
 {
-  return distributionList->name();
+    return distributionList->name();
 }
 
-QPixmap AddresseeEmailSelection::distributionListIcon( const KABC::DistributionList* ) const
+QPixmap AddresseeEmailSelection::distributionListIcon(const KABC::DistributionList *) const
 {
-  return KGlobal::iconLoader()->loadIcon( "kdmconfig", KIcon::Small );
+    return KGlobal::iconLoader()->loadIcon("kdmconfig", KIcon::Small);
 }
 
-bool AddresseeEmailSelection::distributionListEnabled( const KABC::DistributionList* ) const
+bool AddresseeEmailSelection::distributionListEnabled(const KABC::DistributionList *) const
 {
-  return true;
+    return true;
 }
 
-bool AddresseeEmailSelection::distributionListMatches( const KABC::DistributionList *distributionList,
-                                                       const QString &pattern ) const
+bool AddresseeEmailSelection::distributionListMatches(const KABC::DistributionList *distributionList,
+        const QString &pattern) const
 {
-  // check whether the name of the distribution list matches the pattern or one of its entries.
-  bool ok = distributionList->name().startsWith( pattern, false );
+    // check whether the name of the distribution list matches the pattern or one of its entries.
+    bool ok = distributionList->name().startsWith(pattern, false);
 
-  KABC::DistributionList::Entry::List entries = distributionList->entries();
-  KABC::DistributionList::Entry::List::ConstIterator it;
-  for ( it = entries.begin(); it != entries.end(); ++it ) {
-    ok = ok || (*it).addressee.formattedName().startsWith( pattern, false ) ||
-               (*it).email.startsWith( pattern, false );
-  }
+    KABC::DistributionList::Entry::List entries = distributionList->entries();
+    KABC::DistributionList::Entry::List::ConstIterator it;
+    for(it = entries.begin(); it != entries.end(); ++it)
+    {
+        ok = ok || (*it).addressee.formattedName().startsWith(pattern, false) ||
+             (*it).email.startsWith(pattern, false);
+    }
 
-  return ok;
+    return ok;
 }
 
 uint AddresseeEmailSelection::addressBookCount() const
 {
-  // we provide the recent email addresses via the custom addressbooks
-  return 1;
+    // we provide the recent email addresses via the custom addressbooks
+    return 1;
 }
 
-QString AddresseeEmailSelection::addressBookTitle( uint index ) const
+QString AddresseeEmailSelection::addressBookTitle(uint index) const
 {
-  if ( index == 0 )
-    return i18n( "Recent Addresses" );
-  else
-    return QString::null;
+    if(index == 0)
+        return i18n("Recent Addresses");
+    else
+        return QString::null;
 }
 
-KABC::Addressee::List AddresseeEmailSelection::addressBookContent( uint index ) const
+KABC::Addressee::List AddresseeEmailSelection::addressBookContent(uint index) const
 {
-  if ( index == 0 ) {
-    KConfig config( "kmailrc" );
-    return RecentAddresses::self( &config )->kabcAddresses();
-  } else {
-    return KABC::Addressee::List();
-  }
+    if(index == 0)
+    {
+        KConfig config("kmailrc");
+        return RecentAddresses::self(&config)->kabcAddresses();
+    }
+    else
+    {
+        return KABC::Addressee::List();
+    }
 }
 
-QString AddresseeEmailSelection::email( const KABC::Addressee &addressee, uint index ) const
+QString AddresseeEmailSelection::email(const KABC::Addressee &addressee, uint index) const
 {
-  return addressee.emails()[ index ];
+    return addressee.emails()[ index ];
 }
 
-void AddresseeEmailSelection::setSelectedItem( uint fieldIndex, const QStringList &emails )
+void AddresseeEmailSelection::setSelectedItem(uint fieldIndex, const QStringList &emails)
 {
-  QStringList::ConstIterator it;
-  for ( it = emails.begin(); it != emails.end(); ++it ) {
-    KABC::Addressee addr;
-    addr.insertEmail( *it, true );
+    QStringList::ConstIterator it;
+    for(it = emails.begin(); it != emails.end(); ++it)
+    {
+        KABC::Addressee addr;
+        addr.insertEmail(*it, true);
 
-    selector()->setItemSelected( fieldIndex, addr, 0, *it );
-  }
+        selector()->setItemSelected(fieldIndex, addr, 0, *it);
+    }
 }
 
-void AddresseeEmailSelection::addSelectedAddressees( uint fieldIndex, const KABC::Addressee &addressee, uint itemIndex )
+void AddresseeEmailSelection::addSelectedAddressees(uint fieldIndex, const KABC::Addressee &addressee, uint itemIndex)
 {
-  switch ( fieldIndex ) {
-    case 0:
-      mToAddresseeList.append( addressee );
-      mToEmailList.append( email( addressee, itemIndex ) );
-      break;
-    case 1:
-      mCcAddresseeList.append( addressee );
-      mCcEmailList.append( email( addressee, itemIndex ) );
-      break;
-    case 2:
-      mBccAddresseeList.append( addressee );
-      mBccEmailList.append( email( addressee, itemIndex ) );
-      break;
-    default:
-      // oops
-      break;
-  }
+    switch(fieldIndex)
+    {
+        case 0:
+            mToAddresseeList.append(addressee);
+            mToEmailList.append(email(addressee, itemIndex));
+            break;
+        case 1:
+            mCcAddresseeList.append(addressee);
+            mCcEmailList.append(email(addressee, itemIndex));
+            break;
+        case 2:
+            mBccAddresseeList.append(addressee);
+            mBccEmailList.append(email(addressee, itemIndex));
+            break;
+        default:
+            // oops
+            break;
+    }
 }
 
-void AddresseeEmailSelection::addSelectedDistributionList( uint fieldIndex, const KABC::DistributionList *list )
+void AddresseeEmailSelection::addSelectedDistributionList(uint fieldIndex, const KABC::DistributionList *list)
 {
-  switch ( fieldIndex ) {
-    case 0:
-      mToDistributionList.append( list->name() );
-      break;
-    case 1:
-      mCcDistributionList.append( list->name() );
-      break;
-    case 2:
-      mBccDistributionList.append( list->name() );
-      break;
-    default:
-      // oops
-      break;
-  }
+    switch(fieldIndex)
+    {
+        case 0:
+            mToDistributionList.append(list->name());
+            break;
+        case 1:
+            mCcDistributionList.append(list->name());
+            break;
+        case 2:
+            mBccDistributionList.append(list->name());
+            break;
+        default:
+            // oops
+            break;
+    }
 }

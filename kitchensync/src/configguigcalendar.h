@@ -26,15 +26,14 @@
 
 class QLineEdit;
 
-class ConfigGuiGoogleCalendar : public ConfigGui
-{
-  public:
-    ConfigGuiGoogleCalendar( const QSync::Member &, QWidget *parent );
+class ConfigGuiGoogleCalendar : public ConfigGui {
+public:
+    ConfigGuiGoogleCalendar(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     QLineEdit *mUsername;
     QLineEdit *mPassword;
     QLineEdit *mUrl;

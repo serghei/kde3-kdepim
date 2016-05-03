@@ -44,31 +44,30 @@ class Field;
 /**
   Used to draw the jump button bar on the right of the view.
  */
-class JumpButtonBar : public QWidget
-{
-  Q_OBJECT
+class JumpButtonBar : public QWidget {
+    Q_OBJECT
 
-  public:
-    JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name = 0 );
+public:
+    JumpButtonBar(KAB::Core *core, QWidget *parent, const char *name = 0);
     ~JumpButtonBar();
 
-  public slots:
+public slots:
     void updateButtons();
 
-  signals:
+signals:
     /**
       Emitted whenever a letter is selected by the user.
      */
-    void jumpToLetter( const QString &character );
+    void jumpToLetter(const QString &character);
 
-  protected slots:
+protected slots:
     void letterClicked();
 
-  protected:
-    virtual void resizeEvent( QResizeEvent* );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
 
-  private:
-    void sortListLocaleAware( QStringList &list );
+private:
+    void sortListLocaleAware(QStringList &list);
 
     KAB::Core *mCore;
 

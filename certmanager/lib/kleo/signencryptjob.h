@@ -34,7 +34,7 @@
 #define __KLEO_SIGNENCRYPTJOB_H__
 
 #include <gpgmepp/context.h> // for Context::SignatureMode (or should
-			     // we roll our own enum here?)
+// we roll our own enum here?)
 #include "job.h"
 #include <qcstring.h>
 
@@ -42,33 +42,33 @@
 #include <utility>
 
 namespace GpgME {
-  class Error;
-  class Key;
-  class SigningResult;
-  class EncryptionResult;
+class Error;
+class Key;
+class SigningResult;
+class EncryptionResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous combined signing and encrypting
+/**
+   @short An abstract base class for asynchronous combined signing and encrypting
 
-     To use a SignEncryptJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the operation with a
-     call to start(). This call might fail, in which case the
-     SignEncryptJob instance will have scheduled it's own destruction
-     with a call to QObject::deleteLater().
+   To use a SignEncryptJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the operation with a
+   call to start(). This call might fail, in which case the
+   SignEncryptJob instance will have scheduled it's own destruction
+   with a call to QObject::deleteLater().
 
-     After result() is emitted, the SignEncryptJob will schedule it's
-     own destruction by calling QObject::deleteLater().
-  */
-  class SignEncryptJob : public Job {
+   After result() is emitted, the SignEncryptJob will schedule it's
+   own destruction by calling QObject::deleteLater().
+*/
+class SignEncryptJob : public Job {
     Q_OBJECT
-  protected:
-    SignEncryptJob( QObject * parent, const char * name );
-  public:
+protected:
+    SignEncryptJob(QObject *parent, const char *name);
+public:
     ~SignEncryptJob();
 
     /**
@@ -81,22 +81,22 @@ namespace Kleo {
        \em recipient keys will not be performed, but full validity
        assumed for all \em recipient keys without further checks.
     */
-    virtual GpgME::Error start( const std::vector<GpgME::Key> & signers,
-				const std::vector<GpgME::Key> & recipients,
-				const QByteArray & plainText,
-				bool alwaysTrust=false ) = 0;
+    virtual GpgME::Error start(const std::vector<GpgME::Key> &signers,
+                               const std::vector<GpgME::Key> &recipients,
+                               const QByteArray &plainText,
+                               bool alwaysTrust = false) = 0;
 
-    virtual std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
-      exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText,
-	    bool alwaysTrust, QByteArray & cipherText ) = 0;
+    virtual std::pair<GpgME::SigningResult, GpgME::EncryptionResult>
+    exec(const std::vector<GpgME::Key> &signers,
+         const std::vector<GpgME::Key> &recipients,
+         const QByteArray &plainText,
+         bool alwaysTrust, QByteArray &cipherText) = 0;
 
-  signals:
-    void result( const GpgME::SigningResult & signingresult,
-		 const GpgME::EncryptionResult & encryptionresult,
-		 const QByteArray & cipherText );
-  };
+signals:
+    void result(const GpgME::SigningResult &signingresult,
+                const GpgME::EncryptionResult &encryptionresult,
+                const QByteArray &cipherText);
+};
 
 }
 

@@ -31,42 +31,44 @@
 
 #include "bookmark_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_bookmark_xxport, BookmarkXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER(libkaddrbk_bookmark_xxport, BookmarkXXPort)
 
-BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::XXPort( ab, parent, name )
+BookmarkXXPort::BookmarkXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::XXPort(ab, parent, name)
 {
-  createExportAction( i18n( "Export Bookmarks Menu..." ) );
+    createExportAction(i18n("Export Bookmarks Menu..."));
 }
 
-bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
+bool BookmarkXXPort::exportContacts(const KABC::AddresseeList &list, const QString &)
 {
-  QString fileName = locateLocal( "data", "kabc/bookmarks.xml" );
+    QString fileName = locateLocal("data", "kabc/bookmarks.xml");
 
-  KBookmarkManager *mgr = KBookmarkManager::managerForFile( fileName );
-  KBookmarkDomBuilder *builder = new KBookmarkDomBuilder( mgr->root(), mgr );
-  builder->connectImporter( this );
+    KBookmarkManager *mgr = KBookmarkManager::managerForFile(fileName);
+    KBookmarkDomBuilder *builder = new KBookmarkDomBuilder(mgr->root(), mgr);
+    builder->connectImporter(this);
 
-  KABC::AddresseeList::ConstIterator it;
-  emit newFolder( i18n( "AddressBook" ), false, "" );
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( !(*it).url().isEmpty() ) {
-      QString name = (*it).givenName() + " " + (*it).familyName();
-      emit newBookmark( name, (*it).url().url().latin1(), QString( "" ) );
+    KABC::AddresseeList::ConstIterator it;
+    emit newFolder(i18n("AddressBook"), false, "");
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        if(!(*it).url().isEmpty())
+        {
+            QString name = (*it).givenName() + " " + (*it).familyName();
+            emit newBookmark(name, (*it).url().url().latin1(), QString(""));
+        }
     }
-  }
-  emit endFolder();
-  delete builder;
-  mgr->save();
+    emit endFolder();
+    delete builder;
+    mgr->save();
 
-  KBookmarkMenu::DynMenuInfo menu;
-  menu.name = i18n( "Addressbook Bookmarks" );
-  menu.location = fileName;
-  menu.type = "xbel";
-  menu.show = true;
-  KBookmarkMenu::setDynamicBookmarks( "kabc", menu );
+    KBookmarkMenu::DynMenuInfo menu;
+    menu.name = i18n("Addressbook Bookmarks");
+    menu.location = fileName;
+    menu.type = "xbel";
+    menu.show = true;
+    KBookmarkMenu::setDynamicBookmarks("kabc", menu);
 
-  return true;
+    return true;
 }
 
 #include "bookmark_xxport.moc"

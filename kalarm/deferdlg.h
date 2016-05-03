@@ -27,32 +27,37 @@
 class AlarmTimeWidget;
 
 
-class DeferAlarmDlg : public KDialogBase
-{
-		Q_OBJECT
-	public:
-		DeferAlarmDlg(const QString& caption, const DateTime& initialDT,
-		              bool cancelButton, QWidget* parent = 0, const char* name = 0);
-		void             setLimit(const DateTime&);
-		DateTime         setLimit(const QString& eventID);
-		const DateTime&  getDateTime() const   { return mAlarmDateTime; }
-		void             setDeferMinutes(int mins);
-		int              deferMinutes() const  { return mDeferMinutes; }
+class DeferAlarmDlg : public KDialogBase {
+    Q_OBJECT
+public:
+    DeferAlarmDlg(const QString &caption, const DateTime &initialDT,
+                  bool cancelButton, QWidget *parent = 0, const char *name = 0);
+    void             setLimit(const DateTime &);
+    DateTime         setLimit(const QString &eventID);
+    const DateTime  &getDateTime() const
+    {
+        return mAlarmDateTime;
+    }
+    void             setDeferMinutes(int mins);
+    int              deferMinutes() const
+    {
+        return mDeferMinutes;
+    }
 
-	protected slots:
-		virtual void     slotOk();
-		virtual void     slotCancel();
-		virtual void     slotUser1();
+protected slots:
+    virtual void     slotOk();
+    virtual void     slotCancel();
+    virtual void     slotUser1();
 
-	private slots:
-		void             slotPastLimit();
+private slots:
+    void             slotPastLimit();
 
-	private:
-		AlarmTimeWidget* mTimeWidget;
-		DateTime         mAlarmDateTime;
-		DateTime         mLimitDateTime;   // latest date/time allowed for deferral
-		QString          mLimitEventID;    // event from whose recurrences to derive the limit date/time for deferral
-		int              mDeferMinutes;    // number of minutes deferral selected, or 0 if date/time entered
+private:
+    AlarmTimeWidget *mTimeWidget;
+    DateTime         mAlarmDateTime;
+    DateTime         mLimitDateTime;   // latest date/time allowed for deferral
+    QString          mLimitEventID;    // event from whose recurrences to derive the limit date/time for deferral
+    int              mDeferMinutes;    // number of minutes deferral selected, or 0 if date/time entered
 };
 
 #endif // DEFERDLG_H

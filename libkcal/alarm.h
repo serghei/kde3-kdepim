@@ -41,9 +41,8 @@ class Incidence;
 /**
   This class represents an alarm notification.
 */
-class LIBKCAL_EXPORT Alarm : public CustomProperties
-{
-  public:
+class LIBKCAL_EXPORT Alarm : public CustomProperties {
+public:
     enum Type { Invalid, Display, Procedure, Email, Audio };
 
     typedef ListBase<Alarm> List;
@@ -51,7 +50,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Construct a new alarm with variables initialized to "sane" values.
     */
-    explicit Alarm( Incidence *parent );
+    explicit Alarm(Incidence *parent);
     /**
       Destruct Alarm object.
     */
@@ -60,17 +59,20 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Compare this alarm with another one.
     */
-    bool operator==( const Alarm & ) const;
-    bool operator!=( const Alarm &a ) const { return !operator==( a ); }
+    bool operator==(const Alarm &) const;
+    bool operator!=(const Alarm &a) const
+    {
+        return !operator==(a);
+    }
 
     /**
       Set the type of the alarm.
       If the specified type is different from the current type of the alarm,
       the alarm's type-specific properties are initialised to null.
-      
+
       @param type type of alarm.
     */
-    void setType( Type type );
+    void setType(Type type);
     /**
       Return the type of the alarm.
     */
@@ -78,15 +80,15 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be a display alarm.
-      
+
       @param text text to display when the alarm is triggered.
     */
-    void setDisplayAlarm( const QString &text = QString::null );
+    void setDisplayAlarm(const QString &text = QString::null);
     /**
       Set the text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
     */
-    void setText( const QString &text );
+    void setText(const QString &text);
     /**
       Return the text string that displays when the alarm is triggered.
     */
@@ -94,38 +96,38 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be an audio alarm.
-      
+
       @param audioFile optional file to play when the alarm is triggered.
     */
-    void setAudioAlarm( const QString &audioFile = QString::null );
+    void setAudioAlarm(const QString &audioFile = QString::null);
     /**
       Set the file to play when the audio alarm is triggered.
       Ignored if the alarm is not an audio alarm.
     */
-    void setAudioFile( const QString &audioFile );
+    void setAudioFile(const QString &audioFile);
     /**
       Return the name of the audio file for the alarm.
-      
+
       @return The audio file for the alarm, or QString::null if not an audio alarm.
     */
     QString audioFile() const;
 
     /**
       Set the alarm to be a procedure alarm.
-      
+
       @param programFile program to execute when the alarm is triggered.
       @param arguments arguments to supply to programFile.
     */
-    void setProcedureAlarm( const QString &programFile,
-                            const QString &arguments = QString::null );
+    void setProcedureAlarm(const QString &programFile,
+                           const QString &arguments = QString::null);
     /**
       Set the program file to execute when the alarm is triggered.
       Ignored if the alarm is not a procedure alarm.
     */
-    void setProgramFile( const QString &programFile );
+    void setProgramFile(const QString &programFile);
     /**
       Return the name of the program file to execute when the alarm is triggered.
-      
+
       @return the program file name, or QString::null if not a procedure alarm.
     */
     QString programFile() const;
@@ -133,41 +135,41 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set the arguments to the program to execute when the alarm is triggered.
       Ignored if the alarm is not a procedure alarm.
     */
-    void setProgramArguments( const QString &arguments );
+    void setProgramArguments(const QString &arguments);
     /**
       Return the arguments to the program to run when the alarm is triggered.
-      
+
       @return the program arguments, or QString::null if not a procedure alarm.
     */
     QString programArguments() const;
 
     /**
       Set the alarm to be an email alarm.
-      
+
       @param subject subject line of email.
       @param text body of email.
       @param addressees email addresses of recipient(s).
       @param attachments optional names of files to attach to the email.
     */
-    void setEmailAlarm( const QString &subject, const QString &text,
-                        const QValueList<Person> &addressees,
-                        const QStringList &attachments = QStringList() );
+    void setEmailAlarm(const QString &subject, const QString &text,
+                       const QValueList<Person> &addressees,
+                       const QStringList &attachments = QStringList());
 
     /**
       Send mail to this address when the alarm is triggered.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailAddress( const Person &mailAlarmAddress );
+    void setMailAddress(const Person &mailAlarmAddress);
     /**
       Send mail to these addresses when the alarm is triggered.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailAddresses( const QValueList<Person> &mailAlarmAddresses );
+    void setMailAddresses(const QValueList<Person> &mailAlarmAddresses);
     /**
       Add this address to the list of addresses to send mail to when the alarm is triggered.
       Ignored if the alarm is not an email alarm.
     */
-    void addMailAddress( const Person &mailAlarmAddress );
+    void addMailAddress(const Person &mailAlarmAddress);
     /**
       Return the addresses to send mail to when an alarm goes off.
     */
@@ -177,7 +179,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set the subject line of the mail.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailSubject( const QString &mailAlarmSubject );
+    void setMailSubject(const QString &mailAlarmSubject);
     /**
       Return the subject line of the mail.
     */
@@ -187,17 +189,17 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Attach this filename to the email.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailAttachment( const QString &mailAttachFile );
+    void setMailAttachment(const QString &mailAttachFile);
     /**
       Attach these filenames to the email.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailAttachments( const QStringList &mailAttachFiles );
+    void setMailAttachments(const QStringList &mailAttachFiles);
     /**
       Add this filename to the list of files to attach to the email.
       Ignored if the alarm is not an email alarm.
     */
-    void addMailAttachment( const QString &mailAttachFile );
+    void addMailAttachment(const QString &mailAttachFile);
     /**
       Return the filenames to attach to the email.
     */
@@ -207,10 +209,10 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set the email body text.
       Ignored if the alarm is not an email alarm.
     */
-    void setMailText( const QString &text );
+    void setMailText(const QString &text);
     /**
       Return the email body text.
-      
+
       @return the body text, or QString::null if not an email alarm.
     */
     QString mailText() const;
@@ -218,14 +220,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Set the time to trigger an alarm.
     */
-    void setTime( const QDateTime &alarmTime );
+    void setTime(const QDateTime &alarmTime);
     /**
       Return the date/time when an alarm goes off.
     */
     QDateTime time() const;
     /**
       Return the date/time when the last repetition of the alarm goes off.
-	  If the alarm does not repeat, this is equivalent to calling time().
+      If the alarm does not repeat, this is equivalent to calling time().
     */
     QDateTime endTime() const;
     /**
@@ -236,7 +238,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Set offset of alarm in time relative to the start of the event.
     */
-    void setStartOffset( const Duration & );
+    void setStartOffset(const Duration &);
     /**
       Return offset of alarm in time relative to the start of the event.
       If the alarm's time is not defined in terms of an offset relative
@@ -252,7 +254,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Set offset of alarm in time relative to the end of the event.
     */
-    void setEndOffset( const Duration & );
+    void setEndOffset(const Duration &);
     /**
       Return offset of alarm in time relative to the end of the event.
       If the alarm's time is not defined in terms of an offset relative
@@ -267,14 +269,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the interval between snoozes for the alarm.
-      
+
       @param alarmSnoozeTime the time in minutes between snoozes.
     */
-    void setSnoozeTime( int alarmSnoozeTime );
+    void setSnoozeTime(int alarmSnoozeTime);
 
     /**
       Get how long the alarm snooze interval is.
-      
+
       @return the number of minutes between snoozes.
     */
     int snoozeTime() const;
@@ -283,7 +285,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set how many times an alarm is to repeat itself after its initial
       occurrence (w/snoozes).
     */
-    void setRepeatCount( int alarmRepeatCount );
+    void setRepeatCount(int alarmRepeatCount);
     /**
       Get how many times an alarm repeats, after its initial occurrence.
     */
@@ -295,7 +297,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       @return the date and time of the next repetition, or an invalid date/time if
       the specified time is at or after the alarm's last repetition.
     */
-    QDateTime nextRepetition(const QDateTime& preTime) const;
+    QDateTime nextRepetition(const QDateTime &preTime) const;
     /**
       Get the time of the alarm's latest repetition, or its initial occurrence if
       none, before a given time.
@@ -303,7 +305,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       @return the date and time of the latest repetition, or an invalid date/time if
       the specified time is at or before the alarm's initial occurrence.
     */
-    QDateTime previousRepetition(const QDateTime& afterTime) const;
+    QDateTime previousRepetition(const QDateTime &afterTime) const;
     /**
       Get how long between the alarm's initial occurrence and its final repetition.
       @return the number of seconds between the initial occurrence and final repetition.
@@ -328,20 +330,23 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Set the alarm's parent incidence.
     */
-    void setParent( Incidence * );
+    void setParent(Incidence *);
     /**
       Get the alarm's parent incidence.
     */
-    Incidence *parent() const  { return mParent; }
+    Incidence *parent() const
+    {
+        return mParent;
+    }
 
-  protected:
+protected:
     /**
       @copydoc
       CustomProperties::customPropertyUpdated()
     */
     virtual void customPropertyUpdated();
 
-  private:
+private:
     Incidence *mParent;          // the incidence which this alarm belongs to
     Type mType;                  // type of alarm
     QString mDescription;        // text to display/email body/procedure arguments
@@ -351,9 +356,9 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     QString mMailSubject;        // subject of email
 
     int mAlarmSnoozeTime;        // number of minutes after alarm to
-                                 // snooze before ringing again
+    // snooze before ringing again
     int mAlarmRepeatCount;       // number of times for alarm to repeat
-                                 // after the initial time
+    // after the initial time
 
     QDateTime mAlarmTime;        // time at which to trigger the alarm
     Duration mOffset;            // time relative to incidence DTSTART to trigger the alarm

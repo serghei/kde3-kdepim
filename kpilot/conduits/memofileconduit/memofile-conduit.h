@@ -34,58 +34,57 @@
 
 class PilotMemo;
 
-class MemofileConduit : public ConduitAction
-{
-Q_OBJECT
+class MemofileConduit : public ConduitAction {
+    Q_OBJECT
 public:
-	MemofileConduit(KPilotLink *,
-		const char *name=0L,
-		const QStringList &args = QStringList());
-	virtual ~MemofileConduit();
+    MemofileConduit(KPilotLink *,
+                    const char *name = 0L,
+                    const QStringList &args = QStringList());
+    virtual ~MemofileConduit();
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 
 
 protected slots:
-	void process();
+    void process();
 
 private:
-	// configuration settings...
-	QString	_DEFAULT_MEMODIR;
-	QString	_memo_directory;
-	bool	_sync_private;
+    // configuration settings...
+    QString	_DEFAULT_MEMODIR;
+    QString	_memo_directory;
+    bool	_sync_private;
 
-	PilotMemoInfo	*fMemoAppInfo;
-	QPtrList<PilotMemo> fMemoList;
+    PilotMemoInfo	*fMemoAppInfo;
+    QPtrList<PilotMemo> fMemoList;
 
-	// our categories
-	MemoCategoryMap fCategories;
+    // our categories
+    MemoCategoryMap fCategories;
 
-	Memofiles * _memofiles;
+    Memofiles *_memofiles;
 
 
-	bool	readConfig();
-	bool	getAppInfo();
-	bool	setAppInfo();
+    bool	readConfig();
+    bool	getAppInfo();
+    bool	setAppInfo();
 
-	bool	initializeFromPilot();
-	bool	loadPilotCategories();
+    bool	initializeFromPilot();
+    bool	loadPilotCategories();
 
-	void 	listPilotMemos();
+    void 	listPilotMemos();
 
-	void	getAllFromPilot();
-	void	getModifiedFromPilot();
+    void	getAllFromPilot();
+    void	getModifiedFromPilot();
 
-	bool	copyHHToPC();
-	bool	copyPCToHH();
-	void	deleteUnsyncedHHRecords();
-	bool	sync();
+    bool	copyHHToPC();
+    bool	copyPCToHH();
+    void	deleteUnsyncedHHRecords();
+    bool	sync();
 
-	int 	writeToPilot(Memofile * memofile);
-	void	deleteFromPilot(PilotMemo* memo);
+    int 	writeToPilot(Memofile *memofile);
+    void	deleteFromPilot(PilotMemo *memo);
 
-	void 	cleanup();
+    void 	cleanup();
 
 };
 

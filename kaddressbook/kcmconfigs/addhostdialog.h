@@ -32,21 +32,20 @@ class KLineEdit;
 class QPushButton;
 class QSpinBox;
 
-class AddHostDialog : public KDialogBase
-{
+class AddHostDialog : public KDialogBase {
     Q_OBJECT
 
-  public:
-    AddHostDialog( KPIM::LdapServer* server, QWidget* parent = 0, const char* name = 0 );
+public:
+    AddHostDialog(KPIM::LdapServer *server, QWidget *parent = 0, const char *name = 0);
     ~AddHostDialog();
 
-  signals:
-    void changed( bool );
+signals:
+    void changed(bool);
 
-  private slots:
-    void slotHostEditChanged( const QString& );
+private slots:
+    void slotHostEditChanged(const QString &);
     virtual void slotOk();
-  private:
+private:
     KABC::LdapConfigWidget *mCfg;
     KPIM::LdapServer *mServer;
 };

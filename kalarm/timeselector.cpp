@@ -33,37 +33,37 @@
 #include "timeselector.moc"
 
 
-TimeSelector::TimeSelector(const QString& selectText, const QString& postfix, const QString& selectWhatsThis,
-                           const QString& valueWhatsThis, bool allowHourMinute, QWidget* parent, const char* name)
-	: QFrame(parent, name),
-	  mLabel(0),
-	  mReadOnly(false)
+TimeSelector::TimeSelector(const QString &selectText, const QString &postfix, const QString &selectWhatsThis,
+                           const QString &valueWhatsThis, bool allowHourMinute, QWidget *parent, const char *name)
+    : QFrame(parent, name),
+      mLabel(0),
+      mReadOnly(false)
 {
-	setFrameStyle(QFrame::NoFrame);
-	QVBoxLayout* topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
-	QHBoxLayout* layout = new QHBoxLayout(topLayout, KDialog::spacingHint());
-	mSelect = new CheckBox(selectText, this);
-	mSelect->setFixedSize(mSelect->sizeHint());
-	connect(mSelect, SIGNAL(toggled(bool)), SLOT(selectToggled(bool)));
-	QWhatsThis::add(mSelect, selectWhatsThis);
-	layout->addWidget(mSelect);
+    setFrameStyle(QFrame::NoFrame);
+    QVBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    QHBoxLayout *layout = new QHBoxLayout(topLayout, KDialog::spacingHint());
+    mSelect = new CheckBox(selectText, this);
+    mSelect->setFixedSize(mSelect->sizeHint());
+    connect(mSelect, SIGNAL(toggled(bool)), SLOT(selectToggled(bool)));
+    QWhatsThis::add(mSelect, selectWhatsThis);
+    layout->addWidget(mSelect);
 
-	QHBox* box = new QHBox(this);    // to group widgets for QWhatsThis text
-	box->setSpacing(KDialog::spacingHint());
-	layout->addWidget(box);
-	mPeriod = new TimePeriod(allowHourMinute, box);
-	mPeriod->setFixedSize(mPeriod->sizeHint());
-	mPeriod->setSelectOnStep(false);
-	connect(mPeriod, SIGNAL(valueChanged(int)), SLOT(periodChanged(int)));
-	mSelect->setFocusWidget(mPeriod);
-	mPeriod->setEnabled(false);
+    QHBox *box = new QHBox(this);    // to group widgets for QWhatsThis text
+    box->setSpacing(KDialog::spacingHint());
+    layout->addWidget(box);
+    mPeriod = new TimePeriod(allowHourMinute, box);
+    mPeriod->setFixedSize(mPeriod->sizeHint());
+    mPeriod->setSelectOnStep(false);
+    connect(mPeriod, SIGNAL(valueChanged(int)), SLOT(periodChanged(int)));
+    mSelect->setFocusWidget(mPeriod);
+    mPeriod->setEnabled(false);
 
-	if (!postfix.isEmpty())
-	{
-		mLabel = new QLabel(postfix, box);
-		QWhatsThis::add(box, valueWhatsThis);
-		mLabel->setEnabled(false);
-	}
+    if(!postfix.isEmpty())
+    {
+        mLabel = new QLabel(postfix, box);
+        QWhatsThis::add(box, valueWhatsThis);
+        mLabel->setEnabled(false);
+    }
 }
 
 /******************************************************************************
@@ -71,36 +71,36 @@ TimeSelector::TimeSelector(const QString& selectText, const QString& postfix, co
 */
 void TimeSelector::setReadOnly(bool ro)
 {
-	if ((int)ro != (int)mReadOnly)
-	{
-		mReadOnly = ro;
-		mSelect->setReadOnly(mReadOnly);
-		mPeriod->setReadOnly(mReadOnly);
-	}
+    if((int)ro != (int)mReadOnly)
+    {
+        mReadOnly = ro;
+        mSelect->setReadOnly(mReadOnly);
+        mPeriod->setReadOnly(mReadOnly);
+    }
 }
 
 bool TimeSelector::isChecked() const
 {
-	return mSelect->isChecked();
+    return mSelect->isChecked();
 }
 
 void TimeSelector::setChecked(bool on)
 {
-	if (on != mSelect->isChecked())
-	{
-		mSelect->setChecked(on);
-		emit valueChanged(minutes());
-	}
+    if(on != mSelect->isChecked())
+    {
+        mSelect->setChecked(on);
+        emit valueChanged(minutes());
+    }
 }
 
 void TimeSelector::setMaximum(int hourmin, int days)
 {
-	mPeriod->setMaximum(hourmin, days);
+    mPeriod->setMaximum(hourmin, days);
 }
 
 void TimeSelector::setDateOnly(bool dateOnly)
 {
-	mPeriod->setDateOnly(dateOnly);
+    mPeriod->setDateOnly(dateOnly);
 }
 
 /******************************************************************************
@@ -109,7 +109,7 @@ void TimeSelector::setDateOnly(bool dateOnly)
  */
 int TimeSelector::minutes() const
 {
-	return mSelect->isChecked() ? mPeriod->minutes() : 0;
+    return mSelect->isChecked() ? mPeriod->minutes() : 0;
 }
 
 /******************************************************************************
@@ -120,11 +120,11 @@ int TimeSelector::minutes() const
 */
 void TimeSelector::setMinutes(int minutes, bool dateOnly, TimePeriod::Units defaultUnits)
 {
-	mSelect->setChecked(minutes);
-	mPeriod->setEnabled(minutes);
-	if (mLabel)
-		mLabel->setEnabled(minutes);
-	mPeriod->setMinutes(minutes, dateOnly, defaultUnits);
+    mSelect->setChecked(minutes);
+    mPeriod->setEnabled(minutes);
+    if(mLabel)
+        mLabel->setEnabled(minutes);
+    mPeriod->setMinutes(minutes, dateOnly, defaultUnits);
 }
 
 /******************************************************************************
@@ -132,7 +132,7 @@ void TimeSelector::setMinutes(int minutes, bool dateOnly, TimePeriod::Units defa
 */
 void TimeSelector::setFocusOnCount()
 {
-	mPeriod->setFocusOnCount();
+    mPeriod->setFocusOnCount();
 }
 
 /******************************************************************************
@@ -140,13 +140,13 @@ void TimeSelector::setFocusOnCount()
 */
 void TimeSelector::selectToggled(bool on)
 {
-	mPeriod->setEnabled(on);
-	if (mLabel)
-		mLabel->setEnabled(on);
-	if (on)
-		mPeriod->setFocus();
-	emit toggled(on);
-	emit valueChanged(minutes());
+    mPeriod->setEnabled(on);
+    if(mLabel)
+        mLabel->setEnabled(on);
+    if(on)
+        mPeriod->setFocus();
+    emit toggled(on);
+    emit valueChanged(minutes());
 }
 
 /******************************************************************************
@@ -154,6 +154,6 @@ void TimeSelector::selectToggled(bool on)
 */
 void TimeSelector::periodChanged(int minutes)
 {
-	if (mSelect->isChecked())
-		emit valueChanged(minutes);
+    if(mSelect->isChecked())
+        emit valueChanged(minutes);
 }

@@ -28,32 +28,33 @@
 
 using namespace KCal;
 
-ICalDrag::ICalDrag( Calendar *cal, QWidget *parent, const char *name )
-  : QStoredDrag( "text/calendar", parent, name )
+ICalDrag::ICalDrag(Calendar *cal, QWidget *parent, const char *name)
+    : QStoredDrag("text/calendar", parent, name)
 {
-  ICalFormat icf;
-  QString scal = icf.toString( cal );
-
-  setEncodedData( scal.utf8() );
-}
-
-bool ICalDrag::canDecode( QMimeSource *me )
-{
-  return me->provides( "text/calendar" );
-}
-
-bool ICalDrag::decode( QMimeSource *de, Calendar *cal )
-{
-  bool success = false;
-
-  QByteArray payload = de->encodedData( "text/calendar" );
-  if ( payload.size() ) {
-    QString txt = QString::fromUtf8( payload.data() );
-
     ICalFormat icf;
-    success = icf.fromString( cal, txt );
-  }
+    QString scal = icf.toString(cal);
 
-  return success;
+    setEncodedData(scal.utf8());
+}
+
+bool ICalDrag::canDecode(QMimeSource *me)
+{
+    return me->provides("text/calendar");
+}
+
+bool ICalDrag::decode(QMimeSource *de, Calendar *cal)
+{
+    bool success = false;
+
+    QByteArray payload = de->encodedData("text/calendar");
+    if(payload.size())
+    {
+        QString txt = QString::fromUtf8(payload.data());
+
+        ICalFormat icf;
+        success = icf.fromString(cal, txt);
+    }
+
+    return success;
 }
 

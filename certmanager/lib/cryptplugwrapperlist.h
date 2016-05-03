@@ -26,10 +26,9 @@
 
 #include <qptrlist.h>
 
-class CryptPlugWrapperList : public QPtrList<CryptPlugWrapper>
-{
+class CryptPlugWrapperList : public QPtrList<CryptPlugWrapper> {
 public:
-    CryptPlugWrapper * findForLibName( const QString & libName ) const;
+    CryptPlugWrapper *findForLibName(const QString &libName) const;
 };
 
 typedef QPtrListIterator<CryptPlugWrapper> CryptPlugWrapperListIterator;

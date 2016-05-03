@@ -132,9 +132,10 @@ private:
 
 public:
 
-    enum componentType {
-        kCidError=-1,
-        kCidUnknown=0,
+    enum componentType
+    {
+        kCidError = -1,
+        kCidUnknown = 0,
         kCidAddress,
         kCidAddressList,
         kCidBody,
@@ -159,8 +160,8 @@ public:
     //. Class identifier enumeration
 
     DwMessageComponent();
-    DwMessageComponent(const DwMessageComponent& aCmp);
-    DwMessageComponent(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMessageComponent(const DwMessageComponent &aCmp);
+    DwMessageComponent(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMessageComponent} object's string representation to the
     //. empty string and sets its parent to NULL.
@@ -178,7 +179,7 @@ public:
 
     virtual ~DwMessageComponent();
 
-    const DwMessageComponent& operator = (const DwMessageComponent& aCmp);
+    const DwMessageComponent &operator = (const DwMessageComponent &aCmp);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aCmp}.
 
@@ -206,13 +207,13 @@ public:
     //. the {\tt Assemble()} function will return immediately without
     //. calling the {\tt Assemble()} function of any of its children.
 
-    virtual DwMessageComponent* Clone() const = 0;
+    virtual DwMessageComponent *Clone() const = 0;
     //. Creates a new {\tt DwMessageComponent} on the free store that is of
     //. the same type as, and has the same value as, this object.  The
     //. basic idea is that of a ``virtual copy constructor.''
 
-    void FromString(const DwString& aStr);
-    void FromString(const char* aCstr);
+    void FromString(const DwString &aStr);
+    void FromString(const char *aCstr);
     //. Sets the object's string representation.  {\tt aCstr} must be
     //. NUL-terminated. This member function does not invoke the parse
     //. method.  Typically, the virtual member function {\tt Parse()}
@@ -221,7 +222,7 @@ public:
     //. their broken-down representations.  See also
     //. {\tt DwMessageComponent::Parse()}
 
-    const DwString& AsString();
+    const DwString &AsString();
     //. Returns the {\tt DwMessageComponent} object's string representation.
     //. The assemble method is not called automatically.  Typically, the
     //. {\tt Assemble()} member function should be called immediately before
@@ -229,11 +230,11 @@ public:
     //. and the string representation are consistent.  See also
     //. {\tt DwMessageComponent::Assemble()}.
 
-    DwMessageComponent* Parent();
+    DwMessageComponent *Parent();
     //. Returns the {\tt DwMessageComponent} object that is the parent
     //. of this object.
 
-    void SetParent(DwMessageComponent* aParent);
+    void SetParent(DwMessageComponent *aParent);
     //. Sets {\tt aParent} as the {\tt DwMessageComponent} object's parent.
 
     DwBool IsModified() const;
@@ -248,7 +249,7 @@ public:
     int ClassId() const;
     //. Returns an integer id for the object's class.
 
-    const char* ClassName() const;
+    const char *ClassName() const;
     //. Returns the name of the class as a NUL-terminated
     //. char string.
 
@@ -256,8 +257,14 @@ public:
     //. Returns a object id that is unique among all DwMessageComponent
     //. objects.
 
-    const char* partId() const { return mId.c_str(); };
-    void SetPartId( DwString id ) { mId = id; };
+    const char *partId() const
+    {
+        return mId.c_str();
+    };
+    void SetPartId(DwString id)
+    {
+        mId = id;
+    };
     // set or get a unique string for that part
 
 protected:
@@ -268,13 +275,13 @@ protected:
     DwBool mIsModified;
     // Is-modified flag
 
-    DwMessageComponent* mParent;
+    DwMessageComponent *mParent;
     // Component that contains this component
 
     componentType mClassId;
     // Class identifier for runtime type identification
 
-    const char* mClassName;
+    const char *mClassName;
     // Class name for runtime type identification
 
     DwString mId;
@@ -282,11 +289,11 @@ protected:
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -304,7 +311,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

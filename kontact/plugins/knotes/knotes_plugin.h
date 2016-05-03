@@ -29,28 +29,30 @@ class KNotesPart;
 class SummaryWidget;
 
 
-class KNotesPlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KNotesPlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KNotesPlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    KNotesPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~KNotesPlugin();
 
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parentWidget );
+    virtual Kontact::Summary *createSummaryWidget(QWidget *parentWidget);
 
-    int weight() const { return 600; }
+    int weight() const
+    {
+        return 600;
+    }
 
     const KAboutData *aboutData();
 
-  protected:
-    KParts::ReadOnlyPart* createPart();
+protected:
+    KParts::ReadOnlyPart *createPart();
 
-  private slots:
+private slots:
     void slotNewNote();
     void slotSyncNotes();
 
-  private:
+private:
     KAboutData *mAboutData;
 };
 

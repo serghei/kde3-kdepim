@@ -33,110 +33,113 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_komposerconfig( QWidget *parent, const char * ) {
-    return new Komposer::PrefsModule( parent, "komposerprefs" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_komposerconfig(QWidget *parent, const char *)
+    {
+        return new Komposer::PrefsModule(parent, "komposerprefs");
+    }
 }
 using namespace Komposer;
 
-PrefsModule::PrefsModule( QWidget *parent, const char *name )
-  : KPrefsModule( Komposer::Prefs::self(), parent, name )
+PrefsModule::PrefsModule(QWidget *parent, const char *name)
+    : KPrefsModule(Komposer::Prefs::self(), parent, name)
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this );
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
 
-  EditorSelection *editors = new EditorSelection( i18n( "Editors" ),
-                                                  Komposer::Prefs::self()->m_activeEditor,
-                                                  this );
-  topLayout->addWidget( editors->groupBox() );
+    EditorSelection *editors = new EditorSelection(i18n("Editors"),
+            Komposer::Prefs::self()->m_activeEditor,
+            this);
+    topLayout->addWidget(editors->groupBox());
 
-  addWid( editors );
+    addWid(editors);
 
-  load();
+    load();
 }
 
-const KAboutData*
+const KAboutData *
 PrefsModule::aboutData() const
 {
-  KAboutData *about = new KAboutData( I18N_NOOP( "komposerconfig" ),
-                                      I18N_NOOP( "KDE Komposer" ),
-                                      0, 0, KAboutData::License_LGPL,
-                                      I18N_NOOP( "(c), 2003-2004 Zack Rusin" ) );
+    KAboutData *about = new KAboutData(I18N_NOOP("komposerconfig"),
+                                       I18N_NOOP("KDE Komposer"),
+                                       0, 0, KAboutData::License_LGPL,
+                                       I18N_NOOP("(c), 2003-2004 Zack Rusin"));
 
-  about->addAuthor( "Zack Rusin", 0, "zack@kde.org" );;
+    about->addAuthor("Zack Rusin", 0, "zack@kde.org");;
 
-  return about;
+    return about;
 }
 
 
-EditorSelection::EditorSelection( const QString &text, QString &reference,
-                                  QWidget *parent )
-  : m_reference( reference )
+EditorSelection::EditorSelection(const QString &text, QString &reference,
+                                 QWidget *parent)
+    : m_reference(reference)
 {
-  m_box = new QGroupBox( 0, Qt::Vertical, text, parent );
-  QVBoxLayout *boxLayout = new QVBoxLayout( m_box->layout() );
-  boxLayout->setAlignment( Qt::AlignTop );
+    m_box = new QGroupBox(0, Qt::Vertical, text, parent);
+    QVBoxLayout *boxLayout = new QVBoxLayout(m_box->layout());
+    boxLayout->setAlignment(Qt::AlignTop);
 
-  m_editorsCombo = new KComboBox( m_box );
-  boxLayout->addWidget( m_editorsCombo );
+    m_editorsCombo = new KComboBox(m_box);
+    boxLayout->addWidget(m_editorsCombo);
 
-  connect( m_editorsCombo, SIGNAL(activated(const QString&)),
-           SLOT(slotActivated(const QString&)) );
+    connect(m_editorsCombo, SIGNAL(activated(const QString &)),
+            SLOT(slotActivated(const QString &)));
 }
 
 EditorSelection::~EditorSelection()
 {
 }
 
-QGroupBox*
+QGroupBox *
 EditorSelection::groupBox()  const
 {
-  return m_box;
+    return m_box;
 }
 
 void
 EditorSelection::readConfig()
 {
-  m_editorsCombo->clear();
+    m_editorsCombo->clear();
 
-  KTrader::OfferList editors = KTrader::self()->query(
-    QString::fromLatin1( "Komposer/Editor" ) );
-  KTrader::OfferList::ConstIterator it;
-  int i = 0;
-  for ( it = editors.begin(); it != editors.end(); ++it, ++i ) {
-    if ( !(*it)->hasServiceType( QString::fromLatin1( "Komposer/Editor" ) ) )
-      continue;
+    KTrader::OfferList editors = KTrader::self()->query(
+                                     QString::fromLatin1("Komposer/Editor"));
+    KTrader::OfferList::ConstIterator it;
+    int i = 0;
+    for(it = editors.begin(); it != editors.end(); ++it, ++i)
+    {
+        if(!(*it)->hasServiceType(QString::fromLatin1("Komposer/Editor")))
+            continue;
 
-    QString name = (*it)->property( "X-KDE-KomposerIdentifier" ).toString();
-    m_editorsCombo->insertItem( name );
-    if ( m_reference.contains( name ) )
-      m_editorsCombo->setCurrentItem( i );
-  }
+        QString name = (*it)->property("X-KDE-KomposerIdentifier").toString();
+        m_editorsCombo->insertItem(name);
+        if(m_reference.contains(name))
+            m_editorsCombo->setCurrentItem(i);
+    }
 }
 
 void EditorSelection::writeConfig()
 {
-  m_reference =  m_services[ m_editorsCombo->currentText()]->
-                 property( "X-KDE-KomposerIdentifier" ).toString();
+    m_reference =  m_services[ m_editorsCombo->currentText()]->
+                   property("X-KDE-KomposerIdentifier").toString();
 }
 
 void
-EditorSelection::slotActivated( const QString &editor )
+EditorSelection::slotActivated(const QString &editor)
 {
-  if ( !editor.isEmpty() )
-    emit changed();
+    if(!editor.isEmpty())
+        emit changed();
 }
 
 void
-EditorSelection::setItem( const QString &str )
+EditorSelection::setItem(const QString &str)
 {
-  for ( int i = 0; i < m_editorsCombo->count(); ++i ) {
-    if ( m_editorsCombo->text( i ) == str ) {
-      m_editorsCombo->setCurrentItem( i );
-      break;
+    for(int i = 0; i < m_editorsCombo->count(); ++i)
+    {
+        if(m_editorsCombo->text(i) == str)
+        {
+            m_editorsCombo->setCurrentItem(i);
+            break;
+        }
     }
-  }
 }
 
 #include "prefsmodule.moc"

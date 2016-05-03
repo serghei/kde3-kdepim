@@ -14,34 +14,38 @@ namespace Akregator {
  * As soon as it gets out of scope, it will restore the original
  * cursor.
  */
-class KCursorSaver : public Qt
-{
+class KCursorSaver : public Qt {
 public:
     /// constructor taking QCursor shapes
-    KCursorSaver(Qt::CursorShape shape) {
-        QApplication::setOverrideCursor( QCursor(shape) );
+    KCursorSaver(Qt::CursorShape shape)
+    {
+        QApplication::setOverrideCursor(QCursor(shape));
         inited = true;
     }
 
     /// copy constructor. The right side won't restore the cursor
-    KCursorSaver( const KCursorSaver &rhs ) {
+    KCursorSaver(const KCursorSaver &rhs)
+    {
         *this = rhs;
     }
 
     /// restore the cursor
-    ~KCursorSaver() {
-        if (inited)
+    ~KCursorSaver()
+    {
+        if(inited)
             QApplication::restoreOverrideCursor();
     }
 
     /// call this to explitly restore the cursor
-    inline void restoreCursor(void) {
+    inline void restoreCursor(void)
+    {
         QApplication::restoreOverrideCursor();
         inited = false;
     }
 
 protected:
-    void operator=( const KCursorSaver &rhs ) {
+    void operator=(const KCursorSaver &rhs)
+    {
         inited = rhs.inited;
         rhs.inited = false;
     }
@@ -54,12 +58,14 @@ private:
  * convenience functions
  */
 namespace KBusyPtr {
-    inline KCursorSaver idle() {
-        return KCursorSaver(QCursor::ArrowCursor);
-    }
-    inline KCursorSaver busy() {
-        return KCursorSaver(QCursor::WaitCursor);
-    }
+inline KCursorSaver idle()
+{
+    return KCursorSaver(QCursor::ArrowCursor);
+}
+inline KCursorSaver busy()
+{
+    return KCursorSaver(QCursor::WaitCursor);
+}
 }
 
 } // namespace Akregator

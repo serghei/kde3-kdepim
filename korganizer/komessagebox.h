@@ -30,14 +30,13 @@
 #include <qstring.h>
 
 
-class KOMessageBox
-{
-  public:
-    static int fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type, 
-            const QString &text, const QString &caption = QString::null, 
-            const KGuiItem &button1 = KStdGuiItem::yes(), const KGuiItem &button2 = KStdGuiItem::no(), 
-            const KGuiItem &button3 = KStdGuiItem::cont(), 
-            int options = 0 );
+class KOMessageBox {
+public:
+    static int fourBtnMsgBox(QWidget *parent, QMessageBox::Icon type,
+                             const QString &text, const QString &caption = QString::null,
+                             const KGuiItem &button1 = KStdGuiItem::yes(), const KGuiItem &button2 = KStdGuiItem::no(),
+                             const KGuiItem &button3 = KStdGuiItem::cont(),
+                             int options = 0);
 };
 
 #endif

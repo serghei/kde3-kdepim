@@ -37,31 +37,30 @@
 
 namespace Kleo {
 
-  class CryptoConfig;
-  class CryptoConfigModule;
+class CryptoConfig;
+class CryptoConfigModule;
 
-  /**
-   * Simple KDialogBase wrapper around CryptoConfigModule
-   */
-  class KDE_EXPORT CryptoConfigDialog : public KDialogBase
-  {
+/**
+ * Simple KDialogBase wrapper around CryptoConfigModule
+ */
+class KDE_EXPORT CryptoConfigDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0, const char* name = 0 );
+public:
+    CryptoConfigDialog(Kleo::CryptoConfig *config, QWidget *parent = 0, const char *name = 0);
 
-  protected:
+protected:
     virtual void slotOk();
     virtual void slotCancel();
     virtual void slotDefault();
     virtual void slotApply();
     virtual void slotUser1(); // reset
 
-  public slots:
+public slots:
     void slotChanged();
 
-  private:
-    CryptoConfigModule* mMainWidget;
-  };
+private:
+    CryptoConfigModule *mMainWidget;
+};
 
 }
 

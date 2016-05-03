@@ -51,8 +51,8 @@ class DW_EXPORT DwText : public DwFieldBody {
 public:
 
     DwText();
-    DwText(const DwText& aText);
-    DwText(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwText(const DwText &aText);
+    DwText(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwText} object's string representation to the empty string
     //. and sets its parent to NULL.
@@ -70,7 +70,7 @@ public:
 
     virtual ~DwText();
 
-    const DwText& operator = (const DwText& aText);
+    const DwText &operator = (const DwText &aText);
     //. This is the assignment operator.
 
     virtual void Parse();
@@ -99,13 +99,13 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwText} on the free store that has the same
     //. value as this {\tt DwText} object.  The basic idea is that of
     //. a ``virtual copy constructor.''
 
-    static DwText* NewText(const DwString& aStr, DwMessageComponent* aParent);
+    static DwText *NewText(const DwString &aStr, DwMessageComponent *aParent);
     //. Creates a new {\tt DwText} object on the free store.
     //. If the static data member {\tt sNewText} is NULL,
     //. this member function will create a new {\tt DwText}
@@ -115,18 +115,18 @@ public:
     //. {\tt DwText}, and return that object.
 
     //+ Var sNewText
-    static DwText* (*sNewText)(const DwString&, DwMessageComponent*);
+    static DwText *(*sNewText)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewText} is not NULL, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived from
     //. {\tt DwText}.
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -144,7 +144,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

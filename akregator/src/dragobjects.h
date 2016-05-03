@@ -45,25 +45,24 @@ struct ArticleDragItem
     QString guid;
 };
 
-class KDE_EXPORT ArticleDrag : public KURLDrag
-{
+class KDE_EXPORT ArticleDrag : public KURLDrag {
 
 public:
 
-    ArticleDrag(const QValueList<Article>& articles, QWidget* dragSource=0, const char* name=0);
+    ArticleDrag(const QValueList<Article> &articles, QWidget *dragSource = 0, const char *name = 0);
 
-    static bool canDecode(const QMimeSource* e);
-    static bool decode(const QMimeSource* e, QValueList<ArticleDragItem>& articles);
+    static bool canDecode(const QMimeSource *e);
+    static bool decode(const QMimeSource *e, QValueList<ArticleDragItem> &articles);
 
 protected:
 
-    virtual QByteArray encodedData(const char* mime) const;
-    virtual const char* format(int i) const;
+    virtual QByteArray encodedData(const char *mime) const;
+    virtual const char *format(int i) const;
 
 private:
 
-    static QValueList<ArticleDragItem> articlesToDragItems(const QValueList<Article>& articles);
-    static KURL::List articleURLs(const QValueList<Article>& articles);
+    static QValueList<ArticleDragItem> articlesToDragItems(const QValueList<Article> &articles);
+    static KURL::List articleURLs(const QValueList<Article> &articles);
     QValueList<ArticleDragItem> m_items;
 };
 

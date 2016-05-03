@@ -26,80 +26,90 @@
 #include <kapplication.h>
 #include <kdepimmacros.h>
 
-KPartsGenericPart::KPartsGenericPart( QWidget* parentWidget, const char* name )
-    : QWidget( parentWidget, name ), m_part( 0 )
+KPartsGenericPart::KPartsGenericPart(QWidget *parentWidget, const char *name)
+    : QWidget(parentWidget, name), m_part(0)
 {
-    QVBoxLayout* layout = new QVBoxLayout( this );
-    layout->setAutoAdd( true );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setAutoAdd(true);
 }
 
 void KPartsGenericPart::load()
 {
-    if ( m_mimetype.isEmpty() || m_url.isEmpty() )
+    if(m_mimetype.isEmpty() || m_url.isEmpty())
         return; // not enough info yet
     // Here it crashes in KSycoca::openDatabase when trying to load the stuff from designer itself
     // Not sure why - but it's not really needed anyway.
-    if ( !kapp )
+    if(!kapp)
         return;
     QString mimetype = m_mimetype;
-    if ( mimetype == "auto" )
-        mimetype == KMimeType::findByURL( m_url )->name();
-    if ( m_part ) {
+    if(mimetype == "auto")
+        mimetype == KMimeType::findByURL(m_url)->name();
+    if(m_part)
+    {
         delete m_part;
     }
     // "this" is both the parent widget and the parent object
-    m_part = KParts::ComponentFactory::createPartInstanceFromQuery<KParts::ReadOnlyPart>( mimetype, QString::null, this, 0, this, 0 );
-    if ( m_part ) {
-        m_part->openURL( m_url );
+    m_part = KParts::ComponentFactory::createPartInstanceFromQuery<KParts::ReadOnlyPart>(mimetype, QString::null, this, 0, this, 0);
+    if(m_part)
+    {
+        m_part->openURL(m_url);
         m_part->widget()->show();
     }
 }
 
 ////
 
-static const char* mykey = "KPartsGenericPart";
+static const char *mykey = "KPartsGenericPart";
 
-QStringList KPartsWidgetPlugin::keys() const {
+QStringList KPartsWidgetPlugin::keys() const
+{
     return QStringList() << mykey;
 }
 
-QWidget * KPartsWidgetPlugin::create( const QString & key, QWidget * parent, const char * name ) {
-    if ( key == mykey )
-        return new KPartsGenericPart( parent, name );
+QWidget *KPartsWidgetPlugin::create(const QString &key, QWidget *parent, const char *name)
+{
+    if(key == mykey)
+        return new KPartsGenericPart(parent, name);
     return 0;
 }
 
-QString KPartsWidgetPlugin::group( const QString & key ) const {
-    if ( key == mykey )
+QString KPartsWidgetPlugin::group(const QString &key) const
+{
+    if(key == mykey)
         return "Display (KDE)";
     return QString::null;
 }
 
 #if 0
-QIconSet KPartsWidgetPlugin::iconSet( const QString & key ) const {
-  return QIconSet();
+QIconSet KPartsWidgetPlugin::iconSet(const QString &key) const
+{
+    return QIconSet();
 }
 #endif
 
-QString KPartsWidgetPlugin::includeFile( const QString & key ) const {
-    if ( key == mykey )
+QString KPartsWidgetPlugin::includeFile(const QString &key) const
+{
+    if(key == mykey)
         return "partplugin.h";
     return QString::null;
 }
 
-QString KPartsWidgetPlugin::toolTip( const QString & key ) const {
-    if ( key == mykey )
+QString KPartsWidgetPlugin::toolTip(const QString &key) const
+{
+    if(key == mykey)
         return "Generic KParts viewer";
     return QString::null;
 }
 
-QString KPartsWidgetPlugin::whatsThis( const QString & key ) const {
-    if ( key == mykey )
+QString KPartsWidgetPlugin::whatsThis(const QString &key) const
+{
+    if(key == mykey)
         return "A widget to embed any KParts viewer, given a url and optionally a mimetype";
     return QString::null;
 }
 
-bool KPartsWidgetPlugin::isContainer( const QString & /*key*/ ) const {
+bool KPartsWidgetPlugin::isContainer(const QString & /*key*/) const
+{
     return false;
 }
 
@@ -111,7 +121,7 @@ bool KPartsWidgetPlugin::isContainer( const QString & /*key*/ ) const {
   Q_EXPORT_PLUGIN(PLUGIN)
 #endif
 
-KDE_Q_EXPORT_PLUGIN( KPartsWidgetPlugin )
+KDE_Q_EXPORT_PLUGIN(KPartsWidgetPlugin)
 
 #include "kpartsdesignerplugin.moc"
 

@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -33,52 +33,51 @@ namespace Schema {
 
 const QString SchemaUri = "http://www.w3.org/2001/XMLSchema";
 
-class XSDType
-{
-  public:
-    typedef QValueList<const XSDType*> List;
+class XSDType {
+public:
+    typedef QValueList<const XSDType *> List;
 
     enum
     {
-      SIMPLE = 0,
-      COMPLEX,
-      MIXED
+        SIMPLE = 0,
+        COMPLEX,
+        MIXED
     };
 
     enum
     {
-      INVALID = 0,
-      STRING = 1,
-      INTEGER,
-      INT,
-      BYTE,
-      UBYTE,
-      POSINT,
-      UINT,
-      LONG,
-      ULONG,
-      SHORT,
-      USHORT,
-      DECIMAL,
-      FLOAT,
-      DOUBLE,
-      BOOLEAN,
-      TIME,
-      DATETIME,
-      DATE,
-      TOKEN,
-      QNAME,
-      NCNAME,
-      NMTOKEN,
-      NMTOKENS,
-      BASE64BIN,
-      HEXBIN,
-      ANY,
-      ANYTYPE,
-      ANYURI
+        INVALID = 0,
+        STRING = 1,
+        INTEGER,
+        INT,
+        BYTE,
+        UBYTE,
+        POSINT,
+        UINT,
+        LONG,
+        ULONG,
+        SHORT,
+        USHORT,
+        DECIMAL,
+        FLOAT,
+        DOUBLE,
+        BOOLEAN,
+        TIME,
+        DATETIME,
+        DATE,
+        TOKEN,
+        QNAME,
+        NCNAME,
+        NMTOKEN,
+        NMTOKENS,
+        BASE64BIN,
+        HEXBIN,
+        ANY,
+        ANYTYPE,
+        ANYURI
     };
 
-    XSDType( const QString& )
+    XSDType(const QString &)
     {
     };
 
@@ -99,14 +98,14 @@ class XSDType
 
     virtual bool isSimple() const
     {
-      return true;
+        return true;
     }
 
-    virtual void setName( const QString& ) = 0;
-    virtual void setDocumentation( const QString& ) = 0;
-    virtual void setContentModel( int ) = 0;
-    virtual void setType( int ) = 0;
-    virtual void setAnonymous( bool ) = 0;
+    virtual void setName(const QString &) = 0;
+    virtual void setDocumentation(const QString &) = 0;
+    virtual void setContentModel(int) = 0;
+    virtual void setType(int) = 0;
+    virtual void setAnonymous(bool) = 0;
 };
 
 }

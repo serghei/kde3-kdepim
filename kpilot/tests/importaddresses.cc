@@ -45,84 +45,84 @@
 
 static const KCmdLineOptions options[] =
 {
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	{"address-file <path>","Set addressbook file", 0},
-	KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    {"data-dir <path>", "Set data directory", "."},
+    {"address-file <path>", "Set addressbook file", 0},
+    KCmdLineLastOption
 };
 
 
 
 int main(int argc, char **argv)
 {
-	KAboutData aboutData("importaddresses","Import Address Book","0.1");
-	KCmdLineArgs::init(argc,argv,&aboutData);
-	KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("importaddresses", "Import Address Book", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	//  KApplication app( false, false );
-	KApplication app;
+    //  KApplication app( false, false );
+    KApplication app;
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
-	debug_level= (args->isSet("verbose")) ? 4 : 0;
+    debug_level = (args->isSet("verbose")) ? 4 : 0;
 #endif
-	QString datadir = args->getOption("data-dir");
-	QString addressfile = args->getOption("address-file");
+    QString datadir = args->getOption("data-dir");
+    QString addressfile = args->getOption("address-file");
 
-	if (datadir.isEmpty())
-	{
-		kdWarning() << "! Must provide a data-directory." << endl;
-	}
-	if (addressfile.isEmpty())
-	{
-		kdWarning() << "! Must provide an address-file to read." << endl;
-	}
-	if (datadir.isEmpty() || addressfile.isEmpty())
-	{
-		return 1;
-	}
+    if(datadir.isEmpty())
+    {
+        kdWarning() << "! Must provide a data-directory." << endl;
+    }
+    if(addressfile.isEmpty())
+    {
+        kdWarning() << "! Must provide an address-file to read." << endl;
+    }
+    if(datadir.isEmpty() || addressfile.isEmpty())
+    {
+        return 1;
+    }
 
-	KABC::ResourceFile *file = new KABC::ResourceFile( addressfile );
-	KABC::AddressBook book;
-	book.addResource( file );
-	if (!book.load())
-	{
-		kdWarning() << "! Failed to load the address-file <" << addressfile << ">" << endl;
-		return 1;
-	}
+    KABC::ResourceFile *file = new KABC::ResourceFile(addressfile);
+    KABC::AddressBook book;
+    book.addResource(file);
+    if(!book.load())
+    {
+        kdWarning() << "! Failed to load the address-file <" << addressfile << ">" << endl;
+        return 1;
+    }
 
-	Pilot::setupPilotCodec( CSL1("Latin1") );
+    Pilot::setupPilotCodec(CSL1("Latin1"));
 
-	PilotLocalDatabase db( datadir, "AddressDB" );
-	db.createDatabase( 0xdead, 0xbeef );
-	PilotAddressInfo info(0L);
-	info.resetToDefault();
-	info.writeTo(&db);
+    PilotLocalDatabase db(datadir, "AddressDB");
+    db.createDatabase(0xdead, 0xbeef);
+    PilotAddressInfo info(0L);
+    info.resetToDefault();
+    info.writeTo(&db);
 
-	KABCSync::Settings settings;
+    KABCSync::Settings settings;
 
-	kdDebug() << "# Printing address book." << endl;
-	unsigned int count = 1;
-	KABC::AddressBook::ConstIterator it = book.begin();
-	while (it != book.end())
-	{
-		const KABC::Addressee &a = *it;
-		kdDebug() << "# Entry #" << count << endl;
-		kdDebug() << "#  " << a.name() << endl;
-		kdDebug() << "#  " << a.formattedName() << endl;
-		PilotAddress *p = new PilotAddress();
-		KABCSync::copy(*p,a,info,settings);
-		PilotRecord *r = p->pack();
-		if (r)
-		{
-			db.writeRecord(r);
-			delete r;
-		}
-		delete p;
-		++it;
-		++count;
-	}
+    kdDebug() << "# Printing address book." << endl;
+    unsigned int count = 1;
+    KABC::AddressBook::ConstIterator it = book.begin();
+    while(it != book.end())
+    {
+        const KABC::Addressee &a = *it;
+        kdDebug() << "# Entry #" << count << endl;
+        kdDebug() << "#  " << a.name() << endl;
+        kdDebug() << "#  " << a.formattedName() << endl;
+        PilotAddress *p = new PilotAddress();
+        KABCSync::copy(*p, a, info, settings);
+        PilotRecord *r = p->pack();
+        if(r)
+        {
+            db.writeRecord(r);
+            delete r;
+        }
+        delete p;
+        ++it;
+        ++count;
+    }
 
-	return 0;
+    return 0;
 }

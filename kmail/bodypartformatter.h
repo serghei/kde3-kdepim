@@ -36,22 +36,22 @@ class partNode;
 
 namespace KMail {
 
-  class ObjectTreeParser;
-  class ProcessResult;
+class ObjectTreeParser;
+class ProcessResult;
 
-  class BodyPartFormatter {
-    const BodyPartFormatter & operator=( const BodyPartFormatter & );
-    BodyPartFormatter( const BodyPartFormatter & );
-  protected:
+class BodyPartFormatter {
+    const BodyPartFormatter &operator=(const BodyPartFormatter &);
+    BodyPartFormatter(const BodyPartFormatter &);
+protected:
     BodyPartFormatter() {}
-  public:
+public:
     virtual ~BodyPartFormatter() {}
 
-    virtual bool process( ObjectTreeParser *, partNode *, ProcessResult & ) const = 0;
+    virtual bool process(ObjectTreeParser *, partNode *, ProcessResult &) const = 0;
 
-    static const BodyPartFormatter * createFor( int type, int subtype );
-    static const BodyPartFormatter * createFor( const char * type, const char * subtype );
-  };
+    static const BodyPartFormatter *createFor(int type, int subtype);
+    static const BodyPartFormatter *createFor(const char *type, const char *subtype);
+};
 
 } // namespace KMail
 

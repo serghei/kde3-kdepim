@@ -40,20 +40,20 @@ typedef unsigned short uint32_t;
 
 typedef KGenericFactory<KRfc822Plugin> Rfc822Factory;
 
-K_EXPORT_COMPONENT_FACTORY(kfile_rfc822, Rfc822Factory( "kfile_rfc822" ))
+K_EXPORT_COMPONENT_FACTORY(kfile_rfc822, Rfc822Factory("kfile_rfc822"))
 
 KRfc822Plugin::KRfc822Plugin(QObject *parent, const char *name,
-                       const QStringList &args)
+                             const QStringList &args)
 
     : KFilePlugin(parent, name, args)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "message/rfc822" );
+    KFileMimeTypeInfo *info = addMimeTypeInfo("message/rfc822");
 
-    KFileMimeTypeInfo::GroupInfo* group = 0L;
+    KFileMimeTypeInfo::GroupInfo *group = 0L;
 
     group = addGroupInfo(info, "Technical", i18n("Technical Details"));
 
-    KFileMimeTypeInfo::ItemInfo* item;
+    KFileMimeTypeInfo::ItemInfo *item;
 
     item = addItemInfo(group, "From", i18n("From"), QVariant::String);
     item = addItemInfo(group, "To", i18n("To"), QVariant::String);
@@ -63,12 +63,12 @@ KRfc822Plugin::KRfc822Plugin(QObject *parent, const char *name,
 }
 
 
-bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
+bool KRfc822Plugin::readInfo(KFileMetaInfo &info, uint /*what*/)
 {
 
     QFile file(info.path());
 
-    if (!file.open(IO_ReadOnly))
+    if(!file.open(IO_ReadOnly))
     {
         kdDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
         return false;
@@ -100,60 +100,70 @@ bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     memset(buf_subject, 0, 999);
     memset(buf_date, 0, 999);
     memset(buf_contenttype, 0, 999);
-    char * myptr;
+    char *myptr;
 
-    bool done=false;
-    while (!done) {
+    bool done = false;
+    while(!done)
+    {
 
         // read a line
-        file.readLine(linebuf, sizeof( linebuf ));
+        file.readLine(linebuf, sizeof(linebuf));
 
         // have we got something useful?
-        if (memcmp(linebuf, id_from, 6) == 0) {
+        if(memcmp(linebuf, id_from, 6) == 0)
+        {
             // we have a name
             myptr = linebuf + 6;
-            strncpy(buf_from, myptr, sizeof( buf_from ));
-            buf_from[998]='\0';
-        } else if (memcmp(linebuf, id_to, 4) == 0) {
+            strncpy(buf_from, myptr, sizeof(buf_from));
+            buf_from[998] = '\0';
+        }
+        else if(memcmp(linebuf, id_to, 4) == 0)
+        {
             // we have a name
             myptr = linebuf + 4;
-            strncpy(buf_to, myptr, sizeof( buf_to ));
-            buf_to[998]='\0';
-        } else if (memcmp(linebuf, id_subject, 9) == 0) {
+            strncpy(buf_to, myptr, sizeof(buf_to));
+            buf_to[998] = '\0';
+        }
+        else if(memcmp(linebuf, id_subject, 9) == 0)
+        {
             // we have a name
             myptr = linebuf + 9;
-            strncpy(buf_subject, myptr, sizeof( buf_subject ));
-            buf_subject[998]='\0';
-        } else if (memcmp(linebuf, id_date, 6) == 0) {
+            strncpy(buf_subject, myptr, sizeof(buf_subject));
+            buf_subject[998] = '\0';
+        }
+        else if(memcmp(linebuf, id_date, 6) == 0)
+        {
             // we have a name
             myptr = linebuf + 6;
-            strncpy(buf_date, myptr, sizeof( buf_date ));
-            buf_date[998]='\0';
-        } else if (memcmp(linebuf, id_contenttype, 14) == 0) {
+            strncpy(buf_date, myptr, sizeof(buf_date));
+            buf_date[998] = '\0';
+        }
+        else if(memcmp(linebuf, id_contenttype, 14) == 0)
+        {
             // we have a name
             myptr = linebuf + 14;
-            strncpy(buf_contenttype, myptr, sizeof( buf_contenttype ));
-            buf_contenttype[998]='\0';
+            strncpy(buf_contenttype, myptr, sizeof(buf_contenttype));
+            buf_contenttype[998] = '\0';
         }
 
         // are we done yet?
-        if (
-          ((strlen(buf_from) > 0) && (strlen(buf_to) > 0) &&
-          (strlen(buf_subject) > 0) && (strlen(buf_date) > 0) &&
-          (strlen(buf_contenttype) > 0)) ||
-          (file.atEnd())
-          )
+        if(
+            ((strlen(buf_from) > 0) && (strlen(buf_to) > 0) &&
+             (strlen(buf_subject) > 0) && (strlen(buf_date) > 0) &&
+             (strlen(buf_contenttype) > 0)) ||
+            (file.atEnd())
+        )
             done = true;
 
     };
 
     KFileMetaInfoGroup group = appendGroup(info, "Technical");
 
-    if (strlen(buf_from) > 0)           appendItem(group, "From", buf_from);
-    if (strlen(buf_to) > 0)             appendItem(group, "To", buf_to);
-    if (strlen(buf_subject) > 0)        appendItem(group, "Subject", buf_subject);
-    if (strlen(buf_date) > 0)           appendItem(group, "Date", buf_date);
-    if (strlen(buf_contenttype) > 0)    appendItem(group, "Content-Type", buf_contenttype);
+    if(strlen(buf_from) > 0)           appendItem(group, "From", buf_from);
+    if(strlen(buf_to) > 0)             appendItem(group, "To", buf_to);
+    if(strlen(buf_subject) > 0)        appendItem(group, "Subject", buf_subject);
+    if(strlen(buf_date) > 0)           appendItem(group, "Date", buf_date);
+    if(strlen(buf_contenttype) > 0)    appendItem(group, "Content-Type", buf_contenttype);
 
     return true;
 }

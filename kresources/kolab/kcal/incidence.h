@@ -39,10 +39,10 @@
 class QDomElement;
 
 namespace KCal {
-  class Incidence;
-  class Recurrence;
-  class Attachment;
-  class ResourceKolab;
+class Incidence;
+class Recurrence;
+class Attachment;
+class ResourceKolab;
 }
 
 namespace Kolab {
@@ -54,119 +54,122 @@ namespace Kolab {
  */
 class Incidence : public KolabBase {
 public:
-  struct Recurrence {
-    QString cycle;
-    QString type;
-    int interval;
-    QStringList days; // list of days-of-the-week
-    QString dayNumber;
-    QString month;
-    QString rangeType;
-    QString range; // date or number or nothing
-    QValueList<QDate> exclusions;
-  };
+    struct Recurrence
+    {
+        QString cycle;
+        QString type;
+        int interval;
+        QStringList days; // list of days-of-the-week
+        QString dayNumber;
+        QString month;
+        QString rangeType;
+        QString range; // date or number or nothing
+        QValueList<QDate> exclusions;
+    };
 
-  struct Attendee : Email {
-    Attendee() : requestResponse( true ), invitationSent( false ) {}
-    QString status;
-    bool requestResponse;
-    bool invitationSent;
-    QString role;
-    QString delegate;
-    QString delegator;
-  };
+    struct Attendee : Email
+    {
+        Attendee() : requestResponse(true), invitationSent(false) {}
+        QString status;
+        bool requestResponse;
+        bool invitationSent;
+        QString role;
+        QString delegate;
+        QString delegator;
+    };
 
-  explicit Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
-                      const QString& tz );
-  virtual ~Incidence();
+    explicit Incidence(KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
+                       const QString &tz);
+    virtual ~Incidence();
 
-  void saveTo( KCal::Incidence* incidence );
+    void saveTo(KCal::Incidence *incidence);
 
-  virtual void setSummary( const QString& summary );
-  virtual QString summary() const;
+    virtual void setSummary(const QString &summary);
+    virtual QString summary() const;
 
-  virtual void setLocation( const QString& location );
-  virtual QString location() const;
+    virtual void setLocation(const QString &location);
+    virtual QString location() const;
 
-  virtual void setOrganizer( const Email& organizer );
-  virtual Email organizer() const;
+    virtual void setOrganizer(const Email &organizer);
+    virtual Email organizer() const;
 
-  virtual void setStartDate( const QDateTime& startDate );
-  virtual void setStartDate( const QDate& startDate );
-  virtual void setStartDate( const QString& startDate );
-  virtual QDateTime startDate() const;
+    virtual void setStartDate(const QDateTime &startDate);
+    virtual void setStartDate(const QDate &startDate);
+    virtual void setStartDate(const QString &startDate);
+    virtual QDateTime startDate() const;
 
-  virtual void setAlarm( float alarm );
-  virtual float alarm() const;
+    virtual void setAlarm(float alarm);
+    virtual float alarm() const;
 
-  virtual void setRecurrence( KCal::Recurrence* recur );
-  virtual Recurrence recurrence() const;
+    virtual void setRecurrence(KCal::Recurrence *recur);
+    virtual Recurrence recurrence() const;
 
-  virtual void addAttendee( const Attendee& attendee );
-  QValueList<Attendee>& attendees();
-  const QValueList<Attendee>& attendees() const;
+    virtual void addAttendee(const Attendee &attendee);
+    QValueList<Attendee> &attendees();
+    const QValueList<Attendee> &attendees() const;
 
-  /**
-   * The internal uid is used as the uid inside KOrganizer whenever
-   * two or more events with the same uid appear, which KOrganizer
-   * can't handle. To avoid keep that interal uid from changing all the
-   * time, it is persisted in the XML between a save and the next load.
-   */
-  void setInternalUID( const QString& iuid );
-  QString internalUID() const;
+    /**
+     * The internal uid is used as the uid inside KOrganizer whenever
+     * two or more events with the same uid appear, which KOrganizer
+     * can't handle. To avoid keep that interal uid from changing all the
+     * time, it is persisted in the XML between a save and the next load.
+     */
+    void setInternalUID(const QString &iuid);
+    QString internalUID() const;
 
-  virtual void setRevision( int );
-  virtual int revision() const;
+    virtual void setRevision(int);
+    virtual int revision() const;
 
-  // Load the attributes of this class
-  virtual bool loadAttribute( QDomElement& );
+    // Load the attributes of this class
+    virtual bool loadAttribute(QDomElement &);
 
-  // Save the attributes of this class
-  virtual bool saveAttributes( QDomElement& ) const;
+    // Save the attributes of this class
+    virtual bool saveAttributes(QDomElement &) const;
 
 protected:
-  enum FloatingStatus { Unset, AllDay, HasTime };
+    enum FloatingStatus { Unset, AllDay, HasTime };
 
-  // Read all known fields from this ical incidence
-  void setFields( const KCal::Incidence* );
+    // Read all known fields from this ical incidence
+    void setFields(const KCal::Incidence *);
 
-  bool loadAttendeeAttribute( QDomElement&, Attendee& );
-  void saveAttendeeAttribute( QDomElement& element,
-                              const Attendee& attendee ) const;
-  void saveAttendees( QDomElement& element ) const;
-  void saveAttachments( QDomElement& element ) const;
+    bool loadAttendeeAttribute(QDomElement &, Attendee &);
+    void saveAttendeeAttribute(QDomElement &element,
+                               const Attendee &attendee) const;
+    void saveAttendees(QDomElement &element) const;
+    void saveAttachments(QDomElement &element) const;
 
-  void loadRecurrence( const QDomElement& element );
-  void saveRecurrence( QDomElement& element ) const;
-  void saveCustomAttributes( QDomElement& element ) const;
-  void loadCustomAttributes( QDomElement& element );
+    void loadRecurrence(const QDomElement &element);
+    void saveRecurrence(QDomElement &element) const;
+    void saveCustomAttributes(QDomElement &element) const;
+    void loadCustomAttributes(QDomElement &element);
 
-  void loadAttachments();
+    void loadAttachments();
 
-  QString productID() const;
+    QString productID() const;
 
-  QString mSummary;
-  QString mLocation;
-  Email mOrganizer;
-  QDateTime mStartDate;
-  FloatingStatus mFloatingStatus;
-  float mAlarm;
-  bool mHasAlarm;
-  Recurrence mRecurrence;
-  QValueList<Attendee> mAttendees;
-  QValueList<KCal::Attachment*> mAttachments;
-  QString mInternalUID;
-  int mRevision;
+    QString mSummary;
+    QString mLocation;
+    Email mOrganizer;
+    QDateTime mStartDate;
+    FloatingStatus mFloatingStatus;
+    float mAlarm;
+    bool mHasAlarm;
+    Recurrence mRecurrence;
+    QValueList<Attendee> mAttendees;
+    QValueList<KCal::Attachment *> mAttachments;
+    QString mInternalUID;
+    int mRevision;
 
-  struct Custom {
-    QCString key;
-    QString value;
-  };
-  QValueList<Custom> mCustomList;
+    struct Custom
+    {
+        QCString key;
+        QString value;
+    };
+    QValueList<Custom> mCustomList;
 
-  KCal::ResourceKolab *mResource;
-  QString mSubResource;
-  Q_UINT32 mSernum;
+    KCal::ResourceKolab *mResource;
+    QString mSubResource;
+    Q_UINT32 mSernum;
 };
 
 }

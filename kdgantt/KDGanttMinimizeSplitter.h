@@ -44,80 +44,93 @@
 class QSplitterData;
 class QSplitterLayoutStruct;
 
-class KDGanttMinimizeSplitter : public QFrame
-{
+class KDGanttMinimizeSplitter : public QFrame {
     Q_OBJECT
-    Q_ENUMS( Direction )
-    Q_PROPERTY( Orientation orientation READ orientation WRITE setOrientation )
-    Q_PROPERTY( Direction minimizeDirection READ minimizeDirection WRITE setMinimizeDirection )
+    Q_ENUMS(Direction)
+    Q_PROPERTY(Orientation orientation READ orientation WRITE setOrientation)
+    Q_PROPERTY(Direction minimizeDirection READ minimizeDirection WRITE setMinimizeDirection)
 
 public:
     enum ResizeMode { Stretch, KeepSize, FollowSizeHint };
     enum Direction { Left, Right, Up, Down };
 
-    KDGanttMinimizeSplitter( QWidget* parent=0, const char* name=0 );
-    KDGanttMinimizeSplitter( Orientation, QWidget* parent=0, const char* name=0 );
+    KDGanttMinimizeSplitter(QWidget *parent = 0, const char *name = 0);
+    KDGanttMinimizeSplitter(Orientation, QWidget *parent = 0, const char *name = 0);
     ~KDGanttMinimizeSplitter();
 
-    virtual void setOrientation( Orientation );
-    Orientation orientation() const { return orient; }
+    virtual void setOrientation(Orientation);
+    Orientation orientation() const
+    {
+        return orient;
+    }
 
-    void setMinimizeDirection( Direction );
+    void setMinimizeDirection(Direction);
     Direction minimizeDirection() const;
 
 #if QT_VERSION >= 300
-    virtual void setResizeMode( QWidget *w, ResizeMode );
-    virtual void setOpaqueResize( bool = TRUE );
+    virtual void setResizeMode(QWidget *w, ResizeMode);
+    virtual void setOpaqueResize(bool = TRUE);
     bool opaqueResize() const;
 
-    void moveToFirst( QWidget * );
-    void moveToLast( QWidget * );
+    void moveToFirst(QWidget *);
+    void moveToLast(QWidget *);
 
-    void refresh() { recalc( TRUE ); }
+    void refresh()
+    {
+        recalc(TRUE);
+    }
     virtual QSize sizeHint() const;
     virtual QSize minimumSizeHint() const;
 
     QValueList<int> sizes() const;
-    void setSizes( QValueList<int> );
+    void setSizes(QValueList<int>);
 
-    void expandPos( int id, int* min, int* max );
+    void expandPos(int id, int *min, int *max);
 protected:
-    void childEvent( QChildEvent * );
+    void childEvent(QChildEvent *);
 
-    bool event( QEvent * );
-    void resizeEvent( QResizeEvent * );
+    bool event(QEvent *);
+    void resizeEvent(QResizeEvent *);
 
-    int idAfter( QWidget* ) const;
+    int idAfter(QWidget *) const;
 
-    void moveSplitter( QCOORD pos, int id );
-    virtual void drawSplitter( QPainter*, QCOORD x, QCOORD y,
-			       QCOORD w, QCOORD h );
-    void styleChange( QStyle& );
-    int adjustPos( int , int );
-    virtual void setRubberband( int );
-    void getRange( int id, int*, int* );
+    void moveSplitter(QCOORD pos, int id);
+    virtual void drawSplitter(QPainter *, QCOORD x, QCOORD y,
+                              QCOORD w, QCOORD h);
+    void styleChange(QStyle &);
+    int adjustPos(int , int);
+    virtual void setRubberband(int);
+    void getRange(int id, int *, int *);
 
 private:
     void init();
-    void recalc( bool update = FALSE );
+    void recalc(bool update = FALSE);
     void doResize();
     void storeSizes();
     void processChildEvents();
-    QSplitterLayoutStruct *addWidget( QWidget*, bool first = FALSE );
+    QSplitterLayoutStruct *addWidget(QWidget *, bool first = FALSE);
     void recalcId();
-    void moveBefore( int pos, int id, bool upLeft );
-    void moveAfter( int pos, int id, bool upLeft );
-    void setG( QWidget *w, int p, int s, bool isSplitter = FALSE );
+    void moveBefore(int pos, int id, bool upLeft);
+    void moveAfter(int pos, int id, bool upLeft);
+    void setG(QWidget *w, int p, int s, bool isSplitter = FALSE);
 
-    QCOORD pick( const QPoint &p ) const
-    { return orient == Horizontal ? p.x() : p.y(); }
-    QCOORD pick( const QSize &s ) const
-    { return orient == Horizontal ? s.width() : s.height(); }
+    QCOORD pick(const QPoint &p) const
+    {
+        return orient == Horizontal ? p.x() : p.y();
+    }
+    QCOORD pick(const QSize &s) const
+    {
+        return orient == Horizontal ? s.width() : s.height();
+    }
 
-    QCOORD trans( const QPoint &p ) const
-    { return orient == Vertical ? p.x() : p.y(); }
-    QCOORD trans( const QSize &s ) const
-    { return orient == Vertical ? s.width() : s.height(); }
+    QCOORD trans(const QPoint &p) const
+    {
+        return orient == Vertical ? p.x() : p.y();
+    }
+    QCOORD trans(const QSize &s) const
+    {
+        return orient == Vertical ? s.width() : s.height();
+    }
 
     QSplitterData *data;
 #endif
@@ -130,8 +143,8 @@ private:
 #endif
 private:	// Disabled copy constructor and operator=
 #if defined(Q_DISABLE_COPY)
-    KDGanttMinimizeSplitter( const KDGanttMinimizeSplitter & );
-    KDGanttMinimizeSplitter& operator=( const KDGanttMinimizeSplitter & );
+    KDGanttMinimizeSplitter(const KDGanttMinimizeSplitter &);
+    KDGanttMinimizeSplitter &operator=(const KDGanttMinimizeSplitter &);
 #endif
 };
 
@@ -140,31 +153,42 @@ private:	// Disabled copy constructor and operator=
 // QSplitterHandle pertaining to the Qt Enterprise License and the
 // GPL. It has only been renamed to KDGanttSplitterHandler in order to
 // avoid a symbol clash on some platforms.
-class KDGanttSplitterHandle : public QWidget
-{
+class KDGanttSplitterHandle : public QWidget {
     Q_OBJECT
 #if QT_VERSION >= 300
 public:
-    KDGanttSplitterHandle( Qt::Orientation o,
-		       KDGanttMinimizeSplitter *parent, const char* name=0 );
-    void setOrientation( Qt::Orientation o );
-    Qt::Orientation orientation() const { return orient; }
+    KDGanttSplitterHandle(Qt::Orientation o,
+                          KDGanttMinimizeSplitter *parent, const char *name = 0);
+    void setOrientation(Qt::Orientation o);
+    Qt::Orientation orientation() const
+    {
+        return orient;
+    }
 
-    bool opaque() const { return s->opaqueResize(); }
+    bool opaque() const
+    {
+        return s->opaqueResize();
+    }
 
     QSize sizeHint() const;
 
-    int id() const { return myId; } // data->list.at(id())->wid == this
-    void setId( int i ) { myId = i; }
+    int id() const
+    {
+        return myId;    // data->list.at(id())->wid == this
+    }
+    void setId(int i)
+    {
+        myId = i;
+    }
 
 protected:
     QValueList<QPointArray> buttonRegions();
-    void paintEvent( QPaintEvent * );
-    void mouseMoveEvent( QMouseEvent * );
-    void mousePressEvent( QMouseEvent * );
-    void mouseReleaseEvent( QMouseEvent * );
-    int onButton( const QPoint& p );
-    void updateCursor( const QPoint& p );
+    void paintEvent(QPaintEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    int onButton(const QPoint &p);
+    void updateCursor(const QPoint &p);
 
 private:
     Qt::Orientation orient;

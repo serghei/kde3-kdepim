@@ -24,14 +24,13 @@ class KConfig;
 
 namespace KCal {
 
-  class ResourceCalendar;
+class ResourceCalendar;
 
-class TestResource : public QObject
-{
+class TestResource : public QObject {
     Q_OBJECT
 
 public:
-    TestResource( const QString& type, KConfig *config );
+    TestResource(const QString &type, KConfig *config);
     void setup();
     void runAll();
     void cleanup();
@@ -40,13 +39,13 @@ public:
     void testOpenAndClose();
     void testResourceAttributes();
     void testResourceCalendarAttributes();
-    
+
     void testEventAddRemove();
     void testTodoAddRemove();
     void testJournalAddRemove();
 
 private:
-    bool check(const QString& txt, QString a, QString b);
+    bool check(const QString &txt, QString a, QString b);
     QString m_resource_type;
     KConfig *m_config;
     ResourceCalendar *m_res;

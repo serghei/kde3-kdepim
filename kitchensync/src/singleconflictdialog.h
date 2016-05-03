@@ -30,21 +30,20 @@ namespace KSync {
 class HTMLDiffAlgoDisplay;
 }
 
-class SingleConflictDialog : public ConflictDialog
-{
-  Q_OBJECT
+class SingleConflictDialog : public ConflictDialog {
+    Q_OBJECT
 
-  public:
-    SingleConflictDialog( QSync::SyncMapping &mapping, QWidget *parent );
+public:
+    SingleConflictDialog(QSync::SyncMapping &mapping, QWidget *parent);
     ~SingleConflictDialog();
 
-  private slots:
+private slots:
     void useFirstChange();
     void useSecondChange();
     void duplicateChange();
     void ignoreChange();
 
-  private:
+private:
     void initGUI();
 
     DiffAlgo *mDiffAlgo;

@@ -27,7 +27,7 @@
 using namespace QSync;
 
 Member::Member()
-  : mMember( 0 )
+    : mMember(0)
 {
 }
 
@@ -37,152 +37,162 @@ Member::~Member()
 
 bool Member::isValid() const
 {
-  OSyncError *error = 0;
+    OSyncError *error = 0;
 
-  if ( !mMember )
-    return false;
+    if(!mMember)
+        return false;
 
-  if ( !osync_member_instance_plugin( mMember, pluginName().utf8(), &error ) ) {
-    qDebug( "Plugin %s is not valid: %s", pluginName().latin1(), osync_error_print( &error ) );
-    osync_error_free( &error );
-    return false;
-  }
+    if(!osync_member_instance_plugin(mMember, pluginName().utf8(), &error))
+    {
+        qDebug("Plugin %s is not valid: %s", pluginName().latin1(), osync_error_print(&error));
+        osync_error_free(&error);
+        return false;
+    }
 
-  return true;
+    return true;
 }
 
 QString Member::configurationDirectory() const
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  return QString::fromLatin1( osync_member_get_configdir( mMember ) );
+    return QString::fromLatin1(osync_member_get_configdir(mMember));
 }
 
 QString Member::pluginName() const
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  return QString::fromLatin1( osync_member_get_pluginname( mMember ) );
+    return QString::fromLatin1(osync_member_get_pluginname(mMember));
 }
 
 Plugin Member::plugin() const
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  Plugin plugin;
+    Plugin plugin;
 
-  OSyncPlugin *oplugin = osync_member_get_plugin( mMember );
-  if ( oplugin )
-    plugin.mPlugin = oplugin;
+    OSyncPlugin *oplugin = osync_member_get_plugin(mMember);
+    if(oplugin)
+        plugin.mPlugin = oplugin;
 
-  return plugin;
+    return plugin;
 }
 
 int Member::id() const
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  return osync_member_get_id( mMember );
+    return osync_member_get_id(mMember);
 }
 
-void Member::setName( const QString &name )
+void Member::setName(const QString &name)
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  osync_member_set_name( mMember, (const char*)name.utf8() );
+    osync_member_set_name(mMember, (const char *)name.utf8());
 }
 
 QString Member::name() const
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  return QString::fromUtf8( osync_member_get_name( mMember ) );
+    return QString::fromUtf8(osync_member_get_name(mMember));
 }
 
-void Member::setConfiguration( const QByteArray &configurationData )
+void Member::setConfiguration(const QByteArray &configurationData)
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  osync_member_set_config( mMember, configurationData.data(), configurationData.size() );
+    osync_member_set_config(mMember, configurationData.data(), configurationData.size());
 }
 
-Result Member::configuration( QByteArray &configurationData, bool useDefault )
+Result Member::configuration(QByteArray &configurationData, bool useDefault)
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  char *data;
-  int size;
+    char *data;
+    int size;
 
-  OSyncError *error = 0;
-  osync_bool ok = false;
-  if ( useDefault )
-    ok = osync_member_get_config_or_default( mMember, &data, &size, &error );
-  else
-    ok = osync_member_get_config( mMember, &data, &size, &error );
+    OSyncError *error = 0;
+    osync_bool ok = false;
+    if(useDefault)
+        ok = osync_member_get_config_or_default(mMember, &data, &size, &error);
+    else
+        ok = osync_member_get_config(mMember, &data, &size, &error);
 
-  if ( !ok ) {
-    return Result( &error );
-  } else {
-    configurationData.resize( size );
-    memcpy( configurationData.data(), data, size );
+    if(!ok)
+    {
+        return Result(&error);
+    }
+    else
+    {
+        configurationData.resize(size);
+        memcpy(configurationData.data(), data, size);
 
-    return Result();
-  }
+        return Result();
+    }
 }
 
 Result Member::save()
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  OSyncError *error = 0;
-  if ( !osync_member_save( mMember, &error ) )
-    return Result( &error );
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osync_member_save(mMember, &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
-Result Member::instance( const Plugin &plugin )
+Result Member::instance(const Plugin &plugin)
 {
-  OSyncError *error = 0;
-  if ( !osync_member_instance_plugin( mMember, plugin.name().utf8(), &error ) )
-    return Result( &error );
-  else
-    return Result();
+    OSyncError *error = 0;
+    if(!osync_member_instance_plugin(mMember, plugin.name().utf8(), &error))
+        return Result(&error);
+    else
+        return Result();
 }
 
-bool Member::operator==( const Member &member ) const
+bool Member::operator==(const Member &member) const
 {
-  return mMember == member.mMember;
+    return mMember == member.mMember;
 }
 
-QString Member::scanDevices( const QString &query )
+QString Member::scanDevices(const QString &query)
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  OSyncError *error = 0;
-  char *data = (char*)osync_member_call_plugin( mMember, "scan_devices", const_cast<char*>( query.utf8().data() ), &error );
-  if ( error != 0 ) {
-    osync_error_free( &error );
-    return QString();
-  } else {
-    QString xml = QString::fromUtf8( data );
-    free( data );
-    return xml;
-  }
+    OSyncError *error = 0;
+    char *data = (char *)osync_member_call_plugin(mMember, "scan_devices", const_cast<char *>(query.utf8().data()), &error);
+    if(error != 0)
+    {
+        osync_error_free(&error);
+        return QString();
+    }
+    else
+    {
+        QString xml = QString::fromUtf8(data);
+        free(data);
+        return xml;
+    }
 }
 
-bool Member::testConnection( const QString &configuration )
+bool Member::testConnection(const QString &configuration)
 {
-  Q_ASSERT( mMember );
+    Q_ASSERT(mMember);
 
-  OSyncError *error = 0;
-  int *result = (int*)osync_member_call_plugin( mMember, "test_connection", const_cast<char*>( configuration.utf8().data() ), &error );
-  if ( error != 0 ) {
-    osync_error_free( &error );
-    return false;
-  } else {
-    bool value = ( *result == 1 ? true : false );
-    free( result );
-    return value;
-  }
+    OSyncError *error = 0;
+    int *result = (int *)osync_member_call_plugin(mMember, "test_connection", const_cast<char *>(configuration.utf8().data()), &error);
+    if(error != 0)
+    {
+        osync_error_free(&error);
+        return false;
+    }
+    else
+    {
+        bool value = (*result == 1 ? true : false);
+        free(result);
+        return value;
+    }
 }

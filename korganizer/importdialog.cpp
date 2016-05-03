@@ -37,31 +37,31 @@
 
 using namespace KCal;
 
-ImportDialog::ImportDialog( const KURL &url, QWidget *parent )
-  : KDialogBase( Plain, i18n("Import Calendar"), Ok | Cancel, Ok, parent,
-                 0, true, true ),
-    mUrl( url )
+ImportDialog::ImportDialog(const KURL &url, QWidget *parent)
+    : KDialogBase(Plain, i18n("Import Calendar"), Ok | Cancel, Ok, parent,
+                  0, true, true),
+      mUrl(url)
 {
-  QFrame *topFrame = plainPage();
-  QVBoxLayout *topLayout = new QVBoxLayout( topFrame, 0, spacingHint() );
+    QFrame *topFrame = plainPage();
+    QVBoxLayout *topLayout = new QVBoxLayout(topFrame, 0, spacingHint());
 
-  QString txt = i18n("Import calendar at '%1' into KOrganizer.")
-                .arg( mUrl.prettyURL() );
+    QString txt = i18n("Import calendar at '%1' into KOrganizer.")
+                  .arg(mUrl.prettyURL());
 
-  topLayout->addWidget( new QLabel( txt, topFrame ) );
+    topLayout->addWidget(new QLabel(txt, topFrame));
 
-  QButtonGroup *radioBox = new QButtonGroup( 1, Horizontal, topFrame );
-  radioBox->setFlat( true );
-  topLayout->addWidget( radioBox );
+    QButtonGroup *radioBox = new QButtonGroup(1, Horizontal, topFrame);
+    radioBox->setFlat(true);
+    topLayout->addWidget(radioBox);
 
-  mAddButton = new QRadioButton( i18n("Add as new calendar"), radioBox );
+    mAddButton = new QRadioButton(i18n("Add as new calendar"), radioBox);
 
-  mMergeButton = new QRadioButton( i18n("Merge into existing calendar"),
-                                   radioBox );
+    mMergeButton = new QRadioButton(i18n("Merge into existing calendar"),
+                                    radioBox);
 
-  mOpenButton = new QRadioButton( i18n("Open in separate window"), radioBox );
+    mOpenButton = new QRadioButton(i18n("Open in separate window"), radioBox);
 
-  mAddButton->setChecked( true );
+    mAddButton->setChecked(true);
 }
 
 ImportDialog::~ImportDialog()
@@ -70,22 +70,29 @@ ImportDialog::~ImportDialog()
 
 void ImportDialog::slotOk()
 {
-  kdDebug(5850) << "Adding resource for url '" << mUrl << "'" << endl;
+    kdDebug(5850) << "Adding resource for url '" << mUrl << "'" << endl;
 
-  if ( mAddButton->isChecked() ) {
-    emit addResource( mUrl );
-  } else if ( mMergeButton->isChecked() ) {
-    // emit a signal to action manager to merge mUrl into the current calendar
-    emit openURL( mUrl, true );
-  } else if ( mOpenButton->isChecked() ) {
-    // emit a signal to the action manager to open mUrl in a separate window
-    emit newWindow( mUrl );
-  } else {
-    kdError() << "ImportDialog: internal error." << endl;
-  }
+    if(mAddButton->isChecked())
+    {
+        emit addResource(mUrl);
+    }
+    else if(mMergeButton->isChecked())
+    {
+        // emit a signal to action manager to merge mUrl into the current calendar
+        emit openURL(mUrl, true);
+    }
+    else if(mOpenButton->isChecked())
+    {
+        // emit a signal to the action manager to open mUrl in a separate window
+        emit newWindow(mUrl);
+    }
+    else
+    {
+        kdError() << "ImportDialog: internal error." << endl;
+    }
 
-  emit dialogFinished( this );
-  accept();
+    emit dialogFinished(this);
+    accept();
 }
 
 

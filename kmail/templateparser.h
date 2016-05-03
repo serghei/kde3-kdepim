@@ -29,37 +29,37 @@ class KMFolder;
 class QObject;
 class KProcess;
 
-class TemplateParser : public QObject
-{
-  Q_OBJECT
+class TemplateParser : public QObject {
+    Q_OBJECT
 
-  public:
-    enum Mode {
-      NewMessage,
-      Reply,
-      ReplyAll,
-      Forward
+public:
+    enum Mode
+    {
+        NewMessage,
+        Reply,
+        ReplyAll,
+        Forward
     };
 
     static const int PipeTimeout = 15;
 
-  public:
-    TemplateParser( KMMessage *amsg, const Mode amode, const QString aselection,
-                    bool aSmartQuote, bool anoQuote, bool aallowDecryption,
-                    bool aselectionIsBody );
+public:
+    TemplateParser(KMMessage *amsg, const Mode amode, const QString aselection,
+                   bool aSmartQuote, bool anoQuote, bool aallowDecryption,
+                   bool aselectionIsBody);
 
-    virtual void process( KMMessage *aorig_msg, KMFolder *afolder = NULL, bool append = false );
-    virtual void process( const QString &tmplName, KMMessage *aorig_msg,
-                          KMFolder *afolder = NULL, bool append = false );
-    virtual void processWithTemplate( const QString &tmpl );
+    virtual void process(KMMessage *aorig_msg, KMFolder *afolder = NULL, bool append = false);
+    virtual void process(const QString &tmplName, KMMessage *aorig_msg,
+                         KMFolder *afolder = NULL, bool append = false);
+    virtual void processWithTemplate(const QString &tmpl);
     virtual QString findTemplate();
-    virtual QString findCustomTemplate( const QString &tmpl );
-    virtual QString pipe( const QString &cmd, const QString &buf );
+    virtual QString findCustomTemplate(const QString &tmpl);
+    virtual QString pipe(const QString &cmd, const QString &buf);
 
-    virtual QString getFName( const QString &str );
-    virtual QString getLName( const QString &str );
+    virtual QString getFName(const QString &str);
+    virtual QString getLName(const QString &str);
 
-  protected:
+protected:
     Mode mMode;
     KMFolder *mFolder;
     uint mIdentity;
@@ -77,14 +77,14 @@ class TemplateParser : public QObject
     QString mQuoteString;
     bool mAppend;
 
-    int parseQuotes( const QString &prefix, const QString &str,
-                     QString &quote ) const;
+    int parseQuotes(const QString &prefix, const QString &str,
+                    QString &quote) const;
 
-  protected slots:
-    void onProcessExited( KProcess *proc );
-    void onReceivedStdout( KProcess *proc, char *buffer, int buflen );
-    void onReceivedStderr( KProcess *proc, char *buffer, int buflen );
-    void onWroteStdin( KProcess *proc );
+protected slots:
+    void onProcessExited(KProcess *proc);
+    void onReceivedStdout(KProcess *proc, char *buffer, int buflen);
+    void onReceivedStderr(KProcess *proc, char *buffer, int buflen);
+    void onWroteStdin(KProcess *proc);
 };
 
 #endif // __KMAIL_TEMPLATEPARSER_H__

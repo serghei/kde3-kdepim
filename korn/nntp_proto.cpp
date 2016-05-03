@@ -27,31 +27,31 @@
 #include <qptrvector.h>
 #include <qptrlist.h>
 
-void Nntp_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
+void Nntp_Protocol::configFillGroupBoxes(QStringList *groupBoxes) const
 {
-	groupBoxes->append( "server" );
-	groupBoxes->append( "user" );
+    groupBoxes->append("server");
+    groupBoxes->append("user");
 }
 
-void Nntp_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > * result ) const
+void Nntp_Protocol::configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *result) const
 {
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Port" ), 0, 65535, "119", "port" ) );
-	
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
-	result->append( new CheckboxInput( (QWidget*)vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
-	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( toggled( bool ) ),
-			  (QObject*)result->prev()->rightWidget(), SLOT( setEnabled( bool ) ) );
-	result->last()->setValue( "false" );
+    result->append(new TextInput((QWidget *)vector->at(0), i18n("Server"), TextInput::text, "", "server"));
+    result->append(new TextInput((QWidget *)vector->at(0), i18n("Port"), 0, 65535, "119", "port"));
+
+    result->append(new TextInput((QWidget *)vector->at(1), i18n("Username"), TextInput::text, "", "username"));
+    result->append(new TextInput((QWidget *)vector->at(1), i18n("Password"), TextInput::password, "", "password"));
+    result->append(new CheckboxInput((QWidget *)vector->at(1), i18n("Save password"), "true", "savepassword"));
+    QObject::connect((QObject *)result->last()->rightWidget(), SIGNAL(toggled(bool)),
+                     (QObject *)result->prev()->rightWidget(), SLOT(setEnabled(bool)));
+    result->last()->setValue("false");
 }
 
-void Nntp_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString > * ) const
+void Nntp_Protocol::readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const
 {
 }
 
-void Nntp_Protocol::writeEntries( QMap< QString, QString >* map ) const
+void Nntp_Protocol::writeEntries(QMap< QString, QString > *map) const
 {
-	clearFields( map, (KIO_Protocol::Fields)( KIO_Protocol::mailbox | KIO_Protocol::metadata ) );
+    clearFields(map, (KIO_Protocol::Fields)(KIO_Protocol::mailbox | KIO_Protocol::metadata));
 }
 

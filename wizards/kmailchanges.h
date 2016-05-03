@@ -26,61 +26,59 @@
 #include <kconfig.h>
 
 namespace KWallet {
-  class Wallet;
+class Wallet;
 }
 
-class CreateImapAccount : public KConfigPropagator::Change
-{
-  public:
-    class CustomWriter
-    {
-      public:
-        virtual void writeFolder( KConfig &, int folderId ) = 0;
-        virtual void writeIds( int accountId, int transportId ) = 0;
+class CreateImapAccount : public KConfigPropagator::Change {
+public:
+    class CustomWriter {
+    public:
+        virtual void writeFolder(KConfig &, int folderId) = 0;
+        virtual void writeIds(int accountId, int transportId) = 0;
     };
 
-    CreateImapAccount( const QString &accountName, const QString &title );
+    CreateImapAccount(const QString &accountName, const QString &title);
     ~CreateImapAccount();
 
-    void setServer( const QString & );
-    void setUser( const QString & );
-    void setPassword( const QString & );
-    void setRealName( const QString & );
-    void setPort( int );
+    void setServer(const QString &);
+    void setUser(const QString &);
+    void setPassword(const QString &);
+    void setRealName(const QString &);
+    void setPort(int);
     /**
       Set email. Default is "user@server".
     */
-    void setEmail( const QString & );
+    void setEmail(const QString &);
 
-    void setDefaultDomain( const QString & );
+    void setDefaultDomain(const QString &);
 
-    void enableSieve( bool );
-    void setSieveVacationFileName( const QString& );
-    void enableSavePassword( bool );
+    void enableSieve(bool);
+    void setSieveVacationFileName(const QString &);
+    void enableSavePassword(bool);
 
     enum Encryption { None, SSL, TLS };
     enum Authentication { NONE, PLAIN, LOGIN, NTLM_SPA, GSSAPI, DIGEST_MD5, CRAM_MD5 };
 
-    void setEncryption( Encryption );
-    void setAuthentication( Authentication );
+    void setEncryption(Encryption);
+    void setAuthentication(Authentication);
 
-    void setAuthenticationSend( Authentication );
+    void setAuthenticationSend(Authentication);
 
-    void setSmtpPort( int );
+    void setSmtpPort(int);
 
-    void setExistingAccountId( int );
-    void setExistingTransportId( int );
+    void setExistingAccountId(int);
+    void setExistingTransportId(int);
 
     /**
       Set custom writer. CreateImapAccount takes ownerhsip of the
       object.
     */
-    void setCustomWriter( CustomWriter * );
+    void setCustomWriter(CustomWriter *);
 
-  protected:
-    bool writeToWallet( const QString &type, int id );
+protected:
+    bool writeToWallet(const QString &type, int id);
 
-  protected:
+protected:
     QString mAccountName;
 
     QString mServer;
@@ -106,35 +104,39 @@ class CreateImapAccount : public KConfigPropagator::Change
 
     CustomWriter *mCustomWriter;
 
-  private:
+private:
     static KWallet::Wallet *mWallet;
 };
 
-class CreateDisconnectedImapAccount : public CreateImapAccount
-{
-  public:
+class CreateDisconnectedImapAccount : public CreateImapAccount {
+public:
     enum GroupwareType
     {
-      GroupwareNone,
-      GroupwareKolab,
-      GroupwareScalix
+        GroupwareNone,
+        GroupwareKolab,
+        GroupwareScalix
     };
 
-    CreateDisconnectedImapAccount( const QString &accountName );
+    CreateDisconnectedImapAccount(const QString &accountName);
     virtual void apply();
 
-    void enableLocalSubscription( bool b ) { mLocalSubscription = b; }
-    void setGroupwareType( GroupwareType type ) { mGroupwareType = type; }
+    void enableLocalSubscription(bool b)
+    {
+        mLocalSubscription = b;
+    }
+    void setGroupwareType(GroupwareType type)
+    {
+        mGroupwareType = type;
+    }
 
-  private:
+private:
     bool mLocalSubscription;
     GroupwareType mGroupwareType;
 };
 
-class CreateOnlineImapAccount : public CreateImapAccount
-{
-  public:
-    CreateOnlineImapAccount( const QString &accountName );
+class CreateOnlineImapAccount : public CreateImapAccount {
+public:
+    CreateOnlineImapAccount(const QString &accountName);
     virtual void apply();
 };
 

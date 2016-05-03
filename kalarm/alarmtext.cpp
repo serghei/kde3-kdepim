@@ -39,27 +39,27 @@ QString AlarmText::mDatePrefixEn    = QString::fromLatin1("Date:");
 QString AlarmText::mSubjectPrefixEn = QString::fromLatin1("Subject:");
 
 
-void AlarmText::setText(const QString& text)
+void AlarmText::setText(const QString &text)
 {
-	mBody     = text;
-	mIsScript = text.startsWith(QString::fromLatin1("#!"));
-	mIsEmail  = false;
-	mTo = mFrom = mCc = mTime = mSubject = QString::null;
-	mKMailSerialNum = 0;
+    mBody     = text;
+    mIsScript = text.startsWith(QString::fromLatin1("#!"));
+    mIsEmail  = false;
+    mTo = mFrom = mCc = mTime = mSubject = QString::null;
+    mKMailSerialNum = 0;
 }
 
-void AlarmText::setEmail(const QString& to, const QString& from, const QString& cc, const QString& time,
-                         const QString& subject, const QString& body, unsigned long kmailSerialNumber)
+void AlarmText::setEmail(const QString &to, const QString &from, const QString &cc, const QString &time,
+                         const QString &subject, const QString &body, unsigned long kmailSerialNumber)
 {
-	mIsScript       = false;
-	mIsEmail        = true;
-	mTo             = to;
-	mFrom           = from;
-	mCc             = cc;
-	mTime           = time;
-	mSubject        = subject;
-	mBody           = body;
-	mKMailSerialNum = kmailSerialNumber;
+    mIsScript       = false;
+    mIsEmail        = true;
+    mTo             = to;
+    mFrom           = from;
+    mCc             = cc;
+    mTime           = time;
+    mSubject        = subject;
+    mBody           = body;
+    mKMailSerialNum = kmailSerialNumber;
 }
 
 /******************************************************************************
@@ -67,26 +67,26 @@ void AlarmText::setEmail(const QString& to, const QString& from, const QString& 
 */
 QString AlarmText::displayText() const
 {
-	if (mIsEmail)
-	{
-		// Format the email into a text alarm
-		setUpTranslations();
-		QString text;
-		text = mFromPrefix + '\t' + mFrom + '\n';
-		text += mToPrefix + '\t' + mTo + '\n';
-		if (!mCc.isEmpty())
-			text += mCcPrefix + '\t' + mCc + '\n';
-		if (!mTime.isEmpty())
-			text += mDatePrefix + '\t' + mTime + '\n';
-		text += mSubjectPrefix + '\t' + mSubject;
-		if (!mBody.isEmpty())
-		{
-			text += "\n\n";
-			text += mBody;
-		}
-		return text;
-	}
-	return mBody;
+    if(mIsEmail)
+    {
+        // Format the email into a text alarm
+        setUpTranslations();
+        QString text;
+        text = mFromPrefix + '\t' + mFrom + '\n';
+        text += mToPrefix + '\t' + mTo + '\n';
+        if(!mCc.isEmpty())
+            text += mCcPrefix + '\t' + mCc + '\n';
+        if(!mTime.isEmpty())
+            text += mDatePrefix + '\t' + mTime + '\n';
+        text += mSubjectPrefix + '\t' + mSubject;
+        if(!mBody.isEmpty())
+        {
+            text += "\n\n";
+            text += mBody;
+        }
+        return text;
+    }
+    return mBody;
 }
 
 /******************************************************************************
@@ -94,43 +94,43 @@ QString AlarmText::displayText() const
 */
 bool AlarmText::isEmpty() const
 {
-	if (!mBody.isEmpty())
-		return false;
-	if (!mIsEmail)
-		return true;
-	return mFrom.isEmpty() && mTo.isEmpty() && mCc.isEmpty() && mTime.isEmpty() && mSubject.isEmpty();
+    if(!mBody.isEmpty())
+        return false;
+    if(!mIsEmail)
+        return true;
+    return mFrom.isEmpty() && mTo.isEmpty() && mCc.isEmpty() && mTime.isEmpty() && mSubject.isEmpty();
 }
 
 /******************************************************************************
 *  Check whether a text is an email.
 */
-bool AlarmText::checkIfEmail(const QString& text)
+bool AlarmText::checkIfEmail(const QString &text)
 {
-	QStringList lines = QStringList::split('\n', text);
-	return emailHeaderCount(lines);
+    QStringList lines = QStringList::split('\n', text);
+    return emailHeaderCount(lines);
 }
 
 /******************************************************************************
 *  Check whether a text is an email.
 *  Reply = number of email header lines, or 0 if not an email.
 */
-int AlarmText::emailHeaderCount(const QStringList& lines)
+int AlarmText::emailHeaderCount(const QStringList &lines)
 {
-	setUpTranslations();
-	int maxn = lines.count();
-	if (maxn >= 4
-	&&  lines[0].startsWith(mFromPrefix)
-	&&  lines[1].startsWith(mToPrefix))
-	{
-		int n = 2;
-		if (lines[2].startsWith(mCcPrefix))
-			++n;
-		if (maxn > n + 1
-		&&  lines[n].startsWith(mDatePrefix)
-		&&  lines[n+1].startsWith(mSubjectPrefix))
-			return n+2;
-	}
-	return 0;
+    setUpTranslations();
+    int maxn = lines.count();
+    if(maxn >= 4
+            &&  lines[0].startsWith(mFromPrefix)
+            &&  lines[1].startsWith(mToPrefix))
+    {
+        int n = 2;
+        if(lines[2].startsWith(mCcPrefix))
+            ++n;
+        if(maxn > n + 1
+                &&  lines[n].startsWith(mDatePrefix)
+                &&  lines[n + 1].startsWith(mSubjectPrefix))
+            return n + 2;
+    }
+    return 0;
 }
 
 /******************************************************************************
@@ -138,21 +138,21 @@ int AlarmText::emailHeaderCount(const QStringList& lines)
 *  only its subject line.
 *  Reply = headers/subject line, or QString::null if not the text of an email.
 */
-QString AlarmText::emailHeaders(const QString& text, bool subjectOnly)
+QString AlarmText::emailHeaders(const QString &text, bool subjectOnly)
 {
-	QStringList lines = QStringList::split('\n', text);
-	int n = emailHeaderCount(lines);
-	if (!n)
-		return QString::null;
-	if (subjectOnly)
-		return lines[n-1].mid(mSubjectPrefix.length()).stripWhiteSpace();
-	QString h = lines[0];
-	for (int i = 1;  i < n;  ++i)
-	{
-		h += '\n';
-		h += lines[i];
-	}
-	return h;
+    QStringList lines = QStringList::split('\n', text);
+    int n = emailHeaderCount(lines);
+    if(!n)
+        return QString::null;
+    if(subjectOnly)
+        return lines[n - 1].mid(mSubjectPrefix.length()).stripWhiteSpace();
+    QString h = lines[0];
+    for(int i = 1;  i < n;  ++i)
+    {
+        h += '\n';
+        h += lines[i];
+    }
+    return h;
 }
 
 /******************************************************************************
@@ -161,77 +161,77 @@ QString AlarmText::emailHeaders(const QString& text, bool subjectOnly)
 *  untranslated email prefixes.
 *  'email' is set to indicate whether it is an email text.
 */
-QString AlarmText::fromCalendarText(const QString& text, bool& email)
+QString AlarmText::fromCalendarText(const QString &text, bool &email)
 {
-	QStringList lines = QStringList::split('\n', text);
-	int maxn = lines.count();
-	if (maxn >= 4
-	&&  lines[0].startsWith(mFromPrefixEn)
-	&&  lines[1].startsWith(mToPrefixEn))
-	{
-		int n = 2;
-		if (lines[2].startsWith(mCcPrefixEn))
-			++n;
-		if (maxn > n + 1
-		&&  lines[n].startsWith(mDatePrefixEn)
-		&&  lines[n+1].startsWith(mSubjectPrefixEn))
-		{
-			setUpTranslations();
-			QString dispText;
-			dispText = mFromPrefix + lines[0].mid(mFromPrefixEn.length()) + '\n';
-			dispText += mToPrefix + lines[1].mid(mToPrefixEn.length()) + '\n';
-			if (n == 3)
-				dispText += mCcPrefix + lines[2].mid(mCcPrefixEn.length()) + '\n';
-			dispText += mDatePrefix + lines[n].mid(mDatePrefixEn.length()) + '\n';
-			dispText += mSubjectPrefix + lines[n+1].mid(mSubjectPrefixEn.length());
-			int i = text.find(mSubjectPrefixEn);
-			i = text.find('\n', i);
-			if (i > 0)
-				dispText += text.mid(i);
-			email = true;
-			return dispText;
-		}
-	}
-	email = false;
-	return text;
+    QStringList lines = QStringList::split('\n', text);
+    int maxn = lines.count();
+    if(maxn >= 4
+            &&  lines[0].startsWith(mFromPrefixEn)
+            &&  lines[1].startsWith(mToPrefixEn))
+    {
+        int n = 2;
+        if(lines[2].startsWith(mCcPrefixEn))
+            ++n;
+        if(maxn > n + 1
+                &&  lines[n].startsWith(mDatePrefixEn)
+                &&  lines[n + 1].startsWith(mSubjectPrefixEn))
+        {
+            setUpTranslations();
+            QString dispText;
+            dispText = mFromPrefix + lines[0].mid(mFromPrefixEn.length()) + '\n';
+            dispText += mToPrefix + lines[1].mid(mToPrefixEn.length()) + '\n';
+            if(n == 3)
+                dispText += mCcPrefix + lines[2].mid(mCcPrefixEn.length()) + '\n';
+            dispText += mDatePrefix + lines[n].mid(mDatePrefixEn.length()) + '\n';
+            dispText += mSubjectPrefix + lines[n + 1].mid(mSubjectPrefixEn.length());
+            int i = text.find(mSubjectPrefixEn);
+            i = text.find('\n', i);
+            if(i > 0)
+                dispText += text.mid(i);
+            email = true;
+            return dispText;
+        }
+    }
+    email = false;
+    return text;
 }
 
 /******************************************************************************
 *  Return the text for a text message alarm, in alarm calendar format.
 *  (The prefix strings are untranslated in the calendar.)
 */
-QString AlarmText::toCalendarText(const QString& text)
+QString AlarmText::toCalendarText(const QString &text)
 {
-	setUpTranslations();
-	QStringList lines = QStringList::split('\n', text);
-	int maxn = lines.count();
-	if (maxn >= 4
-	&&  lines[0].startsWith(mFromPrefix)
-	&&  lines[1].startsWith(mToPrefix))
-	{
-		int n = 2;
-		if (lines[2].startsWith(mCcPrefix))
-			++n;
-		if (maxn > n + 1
-		&&  lines[n].startsWith(mDatePrefix)
-		&&  lines[n+1].startsWith(mSubjectPrefix))
-		{
-			// Format the email into a text alarm
-			QString calText;
-			calText = mFromPrefixEn + lines[0].mid(mFromPrefix.length()) + '\n';
-			calText += mToPrefixEn + lines[1].mid(mToPrefix.length()) + '\n';
-			if (n == 3)
-				calText += mCcPrefixEn + lines[2].mid(mCcPrefix.length()) + '\n';
-			calText += mDatePrefixEn + lines[n].mid(mDatePrefix.length()) + '\n';
-			calText += mSubjectPrefixEn + lines[n+1].mid(mSubjectPrefix.length());
-			int i = text.find(mSubjectPrefix);
-			i = text.find('\n', i);
-			if (i > 0)
-				calText += text.mid(i);
-			return calText;
-		}
-	}
-	return text;
+    setUpTranslations();
+    QStringList lines = QStringList::split('\n', text);
+    int maxn = lines.count();
+    if(maxn >= 4
+            &&  lines[0].startsWith(mFromPrefix)
+            &&  lines[1].startsWith(mToPrefix))
+    {
+        int n = 2;
+        if(lines[2].startsWith(mCcPrefix))
+            ++n;
+        if(maxn > n + 1
+                &&  lines[n].startsWith(mDatePrefix)
+                &&  lines[n + 1].startsWith(mSubjectPrefix))
+        {
+            // Format the email into a text alarm
+            QString calText;
+            calText = mFromPrefixEn + lines[0].mid(mFromPrefix.length()) + '\n';
+            calText += mToPrefixEn + lines[1].mid(mToPrefix.length()) + '\n';
+            if(n == 3)
+                calText += mCcPrefixEn + lines[2].mid(mCcPrefix.length()) + '\n';
+            calText += mDatePrefixEn + lines[n].mid(mDatePrefix.length()) + '\n';
+            calText += mSubjectPrefixEn + lines[n + 1].mid(mSubjectPrefix.length());
+            int i = text.find(mSubjectPrefix);
+            i = text.find('\n', i);
+            if(i > 0)
+                calText += text.mid(i);
+            return calText;
+        }
+    }
+    return text;
 }
 
 /******************************************************************************
@@ -239,14 +239,14 @@ QString AlarmText::toCalendarText(const QString& text)
 */
 void AlarmText::setUpTranslations()
 {
-	if (mFromPrefix.isNull())
-	{
-		mFromPrefix    = EditAlarmDlg::i18n_EmailFrom();
-		mToPrefix      = EditAlarmDlg::i18n_EmailTo();
-		mCcPrefix      = i18n("Copy-to in email headers", "Cc:");
-		mDatePrefix    = i18n("Date:");
-		mSubjectPrefix = EditAlarmDlg::i18n_EmailSubject();
-	}
+    if(mFromPrefix.isNull())
+    {
+        mFromPrefix    = EditAlarmDlg::i18n_EmailFrom();
+        mToPrefix      = EditAlarmDlg::i18n_EmailTo();
+        mCcPrefix      = i18n("Copy-to in email headers", "Cc:");
+        mDatePrefix    = i18n("Date:");
+        mSubjectPrefix = EditAlarmDlg::i18n_EmailSubject();
+    }
 }
 
 /******************************************************************************
@@ -255,34 +255,34 @@ void AlarmText::setUpTranslations()
 *  If 'truncated' is non-null, it will be set true if the text returned has been
 *  truncated, other than to strip a trailing newline.
 */
-QString AlarmText::summary(const KAEvent& event, int maxLines, bool* truncated)
+QString AlarmText::summary(const KAEvent &event, int maxLines, bool *truncated)
 {
-	QString text = (event.action() == KAEvent::EMAIL) ? event.emailSubject() : event.cleanText();
-	if (event.action() == KAEvent::MESSAGE)
-	{
-		// If the message is the text of an email, return its headers or just subject line
-		QString subject = emailHeaders(text, (maxLines <= 1));
-		if (!subject.isNull())
-		{
-			if (truncated)
-				*truncated = true;
-			return subject;
-		}
-	}
-	if (truncated)
-		*truncated = false;
-	if (text.contains('\n') < maxLines)
-		return text;
-	int newline = -1;
-	for (int i = 0;  i < maxLines;  ++i)
-	{
-		newline = text.find('\n', newline + 1);
-		if (newline < 0)
-			return text;       // not truncated after all !?!
-	}
-	if (newline == static_cast<int>(text.length()) - 1)
-		return text.left(newline);    // text ends in newline
-	if (truncated)
-		*truncated = true;
-	return text.left(newline + (maxLines <= 1 ? 0 : 1)) + QString::fromLatin1("...");
+    QString text = (event.action() == KAEvent::EMAIL) ? event.emailSubject() : event.cleanText();
+    if(event.action() == KAEvent::MESSAGE)
+    {
+        // If the message is the text of an email, return its headers or just subject line
+        QString subject = emailHeaders(text, (maxLines <= 1));
+        if(!subject.isNull())
+        {
+            if(truncated)
+                *truncated = true;
+            return subject;
+        }
+    }
+    if(truncated)
+        *truncated = false;
+    if(text.contains('\n') < maxLines)
+        return text;
+    int newline = -1;
+    for(int i = 0;  i < maxLines;  ++i)
+    {
+        newline = text.find('\n', newline + 1);
+        if(newline < 0)
+            return text;       // not truncated after all !?!
+    }
+    if(newline == static_cast<int>(text.length()) - 1)
+        return text.left(newline);    // text ends in newline
+    if(truncated)
+        *truncated = true;
+    return text.left(newline + (maxLines <= 1 ? 0 : 1)) + QString::fromLatin1("...");
 }

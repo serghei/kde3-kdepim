@@ -41,76 +41,73 @@ class QLabel;
 class QPushButton;
 class SideWidget;
 
-class Recipient
-{
-  public:
+class Recipient {
+public:
     typedef QValueList<Recipient> List;
 
     enum Type { To, Cc, Bcc, Undefined };
 
-    Recipient( const QString &email = QString::null, Type type = To );
+    Recipient(const QString &email = QString::null, Type type = To);
 
-    void setType( Type );
+    void setType(Type);
     Type type() const;
 
-    void setEmail( const QString & );
+    void setEmail(const QString &);
     QString email() const;
 
     bool isEmpty() const;
 
-    static int typeToId( Type );
-    static Type idToType( int );
+    static int typeToId(Type);
+    static Type idToType(int);
 
-    QString typeLabel() const;    static QString typeLabel( Type );
+    QString typeLabel() const;
+    static QString typeLabel(Type);
     static QStringList allTypeLabels();
 
-  private:
+private:
     QString mEmail;
     Type mType;
 };
 
-class RecipientComboBox : public QComboBox
-{
+class RecipientComboBox : public QComboBox {
     Q_OBJECT
-  public:
-    RecipientComboBox( QWidget *parent );
+public:
+    RecipientComboBox(QWidget *parent);
 
-  signals:
+signals:
     void rightPressed();
 
-  protected:
-    void keyPressEvent( QKeyEvent *ev );
+protected:
+    void keyPressEvent(QKeyEvent *ev);
 };
 
-class RecipientLineEdit : public KMLineEdit
-{
+class RecipientLineEdit : public KMLineEdit {
     Q_OBJECT
-  public:
-    RecipientLineEdit( QWidget * parent ) :
-      KMLineEdit( true, parent ) {}
+public:
+    RecipientLineEdit(QWidget *parent) :
+        KMLineEdit(true, parent) {}
 
-  signals:
+signals:
     void deleteMe();
     void leftPressed();
     void rightPressed();
 
-  protected:
-    void keyPressEvent( QKeyEvent *ev );
+protected:
+    void keyPressEvent(QKeyEvent *ev);
 };
 
-class RecipientLine : public QWidget
-{
+class RecipientLine : public QWidget {
     Q_OBJECT
-  public:
-    RecipientLine( QWidget *parent );
+public:
+    RecipientLine(QWidget *parent);
 
-    void setRecipient( const Recipient & );
+    void setRecipient(const Recipient &);
     Recipient recipient() const;
 
-    void setRecipientType( Recipient::Type );
+    void setRecipientType(Recipient::Type);
     Recipient::Type recipientType() const;
 
-    void setRecipient( const QString & );
+    void setRecipient(const QString &);
 
     void activate();
     bool isActive();
@@ -126,39 +123,42 @@ class RecipientLine : public QWidget
     */
     void clearModified();
 
-    int setComboWidth( int w );
+    int setComboWidth(int w);
 
-    void fixTabOrder( QWidget *previous );
+    void fixTabOrder(QWidget *previous);
     QWidget *tabOut() const;
 
     void clear();
 
     int recipientsCount();
 
-    void setRemoveLineButtonEnabled( bool b );
+    void setRemoveLineButtonEnabled(bool b);
 
-  signals:
-    void returnPressed( RecipientLine * );
-    void downPressed( RecipientLine * );
-    void upPressed( RecipientLine * );
+signals:
+    void returnPressed(RecipientLine *);
+    void downPressed(RecipientLine *);
+    void upPressed(RecipientLine *);
     void rightPressed();
-    void deleteLine(  RecipientLine * );
+    void deleteLine(RecipientLine *);
     void countChanged();
-    void typeModified( RecipientLine * );
+    void typeModified(RecipientLine *);
 
-  protected:
-    void keyPressEvent( QKeyEvent * );
-    RecipientLineEdit* lineEdit() const { return mEdit; }
+protected:
+    void keyPressEvent(QKeyEvent *);
+    RecipientLineEdit *lineEdit() const
+    {
+        return mEdit;
+    }
 
-  protected slots:
+protected slots:
     void slotReturnPressed();
-    void analyzeLine( const QString & );
+    void analyzeLine(const QString &);
     void slotFocusUp();
     void slotFocusDown();
     void slotPropagateDeletion();
     void slotTypeModified();
 
-  private:
+private:
     friend class RecipientsView;
     QComboBox *mCombo;
     RecipientLineEdit *mEdit;
@@ -167,11 +167,10 @@ class RecipientLine : public QWidget
     bool mModified;
 };
 
-class RecipientsView : public QScrollView
-{
+class RecipientsView : public QScrollView {
     Q_OBJECT
-  public:
-    RecipientsView( QWidget *parent );
+public:
+    RecipientsView(QWidget *parent);
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
@@ -186,7 +185,7 @@ class RecipientsView : public QScrollView
         @param recipient The recipient(s) you want to remove.
         @param type      The recipient type.
     */
-    void removeRecipient( const QString & recipient, Recipient::Type type );
+    void removeRecipient(const QString &recipient, Recipient::Type type);
 
     /** Returns true if the user has made any modifications to the list of
         recipients.
@@ -197,7 +196,7 @@ class RecipientsView : public QScrollView
     */
     void clearModified();
 
-    void activateLine( RecipientLine * );
+    void activateLine(RecipientLine *);
 
     /**
       * Set the width of the left most column to be the argument width.
@@ -205,39 +204,39 @@ class RecipientsView : public QScrollView
       * by communicating how many pixels that first colum is for them.
       * Returns the width that is actually being used.
       */
-    int setFirstColumnWidth( int );
+    int setFirstColumnWidth(int);
 
-  public slots:
-    void setCompletionMode( KGlobalSettings::Completion );
+public slots:
+    void setCompletionMode(KGlobalSettings::Completion);
     RecipientLine *addLine();
 
     void setFocus();
     void setFocusTop();
     void setFocusBottom();
 
-  signals:
-    void totalChanged( int recipients, int lines );
+signals:
+    void totalChanged(int recipients, int lines);
     void focusUp();
     void focusDown();
     void focusRight();
-    void completionModeChanged( KGlobalSettings::Completion );
+    void completionModeChanged(KGlobalSettings::Completion);
     void sizeHintChanged();
 
-  protected:
-    void viewportResizeEvent( QResizeEvent * );
+protected:
+    void viewportResizeEvent(QResizeEvent *);
     void resizeView();
 
-  protected slots:
-    void slotReturnPressed( RecipientLine * );
-    void slotDownPressed( RecipientLine * );
-    void slotUpPressed( RecipientLine * );
-    void slotDecideLineDeletion(  RecipientLine * );
+protected slots:
+    void slotReturnPressed(RecipientLine *);
+    void slotDownPressed(RecipientLine *);
+    void slotUpPressed(RecipientLine *);
+    void slotDecideLineDeletion(RecipientLine *);
     void slotDeleteLine();
     void calculateTotal();
-    void slotTypeModified( RecipientLine * );
+    void slotTypeModified(RecipientLine *);
     void moveCompletionPopup();
 
-  private:
+private:
     QPtrList<RecipientLine> mLines;
     QGuardedPtr<RecipientLine> mCurDelLine;
     int mLineHeight;
@@ -246,40 +245,38 @@ class RecipientsView : public QScrollView
     KGlobalSettings::Completion mCompletionMode;
 };
 
-class RecipientsToolTip : public QToolTip
-{
-  public:
-    RecipientsToolTip( RecipientsView *, QWidget *parent );
+class RecipientsToolTip : public QToolTip {
+public:
+    RecipientsToolTip(RecipientsView *, QWidget *parent);
 
-  protected:
-    void maybeTip( const QPoint & p );
+protected:
+    void maybeTip(const QPoint &p);
 
-    QString line( const Recipient & );
+    QString line(const Recipient &);
 
-  private:
+private:
     RecipientsView *mView;
 };
 
-class SideWidget : public QWidget
-{
+class SideWidget : public QWidget {
     Q_OBJECT
-  public:
-    SideWidget( RecipientsView *view, QWidget *parent );
+public:
+    SideWidget(RecipientsView *view, QWidget *parent);
     ~SideWidget();
 
-    RecipientsPicker* picker() const;
+    RecipientsPicker *picker() const;
 
-  public slots:
-    void setTotal( int recipients, int lines );
+public slots:
+    void setTotal(int recipients, int lines);
     void setFocus();
 
     void pickRecipient();
 
-  signals:
-    void pickedRecipient( const Recipient & );
+signals:
+    void pickedRecipient(const Recipient &);
     void saveDistributionList();
 
-  private:
+private:
     RecipientsView *mView;
     QLabel *mTotalLabel;
     QPushButton *mDistributionListButton;
@@ -291,32 +288,31 @@ class SideWidget : public QWidget
     mutable KWindowPositioner *mPickerPositioner;
 };
 
-class RecipientsEditor : public QWidget
-{
+class RecipientsEditor : public QWidget {
     Q_OBJECT
-  public:
-    RecipientsEditor( QWidget *parent );
+public:
+    RecipientsEditor(QWidget *parent);
     ~RecipientsEditor();
 
     void clear();
 
     Recipient::List recipients() const;
-    RecipientsPicker* picker() const;
+    RecipientsPicker *picker() const;
 
-    void setRecipientString( const QString &, Recipient::Type );
-    QString recipientString( Recipient::Type );
+    void setRecipientString(const QString &, Recipient::Type);
+    QString recipientString(Recipient::Type);
 
     /** Adds a recipient (or multiple recipients) to one line of the editor.
         @param recipient The recipient(s) you want to add.
         @param type      The recipient type.
     */
-    void addRecipient( const QString & recipient, Recipient::Type type );
+    void addRecipient(const QString &recipient, Recipient::Type type);
 
     /** Removes the recipient provided it can be found and has the given type.
         @param recipient The recipient(s) you want to remove.
         @param type      The recipient type.
     */
-    void removeRecipient( const QString & recipient, Recipient::Type type );
+    void removeRecipient(const QString &recipient, Recipient::Type type);
 
     /** Returns true if the user has made any modifications to the list of
         recipients.
@@ -333,14 +329,14 @@ class RecipientsEditor : public QWidget
       * by communicating how many pixels that first colum is for them.
       * Returns the width that is actually being used.
       */
-    int setFirstColumnWidth( int );
+    int setFirstColumnWidth(int);
 
     /**
       * Set completion mode for all lines
       */
-    void setCompletionMode( KGlobalSettings::Completion );
+    void setCompletionMode(KGlobalSettings::Completion);
 
-  public slots:
+public slots:
     void setFocus();
     void setFocusTop();
     void setFocusBottom();
@@ -348,18 +344,18 @@ class RecipientsEditor : public QWidget
     void selectRecipients();
     void saveDistributionList();
 
-  signals:
+signals:
     void focusUp();
     void focusDown();
-    void completionModeChanged( KGlobalSettings::Completion );
+    void completionModeChanged(KGlobalSettings::Completion);
     void sizeHintChanged();
 
-  protected slots:
-    void slotPickedRecipient( const Recipient & );
+protected slots:
+    void slotPickedRecipient(const Recipient &);
 
-  private:
+private:
     RecipientsView *mRecipientsView;
-    SideWidget* mSideWidget;
+    SideWidget *mSideWidget;
     bool mModified;
 };
 

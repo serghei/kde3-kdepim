@@ -51,56 +51,62 @@
 
 using namespace KMail;
 
-FolderShortcutDialog::FolderShortcutDialog( KMFolder *folder,
-                                            KMMainWidget *mainwidget,
-                                            QWidget *parent,
-                                            const char *name )
-:  KDialogBase( parent, name, true,
-               i18n( "Shortcut for Folder %1" ).arg( folder->label() ),
-               KDialogBase::Ok | KDialogBase::Cancel ),
-   mFolder( folder ), mMainWidget( mainwidget )
+FolderShortcutDialog::FolderShortcutDialog(KMFolder *folder,
+        KMMainWidget *mainwidget,
+        QWidget *parent,
+        const char *name)
+    :  KDialogBase(parent, name, true,
+                   i18n("Shortcut for Folder %1").arg(folder->label()),
+                   KDialogBase::Ok | KDialogBase::Cancel),
+       mFolder(folder), mMainWidget(mainwidget)
 {
-  QVBox *box = makeVBoxMainWidget();
-  QVGroupBox *gb = new QVGroupBox( i18n("Select Shortcut for Folder"), box );
-  QWhatsThis::add( gb, i18n( "<qt>To choose a key or a combination "
+    QVBox *box = makeVBoxMainWidget();
+    QVGroupBox *gb = new QVGroupBox(i18n("Select Shortcut for Folder"), box);
+    QWhatsThis::add(gb, i18n("<qt>To choose a key or a combination "
                              "of keys which select the current folder, "
                              "click the button below and then press the key(s) "
-                             "you wish to associate with this folder.</qt>" ) );
-  QHBox *hb = new QHBox( gb );
-  new QWidget(hb);
-  mKeyButton = new KKeyButton( hb, "FolderShortcutSelector" );
-  new QWidget(hb);
+                             "you wish to associate with this folder.</qt>"));
+    QHBox *hb = new QHBox(gb);
+    new QWidget(hb);
+    mKeyButton = new KKeyButton(hb, "FolderShortcutSelector");
+    new QWidget(hb);
 
-  connect( mKeyButton, SIGNAL( capturedShortcut( const KShortcut& ) ),
-           this, SLOT( slotCapturedShortcut( const KShortcut& ) ) );
-  mKeyButton->setShortcut( folder->shortcut(), false );
+    connect(mKeyButton, SIGNAL(capturedShortcut(const KShortcut &)),
+            this, SLOT(slotCapturedShortcut(const KShortcut &)));
+    mKeyButton->setShortcut(folder->shortcut(), false);
 }
 
 FolderShortcutDialog::~FolderShortcutDialog()
 {
 }
 
-void FolderShortcutDialog::slotCapturedShortcut( const KShortcut& sc )
+void FolderShortcutDialog::slotCapturedShortcut(const KShortcut &sc)
 {
-  if ( sc == mKeyButton->shortcut() ) return;
-  if ( sc.toString().isNull() ) {
-    // null is fine, that's reset, but sc.іsNull() will be false :/
-    mKeyButton->setShortcut( KShortcut::null(), false );
-  } else {
-    if( !mMainWidget->shortcutIsValid( sc ) ) {
-      QString msg( i18n( "The selected shortcut is already used, "
-            "please select a different one." ) );
-      KMessageBox::sorry( mMainWidget, msg );
-    } else {
-      mKeyButton->setShortcut( sc, false );
+    if(sc == mKeyButton->shortcut()) return;
+    if(sc.toString().isNull())
+    {
+        // null is fine, that's reset, but sc.іsNull() will be false :/
+        mKeyButton->setShortcut(KShortcut::null(), false);
     }
-  }
+    else
+    {
+        if(!mMainWidget->shortcutIsValid(sc))
+        {
+            QString msg(i18n("The selected shortcut is already used, "
+                             "please select a different one."));
+            KMessageBox::sorry(mMainWidget, msg);
+        }
+        else
+        {
+            mKeyButton->setShortcut(sc, false);
+        }
+    }
 }
 
 void FolderShortcutDialog::slotOk()
 {
-  mFolder->setShortcut( mKeyButton->shortcut() );
-  KDialogBase::slotOk();
+    mFolder->setShortcut(mKeyButton->shortcut());
+    KDialogBase::slotOk();
 }
 
 #include "foldershortcutdialog.moc"

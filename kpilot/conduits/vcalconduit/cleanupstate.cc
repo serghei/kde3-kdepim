@@ -40,93 +40,94 @@
 
 CleanUpState::CleanUpState()
 {
-	fState = eCleanUp;
+    fState = eCleanUp;
 }
 
 CleanUpState::~CleanUpState()
 {
 }
 
-void CleanUpState::startSync( ConduitAction *ca )
+void CleanUpState::startSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Starting CleanUpState." << endl;
+    DEBUGKPILOT << fname << ": Starting CleanUpState." << endl;
 
-	vccb->addLogMessage( i18n( "Cleaning up ..." ) );
-	vccb->postSync();
+    vccb->addLogMessage(i18n("Cleaning up ..."));
+    vccb->postSync();
 
-	if ( vccb->database() )
-	{
-		vccb->database()->resetSyncFlags();
-		vccb->database()->cleanup();
-	}
-	if ( vccb->localDatabase() )
-	{
-		vccb->localDatabase()->resetSyncFlags();
-		vccb->localDatabase()->cleanup();
-	}
+    if(vccb->database())
+    {
+        vccb->database()->resetSyncFlags();
+        vccb->database()->cleanup();
+    }
+    if(vccb->localDatabase())
+    {
+        vccb->localDatabase()->resetSyncFlags();
+        vccb->localDatabase()->cleanup();
+    }
 
-	KCal::Calendar *fCalendar = vccb->calendar();
-	QString fCalendarFile = vccb->calendarFile();
+    KCal::Calendar *fCalendar = vccb->calendar();
+    QString fCalendarFile = vccb->calendarFile();
 
-	if ( fCalendar )
-	{
-		KURL kurl( vccb->config()->calendarFile() );
-		switch( vccb->config()->calendarType() )
-		{
-		case VCalConduitSettings::eCalendarLocal:
-			dynamic_cast<KCal::CalendarLocal*>(fCalendar)->save( fCalendarFile );
-			if(!kurl.isLocalFile())
-			{
-				if( !KIO::NetAccess::upload( fCalendarFile
-					, vccb->config()->calendarFile(), 0L) )
-				{
-					vccb->addLogError( i18n( "An error occurred while uploading"
-						" \"%1\". You can try to upload "
-						"the temporary local file \"%2\" manually.")
-						.arg(vccb->config()->calendarFile()).arg(fCalendarFile));
-				}
-				else {
-					KIO::NetAccess::removeTempFile( fCalendarFile );
-				}
-				QFile backup( fCalendarFile + CSL1( "~" ) );
-				backup.remove();
-			}
-			break;
-		case VCalConduitSettings::eCalendarResource:
-			fCalendar->save();
-			break;
-		default:
-			break;
-		}
-		fCalendar->close();
-	}
+    if(fCalendar)
+    {
+        KURL kurl(vccb->config()->calendarFile());
+        switch(vccb->config()->calendarType())
+        {
+            case VCalConduitSettings::eCalendarLocal:
+                dynamic_cast<KCal::CalendarLocal *>(fCalendar)->save(fCalendarFile);
+                if(!kurl.isLocalFile())
+                {
+                    if(!KIO::NetAccess::upload(fCalendarFile
+                                               , vccb->config()->calendarFile(), 0L))
+                    {
+                        vccb->addLogError(i18n("An error occurred while uploading"
+                                               " \"%1\". You can try to upload "
+                                               "the temporary local file \"%2\" manually.")
+                                          .arg(vccb->config()->calendarFile()).arg(fCalendarFile));
+                    }
+                    else
+                    {
+                        KIO::NetAccess::removeTempFile(fCalendarFile);
+                    }
+                    QFile backup(fCalendarFile + CSL1("~"));
+                    backup.remove();
+                }
+                break;
+            case VCalConduitSettings::eCalendarResource:
+                fCalendar->save();
+                break;
+            default:
+                break;
+        }
+        fCalendar->close();
+    }
 
-	vccb->setHasNextRecord( false );
+    vccb->setHasNextRecord(false);
 }
 
-void CleanUpState::handleRecord( ConduitAction * )
+void CleanUpState::handleRecord(ConduitAction *)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
-void CleanUpState::finishSync( ConduitAction *ca )
+void CleanUpState::finishSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Finished CleanUpState." << endl;
-	vccb->setState( 0L );
+    DEBUGKPILOT << fname << ": Finished CleanUpState." << endl;
+    vccb->setState(0L);
 }

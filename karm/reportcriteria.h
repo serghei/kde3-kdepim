@@ -29,15 +29,14 @@ class QString;
  Stores entries from export dialog.
 
  Keeps details (like CSV export dialog control names) out of the TaskView
- class, which contains the slot triggered by the export action.  
- 
+ class, which contains the slot triggered by the export action.
+
  The dialog and the report logic can change all they want and the TaskView
  logic can stay the same.
  */
 
-class ReportCriteria
-{
-  public:
+class ReportCriteria {
+public:
 
     /**
     The different report types.

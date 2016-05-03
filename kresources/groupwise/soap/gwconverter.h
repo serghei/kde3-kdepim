@@ -26,39 +26,38 @@
 
 #include "soapH.h"
 
-class GWConverter
-{
-  public:
-    GWConverter( struct soap* );
+class GWConverter {
+public:
+    GWConverter(struct soap *);
 
-    struct soap* soap() const;
+    struct soap *soap() const;
 
-    static QString stringToQString( const std::string& );
-    static QString stringToQString( std::string* );
+    static QString stringToQString(const std::string &);
+    static QString stringToQString(std::string *);
 
-    std::string* qStringToString( const QString& );
-    char* qStringToChar( const QString& );
+    std::string *qStringToString(const QString &);
+    char *qStringToChar(const QString &);
 
-    char* qDateToChar( const QDate& );
-    QDate charToQDate( const char * );
+    char *qDateToChar(const QDate &);
+    QDate charToQDate(const char *);
 
-    std::string* qDateToString( const QDate &string );
-    QDate stringToQDate( std::string* );
+    std::string *qDateToString(const QDate &string);
+    QDate stringToQDate(std::string *);
 
-    char *qDateTimeToChar( const QDateTime &dt, const QString &timezone );
-    char *qDateTimeToChar( const QDateTime &dt );
+    char *qDateTimeToChar(const QDateTime &dt, const QString &timezone);
+    char *qDateTimeToChar(const QDateTime &dt);
 
-    QDateTime charToQDateTime( const char *str );
-    QDateTime charToQDateTime( const char *str, const QString &timezone );
+    QDateTime charToQDateTime(const char *str);
+    QDateTime charToQDateTime(const char *str, const QString &timezone);
 
-    std::string* qDateTimeToString( const QDateTime &string, const QString &timezone );
-    std::string* qDateTimeToString( const QDateTime &string );
-    
-    QDateTime stringToQDateTime( const std::string* );
+    std::string *qDateTimeToString(const QDateTime &string, const QString &timezone);
+    std::string *qDateTimeToString(const QDateTime &string);
 
-    bool emailsMatch( const QString & email1, const QString & email2 );
-  private:
-    struct soap* mSoap;
+    QDateTime stringToQDateTime(const std::string *);
+
+    bool emailsMatch(const QString &email1, const QString &email2);
+private:
+    struct soap *mSoap;
 };
 
 #endif

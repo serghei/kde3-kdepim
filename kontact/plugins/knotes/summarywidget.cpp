@@ -44,120 +44,126 @@
 
 #include "summarywidget.h"
 
-KNotesSummaryWidget::KNotesSummaryWidget( Kontact::Plugin *plugin,
-                                          QWidget *parent, const char *name )
-  : Kontact::Summary( parent, name ), mLayout( 0 ), mPlugin( plugin )
+KNotesSummaryWidget::KNotesSummaryWidget(Kontact::Plugin *plugin,
+        QWidget *parent, const char *name)
+    : Kontact::Summary(parent, name), mLayout(0), mPlugin(plugin)
 {
-  QVBoxLayout *mainLayout = new QVBoxLayout( this, 3, 3 );
+    QVBoxLayout *mainLayout = new QVBoxLayout(this, 3, 3);
 
-  QPixmap icon = KGlobal::iconLoader()->loadIcon( "kontact_notes",
-                   KIcon::Desktop, KIcon::SizeMedium );
-  QWidget* header = createHeader( this, icon, i18n( "Notes" ) );
-  mainLayout->addWidget( header );
+    QPixmap icon = KGlobal::iconLoader()->loadIcon("kontact_notes",
+                   KIcon::Desktop, KIcon::SizeMedium);
+    QWidget *header = createHeader(this, icon, i18n("Notes"));
+    mainLayout->addWidget(header);
 
-  mLayout = new QGridLayout( mainLayout, 7, 3, 3 );
-  mLayout->setRowStretch( 6, 1 );
+    mLayout = new QGridLayout(mainLayout, 7, 3, 3);
+    mLayout->setRowStretch(6, 1);
 
-  mCalendar = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
-  KNotesResourceManager *manager = new KNotesResourceManager();
+    mCalendar = new KCal::CalendarLocal(QString::fromLatin1("UTC"));
+    KNotesResourceManager *manager = new KNotesResourceManager();
 
-  QObject::connect( manager, SIGNAL( sigRegisteredNote( KCal::Journal* ) ),
-                    this, SLOT( addNote( KCal::Journal* ) ) );
-  QObject::connect( manager, SIGNAL( sigDeregisteredNote( KCal::Journal* ) ),
-                    this, SLOT( removeNote( KCal::Journal* ) ) );
-  manager->load();
+    QObject::connect(manager, SIGNAL(sigRegisteredNote(KCal::Journal *)),
+                     this, SLOT(addNote(KCal::Journal *)));
+    QObject::connect(manager, SIGNAL(sigDeregisteredNote(KCal::Journal *)),
+                     this, SLOT(removeNote(KCal::Journal *)));
+    manager->load();
 
 
-  updateView();
+    updateView();
 }
 
 void KNotesSummaryWidget::updateView()
 {
-  mNotes = mCalendar->journals();
-  QLabel *label;
+    mNotes = mCalendar->journals();
+    QLabel *label;
 
-  for ( label = mLabels.first(); label; label = mLabels.next() )
-    label->deleteLater();
-  mLabels.clear();
+    for(label = mLabels.first(); label; label = mLabels.next())
+        label->deleteLater();
+    mLabels.clear();
 
-  KIconLoader loader( "knotes" );
+    KIconLoader loader("knotes");
 
-  int counter = 0;
-  QPixmap pm = loader.loadIcon( "knotes", KIcon::Small );
+    int counter = 0;
+    QPixmap pm = loader.loadIcon("knotes", KIcon::Small);
 
-  KCal::Journal::List::Iterator it;
-  if ( mNotes.count() ) {
-    for (it = mNotes.begin(); it != mNotes.end(); ++it) {
+    KCal::Journal::List::Iterator it;
+    if(mNotes.count())
+    {
+        for(it = mNotes.begin(); it != mNotes.end(); ++it)
+        {
 
-      // Fill Note Pixmap Field
-      label = new QLabel( this );
-      label->setPixmap( pm );
-      label->setMaximumWidth( label->minimumSizeHint().width() );
-      label->setAlignment( AlignVCenter );
-      mLayout->addWidget( label, counter, 0 );
-      mLabels.append( label );
+            // Fill Note Pixmap Field
+            label = new QLabel(this);
+            label->setPixmap(pm);
+            label->setMaximumWidth(label->minimumSizeHint().width());
+            label->setAlignment(AlignVCenter);
+            mLayout->addWidget(label, counter, 0);
+            mLabels.append(label);
 
-      // File Note Summary Field
-      QString newtext = (*it)->summary();
+            // File Note Summary Field
+            QString newtext = (*it)->summary();
 
-      KURLLabel *urlLabel = new KURLLabel( (*it)->uid(), newtext, this );
-      urlLabel->installEventFilter( this );
-      urlLabel->setTextFormat(RichText);
-      urlLabel->setAlignment( urlLabel->alignment() | Qt::WordBreak );
-      mLayout->addWidget( urlLabel, counter, 1 );
-      mLabels.append( urlLabel );
+            KURLLabel *urlLabel = new KURLLabel((*it)->uid(), newtext, this);
+            urlLabel->installEventFilter(this);
+            urlLabel->setTextFormat(RichText);
+            urlLabel->setAlignment(urlLabel->alignment() | Qt::WordBreak);
+            mLayout->addWidget(urlLabel, counter, 1);
+            mLabels.append(urlLabel);
 
-      if ( !(*it)->description().isEmpty() ) {
-        QToolTip::add( urlLabel, (*it)->description().left( 80 ) );
-      }
+            if(!(*it)->description().isEmpty())
+            {
+                QToolTip::add(urlLabel, (*it)->description().left(80));
+            }
 
-      connect( urlLabel, SIGNAL( leftClickedURL( const QString& ) ),
-               this, SLOT( urlClicked( const QString& ) ) );
-      counter++;
+            connect(urlLabel, SIGNAL(leftClickedURL(const QString &)),
+                    this, SLOT(urlClicked(const QString &)));
+            counter++;
+        }
+
+    }
+    else
+    {
+        QLabel *noNotes = new QLabel(i18n("No Notes Available"), this);
+        noNotes->setAlignment(AlignHCenter | AlignVCenter);
+        mLayout->addWidget(noNotes, 0, 1);
+        mLabels.append(noNotes);
     }
 
-  } else {
-      QLabel *noNotes = new QLabel( i18n( "No Notes Available" ), this );
-      noNotes->setAlignment( AlignHCenter | AlignVCenter );
-      mLayout->addWidget( noNotes, 0, 1 );
-      mLabels.append( noNotes );
-  }
-
-  for ( label = mLabels.first(); label; label = mLabels.next() )
-    label->show();
+    for(label = mLabels.first(); label; label = mLabels.next())
+        label->show();
 }
 
-void KNotesSummaryWidget::urlClicked( const QString &/*uid*/ )
+void KNotesSummaryWidget::urlClicked(const QString &/*uid*/)
 {
-  if ( !mPlugin->isRunningStandalone() )
-    mPlugin->core()->selectPlugin( mPlugin );
-  else
-    mPlugin->bringToForeground();
+    if(!mPlugin->isRunningStandalone())
+        mPlugin->core()->selectPlugin(mPlugin);
+    else
+        mPlugin->bringToForeground();
 }
 
-bool KNotesSummaryWidget::eventFilter( QObject *obj, QEvent* e )
+bool KNotesSummaryWidget::eventFilter(QObject *obj, QEvent *e)
 {
-  if ( obj->inherits( "KURLLabel" ) ) {
-    KURLLabel* label = static_cast<KURLLabel*>( obj );
-    if ( e->type() == QEvent::Enter )
-      emit message( i18n( "Read Note: \"%1\"" ).arg( label->text() ) );
-    if ( e->type() == QEvent::Leave )
-      emit message( QString::null );
-  }
+    if(obj->inherits("KURLLabel"))
+    {
+        KURLLabel *label = static_cast<KURLLabel *>(obj);
+        if(e->type() == QEvent::Enter)
+            emit message(i18n("Read Note: \"%1\"").arg(label->text()));
+        if(e->type() == QEvent::Leave)
+            emit message(QString::null);
+    }
 
-  return Kontact::Summary::eventFilter( obj, e );
+    return Kontact::Summary::eventFilter(obj, e);
 }
 
-void KNotesSummaryWidget::addNote( KCal::Journal *j )
+void KNotesSummaryWidget::addNote(KCal::Journal *j)
 {
-  mCalendar->addJournal( j );
-  updateView();
+    mCalendar->addJournal(j);
+    updateView();
 }
 
-void KNotesSummaryWidget::removeNote( KCal::Journal *j )
+void KNotesSummaryWidget::removeNote(KCal::Journal *j)
 {
-  mCalendar->deleteJournal( j );
-  updateView();
+    mCalendar->deleteJournal(j);
+    updateView();
 }
 
 

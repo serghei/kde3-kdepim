@@ -8,17 +8,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -36,34 +36,41 @@
  *
  */
 class memory_manager  {
-	public:
-		virtual ~memory_manager() { }
-		/**
-		 * Return a reference to the memory at position \idx.
-		 * An important interface bug is that it is not specified how far from \idx you
-		 * can safely access.
-		 */
-		virtual const unsigned char* ronly_base( unsigned idx ) const = 0;
-		/**
-		 * Like \ref ronly_base except you can write on the block
-		 */
-		virtual unsigned char* rw_base( unsigned ) const = 0;
-		/** Returns the size of the block */
-		virtual unsigned size() const = 0;
-		/** Resizes the block.
-		  * This invalidates all previously returned pointers
-		  */
-		virtual void resize( unsigned ) = 0;
+public:
+    virtual ~memory_manager() { }
+    /**
+     * Return a reference to the memory at position \idx.
+     * An important interface bug is that it is not specified how far from \idx you
+     * can safely access.
+     */
+    virtual const unsigned char *ronly_base(unsigned idx) const = 0;
+    /**
+     * Like \ref ronly_base except you can write on the block
+     */
+    virtual unsigned char *rw_base(unsigned) const = 0;
+    /** Returns the size of the block */
+    virtual unsigned size() const = 0;
+    /** Resizes the block.
+      * This invalidates all previously returned pointers
+      */
+    virtual void resize(unsigned) = 0;
 };
 
-template <memory_manager* ( *get_parent )()>
-struct thing_manager {
-	public:
+template <memory_manager* (*get_parent)()>
+struct thing_manager
+{
+public:
 
-		const unsigned char* ronly_base( unsigned idx ) const { return get_parent()->ronly_base( idx ); }
-		unsigned char* rw_base( unsigned idx ) const { return get_parent()->rw_base( idx ); }
+    const unsigned char *ronly_base(unsigned idx) const
+    {
+        return get_parent()->ronly_base(idx);
+    }
+    unsigned char *rw_base(unsigned idx) const
+    {
+        return get_parent()->rw_base(idx);
+    }
 };
-		
+
 
 
 #endif /* LPC_MANAGER_H1103129409_INCLUDE_GUARD_ */

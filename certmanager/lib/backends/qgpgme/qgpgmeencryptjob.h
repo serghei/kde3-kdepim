@@ -42,44 +42,45 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
+class Error;
+class Context;
+class Key;
 }
 
 namespace Kleo {
 
-  class QGpgMEEncryptJob : public EncryptJob, private QGpgMEJob {
+class QGpgMEEncryptJob : public EncryptJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEEncryptJob( GpgME::Context * context );
+public:
+    QGpgMEEncryptJob(GpgME::Context *context);
     ~QGpgMEEncryptJob();
 
     /*! \reimp from EncryptJob */
-    GpgME::Error start( const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+    GpgME::Error start(const std::vector<GpgME::Key> &recipients,
+                       const QByteArray &plainText, bool alwaysTrust);
 
     /*! \reimp from EncryptJob */
-    GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
-				  const QByteArray & plainText, bool alwaysTrust,
-				  QByteArray & cipherText );
+    GpgME::EncryptionResult exec(const std::vector<GpgME::Key> &recipients,
+                                 const QByteArray &plainText, bool alwaysTrust,
+                                 QByteArray &cipherText);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & );
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    void setup(const QByteArray &);
 
-  private:
+private:
     GpgME::EncryptionResult mResult;
-  };
+};
 
 }
 

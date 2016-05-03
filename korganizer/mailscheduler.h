@@ -36,27 +36,26 @@ namespace KCal {
   This class implements the iTIP interface using the email interface specified
   as Mail.
 */
-class MailScheduler : public IMIPScheduler
-{
-  public:
-    MailScheduler( Calendar * );
+class MailScheduler : public IMIPScheduler {
+public:
+    MailScheduler(Calendar *);
     virtual ~MailScheduler();
 
-    bool publish ( IncidenceBase *incidence, const QString &recipients );
-    bool performTransaction( IncidenceBase *incidence, Method method );
-    bool performTransaction( IncidenceBase *incidence, Method method,
-                             const QString &recipients );
+    bool publish(IncidenceBase *incidence, const QString &recipients);
+    bool performTransaction(IncidenceBase *incidence, Method method);
+    bool performTransaction(IncidenceBase *incidence, Method method,
+                            const QString &recipients);
     QPtrList<ScheduleMessage> retrieveTransactions();
 
-    bool deleteTransaction( IncidenceBase *incidence );
+    bool deleteTransaction(IncidenceBase *incidence);
 
     /** Returns the directory where the free-busy information is stored */
     virtual QString freeBusyDir();
 
     /** Accepts a counter proposal */
-    bool acceptCounterProposal( Incidence *incidence );
+    bool acceptCounterProposal(Incidence *incidence);
 
-  private:
+private:
     QMap<IncidenceBase *, QString> mEventMap;
 };
 

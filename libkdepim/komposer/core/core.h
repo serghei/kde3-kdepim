@@ -28,45 +28,43 @@
 #include <qptrlist.h>
 
 namespace KSettings {
-  class Dialog;
+class Dialog;
 }
 class QWidgetStack;
 
-namespace Komposer
-{
+namespace Komposer {
 
-  class Editor;
-  class Plugin;
-  class PluginManager;
+class Editor;
+class Plugin;
+class PluginManager;
 
-  /**
-   * This class provides the interface to the Komposer core for the editor.
-   */
-  class Core : public KMainWindow, virtual public KomposerIface
-  {
+/**
+ * This class provides the interface to the Komposer core for the editor.
+ */
+class Core : public KMainWindow, virtual public KomposerIface {
     Q_OBJECT
-  public:
-    Core( QWidget *parentWidget = 0, const char *name = 0 );
+public:
+    Core(QWidget *parentWidget = 0, const char *name = 0);
     virtual ~Core();
 
-  public slots:
-    virtual void send( int how );
-    virtual void addAttachment( const KURL &url, const QString &comment );
-    virtual void setBody( const QString &body );
-    virtual void addAttachment( const QString &name,
-                                const QCString &cte,
-                                const QByteArray &data,
-                                const QCString &type,
-                                const QCString &subType,
-                                const QCString &paramAttr,
-                                const QString &paramValue,
-                                const QCString &contDisp );
+public slots:
+    virtual void send(int how);
+    virtual void addAttachment(const KURL &url, const QString &comment);
+    virtual void setBody(const QString &body);
+    virtual void addAttachment(const QString &name,
+                               const QCString &cte,
+                               const QByteArray &data,
+                               const QCString &type,
+                               const QCString &subType,
+                               const QCString &paramAttr,
+                               const QString &paramValue,
+                               const QCString &contDisp);
 
 
 
-  protected slots:
+protected slots:
     //void slotActivePartChanged( KParts::Part *part );
-    void slotPluginLoaded( Plugin* );
+    void slotPluginLoaded(Plugin *);
     void slotAllPluginsLoaded();
     void slotPreferences();
     void slotQuit();
@@ -80,7 +78,7 @@ namespace Komposer
     void slotNewComposer();
     void slotAttachFile();
 
-  protected:
+protected:
     virtual void initWidgets();
     void initCore();
     void initConnections();
@@ -88,10 +86,10 @@ namespace Komposer
     void saveSettings();
     void createActions();
 
-    void addEditor( Komposer::Editor *editor );
-    void addPlugin( Komposer::Plugin *plugin );
+    void addEditor(Komposer::Editor *editor);
+    void addPlugin(Komposer::Plugin *plugin);
 
-  private:
+private:
     QWidgetStack *m_stack;
     Editor *m_currentEditor;
     PluginManager *m_pluginManager;

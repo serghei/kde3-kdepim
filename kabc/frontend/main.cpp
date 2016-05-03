@@ -6,15 +6,15 @@
 
 #include "mainWindow.h"
 
-int main( int argc, char ** argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("testkabc",I18N_NOOP("TestKabc"),"0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("testkabc", I18N_NOOP("TestKabc"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  MainWindow *w = new MainWindow;
-  w->show();
-  app.connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
-  return app.exec();
+    MainWindow *w = new MainWindow;
+    w->show();
+    app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
+    return app.exec();
 }

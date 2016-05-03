@@ -38,52 +38,59 @@
 
 using namespace KCal;
 
-CacheSettingsDialog::CacheSettingsDialog( QWidget* parent, const char* name )
-    : KDialogBase( parent, name, true, i18n("Resource Cache Settings"), KDialogBase::Close )
+CacheSettingsDialog::CacheSettingsDialog(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("Resource Cache Settings"), KDialogBase::Close)
 {
-  QWidget *mainWidget = new QWidget( this );
-  setMainWidget( mainWidget );
+    QWidget *mainWidget = new QWidget(this);
+    setMainWidget(mainWidget);
 
-  QGridLayout *mainLayout = new QGridLayout( mainWidget, 2, 2 );
-  mainLayout->setSpacing( KDialog::spacingHint() );
+    QGridLayout *mainLayout = new QGridLayout(mainWidget, 2, 2);
+    mainLayout->setSpacing(KDialog::spacingHint());
 
-  mReloadConfig = new KCal::ResourceCachedReloadConfig( mainWidget );
-  mainLayout->addMultiCellWidget( mReloadConfig, 1, 3, 2, 2 );
+    mReloadConfig = new KCal::ResourceCachedReloadConfig(mainWidget);
+    mainLayout->addMultiCellWidget(mReloadConfig, 1, 3, 2, 2);
 
-  mSaveConfig = new KCal::ResourceCachedSaveConfig( mainWidget );
-  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 2, 2 );
+    mSaveConfig = new KCal::ResourceCachedSaveConfig(mainWidget);
+    mainLayout->addMultiCellWidget(mSaveConfig, 4, 4, 2, 2);
 }
 
-void CacheSettingsDialog::loadSettings( KRES::Resource *resource )
+void CacheSettingsDialog::loadSettings(KRES::Resource *resource)
 {
-  kdDebug(7000) << "KCal::CacheSettingsDialog::loadSettings()" << endl;
+    kdDebug(7000) << "KCal::CacheSettingsDialog::loadSettings()" << endl;
 
-  ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>( resource );
-  if ( res ) {
-    if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
-      return;
+    ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>(resource);
+    if(res)
+    {
+        if(!res->prefs())
+        {
+            kdError() << "No PREF" << endl;
+            return;
+        }
+
+        mReloadConfig->loadSettings(res);
+        mSaveConfig->loadSettings(res);
+
     }
-    
-    mReloadConfig->loadSettings( res );
-    mSaveConfig->loadSettings( res );
-    
-  } else {
-    kdError(5700) << "CacheSettingsDialog::loadSettings(): "
-                     "no ResourceGroupwareBase, cast failed" << endl;
-  }
+    else
+    {
+        kdError(5700) << "CacheSettingsDialog::loadSettings(): "
+                      "no ResourceGroupwareBase, cast failed" << endl;
+    }
 }
 
-void CacheSettingsDialog::saveSettings( KRES::Resource *resource )
+void CacheSettingsDialog::saveSettings(KRES::Resource *resource)
 {
-  ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase*>( resource );
-  if ( res ) {
-    mReloadConfig->saveSettings( res );
-    mSaveConfig->saveSettings( res );
-  } else {
-    kdError(5700) << "CacheSettingsDialog::saveSettings(): "
-                     "no ResourceGroupwareBase, cast failed" << endl;
-  }
+    ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>(resource);
+    if(res)
+    {
+        mReloadConfig->saveSettings(res);
+        mSaveConfig->saveSettings(res);
+    }
+    else
+    {
+        kdError(5700) << "CacheSettingsDialog::saveSettings(): "
+                      "no ResourceGroupwareBase, cast failed" << endl;
+    }
 }
 
 #include "kcal_cachesettingsdlg.moc"

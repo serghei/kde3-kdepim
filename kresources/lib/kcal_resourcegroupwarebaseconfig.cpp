@@ -42,96 +42,103 @@
 
 using namespace KCal;
 
-ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,
-                                                          const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig(QWidget *parent,
+        const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  resize( 245, 115 );
+    resize(245, 115);
 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
-  mainLayout->setSpacing( KDialog::spacingHint() );
+    QGridLayout *mainLayout = new QGridLayout(this, 2, 2);
+    mainLayout->setSpacing(KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n("URL:"), this );
-  mainLayout->addWidget( label, 1, 0 );
-  mUrl = new KLineEdit( this );
-  mainLayout->addWidget( mUrl, 1, 1 );
+    QLabel *label = new QLabel(i18n("URL:"), this);
+    mainLayout->addWidget(label, 1, 0);
+    mUrl = new KLineEdit(this);
+    mainLayout->addWidget(mUrl, 1, 1);
 
-  label = new QLabel( i18n("User:"), this );
-  mainLayout->addWidget( label, 2, 0 );
-  mUserEdit = new KLineEdit( this );
-  mainLayout->addWidget( mUserEdit, 2, 1 );
+    label = new QLabel(i18n("User:"), this);
+    mainLayout->addWidget(label, 2, 0);
+    mUserEdit = new KLineEdit(this);
+    mainLayout->addWidget(mUserEdit, 2, 1);
 
-  label = new QLabel( i18n("Password:"), this );
-  mainLayout->addWidget( label, 3, 0 );
-  mPasswordEdit = new KLineEdit( this );
-  mainLayout->addWidget( mPasswordEdit, 3, 1 );
-  mPasswordEdit->setEchoMode( KLineEdit::Password );
+    label = new QLabel(i18n("Password:"), this);
+    mainLayout->addWidget(label, 3, 0);
+    mPasswordEdit = new KLineEdit(this);
+    mainLayout->addWidget(mPasswordEdit, 3, 1);
+    mPasswordEdit->setEchoMode(KLineEdit::Password);
 
-  mFolderConfig = new KPIM::FolderConfig( this );
-  connect( mFolderConfig, SIGNAL( updateFoldersClicked() ),
-    SLOT( updateFolders() ) );
-  mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
+    mFolderConfig = new KPIM::FolderConfig(this);
+    connect(mFolderConfig, SIGNAL(updateFoldersClicked()),
+            SLOT(updateFolders()));
+    mainLayout->addMultiCellWidget(mFolderConfig, 4, 4, 0, 1);
 
-  QHBox *hBox = new QHBox( this );
-  mCacheSettingsButton = new KPushButton( i18n("Configure Cache Settings..."), hBox );
-  mainLayout->addMultiCellWidget( hBox, 5, 5, 0, 1 );
-  connect( mCacheSettingsButton, SIGNAL( clicked() ),
-           SLOT( showCacheSettings() ) );
+    QHBox *hBox = new QHBox(this);
+    mCacheSettingsButton = new KPushButton(i18n("Configure Cache Settings..."), hBox);
+    mainLayout->addMultiCellWidget(hBox, 5, 5, 0, 1);
+    connect(mCacheSettingsButton, SIGNAL(clicked()),
+            SLOT(showCacheSettings()));
 
-  mCacheDialog = new CacheSettingsDialog( this );
+    mCacheDialog = new CacheSettingsDialog(this);
 }
 
-void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *resource )
+void ResourceGroupwareBaseConfig::loadSettings(KRES::Resource *resource)
 {
-  kdDebug(7000) << "KCal::ResourceGroupwareBaseConfig::loadSettings()" << endl;
+    kdDebug(7000) << "KCal::ResourceGroupwareBaseConfig::loadSettings()" << endl;
 
-  ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>( resource );
-  if ( res ) {
-    if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
-      return;
+    ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>(resource);
+    if(res)
+    {
+        if(!res->prefs())
+        {
+            kdError() << "No PREF" << endl;
+            return;
+        }
+
+        mUrl->setText(res->prefs()->url());
+        mUserEdit->setText(res->prefs()->user());
+        mPasswordEdit->setText(res->prefs()->password());
+        if(mCacheDialog) mCacheDialog->loadSettings(res);
+
+        mFolderConfig->setFolderLister(res->folderLister());
+        mFolderConfig->updateFolderList();
     }
-
-    mUrl->setText( res->prefs()->url() );
-    mUserEdit->setText( res->prefs()->user() );
-    mPasswordEdit->setText( res->prefs()->password() );
-    if ( mCacheDialog ) mCacheDialog->loadSettings( res );
-
-    mFolderConfig->setFolderLister( res->folderLister() );
-    mFolderConfig->updateFolderList();
-  } else {
-    kdError(5700) << "KCalResourceGroupwareBaseConfig::loadSettings(): "
-                     "no KCalOpenGroupware, cast failed" << endl;
-  }
+    else
+    {
+        kdError(5700) << "KCalResourceGroupwareBaseConfig::loadSettings(): "
+                      "no KCalOpenGroupware, cast failed" << endl;
+    }
 }
 
-void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *resource )
+void ResourceGroupwareBaseConfig::saveSettings(KRES::Resource *resource)
 {
-  ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase*>( resource );
-  if ( res ) {
-    res->prefs()->setUrl( mUrl->text() );
-    res->prefs()->setUser( mUserEdit->text() );
-    res->prefs()->setPassword( mPasswordEdit->text() );
-    if ( mCacheDialog ) mCacheDialog->saveSettings( res );
-    mFolderConfig->saveSettings();
-  } else {
-    kdError(5700) << "KCalResourceGroupwareBaseConfig::saveSettings(): "
-                     "no KCalOpenGroupware, cast failed" << endl;
-  }
+    ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>(resource);
+    if(res)
+    {
+        res->prefs()->setUrl(mUrl->text());
+        res->prefs()->setUser(mUserEdit->text());
+        res->prefs()->setPassword(mPasswordEdit->text());
+        if(mCacheDialog) mCacheDialog->saveSettings(res);
+        mFolderConfig->saveSettings();
+    }
+    else
+    {
+        kdError(5700) << "KCalResourceGroupwareBaseConfig::saveSettings(): "
+                      "no KCalOpenGroupware, cast failed" << endl;
+    }
 }
 
 void ResourceGroupwareBaseConfig::updateFolders()
 {
-  KURL url = mUrl->text();
-  url.setUser( mUserEdit->text() );
-  url.setPass( mPasswordEdit->text() );
+    KURL url = mUrl->text();
+    url.setUser(mUserEdit->text());
+    url.setPass(mPasswordEdit->text());
 
-  mFolderConfig->retrieveFolderList( url );
+    mFolderConfig->retrieveFolderList(url);
 }
 
 void ResourceGroupwareBaseConfig::showCacheSettings()
 {
-  if ( mCacheDialog ) mCacheDialog->exec();
+    if(mCacheDialog) mCacheDialog->exec();
 }
 
 #include "kcal_resourcegroupwarebaseconfig.moc"

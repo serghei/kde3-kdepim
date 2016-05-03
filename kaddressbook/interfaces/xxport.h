@@ -61,16 +61,15 @@ class KApplication;
  */
 #define K_EXPORT_KADDRESSBOOK_XXFILTER( libname, XXPortClass ) \
 	K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libname, XXPortClass, NULL )
-	
+
 
 namespace KAB {
 
-class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
-{
-  Q_OBJECT
+class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient {
+    Q_OBJECT
 
-  public:
-    XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    XXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~XXPort();
 
     /**
@@ -83,13 +82,16 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
       Reimplement this method if the XXPortManager shall
       pass a sorted list to @ref exportContacts().
      */
-    virtual bool requiresSorting() const { return false; }
+    virtual bool requiresSorting() const
+    {
+        return false;
+    }
 
     /**
       set the KApplication pointer.
       @see: processEvents()
      */
-    void setKApplication( KApplication *app );
+    void setKApplication(KApplication *app);
 
     /**
       Processes outstanding KApplication events. It should be called
@@ -99,42 +101,42 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
      */
     void processEvents() const;
 
-  public slots:
+public slots:
     /**
       Reimplement this method for exporting the contacts.
      */
-    virtual bool exportContacts( const KABC::AddresseeList &list, const QString& identifier );
+    virtual bool exportContacts(const KABC::AddresseeList &list, const QString &identifier);
 
     /**
       Reimplement this method for importing the contacts.
      */
-    virtual KABC::AddresseeList importContacts( const QString& identifier ) const;
+    virtual KABC::AddresseeList importContacts(const QString &identifier) const;
 
-  signals:
+signals:
     /**
       Emitted whenever the export action is activated.
       The parameter contains the @ref identifier() for
       unique identification.
      */
-    void exportActivated( const QString&, const QString& );
+    void exportActivated(const QString &, const QString &);
 
     /**
       Emitted whenever the import action is activated.
       The parameter contains the @ref identifier() for
       unique identification.
      */
-    void importActivated( const QString&, const QString& );
+    void importActivated(const QString &, const QString &);
 
-  protected:
+protected:
     /**
       Create the import action. The identifier is passed in the import slot.
      */
-    void createImportAction( const QString &label, const QString &identifier = QString::null );
+    void createImportAction(const QString &label, const QString &identifier = QString::null);
 
     /**
       Create the export action. The identifier is passed in the export slot.
      */
-    void createExportAction( const QString &label, const QString &identifier = QString::null );
+    void createExportAction(const QString &label, const QString &identifier = QString::null);
 
     /**
       Returns a pointer to the address book object.
@@ -147,11 +149,11 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
      */
     QWidget *parentWidget() const;
 
-  private slots:
-    void slotImportActivated( const QString& );
-    void slotExportActivated( const QString& );
+private slots:
+    void slotImportActivated(const QString &);
+    void slotExportActivated(const QString &);
 
-  private:
+private:
     KABC::AddressBook *mAddressBook;
     QWidget *mParentWidget;
 
@@ -159,17 +161,16 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
     XXPortPrivate *d;
 };
 
-class XXPortFactory : public KLibFactory
-{
-  public:
-    virtual XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent,
-                                  const char *name = 0 ) = 0;
+class XXPortFactory : public KLibFactory {
+public:
+    virtual XXPort *xxportObject(KABC::AddressBook *ab, QWidget *parent,
+                                 const char *name = 0) = 0;
 
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const char*,
-                                   const QStringList & )
+protected:
+    virtual QObject *createObject(QObject *, const char *, const char *,
+                                  const QStringList &)
     {
-      return 0;
+        return 0;
     }
 };
 

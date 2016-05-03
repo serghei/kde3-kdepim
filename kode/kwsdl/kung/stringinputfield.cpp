@@ -26,75 +26,78 @@
 
 #include "stringinputfield.h"
 
-StringInputField::StringInputField( const QString &name, const QString &typeName, const Schema::SimpleType *type )
-  : SimpleInputField( name, type ),
-    mTypeName( typeName )
+StringInputField::StringInputField(const QString &name, const QString &typeName, const Schema::SimpleType *type)
+    : SimpleInputField(name, type),
+      mTypeName(typeName)
 {
 }
 
-void StringInputField::setXMLData( const QDomElement &element )
+void StringInputField::setXMLData(const QDomElement &element)
 {
-  if ( mName != element.tagName() ) {
-    qDebug( "StringInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1() );
-    return;
-  }
+    if(mName != element.tagName())
+    {
+        qDebug("StringInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1());
+        return;
+    }
 
-  setData( element.text() );
+    setData(element.text());
 }
 
-void StringInputField::xmlData( QDomDocument &document, QDomElement &parent )
+void StringInputField::xmlData(QDomDocument &document, QDomElement &parent)
 {
-  QDomElement element = document.createElement( mName );
-  element.setAttribute( "xsi:type", "xsd:" + mTypeName );
-  QDomText text = document.createTextNode( data() );
-  element.appendChild( text );
+    QDomElement element = document.createElement(mName);
+    element.setAttribute("xsi:type", "xsd:" + mTypeName);
+    QDomText text = document.createTextNode(data());
+    element.appendChild(text);
 
-  parent.appendChild( element );
+    parent.appendChild(element);
 }
 
-void StringInputField::setData( const QString &data )
+void StringInputField::setData(const QString &data)
 {
-  mValue = data;
+    mValue = data;
 }
 
 QString StringInputField::data() const
 {
-  return mValue;
+    return mValue;
 }
 
-QWidget *StringInputField::createWidget( QWidget *parent )
+QWidget *StringInputField::createWidget(QWidget *parent)
 {
-  mInputWidget = new QLineEdit( parent );
+    mInputWidget = new QLineEdit(parent);
 
-  if ( mType ) {
-    if ( mType->facetType() & Schema::SimpleType::LENGTH ) // TODO: using QValidator here?
-      mInputWidget->setMaxLength( mType->facetLength() );
+    if(mType)
+    {
+        if(mType->facetType() & Schema::SimpleType::LENGTH)    // TODO: using QValidator here?
+            mInputWidget->setMaxLength(mType->facetLength());
 
-    if ( mType->facetType() & Schema::SimpleType::MINLEN ) {
-      // TODO: using QValidator here?
-      // mInputWidget->setMaxLength( type->facetMinimumLength() );
+        if(mType->facetType() & Schema::SimpleType::MINLEN)
+        {
+            // TODO: using QValidator here?
+            // mInputWidget->setMaxLength( type->facetMinimumLength() );
+        }
+
+        if(mType->facetType() & Schema::SimpleType::MAXLEN)
+            mInputWidget->setMaxLength(mType->facetMaximumLength());
+
+        if(mType->facetType() & Schema::SimpleType::PATTERN)
+            mInputWidget->setValidator(new QRegExpValidator(mType->facetPattern(), mInputWidget));
     }
 
-    if ( mType->facetType() & Schema::SimpleType::MAXLEN )
-      mInputWidget->setMaxLength( mType->facetMaximumLength() );
+    mInputWidget->setText(mValue);
 
-    if ( mType->facetType() & Schema::SimpleType::PATTERN )
-      mInputWidget->setValidator( new QRegExpValidator( mType->facetPattern(), mInputWidget ) );
-  }
+    connect(mInputWidget, SIGNAL(textChanged(const QString &)),
+            this, SLOT(inputChanged(const QString &)));
 
-  mInputWidget->setText( mValue );
-
-  connect( mInputWidget, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( inputChanged( const QString& ) ) );
-
-  return mInputWidget;
+    return mInputWidget;
 }
 
-void StringInputField::inputChanged( const QString &text )
+void StringInputField::inputChanged(const QString &text)
 {
-  mValue = text;
+    mValue = text;
 
-  emit modified();
+    emit modified();
 }
 
 #include "stringinputfield.moc"

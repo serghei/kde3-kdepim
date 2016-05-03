@@ -36,75 +36,72 @@ bool qwmfDebug = false;
 #define QWMF_DEBUG  0
 
 
-class WmfCmd
-{
+class WmfCmd {
 public:
-    ~WmfCmd() { if ( next ) delete next; }
-    WmfCmd* next;
+    ~WmfCmd()
+    {
+        if(next) delete next;
+    }
+    WmfCmd *next;
     unsigned short funcIndex;
     long  numParm;
-    short* parm;
+    short *parm;
 };
 
 
-class WinObjHandle
-{
+class WinObjHandle {
 public:
-    virtual void apply( QPainter& p ) = 0;
+    virtual void apply(QPainter &p) = 0;
 };
 
-class WinObjBrushHandle: public WinObjHandle
-{
+class WinObjBrushHandle: public WinObjHandle {
 public:
-    virtual void apply( QPainter& p );
+    virtual void apply(QPainter &p);
     QBrush brush;
     virtual ~WinObjBrushHandle() {};
 };
 
-class WinObjPenHandle: public WinObjHandle
-{
+class WinObjPenHandle: public WinObjHandle {
 public:
-    virtual void apply( QPainter& p );
+    virtual void apply(QPainter &p);
     QPen pen;
     virtual ~WinObjPenHandle() {};
 };
 
-class WinObjPatternBrushHandle: public WinObjHandle
-{
+class WinObjPatternBrushHandle: public WinObjHandle {
 public:
-    virtual void apply( QPainter& p );
+    virtual void apply(QPainter &p);
     QBrush brush;
     QPixmap image;
     virtual ~WinObjPatternBrushHandle() {};
 };
 
-class WinObjFontHandle: public WinObjHandle
-{
+class WinObjFontHandle: public WinObjHandle {
 public:
-    virtual void apply( QPainter& p );
+    virtual void apply(QPainter &p);
     QFont font;
     int rotation;
     virtual ~WinObjFontHandle() {};
 };
 
-void WinObjBrushHandle::apply( QPainter& p )
+void WinObjBrushHandle::apply(QPainter &p)
 {
-    p.setBrush( brush );
+    p.setBrush(brush);
 }
 
-void WinObjPenHandle::apply( QPainter& p )
+void WinObjPenHandle::apply(QPainter &p)
 {
-    p.setPen( pen );
+    p.setPen(pen);
 }
 
-void WinObjPatternBrushHandle::apply( QPainter& p )
+void WinObjPatternBrushHandle::apply(QPainter &p)
 {
-    p.setBrush( brush );
+    p.setBrush(brush);
 }
 
-void WinObjFontHandle::apply( QPainter& p )
+void WinObjFontHandle::apply(QPainter &p)
 {
-    p.setFont( font );
+    p.setFont(font);
 }
 
 #define MAX_OBJHANDLE 64
@@ -124,23 +121,23 @@ QWinMetaFile::QWinMetaFile()
 //-----------------------------------------------------------------------------
 QWinMetaFile::~QWinMetaFile()
 {
-    if ( mFirstCmd ) delete mFirstCmd;
-    if ( mObjHandleTab ) delete[] mObjHandleTab;
+    if(mFirstCmd) delete mFirstCmd;
+    if(mObjHandleTab) delete[] mObjHandleTab;
 }
 
 
 //-----------------------------------------------------------------------------
-bool QWinMetaFile::load( const QString &filename )
+bool QWinMetaFile::load(const QString &filename)
 {
-    QFile file( filename );
+    QFile file(filename);
 
-    if ( !file.exists() )
+    if(!file.exists())
     {
         kdDebug() << "File " << QFile::encodeName(filename) << " does not exist" << endl;
         return false;
     }
 
-    if ( !file.open( IO_ReadOnly ) )
+    if(!file.open(IO_ReadOnly))
     {
         kdDebug() << "Cannot open file " << QFile::encodeName(filename) << endl;
         return false;
@@ -149,13 +146,13 @@ bool QWinMetaFile::load( const QString &filename )
     QByteArray ba = file.readAll();
     file.close();
 
-    QBuffer buffer( ba );
-    buffer.open( IO_ReadOnly );
-    return load( buffer );
+    QBuffer buffer(ba);
+    buffer.open(IO_ReadOnly);
+    return load(buffer);
 }
 
 //-----------------------------------------------------------------------------
-bool QWinMetaFile::load( QBuffer &buffer )
+bool QWinMetaFile::load(QBuffer &buffer)
 {
     QDataStream st;
     WmfEnhMetaHeader eheader;
@@ -170,16 +167,16 @@ bool QWinMetaFile::load( QBuffer &buffer )
     mTextAlign = 0;
     mRotation = 0;
     mTextColor = Qt::black;
-    if ( mFirstCmd ) delete mFirstCmd;
+    if(mFirstCmd) delete mFirstCmd;
     mFirstCmd = NULL;
 
-    st.setDevice( &buffer );
-    st.setByteOrder( QDataStream::LittleEndian ); // Great, I love Qt !
+    st.setDevice(&buffer);
+    st.setByteOrder(QDataStream::LittleEndian);   // Great, I love Qt !
 
     //----- Read placeable metafile header
     st >> pheader.key;
-    mIsPlaceable = ( pheader.key==( DWORD )APMHEADER_KEY );
-    if ( mIsPlaceable )
+    mIsPlaceable = (pheader.key == (DWORD)APMHEADER_KEY);
+    if(mIsPlaceable)
     {
         st >> pheader.hmf;
         st >> pheader.bbox.left;
@@ -189,27 +186,27 @@ bool QWinMetaFile::load( QBuffer &buffer )
         st >> pheader.inch;
         st >> pheader.reserved;
         st >> pheader.checksum;
-        checksum = calcCheckSum( &pheader );
-        if ( pheader.checksum!=checksum ) mIsPlaceable = false;
+        checksum = calcCheckSum(&pheader);
+        if(pheader.checksum != checksum) mIsPlaceable = false;
 
         mDpi = pheader.inch;
-        mBBox.setLeft( pheader.bbox.left );
-        mBBox.setTop( pheader.bbox.top );
-        mBBox.setRight( pheader.bbox.right );
-        mBBox.setBottom( pheader.bbox.bottom );
+        mBBox.setLeft(pheader.bbox.left);
+        mBBox.setTop(pheader.bbox.top);
+        mBBox.setRight(pheader.bbox.right);
+        mBBox.setBottom(pheader.bbox.bottom);
         mHeaderBoundingBox = mBBox;
-        if ( QWMF_DEBUG )
+        if(QWMF_DEBUG)
         {
             kdDebug() << endl << "-------------------------------------------------" << endl;
-            kdDebug() << "WMF Placeable Header ( " << static_cast<int>(sizeof( pheader ) ) << "):" << endl;
+            kdDebug() << "WMF Placeable Header ( " << static_cast<int>(sizeof(pheader)) << "):" << endl;
             kdDebug() << "  bbox=( " << mBBox.left() << "; " << mBBox.top() << "; " << mBBox.width()
                       << "; " << mBBox.height() << ")" << endl;
             kdDebug() << "  inch=" << pheader.inch << endl;
             kdDebug() << "  checksum=" << pheader.checksum << "( "
-                      << (pheader.checksum==checksum?"ok":"wrong") << " )" << endl;
+                      << (pheader.checksum == checksum ? "ok" : "wrong") << " )" << endl;
         }
     }
-    else buffer.at( 0 );
+    else buffer.at(0);
 
     //----- Read as enhanced metafile header
     filePos = buffer.at();
@@ -224,8 +221,8 @@ bool QWinMetaFile::load( QBuffer &buffer )
     st >> eheader.rclFrame.right;
     st >> eheader.rclFrame.bottom;
     st >> eheader.dSignature;
-    mIsEnhanced = ( eheader.dSignature==ENHMETA_SIGNATURE );
-    if ( mIsEnhanced ) // is it really enhanced ?
+    mIsEnhanced = (eheader.dSignature == ENHMETA_SIGNATURE);
+    if(mIsEnhanced)    // is it really enhanced ?
     {
         st >> eheader.nVersion;
         st >> eheader.nBytes;
@@ -240,7 +237,7 @@ bool QWinMetaFile::load( QBuffer &buffer )
         st >> eheader.szlMillimeters.width;
         st >> eheader.szlMillimeters.height;
 
-        if ( QWMF_DEBUG )
+        if(QWMF_DEBUG)
         {
             kdDebug() << endl << "-------------------------------------------------" << endl;
             kdDebug() << "WMF Extended Header:" << endl;
@@ -257,7 +254,7 @@ bool QWinMetaFile::load( QBuffer &buffer )
     else // no, not enhanced
     {
         //----- Read as standard metafile header
-        buffer.at( filePos );
+        buffer.at(filePos);
         st >> header.mtType;
         st >> header.mtHeaderSize;
         st >> header.mtVersion;
@@ -265,28 +262,29 @@ bool QWinMetaFile::load( QBuffer &buffer )
         st >> header.mtNoObjects;
         st >> header.mtMaxRecord;
         st >> header.mtNoParameters;
-        if ( QWMF_DEBUG ) {
+        if(QWMF_DEBUG)
+        {
             kdDebug() << "WMF Header: " <<  "mtSize=" << header.mtSize << endl;
         }
     }
 
     //----- Test header validity
     mValid = ((header.mtHeaderSize == 9) && (header.mtNoParameters == 0)) || mIsEnhanced || mIsPlaceable;
-    if ( mValid )
+    if(mValid)
     {
         //----- Read Metafile Records
         last = NULL;
         rdFunc = -1;
-        while ( !st.eof() && (rdFunc != 0) )
+        while(!st.eof() && (rdFunc != 0))
         {
             st >> rdSize;
             st >> rdFunc;
-            idx = findFunc( rdFunc );
+            idx = findFunc(rdFunc);
             rdSize -= 3;
 
             cmd = new WmfCmd;
             cmd->next = NULL;
-            if ( last ) last->next = cmd;
+            if(last) last->next = cmd;
             else mFirstCmd = cmd;
 
             cmd->funcIndex = idx;
@@ -294,20 +292,22 @@ bool QWinMetaFile::load( QBuffer &buffer )
             cmd->parm = new WORD[ rdSize ];
             last = cmd;
 
-            for ( i=0; i<rdSize && !st.eof(); i++ )
+            for(i = 0; i < rdSize && !st.eof(); i++)
                 st >> cmd->parm[ i ];
 
 
-            if ( rdFunc == 0x020B ) {         // SETWINDOWORG: dimensions
-                mBBox.setLeft( cmd->parm[ 1 ] );
-                mBBox.setTop( cmd->parm[ 0 ] );
+            if(rdFunc == 0x020B)              // SETWINDOWORG: dimensions
+            {
+                mBBox.setLeft(cmd->parm[ 1 ]);
+                mBBox.setTop(cmd->parm[ 0 ]);
             }
-            if ( rdFunc == 0x020C ) {         // SETWINDOWEXT: dimensions
-                mBBox.setWidth( cmd->parm[ 1 ] );
-                mBBox.setHeight( cmd->parm[ 0 ] );
+            if(rdFunc == 0x020C)              // SETWINDOWEXT: dimensions
+            {
+                mBBox.setWidth(cmd->parm[ 1 ]);
+                mBBox.setHeight(cmd->parm[ 0 ]);
             }
 
-            if ( i<rdSize )
+            if(i < rdSize)
             {
                 kdDebug() << "WMF : file truncated !" << endl;
                 return false;
@@ -315,11 +315,13 @@ bool QWinMetaFile::load( QBuffer &buffer )
         }
         //----- Test records validities
         mValid = (rdFunc == 0) && (mBBox.width() != 0) && (mBBox.height() != 0);
-        if ( !mValid ) {
+        if(!mValid)
+        {
             kdDebug() << "WMF : incorrect file format !" << endl;
         }
     }
-    else {
+    else
+    {
         kdDebug() << "WMF Header : incorrect header !" << endl;
     }
 
@@ -329,71 +331,77 @@ bool QWinMetaFile::load( QBuffer &buffer )
 
 
 //-----------------------------------------------------------------------------
-bool QWinMetaFile::paint( const QPaintDevice* aTarget, bool absolute )
+bool QWinMetaFile::paint(const QPaintDevice *aTarget, bool absolute)
 {
     int idx, i;
-    WmfCmd* cmd;
+    WmfCmd *cmd;
 
-    if ( !mValid )  return false;
+    if(!mValid)  return false;
 
-    assert( aTarget!=NULL );
-    if ( mPainter.isActive() ) return false;
+    assert(aTarget != NULL);
+    if(mPainter.isActive()) return false;
 
-    if ( mObjHandleTab ) delete[] mObjHandleTab;
+    if(mObjHandleTab) delete[] mObjHandleTab;
     mObjHandleTab = new WinObjHandle* [ MAX_OBJHANDLE ];
-    for ( i=MAX_OBJHANDLE-1; i>=0; i-- )
+    for(i = MAX_OBJHANDLE - 1; i >= 0; i--)
         mObjHandleTab[ i ] = NULL;
 
     mPainter.resetXForm();
     mWinding = false;
     mAbsoluteCoord = absolute;
 
-    mPainter.begin( aTarget );
-    if ( QWMF_DEBUG )  {
+    mPainter.begin(aTarget);
+    if(QWMF_DEBUG)
+    {
         kdDebug() << "Bounding box : " << mBBox.left()
-        << " " << mBBox.top() << " " << mBBox.right() << " " << mBBox.bottom() << endl;
+                  << " " << mBBox.top() << " " << mBBox.right() << " " << mBBox.bottom() << endl;
     }
 
-    if ( mAbsoluteCoord ) {
-        mPainter.setWindow( mBBox.top(), mBBox.left(), mBBox.width(), mBBox.height() );
+    if(mAbsoluteCoord)
+    {
+        mPainter.setWindow(mBBox.top(), mBBox.left(), mBBox.width(), mBBox.height());
     }
     mInternalWorldMatrix.reset();
 
-    for ( cmd=mFirstCmd; cmd; cmd=cmd->next )
+    for(cmd = mFirstCmd; cmd; cmd = cmd->next)
     {
         idx = cmd->funcIndex;
-        ( this->*metaFuncTab[ idx ].method )( cmd->numParm, cmd->parm );
+        (this->*metaFuncTab[ idx ].method)(cmd->numParm, cmd->parm);
 
-        if ( QWMF_DEBUG )  {
+        if(QWMF_DEBUG)
+        {
             QString str = "", param;
-            if ( metaFuncTab[ idx ].name == NULL ) {
+            if(metaFuncTab[ idx ].name == NULL)
+            {
                 str += "UNKNOWN ";
             }
-            if ( metaFuncTab[ idx ].method == &QWinMetaFile::noop ) {
+            if(metaFuncTab[ idx ].method == &QWinMetaFile::noop)
+            {
                 str += "UNIMPLEMENTED ";
             }
             str += metaFuncTab[ idx ].name;
             str += " : ";
 
-            for ( i=0 ; i < cmd->numParm ; i++ ) {
-                param.setNum( cmd->parm[ i ] );
+            for(i = 0 ; i < cmd->numParm ; i++)
+            {
+                param.setNum(cmd->parm[ i ]);
                 str += param;
                 str += " ";
             }
             kdDebug() << str << endl;
         }
     }
-/*
-    // TODO: cleanup this code when QPicture::setBoundingBox() is possible in KOClipart (QT31)
-    // because actually QPicture::boundingBox() != mBBox()
-    mWindowsCoord += 1;
-    if ( mWindowsCoord == 2 )  {
-        kdDebug() << "DRAW ANGLES " << endl;
-        mPainter.setPen( Qt::white );
-        mPainter.drawPoint( mBBox.left(), mBBox.top()  );
-        mPainter.drawPoint( mBBox.right(), mBBox.bottom() );
-    }
-*/
+    /*
+        // TODO: cleanup this code when QPicture::setBoundingBox() is possible in KOClipart (QT31)
+        // because actually QPicture::boundingBox() != mBBox()
+        mWindowsCoord += 1;
+        if ( mWindowsCoord == 2 )  {
+            kdDebug() << "DRAW ANGLES " << endl;
+            mPainter.setPen( Qt::white );
+            mPainter.drawPoint( mBBox.left(), mBBox.top()  );
+            mPainter.drawPoint( mBBox.right(), mBBox.bottom() );
+        }
+    */
     mPainter.end();
     return true;
 }
@@ -402,52 +410,57 @@ bool QWinMetaFile::paint( const QPaintDevice* aTarget, bool absolute )
 //----------------s-------------------------------------------------------------
 // Metafile painter methods
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setWindowOrg( long, short* parm )
+void QWinMetaFile::setWindowOrg(long, short *parm)
 {
-    if ( mAbsoluteCoord ) {
+    if(mAbsoluteCoord)
+    {
         QRect r = mPainter.window();
-        mPainter.setWindow( parm[ 1 ], parm[ 0 ], r.width(), r.height() );
+        mPainter.setWindow(parm[ 1 ], parm[ 0 ], r.width(), r.height());
     }
-    else {
+    else
+    {
         double dx = mInternalWorldMatrix.dx();
         double dy = mInternalWorldMatrix.dy();
 
-        mInternalWorldMatrix.translate( -dx, -dy );
-        mInternalWorldMatrix.translate( -parm[ 1 ], -parm[ 0 ] );
-        mPainter.translate( -dx, -dy );
-        mPainter.translate( -parm[ 1 ], -parm[ 0 ] );
+        mInternalWorldMatrix.translate(-dx, -dy);
+        mInternalWorldMatrix.translate(-parm[ 1 ], -parm[ 0 ]);
+        mPainter.translate(-dx, -dy);
+        mPainter.translate(-parm[ 1 ], -parm[ 0 ]);
     }
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setWindowExt( long, short* parm )
+void QWinMetaFile::setWindowExt(long, short *parm)
 {
     // negative value allowed for width and height : QABS() forbidden
-    if ( mAbsoluteCoord ) {
+    if(mAbsoluteCoord)
+    {
         QRect r = mPainter.window();
-        mPainter.setWindow( r.left(), r.top(), parm[ 1 ], parm[ 0 ] );
+        mPainter.setWindow(r.left(), r.top(), parm[ 1 ], parm[ 0 ]);
     }
-    else {
-        if ( (parm[ 0 ] != 0) && (parm[ 1 ] != 0) ) {
+    else
+    {
+        if((parm[ 0 ] != 0) && (parm[ 1 ] != 0))
+        {
             QRect r = mPainter.window();
             double dx = mInternalWorldMatrix.dx();
             double dy = mInternalWorldMatrix.dy();
             double sx = mInternalWorldMatrix.m11();
             double sy = mInternalWorldMatrix.m22();
 
-            mInternalWorldMatrix.translate( -dx, -dy );
-            mInternalWorldMatrix.scale( 1/sx, 1/sy );
-            mPainter.translate( -dx, -dy );
-            mPainter.scale( 1/sx, 1/sy );
+            mInternalWorldMatrix.translate(-dx, -dy);
+            mInternalWorldMatrix.scale(1 / sx, 1 / sy);
+            mPainter.translate(-dx, -dy);
+            mPainter.scale(1 / sx, 1 / sy);
 
             sx = (double)r.width() / (double)parm[ 1 ];
             sy = (double)r.height() / (double)parm[ 0 ];
 
-            mInternalWorldMatrix.scale( sx, sy );
-            mInternalWorldMatrix.translate( dx, dy );
-            mPainter.scale( sx, sy );
-            mPainter.translate( dx, dy );
+            mInternalWorldMatrix.scale(sx, sy);
+            mInternalWorldMatrix.translate(dx, dy);
+            mPainter.scale(sx, sy);
+            mPainter.translate(dx, dy);
         }
     }
 }
@@ -456,38 +469,38 @@ void QWinMetaFile::setWindowExt( long, short* parm )
 //-----------------------------------------------------------------------------
 // Drawing
 //-----------------------------------------------------------------------------
-void QWinMetaFile::lineTo( long, short* parm )
+void QWinMetaFile::lineTo(long, short *parm)
 {
-    mPainter.lineTo( parm[ 1 ], parm[ 0 ] );
+    mPainter.lineTo(parm[ 1 ], parm[ 0 ]);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::moveTo( long, short* parm )
+void QWinMetaFile::moveTo(long, short *parm)
 {
-    mPainter.moveTo( parm[ 1 ], parm[ 0 ] );
+    mPainter.moveTo(parm[ 1 ], parm[ 0 ]);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::ellipse( long, short* parm )
+void QWinMetaFile::ellipse(long, short *parm)
 {
-    mPainter.drawEllipse( parm[ 3 ], parm[ 2 ], parm[ 1 ]-parm[ 3 ], parm[ 0 ]-parm[ 2 ] );
+    mPainter.drawEllipse(parm[ 3 ], parm[ 2 ], parm[ 1 ] - parm[ 3 ], parm[ 0 ] - parm[ 2 ]);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::polygon( long, short* parm )
+void QWinMetaFile::polygon(long, short *parm)
 {
-    QPointArray* pa;
+    QPointArray *pa;
 
-    pa = pointArray( parm[ 0 ], &parm[ 1 ] );
-    mPainter.drawPolygon( *pa, mWinding );
+    pa = pointArray(parm[ 0 ], &parm[ 1 ]);
+    mPainter.drawPolygon(*pa, mWinding);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::polyPolygon( long, short* parm )
+void QWinMetaFile::polyPolygon(long, short *parm)
 {
     QRegion region;
     int  i, j, startPolygon;
@@ -496,32 +509,36 @@ void QWinMetaFile::polyPolygon( long, short* parm )
 
     // define clipping region
     QRect win = bbox();
-    startPolygon = 1+parm[ 0 ];
-    for ( i=0 ; i < parm[ 0 ] ; i++ ) {
-        QPointArray pa1( parm[ 1+i ] );
-        for ( j=0 ; j < parm[ 1+i ] ; j++) {
-            pa1.setPoint ( j, parm[ startPolygon ], parm[ startPolygon+1 ] );
+    startPolygon = 1 + parm[ 0 ];
+    for(i = 0 ; i < parm[ 0 ] ; i++)
+    {
+        QPointArray pa1(parm[ 1 + i ]);
+        for(j = 0 ; j < parm[ 1 + i ] ; j++)
+        {
+            pa1.setPoint(j, parm[ startPolygon ], parm[ startPolygon + 1 ]);
             startPolygon += 2;
         }
-        QRegion r( pa1 );
-        region = region.eor( r );
+        QRegion r(pa1);
+        region = region.eor(r);
     }
-    mPainter.setClipRegion( region, QPainter::CoordPainter );
+    mPainter.setClipRegion(region, QPainter::CoordPainter);
 
     // fill polygons
-    mPainter.fillRect( win.left(), win.top(), win.width(), win.height(), mPainter.brush() );
+    mPainter.fillRect(win.left(), win.top(), win.width(), win.height(), mPainter.brush());
 
     // draw polygon's border if necessary
-    if ( mPainter.pen().style() != Qt::NoPen ) {
-        mPainter.setClipping( false );
-        mPainter.setBrush( Qt::NoBrush );
+    if(mPainter.pen().style() != Qt::NoPen)
+    {
+        mPainter.setClipping(false);
+        mPainter.setBrush(Qt::NoBrush);
 
-        QPointArray* pa;
+        QPointArray *pa;
         int idxPolygon = 1 + parm[ 0 ];
-        for ( i=0 ; i < parm[ 0 ] ; i++ ) {
-            pa = pointArray( parm[ 1+i ], &parm[ idxPolygon ] );
-            mPainter.drawPolygon( *pa );
-            idxPolygon += parm[ 1+i ] * 2;
+        for(i = 0 ; i < parm[ 0 ] ; i++)
+        {
+            pa = pointArray(parm[ 1 + i ], &parm[ idxPolygon ]);
+            mPainter.drawPolygon(*pa);
+            idxPolygon += parm[ 1 + i ] * 2;
         }
     }
 
@@ -530,185 +547,185 @@ void QWinMetaFile::polyPolygon( long, short* parm )
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::polyline( long, short* parm )
+void QWinMetaFile::polyline(long, short *parm)
 {
-    QPointArray* pa;
+    QPointArray *pa;
 
-    pa = pointArray( parm[ 0 ], &parm[ 1 ] );
-    mPainter.drawPolyline( *pa );
+    pa = pointArray(parm[ 0 ], &parm[ 1 ]);
+    mPainter.drawPolyline(*pa);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::rectangle( long, short* parm )
+void QWinMetaFile::rectangle(long, short *parm)
 {
-    mPainter.drawRect( parm[ 3 ], parm[ 2 ], parm[ 1 ]-parm[ 3 ], parm[ 0 ]-parm[ 2 ] );
+    mPainter.drawRect(parm[ 3 ], parm[ 2 ], parm[ 1 ] - parm[ 3 ], parm[ 0 ] - parm[ 2 ]);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::roundRect( long, short* parm )
+void QWinMetaFile::roundRect(long, short *parm)
 {
     int xRnd = 0, yRnd = 0;
 
     // convert (xRound, yRound) in percentage
-    if ( (parm[ 3 ] - parm[ 5 ]) != 0  )
+    if((parm[ 3 ] - parm[ 5 ]) != 0)
         xRnd = (parm[ 1 ] * 100) / (parm[ 3 ] - parm[ 5 ])  ;
-    if ( (parm[ 2 ] - parm[ 4 ]) != 0  )
+    if((parm[ 2 ] - parm[ 4 ]) != 0)
         yRnd = (parm[ 0 ] * 100) / (parm[ 2 ] - parm[ 4 ])  ;
 
-    mPainter.drawRoundRect( parm[ 5 ], parm[ 4 ], parm[ 3 ]-parm[ 5 ], parm[ 2 ]-parm[ 4 ], xRnd, yRnd );
+    mPainter.drawRoundRect(parm[ 5 ], parm[ 4 ], parm[ 3 ] - parm[ 5 ], parm[ 2 ] - parm[ 4 ], xRnd, yRnd);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::arc( long, short* parm )
+void QWinMetaFile::arc(long, short *parm)
 {
     int xCenter, yCenter, angleStart, aLength;
 
     xCenter = parm[ 7 ] + ((parm[ 5 ] - parm[ 7 ]) / 2);
     yCenter = parm[ 6 ] + ((parm[ 4 ] - parm[ 6 ]) / 2);
 
-    xyToAngle ( parm[ 3 ] - xCenter, yCenter - parm[ 2 ], parm[ 1 ] - xCenter, yCenter - parm[ 0 ], angleStart, aLength );
+    xyToAngle(parm[ 3 ] - xCenter, yCenter - parm[ 2 ], parm[ 1 ] - xCenter, yCenter - parm[ 0 ], angleStart, aLength);
 
-    mPainter.drawArc( parm[ 7 ], parm[ 6 ], parm[ 5 ]-parm[ 7 ], parm[ 4 ]-parm[ 6 ], angleStart, aLength);
+    mPainter.drawArc(parm[ 7 ], parm[ 6 ], parm[ 5 ] - parm[ 7 ], parm[ 4 ] - parm[ 6 ], angleStart, aLength);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::chord( long, short* parm )
+void QWinMetaFile::chord(long, short *parm)
 {
     int xCenter, yCenter, angleStart, aLength;
 
     xCenter = parm[ 7 ] + ((parm[ 5 ] - parm[ 7 ]) / 2);
     yCenter = parm[ 6 ] + ((parm[ 4 ] - parm[ 6 ]) / 2);
 
-    xyToAngle ( parm[ 3 ] - xCenter, yCenter - parm[ 2 ], parm[ 1 ] - xCenter, yCenter - parm[ 0 ], angleStart, aLength );
+    xyToAngle(parm[ 3 ] - xCenter, yCenter - parm[ 2 ], parm[ 1 ] - xCenter, yCenter - parm[ 0 ], angleStart, aLength);
 
-    mPainter.drawChord( parm[ 7 ], parm[ 6 ], parm[ 5 ]-parm[ 7 ], parm[ 4 ]-parm[ 6 ], angleStart, aLength);
+    mPainter.drawChord(parm[ 7 ], parm[ 6 ], parm[ 5 ] - parm[ 7 ], parm[ 4 ] - parm[ 6 ], angleStart, aLength);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::pie( long, short* parm )
+void QWinMetaFile::pie(long, short *parm)
 {
     int xCenter, yCenter, angleStart, aLength;
 
     xCenter = parm[ 7 ] + ((parm[ 5 ] - parm[ 7 ]) / 2);
     yCenter = parm[ 6 ] + ((parm[ 4 ] - parm[ 6 ]) / 2);
 
-    xyToAngle ( parm[ 3 ] - xCenter, yCenter - parm[ 2 ], parm[ 1 ] - xCenter, yCenter - parm[ 0 ], angleStart, aLength );
+    xyToAngle(parm[ 3 ] - xCenter, yCenter - parm[ 2 ], parm[ 1 ] - xCenter, yCenter - parm[ 0 ], angleStart, aLength);
 
-    mPainter.drawPie( parm[ 7 ], parm[ 6 ], parm[ 5 ]-parm[ 7 ], parm[ 4 ]-parm[ 6 ], angleStart, aLength);
+    mPainter.drawPie(parm[ 7 ], parm[ 6 ], parm[ 5 ] - parm[ 7 ], parm[ 4 ] - parm[ 6 ], angleStart, aLength);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setPolyFillMode( long, short* parm )
+void QWinMetaFile::setPolyFillMode(long, short *parm)
 {
     mWinding = parm[ 0 ];
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setBkColor( long, short* parm )
+void QWinMetaFile::setBkColor(long, short *parm)
 {
-    mPainter.setBackgroundColor( color( parm ) );
+    mPainter.setBackgroundColor(color(parm));
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setBkMode( long, short* parm )
+void QWinMetaFile::setBkMode(long, short *parm)
 {
-    if ( parm[ 0 ]==1 ) mPainter.setBackgroundMode( Qt::TransparentMode );
-    else mPainter.setBackgroundMode( Qt::OpaqueMode );
+    if(parm[ 0 ] == 1) mPainter.setBackgroundMode(Qt::TransparentMode);
+    else mPainter.setBackgroundMode(Qt::OpaqueMode);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setPixel( long, short* parm )
+void QWinMetaFile::setPixel(long, short *parm)
 {
     QPen pen = mPainter.pen();
-    mPainter.setPen( color( parm ) );
-    mPainter.drawPoint( parm[ 3 ], parm[ 2 ] );
-    mPainter.setPen( pen );
+    mPainter.setPen(color(parm));
+    mPainter.drawPoint(parm[ 3 ], parm[ 2 ]);
+    mPainter.setPen(pen);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setRop( long, short* parm )
+void QWinMetaFile::setRop(long, short *parm)
 {
-    mPainter.setRasterOp( winToQtRaster( parm[ 0 ] ) );
+    mPainter.setRasterOp(winToQtRaster(parm[ 0 ]));
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::saveDC( long, short* )
+void QWinMetaFile::saveDC(long, short *)
 {
     mPainter.save();
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::restoreDC( long, short *parm )
+void QWinMetaFile::restoreDC(long, short *parm)
 {
-    for ( int i=0; i > parm[ 0 ] ; i-- )
+    for(int i = 0; i > parm[ 0 ] ; i--)
         mPainter.restore();
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::intersectClipRect( long, short* parm )
+void QWinMetaFile::intersectClipRect(long, short *parm)
 {
-/*  TODO: better implementation : need QT 3.0.2
-    QRegion region = mPainter.clipRegion();
-    if ( region.isEmpty() )
-        region = bbox();
-*/
-    QRegion region( bbox() );
+    /*  TODO: better implementation : need QT 3.0.2
+        QRegion region = mPainter.clipRegion();
+        if ( region.isEmpty() )
+            region = bbox();
+    */
+    QRegion region(bbox());
 
-    QRegion newRegion( parm[ 3 ], parm[ 2 ], parm[ 1 ] - parm[ 3 ], parm[ 0 ] - parm[ 2 ] );
-    region = region.intersect( newRegion );
+    QRegion newRegion(parm[ 3 ], parm[ 2 ], parm[ 1 ] - parm[ 3 ], parm[ 0 ] - parm[ 2 ]);
+    region = region.intersect(newRegion);
 
-    mPainter.setClipRegion( region, QPainter::CoordPainter );
+    mPainter.setClipRegion(region, QPainter::CoordPainter);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::excludeClipRect( long, short* parm )
+void QWinMetaFile::excludeClipRect(long, short *parm)
 {
-/*  TODO: better implementation : need QT 3.0.2
-    QRegion region = mPainter.clipRegion();
-    if ( region.isEmpty() )
-        region = bbox();
-*/
-    QRegion region( bbox() );
+    /*  TODO: better implementation : need QT 3.0.2
+        QRegion region = mPainter.clipRegion();
+        if ( region.isEmpty() )
+            region = bbox();
+    */
+    QRegion region(bbox());
 
-    QRegion newRegion( parm[ 3 ], parm[ 2 ], parm[ 1 ] - parm[ 3 ], parm[ 0 ] - parm[ 2 ] );
-    region = region.subtract( newRegion );
+    QRegion newRegion(parm[ 3 ], parm[ 2 ], parm[ 1 ] - parm[ 3 ], parm[ 0 ] - parm[ 2 ]);
+    region = region.subtract(newRegion);
 
-    mPainter.setClipRegion( region, QPainter::CoordPainter );
+    mPainter.setClipRegion(region, QPainter::CoordPainter);
 }
 
 
 //-----------------------------------------------------------------------------
 // Text
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setTextColor( long, short* parm )
+void QWinMetaFile::setTextColor(long, short *parm)
 {
-    mTextColor = color( parm );
+    mTextColor = color(parm);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::setTextAlign( long, short* parm )
+void QWinMetaFile::setTextAlign(long, short *parm)
 {
     mTextAlign = parm[ 0 ];
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::textOut( long num, short* parm )
+void QWinMetaFile::textOut(long num, short *parm)
 {
 
     short *copyParm = new short[ num + 1 ];
@@ -719,68 +736,74 @@ void QWinMetaFile::textOut( long num, short* parm )
     copyParm[ 1 ] = parm[ idxOffset + 1 ];
     copyParm[ 2 ] = parm[ 0 ];
     copyParm[ 3 ] = 0;
-    memcpy( &copyParm[ 4 ], &parm[ 1 ], parm[ 0 ] );
+    memcpy(&copyParm[ 4 ], &parm[ 1 ], parm[ 0 ]);
 
-    extTextOut( num + 1, copyParm );
+    extTextOut(num + 1, copyParm);
     delete [] copyParm;
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::extTextOut( long num, short* parm )
+void QWinMetaFile::extTextOut(long num, short *parm)
 {
-    char* ptStr;
+    char *ptStr;
     int x, y, width, height;
     int idxOffset;
 
-    if ( parm[ 3 ] != 0 )       // ETO_CLIPPED flag add 4 parameters
-        ptStr = (char*)&parm[ 8 ];
+    if(parm[ 3 ] != 0)          // ETO_CLIPPED flag add 4 parameters
+        ptStr = (char *)&parm[ 8 ];
     else
-        ptStr = (char*)&parm[ 4 ];
+        ptStr = (char *)&parm[ 4 ];
 
-    QCString text( ptStr, parm[ 2 ] + 1 );
+    QCString text(ptStr, parm[ 2 ] + 1);
 
-    QFontMetrics fm( mPainter.font() );
-    width = fm.width( text ) + fm.descent();  // because fm.width(text) isn't rigth with Italic text
+    QFontMetrics fm(mPainter.font());
+    width = fm.width(text) + fm.descent();    // because fm.width(text) isn't rigth with Italic text
     height = fm.height();
 
     mPainter.save();
 
-    if ( mTextAlign & 0x01 ) {       // (left, top) position = current logical position
+    if(mTextAlign & 0x01)            // (left, top) position = current logical position
+    {
         QPoint pos = mPainter.pos();
         x = pos.x();
         y = pos.y();
     }
-    else {                           // (left, top) position = parameters
+    else                             // (left, top) position = parameters
+    {
         x = parm[ 1 ];
         y = parm[ 0 ];
     }
 
-    if ( mRotation ) {
-        mPainter.translate( parm[ 1 ], parm[ 0 ]);
-        mPainter.rotate ( mRotation );
-        mPainter.translate( -parm[ 1 ], -parm[ 0 ] );
+    if(mRotation)
+    {
+        mPainter.translate(parm[ 1 ], parm[ 0 ]);
+        mPainter.rotate(mRotation);
+        mPainter.translate(-parm[ 1 ], -parm[ 0 ]);
     }
 
     // alignment
-    if ( mTextAlign & 0x06 )
-        x -= ( width / 2 );
-    if ( mTextAlign & 0x08 )
+    if(mTextAlign & 0x06)
+        x -= (width / 2);
+    if(mTextAlign & 0x08)
         y -= (height - fm.descent());
 
-    mPainter.setPen( mTextColor );
+    mPainter.setPen(mTextColor);
     idxOffset = (parm[ 2 ] / 2) + 4 + (parm[ 2 ] & 1);
-    if ( ( parm[ 2 ] > 1 ) && ( num >= (idxOffset + parm[ 2 ]) ) && ( parm[ 3 ] == 0 ) ) {
+    if((parm[ 2 ] > 1) && (num >= (idxOffset + parm[ 2 ])) && (parm[ 3 ] == 0))
+    {
         // offset for each char
         int left = x;
-        mPainter.drawText( left, y, width, height, Qt::AlignLeft | Qt::AlignTop, text.mid(0, 1) );
-        for ( int i = 1; i < parm[ 2 ] ; i++ ) {
+        mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, text.mid(0, 1));
+        for(int i = 1; i < parm[ 2 ] ; i++)
+        {
             left += parm[ idxOffset + i - 1 ];
-            mPainter.drawText( left, y, width, height, Qt::AlignLeft | Qt::AlignTop, text.mid(i, 1) );
+            mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, text.mid(i, 1));
         }
     }
-    else {
-        mPainter.drawText( x, y, width, height, Qt::AlignLeft | Qt::AlignTop, text );
+    else
+    {
+        mPainter.drawText(x, y, width, height, Qt::AlignLeft | Qt::AlignTop, text);
     }
 
     mPainter.restore();
@@ -792,104 +815,116 @@ void QWinMetaFile::extTextOut( long num, short* parm )
 //-----------------------------------------------------------------------------
 // Bitmap
 //-----------------------------------------------------------------------------
-void QWinMetaFile::dibBitBlt( long num, short* parm )
+void QWinMetaFile::dibBitBlt(long num, short *parm)
 {
-    if ( num > 9 ) {      // DIB image
+    if(num > 9)           // DIB image
+    {
         QImage bmpSrc;
 
-        if ( dibToBmp( bmpSrc, (char*)&parm[ 8 ], (num - 8) * 2 ) ) {
-            long raster = toDWord( parm );
+        if(dibToBmp(bmpSrc, (char *)&parm[ 8 ], (num - 8) * 2))
+        {
+            long raster = toDWord(parm);
 
-            mPainter.setRasterOp( winToQtRaster( raster )  );
+            mPainter.setRasterOp(winToQtRaster(raster));
 
             // wmf file allow negative width or height
             mPainter.save();
-            if ( parm[ 5 ] < 0 ) {  // width < 0 => horizontal flip
-                QWMatrix m( -1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F );
-                mPainter.setWorldMatrix( m, true );
+            if(parm[ 5 ] < 0)       // width < 0 => horizontal flip
+            {
+                QWMatrix m(-1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+                mPainter.setWorldMatrix(m, true);
             }
-            if ( parm[ 4 ] < 0 ) {  // height < 0 => vertical flip
-                QWMatrix m( 1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F );
-                mPainter.setWorldMatrix( m, true );
+            if(parm[ 4 ] < 0)       // height < 0 => vertical flip
+            {
+                QWMatrix m(1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F);
+                mPainter.setWorldMatrix(m, true);
             }
-            mPainter.drawImage( parm[ 7 ], parm[ 6 ], bmpSrc, parm[ 3 ], parm[ 2 ], parm[ 5 ], parm[ 4 ] );
+            mPainter.drawImage(parm[ 7 ], parm[ 6 ], bmpSrc, parm[ 3 ], parm[ 2 ], parm[ 5 ], parm[ 4 ]);
             mPainter.restore();
         }
     }
-    else {
+    else
+    {
         kdDebug() << "QWinMetaFile::dibBitBlt without image: not implemented " << endl;
     }
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::dibStretchBlt( long num, short* parm )
+void QWinMetaFile::dibStretchBlt(long num, short *parm)
 {
     QImage bmpSrc;
 
-    if ( dibToBmp( bmpSrc, (char*)&parm[ 10 ], (num - 10) * 2 ) ) {
-        long raster = toDWord( parm );
+    if(dibToBmp(bmpSrc, (char *)&parm[ 10 ], (num - 10) * 2))
+    {
+        long raster = toDWord(parm);
 
-        mPainter.setRasterOp( winToQtRaster( raster )  );
+        mPainter.setRasterOp(winToQtRaster(raster));
 
         // wmf file allow negative width or height
         mPainter.save();
-        if ( parm[ 7 ] < 0 ) {  // width < 0 => horizontal flip
-            QWMatrix m( -1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F );
-            mPainter.setWorldMatrix( m, true );
+        if(parm[ 7 ] < 0)       // width < 0 => horizontal flip
+        {
+            QWMatrix m(-1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+            mPainter.setWorldMatrix(m, true);
         }
-        if ( parm[ 6 ] < 0 ) {  // height < 0 => vertical flip
-            QWMatrix m( 1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F );
-            mPainter.setWorldMatrix( m, true );
+        if(parm[ 6 ] < 0)       // height < 0 => vertical flip
+        {
+            QWMatrix m(1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F);
+            mPainter.setWorldMatrix(m, true);
         }
-        bmpSrc = bmpSrc.copy( parm[ 5 ], parm[ 4 ], parm[ 3 ], parm[ 2 ] );
+        bmpSrc = bmpSrc.copy(parm[ 5 ], parm[ 4 ], parm[ 3 ], parm[ 2 ]);
         // TODO: scale the bitmap ( QImage::scale(parm[ 7 ], parm[ 6 ]) is actually too slow )
 
-        mPainter.drawImage( parm[ 9 ], parm[ 8 ], bmpSrc );
+        mPainter.drawImage(parm[ 9 ], parm[ 8 ], bmpSrc);
         mPainter.restore();
     }
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::stretchDib( long num, short* parm )
+void QWinMetaFile::stretchDib(long num, short *parm)
 {
     QImage bmpSrc;
 
-    if ( dibToBmp( bmpSrc, (char*)&parm[ 11 ], (num - 11) * 2 ) ) {
-        long raster = toDWord( parm );
+    if(dibToBmp(bmpSrc, (char *)&parm[ 11 ], (num - 11) * 2))
+    {
+        long raster = toDWord(parm);
 
-        mPainter.setRasterOp( winToQtRaster( raster )  );
+        mPainter.setRasterOp(winToQtRaster(raster));
 
         // wmf file allow negative width or height
         mPainter.save();
-        if ( parm[ 8 ] < 0 ) {  // width < 0 => horizontal flip
-            QWMatrix m( -1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F );
-            mPainter.setWorldMatrix( m, true );
+        if(parm[ 8 ] < 0)       // width < 0 => horizontal flip
+        {
+            QWMatrix m(-1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+            mPainter.setWorldMatrix(m, true);
         }
-        if ( parm[ 7 ] < 0 ) {  // height < 0 => vertical flip
-            QWMatrix m( 1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F );
-            mPainter.setWorldMatrix( m, true );
+        if(parm[ 7 ] < 0)       // height < 0 => vertical flip
+        {
+            QWMatrix m(1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F);
+            mPainter.setWorldMatrix(m, true);
         }
-        bmpSrc = bmpSrc.copy( parm[ 6 ], parm[ 5 ], parm[ 4 ], parm[ 3 ] );
+        bmpSrc = bmpSrc.copy(parm[ 6 ], parm[ 5 ], parm[ 4 ], parm[ 3 ]);
         // TODO: scale the bitmap ( QImage::scale(parm[ 8 ], parm[ 7 ]) is actually too slow )
 
-        mPainter.drawImage( parm[ 10 ], parm[ 9 ], bmpSrc );
+        mPainter.drawImage(parm[ 10 ], parm[ 9 ], bmpSrc);
         mPainter.restore();
     }
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::dibCreatePatternBrush( long num, short* parm )
+void QWinMetaFile::dibCreatePatternBrush(long num, short *parm)
 {
-    WinObjPatternBrushHandle* handle = new WinObjPatternBrushHandle;
-    addHandle( handle );
+    WinObjPatternBrushHandle *handle = new WinObjPatternBrushHandle;
+    addHandle(handle);
     QImage bmpSrc;
 
-    if ( dibToBmp( bmpSrc, (char*)&parm[ 2 ], (num - 2) * 2 ) ) {
+    if(dibToBmp(bmpSrc, (char *)&parm[ 2 ], (num - 2) * 2))
+    {
         handle->image = bmpSrc;
-        handle->brush.setPixmap( handle->image );
+        handle->brush.setPixmap(handle->image);
     }
 }
 
@@ -897,33 +932,33 @@ void QWinMetaFile::dibCreatePatternBrush( long num, short* parm )
 //-----------------------------------------------------------------------------
 // Object handle
 //-----------------------------------------------------------------------------
-void QWinMetaFile::selectObject( long, short* parm )
+void QWinMetaFile::selectObject(long, short *parm)
 {
     int idx = parm[ 0 ];
-    if ( idx>=0 && idx < MAX_OBJHANDLE && mObjHandleTab[ idx ] )
-        mObjHandleTab[ idx ]->apply( mPainter );
+    if(idx >= 0 && idx < MAX_OBJHANDLE && mObjHandleTab[ idx ])
+        mObjHandleTab[ idx ]->apply(mPainter);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::deleteObject( long, short* parm )
+void QWinMetaFile::deleteObject(long, short *parm)
 {
-    deleteHandle( parm[ 0 ] );
+    deleteHandle(parm[ 0 ]);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::createEmptyObject( long, short* )
+void QWinMetaFile::createEmptyObject(long, short *)
 {
     // allocation of an empty object (to keep object counting in sync)
-    WinObjPenHandle* handle = new WinObjPenHandle;
-    addHandle( handle );
+    WinObjPenHandle *handle = new WinObjPenHandle;
+    addHandle(handle);
     kdDebug() << "QWinMetaFile: unimplemented createObject " << endl;
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::createBrushIndirect( long, short* parm )
+void QWinMetaFile::createBrushIndirect(long, short *parm)
 {
     static Qt::BrushStyle hatchedStyleTab[] =
     {
@@ -934,126 +969,129 @@ void QWinMetaFile::createBrushIndirect( long, short* parm )
         Qt::DiagCrossPattern
     };
     static Qt::BrushStyle styleTab[] =
-    { Qt::SolidPattern,
-      Qt::NoBrush,
-      Qt::FDiagPattern,   /* hatched */
-      Qt::Dense4Pattern,  /* should be custom bitmap pattern */
-      Qt::HorPattern,     /* should be BS_INDEXED (?) */
-      Qt::VerPattern,     /* should be device-independent bitmap */
-      Qt::Dense6Pattern,  /* should be device-independent packed-bitmap */
-      Qt::Dense2Pattern,  /* should be BS_PATTERN8x8 */
-      Qt::Dense3Pattern   /* should be device-independent BS_DIBPATTERN8x8 */
+    {
+        Qt::SolidPattern,
+        Qt::NoBrush,
+        Qt::FDiagPattern,   /* hatched */
+        Qt::Dense4Pattern,  /* should be custom bitmap pattern */
+        Qt::HorPattern,     /* should be BS_INDEXED (?) */
+        Qt::VerPattern,     /* should be device-independent bitmap */
+        Qt::Dense6Pattern,  /* should be device-independent packed-bitmap */
+        Qt::Dense2Pattern,  /* should be BS_PATTERN8x8 */
+        Qt::Dense3Pattern   /* should be device-independent BS_DIBPATTERN8x8 */
     };
     Qt::BrushStyle style;
     short arg;
-    WinObjBrushHandle* handle = new WinObjBrushHandle;
-    addHandle( handle );
+    WinObjBrushHandle *handle = new WinObjBrushHandle;
+    addHandle(handle);
 
     arg = parm[ 0 ];
-    if ( arg==2 )
+    if(arg == 2)
     {
         arg = parm[ 3 ];
-        if ( arg>=0 && arg<5 ) style = hatchedStyleTab[ arg ];
+        if(arg >= 0 && arg < 5) style = hatchedStyleTab[ arg ];
         else
         {
             kdDebug() << "QWinMetaFile::createBrushIndirect: invalid hatched brush " << arg << endl;
             style = Qt::SolidPattern;
         }
     }
-    else if ( arg>=0 && arg<9 )
+    else if(arg >= 0 && arg < 9)
         style = styleTab[ arg ];
     else
     {
         kdDebug() << "QWinMetaFile::createBrushIndirect: invalid brush " << arg << endl;
         style = Qt::SolidPattern;
     }
-    handle->brush.setStyle( style );
-    handle->brush.setColor( color( parm+1 ) );
+    handle->brush.setStyle(style);
+    handle->brush.setColor(color(parm + 1));
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::createPenIndirect( long, short* parm )
+void QWinMetaFile::createPenIndirect(long, short *parm)
 {
     static Qt::PenStyle styleTab[] =
-    { Qt::SolidLine, Qt::DashLine, Qt::DotLine, Qt::DashDotLine, Qt::DashDotDotLine,
-      Qt::NoPen, Qt::SolidLine };
+    {
+        Qt::SolidLine, Qt::DashLine, Qt::DotLine, Qt::DashDotLine, Qt::DashDotDotLine,
+        Qt::NoPen, Qt::SolidLine
+    };
     Qt::PenStyle style;
-    WinObjPenHandle* handle = new WinObjPenHandle;
-    addHandle( handle );
+    WinObjPenHandle *handle = new WinObjPenHandle;
+    addHandle(handle);
 
-    if ( parm[ 0 ]>=0 && parm[ 0 ]<6 ) style=styleTab[ parm[ 0 ] ];
+    if(parm[ 0 ] >= 0 && parm[ 0 ] < 6) style = styleTab[ parm[ 0 ] ];
     else
     {
         kdDebug() << "QWinMetaFile::createPenIndirect: invalid pen " << parm[ 0 ] << endl;
         style = Qt::SolidLine;
     }
 
-    handle->pen.setStyle( style );
-    handle->pen.setColor( color( parm+3 ) );
-    handle->pen.setCapStyle( Qt::RoundCap );
+    handle->pen.setStyle(style);
+    handle->pen.setColor(color(parm + 3));
+    handle->pen.setCapStyle(Qt::RoundCap);
 
     //int width = 0;
     // TODO : width of pen proportional to device context width
     // DOESN'T WORK
-/*
-    QRect devRec;
-    devRec = mPainter.xForm( mBBox );
-    width = ( parm[ 0 ] * devRec.width() ) / mBBox.width() ;
-    kdDebug() << "CreatePenIndirect: " <<  endl;
-    kdDebug() << "   log coord. : " << mBBox.width() << "   " << mBBox.height() << endl;
-    kdDebug() << "   log. pen : " << parm[ 1 ] << "   " << parm[ 2 ] << endl;
-    kdDebug() << "   dev. pen : " << width << endl;
-    handle->pen.setWidth( width );
-*/
+    /*
+        QRect devRec;
+        devRec = mPainter.xForm( mBBox );
+        width = ( parm[ 0 ] * devRec.width() ) / mBBox.width() ;
+        kdDebug() << "CreatePenIndirect: " <<  endl;
+        kdDebug() << "   log coord. : " << mBBox.width() << "   " << mBBox.height() << endl;
+        kdDebug() << "   log. pen : " << parm[ 1 ] << "   " << parm[ 2 ] << endl;
+        kdDebug() << "   dev. pen : " << width << endl;
+        handle->pen.setWidth( width );
+    */
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::createFontIndirect( long , short* parm)
+void QWinMetaFile::createFontIndirect(long , short *parm)
 {
-    WinObjFontHandle* handle = new WinObjFontHandle;
-    addHandle( handle );
+    WinObjFontHandle *handle = new WinObjFontHandle;
+    addHandle(handle);
 
-    QString family( (const char*)&parm[ 9 ] );
+    QString family((const char *)&parm[ 9 ]);
 
     mRotation = -parm[ 2 ]  / 10;               // text rotation (in 1/10 degree)
-                                                // TODO: memorisation of rotation in object Font
-    handle->font.setFamily( family );
-    handle->font.setFixedPitch( ((parm[ 8 ] & 0x01) == 0) );
+    // TODO: memorisation of rotation in object Font
+    handle->font.setFamily(family);
+    handle->font.setFixedPitch(((parm[ 8 ] & 0x01) == 0));
     // TODO: investigation why some test case need -2. (size of font in logical point)
-    handle->font.setPointSize( QABS(parm[ 0 ]) - 2 );
-    handle->font.setWeight( (parm[ 4 ] >> 3) );
-    handle->font.setItalic( (parm[ 5 ] & 0x01) );
-    handle->font.setUnderline( (parm[ 5 ] & 0x100) );
+    handle->font.setPointSize(QABS(parm[ 0 ]) - 2);
+    handle->font.setWeight((parm[ 4 ] >> 3));
+    handle->font.setItalic((parm[ 5 ] & 0x01));
+    handle->font.setUnderline((parm[ 5 ] & 0x100));
 }
 
 
 //-----------------------------------------------------------------------------
 // Misc
 //-----------------------------------------------------------------------------
-void QWinMetaFile::noop( long, short* )
+void QWinMetaFile::noop(long, short *)
 {
 }
 
 
-void QWinMetaFile::end( long, short* )
+void QWinMetaFile::end(long, short *)
 {
     // end of file :
-//    kdDebug() << "END bbox=( " << mBBox.left() << "; " << mBBox.top() << "; " << mBBox.width() << "; " << mBBox.height() << ")" << endl;
+    //    kdDebug() << "END bbox=( " << mBBox.left() << "; " << mBBox.top() << "; " << mBBox.width() << "; " << mBBox.height() << ")" << endl;
 }
 
 
 //-----------------------------------------------------------------------------
-unsigned short QWinMetaFile::calcCheckSum( WmfPlaceableHeader* apmfh )
+unsigned short QWinMetaFile::calcCheckSum(WmfPlaceableHeader *apmfh)
 {
-    WORD*  lpWord;
+    WORD  *lpWord;
     WORD   wResult, i;
 
     // Start with the first word
-    wResult = *( lpWord = ( WORD* )( apmfh ) );
+    wResult = *(lpWord = (WORD *)(apmfh));
     // XOR in each of the other 9 words
-    for( i=1; i<=9; i++ )
+    for(i = 1; i <= 9; i++)
     {
         wResult ^= lpWord[ i ];
     }
@@ -1062,46 +1100,46 @@ unsigned short QWinMetaFile::calcCheckSum( WmfPlaceableHeader* apmfh )
 
 
 //-----------------------------------------------------------------------------
-int QWinMetaFile::findFunc( unsigned short aFunc ) const
+int QWinMetaFile::findFunc(unsigned short aFunc) const
 {
     int i;
 
-    for ( i=0; metaFuncTab[ i ].name; i++ )
-        if ( metaFuncTab[ i ].func == aFunc ) return i;
+    for(i = 0; metaFuncTab[ i ].name; i++)
+        if(metaFuncTab[ i ].func == aFunc) return i;
 
     // here : unknown function
     return i;
 }
 
 //-----------------------------------------------------------------------------
-QPointArray* QWinMetaFile::pointArray( short num, short* parm )
+QPointArray *QWinMetaFile::pointArray(short num, short *parm)
 {
     int i;
 
-    mPoints.resize( num );
+    mPoints.resize(num);
 
-    for ( i=0; i<num; i++, parm+=2 )
-        mPoints.setPoint( i, parm[ 0 ], parm[ 1 ] );
+    for(i = 0; i < num; i++, parm += 2)
+        mPoints.setPoint(i, parm[ 0 ], parm[ 1 ]);
 
     return &mPoints;
 }
 
 //-----------------------------------------------------------------------------
-unsigned int QWinMetaFile::toDWord( short* parm )
+unsigned int QWinMetaFile::toDWord(short *parm)
 {
     unsigned int l;
 
 #if !defined( WORDS_BIGENDIAN )
-    l = *( unsigned int* )( parm );
+    l = *(unsigned int *)(parm);
 #else
     char *bytes;
     char swap[ 4 ];
-    bytes = ( char* )parm;
+    bytes = (char *)parm;
     swap[ 0 ] = bytes[ 2 ];
     swap[ 1 ] = bytes[ 3 ];
     swap[ 2 ] = bytes[ 0 ];
     swap[ 3 ] = bytes[ 1 ];
-    l = *( unsigned int* )( swap );
+    l = *(unsigned int *)(swap);
 #endif
 
     return l;
@@ -1109,52 +1147,52 @@ unsigned int QWinMetaFile::toDWord( short* parm )
 
 
 //-----------------------------------------------------------------------------
-QColor QWinMetaFile::color( short* parm )
+QColor QWinMetaFile::color(short *parm)
 {
     unsigned int colorRef;
     int red, green, blue;
 
-    colorRef = toDWord( parm ) & 0xffffff;
+    colorRef = toDWord(parm) & 0xffffff;
     red      = colorRef & 255;
-    green    = ( colorRef>>8 ) & 255;
-    blue     = ( colorRef>>16 ) & 255;
+    green    = (colorRef >> 8) & 255;
+    blue     = (colorRef >> 16) & 255;
 
-    return QColor( red, green, blue );
+    return QColor(red, green, blue);
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::xyToAngle( int xStart, int yStart, int xEnd, int yEnd, int& angleStart, int& angleLength )
+void QWinMetaFile::xyToAngle(int xStart, int yStart, int xEnd, int yEnd, int &angleStart, int &angleLength)
 {
     float aStart, aLength;
 
-    aStart = atan2( double(yStart),  double(xStart) );
-    aLength = atan2( double(yEnd), double(xEnd) ) - aStart;
+    aStart = atan2(double(yStart),  double(xStart));
+    aLength = atan2(double(yEnd), double(xEnd)) - aStart;
 
     angleStart = (int)(aStart * 2880 / 3.14166);
     angleLength = (int)(aLength * 2880 / 3.14166);
-    if ( angleLength < 0 ) angleLength = 5760 + angleLength;
+    if(angleLength < 0) angleLength = 5760 + angleLength;
 }
 
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::addHandle( WinObjHandle* handle )
+void QWinMetaFile::addHandle(WinObjHandle *handle)
 {
     int idx;
 
-    for ( idx=0; idx < MAX_OBJHANDLE ; idx++ )
-        if ( mObjHandleTab[ idx ] == NULL )  break;
+    for(idx = 0; idx < MAX_OBJHANDLE ; idx++)
+        if(mObjHandleTab[ idx ] == NULL)  break;
 
-    if ( idx < MAX_OBJHANDLE )
+    if(idx < MAX_OBJHANDLE)
         mObjHandleTab[ idx ] = handle;
     else
         kdDebug() << "QWinMetaFile error: handle table full !" << endl;
 }
 
 //-----------------------------------------------------------------------------
-void QWinMetaFile::deleteHandle( int idx )
+void QWinMetaFile::deleteHandle(int idx)
 {
-    if ( idx >= 0 && idx < MAX_OBJHANDLE && mObjHandleTab[ idx ] )
+    if(idx >= 0 && idx < MAX_OBJHANDLE && mObjHandleTab[ idx ])
     {
         delete mObjHandleTab[ idx ];
         mObjHandleTab[ idx ] = NULL;
@@ -1162,7 +1200,7 @@ void QWinMetaFile::deleteHandle( int idx )
 }
 
 //-----------------------------------------------------------------------------
-Qt::RasterOp  QWinMetaFile::winToQtRaster( short parm ) const
+Qt::RasterOp  QWinMetaFile::winToQtRaster(short parm) const
 {
     static const Qt::RasterOp opTab[] =
     {
@@ -1173,14 +1211,14 @@ Qt::RasterOp  QWinMetaFile::winToQtRaster( short parm ) const
         Qt::CopyROP, Qt::OrNotROP, Qt::OrROP, Qt::SetROP
     };
 
-    if ( parm > 0 && parm <= 16 )
+    if(parm > 0 && parm <= 16)
         return opTab[ parm ];
     else
         return Qt::CopyROP;
 }
 
 //-----------------------------------------------------------------------------
-Qt::RasterOp  QWinMetaFile::winToQtRaster( long parm ) const
+Qt::RasterOp  QWinMetaFile::winToQtRaster(long parm) const
 {
     /* TODO: Ternary raster operations
     0x00C000CA  dest = (source AND pattern)
@@ -1211,20 +1249,21 @@ Qt::RasterOp  QWinMetaFile::winToQtRaster( long parm ) const
     };
 
     int i;
-    for ( i=0 ; i < 15 ; i++ )
-        if ( opTab[ i ].winRasterOp == parm )
+    for(i = 0 ; i < 15 ; i++)
+        if(opTab[ i ].winRasterOp == parm)
             break;
 
-    if ( i < 15 )
+    if(i < 15)
         return opTab[ i ].qtRasterOp;
     else
         return Qt::CopyROP;
 }
 
 //-----------------------------------------------------------------------------
-bool QWinMetaFile::dibToBmp( QImage& bmp, const char* dib, long size )
+bool QWinMetaFile::dibToBmp(QImage &bmp, const char *dib, long size)
 {
-    typedef struct _BMPFILEHEADER {
+    typedef struct _BMPFILEHEADER
+    {
         WORD bmType;
         DWORD bmSize;
         WORD bmReserved1;
@@ -1234,24 +1273,26 @@ bool QWinMetaFile::dibToBmp( QImage& bmp, const char* dib, long size )
 
     int sizeBmp = size + 14;
 
-    QByteArray pattern( sizeBmp );       // BMP header and DIB data
+    QByteArray pattern(sizeBmp);         // BMP header and DIB data
     pattern.fill(0);
-    memcpy( &pattern[ 14 ], dib, size );
+    memcpy(&pattern[ 14 ], dib, size);
 
     // add BMP header
-    BMPFILEHEADER* bmpHeader;
-    bmpHeader = (BMPFILEHEADER*)((const char*)pattern);
+    BMPFILEHEADER *bmpHeader;
+    bmpHeader = (BMPFILEHEADER *)((const char *)pattern);
     bmpHeader->bmType = 0x4D42;
     bmpHeader->bmSize = sizeBmp;
 
-    if ( !bmp.loadFromData( (const uchar*)bmpHeader, pattern.size(), "BMP" ) ) {
+    if(!bmp.loadFromData((const uchar *)bmpHeader, pattern.size(), "BMP"))
+    {
         kdDebug() << "QWinMetaFile::dibToBmp: invalid bitmap " << endl;
         return false;
     }
-    else {
-//        if ( bmp.save("/home/software/kde-cvs/qt/examples/wmf/test.bmp", "BMP") )
-//        if ( bmp.load( "/home/software/kde-cvs/qt/examples/wmf/test.bmp", "BMP" ) )
-//            fprintf(stderr, "Bitmap ok \n");
+    else
+    {
+        //        if ( bmp.save("/home/software/kde-cvs/qt/examples/wmf/test.bmp", "BMP") )
+        //        if ( bmp.load( "/home/software/kde-cvs/qt/examples/wmf/test.bmp", "BMP" ) )
+        //            fprintf(stderr, "Bitmap ok \n");
         return true;
     }
 }

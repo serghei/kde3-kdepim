@@ -47,50 +47,53 @@
 
 class KWatchGnuPGApplication : public KUniqueApplication {
 public:
-  KWatchGnuPGApplication();
-  ~KWatchGnuPGApplication();
-  virtual int newInstance();
+    KWatchGnuPGApplication();
+    ~KWatchGnuPGApplication();
+    virtual int newInstance();
 private:
-  KWatchGnuPGMainWindow* mMainWin;
+    KWatchGnuPGMainWindow *mMainWin;
 };
 
 KWatchGnuPGApplication::KWatchGnuPGApplication()
-  : KUniqueApplication(), mMainWin(0)
+    : KUniqueApplication(), mMainWin(0)
 {
 }
 
 KWatchGnuPGApplication::~KWatchGnuPGApplication()
 {
-  delete mMainWin;
+    delete mMainWin;
 }
 
 int KWatchGnuPGApplication::newInstance()
 {
-  if( !mMainWin ) {
-	mMainWin = new KWatchGnuPGMainWindow( 0, "kwatchgnupg mainwin" );
-	setMainWidget( mMainWin );
-  }
-  mMainWin->show();
-  return KUniqueApplication::newInstance();
+    if(!mMainWin)
+    {
+        mMainWin = new KWatchGnuPGMainWindow(0, "kwatchgnupg mainwin");
+        setMainWidget(mMainWin);
+    }
+    mMainWin->show();
+    return KUniqueApplication::newInstance();
 }
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  AboutData aboutData;
+    AboutData aboutData;
 
-  KCmdLineArgs::init(argc, argv, &aboutData);
-  static const KCmdLineOptions options[] = {
-	KCmdLineLastOption// End of options.
-  };
-  KCmdLineArgs::addCmdLineOptions( options );
-  KWatchGnuPGApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    static const KCmdLineOptions options[] =
+    {
+        KCmdLineLastOption// End of options.
+    };
+    KCmdLineArgs::addCmdLineOptions(options);
+    KWatchGnuPGApplication::addCmdLineOptions();
 
 #if 0
-  if (!KWatchGnuPGApplication::start()) {
-	kdError() << "KWatchGnuPG is already running!" << endl;
-	return 0;
-  }
+    if(!KWatchGnuPGApplication::start())
+    {
+        kdError() << "KWatchGnuPG is already running!" << endl;
+        return 0;
+    }
 #endif
-  KWatchGnuPGApplication app;
-  return app.exec();
+    KWatchGnuPGApplication app;
+    return app.exec();
 }

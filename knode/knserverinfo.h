@@ -19,13 +19,13 @@
 
 class KConfig;
 namespace KWallet {
-  class Wallet;
+class Wallet;
 }
 using KWallet::Wallet;
 
 class KNServerInfo {
 
-  public:
+public:
     enum serverType { STnntp, STsmtp, STpop3 };
     enum Encryption { None, SSL, TLS };
 
@@ -36,37 +36,97 @@ class KNServerInfo {
     void saveConf(KConfig *conf);
 
     //get
-    serverType type()const         { return t_ype; }
-    int id()const                  { return i_d; }
-    const QString& server()   { return s_erver; }
-    const QString& user()     { return u_ser; }
-    const QString& pass();
-    int port() const                { return p_ort; }
-    int hold() const               { return h_old; }
-    int timeout() const            { return t_imeout; }
-    bool needsLogon()const         { return n_eedsLogon; }
-    bool isEmpty()const            { return s_erver.isEmpty(); }
-    bool readyForLogin() const { return !n_eedsLogon || mPassLoaded; }
-    Encryption encryption() const { return mEncryption; }
+    serverType type()const
+    {
+        return t_ype;
+    }
+    int id()const
+    {
+        return i_d;
+    }
+    const QString &server()
+    {
+        return s_erver;
+    }
+    const QString &user()
+    {
+        return u_ser;
+    }
+    const QString &pass();
+    int port() const
+    {
+        return p_ort;
+    }
+    int hold() const
+    {
+        return h_old;
+    }
+    int timeout() const
+    {
+        return t_imeout;
+    }
+    bool needsLogon()const
+    {
+        return n_eedsLogon;
+    }
+    bool isEmpty()const
+    {
+        return s_erver.isEmpty();
+    }
+    bool readyForLogin() const
+    {
+        return !n_eedsLogon || mPassLoaded;
+    }
+    Encryption encryption() const
+    {
+        return mEncryption;
+    }
 
     //set
-    void setType(serverType t)        { t_ype=t; }
-    void setId(int i)                 { i_d=i; }
-    void setServer(const QString &s)  { s_erver=s; }
-    void setUser(const QString &s)    { u_ser=s; }
+    void setType(serverType t)
+    {
+        t_ype = t;
+    }
+    void setId(int i)
+    {
+        i_d = i;
+    }
+    void setServer(const QString &s)
+    {
+        s_erver = s;
+    }
+    void setUser(const QString &s)
+    {
+        u_ser = s;
+    }
     void setPass(const QString &s);
-    void setPort(int p)               { p_ort=p; }
-    void setHold(int h)               { h_old=h; }
-    void setTimeout(int t)            { t_imeout=t; }
-    void setNeedsLogon(bool b)        { n_eedsLogon=b; }
-    void setEncryption( Encryption enc ) { mEncryption = enc; }
+    void setPort(int p)
+    {
+        p_ort = p;
+    }
+    void setHold(int h)
+    {
+        h_old = h;
+    }
+    void setTimeout(int t)
+    {
+        t_imeout = t;
+    }
+    void setNeedsLogon(bool b)
+    {
+        n_eedsLogon = b;
+    }
+    void setEncryption(Encryption enc)
+    {
+        mEncryption = enc;
+    }
 
     bool operator==(const KNServerInfo &s);
 
     /** Loads the password from KWallet, used for on-demand password loading */
     void readPassword();
 
-  protected:
+protected:
     serverType t_ype;
 
     QString  s_erver,

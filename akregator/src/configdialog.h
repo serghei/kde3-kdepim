@@ -32,26 +32,26 @@ namespace Akregator {
 class SettingsAdvanced;
 class SettingsAppearance;
 
-class ConfigDialog : public KConfigDialog
-{
+class ConfigDialog : public KConfigDialog {
     Q_OBJECT
-    public:
-    
-        ConfigDialog(QWidget *parent, const char *name, KConfigSkeleton *config, DialogType dialogType=IconList, int dialogButtons=Default|Ok|Apply|Cancel|Help, ButtonCode defaultButton=Ok, bool modal=false);
-        
-        virtual ~ConfigDialog();
+public:
 
-    protected slots:
+    ConfigDialog(QWidget *parent, const char *name, KConfigSkeleton *config, DialogType dialogType = IconList,
+                 int dialogButtons = Default | Ok | Apply | Cancel | Help, ButtonCode defaultButton = Ok, bool modal = false);
 
-        virtual void updateSettings();
-        
-        virtual void updateWidgets();
+    virtual ~ConfigDialog();
 
-    private:
-        KConfigSkeleton* m_config;
-        SettingsAdvanced* m_settingsAdvanced;
-        SettingsAppearance* m_settingsAppearance;
-        
+protected slots:
+
+    virtual void updateSettings();
+
+    virtual void updateWidgets();
+
+private:
+    KConfigSkeleton *m_config;
+    SettingsAdvanced *m_settingsAdvanced;
+    SettingsAppearance *m_settingsAppearance;
+
 };
 
 } // namespace Akregator

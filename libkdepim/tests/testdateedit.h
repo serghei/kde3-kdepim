@@ -24,15 +24,14 @@
 
 #include <qwidget.h>
 
-class DateEdit : public QWidget
-{
-  Q_OBJECT
+class DateEdit : public QWidget {
+    Q_OBJECT
 
-  public:
-    DateEdit( QWidget *parent = 0, const char *name = 0 );
+public:
+    DateEdit(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void dateChanged( const QDate& );
+public slots:
+    void dateChanged(const QDate &);
 };
 
 #endif

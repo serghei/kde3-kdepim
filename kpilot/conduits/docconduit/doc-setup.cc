@@ -43,94 +43,94 @@
 #include "docconduitSettings.h"
 
 
-DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
-	ConduitConfigBase(w, n),
-	fConfigWidget(new DOCWidget(w))
+DOCWidgetConfig::DOCWidgetConfig(QWidget *w, const char *n):
+    ConduitConfigBase(w, n),
+    fConfigWidget(new DOCWidget(w))
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fWidget=fConfigWidget;
+    fWidget = fConfigWidget;
 
-	QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
-	for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it)
-	{
-		fConfigWidget->fEncoding->insertItem(*it);
-	}
+    QStringList l = KGlobal::charsets()->descriptiveEncodingNames();
+    for(QStringList::Iterator it = l.begin(); it != l.end(); ++it)
+    {
+        fConfigWidget->fEncoding->insertItem(*it);
+    }
 
-	fConfigWidget->fTXTDir->setMode(KFile::Directory);
-	fConfigWidget->fPDBDir->setMode(KFile::Directory);
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,DOCConduitFactory::about());
+    fConfigWidget->fTXTDir->setMode(KFile::Directory);
+    fConfigWidget->fPDBDir->setMode(KFile::Directory);
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, DOCConduitFactory::about());
 
-	fConduitName=i18n("Palm DOC");
+    fConduitName = i18n("Palm DOC");
 
 #define CMOD(a,b) connect(fConfigWidget->a,SIGNAL(b),this,SLOT(modified()))
-	CMOD(fTXTDir,textChanged(const QString &));
-	CMOD(fPDBDir,textChanged(const QString &));
-	CMOD(fkeepPDBLocally,clicked());
-	CMOD(fConflictResolution,clicked(int));
-	CMOD(fConvertBookmarks,stateChanged(int));
-	CMOD(fBookmarksBmk,stateChanged(int));
-	CMOD(fBookmarksInline,stateChanged(int));
-	CMOD(fBookmarksEndtags,stateChanged(int));
-	CMOD(fCompress,stateChanged(int));
-	CMOD(fSyncDirection,clicked(int));
-	CMOD(fNoConversionOfBmksOnly,stateChanged(int));
-	CMOD(fAlwaysUseResolution,stateChanged(int));
-	CMOD(fPCBookmarks,clicked(int));
-	CMOD(fEncoding,textChanged(const QString &));
+    CMOD(fTXTDir, textChanged(const QString &));
+    CMOD(fPDBDir, textChanged(const QString &));
+    CMOD(fkeepPDBLocally, clicked());
+    CMOD(fConflictResolution, clicked(int));
+    CMOD(fConvertBookmarks, stateChanged(int));
+    CMOD(fBookmarksBmk, stateChanged(int));
+    CMOD(fBookmarksInline, stateChanged(int));
+    CMOD(fBookmarksEndtags, stateChanged(int));
+    CMOD(fCompress, stateChanged(int));
+    CMOD(fSyncDirection, clicked(int));
+    CMOD(fNoConversionOfBmksOnly, stateChanged(int));
+    CMOD(fAlwaysUseResolution, stateChanged(int));
+    CMOD(fPCBookmarks, clicked(int));
+    CMOD(fEncoding, textChanged(const QString &));
 #undef CMOD
 
-	fConfigWidget->adjustSize();
+    fConfigWidget->adjustSize();
 }
 
 /* virtual */ void DOCWidgetConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	DOCConduitSettings::setTXTDirectory( fConfigWidget->fTXTDir->url() );
-	DOCConduitSettings::setPDBDirectory( fConfigWidget->fPDBDir->url() );
+    DOCConduitSettings::setTXTDirectory(fConfigWidget->fTXTDir->url());
+    DOCConduitSettings::setPDBDirectory(fConfigWidget->fPDBDir->url());
 
-	DOCConduitSettings::setKeepPDBsLocally( fConfigWidget->fkeepPDBLocally->isChecked());
-	DOCConduitSettings::setConflictResolution( fConfigWidget->fConflictResolution->id(
-		fConfigWidget->fConflictResolution->selected()) );
-	DOCConduitSettings::setConvertBookmarks(fConfigWidget->fConvertBookmarks->isChecked());
-	DOCConduitSettings::setBmkFileBookmarks(fConfigWidget->fBookmarksBmk->isChecked());
-	DOCConduitSettings::setInlineBookmarks(fConfigWidget->fBookmarksInline->isChecked());
-	DOCConduitSettings::setEndtagBookmarks(fConfigWidget->fBookmarksEndtags->isChecked());
-	DOCConduitSettings::setCompress(fConfigWidget->fCompress->isChecked());
-	DOCConduitSettings::setSyncDirection(fConfigWidget->fSyncDirection->id(
-		fConfigWidget->fSyncDirection->selected()));
-	DOCConduitSettings::setIgnoreBmkChanges(fConfigWidget->fNoConversionOfBmksOnly->isChecked());
-	DOCConduitSettings::setAlwaysShowResolutionDialog(fConfigWidget->fAlwaysUseResolution->isChecked());
-	DOCConduitSettings::setBookmarksToPC( fConfigWidget->fPCBookmarks->id(
-		fConfigWidget->fPCBookmarks->selected()) );
-	DOCConduitSettings::setEncoding( fConfigWidget->fEncoding->currentText() );
+    DOCConduitSettings::setKeepPDBsLocally(fConfigWidget->fkeepPDBLocally->isChecked());
+    DOCConduitSettings::setConflictResolution(fConfigWidget->fConflictResolution->id(
+                fConfigWidget->fConflictResolution->selected()));
+    DOCConduitSettings::setConvertBookmarks(fConfigWidget->fConvertBookmarks->isChecked());
+    DOCConduitSettings::setBmkFileBookmarks(fConfigWidget->fBookmarksBmk->isChecked());
+    DOCConduitSettings::setInlineBookmarks(fConfigWidget->fBookmarksInline->isChecked());
+    DOCConduitSettings::setEndtagBookmarks(fConfigWidget->fBookmarksEndtags->isChecked());
+    DOCConduitSettings::setCompress(fConfigWidget->fCompress->isChecked());
+    DOCConduitSettings::setSyncDirection(fConfigWidget->fSyncDirection->id(
+            fConfigWidget->fSyncDirection->selected()));
+    DOCConduitSettings::setIgnoreBmkChanges(fConfigWidget->fNoConversionOfBmksOnly->isChecked());
+    DOCConduitSettings::setAlwaysShowResolutionDialog(fConfigWidget->fAlwaysUseResolution->isChecked());
+    DOCConduitSettings::setBookmarksToPC(fConfigWidget->fPCBookmarks->id(
+            fConfigWidget->fPCBookmarks->selected()));
+    DOCConduitSettings::setEncoding(fConfigWidget->fEncoding->currentText());
 
-	DOCConduitSettings::self()->writeConfig();
-	unmodified();
+    DOCConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 /* virtual */ void DOCWidgetConfig::load()
 {
-	FUNCTIONSETUP;
-	DOCConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    DOCConduitSettings::self()->readConfig();
 
-	fConfigWidget->fTXTDir->setURL( DOCConduitSettings::tXTDirectory() );
-	fConfigWidget->fPDBDir->setURL( DOCConduitSettings::pDBDirectory() );
-	fConfigWidget->fkeepPDBLocally->setChecked( DOCConduitSettings::keepPDBsLocally() );
-	fConfigWidget->fConflictResolution->setButton(DOCConduitSettings::conflictResolution() );
-	fConfigWidget->fConvertBookmarks->setChecked(DOCConduitSettings::convertBookmarks() );
-	fConfigWidget->fBookmarksBmk->setChecked(DOCConduitSettings::bmkFileBookmarks() );
-	fConfigWidget->fBookmarksInline->setChecked(DOCConduitSettings::inlineBookmarks() );
-	fConfigWidget->fBookmarksEndtags->setChecked(DOCConduitSettings::endtagBookmarks() );
-	fConfigWidget->fCompress->setChecked(DOCConduitSettings::compress() );
-	fConfigWidget->fSyncDirection->setButton(DOCConduitSettings::syncDirection() );
+    fConfigWidget->fTXTDir->setURL(DOCConduitSettings::tXTDirectory());
+    fConfigWidget->fPDBDir->setURL(DOCConduitSettings::pDBDirectory());
+    fConfigWidget->fkeepPDBLocally->setChecked(DOCConduitSettings::keepPDBsLocally());
+    fConfigWidget->fConflictResolution->setButton(DOCConduitSettings::conflictResolution());
+    fConfigWidget->fConvertBookmarks->setChecked(DOCConduitSettings::convertBookmarks());
+    fConfigWidget->fBookmarksBmk->setChecked(DOCConduitSettings::bmkFileBookmarks());
+    fConfigWidget->fBookmarksInline->setChecked(DOCConduitSettings::inlineBookmarks());
+    fConfigWidget->fBookmarksEndtags->setChecked(DOCConduitSettings::endtagBookmarks());
+    fConfigWidget->fCompress->setChecked(DOCConduitSettings::compress());
+    fConfigWidget->fSyncDirection->setButton(DOCConduitSettings::syncDirection());
 
-	fConfigWidget->fNoConversionOfBmksOnly->setChecked( DOCConduitSettings::ignoreBmkChanges() );
-	fConfigWidget->fAlwaysUseResolution->setChecked( DOCConduitSettings::alwaysShowResolutionDialog() );
+    fConfigWidget->fNoConversionOfBmksOnly->setChecked(DOCConduitSettings::ignoreBmkChanges());
+    fConfigWidget->fAlwaysUseResolution->setChecked(DOCConduitSettings::alwaysShowResolutionDialog());
 
-	fConfigWidget->fPCBookmarks->setButton(DOCConduitSettings::bookmarksToPC() );
-	fConfigWidget->fEncoding->setCurrentText(DOCConduitSettings::encoding() );
-	unmodified();
+    fConfigWidget->fPCBookmarks->setButton(DOCConduitSettings::bookmarksToPC());
+    fConfigWidget->fEncoding->setCurrentText(DOCConduitSettings::encoding());
+    unmodified();
 }
 

@@ -28,62 +28,65 @@
 #include "loader.h"
 
 Loader::Loader()
-  : QObject( 0, "KWSDL::Loader" )
+    : QObject(0, "KWSDL::Loader")
 {
 }
 
-void Loader::setWSDLUrl( const QString &wsdlUrl )
+void Loader::setWSDLUrl(const QString &wsdlUrl)
 {
-  mWSDLUrl = wsdlUrl;
-  mWSDLBaseUrl = mWSDLUrl.left( mWSDLUrl.findRev( '/' ) );
+    mWSDLUrl = wsdlUrl;
+    mWSDLBaseUrl = mWSDLUrl.left(mWSDLUrl.findRev('/'));
 
-  mParser.setSchemaBaseUrl( mWSDLBaseUrl );
+    mParser.setSchemaBaseUrl(mWSDLBaseUrl);
 }
 
 void Loader::run()
 {
-  download();
+    download();
 }
 
 void Loader::download()
 {
-  Schema::FileProvider provider;
+    Schema::FileProvider provider;
 
-  QString fileName;
-  if ( provider.get( mWSDLUrl, fileName ) ) {
-    QFile file( fileName );
-    if ( !file.open( IO_ReadOnly ) ) {
-      qDebug( "Unable to download wsdl file %s", mWSDLUrl.latin1() );
-      provider.cleanUp();
-      return;
+    QString fileName;
+    if(provider.get(mWSDLUrl, fileName))
+    {
+        QFile file(fileName);
+        if(!file.open(IO_ReadOnly))
+        {
+            qDebug("Unable to download wsdl file %s", mWSDLUrl.latin1());
+            provider.cleanUp();
+            return;
+        }
+
+        QString errorMsg;
+        int errorLine, errorCol;
+        QDomDocument doc;
+        if(!doc.setContent(&file, true, &errorMsg, &errorLine, &errorCol))
+        {
+            qDebug("%s at (%d,%d)", errorMsg.latin1(), errorLine, errorCol);
+            return;
+        }
+
+        parse(doc.documentElement());
+
+        provider.cleanUp();
     }
-
-    QString errorMsg;
-    int errorLine, errorCol;
-    QDomDocument doc;
-    if ( !doc.setContent( &file, true, &errorMsg, &errorLine, &errorCol ) ) {
-      qDebug( "%s at (%d,%d)", errorMsg.latin1(), errorLine, errorCol );
-      return;
-    }
-
-    parse( doc.documentElement() );
-
-    provider.cleanUp();
-  }
 }
 
-void Loader::parse( const QDomElement &element )
+void Loader::parse(const QDomElement &element)
 {
-  mParser.parse( element );
-  execute();
+    mParser.parse(element);
+    execute();
 }
 
 void Loader::execute()
 {
-  mDispatcher = new Dispatcher;
-  mDispatcher->setWSDL( mParser.wsdl() );
+    mDispatcher = new Dispatcher;
+    mDispatcher->setWSDL(mParser.wsdl());
 
-  mDispatcher->run();
+    mDispatcher->run();
 }
 
 #include "loader.moc"

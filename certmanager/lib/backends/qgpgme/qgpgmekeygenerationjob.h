@@ -39,39 +39,40 @@
 #include <kdepimmacros.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
-  class Data;
+class Error;
+class Context;
+class Key;
+class Data;
 }
 
 namespace QGpgME {
-  class QByteArrayDataProvider;
+class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class KDE_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
+class KDE_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEKeyGenerationJob( GpgME::Context * context );
+public:
+    QGpgMEKeyGenerationJob(GpgME::Context *context);
     ~QGpgMEKeyGenerationJob();
-    
+
     /*! \reimp from KeygenerationJob */
-    GpgME::Error start( const QString & parameters );
-    
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & error ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, error );
+    GpgME::Error start(const QString &parameters);
+
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &error)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, error);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
 
-  private:
-    QGpgME::QByteArrayDataProvider * mPubKeyDataProvider;
-    GpgME::Data * mPubKey;
-  };
+private:
+    QGpgME::QByteArrayDataProvider *mPubKeyDataProvider;
+    GpgME::Data *mPubKey;
+};
 
 }
 

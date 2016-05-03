@@ -59,10 +59,10 @@ class CalFilter;
 */
 enum SortDirection
 {
-  /** Sort in ascending order (first to last) */
-  SortDirectionAscending,
-  /** Sort in descending order (last to first) */
-  SortDirectionDescending
+    /** Sort in ascending order (first to last) */
+    SortDirectionAscending,
+    /** Sort in descending order (last to first) */
+    SortDirectionDescending
 };
 
 /**
@@ -71,14 +71,14 @@ enum SortDirection
 */
 enum EventSortField
 {
-  /** Events are to be unsorted */
-  EventSortUnsorted,
-  /** Sort Events chronologically, by start date */
-  EventSortStartDate,
-  /** Sort Events chronologically, by end date */
-  EventSortEndDate,
-  /** Sort Events alphabetically, by summary */
-  EventSortSummary
+    /** Events are to be unsorted */
+    EventSortUnsorted,
+    /** Sort Events chronologically, by start date */
+    EventSortStartDate,
+    /** Sort Events chronologically, by end date */
+    EventSortEndDate,
+    /** Sort Events alphabetically, by summary */
+    EventSortSummary
 };
 
 /**
@@ -87,18 +87,18 @@ enum EventSortField
 */
 enum TodoSortField
 {
-  /** Todos are to be unsorted */
-  TodoSortUnsorted,
-  /** Sort Todos chronologically, by start date */
-  TodoSortStartDate,
-  /** Sort Todos chronologically, by due date */
-  TodoSortDueDate,
-  /** Sort Todos by priority */
-  TodoSortPriority,
-  /** Sort Todos by percentage completed */
-  TodoSortPercentComplete,
-  /** Sort Todos alphabetically, by summary */
-  TodoSortSummary
+    /** Todos are to be unsorted */
+    TodoSortUnsorted,
+    /** Sort Todos chronologically, by start date */
+    TodoSortStartDate,
+    /** Sort Todos chronologically, by due date */
+    TodoSortDueDate,
+    /** Sort Todos by priority */
+    TodoSortPriority,
+    /** Sort Todos by percentage completed */
+    TodoSortPercentComplete,
+    /** Sort Todos alphabetically, by summary */
+    TodoSortSummary
 };
 
 /**
@@ -107,12 +107,12 @@ enum TodoSortField
 */
 enum JournalSortField
 {
-  /** Journals are to be unsorted */
-  JournalSortUnsorted,
-  /** Sort Journals chronologically by date */
-  JournalSortDate,
-  /** Sort Journals alphabetically, by summary */
-  JournalSortSummary
+    /** Journals are to be unsorted */
+    JournalSortUnsorted,
+    /** Sort Journals chronologically by date */
+    JournalSortDate,
+    /** Sort Journals alphabetically, by summary */
+    JournalSortSummary
 };
 
 /**
@@ -165,11 +165,10 @@ enum JournalSortField
         either in UTC or without a time zone (floating time zone).
 */
 class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
-                                public IncidenceBase::Observer
-{
+    public IncidenceBase::Observer {
     Q_OBJECT
 
-  public:
+public:
 
     /**
        Construct Calendar object using a Time Zone.
@@ -185,7 +184,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Do Not pass an empty timeZoneId string as this may cause unintended
        consequences when storing Incidences into the Calendar.
     */
-    Calendar( const QString &timeZoneId );
+    Calendar(const QString &timeZoneId);
 
     /**
        Destructor
@@ -197,7 +196,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param productId is a QString containing the Product ID.
     */
-    void setProductId( const QString &productId );
+    void setProductId(const QString &productId);
 
     /**
        Get the Calendar's Product ID.
@@ -211,7 +210,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @param owner is a Person object.
     */
-    void setOwner( const Person &owner );
+    void setOwner(const Person &owner);
 
     /**
        Get the owner of the Calendar.
@@ -234,7 +233,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Do Not pass an empty timeZoneId string as this may cause unintended
        consequences when storing Incidences into the Calendar.
     */
-    void setTimeZoneId( const QString &timeZoneId );
+    void setTimeZoneId(const QString &timeZoneId);
 
     /**
      * Set the timezone used for viewing the incidences in this calendar. In
@@ -242,7 +241,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
      * retain their absolute time (in UTC).
      * @ref setTimeZoneId
      */
-    virtual void setTimeZoneIdViewOnly( const QString &timeZoneId ) = 0;
+    virtual void setTimeZoneIdViewOnly(const QString &timeZoneId) = 0;
 
     /**
        Get the Time Zone ID for the Calendar.
@@ -270,14 +269,17 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param modified is true if the Calendar has been modified since open
        or last save.
     */
-    void setModified( bool modified );
+    void setModified(bool modified);
 
     /**
        Determine the Calendar's modification status.
 
        @return true if the Calendar has been modified since open or last save.
     */
-    bool isModified() const { return mModified; }
+    bool isModified() const
+    {
+        return mModified;
+    }
 
     /**
        Clears out the current Calendar, freeing all used memory etc.
@@ -294,14 +296,17 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
      * once before, in other words initialized.
      * @par tz The timezone to use for loading.
      */
-    virtual bool reload( const QString &tz ) = 0;
+    virtual bool reload(const QString &tz) = 0;
 
     /**
        Determine if the Calendar is currently being saved.
 
        @return true if the Calendar is currently being saved; false otherwise.
     */
-    virtual bool isSaving() { return false; }
+    virtual bool isSaving()
+    {
+        return false;
+    }
 
     /**
        Return a list of all categories used by Incidences in this Calendar.
@@ -310,7 +315,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     QStringList categories();
 
-// Incidence Specific Methods //
+    // Incidence Specific Methods //
 
     /**
        Insert an Incidence into the Calendar.
@@ -319,7 +324,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Incidence was successfully inserted; false otherwise.
     */
-    virtual bool addIncidence( Incidence *incidence );
+    virtual bool addIncidence(Incidence *incidence);
 
     /**
        Remove an Incidence from the Calendar.
@@ -328,7 +333,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Incidence was successfully removed; false otherwise.
     */
-    virtual bool deleteIncidence( Incidence *incidence );
+    virtual bool deleteIncidence(Incidence *incidence);
 
     /**
        Return a filtered list of all Incidences for this Calendar.
@@ -344,7 +349,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of filtered Incidences occurring on the specified date.
     */
-    virtual Incidence::List incidences( const QDate &date );
+    virtual Incidence::List incidences(const QDate &date);
 
     /**
        Return an unfiltered list of all Incidences for this Calendar.
@@ -361,7 +366,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return a pointer to the Incidence.
        A null pointer is returned if no such Incidence exists.
     */
-    Incidence *incidence( const QString &uid );
+    Incidence *incidence(const QString &uid);
 
     /**
        Returns the Incidence associated with the given scheduling identifier.
@@ -371,13 +376,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return a pointer to the Incidence.
        A null pointer is returned if no such Incidence exists.
     */
-    Incidence *incidenceFromSchedulingID( const QString &sid );
+    Incidence *incidenceFromSchedulingID(const QString &sid);
 
     /**
      * Searches all events and todos for (an incidence with this
      * scheduling ID. Returns a list of matching results.
      **/
-    Incidence::List incidencesFromSchedulingID( const QString &UID );
+    Incidence::List incidencesFromSchedulingID(const QString &UID);
 
     /**
        Create a merged list of Events, Todos, and Journals.
@@ -388,23 +393,23 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a list of merged Incidences.
     */
-    static Incidence::List mergeIncidenceList( const Event::List &events,
-                                               const Todo::List &todos,
-                                               const Journal::List &journals );
+    static Incidence::List mergeIncidenceList(const Event::List &events,
+            const Todo::List &todos,
+            const Journal::List &journals);
 
     /**
        Flag that a change to a Calendar Incidence is starting.
 
        @param incidence is a pointer to the Incidence that will be changing.
     */
-    virtual bool beginChange( Incidence *incidence );
+    virtual bool beginChange(Incidence *incidence);
 
     /**
        Flag that a change to a Calendar Incidence has completed.
 
        @param incidence is a pointer to the Incidence that was changed.
     */
-    virtual bool endChange( Incidence *incidence );
+    virtual bool endChange(Incidence *incidence);
 
     /**
        Dissociate an Incidence from a recurring Incidence.
@@ -422,10 +427,10 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a pointer to a new recurring Incidence if @a single is false.
     */
-    Incidence *dissociateOccurrence( Incidence *incidence, QDate date,
-                                     bool single = true );
+    Incidence *dissociateOccurrence(Incidence *incidence, QDate date,
+                                    bool single = true);
 
-// Event Specific Methods //
+    // Event Specific Methods //
 
     /**
        Insert an Event into the Calendar.
@@ -434,7 +439,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Event was successfully inserted; false otherwise.
     */
-    virtual bool addEvent( Event *event ) = 0;
+    virtual bool addEvent(Event *event) = 0;
 
     /**
        Remove an Event from the Calendar.
@@ -443,7 +448,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Event was successfully remove; false otherwise.
     */
-    virtual bool deleteEvent( Event *event ) = 0;
+    virtual bool deleteEvent(Event *event) = 0;
 
     /**
        Sort a list of Events.
@@ -454,9 +459,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a list of Events sorted as specified.
     */
-    static Event::List sortEvents( Event::List *eventList,
-                                   EventSortField sortField,
-                                   SortDirection sortDirection );
+    static Event::List sortEvents(Event::List *eventList,
+                                  EventSortField sortField,
+                                  SortDirection sortDirection);
     /**
        Return a sorted, filtered list of all Events for this Calendar.
 
@@ -466,8 +471,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of all filtered Events sorted as specified.
     */
     virtual Event::List events(
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        EventSortField sortField = EventSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return a filtered list of all Events which occur on the given timestamp.
@@ -476,7 +481,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of filtered Events occurring on the specified timestamp.
     */
-    Event::List events( const QDateTime &qdt );
+    Event::List events(const QDateTime &qdt);
 
     /**
        Return a filtered list of all Events occurring within a date range.
@@ -489,8 +494,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of filtered Events occurring within the specified
        date range.
     */
-    Event::List events( const QDate &start, const QDate &end,
-                        bool inclusive = false);
+    Event::List events(const QDate &start, const QDate &end,
+                       bool inclusive = false);
 
     /**
        Return a sorted, filtered list of all Events which occur on the given
@@ -504,9 +509,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of sorted, filtered Events occurring on @a date.
     */
     Event::List events(
-      const QDate &date,
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        const QDate &date,
+        EventSortField sortField = EventSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return a sorted, unfiltered list of all Events for this Calendar.
@@ -517,8 +522,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of all unfiltered Events sorted as specified.
     */
     virtual Event::List rawEvents(
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) = 0;
+        EventSortField sortField = EventSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending) = 0;
 
     /**
        Return an unfiltered list of all Events which occur on the given
@@ -529,7 +534,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of unfiltered Events occurring on the specified
        timestamp.
     */
-    virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual Event::List rawEventsForDate(const QDateTime &qdt) = 0;
 
     /**
        Return an unfiltered list of all Events occurring within a date range.
@@ -542,8 +547,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of unfiltered Events occurring within the specified
        date range.
     */
-    virtual Event::List rawEvents( const QDate &start, const QDate &end,
-                                   bool inclusive = false ) = 0;
+    virtual Event::List rawEvents(const QDate &start, const QDate &end,
+                                  bool inclusive = false) = 0;
 
     /**
        Return a sorted, unfiltered list of all Events which occur on the given
@@ -557,9 +562,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of sorted, unfiltered Events occurring on @a date.
     */
     virtual Event::List rawEventsForDate(
-      const QDate &date,
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) = 0;
+        const QDate &date,
+        EventSortField sortField = EventSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending) = 0;
 
     /**
        Returns the Event associated with the given unique identifier.
@@ -569,9 +574,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return a pointer to the Event.
        A null pointer is returned if no such Event exists.
     */
-    virtual Event *event( const QString &uid ) = 0;
+    virtual Event *event(const QString &uid) = 0;
 
-// Todo Specific Methods //
+    // Todo Specific Methods //
 
     /**
        Insert a Todo into the Calendar.
@@ -580,7 +585,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Todo was successfully inserted; false otherwise.
     */
-    virtual bool addTodo( Todo *todo ) = 0;
+    virtual bool addTodo(Todo *todo) = 0;
 
     /**
        Remove a Todo from the Calendar.
@@ -589,7 +594,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Todo was successfully removed; false otherwise.
     */
-    virtual bool deleteTodo( Todo *todo ) = 0;
+    virtual bool deleteTodo(Todo *todo) = 0;
 
     /**
        Sort a list of Todos.
@@ -600,9 +605,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a list of Todos sorted as specified.
     */
-    static Todo::List sortTodos( Todo::List *todoList,
-                                 TodoSortField sortField,
-                                 SortDirection sortDirection );
+    static Todo::List sortTodos(Todo::List *todoList,
+                                TodoSortField sortField,
+                                SortDirection sortDirection);
 
     /**
        Return a sorted, filtered list of all Todos for this Calendar.
@@ -613,8 +618,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of all filtered Todos sorted as specified.
     */
     virtual Todo::List todos(
-      TodoSortField sortField = TodoSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        TodoSortField sortField = TodoSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return a filtered list of all Todos which are due on the specified date.
@@ -623,7 +628,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of filtered Todos due on the specified date.
     */
-    virtual Todo::List todos( const QDate &date );
+    virtual Todo::List todos(const QDate &date);
 
     /**
        Return a sorted, unfiltered list of all Todos for this Calendar.
@@ -634,8 +639,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of all unfiltered Todos sorted as specified.
     */
     virtual Todo::List rawTodos(
-      TodoSortField sortField = TodoSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) = 0;
+        TodoSortField sortField = TodoSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending) = 0;
 
     /**
        Return an unfiltered list of all Todos which due on the specified date.
@@ -644,7 +649,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of unfiltered Todos due on the specified date.
     */
-    virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
+    virtual Todo::List rawTodosForDate(const QDate &date) = 0;
 
     /**
        Returns the Todo associated with the given unique identifier.
@@ -654,9 +659,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return a pointer to the Todo.
        A null pointer is returned if no such Todo exists.
     */
-    virtual Todo *todo( const QString &uid ) = 0;
+    virtual Todo *todo(const QString &uid) = 0;
 
-// Journal Specific Methods //
+    // Journal Specific Methods //
 
     /**
        Insert a Journal into the Calendar.
@@ -665,7 +670,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Journal was successfully inserted; false otherwise.
     */
-    virtual bool addJournal( Journal *journal ) = 0;
+    virtual bool addJournal(Journal *journal) = 0;
 
     /**
        Remove a Journal from the Calendar.
@@ -674,7 +679,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return true if the Journal was successfully removed; false otherwise.
     */
-    virtual bool deleteJournal( Journal *journal ) = 0;
+    virtual bool deleteJournal(Journal *journal) = 0;
 
     /**
        Sort a list of Journals.
@@ -685,9 +690,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a list of Journals sorted as specified.
     */
-    static Journal::List sortJournals( Journal::List *journalList,
-                                       JournalSortField sortField,
-                                       SortDirection sortDirection );
+    static Journal::List sortJournals(Journal::List *journalList,
+                                      JournalSortField sortField,
+                                      SortDirection sortDirection);
     /**
        Return a sorted, filtered list of all Journals for this Calendar.
 
@@ -697,8 +702,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of all filtered Journals sorted as specified.
     */
     virtual Journal::List journals(
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        JournalSortField sortField = JournalSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return a filtered list of all Journals for on the specifed date.
@@ -707,7 +712,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of filtered Journals for the specified date.
     */
-    virtual Journal::List journals( const QDate &date );
+    virtual Journal::List journals(const QDate &date);
 
     /**
        Return a sorted, unfiltered list of all Journals for this Calendar.
@@ -718,8 +723,8 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return the list of all unfiltered Journals sorted as specified.
     */
     virtual Journal::List rawJournals(
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending ) = 0;
+        JournalSortField sortField = JournalSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending) = 0;
 
     /**
        Return an unfiltered list of all Journals for on the specifed date.
@@ -728,7 +733,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of unfiltered Journals for the specified date.
     */
-    virtual Journal::List rawJournalsForDate( const QDate &date ) = 0;
+    virtual Journal::List rawJournalsForDate(const QDate &date) = 0;
 
     /**
        Returns the Journal associated with the given unique identifier.
@@ -738,9 +743,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @return a pointer to the Journal.
        A null pointer is returned if no such Journal exists.
     */
-    virtual Journal *journal( const QString &uid ) = 0;
+    virtual Journal *journal(const QString &uid) = 0;
 
-// Relations Specific Methods //
+    // Relations Specific Methods //
 
     /**
        Setup Relations for an Incidence.
@@ -748,7 +753,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param incidence is a pointer to the Incidence to have a
        Relation setup.
     */
-    virtual void setupRelations( Incidence *incidence );
+    virtual void setupRelations(Incidence *incidence);
 
     /**
        Remove all Relations from an Incidence.
@@ -756,9 +761,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param incidence is a pointer to the Incidence to have a
        Relation removed.
     */
-    virtual void removeRelations( Incidence *incidence );
+    virtual void removeRelations(Incidence *incidence);
 
-// Filter Specific Methods //
+    // Filter Specific Methods //
 
     /**
        Set the Calendar filter.
@@ -766,7 +771,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param filter a pointer to a CalFilter object which will be
        used to filter Calendar Incidences.
     */
-    void setFilter( CalFilter *filter );
+    void setFilter(CalFilter *filter);
 
     /**
        Return the Calendar filter.
@@ -776,7 +781,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     */
     CalFilter *filter();
 
-// Alarm Specific Methods //
+    // Alarm Specific Methods //
 
     /**
        Return a list of Alarms within a time range for this Calendar.
@@ -786,19 +791,18 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return the list of Alarms for the for the specified time range.
     */
-    virtual Alarm::List alarms( const QDateTime &from,
-                                const QDateTime &to ) = 0;
+    virtual Alarm::List alarms(const QDateTime &from,
+                               const QDateTime &to) = 0;
 
-// Observer Specific Methods //
+    // Observer Specific Methods //
 
     /**
        @class Observer
 
        The Observer class.
     */
-    class Observer
-    {
-      public:
+    class Observer {
+    public:
         virtual ~Observer() {}
         /**
            Notify the Observer that a Calendar has been modified.
@@ -807,29 +811,29 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
            Second parameter is a pointer to the Calendar object that
            is being observed.
         */
-        virtual void calendarModified( bool /*modified*/,
-                                       Calendar * /*calendar*/ ) {};
+        virtual void calendarModified(bool /*modified*/,
+                                      Calendar * /*calendar*/) {};
 
         /**
            Notify the Observer that an Incidence has been inserted.
 
            First parameter is a pointer to the Incidence that was inserted.
         */
-        virtual void calendarIncidenceAdded( Incidence * /*incidence*/ ) {}
+        virtual void calendarIncidenceAdded(Incidence * /*incidence*/) {}
 
         /**
            Notify the Observer that an Incidence has been modified.
 
            First parameter is a pointer to the Incidence that was modified.
         */
-        virtual void calendarIncidenceChanged( Incidence * /*incidence*/ ) {}
+        virtual void calendarIncidenceChanged(Incidence * /*incidence*/) {}
 
         /**
            Notify the Observer that an Incidence has been removed.
 
            First parameter is a pointer to the Incidence that was removed.
         */
-          virtual void calendarIncidenceDeleted( Incidence * /*incidence*/ ) {}
+        virtual void calendarIncidenceDeleted(Incidence * /*incidence*/) {}
     };
 
     /**
@@ -838,7 +842,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param observer is a pointer to an Observer object that will be
        watching this Calendar.
      */
-    void registerObserver( Observer *observer );
+    void registerObserver(Observer *observer);
 
     /**
        Unregister an Observer for this Calendar.
@@ -846,9 +850,9 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param observer is a pointer to an Observer object that has been
        watching this Calendar.
      */
-    void unregisterObserver( Observer *observer );
+    void unregisterObserver(Observer *observer);
 
-  signals:
+signals:
     /**
        Signal that the Calendar has been modified.
      */
@@ -864,13 +868,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
      */
     void calendarLoaded();
 
-  protected:
+protected:
     /**
        The Observer interface. So far not implemented.
 
        @param incidenceBase is a pointer an IncidenceBase object.
     */
-    void incidenceUpdated( IncidenceBase *incidenceBase );
+    void incidenceUpdated(IncidenceBase *incidenceBase);
 
     /**
        Let Calendar subclasses set the Time Zone ID.
@@ -884,28 +888,28 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Do Not pass an empty timeZoneId string as this may cause unintended
        consequences when storing Incidences into the Calendar.
     */
-    virtual void doSetTimeZoneId( const QString &/*timeZoneId*/ ) {}
+    virtual void doSetTimeZoneId(const QString &/*timeZoneId*/) {}
 
     /**
        Let Calendar subclasses notify that they inserted an Incidence.
 
        @param incidence is a pointer to the Incidence object that was inserted.
     */
-    void notifyIncidenceAdded( Incidence *incidence );
+    void notifyIncidenceAdded(Incidence *incidence);
 
     /**
        Let Calendar subclasses notify that they modified an Incidence.
 
        @param incidence is a pointer to the Incidence object that was modified.
     */
-    void notifyIncidenceChanged( Incidence *incidence );
+    void notifyIncidenceChanged(Incidence *incidence);
 
     /**
        Let Calendar subclasses notify that they removed an Incidence.
 
        @param incidence is a pointer to the Incidence object that was removed.
     */
-    void notifyIncidenceDeleted( Incidence *incidence );
+    void notifyIncidenceDeleted(Incidence *incidence);
 
     /**
       @copydoc
@@ -919,13 +923,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        @param enabled if true tells the Calendar that a subclass has
        enabled an Observer.
     */
-    void setObserversEnabled( bool enabled );
+    void setObserversEnabled(bool enabled);
 
     //TODO: Move appendAlarms() and appendRecurringAlarms() from
     //      calendarlocal here, as protected static methods
     //      returning static Alarm::List
 
-  private:
+private:
     /**
        Intialize a Calendar object with starting values.
     */
@@ -951,7 +955,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
     class Private;
     Private *d;
-  };
+};
 
 }
 

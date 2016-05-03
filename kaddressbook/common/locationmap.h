@@ -28,22 +28,21 @@
 #include <qobject.h>
 #include <qstring.h>
 
-class LocationMap : public QObject
-{
-  Q_OBJECT
+class LocationMap : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     static LocationMap *instance();
     ~LocationMap();
 
-  public slots:
-    void showAddress( const KABC::Address& );
+public slots:
+    void showAddress(const KABC::Address &);
 
-  protected:
+protected:
     LocationMap();
 
-  private:
-    QString createUrl( const KABC::Address& );
+private:
+    QString createUrl(const KABC::Address &);
 
     static LocationMap *mSelf;
 };

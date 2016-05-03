@@ -37,23 +37,22 @@ class KComboBox;
 /**
   Editor dialog for name details, like given name, family name etc.
 */
-class NameEditDialog : public KDialogBase
-{
-  Q_OBJECT
+class NameEditDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     enum FormattedNameType
     {
-      CustomName,           // returned by @ref customFormattedName()
-      SimpleName,           // form: givenName familyName
-      FullName,             // form: prefix givenName additionalName familyName suffix
-      ReverseNameWithComma, // form: familyName, givenName
-      ReverseName,          // form: familyName givenName
-      Organization          // the organization name
+        CustomName,           // returned by @ref customFormattedName()
+        SimpleName,           // form: givenName familyName
+        FullName,             // form: prefix givenName additionalName familyName suffix
+        ReverseNameWithComma, // form: familyName, givenName
+        ReverseName,          // form: familyName givenName
+        Organization          // the organization name
     };
 
-    NameEditDialog( const KABC::Addressee &addr, int type,
-                    bool readOnly, QWidget *parent, const char *name = 0 );
+    NameEditDialog(const KABC::Addressee &addr, int type,
+                   bool readOnly, QWidget *parent, const char *name = 0);
     ~NameEditDialog();
 
     QString familyName() const;
@@ -66,20 +65,20 @@ class NameEditDialog : public KDialogBase
 
     bool changed() const;
 
-    static QString formattedName( const KABC::Addressee &addr, int type );
+    static QString formattedName(const KABC::Addressee &addr, int type);
 
-  protected slots:
+protected slots:
     void slotHelp();
 
-  private slots:
-    void parseBoxChanged( bool );
+private slots:
+    void parseBoxChanged(bool);
     void formattedNameTypeChanged();
-    void formattedNameChanged( const QString& );
-    void typeChanged( int );
+    void formattedNameChanged(const QString &);
+    void typeChanged(int);
     void initTypeCombo();
     void modified();
 
-  private:
+private:
     KComboBox *mSuffixCombo;
     KComboBox *mPrefixCombo;
     KComboBox *mFormattedNameCombo;

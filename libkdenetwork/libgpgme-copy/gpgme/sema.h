@@ -3,17 +3,17 @@
    Copyright (C) 2001, 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
- 
+
    GPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as
    published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
-   
+
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
-   
+
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -24,8 +24,8 @@
 
 struct critsect_s
 {
-  const char *name;
-  void *private;
+    const char *name;
+    void *private;
 };
 
 #define DEFINE_GLOBAL_LOCK(name) \
@@ -43,7 +43,7 @@ struct critsect_s
     }					\
   while (0)
 #define DESTROY_LOCK(name) _gpgme_sema_cs_destroy (&(name))
-                       
+
 
 #define LOCK(name)			\
   do					\
@@ -59,9 +59,9 @@ struct critsect_s
     }					\
   while (0)
 
-void _gpgme_sema_subsystem_init (void);
-void _gpgme_sema_cs_enter (struct critsect_s *s);
-void _gpgme_sema_cs_leave (struct critsect_s *s);
-void _gpgme_sema_cs_destroy (struct critsect_s *s);
+void _gpgme_sema_subsystem_init(void);
+void _gpgme_sema_cs_enter(struct critsect_s *s);
+void _gpgme_sema_cs_leave(struct critsect_s *s);
+void _gpgme_sema_cs_destroy(struct critsect_s *s);
 
 #endif /* SEMA_H */

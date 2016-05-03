@@ -39,16 +39,16 @@
 class KWatchGnuPGMainWindow;
 
 class KWatchGnuPGTray : public KSystemTray {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
-  virtual ~KWatchGnuPGTray();
+    KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin);
+    virtual ~KWatchGnuPGTray();
 
 public slots:
-  void setAttention( bool att );
+    void setAttention(bool att);
 private:
-  QPixmap mNormalPix;
-  QPixmap mAttentionPix;
+    QPixmap mNormalPix;
+    QPixmap mAttentionPix;
 };
 
 #endif /* TRAY_H */

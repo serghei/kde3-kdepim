@@ -24,10 +24,9 @@
 
 #include <kdialogbase.h>
 
-class OutputDialog : public KDialogBase
-{
-  public:
-    OutputDialog( QWidget *page, QWidget *parent );
+class OutputDialog : public KDialogBase {
+public:
+    OutputDialog(QWidget *page, QWidget *parent);
 };
 
 #endif

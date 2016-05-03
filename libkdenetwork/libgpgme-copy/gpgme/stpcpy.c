@@ -31,25 +31,25 @@
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 char *
-__stpcpy (dest, src)
-     char *dest;
-     const char *src;
+__stpcpy(dest, src)
+char *dest;
+const char *src;
 {
-  register char *d = dest;
-  register const char *s = src;
+    register char *d = dest;
+    register const char *s = src;
 
-  do
-    *d++ = *s;
-  while (*s++ != '\0');
+    do
+        *d++ = *s;
+    while(*s++ != '\0');
 
-  return d - 1;
+    return d - 1;
 }
 #ifdef libc_hidden_def
-libc_hidden_def (__stpcpy)
+libc_hidden_def(__stpcpy)
 #endif
 #ifdef weak_alias
-weak_alias (__stpcpy, stpcpy)
+weak_alias(__stpcpy, stpcpy)
 #endif
 #ifdef libc_hidden_builtin_def
-libc_hidden_builtin_def (stpcpy)
+libc_hidden_builtin_def(stpcpy)
 #endif

@@ -41,29 +41,28 @@ class KListView;
   This widget displays a list box of the instant messaging addresses as well as buttons
   to manipulate them (up, down, add, remove).
 */
-class IMEditWidget : public QWidget
-{
-  Q_OBJECT
+class IMEditWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    IMEditWidget(QWidget *parent, KABC::Addressee &addr, const char *name = 0 );
+public:
+    IMEditWidget(QWidget *parent, KABC::Addressee &addr, const char *name = 0);
     ~IMEditWidget();
 
-    void setIMs( const QStringList &list );
+    void setIMs(const QStringList &list);
     QStringList ims();
 
-    void setPreferredIM( const QString &addr );
+    void setPreferredIM(const QString &addr);
     QString preferredIM();
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  signals:
+signals:
     void modified();
 
-  private slots:
+private slots:
     void edit();
-    void textChanged( const QString& );
+    void textChanged(const QString &);
 
-  private:
+private:
     KLineEdit *mIMEdit;
     QPushButton *mEditButton;
     QStringList mIMList;

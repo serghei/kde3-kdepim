@@ -33,60 +33,66 @@ using namespace KCal;
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("testincidence","Test Incidence","0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
-  KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("testincidence", "Test Incidence", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
- KApplication app( false, false );
+    KApplication app(false, false);
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
+    bool verbose = false;
+    if(args->isSet("verbose")) verbose = true;
 
-  ICalFormat f;
+    ICalFormat f;
 
-  Event *event1 = new Event;
-  event1->setSummary("Test Event");
-  event1->recurrence()->setDaily( 2 );
-  event1->recurrence()->setDuration( 3 );
+    Event *event1 = new Event;
+    event1->setSummary("Test Event");
+    event1->recurrence()->setDaily(2);
+    event1->recurrence()->setDuration(3);
 
-  QString eventString1 = f.toString( event1 );
-  if ( verbose )
-    kdDebug(5800) << "EVENT1 START:" << eventString1 << "EVENT1 END" << endl;
+    QString eventString1 = f.toString(event1);
+    if(verbose)
+        kdDebug(5800) << "EVENT1 START:" << eventString1 << "EVENT1 END" << endl;
 
-  Incidence *event2 = event1->clone();
+    Incidence *event2 = event1->clone();
 
-  QString eventString2 = f.toString( event2 );
-  if( verbose )
-    kdDebug(5800) << "EVENT2 START:" << eventString2 << "EVENT2 END" << endl;
+    QString eventString2 = f.toString(event2);
+    if(verbose)
+        kdDebug(5800) << "EVENT2 START:" << eventString2 << "EVENT2 END" << endl;
 
-  if ( eventString1 != eventString2 ) {
-    kdDebug(5800) << "Clone Event FAILED." << endl;
-  } else {
-    kdDebug(5800) << "Clone Event SUCCEEDED." << endl;
-  }
+    if(eventString1 != eventString2)
+    {
+        kdDebug(5800) << "Clone Event FAILED." << endl;
+    }
+    else
+    {
+        kdDebug(5800) << "Clone Event SUCCEEDED." << endl;
+    }
 
-  Todo *todo1 = new Todo;
-  todo1->setSummary("Test todo");
-  QString todoString1 = f.toString( todo1 );
-  if( verbose )
-    kdDebug(5800) << "todo1 START:" << todoString1 << "todo1 END" << endl;
+    Todo *todo1 = new Todo;
+    todo1->setSummary("Test todo");
+    QString todoString1 = f.toString(todo1);
+    if(verbose)
+        kdDebug(5800) << "todo1 START:" << todoString1 << "todo1 END" << endl;
 
-  Incidence *todo2 = todo1->clone();
-  QString todoString2 = f.toString( todo2 );
-  if( verbose )
-    kdDebug(5800) << "todo2 START:" << todoString2 << "todo2 END" << endl;
+    Incidence *todo2 = todo1->clone();
+    QString todoString2 = f.toString(todo2);
+    if(verbose)
+        kdDebug(5800) << "todo2 START:" << todoString2 << "todo2 END" << endl;
 
-  if ( todoString1 != todoString2 ) {
-    kdDebug(5800) << "Clone Todo FAILED." << endl;
-  } else {
-    kdDebug(5800) << "Clone Todo SUCCEEDED." << endl;
-  }
+    if(todoString1 != todoString2)
+    {
+        kdDebug(5800) << "Clone Todo FAILED." << endl;
+    }
+    else
+    {
+        kdDebug(5800) << "Clone Todo SUCCEEDED." << endl;
+    }
 }

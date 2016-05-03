@@ -31,12 +31,17 @@ class Calendar;
 class Incidence;
 class IncidenceBase;
 
-class LIBKCAL_EXPORT InvitationFormatterHelper
-{
-  public:
-    virtual QString generateLinkURL( const QString &id ) { return id; }
-    virtual QString makeLink( const QString &id, const QString &text );
-    virtual Calendar* calendar() const { return 0; }
+class LIBKCAL_EXPORT InvitationFormatterHelper {
+public:
+    virtual QString generateLinkURL(const QString &id)
+    {
+        return id;
+    }
+    virtual QString makeLink(const QString &id, const QString &text);
+    virtual Calendar *calendar() const
+    {
+        return 0;
+    }
 };
 
 /**
@@ -46,24 +51,23 @@ class LIBKCAL_EXPORT InvitationFormatterHelper
 
   @short methods to format incidences into various formats for displaying them
 */
-class LIBKCAL_EXPORT IncidenceFormatter
-{
-  public:
-    static QString toolTipString( IncidenceBase *incidence, bool richText = true );
-    static QString mailBodyString( IncidenceBase *incidencebase );
-    static QString extensiveDisplayString( IncidenceBase *incidence );
+class LIBKCAL_EXPORT IncidenceFormatter {
+public:
+    static QString toolTipString(IncidenceBase *incidence, bool richText = true);
+    static QString mailBodyString(IncidenceBase *incidencebase);
+    static QString extensiveDisplayString(IncidenceBase *incidence);
 
-    static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
-                                         InvitationFormatterHelper *helper );
+    static QString formatICalInvitation(QString invitation, Calendar *mCalendar,
+                                        InvitationFormatterHelper *helper);
     // Format a TNEF attachment to an HTML mail
-    static QString formatTNEFInvitation( const QByteArray& tnef,
-                                         Calendar *mCalendar,
-                                         InvitationFormatterHelper *helper );
+    static QString formatTNEFInvitation(const QByteArray &tnef,
+                                        Calendar *mCalendar,
+                                        InvitationFormatterHelper *helper);
     // Transform a TNEF attachment to an iCal or vCard
-    static QString msTNEFToVPart( const QByteArray& tnef );
+    static QString msTNEFToVPart(const QByteArray &tnef);
 
-    static QString recurrenceString( Incidence *incidence );
-  private:
+    static QString recurrenceString(Incidence *incidence);
+private:
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;

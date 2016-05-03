@@ -60,174 +60,173 @@ class PilotCategoryInfo; // ... and category information
 * as mapping user-visible strings from UTF8 (KDE side) to
 * the encoding used on the handheld.
 */
-namespace Pilot
+namespace Pilot {
+/** Maximum size of an AppInfo block, taken roughly from the pilot-link source. */
+static const int MAX_APPINFO_SIZE = 8192;
+
+/** Maximum number of categories the handheld has */
+static const unsigned int CATEGORY_COUNT = 16;
+
+/** Maximum size of a category label */
+static const unsigned int CATEGORY_SIZE = 16;
+
+/** Category number for unfiled records */
+static const int Unfiled = 0;
+
+/** Maximum size (in bytes) of a record's data */
+static const int MAX_RECORD_SIZE = 65535;
+
+typedef QValueList<recordid_t> RecordIDList;
+
+/** Static translation function that maps handheld native (8 bit,
+* usually latin1 but sometimes someting else) encoded data to
+* a Unicode string. Converts the @p len characters in @p c
+* to a Unicode string.
+*/
+QString fromPilot(const char *c, int len);
+
+/** Static translation function mapping a NUL-terminated
+* string from the handheld's encoding to UTF-8.
+* @param c the NUL-terminated string to decode
+* @return QString (UTF-8) value of @p c
+* @note NUL-terminated strings are rare on the handheld.
+*/
+QString fromPilot(const char *c);
+
+/** Static translation function that maps a QString onto the
+* native 8 bit encoding of the handheld. Writes the result into
+* the buffer @p buf which has size @p len. Returns the length
+* of the result. Zero-fills the buffer as needed.
+*/
+int toPilot(const QString &s, char *buf, int len);
+int toPilot(const QString &s, unsigned char *buf, int len);
+
+/** Static translation function that maps a QString onto the
+* native 8 bit encoding of the handheld.
+*
+* @param s String to encode
+* @return Encoded string in a QCString
+*/
+QCString toPilot(const QString &s);
+
+/** Create a codec for translating handheld native 8 bit to Unicode,
+* using the given codec @p name -- this will often be latin1, but
+* might be something else for, say, Russian-language Pilots.
+* If @p name is empty, use latin1.
+*
+* @return @c true on success, @c false otherwise
+*/
+bool setupPilotCodec(const QString &name);
+
+/** Returns the name of the codec being used. */
+QString codecName();
+
+/** For debugging, display category names for the given AppInfo
+* structure. Called by dump(). You must pass a valid reference.
+*/
+void dumpCategories(const struct CategoryAppInfo *info);
+
+/** Check that a given category number is valid. This
+* restricts the range of integers to [0..CATEGORY_COUNT-1]
+* (i.e. [0..15]) which is what the handheld supports.
+*/
+inline bool validCategory(int c)
 {
-	/** Maximum size of an AppInfo block, taken roughly from the pilot-link source. */
-	static const int MAX_APPINFO_SIZE=8192;
+    if(c < 0)
+    {
+        return false;
+    }
+    return ((unsigned int)c < CATEGORY_COUNT);
+}
 
-	/** Maximum number of categories the handheld has */
-	static const unsigned int CATEGORY_COUNT=16;
+/** Returns the QString for the requested category @p i
+* in the category structure @p info. Returns @c QString::null
+* on error (bad pointer or bad category number). May also
+* return @c QString::null if the category name is empty.
+*/
+inline QString categoryName(const struct CategoryAppInfo *info, unsigned int i)
+{
+    if((i < CATEGORY_COUNT) && (info->name[i][0]))
+    {
+        /*
+         * Seems to be important that we try to pass the real length here
+         * to the codec.
+         */
+        return fromPilot(info->name[i], MIN(strlen(info->name[i]), CATEGORY_SIZE));
+    }
+    else
+    {
+        return QString::null;
+    }
+}
 
-	/** Maximum size of a category label */
-	static const unsigned int CATEGORY_SIZE=16;
+/** Returns a list of all the category names available on the
+*  handheld. This list is neither ordered nor does it contain
+*  all sixteen categories -- empty category names on the
+*  handheld are skipped.
+*/
+inline QStringList categoryNames(const struct CategoryAppInfo *info)
+{
+    QStringList l;
+    if(!info)
+    {
+        return l;
+    }
+    for(unsigned int i = 0; i < CATEGORY_COUNT; ++i)
+    {
+        QString s = categoryName(info, i);
+        if(!s.isEmpty())
+        {
+            l.append(s);
+        }
+    }
+    return l;
+}
 
-	/** Category number for unfiled records */
-	static const int Unfiled = 0;
+/** Search for the given category @p name in the list
+* of categories; returns the category number. If @p unknownIsUnfiled
+* is true, then map unknown categories to Unfiled instead of returning
+* an error number.
+*
+* @return >=0   is a specific category based on the text-to-
+*               category number mapping defined by the Pilot,
+*               where 0 is always the 'unfiled' category.
+*  @return -1   means unknown category selected when
+*               @p unknownIsUnfiled is false.
+*  @return  0   == Unfiled means unknown category selected when
+*               @p unknownIsUnfiled is true.
+*
+*/
+int findCategory(const struct CategoryAppInfo *info, const QString &name, bool unknownIsUnfiled);
 
-	/** Maximum size (in bytes) of a record's data */
-	static const int MAX_RECORD_SIZE = 65535;
+/** Search for the given category @p name in the list
+* of categories; returns the category number. If @p unknownIsUnfiled
+* is @c true, then map unknown categories to Unfiled.
+* If @p unknownIsUnfiled is @c false, insert a @em new
+* category into the structure and return the category
+* number of the new category. Return -1 if (and only if)
+* @p unknownIsUnfiled is false and the category structure
+* is already full.
+*
+* @return >=0   is a specific category based on the text-to-
+*               category number mapping defined by the Pilot,
+*               where 0 is always the 'unfiled' category.
+* @return 0     Unknown category and @p unknownIsUnfiled is @c true
+* @return -1    means unknown category selected when
+*               @p unknownIsUnfiled is false and categories
+*               are all full.
+*
+*/
+int insertCategory(struct CategoryAppInfo *info, const QString &label, bool unknownIsUnfiled);
 
-	typedef QValueList<recordid_t> RecordIDList;
-
-	/** Static translation function that maps handheld native (8 bit,
-	* usually latin1 but sometimes someting else) encoded data to
-	* a Unicode string. Converts the @p len characters in @p c
-	* to a Unicode string.
-	*/
-	QString fromPilot( const char *c, int len );
-
-	/** Static translation function mapping a NUL-terminated
-	* string from the handheld's encoding to UTF-8.
-	* @param c the NUL-terminated string to decode
-	* @return QString (UTF-8) value of @p c
-	* @note NUL-terminated strings are rare on the handheld.
-	*/
-	QString fromPilot( const char *c );
-
-	/** Static translation function that maps a QString onto the
-	* native 8 bit encoding of the handheld. Writes the result into
-	* the buffer @p buf which has size @p len. Returns the length
-	* of the result. Zero-fills the buffer as needed.
-	*/
-	int toPilot( const QString &s, char *buf, int len);
-	int toPilot( const QString &s, unsigned char *buf, int len);
-
-	/** Static translation function that maps a QString onto the
-	* native 8 bit encoding of the handheld.
-	*
-	* @param s String to encode
-	* @return Encoded string in a QCString
-	*/
-	QCString toPilot( const QString &s );
-
-	/** Create a codec for translating handheld native 8 bit to Unicode,
-	* using the given codec @p name -- this will often be latin1, but
-	* might be something else for, say, Russian-language Pilots.
-	* If @p name is empty, use latin1.
-	*
-	* @return @c true on success, @c false otherwise
-	*/
-	bool setupPilotCodec(const QString &name);
-
-	/** Returns the name of the codec being used. */
-	QString codecName();
-
-	/** For debugging, display category names for the given AppInfo
-	* structure. Called by dump(). You must pass a valid reference.
-	*/
-	void dumpCategories(const struct CategoryAppInfo *info);
-
-	/** Check that a given category number is valid. This
-	* restricts the range of integers to [0..CATEGORY_COUNT-1]
-	* (i.e. [0..15]) which is what the handheld supports.
-	*/
-	inline bool validCategory(int c)
-	{
-		if (c<0)
-		{
-			return false;
-		}
-		return ((unsigned int)c<CATEGORY_COUNT);
-	}
-
-	/** Returns the QString for the requested category @p i
-	* in the category structure @p info. Returns @c QString::null
-	* on error (bad pointer or bad category number). May also
-	* return @c QString::null if the category name is empty.
-	*/
-	inline QString categoryName(const struct CategoryAppInfo *info, unsigned int i)
-	{
-		if ( ( i < CATEGORY_COUNT ) && ( info->name[i][0] ) )
-		{
-			/*
-			 * Seems to be important that we try to pass the real length here
-			 * to the codec.
-			 */
-			return fromPilot( info->name[i], MIN(strlen(info->name[i]),CATEGORY_SIZE) );
-		}
-		else
-		{
-			return QString::null;
-		}
-	}
-
-	/** Returns a list of all the category names available on the
-	*  handheld. This list is neither ordered nor does it contain
-	*  all sixteen categories -- empty category names on the
-	*  handheld are skipped.
-	*/
-	inline QStringList categoryNames(const struct CategoryAppInfo *info)
-	{
-		QStringList l;
-		if (!info)
-		{
-			return l;
-		}
-		for (unsigned int i=0; i<CATEGORY_COUNT; ++i)
-		{
-			QString s = categoryName(info,i);
-			if (!s.isEmpty())
-			{
-				l.append(s);
-			}
-		}
-		return l;
-	}
-
-	/** Search for the given category @p name in the list
-	* of categories; returns the category number. If @p unknownIsUnfiled
-	* is true, then map unknown categories to Unfiled instead of returning
-	* an error number.
-	*
-	* @return >=0   is a specific category based on the text-to-
-	*               category number mapping defined by the Pilot,
-	*               where 0 is always the 'unfiled' category.
-	*  @return -1   means unknown category selected when
-	*               @p unknownIsUnfiled is false.
-	*  @return  0   == Unfiled means unknown category selected when
-	*               @p unknownIsUnfiled is true.
-	*
-	*/
-	int findCategory(const struct CategoryAppInfo *info, const QString &name, bool unknownIsUnfiled);
-
-	/** Search for the given category @p name in the list
-	* of categories; returns the category number. If @p unknownIsUnfiled
-	* is @c true, then map unknown categories to Unfiled.
-	* If @p unknownIsUnfiled is @c false, insert a @em new
-	* category into the structure and return the category
-	* number of the new category. Return -1 if (and only if)
-	* @p unknownIsUnfiled is false and the category structure
-	* is already full.
-	*
-	* @return >=0   is a specific category based on the text-to-
-	*               category number mapping defined by the Pilot,
-	*               where 0 is always the 'unfiled' category.
-	* @return 0     Unknown category and @p unknownIsUnfiled is @c true
-	* @return -1    means unknown category selected when
-	*               @p unknownIsUnfiled is false and categories
-	*               are all full.
-	*
-	*/
-	int insertCategory(struct CategoryAppInfo *info, const QString &label, bool unknownIsUnfiled);
-
-	/** The handheld also holds data about each database
-	* in a DBInfo structure; check if the database described
-	* by this structure is a resource database.
-	*/
-	static inline bool isResource(struct DBInfo *info)
-	{
-		return (info->flags & dlpDBFlagResource);
-	}
+/** The handheld also holds data about each database
+* in a DBInfo structure; check if the database described
+* by this structure is a resource database.
+*/
+static inline bool isResource(struct DBInfo *info)
+{
+    return (info->flags & dlpDBFlagResource);
+}
 
 
 /** @section Binary blob handling
@@ -268,140 +267,140 @@ template<typename t> struct dlp { } ;
 
 template<> struct dlp<char>
 {
-	enum { size = 1 };
+    enum { size = 1 };
 
-	static void append(pi_buffer_t *b, char v)
-	{
-		pi_buffer_append(b,&v,size);
-	}
+    static void append(pi_buffer_t *b, char v)
+    {
+        pi_buffer_append(b, &v, size);
+    }
 
-	/**
-	* Returns next byte from buffer or 0 on error (0 is also a
-	* valid return value, though).
-	*/
-	static char read(const pi_buffer_t *b, unsigned int &offset)
-	{
-		if (offset+size > b->used)
-		{
-			return 0;
-		}
-		char c = b->data[offset];
-		offset+=size;
-		return c;
-	}
+    /**
+    * Returns next byte from buffer or 0 on error (0 is also a
+    * valid return value, though).
+    */
+    static char read(const pi_buffer_t *b, unsigned int &offset)
+    {
+        if(offset + size > b->used)
+        {
+            return 0;
+        }
+        char c = b->data[offset];
+        offset += size;
+        return c;
+    }
 } ;
 
 template<> struct dlp<short>
 {
-	enum { size = 2 };
+    enum { size = 2 };
 
-	static void append(pi_buffer_t *b, short v)
-	{
-		char buf[size];
-		set_short(buf,v);
-		pi_buffer_append(b,buf,size);
-	}
+    static void append(pi_buffer_t *b, short v)
+    {
+        char buf[size];
+        set_short(buf, v);
+        pi_buffer_append(b, buf, size);
+    }
 
-	/**
-	* Returns the next short (2 byte) value from the buffer, or
-	* -1 on error (which is also a valid return value).
-	*/
-	static int read(const pi_buffer_t *b, unsigned int &offset)
-	{
-		if (offset+size > b->used)
-		{
-			return -1;
-		}
-		else
-		{
-			int r = get_short(b->data + offset);
-			offset+=size;
-			return r;
-		}
-	}
+    /**
+    * Returns the next short (2 byte) value from the buffer, or
+    * -1 on error (which is also a valid return value).
+    */
+    static int read(const pi_buffer_t *b, unsigned int &offset)
+    {
+        if(offset + size > b->used)
+        {
+            return -1;
+        }
+        else
+        {
+            int r = get_short(b->data + offset);
+            offset += size;
+            return r;
+        }
+    }
 
-	/**
-	* Overload to read from a data buffer instead of a real pi_buffer;
-	* does no bounds checking.
-	*/
-	static int read(const unsigned char *b, unsigned int &offset)
-	{
-		int r = get_short(b+offset);
-		offset+=size;
-		return r;
-	}
+    /**
+    * Overload to read from a data buffer instead of a real pi_buffer;
+    * does no bounds checking.
+    */
+    static int read(const unsigned char *b, unsigned int &offset)
+    {
+        int r = get_short(b + offset);
+        offset += size;
+        return r;
+    }
 } ;
 
 template<> struct dlp<long>
 {
-	enum { size = 4 };
+    enum { size = 4 };
 
-	static void append(pi_buffer_t *b, int v)
-	{
-		char buf[size];
-		set_long(buf,v);
-		pi_buffer_append(b,buf,size);
-	}
+    static void append(pi_buffer_t *b, int v)
+    {
+        char buf[size];
+        set_long(buf, v);
+        pi_buffer_append(b, buf, size);
+    }
 
-	/**
-	* Returns the next long (4 byte) value from the buffer or
-	* -1 on error (which is also a valid value).
-	*/
-	static int read(const pi_buffer_t *b, unsigned int &offset)
-	{
-		if (offset+size > b->used)
-		{
-			return -1;
-		}
-		else
-		{
-			int r = get_long(b->data + offset);
-			offset+=size;
-			return r;
-		}
-	}
+    /**
+    * Returns the next long (4 byte) value from the buffer or
+    * -1 on error (which is also a valid value).
+    */
+    static int read(const pi_buffer_t *b, unsigned int &offset)
+    {
+        if(offset + size > b->used)
+        {
+            return -1;
+        }
+        else
+        {
+            int r = get_long(b->data + offset);
+            offset += size;
+            return r;
+        }
+    }
 
-	/**
-	* Overload to read a long value from a data buffer; does
-	* no bounds checking.
-	*/
-	static int read(const unsigned char *b, unsigned int &offset)
-	{
-		int r = get_long(b+offset);
-		offset+=size;
-		return r;
-	}
+    /**
+    * Overload to read a long value from a data buffer; does
+    * no bounds checking.
+    */
+    static int read(const unsigned char *b, unsigned int &offset)
+    {
+        int r = get_long(b + offset);
+        offset += size;
+        return r;
+    }
 } ;
 
 template<> struct dlp<char *>
 {
-	// No size enum, doesn't make sense
-	// No append, use pi_buffer_append
-	/**
-	* Read a fixed-length string from the buffer @p b into data buffer
-	* @p v which has size (including terminating NUL) of @p s.
-	* Returns the number of bytes read (which will normally  be @p s
-	* but will be less than @p s on error).
-	*/
-	static int read(const pi_buffer_t *b,
-		unsigned int &offset,
-		unsigned char *v,
-		size_t s)
-	{
-		if ( s+offset > b->used )
-		{
-			s = b->allocated - offset;
-		}
-		memcpy(v, b->data + offset, s);
-		offset+=s;
-		return s;
-	}
+    // No size enum, doesn't make sense
+    // No append, use pi_buffer_append
+    /**
+    * Read a fixed-length string from the buffer @p b into data buffer
+    * @p v which has size (including terminating NUL) of @p s.
+    * Returns the number of bytes read (which will normally  be @p s
+    * but will be less than @p s on error).
+    */
+    static int read(const pi_buffer_t *b,
+                    unsigned int &offset,
+                    unsigned char *v,
+                    size_t s)
+    {
+        if(s + offset > b->used)
+        {
+            s = b->allocated - offset;
+        }
+        memcpy(v, b->data + offset, s);
+        offset += s;
+        return s;
+    }
 
-	/** Overload for signed char. */
-	inline static int read(const pi_buffer_t *b, unsigned int &offset, char *v, size_t s)
-	{
-		return read(b,offset,(unsigned char *)v,s);
-	}
+    /** Overload for signed char. */
+    inline static int read(const pi_buffer_t *b, unsigned int &offset, char *v, size_t s)
+    {
+        return read(b, offset, (unsigned char *)v, s);
+    }
 } ;
 
 }

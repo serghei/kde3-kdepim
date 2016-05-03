@@ -31,38 +31,38 @@
 
 #include "testdateedit.h"
 
-DateEdit::DateEdit( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+DateEdit::DateEdit(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  
-  KDateEdit *edit = new KDateEdit( this );
-  layout->addWidget( edit );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  connect( edit, SIGNAL( dateChanged( const QDate& ) ),
-           this, SLOT( dateChanged( const QDate& ) ) );
+    KDateEdit *edit = new KDateEdit(this);
+    layout->addWidget(edit);
+
+    connect(edit, SIGNAL(dateChanged(const QDate &)),
+            this, SLOT(dateChanged(const QDate &)));
 }
 
-void DateEdit::dateChanged( const QDate &date )
+void DateEdit::dateChanged(const QDate &date)
 {
-  if ( date.isValid() )
-    qDebug( "%s", date.toString().latin1() );
-  else
-    qDebug( "invalid date entered" );
+    if(date.isValid())
+        qDebug("%s", date.toString().latin1());
+    else
+        qDebug("invalid date entered");
 }
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "testdateedit", "Test KDateEdit", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData("testdateedit", "Test KDateEdit", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  DateEdit dateEdit;
-  app.setMainWidget( &dateEdit );
-  dateEdit.show();
+    DateEdit dateEdit;
+    app.setMainWidget(&dateEdit);
+    dateEdit.show();
 
-  app.exec();
+    app.exec();
 }
 
 #include "testdateedit.moc"

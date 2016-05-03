@@ -29,55 +29,53 @@
 
 #include "article.h"
 
-namespace Akregator 
-{
+namespace Akregator {
 
-    /** this class collects notification requests (new articles etc.) and processes them using KNotify.  */
-class NotificationManager : public QObject
-{
+/** this class collects notification requests (new articles etc.) and processes them using KNotify.  */
+class NotificationManager : public QObject {
     Q_OBJECT
-    public:
-        /** singleton instance of notification manager */
-        static NotificationManager* self();
-        
-        ~NotificationManager();
+public:
+    /** singleton instance of notification manager */
+    static NotificationManager *self();
 
-        /** the widget used for notification, normally either the mainwindow or the tray icon */
-        void setWidget(QWidget* widget, KInstance* inst=0);
-        
-    public slots:
+    ~NotificationManager();
 
-        /** notifies an article. Note that articles are not notified separately, but
-        "collected" and notified all together */
-        void slotNotifyArticle(const Article& article);
+    /** the widget used for notification, normally either the mainwindow or the tray icon */
+    void setWidget(QWidget *widget, KInstance *inst = 0);
 
-        /** notifies the addition of feeds (used when added via DCOP or command line) */
-        void slotNotifyFeeds(const QStringList& feeds);
-        
-    protected:
-        
-        void doNotify();
-        
-    protected slots:
+public slots:
 
-        void slotIntervalCheck();
-        
-    private:
-        NotificationManager();
-        NotificationManager(const NotificationManager&) : QObject(){}
-        
-        uint m_checkInterval;
-        uint m_intervalsLapsed;
-        uint m_maxIntervals;
-        uint m_maxArticles;
-        bool m_running;
-        bool m_addedInLastInterval;
-        QWidget* m_widget;
-        KInstance* m_instance;
+    /** notifies an article. Note that articles are not notified separately, but
+    "collected" and notified all together */
+    void slotNotifyArticle(const Article &article);
 
-        QValueList<Article> m_articles;
+    /** notifies the addition of feeds (used when added via DCOP or command line) */
+    void slotNotifyFeeds(const QStringList &feeds);
 
-        static NotificationManager* m_self;
+protected:
+
+    void doNotify();
+
+protected slots:
+
+    void slotIntervalCheck();
+
+private:
+    NotificationManager();
+    NotificationManager(const NotificationManager &) : QObject() {}
+
+    uint m_checkInterval;
+    uint m_intervalsLapsed;
+    uint m_maxIntervals;
+    uint m_maxArticles;
+    bool m_running;
+    bool m_addedInLastInterval;
+    QWidget *m_widget;
+    KInstance *m_instance;
+
+    QValueList<Article> m_articles;
+
+    static NotificationManager *m_self;
 };
 
 } // namespace

@@ -24,10 +24,9 @@
 
 #include <uniqueapphandler.h>
 
-class KOrganizerUniqueAppHandler : public Kontact::UniqueAppHandler
-{
+class KOrganizerUniqueAppHandler : public Kontact::UniqueAppHandler {
 public:
-    KOrganizerUniqueAppHandler( Kontact::Plugin* plugin ) : Kontact::UniqueAppHandler( plugin ) {}
+    KOrganizerUniqueAppHandler(Kontact::Plugin *plugin) : Kontact::UniqueAppHandler(plugin) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
 };

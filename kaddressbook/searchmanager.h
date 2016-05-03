@@ -34,20 +34,20 @@
 
 namespace KAB {
 
-class SearchManager : public QObject
-{
-  Q_OBJECT
+class SearchManager : public QObject {
+    Q_OBJECT
 
-  public:
-    enum Type {
-      StartsWith,
-      EndsWith,
-      Contains,
-      Equals
+public:
+    enum Type
+    {
+        StartsWith,
+        EndsWith,
+        Contains,
+        Equals
     };
 
-    SearchManager( KABC::AddressBook *ab,
-                   QObject *parent, const char *name = 0 );
+    SearchManager(KABC::AddressBook *ab,
+                  QObject *parent, const char *name = 0);
 
     /**
       This method takes a pattern and searches for a match of the specified
@@ -58,7 +58,7 @@ class SearchManager : public QObject
       @param field The field which shall be compared with the search string.
       @param type The type for the matching.
      */
-    void search( const QString &pattern, const KABC::Field::List &fields, Type type = Contains );
+    void search(const QString &pattern, const KABC::Field::List &fields, Type type = Contains);
 
     /**
       Returns the contacts which matched the last search query.
@@ -68,9 +68,9 @@ class SearchManager : public QObject
 
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
-      sets the distribution list to be shown 
+      sets the distribution list to be shown
      */
-    void setSelectedDistributionList( const QString &name );
+    void setSelectedDistributionList(const QString &name);
 
     /**
       Returns all the distribution lists.
@@ -83,16 +83,16 @@ class SearchManager : public QObject
     QStringList distributionListNames() const;
 #endif
 
-  signals:
+signals:
     /**
       Emitted whenever the contacts have changed.
      */
     void contactsUpdated();
 
-  public slots:
+public slots:
     void reload();
 
-  private:
+private:
     KABC::Addressee::List mContacts;
 #ifdef KDEPIM_NEW_DISTRLISTS
     QString mSelectedDistributionList;

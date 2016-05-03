@@ -42,56 +42,59 @@ class KPilotLink;
 
 /** Template class that defines a conduit's factory. */
 
-template <class Widget, class Action> class ConduitFactory : public KLibFactory
-{
+template <class Widget, class Action> class ConduitFactory : public KLibFactory {
 public:
-	ConduitFactory(QObject *parent = 0, const char *name = 0) :
-		KLibFactory(parent,name)
-		{ fInstance = new KInstance(name); } ;
-	virtual ~ConduitFactory()
-		{ delete fInstance; } ;
+    ConduitFactory(QObject *parent = 0, const char *name = 0) :
+        KLibFactory(parent, name)
+    {
+        fInstance = new KInstance(name);
+    } ;
+    virtual ~ConduitFactory()
+    {
+        delete fInstance;
+    } ;
 
 protected:
-	virtual QObject *createObject(
-		QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() )
-	{
-		if (qstrcmp(classname,"ConduitConfigBase")==0)
-		{
-			QWidget *w = dynamic_cast<QWidget *>(parent);
-			if (w) return new Widget(w,name);
-			else
-			{
-				WARNINGKPILOT << "Could not cast parent to widget." << endl;
-				return 0L;
-			}
-		}
+    virtual QObject *createObject(
+        QObject *parent = 0,
+        const char *name = 0,
+        const char *classname = "QObject",
+        const QStringList &args = QStringList())
+    {
+        if(qstrcmp(classname, "ConduitConfigBase") == 0)
+        {
+            QWidget *w = dynamic_cast<QWidget *>(parent);
+            if(w) return new Widget(w, name);
+            else
+            {
+                WARNINGKPILOT << "Could not cast parent to widget." << endl;
+                return 0L;
+            }
+        }
 
-		if (qstrcmp(classname,"SyncAction")==0)
-		{
-			KPilotLink *d = 0L;
-			if (parent) d = dynamic_cast<KPilotLink *>(parent);
+        if(qstrcmp(classname, "SyncAction") == 0)
+        {
+            KPilotLink *d = 0L;
+            if(parent) d = dynamic_cast<KPilotLink *>(parent);
 
-			if (d || !parent)
-			{
-				if (!parent)
-				{
-					kdDebug() << k_funcinfo << ": Using NULL device." << endl;
-				}
-				return new Action(d,name,args);
-			}
-			else
-			{
-				WARNINGKPILOT << "Could not cast parent to KPilotLink" << endl;
-				return 0L;
-			}
-		}
-		return 0L;
-	}
+            if(d || !parent)
+            {
+                if(!parent)
+                {
+                    kdDebug() << k_funcinfo << ": Using NULL device." << endl;
+                }
+                return new Action(d, name, args);
+            }
+            else
+            {
+                WARNINGKPILOT << "Could not cast parent to KPilotLink" << endl;
+                return 0L;
+            }
+        }
+        return 0L;
+    }
 
-	KInstance *fInstance;
+    KInstance *fInstance;
 } ;
 
 #endif

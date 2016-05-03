@@ -21,26 +21,29 @@ class KNArticle;
 class KNArticleCollection;
 
 namespace KNode {
-  class ArticleWidget;
+class ArticleWidget;
 }
 
 class KNArticleWindow : public KMainWindow  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNArticleWindow(KNArticle *art);
     ~KNArticleWindow();
-    KNode::ArticleWidget* artWidget()const        { return artW; }
+    KNode::ArticleWidget *artWidget()const
+    {
+        return artW;
+    }
 
-    static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force=true);
-    static bool closeAllWindowsForArticle(KNArticle *art, bool force=true);
+    static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force = true);
+    static bool closeAllWindowsForArticle(KNArticle *art, bool force = true);
     static bool raiseWindowForArticle(KNArticle *art);   // false: no window found
     static bool raiseWindowForArticle(const QCString &mid);
 
-  protected:
+protected:
     KNode::ArticleWidget *artW;
-    static QValueList<KNArticleWindow*> mInstances;
+    static QValueList<KNArticleWindow *> mInstances;
 
 };
 

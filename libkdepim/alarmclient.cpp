@@ -31,30 +31,33 @@
 
 AlarmClient::AlarmClient()
 {
-  kdDebug(5850) << "AlarmClient::AlarmClient()" << endl;
+    kdDebug(5850) << "AlarmClient::AlarmClient()" << endl;
 }
 
 void AlarmClient::startDaemon()
 {
-  if ( kapp->dcopClient()->isApplicationRegistered( "korgac" ) ) {
-    // Alarm daemon already runs
-    return;
-  }
+    if(kapp->dcopClient()->isApplicationRegistered("korgac"))
+    {
+        // Alarm daemon already runs
+        return;
+    }
 
-  KGlobal::dirs()->addResourceType("autostart", "share/autostart");
-  QString desktopFile = locate( "autostart", "korgac.desktop" );
-  if ( desktopFile.isEmpty() ) {
-    kdWarning() << "Couldn't find autostart/korgac.desktop!" << endl;
-  }
-  else {
-    QString error;
-    if ( kapp->startServiceByDesktopPath( desktopFile, QStringList(), &error ) != 0 )
-      kdWarning() << "Failure starting korgac:" << error << endl;
-  }
+    KGlobal::dirs()->addResourceType("autostart", "share/autostart");
+    QString desktopFile = locate("autostart", "korgac.desktop");
+    if(desktopFile.isEmpty())
+    {
+        kdWarning() << "Couldn't find autostart/korgac.desktop!" << endl;
+    }
+    else
+    {
+        QString error;
+        if(kapp->startServiceByDesktopPath(desktopFile, QStringList(), &error) != 0)
+            kdWarning() << "Failure starting korgac:" << error << endl;
+    }
 }
 
 void AlarmClient::stopDaemon()
 {
-  DCOPRef ref( "korgac", "ac" );
-  ref.send( "quit" );
+    DCOPRef ref("korgac", "ac");
+    ref.send("quit");
 }

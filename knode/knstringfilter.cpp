@@ -27,32 +27,35 @@
 #include "knstringfilter.h"
 
 
-KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
+KNStringFilter &KNStringFilter::operator=(const KNStringFilter &sf)
 {
-  con=sf.con;
-  data=sf.data.copy();
-  regExp=sf.regExp;
+    con = sf.con;
+    data = sf.data.copy();
+    regExp = sf.regExp;
 
-  return (*this);
+    return (*this);
 }
 
 
 
 bool KNStringFilter::doFilter(const QString &s)
 {
-  bool ret=true;
+    bool ret = true;
 
-  if(!expanded.isEmpty()) {
-    if(regExp) {
-      QRegExp matcher(expanded);
-      ret = ( matcher.search(s) >= 0 );
-    } else
-      ret=(s.find(expanded,0,false)!=-1);
+    if(!expanded.isEmpty())
+    {
+        if(regExp)
+        {
+            QRegExp matcher(expanded);
+            ret = (matcher.search(s) >= 0);
+        }
+        else
+            ret = (s.find(expanded, 0, false) != -1);
 
-    if(!con) ret=!ret;
-  }
+        if(!con) ret = !ret;
+    }
 
-  return ret;
+    return ret;
 }
 
 
@@ -60,58 +63,59 @@ bool KNStringFilter::doFilter(const QString &s)
 // replace placeholders
 void KNStringFilter::expand(KNGroup *g)
 {
-  KNConfig::Identity *id = (g) ? g->identity() : 0;
+    KNConfig::Identity *id = (g) ? g->identity() : 0;
 
-  if (!id) {
-    id = (g) ? g->account()->identity() : 0;
-    if (!id)
-      id = knGlobals.configManager()->identity();
-  }
+    if(!id)
+    {
+        id = (g) ? g->account()->identity() : 0;
+        if(!id)
+            id = knGlobals.configManager()->identity();
+    }
 
-  expanded = data;
-  expanded.replace(QRegExp("%MYNAME"), id->name());
-  expanded.replace(QRegExp("%MYEMAIL"), id->email());
+    expanded = data;
+    expanded.replace(QRegExp("%MYNAME"), id->name());
+    expanded.replace(QRegExp("%MYEMAIL"), id->email());
 }
 
 
 
 void KNStringFilter::load(KSimpleConfig *conf)
 {
-  con=conf->readBoolEntry("contains", true);
-  data=conf->readEntry("Data");
-  regExp=conf->readBoolEntry("regX", false);
+    con = conf->readBoolEntry("contains", true);
+    data = conf->readEntry("Data");
+    regExp = conf->readBoolEntry("regX", false);
 }
 
 
 
 void KNStringFilter::save(KSimpleConfig *conf)
 {
-  conf->writeEntry("contains", con);
-  conf->writeEntry("Data", data);
-  conf->writeEntry("regX", regExp);
+    conf->writeEntry("contains", con);
+    conf->writeEntry("Data", data);
+    conf->writeEntry("regX", regExp);
 }
 
 
 //===============================================================================
 
-KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent)
-  : QGroupBox(title, parent)
+KNStringFilterWidget::KNStringFilterWidget(const QString &title, QWidget *parent)
+    : QGroupBox(title, parent)
 {
-  fType=new QComboBox(this);
-  fType->insertItem(i18n("Does Contain"));
-  fType->insertItem(i18n("Does NOT Contain"));
+    fType = new QComboBox(this);
+    fType->insertItem(i18n("Does Contain"));
+    fType->insertItem(i18n("Does NOT Contain"));
 
-  fString=new KLineEdit(this);
+    fString = new KLineEdit(this);
 
-  regExp=new QCheckBox(i18n("Regular expression"), this);
+    regExp = new QCheckBox(i18n("Regular expression"), this);
 
-  QGridLayout *topL=new QGridLayout(this, 3,3, 8,5 );
-  topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  topL->addWidget(fType, 1,0);
-  topL->addColSpacing(1, 10);
-  topL->addWidget(regExp, 1,1);
-  topL->addMultiCellWidget(fString, 2,2, 0,2);
-  topL->setColStretch(2,1);
+    QGridLayout *topL = new QGridLayout(this, 3, 3, 8, 5);
+    topL->addRowSpacing(0, fontMetrics().lineSpacing() - 4);
+    topL->addWidget(fType, 1, 0);
+    topL->addColSpacing(1, 10);
+    topL->addWidget(regExp, 1, 1);
+    topL->addMultiCellWidget(fString, 2, 2, 0, 2);
+    topL->setColStretch(2, 1);
 }
 
 
@@ -124,37 +128,37 @@ KNStringFilterWidget::~KNStringFilterWidget()
 
 KNStringFilter KNStringFilterWidget::filter()
 {
-  KNStringFilter ret;
-  ret.con=(fType->currentItem()==0);
-  ret.data=fString->text();
-  ret.regExp=regExp->isChecked();
+    KNStringFilter ret;
+    ret.con = (fType->currentItem() == 0);
+    ret.data = fString->text();
+    ret.regExp = regExp->isChecked();
 
-  return ret;
+    return ret;
 }
 
 
 
 void KNStringFilterWidget::setFilter(KNStringFilter &f)
 {
-  if(f.con) fType->setCurrentItem(0);
-  else fType->setCurrentItem(1);
-  fString->setText(f.data);
-  regExp->setChecked(f.regExp);
+    if(f.con) fType->setCurrentItem(0);
+    else fType->setCurrentItem(1);
+    fString->setText(f.data);
+    regExp->setChecked(f.regExp);
 }
 
 
 
 void KNStringFilterWidget::clear()
 {
-  fString->clear();
-  fType->setCurrentItem(0);
-  regExp->setChecked(false);
+    fString->clear();
+    fType->setCurrentItem(0);
+    regExp->setChecked(false);
 }
 
 
 void KNStringFilterWidget::setStartFocus()
 {
-  fString->setFocus();
+    fString->setFocus();
 }
 
 

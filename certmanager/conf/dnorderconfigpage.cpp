@@ -38,40 +38,45 @@
 
 #include <qlayout.h>
 
-DNOrderConfigPage::DNOrderConfigPage( QWidget * parent, const char * name )
-  : KCModule( parent, name )
+DNOrderConfigPage::DNOrderConfigPage(QWidget *parent, const char *name)
+    : KCModule(parent, name)
 {
-  QVBoxLayout * vlay = new QVBoxLayout( this );
-  mWidget = Kleo::DNAttributeMapper::instance()->configWidget( this, "mWidget" );
-  vlay->addWidget( mWidget );
+    QVBoxLayout *vlay = new QVBoxLayout(this);
+    mWidget = Kleo::DNAttributeMapper::instance()->configWidget(this, "mWidget");
+    vlay->addWidget(mWidget);
 
-  connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );
+    connect(mWidget, SIGNAL(changed()), SLOT(slotChanged()));
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
+    load();
 #endif
 }
 
 
-void DNOrderConfigPage::load() {
-  mWidget->load();
+void DNOrderConfigPage::load()
+{
+    mWidget->load();
 }
 
-void DNOrderConfigPage::save() {
-  mWidget->save();
+void DNOrderConfigPage::save()
+{
+    mWidget->save();
 }
 
-void DNOrderConfigPage::defaults() {
-  mWidget->defaults();
+void DNOrderConfigPage::defaults()
+{
+    mWidget->defaults();
 }
 
 // kdelibs-3.2 didn't have the changed signal in KCModule...
-void DNOrderConfigPage::slotChanged() {
-  emit changed(true);
+void DNOrderConfigPage::slotChanged()
+{
+    emit changed(true);
 }
 
-extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget * parent, const char * ) {
-    return new DNOrderConfigPage( parent, "kleopatra_config_dnorder" );
+extern "C" KDE_EXPORT KCModule *create_kleopatra_config_dnorder(QWidget *parent, const char *)
+{
+    return new DNOrderConfigPage(parent, "kleopatra_config_dnorder");
 }
 
 #include "dnorderconfigpage.moc"

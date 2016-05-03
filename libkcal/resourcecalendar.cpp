@@ -32,8 +32,8 @@
 
 using namespace KCal;
 
-ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config ),mResolveConflict( false )
+ResourceCalendar::ResourceCalendar(const KConfig *config)
+    : KRES::Resource(config), mResolveConflict(false)
 {
 }
 
@@ -41,164 +41,171 @@ ResourceCalendar::~ResourceCalendar()
 {
 }
 
-void ResourceCalendar::setResolveConflict( bool b)
+void ResourceCalendar::setResolveConflict(bool b)
 {
- mResolveConflict = b;
+    mResolveConflict = b;
 }
 QString ResourceCalendar::infoText() const
 {
-  QString txt;
+    QString txt;
 
-  txt += "<b>" + resourceName() + "</b>";
-  txt += "<br>";
+    txt += "<b>" + resourceName() + "</b>";
+    txt += "<br>";
 
-  KRES::Factory *factory = KRES::Factory::self( "calendar" );
-  QString t = factory->typeName( type() );
-  txt += i18n("Type: %1").arg( t );
+    KRES::Factory *factory = KRES::Factory::self("calendar");
+    QString t = factory->typeName(type());
+    txt += i18n("Type: %1").arg(t);
 
-  addInfoText( txt );
+    addInfoText(txt);
 
-  return txt;
+    return txt;
 }
 
-void ResourceCalendar::writeConfig( KConfig* config )
+void ResourceCalendar::writeConfig(KConfig *config)
 {
-//  kdDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
+    //  kdDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
 
-  KRES::Resource::writeConfig( config );
+    KRES::Resource::writeConfig(config);
 }
 
-Incidence *ResourceCalendar::incidence( const QString &uid )
+Incidence *ResourceCalendar::incidence(const QString &uid)
 {
-  Incidence *i = event( uid );
-  if ( i ) return i;
-  i = todo( uid );
-  if ( i ) return i;
-  i = journal( uid );
-  return i;
+    Incidence *i = event(uid);
+    if(i) return i;
+    i = todo(uid);
+    if(i) return i;
+    i = journal(uid);
+    return i;
 }
 
-bool ResourceCalendar::addIncidence( Incidence *incidence )
+bool ResourceCalendar::addIncidence(Incidence *incidence)
 {
-  Incidence::AddVisitor<ResourceCalendar> v( this );
-  return incidence->accept( v );
+    Incidence::AddVisitor<ResourceCalendar> v(this);
+    return incidence->accept(v);
 }
 
-bool ResourceCalendar::deleteIncidence( Incidence *incidence )
+bool ResourceCalendar::deleteIncidence(Incidence *incidence)
 {
-  Incidence::DeleteVisitor<ResourceCalendar> v( this );
-  return incidence->accept( v );
+    Incidence::DeleteVisitor<ResourceCalendar> v(this);
+    return incidence->accept(v);
 }
 
 Incidence::List ResourceCalendar::rawIncidences()
 {
-  return Calendar::mergeIncidenceList( rawEvents(), rawTodos(), rawJournals() );
+    return Calendar::mergeIncidenceList(rawEvents(), rawTodos(), rawJournals());
 }
 
-void ResourceCalendar::setSubresourceActive( const QString &, bool )
+void ResourceCalendar::setSubresourceActive(const QString &, bool)
 {
 }
 
-bool ResourceCalendar::addSubresource( const QString &, const QString & )
+bool ResourceCalendar::addSubresource(const QString &, const QString &)
 {
-  return true;
+    return true;
 }
 
-bool ResourceCalendar::removeSubresource( const QString & )
+bool ResourceCalendar::removeSubresource(const QString &)
 {
-  return true;
+    return true;
 }
 
 bool ResourceCalendar::load()
 {
-  kdDebug(5800) << "Loading resource " + resourceName() << endl;
+    kdDebug(5800) << "Loading resource " + resourceName() << endl;
 
-  mReceivedLoadError = false;
+    mReceivedLoadError = false;
 
-  bool success = true;
-  if ( !isOpen() )
-    success = open();
-  if ( success )
-    success = doLoad();
+    bool success = true;
+    if(!isOpen())
+        success = open();
+    if(success)
+        success = doLoad();
 
-  if ( !success && !mReceivedLoadError )
-    loadError();
+    if(!success && !mReceivedLoadError)
+        loadError();
 
-  // If the resource is read-only, we need to set its incidences to read-only,
-  // too. This can't be done at a lower-level, since the read-only setting
-  // happens at this level
-  if ( readOnly() ) {
-    Incidence::List incidences( rawIncidences() );
-    Incidence::List::Iterator it;
-    for ( it = incidences.begin(); it != incidences.end(); ++it ) {
-      (*it)->setReadOnly( true );
+    // If the resource is read-only, we need to set its incidences to read-only,
+    // too. This can't be done at a lower-level, since the read-only setting
+    // happens at this level
+    if(readOnly())
+    {
+        Incidence::List incidences(rawIncidences());
+        Incidence::List::Iterator it;
+        for(it = incidences.begin(); it != incidences.end(); ++it)
+        {
+            (*it)->setReadOnly(true);
+        }
     }
-  }
 
-  kdDebug(5800) << "Done loading resource " + resourceName() << endl;
-
-  return success;
-}
-
-void ResourceCalendar::loadError( const QString &err )
-{
-  kdDebug(5800) << "Error loading resource: " << err << endl;
-
-  mReceivedLoadError = true;
-
-  QString msg = i18n("Error while loading %1.\n") .arg( resourceName() );
-  if ( !err.isEmpty() ) {
-    msg += err;
-  }
-  emit resourceLoadError( this, msg );
-}
-
-bool ResourceCalendar::save( Incidence *incidence )
-{
-  if ( !readOnly() ) {
-    kdDebug(5800) << "Save resource " + resourceName() << endl;
-
-    mReceivedSaveError = false;
-
-    if ( !isOpen() ) return true;
-    bool success = incidence ? doSave(incidence) : doSave();
-    if ( !success && !mReceivedSaveError ) saveError();
+    kdDebug(5800) << "Done loading resource " + resourceName() << endl;
 
     return success;
-  } else {
-    // Read-only, just don't save...
-    kdDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
-    return true;
-  }
 }
 
-bool ResourceCalendar::doSave( Incidence * )
+void ResourceCalendar::loadError(const QString &err)
 {
-  return doSave();
+    kdDebug(5800) << "Error loading resource: " << err << endl;
+
+    mReceivedLoadError = true;
+
+    QString msg = i18n("Error while loading %1.\n") .arg(resourceName());
+    if(!err.isEmpty())
+    {
+        msg += err;
+    }
+    emit resourceLoadError(this, msg);
 }
 
-void ResourceCalendar::saveError( const QString &err )
+bool ResourceCalendar::save(Incidence *incidence)
 {
-  kdDebug(5800) << "Error saving resource: " << err << endl;
+    if(!readOnly())
+    {
+        kdDebug(5800) << "Save resource " + resourceName() << endl;
 
-  mReceivedSaveError = true;
+        mReceivedSaveError = false;
 
-  QString msg = i18n("Error while saving %1.\n") .arg( resourceName() );
-  if ( !err.isEmpty() ) {
-    msg += err;
-  }
-  emit resourceSaveError( this, msg );
+        if(!isOpen()) return true;
+        bool success = incidence ? doSave(incidence) : doSave();
+        if(!success && !mReceivedSaveError) saveError();
+
+        return success;
+    }
+    else
+    {
+        // Read-only, just don't save...
+        kdDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
+        return true;
+    }
 }
 
-bool ResourceCalendar::setValue( const QString &key, const QString &value )
+bool ResourceCalendar::doSave(Incidence *)
 {
-  return false;
+    return doSave();
 }
 
-QString ResourceCalendar::subresourceType( const QString &resource )
+void ResourceCalendar::saveError(const QString &err)
 {
-  Q_UNUSED( resource );
-  return QString();
+    kdDebug(5800) << "Error saving resource: " << err << endl;
+
+    mReceivedSaveError = true;
+
+    QString msg = i18n("Error while saving %1.\n") .arg(resourceName());
+    if(!err.isEmpty())
+    {
+        msg += err;
+    }
+    emit resourceSaveError(this, msg);
+}
+
+bool ResourceCalendar::setValue(const QString &key, const QString &value)
+{
+    return false;
+}
+
+QString ResourceCalendar::subresourceType(const QString &resource)
+{
+    Q_UNUSED(resource);
+    return QString();
 }
 
 

@@ -33,160 +33,160 @@ Boston, MA 02111-1307, USA.  */
 #define va_copy(d, s) (*(d) = *(s))
 #elif defined (MUST_COPY_VA_BYVAL)
 #define va_copy(d, s) ((d) = (s))
-#else 
+#else
 #define va_copy(d, s) memcpy ((d), (s), sizeof (va_list))
-#endif 
-#endif 
+#endif
+#endif
 
 
 #ifdef TEST
 int global_total_width;
 #endif
 
-static int int_vasprintf (char **, const char *, va_list *);
+static int int_vasprintf(char **, const char *, va_list *);
 
 static int
-int_vasprintf (result, format, args)
-     char **result;
-     const char *format;
-     va_list *args;
+int_vasprintf(result, format, args)
+char **result;
+const char *format;
+va_list *args;
 {
-  const char *p = format;
-  /* Add one to make sure that it is never zero, which might cause malloc
-     to return NULL.  */
-  int total_width = strlen (format) + 1;
-  va_list ap;
+    const char *p = format;
+    /* Add one to make sure that it is never zero, which might cause malloc
+       to return NULL.  */
+    int total_width = strlen(format) + 1;
+    va_list ap;
 
-  va_copy (ap, *args);
+    va_copy(ap, *args);
 
-  while (*p != '\0')
+    while(*p != '\0')
     {
-      if (*p++ == '%')
-	{
-	  while (strchr ("-+ #0", *p))
-	    ++p;
-	  if (*p == '*')
-	    {
-	      ++p;
-	      total_width += abs (va_arg (ap, int));
-	    }
-	  else
-	    total_width += strtoul (p, (char **) &p, 10);
-	  if (*p == '.')
-	    {
-	      ++p;
-	      if (*p == '*')
-		{
-		  ++p;
-		  total_width += abs (va_arg (ap, int));
-		}
-	      else
-	      total_width += strtoul (p, (char **) &p, 10);
-	    }
-	  while (strchr ("hlL", *p))
-	    ++p;
-	  /* Should be big enough for any format specifier except %s and floats.  */
-	  total_width += 30;
-	  switch (*p)
-	    {
-	    case 'd':
-	    case 'i':
-	    case 'o':
-	    case 'u':
-	    case 'x':
-	    case 'X':
-	    case 'c':
-	      (void) va_arg (ap, int);
-	      break;
-	    case 'f':
-	    case 'e':
-	    case 'E':
-	    case 'g':
-	    case 'G':
-	      (void) va_arg (ap, double);
-	      /* Since an ieee double can have an exponent of 307, we'll
-		 make the buffer wide enough to cover the gross case. */
-	      total_width += 307;
-	      break;
-	    case 's':
-              {
-                char *tmp = va_arg (ap, char *);
-                if (tmp)
-                  total_width += strlen (tmp);
-                else /* in case the vsprintf does prints a text */
-                  total_width += 25; /* e.g. "(null pointer reference)" */
-              }
-	      break;
-	    case 'p':
-	    case 'n':
-	      (void) va_arg (ap, char *);
-	      break;
-	    }
-	  p++;
-	}
+        if(*p++ == '%')
+        {
+            while(strchr("-+ #0", *p))
+                ++p;
+            if(*p == '*')
+            {
+                ++p;
+                total_width += abs(va_arg(ap, int));
+            }
+            else
+                total_width += strtoul(p, (char **) &p, 10);
+            if(*p == '.')
+            {
+                ++p;
+                if(*p == '*')
+                {
+                    ++p;
+                    total_width += abs(va_arg(ap, int));
+                }
+                else
+                    total_width += strtoul(p, (char **) &p, 10);
+            }
+            while(strchr("hlL", *p))
+                ++p;
+            /* Should be big enough for any format specifier except %s and floats.  */
+            total_width += 30;
+            switch(*p)
+            {
+                case 'd':
+                case 'i':
+                case 'o':
+                case 'u':
+                case 'x':
+                case 'X':
+                case 'c':
+                    (void) va_arg(ap, int);
+                    break;
+                case 'f':
+                case 'e':
+                case 'E':
+                case 'g':
+                case 'G':
+                    (void) va_arg(ap, double);
+                    /* Since an ieee double can have an exponent of 307, we'll
+                    make the buffer wide enough to cover the gross case. */
+                    total_width += 307;
+                    break;
+                case 's':
+                {
+                    char *tmp = va_arg(ap, char *);
+                    if(tmp)
+                        total_width += strlen(tmp);
+                    else /* in case the vsprintf does prints a text */
+                        total_width += 25; /* e.g. "(null pointer reference)" */
+                }
+                break;
+                case 'p':
+                case 'n':
+                    (void) va_arg(ap, char *);
+                    break;
+            }
+            p++;
+        }
     }
 #ifdef TEST
-  global_total_width = total_width;
+    global_total_width = total_width;
 #endif
-  *result = malloc (total_width);
-  if (*result != NULL)
-    return vsprintf (*result, format, *args);
-  else
-    return 0;
+    *result = malloc(total_width);
+    if(*result != NULL)
+        return vsprintf(*result, format, *args);
+    else
+        return 0;
 }
 
 int
-vasprintf (result, format, args)
-     char **result;
-     const char *format;
+vasprintf(result, format, args)
+char **result;
+const char *format;
 #if defined (_BSD_VA_LIST_) && defined (__FreeBSD__)
-     _BSD_VA_LIST_ args;
+_BSD_VA_LIST_ args;
 #else
-     va_list args;
+va_list args;
 #endif
 {
-  return int_vasprintf (result, format, &args);
+    return int_vasprintf(result, format, &args);
 }
 
 
 int
-asprintf (char **buf, const char *fmt, ...)
+asprintf(char **buf, const char *fmt, ...)
 {
-  int status;
-  va_list ap;
+    int status;
+    va_list ap;
 
-  va_start (ap, fmt);
-  status = vasprintf (buf, fmt, ap);
-  va_end (ap);
-  return status;
+    va_start(ap, fmt);
+    status = vasprintf(buf, fmt, ap);
+    va_end(ap);
+    return status;
 }
 
 
 #ifdef TEST
 void
-checkit (const char* format, ...)
+checkit(const char *format, ...)
 {
-  va_list args;
-  char *result;
+    va_list args;
+    char *result;
 
-  va_start (args, format);
-  vasprintf (&result, format, args);
-  if (strlen (result) < global_total_width)
-    printf ("PASS: ");
-  else
-    printf ("FAIL: ");
-  printf ("%d %s\n", global_total_width, result);
+    va_start(args, format);
+    vasprintf(&result, format, args);
+    if(strlen(result) < global_total_width)
+        printf("PASS: ");
+    else
+        printf("FAIL: ");
+    printf("%d %s\n", global_total_width, result);
 }
 
 int
-main (void)
+main(void)
 {
-  checkit ("%d", 0x12345678);
-  checkit ("%200d", 5);
-  checkit ("%.300d", 6);
-  checkit ("%100.150d", 7);
-  checkit ("%s", "jjjjjjjjjiiiiiiiiiiiiiiioooooooooooooooooppppppppppppaa\n\
+    checkit("%d", 0x12345678);
+    checkit("%200d", 5);
+    checkit("%.300d", 6);
+    checkit("%100.150d", 7);
+    checkit("%s", "jjjjjjjjjiiiiiiiiiiiiiiioooooooooooooooooppppppppppppaa\n\
 777777777777777777333333333333366666666666622222222222777777777777733333");
-  checkit ("%f%s%d%s", 1.0, "foo", 77, "asdjffffffffffffffiiiiiiiiiiixxxxx");
+    checkit("%f%s%d%s", 1.0, "foo", 77, "asdjffffffffffffffiiiiiiiiiiixxxxx");
 }
 #endif /* TEST */

@@ -26,28 +26,58 @@ class KNConfigDialog;
 
 class KNConfigManager : QObject {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KNConfigManager(QObject *p=0, const char *n=0);
+public:
+    KNConfigManager(QObject *p = 0, const char *n = 0);
     ~KNConfigManager();
 
-    KNConfig::Identity*             identity() const           { return i_dentity; }
-    KNConfig::Appearance*           appearance()const          { return a_ppearance; }
-    KNConfig::ReadNewsGeneral*      readNewsGeneral()const     { return r_eadNewsGeneral; }
-    KNConfig::ReadNewsNavigation*   readNewsNavigation()const  { return r_eadNewsNavigation; }
-    KNConfig::ReadNewsViewer*       readNewsViewer()const      { return r_eadNewsViewer; }
-    KNConfig::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
-    KNConfig::Scoring*              scoring()const             { return s_coring; }
-    KNConfig::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
-    KNConfig::PostNewsComposer*     postNewsComposer() const   { return p_ostNewsCompose; }
-    KNConfig::Cleanup*              cleanup()const             { return c_leanup; }
+    KNConfig::Identity             *identity() const
+    {
+        return i_dentity;
+    }
+    KNConfig::Appearance           *appearance()const
+    {
+        return a_ppearance;
+    }
+    KNConfig::ReadNewsGeneral      *readNewsGeneral()const
+    {
+        return r_eadNewsGeneral;
+    }
+    KNConfig::ReadNewsNavigation   *readNewsNavigation()const
+    {
+        return r_eadNewsNavigation;
+    }
+    KNConfig::ReadNewsViewer       *readNewsViewer()const
+    {
+        return r_eadNewsViewer;
+    }
+    KNConfig::DisplayedHeaders     *displayedHeaders()const
+    {
+        return d_isplayedHeaders;
+    }
+    KNConfig::Scoring              *scoring()const
+    {
+        return s_coring;
+    }
+    KNConfig::PostNewsTechnical    *postNewsTechnical()const
+    {
+        return p_ostNewsTechnical;
+    }
+    KNConfig::PostNewsComposer     *postNewsComposer() const
+    {
+        return p_ostNewsCompose;
+    }
+    KNConfig::Cleanup              *cleanup()const
+    {
+        return c_leanup;
+    }
     //KNConfig::Cache*                cache()const               { return c_ache; }
 
     void configure();
     void syncConfig();
 
-  protected:
+protected:
     KNConfig::Identity             *i_dentity;
     KNConfig::Appearance           *a_ppearance;
     KNConfig::ReadNewsGeneral      *r_eadNewsGeneral;
@@ -62,7 +92,7 @@ class KNConfigManager : QObject {
 
     KNConfigDialog  *d_ialog;
 
-  protected slots:
+protected slots:
     void slotDialogDone();
 
 };
@@ -70,12 +100,12 @@ class KNConfigManager : QObject {
 
 class KNConfigDialog : public KCMultiDialog {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KNConfigDialog(QWidget *p=0, const char *n=0);
+public:
+    KNConfigDialog(QWidget *p = 0, const char *n = 0);
 
-  protected slots:
+protected slots:
     void slotConfigCommitted();
 
 };

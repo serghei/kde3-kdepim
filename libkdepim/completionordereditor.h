@@ -42,48 +42,49 @@ class LdapSearch;
 class CompletionOrderEditor;
 
 // Base class for items in the list
-class CompletionItem
-{
+class CompletionItem {
 public:
-  virtual ~CompletionItem() {}
-  virtual QString label() const = 0;
-  virtual int completionWeight() const = 0;
-  virtual void setCompletionWeight( int weight ) = 0;
-  virtual void save( CompletionOrderEditor* ) = 0;
+    virtual ~CompletionItem() {}
+    virtual QString label() const = 0;
+    virtual int completionWeight() const = 0;
+    virtual void setCompletionWeight(int weight) = 0;
+    virtual void save(CompletionOrderEditor *) = 0;
 };
 
 
 // I don't like QPtrList much, but it has compareItems, which QValueList doesn't
-class KDE_EXPORT CompletionItemList : public QPtrList<CompletionItem>
-{
+class KDE_EXPORT CompletionItemList : public QPtrList<CompletionItem> {
 public:
-  CompletionItemList() {}
-  virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 );
+    CompletionItemList() {}
+    virtual int compareItems(QPtrCollection::Item s1, QPtrCollection::Item s2);
 };
 
 class KDE_EXPORT CompletionOrderEditor : public KDialogBase {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  CompletionOrderEditor( KPIM::LdapSearch* ldapSearch, QWidget* parent, const char* name = 0 );
-  ~CompletionOrderEditor();
+    CompletionOrderEditor(KPIM::LdapSearch *ldapSearch, QWidget *parent, const char *name = 0);
+    ~CompletionOrderEditor();
 
-  KConfig* configFile() { return &mConfig; }
+    KConfig *configFile()
+    {
+        return &mConfig;
+    }
 
 private slots:
-  void slotSelectionChanged( QListViewItem* );
-  void slotMoveUp();
-  void slotMoveDown();
-  virtual void slotOk();
+    void slotSelectionChanged(QListViewItem *);
+    void slotMoveUp();
+    void slotMoveDown();
+    virtual void slotOk();
 
 private:
-  KConfig mConfig;
-  CompletionItemList mItems;
-  KListView* mListView;
-  KPushButton* mUpButton;
-  KPushButton* mDownButton;
+    KConfig mConfig;
+    CompletionItemList mItems;
+    KListView *mListView;
+    KPushButton *mUpButton;
+    KPushButton *mDownButton;
 
-  bool mDirty;
+    bool mDirty;
 };
 
 } // namespace

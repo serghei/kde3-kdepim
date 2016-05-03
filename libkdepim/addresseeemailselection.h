@@ -26,9 +26,8 @@
 
 namespace KPIM {
 
-class KDE_EXPORT AddresseeEmailSelection : public Selection
-{
-  public:
+class KDE_EXPORT AddresseeEmailSelection : public Selection {
+public:
     AddresseeEmailSelection();
 
     /**
@@ -39,58 +38,58 @@ class KDE_EXPORT AddresseeEmailSelection : public Selection
     /**
       Returns the title for the field specified by index.
      */
-    virtual QString fieldTitle( uint index ) const;
+    virtual QString fieldTitle(uint index) const;
 
     /**
       Returns the number of items for the given addressee.
      */
-    virtual uint itemCount( const KABC::Addressee &addresse ) const;
+    virtual uint itemCount(const KABC::Addressee &addresse) const;
 
     /**
       Returns the text that's used for the item specified by index.
      */
-    virtual QString itemText( const KABC::Addressee &addresse, uint index ) const;
+    virtual QString itemText(const KABC::Addressee &addresse, uint index) const;
 
     /**
       Returns the icon that's used for the item specified by index.
      */
-    virtual QPixmap itemIcon( const KABC::Addressee &addresse, uint index ) const;
+    virtual QPixmap itemIcon(const KABC::Addressee &addresse, uint index) const;
 
     /**
       Returns whether the item specified by index is enabled.
      */
-    virtual bool itemEnabled( const KABC::Addressee &addresse, uint index ) const;
+    virtual bool itemEnabled(const KABC::Addressee &addresse, uint index) const;
 
     /**
       Returns whether the item specified by index matches the passed pattern.
      */
-    virtual bool itemMatches( const KABC::Addressee &addresse, uint index, const QString &pattern ) const;
+    virtual bool itemMatches(const KABC::Addressee &addresse, uint index, const QString &pattern) const;
 
     /**
       Returns whether the item specified by index equals the passed pattern.
      */
-    virtual bool itemEquals( const KABC::Addressee &addresse, uint index, const QString &pattern ) const;
+    virtual bool itemEquals(const KABC::Addressee &addresse, uint index, const QString &pattern) const;
 
     /**
       Returns the text that's used for the given distribution list.
      */
-    virtual QString distributionListText( const KABC::DistributionList *distributionList ) const;
+    virtual QString distributionListText(const KABC::DistributionList *distributionList) const;
 
     /**
       Returns the icon that's used for the given distribution list.
      */
-    virtual QPixmap distributionListIcon( const KABC::DistributionList *distributionList ) const;
+    virtual QPixmap distributionListIcon(const KABC::DistributionList *distributionList) const;
 
     /**
       Returns whether the given distribution list is enabled.
      */
-    virtual bool distributionListEnabled( const KABC::DistributionList *distributionList ) const;
+    virtual bool distributionListEnabled(const KABC::DistributionList *distributionList) const;
 
     /**
       Returns whether the given distribution list matches the passed pattern.
      */
-    virtual bool distributionListMatches(  const KABC::DistributionList *distributionList,
-                                           const QString &pattern ) const;
+    virtual bool distributionListMatches(const KABC::DistributionList *distributionList,
+                                         const QString &pattern) const;
 
     /**
       Returns the number of additional address books.
@@ -100,12 +99,12 @@ class KDE_EXPORT AddresseeEmailSelection : public Selection
     /**
       Returns the title for an additional address book.
      */
-    virtual QString addressBookTitle( uint index ) const;
+    virtual QString addressBookTitle(uint index) const;
 
     /**
       Returns the content for an additional address book.
      */
-    virtual KABC::Addressee::List addressBookContent( uint index ) const;
+    virtual KABC::Addressee::List addressBookContent(uint index) const;
 
     QStringList to() const;
     QStringList cc() const;
@@ -119,16 +118,16 @@ class KDE_EXPORT AddresseeEmailSelection : public Selection
     QStringList ccDistributionLists() const;
     QStringList bccDistributionLists() const;
 
-    void setSelectedTo( const QStringList &emails );
-    void setSelectedCC( const QStringList &emails );
-    void setSelectedBCC( const QStringList &emails );
+    void setSelectedTo(const QStringList &emails);
+    void setSelectedCC(const QStringList &emails);
+    void setSelectedBCC(const QStringList &emails);
 
-  private:
-    virtual void addSelectedAddressees( uint fieldIndex, const KABC::Addressee&, uint itemIndex );
-    virtual void addSelectedDistributionList( uint fieldIndex, const KABC::DistributionList* );
+private:
+    virtual void addSelectedAddressees(uint fieldIndex, const KABC::Addressee &, uint itemIndex);
+    virtual void addSelectedDistributionList(uint fieldIndex, const KABC::DistributionList *);
 
-    QString email( const KABC::Addressee&, uint ) const;
-    void setSelectedItem( uint fieldIndex, const QStringList& );
+    QString email(const KABC::Addressee &, uint) const;
+    void setSelectedItem(uint fieldIndex, const QStringList &);
 
     KABC::Addressee::List mToAddresseeList;
     KABC::Addressee::List mCcAddresseeList;

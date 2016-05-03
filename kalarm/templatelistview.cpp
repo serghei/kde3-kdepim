@@ -32,28 +32,28 @@
 =  Class: TemplateListView
 =  Displays the list of outstanding alarms.
 =============================================================================*/
-QValueList<EventListViewBase*>  TemplateListView::mInstanceList;
+QValueList<EventListViewBase *>  TemplateListView::mInstanceList;
 
 
-TemplateListView::TemplateListView(bool includeCmdAlarms, const QString& whatsThisText, QWidget* parent, const char* name)
-	: EventListViewBase(parent, name),
-	  mWhatsThisText(whatsThisText),
-	  mIconColumn(0),
-	  mNameColumn(1),
-	  mExcludeCmdAlarms(!includeCmdAlarms)
+TemplateListView::TemplateListView(bool includeCmdAlarms, const QString &whatsThisText, QWidget *parent, const char *name)
+    : EventListViewBase(parent, name),
+      mWhatsThisText(whatsThisText),
+      mIconColumn(0),
+      mNameColumn(1),
+      mExcludeCmdAlarms(!includeCmdAlarms)
 {
-	addColumn(QString::null);          // icon column
-	addLastColumn(i18n("Name"));
-	setSorting(mNameColumn);           // sort initially by name
-	setColumnAlignment(mIconColumn, Qt::AlignHCenter);
-	setColumnWidthMode(mIconColumn, QListView::Maximum);
+    addColumn(QString::null);          // icon column
+    addLastColumn(i18n("Name"));
+    setSorting(mNameColumn);           // sort initially by name
+    setColumnAlignment(mIconColumn, Qt::AlignHCenter);
+    setColumnWidthMode(mIconColumn, QListView::Maximum);
 
-	mInstanceList.append(this);
+    mInstanceList.append(this);
 }
 
 TemplateListView::~TemplateListView()
 {
-	mInstanceList.remove(this);
+    mInstanceList.remove(this);
 }
 
 /******************************************************************************
@@ -61,17 +61,17 @@ TemplateListView::~TemplateListView()
 */
 void TemplateListView::populate()
 {
-	QValueList<KAEvent> templates = KAlarm::templateList();
-	for (QValueList<KAEvent>::Iterator it = templates.begin();  it != templates.end();  ++it)
-		addEntry(*it);
+    QValueList<KAEvent> templates = KAlarm::templateList();
+    for(QValueList<KAEvent>::Iterator it = templates.begin();  it != templates.end();  ++it)
+        addEntry(*it);
 }
 
 /******************************************************************************
 *  Create a new list item for addEntry().
 */
-EventListViewItemBase* TemplateListView::createItem(const KAEvent& event)
+EventListViewItemBase *TemplateListView::createItem(const KAEvent &event)
 {
-	return new TemplateListViewItem(this, event);
+    return new TemplateListViewItem(this, event);
 }
 
 /******************************************************************************
@@ -79,11 +79,11 @@ EventListViewItemBase* TemplateListView::createItem(const KAEvent& event)
 */
 QString TemplateListView::whatsThisText(int column) const
 {
-	if (column == mIconColumn)
-		return i18n("Alarm type");
-	if (column == mNameColumn)
-		return i18n("Name of the alarm template");
-	return mWhatsThisText;
+    if(column == mIconColumn)
+        return i18n("Alarm type");
+    if(column == mNameColumn)
+        return i18n("Name of the alarm template");
+    return mWhatsThisText;
 }
 
 
@@ -92,22 +92,30 @@ QString TemplateListView::whatsThisText(int column) const
 =  Contains the details of one alarm for display in the TemplateListView.
 =============================================================================*/
 
-TemplateListViewItem::TemplateListViewItem(TemplateListView* parent, const KAEvent& event)
-	: EventListViewItemBase(parent, event)
+TemplateListViewItem::TemplateListViewItem(TemplateListView *parent, const KAEvent &event)
+    : EventListViewItemBase(parent, event)
 {
-	setLastColumnText();     // set the template name column text
+    setLastColumnText();     // set the template name column text
 
-	int index;
-	switch (event.action())
-	{
-		case KAAlarm::FILE:     index = 2;  break;
-		case KAAlarm::COMMAND:  index = 3;  break;
-		case KAAlarm::EMAIL:    index = 4;  break;
-		case KAAlarm::MESSAGE:
-		default:                index = 1;  break;
-	}
-	mIconOrder.sprintf("%01u", index);
-	setPixmap(templateListView()->iconColumn(), *eventIcon());
+    int index;
+    switch(event.action())
+    {
+        case KAAlarm::FILE:
+            index = 2;
+            break;
+        case KAAlarm::COMMAND:
+            index = 3;
+            break;
+        case KAAlarm::EMAIL:
+            index = 4;
+            break;
+        case KAAlarm::MESSAGE:
+        default:
+            index = 1;
+            break;
+    }
+    mIconOrder.sprintf("%01u", index);
+    setPixmap(templateListView()->iconColumn(), *eventIcon());
 }
 
 /******************************************************************************
@@ -115,7 +123,7 @@ TemplateListViewItem::TemplateListViewItem(TemplateListView* parent, const KAEve
 */
 QString TemplateListViewItem::lastColumnText() const
 {
-	return event().templateName();
+    return event().templateName();
 }
 
 /******************************************************************************
@@ -123,9 +131,9 @@ QString TemplateListViewItem::lastColumnText() const
 */
 QString TemplateListViewItem::key(int column, bool) const
 {
-	TemplateListView* listView = templateListView();
-	if (column == listView->iconColumn())
-		return mIconOrder;
-	return text(column).lower();
+    TemplateListView *listView = templateListView();
+    if(column == listView->iconColumn())
+        return mIconOrder;
+    return text(column).lower();
 }
 

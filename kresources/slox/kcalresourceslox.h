@@ -58,13 +58,12 @@ class SloxAccounts;
 /**
   This class provides a calendar stored as a remote file.
 */
-class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
-{
+class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase {
     Q_OBJECT
 
     friend class KCalResourceSloxConfig;
 
-  public:
+public:
     /**
       Reload policy.
 
@@ -75,14 +74,17 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
     /**
       Create resource from configuration information stored in KConfig object.
     */
-    KCalResourceSlox( const KConfig * );
-    KCalResourceSlox( const KURL &url );
+    KCalResourceSlox(const KConfig *);
+    KCalResourceSlox(const KURL &url);
     ~KCalResourceSlox();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig *config );
+    void readConfig(const KConfig *config);
+    void writeConfig(KConfig *config);
 
-    KCal::SloxPrefs *prefs() const { return mPrefs; }
+    KCal::SloxPrefs *prefs() const
+    {
+        return mPrefs;
+    }
 
     KABC::Lock *lock();
 
@@ -90,20 +92,20 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
 
     void dump() const;
 
-  protected slots:
-    void slotLoadEventsResult( KIO::Job * );
-    void slotLoadTodosResult( KIO::Job * );
-    void slotUploadResult( KIO::Job * );
+protected slots:
+    void slotLoadEventsResult(KIO::Job *);
+    void slotLoadTodosResult(KIO::Job *);
+    void slotUploadResult(KIO::Job *);
 
-    void slotEventsProgress( KIO::Job *job, unsigned long percent );
-    void slotTodosProgress( KIO::Job *job, unsigned long percent );
-    void slotUploadProgress( KIO::Job *job, unsigned long percent );
+    void slotEventsProgress(KIO::Job *job, unsigned long percent);
+    void slotTodosProgress(KIO::Job *job, unsigned long percent);
+    void slotUploadProgress(KIO::Job *job, unsigned long percent);
 
     void cancelLoadEvents();
     void cancelLoadTodos();
     void cancelUpload();
 
-  protected:
+protected:
     void doClose();
     bool doLoad();
     bool doSave();
@@ -113,35 +115,35 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
 
     void uploadIncidences();
 
-    void parseMembersAttribute( const QDomElement &e,
-                                KCal::Incidence *incidence );
-    void parseReadRightsAttribute( const QDomElement &e,
-                                              KCal::Incidence *incidence );
-    void parseIncidenceAttribute( const QDomElement &e,
-                                  KCal::Incidence *incidence );
-    void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
-    void parseEventAttribute( const QDomElement &e, KCal::Event *event );
-    void parseRecurrence( const QDomNode &n, KCal::Event *event );
+    void parseMembersAttribute(const QDomElement &e,
+                               KCal::Incidence *incidence);
+    void parseReadRightsAttribute(const QDomElement &e,
+                                  KCal::Incidence *incidence);
+    void parseIncidenceAttribute(const QDomElement &e,
+                                 KCal::Incidence *incidence);
+    void parseTodoAttribute(const QDomElement &e, KCal::Todo *todo);
+    void parseEventAttribute(const QDomElement &e, KCal::Event *event);
+    void parseRecurrence(const QDomNode &n, KCal::Event *event);
 
-    void createIncidenceAttributes( QDomDocument &doc,
-                                    QDomElement &parent,
-                                    KCal::Incidence *incidence );
-    void createEventAttributes( QDomDocument &doc,
-                                QDomElement &parent,
-                                KCal::Event *event );
-    void createTodoAttributes( QDomDocument &doc,
+    void createIncidenceAttributes(QDomDocument &doc,
+                                   QDomElement &parent,
+                                   KCal::Incidence *incidence);
+    void createEventAttributes(QDomDocument &doc,
                                QDomElement &parent,
-                               KCal::Todo *todo );
-    void createRecurrenceAttributes( QDomDocument &doc,
-                                     QDomElement &parent,
-                                     KCal::Incidence *incidence );
+                               KCal::Event *event);
+    void createTodoAttributes(QDomDocument &doc,
+                              QDomElement &parent,
+                              KCal::Todo *todo);
+    void createRecurrenceAttributes(QDomDocument &doc,
+                                    QDomElement &parent,
+                                    KCal::Incidence *incidence);
 
     bool confirmSave();
 
-    QString sloxIdToEventUid( const QString &sloxId );
-    QString sloxIdToTodoUid( const QString &sloxId );
+    QString sloxIdToEventUid(const QString &sloxId);
+    QString sloxIdToTodoUid(const QString &sloxId);
 
-  private:
+private:
     void init();
 
     KCal::SloxPrefs *mPrefs;

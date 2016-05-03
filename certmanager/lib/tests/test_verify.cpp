@@ -46,54 +46,54 @@
 
 #include <assert.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  setenv("GNUPGHOME", KDESRCDIR "/gnupg_home", 1 );
-  setenv("LC_ALL", "C", 1);
-  setenv("KDEHOME", QFile::encodeName( QDir::homeDirPath() + "/.kde-unit-test" ), 1);
+    setenv("GNUPGHOME", KDESRCDIR "/gnupg_home", 1);
+    setenv("LC_ALL", "C", 1);
+    setenv("KDEHOME", QFile::encodeName(QDir::homeDirPath() + "/.kde-unit-test"), 1);
 
-  KAboutData aboutData( "test_verify", "verify job test", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app( false, false );
+    KAboutData aboutData("test_verify", "verify job test", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication app(false, false);
 
-  const QString sigFileName = KDESRCDIR "/test.data.sig";
-  const QString dataFileName = KDESRCDIR "/test.data";
+    const QString sigFileName = KDESRCDIR "/test.data.sig";
+    const QString dataFileName = KDESRCDIR "/test.data";
 
-  QFile sigFile( sigFileName );
-  assert( sigFile.open( IO_ReadOnly ) );
-  QFile dataFile( dataFileName );
-  assert( dataFile.open( IO_ReadOnly ) );
+    QFile sigFile(sigFileName);
+    assert(sigFile.open(IO_ReadOnly));
+    QFile dataFile(dataFileName);
+    assert(dataFile.open(IO_ReadOnly));
 
-  const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+    const Kleo::CryptoBackend::Protocol *const backend = Kleo::CryptoBackendFactory::instance()->protocol("openpgp");
 
-  Kleo::VerifyDetachedJob *job = backend->verifyDetachedJob();
-  GpgME::VerificationResult result = job->exec( sigFile.readAll(), dataFile.readAll() );
-  assert( !result.error() );
-  assert( result.signatures().size() == 1 );
+    Kleo::VerifyDetachedJob *job = backend->verifyDetachedJob();
+    GpgME::VerificationResult result = job->exec(sigFile.readAll(), dataFile.readAll());
+    assert(!result.error());
+    assert(result.signatures().size() == 1);
 
-  GpgME::Signature sig = result.signature( 0 );
-  assert( (sig.summary() & GpgME::Signature::KeyMissing) == 0 );
-  assert( sig.creationTime() == 1189650248L );
-  assert( sig.validity() == GpgME::Signature::Full );
+    GpgME::Signature sig = result.signature(0);
+    assert((sig.summary() & GpgME::Signature::KeyMissing) == 0);
+    assert(sig.creationTime() == 1189650248L);
+    assert(sig.validity() == GpgME::Signature::Full);
 
-  const QString opaqueFileName = KDESRCDIR "/test.data.gpg";
-  QFile opaqueFile( opaqueFileName );
-  assert( opaqueFile.open( IO_ReadOnly ) );
-  QByteArray clearText;
+    const QString opaqueFileName = KDESRCDIR "/test.data.gpg";
+    QFile opaqueFile(opaqueFileName);
+    assert(opaqueFile.open(IO_ReadOnly));
+    QByteArray clearText;
 
-  Kleo::VerifyOpaqueJob *job2 = backend->verifyOpaqueJob();
-  result = job2->exec( opaqueFile.readAll(), clearText );
-  assert( !result.error() );
-  assert( result.signatures().size() == 1 );
+    Kleo::VerifyOpaqueJob *job2 = backend->verifyOpaqueJob();
+    result = job2->exec(opaqueFile.readAll(), clearText);
+    assert(!result.error());
+    assert(result.signatures().size() == 1);
 
-  sig = result.signature( 0 );
-  assert( (sig.summary() & GpgME::Signature::KeyMissing) == 0 );
-  assert( (sig.summary() & GpgME::Signature::Green ) );
-  assert( sig.creationTime() > 0 );
-  assert( sig.validity() == GpgME::Signature::Full );
+    sig = result.signature(0);
+    assert((sig.summary() & GpgME::Signature::KeyMissing) == 0);
+    assert((sig.summary() & GpgME::Signature::Green));
+    assert(sig.creationTime() > 0);
+    assert(sig.validity() == GpgME::Signature::Full);
 
-  dataFile.reset();
-  assert( clearText == dataFile.readAll() );
+    dataFile.reset();
+    assert(clearText == dataFile.readAll());
 
-  return 0;
+    return 0;
 }

@@ -29,38 +29,38 @@
 #include "resourcelocal.h"
 #include "resourcelocalconfig.h"
 
-ResourceLocalConfig::ResourceLocalConfig( QWidget *parent,  const char *name )
-    : KRES::ConfigWidget( parent, name )
+ResourceLocalConfig::ResourceLocalConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-    QHBoxLayout *layout = new QHBoxLayout( this );
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
-    QLabel *label = new QLabel( i18n( "Location:" ), this );
-    mURL = new KURLRequester( this );
-    KFile::Mode mode = static_cast<KFile::Mode>( KFile::File |
-                                                 KFile::LocalOnly );
-    mURL->setMode( mode );
-    layout->addWidget( label );
-    layout->addWidget( mURL );
+    QLabel *label = new QLabel(i18n("Location:"), this);
+    mURL = new KURLRequester(this);
+    KFile::Mode mode = static_cast<KFile::Mode>(KFile::File |
+                       KFile::LocalOnly);
+    mURL->setMode(mode);
+    layout->addWidget(label);
+    layout->addWidget(mURL);
 }
 
 ResourceLocalConfig::~ResourceLocalConfig()
 {
 }
 
-void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
+void ResourceLocalConfig::loadSettings(KRES::Resource *resource)
 {
-    ResourceLocal *res = dynamic_cast<ResourceLocal *>( resource );
-    if ( res )
-        mURL->setURL( res->url().prettyURL() );
+    ResourceLocal *res = dynamic_cast<ResourceLocal *>(resource);
+    if(res)
+        mURL->setURL(res->url().prettyURL());
     else
         kdDebug() << "ERROR: ResourceLocalConfig::loadSettings(): no ResourceLocal, cast failed" << endl;
 }
 
-void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
+void ResourceLocalConfig::saveSettings(KRES::Resource *resource)
 {
-    ResourceLocal *res = dynamic_cast<ResourceLocal *>( resource );
-    if ( res )
-        res->setURL( mURL->url() );
+    ResourceLocal *res = dynamic_cast<ResourceLocal *>(resource);
+    if(res)
+        res->setURL(mURL->url());
     else
         kdDebug() << "ERROR: ResourceLocalConfig::saveSettings(): no ResourceLocal, cast failed" << endl;
 }

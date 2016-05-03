@@ -28,27 +28,38 @@
 
 namespace KODE {
 
-class KDE_EXPORT Variable
-{
-  public:
+class KDE_EXPORT Variable {
+public:
     typedef QValueList<Variable> List;
 
     Variable();
-    Variable( const QString &name, const QString &type, bool isStatic = false );
+    Variable(const QString &name, const QString &type, bool isStatic = false);
 
-    void setType( const QString & );
-    QString type() const { return mType; }
+    void setType(const QString &);
+    QString type() const
+    {
+        return mType;
+    }
 
-    void setName( const QString & );
-    QString name() const { return mName; }
+    void setName(const QString &);
+    QString name() const
+    {
+        return mName;
+    }
 
-    void setStatic( bool );
-    bool isStatic() const { return mIsStatic; }
+    void setStatic(bool);
+    bool isStatic() const
+    {
+        return mIsStatic;
+    }
 
-    void setInitializer( const QString & );
-    QString initializer() const { return mInitializer; }
+    void setInitializer(const QString &);
+    QString initializer() const
+    {
+        return mInitializer;
+    }
 
-  private:
+private:
     QString mType;
     QString mName;
     bool mIsStatic;

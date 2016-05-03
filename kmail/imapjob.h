@@ -44,51 +44,56 @@ class KMMessage;
 class KMFolderTreeItem;
 class KMFolderImap;
 namespace KPIM {
-  class ProgressItem;
+class ProgressItem;
 }
 
 namespace KMail {
 
 class AttachmentStrategy;
 
-class ImapJob : public FolderJob
-{
-  Q_OBJECT
-  friend class ::KMAcctImap;
+class ImapJob : public FolderJob {
+    Q_OBJECT
+    friend class ::KMAcctImap;
 
 public:
-  ImapJob( KMMessage *msg, JobType jt = tGetMessage, KMFolderImap *folder = 0,
-           QString partSpecifier = QString::null, const AttachmentStrategy *as = 0 );
-  ImapJob( QPtrList<KMMessage>& msgList, QString sets,
-           JobType jt = tGetMessage, KMFolderImap *folder = 0 );
-  virtual ~ImapJob();
+    ImapJob(KMMessage *msg, JobType jt = tGetMessage, KMFolderImap *folder = 0,
+            QString partSpecifier = QString::null, const AttachmentStrategy *as = 0);
+    ImapJob(QPtrList<KMMessage> &msgList, QString sets,
+            JobType jt = tGetMessage, KMFolderImap *folder = 0);
+    virtual ~ImapJob();
 
-  void setParentFolder( const KMFolderImap* parent );
-  KPIM::ProgressItem* parentProgressItem() const { return mParentProgressItem; }
-  void setParentProgressItem( KPIM::ProgressItem *p ) { mParentProgressItem = p; }
+    void setParentFolder(const KMFolderImap *parent);
+    KPIM::ProgressItem *parentProgressItem() const
+    {
+        return mParentProgressItem;
+    }
+    void setParentProgressItem(KPIM::ProgressItem *p)
+    {
+        mParentProgressItem = p;
+    }
 
 private slots:
-  void slotGetMessageResult( KIO::Job * job );
-  void slotGetBodyStructureResult( KIO::Job * job );
-  void slotGetNextMessage();
-  /** Feeds the message in pieces to the server */
-  void slotPutMessageDataReq( KIO::Job *job, QByteArray &data );
-  void slotPutMessageResult( KIO::Job *job );
-  void slotPutMessageInfoData(KIO::Job *, const QString &data);
-  /** result of a copy-operation */
-  void slotCopyMessageResult( KIO::Job *job );
-  void slotCopyMessageInfoData( KIO::Job *, const QString &data );
-  void slotProcessedSize( KIO::Job *, KIO::filesize_t processed );
+    void slotGetMessageResult(KIO::Job *job);
+    void slotGetBodyStructureResult(KIO::Job *job);
+    void slotGetNextMessage();
+    /** Feeds the message in pieces to the server */
+    void slotPutMessageDataReq(KIO::Job *job, QByteArray &data);
+    void slotPutMessageResult(KIO::Job *job);
+    void slotPutMessageInfoData(KIO::Job *, const QString &data);
+    /** result of a copy-operation */
+    void slotCopyMessageResult(KIO::Job *job);
+    void slotCopyMessageInfoData(KIO::Job *, const QString &data);
+    void slotProcessedSize(KIO::Job *, KIO::filesize_t processed);
 
 private:
-  void execute();
-  void init( JobType jt, QString sets, KMFolderImap *folder,
-             QPtrList<KMMessage>& msgList );
-  KIO::Job *mJob;
-  QByteArray mData;
-  const AttachmentStrategy *mAttachmentStrategy;
-  KMFolderImap *mParentFolder;
-  KPIM::ProgressItem *mParentProgressItem;
+    void execute();
+    void init(JobType jt, QString sets, KMFolderImap *folder,
+              QPtrList<KMMessage> &msgList);
+    KIO::Job *mJob;
+    QByteArray mData;
+    const AttachmentStrategy *mAttachmentStrategy;
+    KMFolderImap *mParentFolder;
+    KPIM::ProgressItem *mParentProgressItem;
 };
 
 }

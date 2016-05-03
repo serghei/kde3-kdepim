@@ -21,18 +21,18 @@
 #include "radiobutton.moc"
 
 
-RadioButton::RadioButton(QWidget* parent, const char* name)
-	: QRadioButton(parent, name),
-	  mFocusPolicy(focusPolicy()),
-	  mFocusWidget(0),
-	  mReadOnly(false)
+RadioButton::RadioButton(QWidget *parent, const char *name)
+    : QRadioButton(parent, name),
+      mFocusPolicy(focusPolicy()),
+      mFocusWidget(0),
+      mReadOnly(false)
 { }
 
-RadioButton::RadioButton(const QString& text, QWidget* parent, const char* name)
-	: QRadioButton(text, parent, name),
-	  mFocusPolicy(focusPolicy()),
-	  mFocusWidget(0),
-	  mReadOnly(false)
+RadioButton::RadioButton(const QString &text, QWidget *parent, const char *name)
+    : QRadioButton(text, parent, name),
+      mFocusPolicy(focusPolicy()),
+      mFocusWidget(0),
+      mReadOnly(false)
 { }
 
 /******************************************************************************
@@ -41,26 +41,26 @@ RadioButton::RadioButton(const QString& text, QWidget* parent, const char* name)
 */
 void RadioButton::setReadOnly(bool ro)
 {
-	if ((int)ro != (int)mReadOnly)
-	{
-		mReadOnly = ro;
-		setFocusPolicy(ro ? QWidget::NoFocus : mFocusPolicy);
-		if (ro)
-			clearFocus();
-	}
+    if((int)ro != (int)mReadOnly)
+    {
+        mReadOnly = ro;
+        setFocusPolicy(ro ? QWidget::NoFocus : mFocusPolicy);
+        if(ro)
+            clearFocus();
+    }
 }
 
 /******************************************************************************
 *  Specify a widget to receive focus when the button is clicked on.
 */
-void RadioButton::setFocusWidget(QWidget* w, bool enable)
+void RadioButton::setFocusWidget(QWidget *w, bool enable)
 {
-	mFocusWidget = w;
-	mFocusWidgetEnable = enable;
-	if (w)
-		connect(this, SIGNAL(clicked()), SLOT(slotClicked()));
-	else
-		disconnect(this, SIGNAL(clicked()), this, SLOT(slotClicked()));
+    mFocusWidget = w;
+    mFocusWidgetEnable = enable;
+    if(w)
+        connect(this, SIGNAL(clicked()), SLOT(slotClicked()));
+    else
+        disconnect(this, SIGNAL(clicked()), this, SLOT(slotClicked()));
 }
 
 /******************************************************************************
@@ -69,66 +69,66 @@ void RadioButton::setFocusWidget(QWidget* w, bool enable)
 */
 void RadioButton::slotClicked()
 {
-	if (mFocusWidget  &&  isChecked())
-	{
-		if (mFocusWidgetEnable)
-			mFocusWidget->setEnabled(true);
-		mFocusWidget->setFocus();
-	}
+    if(mFocusWidget  &&  isChecked())
+    {
+        if(mFocusWidgetEnable)
+            mFocusWidget->setEnabled(true);
+        mFocusWidget->setFocus();
+    }
 }
 
 /******************************************************************************
 *  Event handlers to intercept events if in read-only mode.
 *  Any events which could change the button state are discarded.
 */
-void RadioButton::mousePressEvent(QMouseEvent* e)
+void RadioButton::mousePressEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	QRadioButton::mousePressEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    QRadioButton::mousePressEvent(e);
 }
 
-void RadioButton::mouseReleaseEvent(QMouseEvent* e)
+void RadioButton::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	QRadioButton::mouseReleaseEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    QRadioButton::mouseReleaseEvent(e);
 }
 
-void RadioButton::mouseMoveEvent(QMouseEvent* e)
+void RadioButton::mouseMoveEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		QRadioButton::mouseMoveEvent(e);
+    if(!mReadOnly)
+        QRadioButton::mouseMoveEvent(e);
 }
 
-void RadioButton::keyPressEvent(QKeyEvent* e)
+void RadioButton::keyPressEvent(QKeyEvent *e)
 {
-	if (mReadOnly)
-		switch (e->key())
-		{
-			case Qt::Key_Up:
-			case Qt::Key_Left:
-			case Qt::Key_Right:
-			case Qt::Key_Down:
-				// Process keys which shift the focus
-			case Qt::Key_Escape:
-				break;
-			default:
-				return;
-		}
-	QRadioButton::keyPressEvent(e);
+    if(mReadOnly)
+        switch(e->key())
+        {
+            case Qt::Key_Up:
+            case Qt::Key_Left:
+            case Qt::Key_Right:
+            case Qt::Key_Down:
+            // Process keys which shift the focus
+            case Qt::Key_Escape:
+                break;
+            default:
+                return;
+        }
+    QRadioButton::keyPressEvent(e);
 }
 
-void RadioButton::keyReleaseEvent(QKeyEvent* e)
+void RadioButton::keyReleaseEvent(QKeyEvent *e)
 {
-	if (!mReadOnly)
-		QRadioButton::keyReleaseEvent(e);
+    if(!mReadOnly)
+        QRadioButton::keyReleaseEvent(e);
 }

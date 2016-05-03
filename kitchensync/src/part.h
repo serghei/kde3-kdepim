@@ -27,23 +27,22 @@
 
 class KAboutData;
 
-class KitchenSyncPart: public KParts::ReadOnlyPart
-{
-  Q_OBJECT
+class KitchenSyncPart: public KParts::ReadOnlyPart {
+    Q_OBJECT
 
-  public:
-    KitchenSyncPart( QWidget *parentWidget, const char *widgetName,
-                     QObject *parent, const char *name, const QStringList& );
+public:
+    KitchenSyncPart(QWidget *parentWidget, const char *widgetName,
+                    QObject *parent, const char *name, const QStringList &);
     virtual ~KitchenSyncPart();
 
     static KAboutData *createAboutData();
 
     virtual void exit();
-    virtual bool openURL( const KURL &url );
+    virtual bool openURL(const KURL &url);
 
-  protected:
+protected:
     virtual bool openFile();
-    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *);
 };
 
 #endif

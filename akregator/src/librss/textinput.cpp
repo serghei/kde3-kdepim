@@ -19,10 +19,10 @@ using namespace RSS;
 
 struct TextInput::Private : public Shared
 {
-	QString title;
-	QString description;
-	QString name;
-	KURL link;
+    QString title;
+    QString description;
+    QString name;
+    KURL link;
 };
 
 TextInput::TextInput() : d(new Private)
@@ -31,66 +31,67 @@ TextInput::TextInput() : d(new Private)
 
 TextInput::TextInput(const TextInput &other) : d(0)
 {
-	*this = other;
+    *this = other;
 }
 
 TextInput::TextInput(const QDomNode &node) : d(new Private)
 {
-	QString elemText;
+    QString elemText;
 
-	if (!(elemText = extractNode(node, QString::fromLatin1("title"))).isNull())
-		d->title = elemText;
-	if (!(elemText = extractNode(node, QString::fromLatin1("description"))).isNull())
-		d->description = elemText;
-	if (!(elemText = extractNode(node, QString::fromLatin1("name"))))
-		d->name = elemText;
-	if (!(elemText = extractNode(node, QString::fromLatin1("link"))).isNull())
-		d->link = elemText;
+    if(!(elemText = extractNode(node, QString::fromLatin1("title"))).isNull())
+        d->title = elemText;
+    if(!(elemText = extractNode(node, QString::fromLatin1("description"))).isNull())
+        d->description = elemText;
+    if(!(elemText = extractNode(node, QString::fromLatin1("name"))))
+        d->name = elemText;
+    if(!(elemText = extractNode(node, QString::fromLatin1("link"))).isNull())
+        d->link = elemText;
 }
 
 TextInput::~TextInput()
 {
-	if (d->deref())
-		delete d;
+    if(d->deref())
+        delete d;
 }
 
 QString TextInput::title() const
 {
-	return d->title;
+    return d->title;
 }
 
 QString TextInput::description() const
 {
-	return d->description;
+    return d->description;
 }
 
 QString TextInput::name() const
 {
-	return d->name;
+    return d->name;
 }
 
 const KURL &TextInput::link() const
 {
-	return d->link;
+    return d->link;
 }
 
 TextInput &TextInput::operator=(const TextInput &other)
 {
-	if (this != &other) {
-		other.d->ref();
-		if (d && d->deref())
-			delete d;
-		d = other.d;
-	}
-	return *this;
+    if(this != &other)
+    {
+        other.d->ref();
+        if(d && d->deref())
+            delete d;
+        d = other.d;
+    }
+    return *this;
 }
 
 bool TextInput::operator==(const TextInput &other) const
 {
-	return d->title == other.title() &&
-	       d->description == other.description() &&
-		   d->name == other.name() &&
-		   d->link == other.link();
+    return d->title == other.title() &&
+           d->description == other.description() &&
+           d->name == other.name() &&
+           d->link == other.link();
 }
 
 // vim:noet:ts=4

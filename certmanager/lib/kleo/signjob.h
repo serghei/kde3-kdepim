@@ -34,56 +34,56 @@
 #define __KLEO_SIGNJOB_H__
 
 #include <gpgmepp/context.h> // for Context::SignatureMode (or should
-			     // we roll our own enum here?)
+// we roll our own enum here?)
 #include "job.h"
 #include <qcstring.h>
 
 #include <vector>
 
 namespace GpgME {
-  class Error;
-  class Key;
-  class SigningResult;
+class Error;
+class Key;
+class SigningResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous signing
+/**
+   @short An abstract base class for asynchronous signing
 
-     To use a SignJob, first obtain an instance from the CryptoBackend
-     implementation, connect the progress() and result() signals to
-     suitable slots and then start the signing with a call to
-     start(). This call might fail, in which case the SignJob instance
-     will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a SignJob, first obtain an instance from the CryptoBackend
+   implementation, connect the progress() and result() signals to
+   suitable slots and then start the signing with a call to
+   start(). This call might fail, in which case the SignJob instance
+   will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the SignJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class SignJob : public Job {
+   After result() is emitted, the SignJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class SignJob : public Job {
     Q_OBJECT
-  protected:
-    SignJob( QObject * parent, const char * name );
-  public:
+protected:
+    SignJob(QObject *parent, const char *name);
+public:
     ~SignJob();
 
     /**
        Starts the signing operation. \a signers is the list of keys to
        sign \a plainText with. Empty (null) keys are ignored.
     */
-    virtual GpgME::Error start( const std::vector<GpgME::Key> & signers,
-				const QByteArray & plainText,
-				GpgME::Context::SignatureMode mode ) = 0;
-    virtual GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
-				       const QByteArray & plainText,
-				       GpgME::Context::SignatureMode mode,
-				       QByteArray & signature ) = 0;
+    virtual GpgME::Error start(const std::vector<GpgME::Key> &signers,
+                               const QByteArray &plainText,
+                               GpgME::Context::SignatureMode mode) = 0;
+    virtual GpgME::SigningResult exec(const std::vector<GpgME::Key> &signers,
+                                      const QByteArray &plainText,
+                                      GpgME::Context::SignatureMode mode,
+                                      QByteArray &signature) = 0;
 
-  signals:
-    void result( const GpgME::SigningResult & result, const QByteArray & signature );
-  };
+signals:
+    void result(const GpgME::SigningResult &result, const QByteArray &signature);
+};
 
 }
 

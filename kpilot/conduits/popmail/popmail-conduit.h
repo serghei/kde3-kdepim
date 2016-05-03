@@ -41,33 +41,32 @@ class KSocket;
 class PilotRecord;
 class PilotDatabase;
 
-class PopMailConduit : public ConduitAction
-{
+class PopMailConduit : public ConduitAction {
 public:
-	PopMailConduit(KPilotLink *d,
-		const char *n=0L,
-		const QStringList &l=QStringList());
-	virtual ~PopMailConduit();
+    PopMailConduit(KPilotLink *d,
+                   const char *n = 0L,
+                   const QStringList &l = QStringList());
+    virtual ~PopMailConduit();
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 
-	// static PilotRecord *readMessage(FILE *mailbox,
-	//	char *buffer,int bufferSize);
+    // static PilotRecord *readMessage(FILE *mailbox,
+    //	char *buffer,int bufferSize);
 
 protected:
-	void doSync();
-	void doTest();
+    void doSync();
+    void doTest();
 
-	// Pilot -> Sendmail
-	//
-	//
-	int sendPendingMail(int mode /* unused */);
-	// int sendViaSendmail();
-	int sendViaKMail();
-	// int sendViaSMTP();
-	void writeMessageToFile(FILE* sendf, struct Mail& theMail);
-	QString getKMailOutbox() const;
+    // Pilot -> Sendmail
+    //
+    //
+    int sendPendingMail(int mode /* unused */);
+    // int sendViaSendmail();
+    int sendViaKMail();
+    // int sendViaSMTP();
+    void writeMessageToFile(FILE *sendf, struct Mail &theMail);
+    QString getKMailOutbox() const;
 
 };
 

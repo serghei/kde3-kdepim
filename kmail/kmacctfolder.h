@@ -31,25 +31,24 @@ class KMAccount;
  * used as a typecast for KMFolder only !!
  * @author Stefan Taferner
  */
-class KMAcctFolder: public KMFolder
-{
+class KMAcctFolder: public KMFolder {
 public:
-  /** Returns first account or 0 if no account is associated with this
-      folder */
-  KMAccount* account();
+    /** Returns first account or 0 if no account is associated with this
+        folder */
+    KMAccount *account();
 
-  /** Add given account to the list */
-  void addAccount( KMAccount* );
+    /** Add given account to the list */
+    void addAccount(KMAccount *);
 
-  /** Remove given account from the list */
-  void removeAccount( KMAccount* );
+    /** Remove given account from the list */
+    void removeAccount(KMAccount *);
 
-  /** Clear list of accounts */
-  void clearAccountList();
+    /** Clear list of accounts */
+    void clearAccountList();
 
 private:
-  KMAcctFolder( KMFolderDir* parent, const QString& name,
-                     KMFolderType aFolderType );
+    KMAcctFolder(KMFolderDir *parent, const QString &name,
+                 KMFolderType aFolderType);
 };
 
 #endif /*kmacctfolder_h*/

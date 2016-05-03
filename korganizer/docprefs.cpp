@@ -30,10 +30,11 @@
 
 KSimpleConfig *DocPrefs::mConfig = 0;
 
-DocPrefs::DocPrefs( const QString &type )
+DocPrefs::DocPrefs(const QString &type)
 {
-    if ( !mConfig ) {
-        mConfig = new KSimpleConfig( locateLocal( "data", "korganizer/docprefs." + type + ".kconfig" ) );
+    if(!mConfig)
+    {
+        mConfig = new KSimpleConfig(locateLocal("data", "korganizer/docprefs." + type + ".kconfig"));
     }
 }
 
@@ -42,7 +43,7 @@ DocPrefs::~DocPrefs()
     mConfig->sync();
 }
 
-void DocPrefs::setDoc( const QString &identifier )
+void DocPrefs::setDoc(const QString &identifier)
 {
     mDocId = identifier;
 }
@@ -52,17 +53,17 @@ QString DocPrefs::doc() const
     return mDocId;
 }
 
-bool DocPrefs::readBoolEntry( const QString &id ) const
+bool DocPrefs::readBoolEntry(const QString &id) const
 {
-    mConfig->setGroup( mDocId );
-    bool result = mConfig->readBoolEntry( id, false );
-//    kdDebug(5850) << "DocPrefs::readEntry(): " << id << " : " << (result ? "True" : "False" ) << endl;
+    mConfig->setGroup(mDocId);
+    bool result = mConfig->readBoolEntry(id, false);
+    //    kdDebug(5850) << "DocPrefs::readEntry(): " << id << " : " << (result ? "True" : "False" ) << endl;
     return result;
 }
 
-void DocPrefs::writeEntry( const QString &id, bool value )
+void DocPrefs::writeEntry(const QString &id, bool value)
 {
-//    kdDebug(5850) << "DocPrefs::writeEntry(): " << id << " : " << (value ? "True" : "False" ) << endl;
-    mConfig->setGroup( mDocId );
-    mConfig->writeEntry( id, value );
+    //    kdDebug(5850) << "DocPrefs::writeEntry(): " << id << " : " << (value ? "True" : "False" ) << endl;
+    mConfig->setGroup(mDocId);
+    mConfig->writeEntry(id, value);
 }

@@ -39,44 +39,57 @@ class QColor;
 
 namespace KMail {
 
-  /**
-   * @short The HTML statusbar widget for use with the reader.
-   *
-   * The HTML status bar is a small widget that acts as an indicator
-   * for the message content. It can be in one of two modes:
-   *
-   * <dl>
-   * <dt><code>Normal</code></dt>
-   * <dd>Default. No HTML.</dd>
-   * <dt><code>Neutral</code></dt>
-   * <dd>Temporary value. Used while the real mode is undetermined.</dd>
-   * <dt><code>Html</code></dt>
-   * <dd>HTML content is being shown. Since HTML mails can mimic all sorts
-   *     of KMail markup in the reader, this provides out-of-band information
-   *     about the presence of (rendered) HTML.</dd>
-   * </dl>
-   *
-   * @author Ingo Kloecker <kloecker@kde.org>, Marc Mutz <mutz@kde.org>
-   **/
-  class HtmlStatusBar : public QLabel {
+/**
+ * @short The HTML statusbar widget for use with the reader.
+ *
+ * The HTML status bar is a small widget that acts as an indicator
+ * for the message content. It can be in one of two modes:
+ *
+ * <dl>
+ * <dt><code>Normal</code></dt>
+ * <dd>Default. No HTML.</dd>
+ * <dt><code>Neutral</code></dt>
+ * <dd>Temporary value. Used while the real mode is undetermined.</dd>
+ * <dt><code>Html</code></dt>
+ * <dd>HTML content is being shown. Since HTML mails can mimic all sorts
+ *     of KMail markup in the reader, this provides out-of-band information
+ *     about the presence of (rendered) HTML.</dd>
+ * </dl>
+ *
+ * @author Ingo Kloecker <kloecker@kde.org>, Marc Mutz <mutz@kde.org>
+ **/
+class HtmlStatusBar : public QLabel {
     Q_OBJECT
-  public:
-    HtmlStatusBar( QWidget * parent=0, const char * name=0, WFlags f=0 );
+public:
+    HtmlStatusBar(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
     virtual ~HtmlStatusBar();
 
-    enum Mode {
-      Normal,
-      Html,
-      Neutral
+    enum Mode
+    {
+        Normal,
+        Html,
+        Neutral
     };
 
     /** @return current mode. */
-    Mode mode() const { return mMode ; }
-    bool isHtml() const { return mode() == Html ; }
-    bool isNormal() const { return mode() == Normal ; }
-    bool isNeutral() const { return mode() == Neutral ; }
+    Mode mode() const
+    {
+        return mMode ;
+    }
+    bool isHtml() const
+    {
+        return mode() == Html ;
+    }
+    bool isNormal() const
+    {
+        return mode() == Normal ;
+    }
+    bool isNeutral() const
+    {
+        return mode() == Neutral ;
+    }
 
-  public slots:
+public slots:
     /** Switch to "html mode". */
     void setHtmlMode();
     /** Switch to "normal mode". */
@@ -84,16 +97,16 @@ namespace KMail {
     /** Switch to "neutral" mode (currently == normal mode). */
     void setNeutralMode();
     /** Switch to mode @p m */
-    void setMode( Mode m );
+    void setMode(Mode m);
 
-  private:
+private:
     void upd();
     QString message() const;
     QColor bgColor() const;
     QColor fgColor() const;
 
     Mode mMode;
-  };
+};
 
 } // namespace KMail
 

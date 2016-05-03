@@ -43,42 +43,42 @@
 #include <kpushbutton.h>
 #include <kdialog.h>
 
-KWidgetLister::KWidgetLister( int minWidgets, int maxWidgets, QWidget *parent, const char* name )
-  : QWidget( parent, name )
+KWidgetLister::KWidgetLister(int minWidgets, int maxWidgets, QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  mWidgetList.setAutoDelete(TRUE);
+    mWidgetList.setAutoDelete(TRUE);
 
-  mMinWidgets = QMAX( minWidgets, 1 );
-  mMaxWidgets = QMAX( maxWidgets, mMinWidgets + 1 );
+    mMinWidgets = QMAX(minWidgets, 1);
+    mMaxWidgets = QMAX(maxWidgets, mMinWidgets + 1);
 
-  //--------- the button box
-  mLayout = new QVBoxLayout(this, 0, 4);
-  mButtonBox = new QHBox(this);
-  mButtonBox->setSpacing( KDialog::spacingHint() );
-  mLayout->addWidget( mButtonBox );
+    //--------- the button box
+    mLayout = new QVBoxLayout(this, 0, 4);
+    mButtonBox = new QHBox(this);
+    mButtonBox->setSpacing(KDialog::spacingHint());
+    mLayout->addWidget(mButtonBox);
 
-  mBtnMore = new KPushButton( KGuiItem( i18n( "more widgets", "More" ), "button_more" ), mButtonBox );
-  mButtonBox->setStretchFactor( mBtnMore, 0 );
+    mBtnMore = new KPushButton(KGuiItem(i18n("more widgets", "More"), "button_more"), mButtonBox);
+    mButtonBox->setStretchFactor(mBtnMore, 0);
 
-  mBtnFewer = new KPushButton( KGuiItem( i18n( "fewer widgets", "Fewer" ), "button_fewer" ), mButtonBox );
-  mButtonBox->setStretchFactor( mBtnFewer, 0 );
+    mBtnFewer = new KPushButton(KGuiItem(i18n("fewer widgets", "Fewer"), "button_fewer"), mButtonBox);
+    mButtonBox->setStretchFactor(mBtnFewer, 0);
 
-  QWidget *spacer = new QWidget( mButtonBox );
-  mButtonBox->setStretchFactor( spacer, 1 );
+    QWidget *spacer = new QWidget(mButtonBox);
+    mButtonBox->setStretchFactor(spacer, 1);
 
-  // FIXME: We need a KStdGuiItem::clear here and in other locations to be automagically RTL aware - Martijn
-  mBtnClear = new KPushButton( KGuiItem( i18n( "clear widgets", "Clear" ), "locationbar_erase" ), mButtonBox );
-  mButtonBox->setStretchFactor( mBtnClear, 0 );
+    // FIXME: We need a KStdGuiItem::clear here and in other locations to be automagically RTL aware - Martijn
+    mBtnClear = new KPushButton(KGuiItem(i18n("clear widgets", "Clear"), "locationbar_erase"), mButtonBox);
+    mButtonBox->setStretchFactor(mBtnClear, 0);
 
-  //---------- connect everything
-  connect( mBtnMore, SIGNAL(clicked()),
-	   this, SLOT(slotMore()) );
-  connect( mBtnFewer, SIGNAL(clicked()),
-	   this, SLOT(slotFewer()) );
-  connect( mBtnClear, SIGNAL(clicked()),
-	   this, SLOT(slotClear()) );
+    //---------- connect everything
+    connect(mBtnMore, SIGNAL(clicked()),
+            this, SLOT(slotMore()));
+    connect(mBtnFewer, SIGNAL(clicked()),
+            this, SLOT(slotFewer()));
+    connect(mBtnClear, SIGNAL(clicked()),
+            this, SLOT(slotClear()));
 
-  enableControls();
+    enableControls();
 }
 
 KWidgetLister::~KWidgetLister()
@@ -87,92 +87,92 @@ KWidgetLister::~KWidgetLister()
 
 void KWidgetLister::slotMore()
 {
-  // the class should make certain that slotMore can't
-  // be called when mMaxWidgets are on screen.
-  assert( (int)mWidgetList.count() < mMaxWidgets );
+    // the class should make certain that slotMore can't
+    // be called when mMaxWidgets are on screen.
+    assert((int)mWidgetList.count() < mMaxWidgets);
 
-  addWidgetAtEnd();
-  //  adjustSize();
-  enableControls();
+    addWidgetAtEnd();
+    //  adjustSize();
+    enableControls();
 }
 
 void KWidgetLister::slotFewer()
 {
-  // the class should make certain that slotFewer can't
-  // be called when mMinWidgets are on screen.
-  assert( (int)mWidgetList.count() > mMinWidgets );
+    // the class should make certain that slotFewer can't
+    // be called when mMinWidgets are on screen.
+    assert((int)mWidgetList.count() > mMinWidgets);
 
-  removeLastWidget();
-  //  adjustSize();
-  enableControls();
+    removeLastWidget();
+    //  adjustSize();
+    enableControls();
 }
 
 void KWidgetLister::slotClear()
 {
-  setNumberOfShownWidgetsTo( mMinWidgets );
+    setNumberOfShownWidgetsTo(mMinWidgets);
 
-  // clear remaining widgets
-  QPtrListIterator<QWidget> it( mWidgetList );
-  for ( it.toFirst() ; it.current() ; ++it )
-    clearWidget( (*it) );
+    // clear remaining widgets
+    QPtrListIterator<QWidget> it(mWidgetList);
+    for(it.toFirst() ; it.current() ; ++it)
+        clearWidget((*it));
 
-  //  adjustSize();
-  enableControls();
-  emit clearWidgets();
+    //  adjustSize();
+    enableControls();
+    emit clearWidgets();
 }
 
 void KWidgetLister::addWidgetAtEnd(QWidget *w)
 {
-  if (!w) w = this->createWidget(this);
+    if(!w) w = this->createWidget(this);
 
-  mLayout->insertWidget( mLayout->findWidget( mButtonBox ), w );
-  mWidgetList.append( w );
-  w->show();
-  enableControls();
-  emit widgetAdded();
-  emit widgetAdded(w);
+    mLayout->insertWidget(mLayout->findWidget(mButtonBox), w);
+    mWidgetList.append(w);
+    w->show();
+    enableControls();
+    emit widgetAdded();
+    emit widgetAdded(w);
 }
 
 void KWidgetLister::removeLastWidget()
 {
-  // The layout will take care that the
-  // widget is removed from screen, too.
-  mWidgetList.removeLast();
-  enableControls();
-  emit widgetRemoved();
+    // The layout will take care that the
+    // widget is removed from screen, too.
+    mWidgetList.removeLast();
+    enableControls();
+    emit widgetRemoved();
 }
 
-void KWidgetLister::clearWidget( QWidget* /*aWidget*/ )
+void KWidgetLister::clearWidget(QWidget * /*aWidget*/)
 {
 }
 
-QWidget* KWidgetLister::createWidget( QWidget* parent )
+QWidget *KWidgetLister::createWidget(QWidget *parent)
 {
-  return new QWidget( parent );
+    return new QWidget(parent);
 }
 
-void KWidgetLister::setNumberOfShownWidgetsTo( int aNum )
+void KWidgetLister::setNumberOfShownWidgetsTo(int aNum)
 {
-  int superfluousWidgets = QMAX( (int)mWidgetList.count() - aNum, 0 );
-  int missingWidgets     = QMAX( aNum - (int)mWidgetList.count(), 0 );
+    int superfluousWidgets = QMAX((int)mWidgetList.count() - aNum, 0);
+    int missingWidgets     = QMAX(aNum - (int)mWidgetList.count(), 0);
 
-  // remove superfluous widgets
-  for ( ; superfluousWidgets ; superfluousWidgets-- )
-    removeLastWidget();
+    // remove superfluous widgets
+    for(; superfluousWidgets ; superfluousWidgets--)
+        removeLastWidget();
 
-  // add missing widgets
-  for ( ; missingWidgets ; missingWidgets-- )
-    addWidgetAtEnd();
+    // add missing widgets
+    for(; missingWidgets ; missingWidgets--)
+        addWidgetAtEnd();
 }
 
 void KWidgetLister::enableControls()
 {
-  int count = mWidgetList.count();
-  bool isMaxWidgets = ( count >= mMaxWidgets );
-  bool isMinWidgets = ( count <= mMinWidgets );
+    int count = mWidgetList.count();
+    bool isMaxWidgets = (count >= mMaxWidgets);
+    bool isMinWidgets = (count <= mMinWidgets);
 
-  mBtnMore->setEnabled( !isMaxWidgets );
-  mBtnFewer->setEnabled( !isMinWidgets );
+    mBtnMore->setEnabled(!isMaxWidgets);
+    mBtnFewer->setEnabled(!isMinWidgets);
 }
 
 #include "kwidgetlister.moc"

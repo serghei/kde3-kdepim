@@ -72,30 +72,30 @@
 template <>
 CustomListViewItem<KCal::Attendee *>::~CustomListViewItem()
 {
-  delete mData;
+    delete mData;
 }
 
 template <>
 void CustomListViewItem<KCal::Attendee *>::updateItem()
 {
-  setText(0,mData->name());
-  setText(1,mData->email());
-  setText(2,mData->roleStr());
-  setText(3,mData->statusStr());
-  if (mData->RSVP() && !mData->email().isEmpty())
-    setPixmap(4,KOGlobals::self()->smallIcon("mailappt"));
-  else
-    setPixmap(4,KOGlobals::self()->smallIcon("nomailappt"));
-  setText(5, mData->delegate());
-  setText(6, mData->delegator());
+    setText(0, mData->name());
+    setText(1, mData->email());
+    setText(2, mData->roleStr());
+    setText(3, mData->statusStr());
+    if(mData->RSVP() && !mData->email().isEmpty())
+        setPixmap(4, KOGlobals::self()->smallIcon("mailappt"));
+    else
+        setPixmap(4, KOGlobals::self()->smallIcon("nomailappt"));
+    setText(5, mData->delegate());
+    setText(6, mData->delegator());
 }
 
-KOAttendeeListView::KOAttendeeListView ( QWidget *parent, const char *name )
-  : KListView(parent, name)
+KOAttendeeListView::KOAttendeeListView(QWidget *parent, const char *name)
+    : KListView(parent, name)
 {
-  setAcceptDrops( true );
-  setAllColumnsShowFocus( true );
-  setSorting( -1 );
+    setAcceptDrops(true);
+    setAllColumnsShowFocus(true);
+    setSorting(-1);
 }
 
 /** KOAttendeeListView is a child class of KListView  which supports
@@ -107,122 +107,135 @@ KOAttendeeListView::~KOAttendeeListView()
 {
 }
 
-void KOAttendeeListView::contentsDragEnterEvent( QDragEnterEvent *e )
+void KOAttendeeListView::contentsDragEnterEvent(QDragEnterEvent *e)
 {
-  dragEnterEvent(e);
+    dragEnterEvent(e);
 }
 
-void KOAttendeeListView::contentsDragMoveEvent( QDragMoveEvent *e )
+void KOAttendeeListView::contentsDragMoveEvent(QDragMoveEvent *e)
 {
 #ifndef KORG_NODND
-  if ( KVCardDrag::canDecode( e ) || QTextDrag::canDecode( e ) ) {
-    e->accept();
-  } else {
-    e->ignore();
-  }
+    if(KVCardDrag::canDecode(e) || QTextDrag::canDecode(e))
+    {
+        e->accept();
+    }
+    else
+    {
+        e->ignore();
+    }
 #endif
 }
 
-void KOAttendeeListView::dragEnterEvent( QDragEnterEvent *e )
+void KOAttendeeListView::dragEnterEvent(QDragEnterEvent *e)
 {
 #ifndef KORG_NODND
-  if ( KVCardDrag::canDecode( e ) || QTextDrag::canDecode( e ) ) {
-    e->accept();
-  } else {
-    e->ignore();
-  }
+    if(KVCardDrag::canDecode(e) || QTextDrag::canDecode(e))
+    {
+        e->accept();
+    }
+    else
+    {
+        e->ignore();
+    }
 #endif
 }
 
-void KOAttendeeListView::addAttendee( const QString &newAttendee )
+void KOAttendeeListView::addAttendee(const QString &newAttendee)
 {
-  kdDebug(5850) << " Email: " << newAttendee << endl;
-  QString name;
-  QString email;
-  KPIM::getNameAndMail( newAttendee, name, email );
-  emit dropped( new Attendee( name, email, true ) );
+    kdDebug(5850) << " Email: " << newAttendee << endl;
+    QString name;
+    QString email;
+    KPIM::getNameAndMail(newAttendee, name, email);
+    emit dropped(new Attendee(name, email, true));
 }
 
-void KOAttendeeListView::contentsDropEvent( QDropEvent *e )
+void KOAttendeeListView::contentsDropEvent(QDropEvent *e)
 {
-  dropEvent(e);
+    dropEvent(e);
 }
 
-void KOAttendeeListView::dropEvent( QDropEvent *e )
+void KOAttendeeListView::dropEvent(QDropEvent *e)
 {
 #ifndef KORG_NODND
-  QString text;
-  QString vcards;
+    QString text;
+    QString vcards;
 
 #ifndef KORG_NOKABC
-  if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardConverter converter;
+    if(KVCardDrag::decode(e, vcards))
+    {
+        KABC::VCardConverter converter;
 
-    KABC::Addressee::List list = converter.parseVCards( vcards );
-    KABC::Addressee::List::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      QString em( (*it).fullEmail() );
-      if (em.isEmpty()) {
-        em=(*it).realName();
-      }
-      addAttendee( em );
+        KABC::Addressee::List list = converter.parseVCards(vcards);
+        KABC::Addressee::List::Iterator it;
+        for(it = list.begin(); it != list.end(); ++it)
+        {
+            QString em((*it).fullEmail());
+            if(em.isEmpty())
+            {
+                em = (*it).realName();
+            }
+            addAttendee(em);
+        }
     }
-  } else
+    else
 #endif // KORG_NOKABC
-  if (QTextDrag::decode(e,text)) {
-    kdDebug(5850) << "Dropped : " << text << endl;
-    QStringList emails = QStringList::split(",",text);
-    for(QStringList::ConstIterator it = emails.begin();it!=emails.end();++it) {
-      addAttendee(*it);
-    }
-  }
+        if(QTextDrag::decode(e, text))
+        {
+            kdDebug(5850) << "Dropped : " << text << endl;
+            QStringList emails = QStringList::split(",", text);
+            for(QStringList::ConstIterator it = emails.begin(); it != emails.end(); ++it)
+            {
+                addAttendee(*it);
+            }
+        }
 #endif //KORG_NODND
 }
 
 
-KOEditorDetails::KOEditorDetails( int spacing, QWidget *parent,
-                                  const char *name )
-  : KOAttendeeEditor( parent, name), mDisableItemUpdate( false )
+KOEditorDetails::KOEditorDetails(int spacing, QWidget *parent,
+                                 const char *name)
+    : KOAttendeeEditor(parent, name), mDisableItemUpdate(false)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setSpacing( spacing );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setSpacing(spacing);
 
-  initOrganizerWidgets( this, topLayout );
+    initOrganizerWidgets(this, topLayout);
 
-  mListView = new KOAttendeeListView( this, "mListView" );
-  QWhatsThis::add( mListView,
-		   i18n("Displays information about current attendees. "
-		   	"To edit an attendee, select it in this list "
-			"and modify the values in the area below. "
-		   	"Clicking on a column title will sort the list "
-			"according to that column. The RSVP column "
-			"indicates whether or not a response is requested "
-			"from the attendee.") );
-  mListView->addColumn( i18n("Name"), 200 );
-  mListView->addColumn( i18n("Email"), 200 );
-  mListView->addColumn( i18n("Role"), 80 );
-  mListView->addColumn( i18n("Status"), 100 );
-  mListView->addColumn( i18n("RSVP"), 55 );
-  mListView->addColumn( i18n("Delegated to"), 120 );
-  mListView->addColumn( i18n("Delegated from" ), 120 );
-  mListView->setResizeMode( QListView::LastColumn );
-  if ( KOPrefs::instance()->mCompactDialogs ) {
-    mListView->setFixedHeight( 78 );
-  }
+    mListView = new KOAttendeeListView(this, "mListView");
+    QWhatsThis::add(mListView,
+                    i18n("Displays information about current attendees. "
+                         "To edit an attendee, select it in this list "
+                         "and modify the values in the area below. "
+                         "Clicking on a column title will sort the list "
+                         "according to that column. The RSVP column "
+                         "indicates whether or not a response is requested "
+                         "from the attendee."));
+    mListView->addColumn(i18n("Name"), 200);
+    mListView->addColumn(i18n("Email"), 200);
+    mListView->addColumn(i18n("Role"), 80);
+    mListView->addColumn(i18n("Status"), 100);
+    mListView->addColumn(i18n("RSVP"), 55);
+    mListView->addColumn(i18n("Delegated to"), 120);
+    mListView->addColumn(i18n("Delegated from"), 120);
+    mListView->setResizeMode(QListView::LastColumn);
+    if(KOPrefs::instance()->mCompactDialogs)
+    {
+        mListView->setFixedHeight(78);
+    }
 
-  connect( mListView, SIGNAL( selectionChanged( QListViewItem * ) ),
-           SLOT( updateAttendeeInput() ) );
+    connect(mListView, SIGNAL(selectionChanged(QListViewItem *)),
+            SLOT(updateAttendeeInput()));
 #ifndef KORG_NODND
-  connect( mListView, SIGNAL( dropped( Attendee * ) ),
-           SLOT( slotInsertAttendee( Attendee * ) ) );
+    connect(mListView, SIGNAL(dropped(Attendee *)),
+            SLOT(slotInsertAttendee(Attendee *)));
 #endif
-  topLayout->addWidget( mListView );
+    topLayout->addWidget(mListView);
 
-  initEditWidgets( this, topLayout );
+    initEditWidgets(this, topLayout);
 
-  connect( mRemoveButton, SIGNAL(clicked()), SLOT(removeAttendee()) );
+    connect(mRemoveButton, SIGNAL(clicked()), SLOT(removeAttendee()));
 
-  updateAttendeeInput();
+    updateAttendeeInput();
 }
 
 KOEditorDetails::~KOEditorDetails()
@@ -231,142 +244,155 @@ KOEditorDetails::~KOEditorDetails()
 
 bool KOEditorDetails::hasAttendees()
 {
-  return mListView->childCount() > 0;
+    return mListView->childCount() > 0;
 }
 
 void KOEditorDetails::removeAttendee()
 {
-  AttendeeListItem *aItem =
-      static_cast<AttendeeListItem *>( mListView->selectedItem() );
-  if ( !aItem ) return;
+    AttendeeListItem *aItem =
+        static_cast<AttendeeListItem *>(mListView->selectedItem());
+    if(!aItem) return;
 
-  Attendee *delA = new Attendee( aItem->data()->name(), aItem->data()->email(),
-                                 aItem->data()->RSVP(), aItem->data()->status(),
-                                 aItem->data()->role(), aItem->data()->uid() );
-  mdelAttendees.append( delA );
+    Attendee *delA = new Attendee(aItem->data()->name(), aItem->data()->email(),
+                                  aItem->data()->RSVP(), aItem->data()->status(),
+                                  aItem->data()->role(), aItem->data()->uid());
+    mdelAttendees.append(delA);
 
-  delete aItem;
+    delete aItem;
 
-  updateAttendeeInput();
-  emit updateAttendeeSummary( mListView->childCount() );
+    updateAttendeeInput();
+    emit updateAttendeeSummary(mListView->childCount());
 }
 
 
-void KOEditorDetails::insertAttendee( Attendee *a, bool goodEmailAddress )
+void KOEditorDetails::insertAttendee(Attendee *a, bool goodEmailAddress)
 {
-  Q_UNUSED( goodEmailAddress );
+    Q_UNUSED(goodEmailAddress);
 
-  // lastItem() is O(n), but for n very small that should be fine
-  AttendeeListItem *item = new AttendeeListItem( a, mListView,
-      static_cast<KListViewItem*>( mListView->lastItem() ) );
-  mListView->setSelected( item, true );
-  emit updateAttendeeSummary( mListView->childCount() );
+    // lastItem() is O(n), but for n very small that should be fine
+    AttendeeListItem *item = new AttendeeListItem(a, mListView,
+            static_cast<KListViewItem *>(mListView->lastItem()));
+    mListView->setSelected(item, true);
+    emit updateAttendeeSummary(mListView->childCount());
 }
 
 void KOEditorDetails::setDefaults()
 {
-  mRsvpButton->setChecked( true );
+    mRsvpButton->setChecked(true);
 }
 
-void KOEditorDetails::readEvent( Incidence *event )
+void KOEditorDetails::readEvent(Incidence *event)
 {
-  mListView->clear();
-  KOAttendeeEditor::readEvent( event );
+    mListView->clear();
+    KOAttendeeEditor::readEvent(event);
 
-  mListView->setSelected( mListView->firstChild(), true );
+    mListView->setSelected(mListView->firstChild(), true);
 
-  emit updateAttendeeSummary( mListView->childCount() );
+    emit updateAttendeeSummary(mListView->childCount());
 }
 
 void KOEditorDetails::writeEvent(Incidence *event)
 {
-  event->clearAttendees();
-  QValueVector<QListViewItem*> toBeDeleted;
-  QListViewItem *item;
-  AttendeeListItem *a;
-  for (item = mListView->firstChild(); item;
-       item = item->nextSibling()) {
-    a = (AttendeeListItem *)item;
-    Attendee *attendee = a->data();
-    Q_ASSERT( attendee );
-    /* Check if the attendee is a distribution list and expand it */
-    if ( attendee->email().isEmpty() ) {
-      KPIM::DistributionList list =
-        KPIM::DistributionList::findByName( KABC::StdAddressBook::self(), attendee->name() );
-      if ( !list.isEmpty() ) {
-        toBeDeleted.push_back( item ); // remove it once we are done expanding
-        KPIM::DistributionList::Entry::List entries = list.entries( KABC::StdAddressBook::self() );
-        KPIM::DistributionList::Entry::List::Iterator it( entries.begin() );
-        while ( it != entries.end() ) {
-          KPIM::DistributionList::Entry &e = ( *it );
-          ++it;
-          // this calls insertAttendee, which appends
-          insertAttendeeFromAddressee( e.addressee, attendee );
-          // TODO: duplicate check, in case it was already added manually
+    event->clearAttendees();
+    QValueVector<QListViewItem *> toBeDeleted;
+    QListViewItem *item;
+    AttendeeListItem *a;
+    for(item = mListView->firstChild(); item;
+            item = item->nextSibling())
+    {
+        a = (AttendeeListItem *)item;
+        Attendee *attendee = a->data();
+        Q_ASSERT(attendee);
+        /* Check if the attendee is a distribution list and expand it */
+        if(attendee->email().isEmpty())
+        {
+            KPIM::DistributionList list =
+                KPIM::DistributionList::findByName(KABC::StdAddressBook::self(), attendee->name());
+            if(!list.isEmpty())
+            {
+                toBeDeleted.push_back(item);   // remove it once we are done expanding
+                KPIM::DistributionList::Entry::List entries = list.entries(KABC::StdAddressBook::self());
+                KPIM::DistributionList::Entry::List::Iterator it(entries.begin());
+                while(it != entries.end())
+                {
+                    KPIM::DistributionList::Entry &e = (*it);
+                    ++it;
+                    // this calls insertAttendee, which appends
+                    insertAttendeeFromAddressee(e.addressee, attendee);
+                    // TODO: duplicate check, in case it was already added manually
+                }
+            }
         }
-      }
-    } else {
-      bool skip = false;
-      if ( attendee->email().endsWith( "example.net" ) ) {
-        if ( KMessageBox::warningYesNo( this, i18n("%1 does not look like a valid email address. "
-                "Are you sure you want to invite this participant?").arg( attendee->email() ),
-              i18n("Invalid email address") ) != KMessageBox::Yes ) {
-          skip = true;
+        else
+        {
+            bool skip = false;
+            if(attendee->email().endsWith("example.net"))
+            {
+                if(KMessageBox::warningYesNo(this, i18n("%1 does not look like a valid email address. "
+                                                        "Are you sure you want to invite this participant?").arg(attendee->email()),
+                                             i18n("Invalid email address")) != KMessageBox::Yes)
+                {
+                    skip = true;
+                }
+            }
+            if(!skip)
+            {
+                event->addAttendee(new Attendee(*attendee));
+            }
         }
-      }
-      if ( !skip ) {
-        event->addAttendee( new Attendee( *attendee ) );
-      }
     }
-  }
 
-  KOAttendeeEditor::writeEvent( event );
+    KOAttendeeEditor::writeEvent(event);
 
-  // cleanup
-  QValueVector<QListViewItem*>::iterator it;
-  for( it = toBeDeleted.begin(); it != toBeDeleted.end(); ++it ) {
-    delete *it;
-  }
+    // cleanup
+    QValueVector<QListViewItem *>::iterator it;
+    for(it = toBeDeleted.begin(); it != toBeDeleted.end(); ++it)
+    {
+        delete *it;
+    }
 }
 
 bool KOEditorDetails::validateInput()
 {
-  return true;
+    return true;
 }
 
-KCal::Attendee * KOEditorDetails::currentAttendee() const
+KCal::Attendee *KOEditorDetails::currentAttendee() const
 {
-  QListViewItem *item = mListView->selectedItem();
-  AttendeeListItem *aItem = static_cast<AttendeeListItem *>( item );
-  if ( !aItem )
-    return 0;
-  return aItem->data();
+    QListViewItem *item = mListView->selectedItem();
+    AttendeeListItem *aItem = static_cast<AttendeeListItem *>(item);
+    if(!aItem)
+        return 0;
+    return aItem->data();
 }
 
 void KOEditorDetails::updateCurrentItem()
 {
-  AttendeeListItem *item = static_cast<AttendeeListItem*>( mListView->selectedItem() );
-  if ( item )
-    item->updateItem();
+    AttendeeListItem *item = static_cast<AttendeeListItem *>(mListView->selectedItem());
+    if(item)
+        item->updateItem();
 }
 
-void KOEditorDetails::slotInsertAttendee(Attendee * a)
+void KOEditorDetails::slotInsertAttendee(Attendee *a)
 {
-  insertAttendee( a );
+    insertAttendee(a);
 }
 
 void KOEditorDetails::changeStatusForMe(Attendee::PartStat status)
 {
-  const QStringList myEmails = KOPrefs::instance()->allEmails();
-  for ( QListViewItemIterator it( mListView ); it.current(); ++it ) {
-    AttendeeListItem *item = static_cast<AttendeeListItem*>( it.current() );
-    for ( QStringList::ConstIterator it2( myEmails.begin() ), end( myEmails.end() ); it2 != end; ++it2 ) {
-      if ( item->data()->email() == *it2 ) {
-        item->data()->setStatus( status );
-        item->updateItem();
-      }
+    const QStringList myEmails = KOPrefs::instance()->allEmails();
+    for(QListViewItemIterator it(mListView); it.current(); ++it)
+    {
+        AttendeeListItem *item = static_cast<AttendeeListItem *>(it.current());
+        for(QStringList::ConstIterator it2(myEmails.begin()), end(myEmails.end()); it2 != end; ++it2)
+        {
+            if(item->data()->email() == *it2)
+            {
+                item->data()->setStatus(status);
+                item->updateItem();
+            }
+        }
     }
-  }
 }
 
 #include "koeditordetails.moc"

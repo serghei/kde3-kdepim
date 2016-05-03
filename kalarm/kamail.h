@@ -26,40 +26,45 @@
 class KURL;
 class KAEvent;
 class EmailAddressList;
-namespace KPIM { class IdentityManager; }
-namespace KMime { namespace Types { struct Address; } }
+namespace KPIM {
+class IdentityManager;
+}
+namespace KMime {
+namespace Types {
+struct Address;
+}
+}
 
 struct KAMailData;
 
 
-class KAMail
-{
-	public:
-		static bool        send(const KAEvent&, QStringList& errmsgs, bool allowNotify = true);
-		static int         checkAddress(QString& address);
-		static int         checkAttachment(QString& attachment, KURL* = 0);
-		static bool        checkAttachment(const KURL&);
-		static QString     convertAddresses(const QString& addresses, EmailAddressList&);
-		static QString     convertAttachments(const QString& attachments, QStringList& list);
-		static KPIM::IdentityManager* identityManager();
-		static bool        identitiesExist();
-		static uint        identityUoid(const QString& identityUoidOrName);
-		static QString     controlCentreAddress();
-		static QString     getMailBody(Q_UINT32 serialNumber);
-		static QString     i18n_NeedFromEmailAddress();
-		static QString     i18n_sent_mail();
+class KAMail {
+public:
+    static bool        send(const KAEvent &, QStringList &errmsgs, bool allowNotify = true);
+    static int         checkAddress(QString &address);
+    static int         checkAttachment(QString &attachment, KURL * = 0);
+    static bool        checkAttachment(const KURL &);
+    static QString     convertAddresses(const QString &addresses, EmailAddressList &);
+    static QString     convertAttachments(const QString &attachments, QStringList &list);
+    static KPIM::IdentityManager *identityManager();
+    static bool        identitiesExist();
+    static uint        identityUoid(const QString &identityUoidOrName);
+    static QString     controlCentreAddress();
+    static QString     getMailBody(Q_UINT32 serialNumber);
+    static QString     i18n_NeedFromEmailAddress();
+    static QString     i18n_sent_mail();
 
-	private:
-		static KPIM::IdentityManager* mIdentityManager;     // KMail identity manager
-		static QString     sendKMail(const KAMailData&);
-		static QString     initHeaders(const KAMailData&, bool dateId);
-		static QString     appendBodyAttachments(QString& message, const KAEvent&);
-		static QString     addToKMailFolder(const KAMailData&, const char* folder, bool checkKmailRunning);
-		static bool        callKMail(const QByteArray& callData, const QCString& iface, const QCString& function, const QCString& funcType);
-		static QString     convertAddress(KMime::Types::Address, EmailAddressList&);
-		static void        notifyQueued(const KAEvent&);
-		static char*       base64Encode(const char* in, QIODevice::Offset size, QIODevice::Offset& outSize);
-		static QStringList errors(const QString& error = QString::null, bool sendfail = true);
+private:
+    static KPIM::IdentityManager *mIdentityManager;     // KMail identity manager
+    static QString     sendKMail(const KAMailData &);
+    static QString     initHeaders(const KAMailData &, bool dateId);
+    static QString     appendBodyAttachments(QString &message, const KAEvent &);
+    static QString     addToKMailFolder(const KAMailData &, const char *folder, bool checkKmailRunning);
+    static bool        callKMail(const QByteArray &callData, const QCString &iface, const QCString &function, const QCString &funcType);
+    static QString     convertAddress(KMime::Types::Address, EmailAddressList &);
+    static void        notifyQueued(const KAEvent &);
+    static char       *base64Encode(const char *in, QIODevice::Offset size, QIODevice::Offset &outSize);
+    static QStringList errors(const QString &error = QString::null, bool sendfail = true);
 };
 
 #endif // KAMAIL_H

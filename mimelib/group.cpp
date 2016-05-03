@@ -30,18 +30,20 @@
 #include <mimelib/group.h>
 #include <mimelib/token.h>
 
-const char* const DwGroup::sClassName = "DwGroup";
+const char *const DwGroup::sClassName = "DwGroup";
 
 
-DwGroup* (*DwGroup::sNewGroup)(const DwString&, DwMessageComponent*) = 0;
+DwGroup *(*DwGroup::sNewGroup)(const DwString &, DwMessageComponent *) = 0;
 
 
-DwGroup* DwGroup::NewGroup(const DwString& aStr, DwMessageComponent* aParent)
+DwGroup *DwGroup::NewGroup(const DwString &aStr, DwMessageComponent *aParent)
 {
-    if (sNewGroup) {
+    if(sNewGroup)
+    {
         return sNewGroup(aStr, aParent);
     }
-    else {
+    else
+    {
         return new DwGroup(aStr, aParent);
     }
 }
@@ -56,19 +58,19 @@ DwGroup::DwGroup()
 }
 
 
-DwGroup::DwGroup(const DwGroup& aGroup)
-   : DwAddress(aGroup),
-     mGroupName(aGroup.mGroupName)
+DwGroup::DwGroup(const DwGroup &aGroup)
+    : DwAddress(aGroup),
+      mGroupName(aGroup.mGroupName)
 {
-    mMailboxList = (DwMailboxList*) aGroup.mMailboxList->Clone();
+    mMailboxList = (DwMailboxList *) aGroup.mMailboxList->Clone();
     mMailboxList->SetParent(this);
     mClassId = kCidGroup;
     mClassName = sClassName;
 }
 
 
-DwGroup::DwGroup(const DwString& aStr, DwMessageComponent* aParent)
-   : DwAddress(aStr, aParent)
+DwGroup::DwGroup(const DwString &aStr, DwMessageComponent *aParent)
+    : DwAddress(aStr, aParent)
 {
     mMailboxList =
         DwMailboxList::NewMailboxList("", this);
@@ -83,43 +85,43 @@ DwGroup::~DwGroup()
 }
 
 
-const DwGroup& DwGroup::operator = (const DwGroup& aGroup)
+const DwGroup &DwGroup::operator = (const DwGroup &aGroup)
 {
-    if (this == &aGroup) return *this;
+    if(this == &aGroup) return *this;
     DwAddress::operator = (aGroup);
     mGroupName    =  aGroup.mGroupName;
     delete mMailboxList;
-    mMailboxList = (DwMailboxList*) aGroup.mMailboxList->Clone();
+    mMailboxList = (DwMailboxList *) aGroup.mMailboxList->Clone();
     // *mMailboxList = *aGroup.mMailboxList;
     return *this;
 }
 
 
-const DwString& DwGroup::GroupName() const
+const DwString &DwGroup::GroupName() const
 {
     return mGroupName;
 }
 
 
-const DwString& DwGroup::Phrase() const
+const DwString &DwGroup::Phrase() const
 {
     return mGroupName;
 }
 
 
-void DwGroup::SetGroupName(const DwString& aName)
+void DwGroup::SetGroupName(const DwString &aName)
 {
     mGroupName = aName;
 }
 
 
-void DwGroup::SetPhrase(const DwString& aPhrase)
+void DwGroup::SetPhrase(const DwString &aPhrase)
 {
     mGroupName = aPhrase;
 }
 
 
-DwMailboxList& DwGroup::MailboxList() const
+DwMailboxList &DwGroup::MailboxList() const
 {
     return *mMailboxList;
 }
@@ -130,7 +132,8 @@ void DwGroup::Parse()
     mIsModified = 0;
     mGroupName = "";
     int isGroupNameNull = 1;
-    if (mMailboxList) {
+    if(mMailboxList)
+    {
         delete mMailboxList;
     }
     mMailboxList = DwMailboxList::NewMailboxList("", this);
@@ -141,25 +144,30 @@ void DwGroup::Parse()
 
     // Everything up to the first ':' is the group name
     int done = 0;
-    while (!done && type != eTkNull) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case ':':
-                done = 1;
-            }
-            break;
-        case eTkQuotedString:
-        case eTkAtom:
-            if (isGroupNameNull) {
-                isGroupNameNull = 0;
-            }
-            else {
-                mGroupName += " ";
-            }
-            mGroupName += tokenizer.Token();
-            break;
+    while(!done && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case ':':
+                        done = 1;
+                }
+                break;
+            case eTkQuotedString:
+            case eTkAtom:
+                if(isGroupNameNull)
+                {
+                    isGroupNameNull = 0;
+                }
+                else
+                {
+                    mGroupName += " ";
+                }
+                mGroupName += tokenizer.Token();
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -169,23 +177,28 @@ void DwGroup::Parse()
     DwTokenString tokenString(mString);
     tokenString.SetFirst(tokenizer);
     done = 0;
-    while (!done && type != eTkNull) {
-        if (type == eTkSpecial && tokenizer.Token()[0] == ';') {
+    while(!done && type != eTkNull)
+    {
+        if(type == eTkSpecial && tokenizer.Token()[0] == ';')
+        {
             tokenString.ExtendTo(tokenizer);
             break;
         }
         ++tokenizer;
         type = tokenizer.Type();
     }
-    if (mMailboxList) {
+    if(mMailboxList)
+    {
         delete mMailboxList;
     }
     mMailboxList = DwMailboxList::NewMailboxList(tokenString.Tokens(), this);
     mMailboxList->Parse();
-    if (mGroupName.length() > 0) {
+    if(mGroupName.length() > 0)
+    {
         mIsValid = 1;
     }
-    else {
+    else
+    {
         mIsValid = 0;
     }
 }
@@ -193,8 +206,9 @@ void DwGroup::Parse()
 
 void DwGroup::Assemble()
 {
-    if (!mIsModified) return;
-    if (mGroupName.length() == 0) {
+    if(!mIsModified) return;
+    if(mGroupName.length() == 0)
+    {
         mIsValid = 0;
         mString = "";
         return;
@@ -209,37 +223,38 @@ void DwGroup::Assemble()
 }
 
 
-DwMessageComponent* DwGroup::Clone() const
+DwMessageComponent *DwGroup::Clone() const
 {
     return new DwGroup(*this);
 }
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwGroup::PrintDebugInfo(std::ostream& aStrm, int aDepth) const
+void DwGroup::PrintDebugInfo(std::ostream &aStrm, int aDepth) const
 {
     aStrm << "------------ Debug info for DwGroup class ------------\n";
     _PrintDebugInfo(aStrm);
     int depth = aDepth - 1;
     depth = (depth >= 0) ? depth : 0;
-    if (aDepth == 0 || depth > 0) {
+    if(aDepth == 0 || depth > 0)
+    {
         mMailboxList->PrintDebugInfo(aStrm, depth);
     }
 }
 #else
-void DwGroup::PrintDebugInfo(std::ostream&, int) const {}
+void DwGroup::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwGroup::_PrintDebugInfo(std::ostream& aStrm) const
+void DwGroup::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwAddress::_PrintDebugInfo(aStrm);
     aStrm << "Group name:       " << mGroupName << '\n';
     aStrm << "Mailbox list:     " << mMailboxList->ObjectId() << '\n';
 }
 #else
-void DwGroup::_PrintDebugInfo(std::ostream& ) const {}
+void DwGroup::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
@@ -249,6 +264,6 @@ void DwGroup::CheckInvariants() const
     DwAddress::CheckInvariants();
     mGroupName.CheckInvariants();
     mMailboxList->CheckInvariants();
-    assert((DwMessageComponent*) this == mMailboxList->Parent());
+    assert((DwMessageComponent *) this == mMailboxList->Parent());
 #endif // defined (DW_DEBUG_VERSION)
 }

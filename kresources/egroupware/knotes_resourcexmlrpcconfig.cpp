@@ -34,65 +34,67 @@
 
 using namespace KNotes;
 
-ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+ResourceXMLRPCConfig::ResourceXMLRPCConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  QGridLayout *mainLayout = new QGridLayout( this, 4, 2, 0, KDialog::spacingHint() );
+    QGridLayout *mainLayout = new QGridLayout(this, 4, 2, 0, KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "URL:" ), this );
-  mURL = new KURLRequester( this );
+    QLabel *label = new QLabel(i18n("URL:"), this);
+    mURL = new KURLRequester(this);
 
-  mainLayout->addWidget( label, 0, 0 );
-  mainLayout->addWidget( mURL, 0, 1 );
+    mainLayout->addWidget(label, 0, 0);
+    mainLayout->addWidget(mURL, 0, 1);
 
-  label = new QLabel( i18n( "Domain:" ), this );
-  mDomain = new KLineEdit( this );
+    label = new QLabel(i18n("Domain:"), this);
+    mDomain = new KLineEdit(this);
 
-  mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mDomain, 1, 1 );
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(mDomain, 1, 1);
 
-  label = new QLabel( i18n( "User:" ), this );
-  mUser = new KLineEdit( this );
+    label = new QLabel(i18n("User:"), this);
+    mUser = new KLineEdit(this);
 
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUser, 2, 1 );
+    mainLayout->addWidget(label, 2, 0);
+    mainLayout->addWidget(mUser, 2, 1);
 
-  label = new QLabel( i18n( "Password:" ), this );
-  mPassword = new KLineEdit( this );
-  mPassword->setEchoMode( QLineEdit::Password );
+    label = new QLabel(i18n("Password:"), this);
+    mPassword = new KLineEdit(this);
+    mPassword->setEchoMode(QLineEdit::Password);
 
-  mainLayout->addWidget( label, 3, 0 );
-  mainLayout->addWidget( mPassword, 3, 1 );
+    mainLayout->addWidget(label, 3, 0);
+    mainLayout->addWidget(mPassword, 3, 1);
 }
 
-void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
+void ResourceXMLRPCConfig::loadSettings(KRES::Resource *res)
 {
-  ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
+    ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC *>(res);
 
-  if ( !resource ) {
-    kdDebug(5700) << "ResourceXMLRPCConfig::loadSettings(): cast failed" << endl;
-    return;
-  }
+    if(!resource)
+    {
+        kdDebug(5700) << "ResourceXMLRPCConfig::loadSettings(): cast failed" << endl;
+        return;
+    }
 
-  mURL->setURL( resource->prefs()->url() );
-  mDomain->setText( resource->prefs()->domain() );
-  mUser->setText( resource->prefs()->user() );
-  mPassword->setText( resource->prefs()->password() );
+    mURL->setURL(resource->prefs()->url());
+    mDomain->setText(resource->prefs()->domain());
+    mUser->setText(resource->prefs()->user());
+    mPassword->setText(resource->prefs()->password());
 }
 
-void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
+void ResourceXMLRPCConfig::saveSettings(KRES::Resource *res)
 {
-  ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
+    ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC *>(res);
 
-  if ( !resource ) {
-    kdDebug(5700) << "ResourceXMLRPCConfig::saveSettings(): cast failed" << endl;
-    return;
-  }
+    if(!resource)
+    {
+        kdDebug(5700) << "ResourceXMLRPCConfig::saveSettings(): cast failed" << endl;
+        return;
+    }
 
-  resource->prefs()->setUrl( mURL->url() );
-  resource->prefs()->setDomain( mDomain->text() );
-  resource->prefs()->setUser( mUser->text() );
-  resource->prefs()->setPassword( mPassword->text() );
+    resource->prefs()->setUrl(mURL->url());
+    resource->prefs()->setDomain(mDomain->text());
+    resource->prefs()->setUser(mUser->text());
+    resource->prefs()->setPassword(mPassword->text());
 }
 
 #include "knotes_resourcexmlrpcconfig.moc"

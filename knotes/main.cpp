@@ -41,22 +41,22 @@ void remove_sm_from_client_leader()
     unsigned char *data = 0;
 
     Atom atoms[ 2 ];
-    char *atom_names[ 2 ] = { (char*)"WM_CLIENT_LEADER", (char*)"SM_CLIENT_ID" };
+    char *atom_names[ 2 ] = { (char *)"WM_CLIENT_LEADER", (char *)"SM_CLIENT_ID" };
 
-    XInternAtoms( qt_xdisplay(), atom_names, 2, False, atoms );
+    XInternAtoms(qt_xdisplay(), atom_names, 2, False, atoms);
 
     QWidget w;
     KXErrorHandler handler; // ignore X errors
-    status = XGetWindowProperty( qt_xdisplay(), w.winId(), atoms[ 0 ], 0, 10000,
-                                 FALSE, XA_WINDOW, &type, &format,
-                                 &nitems, &extra, &data );
+    status = XGetWindowProperty(qt_xdisplay(), w.winId(), atoms[ 0 ], 0, 10000,
+                                FALSE, XA_WINDOW, &type, &format,
+                                &nitems, &extra, &data);
 
-    if (status  == Success && !handler.error( false ))
+    if(status  == Success && !handler.error(false))
     {
-        if (data && nitems > 0)
+        if(data && nitems > 0)
         {
-            Window leader = *((Window*) data);
-            XDeleteProperty( qt_xdisplay(), leader, atoms[ 1 ] );
+            Window leader = *((Window *) data);
+            XDeleteProperty(qt_xdisplay(), leader, atoms[ 1 ]);
         }
         XFree(data);
     }
@@ -64,7 +64,7 @@ void remove_sm_from_client_leader()
 
 
 Application::Application()
-    : KUniqueApplication(), mMainWindow( 0 )
+    : KUniqueApplication(), mMainWindow(0)
 {
 }
 
@@ -75,7 +75,7 @@ Application::~Application()
 
 int Application::newInstance()
 {
-    if ( !mMainWindow )
+    if(!mMainWindow)
     {
         mMainWindow = new KNotesApp();
         mMainWindow->show();
@@ -86,17 +86,17 @@ int Application::newInstance()
     return KUniqueApplication::newInstance();
 }
 
-int main( int argc, char* argv[] )
+int main(int argc, char *argv[])
 {
-    QString version = QString::number( KNOTES_VERSION );
+    QString version = QString::number(KNOTES_VERSION);
 
     KAboutData aboutData(
-          "knotes",
-          I18N_NOOP("KNotes"),
-          version.latin1(),
-          I18N_NOOP( "KDE Notes" ),
-          KAboutData::License_GPL,
-          I18N_NOOP("(c) 1997-2006, The KNotes Developers")
+        "knotes",
+        I18N_NOOP("KNotes"),
+        version.latin1(),
+        I18N_NOOP("KDE Notes"),
+        KAboutData::License_GPL,
+        I18N_NOOP("(c) 1997-2006, The KNotes Developers")
     );
 
     aboutData.addAuthor("Michael Brade", I18N_NOOP("Maintainer"), "brade@kde.org");
@@ -117,12 +117,12 @@ int main( int argc, char* argv[] )
     aboutData.addCredit("Harri Porten", 0, "porten@kde.org");
     aboutData.addCredit("Espen Sand", 0, "espen@kde.org");
 
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
     KUniqueApplication::addCmdLineOptions();
 
     Application app;
-    app.connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+    app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
 
     remove_sm_from_client_leader();
 

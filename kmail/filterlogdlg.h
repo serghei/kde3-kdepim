@@ -38,42 +38,41 @@ class QGroupBox;
 
 namespace KMail {
 
-  /**
-    @short KMail Filter Log Collector.
-    @author Andreas Gungl <a.gungl@gmx.de>
+/**
+  @short KMail Filter Log Collector.
+  @author Andreas Gungl <a.gungl@gmx.de>
 
-    The filter log dialog allows a continued observation of the 
-    filter log of KMail.
-  */
-  class FilterLogDialog : public KDialogBase
-  {
+  The filter log dialog allows a continued observation of the
+  filter log of KMail.
+*/
+class FilterLogDialog : public KDialogBase {
     Q_OBJECT
-    
-    public:
-      /** constructor */
-      FilterLogDialog( QWidget * parent );
-    
-    protected slots:
-      void slotLogEntryAdded( QString logEntry );
-      void slotLogShrinked();
-      void slotLogStateChanged();
-      void slotChangeLogDetail();
-      void slotSwitchLogState();
-      void slotChangeLogMemLimit( int value );
-      
-    protected:
-      virtual void slotUser1();
-      virtual void slotUser2();
-      
-      QTextEdit * mTextEdit;
-      QCheckBox * mLogActiveBox;
-      QGroupBox * mLogDetailsBox;
-      QCheckBox * mLogPatternDescBox;
-      QCheckBox * mLogRuleEvaluationBox;
-      QCheckBox * mLogPatternResultBox;
-      QCheckBox * mLogFilterActionBox;
-      QSpinBox  * mLogMemLimitSpin;
-  };
+
+public:
+    /** constructor */
+    FilterLogDialog(QWidget *parent);
+
+protected slots:
+    void slotLogEntryAdded(QString logEntry);
+    void slotLogShrinked();
+    void slotLogStateChanged();
+    void slotChangeLogDetail();
+    void slotSwitchLogState();
+    void slotChangeLogMemLimit(int value);
+
+protected:
+    virtual void slotUser1();
+    virtual void slotUser2();
+
+    QTextEdit *mTextEdit;
+    QCheckBox *mLogActiveBox;
+    QGroupBox *mLogDetailsBox;
+    QCheckBox *mLogPatternDescBox;
+    QCheckBox *mLogRuleEvaluationBox;
+    QCheckBox *mLogPatternResultBox;
+    QCheckBox *mLogFilterActionBox;
+    QSpinBox   *mLogMemLimitSpin;
+};
 
 } // namespace KMail
 

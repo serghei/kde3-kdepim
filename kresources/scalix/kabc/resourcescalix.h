@@ -43,7 +43,7 @@
 
 namespace KABC {
 
-  class FormatPlugin;
+class FormatPlugin;
 
 /**
  * This class implements a KAddressBook resource that keeps its
@@ -51,118 +51,118 @@ namespace KABC {
  * clients).
  */
 class KDE_EXPORT ResourceScalix : public KPIM::ResourceABC,
-                     public Scalix::ResourceScalixBase
-{
-  Q_OBJECT
+    public Scalix::ResourceScalixBase {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructor
-   */
-  ResourceScalix( const KConfig* );
+    /**
+     * Constructor
+     */
+    ResourceScalix(const KConfig *);
 
-  /**
-   * Destructor.
-   */
-  virtual ~ResourceScalix();
+    /**
+     * Destructor.
+     */
+    virtual ~ResourceScalix();
 
-  /**
-   * Open the contacts list
-   */
-  virtual bool doOpen();
+    /**
+     * Open the contacts list
+     */
+    virtual bool doOpen();
 
-  /**
-   * Request a ticket, you have to pass through save() to
-   * allow locking.
-   */
-  virtual Ticket *requestSaveTicket();
+    /**
+     * Request a ticket, you have to pass through save() to
+     * allow locking.
+     */
+    virtual Ticket *requestSaveTicket();
 
-  /**
-     Releases the ticket previousely requested with requestSaveTicket().
-     The resource has to remove its locks in this function.
-  */
-  virtual void releaseSaveTicket( Ticket* );
+    /**
+       Releases the ticket previousely requested with requestSaveTicket().
+       The resource has to remove its locks in this function.
+    */
+    virtual void releaseSaveTicket(Ticket *);
 
-  /**
-  * Load all addressees to the addressbook
-   */
-  virtual bool load();
+    /**
+    * Load all addressees to the addressbook
+     */
+    virtual bool load();
 
-  /**
-  * Save all addressees to the addressbook.
-   *
-   * @param ticket The ticket you get by requestSaveTicket()
-   */
-  virtual bool save( Ticket *ticket );
+    /**
+    * Save all addressees to the addressbook.
+     *
+     * @param ticket The ticket you get by requestSaveTicket()
+     */
+    virtual bool save(Ticket *ticket);
 
-  /**
-     Insert an addressee into the resource.
-  */
-  virtual void insertAddressee( const Addressee& );
+    /**
+       Insert an addressee into the resource.
+    */
+    virtual void insertAddressee(const Addressee &);
 
-  /**
-  * Removes a addressee from resource. This method is mainly
-   * used by record-based resources like LDAP or SQL.
-   */
-  virtual void removeAddressee( const Addressee& addr );
+    /**
+    * Removes a addressee from resource. This method is mainly
+     * used by record-based resources like LDAP or SQL.
+     */
+    virtual void removeAddressee(const Addressee &addr);
 
-  // Listen to KMail changes in the amount of sub resources
-  void fromKMailAddSubresource( const QString& type, const QString& id,
-                                const QString& label, bool writable );
-  void fromKMailDelSubresource( const QString& type, const QString& id );
+    // Listen to KMail changes in the amount of sub resources
+    void fromKMailAddSubresource(const QString &type, const QString &id,
+                                 const QString &label, bool writable);
+    void fromKMailDelSubresource(const QString &type, const QString &id);
 
-  bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, int format, const QString& contact );
-  void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& contact );
-  void fromKMailRefresh( const QString& type, const QString& resource );
+    bool fromKMailAddIncidence(const QString &type, const QString &resource,
+                               Q_UINT32 sernum, int format, const QString &contact);
+    void fromKMailDelIncidence(const QString &type, const QString &resource,
+                               const QString &contact);
+    void fromKMailRefresh(const QString &type, const QString &resource);
 
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
-                                 const QString& type,
-                                 const QString& folder );
+    void fromKMailAsyncLoadResult(const QMap<Q_UINT32, QString> &map,
+                                  const QString &type,
+                                  const QString &folder);
 
-  /// Return the list of subresources.
-  QStringList subresources() const;
+    /// Return the list of subresources.
+    QStringList subresources() const;
 
-  /// Is this subresource active?
-  bool subresourceActive( const QString& ) const;
-  /// Is this subresource writabel?
-  bool subresourceWritable( const QString& ) const;
+    /// Is this subresource active?
+    bool subresourceActive(const QString &) const;
+    /// Is this subresource writabel?
+    bool subresourceWritable(const QString &) const;
 
-  virtual void setSubresourceActive( const QString &, bool );
+    virtual void setSubresourceActive(const QString &, bool);
 
-  /// Completion weight for a given subresource
-  virtual int subresourceCompletionWeight( const QString& ) const;
+    /// Completion weight for a given subresource
+    virtual int subresourceCompletionWeight(const QString &) const;
 
-  /// Label for a given subresource
-  virtual QString subresourceLabel( const QString& ) const;
+    /// Label for a given subresource
+    virtual QString subresourceLabel(const QString &) const;
 
-  /// Set completion weight for a given subresource
-  virtual void setSubresourceCompletionWeight( const QString&, int );
+    /// Set completion weight for a given subresource
+    virtual void setSubresourceCompletionWeight(const QString &, int);
 
-  /// Give the uidmap. Used for ordered searching
-  QMap<QString, QString> uidToResourceMap() const;
+    /// Give the uidmap. Used for ordered searching
+    QMap<QString, QString> uidToResourceMap() const;
 
 protected:
-  bool kmailUpdateAddressee( const Addressee& );
+    bool kmailUpdateAddressee(const Addressee &);
 
-  void doClose();
+    void doClose();
 
-  void loadSubResourceConfig( KConfig& config, const QString& name,
-                              const QString& label, bool writable );
-  bool loadSubResource( const QString& subResource );
-  bool loadSubResourceHelper( const QString& subResource, const char* mimetype, KMailICalIface::StorageFormat format );
-  QString loadContact( const QString& contactData, const QString& subResource,
-                       Q_UINT32 sernum, const KMailICalIface::StorageFormat format );
+    void loadSubResourceConfig(KConfig &config, const QString &name,
+                               const QString &label, bool writable);
+    bool loadSubResource(const QString &subResource);
+    bool loadSubResourceHelper(const QString &subResource, const char *mimetype, KMailICalIface::StorageFormat format);
+    QString loadContact(const QString &contactData, const QString &subResource,
+                        Q_UINT32 sernum, const KMailICalIface::StorageFormat format);
 
-  QString configFile() const {
-    return Scalix::ResourceScalixBase::configFile( "kabc" );
-  }
+    QString configFile() const
+    {
+        return Scalix::ResourceScalixBase::configFile("kabc");
+    }
 
-  // The list of subresources
-  Scalix::ResourceMap mSubResources;
-  QString mCachedSubresource;
-  bool mLocked;
+    // The list of subresources
+    Scalix::ResourceMap mSubResources;
+    QString mCachedSubresource;
+    bool mLocked;
 };
 
 }

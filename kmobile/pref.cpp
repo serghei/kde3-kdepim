@@ -11,7 +11,7 @@
 
 KMobilePreferences::KMobilePreferences()
     : KDialogBase(TreeList, i18n("Preferences"),
-                  Help|Default|Ok|Apply|Cancel, Ok)
+                  Help | Default | Ok | Apply | Cancel, Ok)
 {
     // this is the base class for your preferences dialog.  it is now
     // a Treelist dialog.. but there are a number of other

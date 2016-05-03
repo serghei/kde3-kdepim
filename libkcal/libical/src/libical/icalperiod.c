@@ -2,13 +2,13 @@
   ======================================================================
   FILE: icalperiod.c
   CREATOR: eric 02 June 2000
-  
-    
+
+
  (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
      http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
+ it under the terms of either:
 
     The LGPL as published by the Free Software Foundation, version
     2.1, available at: http://www.fsf.org/copyleft/lesser.html
@@ -41,9 +41,9 @@
 
 
 
-struct icalperiodtype icalperiodtype_from_string (const char* str)
+struct icalperiodtype icalperiodtype_from_string(const char *str)
 {
-    
+
     struct icalperiodtype p, null_p;
     char *s = icalmemory_strdup(str);
     char *start, *end = s;
@@ -71,22 +71,23 @@ struct icalperiodtype icalperiodtype_from_string (const char* str)
 
     p.start = icaltime_from_string(start);
 
-    if (icaltime_is_null_time(p.start)) goto error;
+    if(icaltime_is_null_time(p.start)) goto error;
 
     es = icalerror_get_error_state(ICAL_MALFORMEDDATA_ERROR);
-    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_NONFATAL);
+    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR, ICAL_ERROR_NONFATAL);
 
     p.end = icaltime_from_string(end);
 
-    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,es);
-    
+    icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR, es);
 
-    if (icaltime_is_null_time(p.end)){
 
-	p.duration = icaldurationtype_from_string(end);
+    if(icaltime_is_null_time(p.end))
+    {
 
-	if(icaldurationtype_as_int(p.duration) == 0) goto error;
-    } 
+        p.duration = icaldurationtype_from_string(end);
+
+        if(icaldurationtype_as_int(p.duration) == 0) goto error;
+    }
 
     icalerrno = e;
 
@@ -94,51 +95,55 @@ struct icalperiodtype icalperiodtype_from_string (const char* str)
 
     return p;
 
- error:
+error:
     icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
 
-    if (s)
-	icalmemory_free_buffer (s);
+    if(s)
+        icalmemory_free_buffer(s);
     return null_p;
 }
 
 
-const char* icalperiodtype_as_ical_string(struct icalperiodtype p)
+const char *icalperiodtype_as_ical_string(struct icalperiodtype p)
 {
 
-    const char* start;
-    const char* end;
+    const char *start;
+    const char *end;
 
     char *buf;
     size_t buf_size = 40;
-    char* buf_ptr = 0;
+    char *buf_ptr = 0;
 
-    buf = (char*)icalmemory_new_buffer(buf_size);
+    buf = (char *)icalmemory_new_buffer(buf_size);
     buf_ptr = buf;
-    
+
 
     start = icaltime_as_ical_string(p.start);
 
-    icalmemory_append_string(&buf, &buf_ptr, &buf_size, start); 
+    icalmemory_append_string(&buf, &buf_ptr, &buf_size, start);
 
-    if(!icaltime_is_null_time(p.end)){
-	end = icaltime_as_ical_string(p.end);
-    } else {
-	end = icaldurationtype_as_ical_string(p.duration);
+    if(!icaltime_is_null_time(p.end))
+    {
+        end = icaltime_as_ical_string(p.end);
+    }
+    else
+    {
+        end = icaldurationtype_as_ical_string(p.duration);
     }
 
-    icalmemory_append_char(&buf, &buf_ptr, &buf_size, '/'); 
+    icalmemory_append_char(&buf, &buf_ptr, &buf_size, '/');
 
-    icalmemory_append_string(&buf, &buf_ptr, &buf_size, end); 
-    
-	icalmemory_add_tmp_buffer(buf);
+    icalmemory_append_string(&buf, &buf_ptr, &buf_size, end);
+
+    icalmemory_add_tmp_buffer(buf);
 
     return buf;
 }
 
 
 
-struct icalperiodtype icalperiodtype_null_period(void) {
+struct icalperiodtype icalperiodtype_null_period(void)
+{
     struct icalperiodtype p;
     p.start = icaltime_null_time();
     p.end = icaltime_null_time();
@@ -146,23 +151,28 @@ struct icalperiodtype icalperiodtype_null_period(void) {
 
     return p;
 }
-int icalperiodtype_is_null_period(struct icalperiodtype p){
-    
-    if(icaltime_is_null_time(p.start) && 
-       icaltime_is_null_time(p.end) && 
-       icaldurationtype_is_null_duration(p.duration)){
-	return 1;
-    } else {
-	return 0;
+int icalperiodtype_is_null_period(struct icalperiodtype p)
+{
+
+    if(icaltime_is_null_time(p.start) &&
+            icaltime_is_null_time(p.end) &&
+            icaldurationtype_is_null_duration(p.duration))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
     }
 }
 
-int icalperiodtype_is_valid_period(struct icalperiodtype p){
-    if(icaltime_is_valid_time(p.start) && 
-       (icaltime_is_valid_time(p.end) || icaltime_is_null_time(p.end)) )
-	{
-	    return 1;
-	}
+int icalperiodtype_is_valid_period(struct icalperiodtype p)
+{
+    if(icaltime_is_valid_time(p.start) &&
+            (icaltime_is_valid_time(p.end) || icaltime_is_null_time(p.end)))
+    {
+        return 1;
+    }
 
     return 0;
 }

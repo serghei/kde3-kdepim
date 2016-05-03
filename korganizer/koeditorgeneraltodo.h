@@ -37,11 +37,10 @@ class Todo;
 }
 using namespace KCal;
 
-class KOEditorGeneralTodo : public KOEditorGeneral
-{
+class KOEditorGeneralTodo : public KOEditorGeneral {
     Q_OBJECT
-  public:
-    KOEditorGeneralTodo (QObject* parent=0,const char* name=0);
+public:
+    KOEditorGeneralTodo(QObject *parent = 0, const char *name = 0);
     virtual ~KOEditorGeneralTodo();
 
     void initTime(QWidget *, QBoxLayout *);
@@ -52,7 +51,7 @@ class KOEditorGeneralTodo : public KOEditorGeneral
     void finishSetup();
 
     /** Set widgets to default values */
-    void setDefaults( const QDateTime &due, bool allDay );
+    void setDefaults(const QDateTime &due, bool allDay);
     /** Read todo object and setup widgets accordingly */
     void readTodo(Todo *todo, Calendar *calendar);
     /** Write todo settings to event object */
@@ -62,27 +61,27 @@ class KOEditorGeneralTodo : public KOEditorGeneral
     bool validateInput();
 
     /** The todo has been modified externally */
-    void modified (Todo*, int);
+    void modified(Todo *, int);
 
-  signals:
-    void dueDateEditToggle( bool );
-    void dateTimeStrChanged( const QString & );
-    void signalDateTimeChanged( const QDateTime &, const QDateTime & );
+signals:
+    void dueDateEditToggle(bool);
+    void dateTimeStrChanged(const QString &);
+    void signalDateTimeChanged(const QDateTime &, const QDateTime &);
 
-  protected slots:
+protected slots:
     void completedChanged(int);
     void dateChanged();
     void startDateModified();
 
-    void enableDueEdit( bool enable );
-    void enableStartEdit( bool enable );
-    void enableTimeEdits( bool enable );
+    void enableDueEdit(bool enable);
+    void enableStartEdit(bool enable);
+    void enableTimeEdits(bool enable);
     void showAlarm();
 
-  protected:
+protected:
     void setCompletedDate();
 
- private:
+private:
     bool                    mAlreadyComplete;
     bool                    mStartDateModified;
 

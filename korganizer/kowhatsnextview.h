@@ -34,12 +34,12 @@ class KOEventViewerDialog;
 
 class WhatsNextTextBrowser : public QTextBrowser {
     Q_OBJECT
-  public:
+public:
     WhatsNextTextBrowser(QWidget *parent) : QTextBrowser(parent) {}
 
     void setSource(const QString &);
 
-  signals:
+signals:
     void showIncidence(const QString &uid);
 };
 
@@ -47,34 +47,39 @@ class WhatsNextTextBrowser : public QTextBrowser {
 /**
   This class provides a view of the next events and todos
 */
-class KOWhatsNextView : public KOrg::BaseView
-{
+class KOWhatsNextView : public KOrg::BaseView {
     Q_OBJECT
-  public:
+public:
     KOWhatsNextView(Calendar *calendar, QWidget *parent = 0,
                     const char *name = 0);
     ~KOWhatsNextView();
 
     virtual int currentDateCount();
-    virtual Incidence::List selectedIncidences() { return Incidence::List(); }
-    DateList selectedDates() { return DateList(); }
+    virtual Incidence::List selectedIncidences()
+    {
+        return Incidence::List();
+    }
+    DateList selectedDates()
+    {
+        return DateList();
+    }
 
-  public slots:
+public slots:
     virtual void updateView();
     virtual void showDates(const QDate &start, const QDate &end);
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showIncidences(const Incidence::List &incidenceList);
 
     void changeIncidenceDisplay(Incidence *, int);
 
-  protected:
-    void appendEvent( Incidence *, const QDateTime &start = QDateTime(), 
-                      const QDateTime &end = QDateTime() );
-    void appendTodo( Incidence * );
+protected:
+    void appendEvent(Incidence *, const QDateTime &start = QDateTime(),
+                     const QDateTime &end = QDateTime());
+    void appendTodo(Incidence *);
 
-  private slots:
+private slots:
     void showIncidence(const QString &);
 
-  private:
+private:
     QTextBrowser *mView;
     QString mText;
     QDate mStartDate;

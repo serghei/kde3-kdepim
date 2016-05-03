@@ -42,108 +42,107 @@ typedef unsigned int uint;
 class KURL;
 class KURLLabel;
 
-namespace RSS
-{
-    class Article;
-    class Enclosure;
+namespace RSS {
+class Article;
+class Enclosure;
 }
 
-namespace Akregator
-{
-    namespace Backend
+namespace Akregator {
+namespace Backend {
+class FeedStorage;
+}
+class Feed;
+/** A proxy class for RSS::Article with some additional methods to assist sorting. */
+class KDE_EXPORT Article {
+public:
+    enum Status { Unread = 0, Read, New };
+    typedef QValueList<Article> List;
+
+    Article();
+    /** creates am article object for an existing article.
+     The constructor accesses the archive to load it's data
+     */
+    Article(const QString &guid, Feed *feed);
+    /** creates an article object from a parsed librss Article
+       the article is added to the archive if not yet stored, or updated if stored but modified
+    */
+    Article(RSS::Article article, Feed *feed);
+
+    Article(RSS::Article article, Backend::FeedStorage *archive);
+    Article(const Article &other);
+    Article &operator=(const Article &other);
+    bool operator==(const Article &other) const;
+    bool operator!=(const Article &other) const
     {
-        class FeedStorage;
+        return !operator==(other);
     }
-    class Feed;
-    /** A proxy class for RSS::Article with some additional methods to assist sorting. */
-    class KDE_EXPORT Article
-    {
-        public:
-            enum Status { Unread=0, Read, New };
-            typedef QValueList<Article> List;
+    virtual ~Article();
 
-            Article();
-            /** creates am article object for an existing article.
-             The constructor accesses the archive to load it's data
-             */
-            Article(const QString& guid, Feed* feed);
-            /** creates an article object from a parsed librss Article
-               the article is added to the archive if not yet stored, or updated if stored but modified
-            */
-            Article(RSS::Article article, Feed* feed);
-            
-            Article(RSS::Article article, Backend::FeedStorage* archive);
-            Article(const Article &other);
-            Article &operator=(const Article &other);
-            bool operator==(const Article &other) const;
-            bool operator!=(const Article &other) const { return !operator==(other); }
-            virtual ~Article();
+    bool isNull() const;
 
-            bool isNull() const;
-            
-            int status() const;
-            void setStatus(int s);
+    int status() const;
+    void setStatus(int s);
 
-            void offsetPubDate(int secs);
+    void offsetPubDate(int secs);
 
-            QString title() const;
-            KURL link() const;
-            
-            QString author() const;
-            
-            QString description() const;
-            QString guid() const;
-            /** if true, the article should be kept even when expired **/
-            bool keep() const;
-            void setKeep(bool keep);
-            bool isDeleted() const;
-            
-            RSS::Enclosure enclosure() const;
-            
-            void setDeleted();
-            
+    QString title() const;
+    KURL link() const;
 
-            Feed* feed() const;
+    QString author() const;
 
-            /** returns a hash value used to detect changes in articles with non-hash GUIDs. If the guid is a hash itself, it returns @c 0 */
-            
-            uint hash() const;
+    QString description() const;
+    QString guid() const;
+    /** if true, the article should be kept even when expired **/
+    bool keep() const;
+    void setKeep(bool keep);
+    bool isDeleted() const;
 
-            /** returns if the guid is a hash or an ID taken from the source */
-            
-            bool guidIsHash() const;
-            
-            bool guidIsPermaLink() const;
-            
-            const QDateTime& pubDate() const;
-            
-            KURL commentsLink() const;
-            
-            int comments() const;
-            
-            void addTag(const QString& tag);
-            void removeTag(const QString& tag);
-            bool hasTag(const QString& tag) const;
-            QStringList tags() const;
-            
-            bool operator<(const Article &other) const;
-            bool operator<=(const Article &other) const;
-            bool operator>(const Article &other) const;
-            bool operator>=(const Article &other) const;
+    RSS::Enclosure enclosure() const;
+
+    void setDeleted();
 
 
-        private:
-            void initialize(RSS::Article article, Backend::FeedStorage* archive);
-            static QString buildTitle(const QString& description);
+    Feed *feed() const;
 
-            int statusBits() const; // returns all of the status bits for the article.  this
-                                    // differs from status() which only returns the most relevant
-                                    // status flag.
-                                    
+    /** returns a hash value used to detect changes in articles with non-hash GUIDs. If the guid is a hash itself, it returns @c 0 */
 
-            struct Private;
-            Private *d;
-    };
+    uint hash() const;
+
+    /** returns if the guid is a hash or an ID taken from the source */
+
+    bool guidIsHash() const;
+
+    bool guidIsPermaLink() const;
+
+    const QDateTime &pubDate() const;
+
+    KURL commentsLink() const;
+
+    int comments() const;
+
+    void addTag(const QString &tag);
+    void removeTag(const QString &tag);
+    bool hasTag(const QString &tag) const;
+    QStringList tags() const;
+
+    bool operator<(const Article &other) const;
+    bool operator<=(const Article &other) const;
+    bool operator>(const Article &other) const;
+    bool operator>=(const Article &other) const;
+
+
+private:
+    void initialize(RSS::Article article, Backend::FeedStorage *archive);
+    static QString buildTitle(const QString &description);
+
+    int statusBits() const; // returns all of the status bits for the article.  this
+    // differs from status() which only returns the most relevant
+    // status flag.
+
+
+    struct Private;
+    Private *d;
+};
 }
 
 #endif

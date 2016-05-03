@@ -34,28 +34,27 @@ test cases:
 #include "karmstorage.h"
 #include "kapplication.h"
 
-class PlannerParser : public QXmlDefaultHandler
-{
+class PlannerParser : public QXmlDefaultHandler {
 public:
 
-  /**  Stores the active TaskView in this parser. Returns error code (not always, hopefully)  */
-  PlannerParser(TaskView * tv);
+    /**  Stores the active TaskView in this parser. Returns error code (not always, hopefully)  */
+    PlannerParser(TaskView *tv);
 
-  /** given by the framework from qxml. Called when parsing the xml-document starts.          */
-  bool startDocument();
+    /** given by the framework from qxml. Called when parsing the xml-document starts.          */
+    bool startDocument();
 
-  /** given by the framework from qxml. Called when the reader occurs an open tag (e.g. \<b\> ) */
-  bool startElement( const QString&, const QString&, const QString& qName, const QXmlAttributes& att );
+    /** given by the framework from qxml. Called when the reader occurs an open tag (e.g. \<b\> ) */
+    bool startElement(const QString &, const QString &, const QString &qName, const QXmlAttributes &att);
 
-  /** given by the framework from qxml. Called when the reader occurs a closed tag (e.g. \</b\> )*/
-  bool endElement( const QString&, const QString&, const QString& qName);
+    /** given by the framework from qxml. Called when the reader occurs a closed tag (e.g. \</b\> )*/
+    bool endElement(const QString &, const QString &, const QString &qName);
 
 private:
-  bool withInTasks;     // within <tasks> ?
-  TaskView *_taskView;
-  Task *task;
-  Task *parentTask;
-  int level;            // level=1: task is top-level-task
+    bool withInTasks;     // within <tasks> ?
+    TaskView *_taskView;
+    Task *task;
+    Task *parentTask;
+    int level;            // level=1: task is top-level-task
 };
 
 

@@ -44,13 +44,12 @@
 #include "knotes-factory.moc"
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_knotes()
-{
-	return new KNotesConduitFactory;
-}
+    void *init_conduit_knotes()
+    {
+        return new KNotesConduitFactory;
+    }
 
 }
 
@@ -58,76 +57,75 @@ void *init_conduit_knotes()
 /* static */ KAboutData *KNotesConduitFactory::fAbout = 0L;
 
 KNotesConduitFactory::KNotesConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
+    KLibFactory(p, n)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fInstance = new KInstance("knotesconduit");
-	fAbout = new KAboutData("knotesconduit",
-		I18N_NOOP("KNotes Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the KNotes Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
-		"groot@kde.org",
-		"http://www.cs.kun.nl/~adridg/kpilot");
-	fAbout->addCredit("David Bishop",
-		I18N_NOOP("UI"));
+    fInstance = new KInstance("knotesconduit");
+    fAbout = new KAboutData("knotesconduit",
+                            I18N_NOOP("KNotes Conduit for KPilot"),
+                            KPILOT_VERSION,
+                            I18N_NOOP("Configures the KNotes Conduit for KPilot"),
+                            KAboutData::License_GPL,
+                            "(C) 2001, Adriaan de Groot");
+    fAbout->addAuthor("Adriaan de Groot",
+                      I18N_NOOP("Primary Author"),
+                      "groot@kde.org",
+                      "http://www.cs.kun.nl/~adridg/kpilot");
+    fAbout->addCredit("David Bishop",
+                      I18N_NOOP("UI"));
 }
 
 KNotesConduitFactory::~KNotesConduitFactory()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
+    KPILOT_DELETE(fInstance);
+    KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *KNotesConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
+/* virtual */ QObject *KNotesConduitFactory::createObject(QObject *p,
+        const char *n,
+        const char *c,
+        const QStringList &a)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Creating object of class "
-		<< c
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Creating object of class "
+                << c
+                << endl;
 #endif
 
-	if (qstrcmp(c,"ConduitConfigBase")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			return new KNotesConfigBase(w,0L);
-		}
-		else
-		{
-			return 0L;
-		}
-	}
-	else
-	if (qstrcmp(c,"SyncAction")==0)
-	{
-		KPilotLink *d = dynamic_cast<KPilotLink *>(p);
+    if(qstrcmp(c, "ConduitConfigBase") == 0)
+    {
+        QWidget *w = dynamic_cast<QWidget *>(p);
+        if(w)
+        {
+            return new KNotesConfigBase(w, 0L);
+        }
+        else
+        {
+            return 0L;
+        }
+    }
+    else if(qstrcmp(c, "SyncAction") == 0)
+    {
+        KPilotLink *d = dynamic_cast<KPilotLink *>(p);
 
-		if (d)
-		{
-			return new KNotesAction(d,n,a);
-		}
-		else
-		{
-			WARNINGKPILOT
-				<< "Couldn't cast parent to KPilotDeviceLink"
-				<< endl;
-			return 0L;
-		}
-	}
+        if(d)
+        {
+            return new KNotesAction(d, n, a);
+        }
+        else
+        {
+            WARNINGKPILOT
+                    << "Couldn't cast parent to KPilotDeviceLink"
+                    << endl;
+            return 0L;
+        }
+    }
 
-	return 0L;
+    return 0L;
 }

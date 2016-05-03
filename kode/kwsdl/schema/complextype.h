@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -32,103 +32,104 @@
 
 namespace Schema {
 
-class ComplexType : public XSDType
-{
-  public:
+class ComplexType : public XSDType {
+public:
     typedef QValueList<ComplexType> List;
 
-    typedef enum { 
-      SEQ = 0, 
-      CHOICE, 
-      ALL 
+    typedef enum
+    {
+        SEQ = 0,
+        CHOICE,
+        ALL
     } Compositor;
 
-    typedef enum {
-      Restriction,
-      Extension
+    typedef enum
+    {
+        Restriction,
+        Extension
     } Derivation;
-       
+
     ComplexType();
-    ComplexType( const QString& );
+    ComplexType(const QString &);
     ~ComplexType();
 
-    void setName( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
     QualifiedName qualifiedName() const;
 
-    void setDocumentation( const QString &documentation );
+    void setDocumentation(const QString &documentation);
     QString documentation() const;
 
-    void setType( int type );
+    void setType(int type);
     int type() const;
 
-    void setContentType( int contentType );
+    void setContentType(int contentType);
     int contentType() const;
 
-    void setContentModel( int model );
+    void setContentModel(int model);
     int contentModel() const;
 
     bool isSimple() const;
 
-    int attributeType( int index );
-    QString attributeName( int index );
+    int attributeType(int index);
+    QString attributeName(int index);
 
-    int elementType( int index );
-    QString elementName( int index );
+    int elementType(int index);
+    QString elementName(int index);
 
     int numElements() const;
     int numAttributes() const;
 
-    void setAnonymous( bool anonymous );
+    void setAnonymous(bool anonymous);
     bool isAnonymous() const;
 
-    void setBaseType( int type, Derivation derivation, const XSDType *ptr );
-    void setBaseTypeName( const QString &baseTypeName );
+    void setBaseType(int type, Derivation derivation, const XSDType *ptr);
+    void setBaseTypeName(const QString &baseTypeName);
 
     int baseType() const;
     int baseDerivation() const;
     QString baseTypeName() const;
 
     Compositor topLevelGroup() const;
-    Compositor groupType( int groupId ) const;
+    Compositor groupType(int groupId) const;
 
-    const Element *element( const QString &name );
-    const Attribute *attribute( const QString &name );
-    Element *element( int id );
-    Attribute *attribute( int id );
+    const Element *element(const QString &name);
+    const Attribute *attribute(const QString &name);
+    Element *element(int id);
+    Attribute *attribute(int id);
 
-    void setElements( const Element::List &elements );
+    void setElements(const Element::List &elements);
     Element::List elements() const;
 
-    void setAttributes( const Attribute::List &attributes );
+    void setAttributes(const Attribute::List &attributes);
     Attribute::List attributes() const;
 
-    void setIsArray( bool isArray );
+    void setIsArray(bool isArray);
     bool isArray() const;
 
-    void setCompositor( Compositor type, bool open = true, int minOccurs = 1, int maxOccurs = 1 );
+    void setCompositor(Compositor type, bool open = true, int minOccurs = 1, int maxOccurs = 1);
 
-    void addAttribute( const QString &name, int type_id, bool qualified = false,
-                       const QString &defaultValue = QString(),
-                       const QString &fixedValue = QString(),
-                       bool use = false );
-    void addAttributeRef( const QualifiedName &name, bool qualified, bool use );
+    void addAttribute(const QString &name, int type_id, bool qualified = false,
+                      const QString &defaultValue = QString(),
+                      const QString &fixedValue = QString(),
+                      bool use = false);
+    void addAttributeRef(const QualifiedName &name, bool qualified, bool use);
 
-    void addElement( const QString &name, int type_id, int minOccurs = 1,
-                     int maxOccurs = 1, bool qualified = false,
-                     const QString &defaultValue = QString(),
-                     const QString &fixedValue = QString(),
-                     const QString &documentation = QString() );
-    void addElementRef( const QualifiedName &name, int minOccurs, int maxOccurs );
+    void addElement(const QString &name, int type_id, int minOccurs = 1,
+                    int maxOccurs = 1, bool qualified = false,
+                    const QString &defaultValue = QString(),
+                    const QString &fixedValue = QString(),
+                    const QString &documentation = QString());
+    void addElementRef(const QualifiedName &name, int minOccurs, int maxOccurs);
 
-    void matchAttributeRef( const QString &name, Attribute &attribute );
-    void matchElementRef( const QString &name, Element &element );
+    void matchAttributeRef(const QString &name, Attribute &attribute);
+    void matchElementRef(const QString &name, Element &element);
 
     bool checkOccurrences();
     void resetCounters();
 
-  private:
+private:
     QString mName;
     QString mNameSpace;
     QString mDocumentation;
@@ -142,29 +143,29 @@ class ComplexType : public XSDType
     bool mAnonymous;
     bool mIsArray;
     int mContentType;
- 
+
     struct
     {
-      int typeId;
-      Derivation derivation;
-      const  XSDType *type;
-      QString name;
+        int typeId;
+        Derivation derivation;
+        const  XSDType *type;
+        QString name;
     } mBaseType;
-  
+
     struct CompositorStruct
     {
-      CompositorStruct()
-      {
-      }
+        CompositorStruct()
+        {
+        }
 
-      CompositorStruct( Compositor _type, int min = 1, int max = 1 )
-        : type( _type ), minOccurs( min ), maxOccurs( max )
-      {
-      }
+        CompositorStruct(Compositor _type, int min = 1, int max = 1)
+            : type(_type), minOccurs(min), maxOccurs(max)
+        {
+        }
 
-      Compositor type;
-      int minOccurs;
-      int maxOccurs;
+        Compositor type;
+        int minOccurs;
+        int maxOccurs;
     };
 
     QValueList<struct CompositorStruct> mGroups;

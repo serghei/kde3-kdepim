@@ -27,37 +27,40 @@
 class KNNntpAccount;
 
 namespace KNConfig {
-  class Identity;
-  class Cleanup;
+class Identity;
+class Cleanup;
 }
 
 
 class KNNntpAccountIntervalChecking : public QObject  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNNntpAccountIntervalChecking(KNNntpAccount *account);
     ~KNNntpAccountIntervalChecking();
     void installTimer();
     void deinstallTimer();
 
-  protected:
+protected:
     QTimer *t_imer;
     KNNntpAccount *a_ccount;
 
-  protected slots:
+protected slots:
     void slotCheckNews();
 
 };
 
 class KNNntpAccount : public KNCollection , public KNServerInfo {
 
-  public:
+public:
     KNNntpAccount();
     ~KNNntpAccount();
 
-    collectionType type()             { return CTnntpAccount; }
+    collectionType type()
+    {
+        return CTnntpAccount;
+    }
 
     /** tries to read information, returns false if it fails to do so */
     bool readInfo(const QString &confPath);
@@ -71,26 +74,62 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     void startTimer();
 
     //get
-    bool fetchDescriptions() const         { return f_etchDescriptions; }
-    QDate lastNewFetch() const             { return l_astNewFetch; }
-    bool wasOpen() const                   { return w_asOpen; }
-    bool useDiskCache() const              { return u_seDiskCache; }
-    KNConfig::Identity* identity() const   { return i_dentity; }
-    bool intervalChecking() const          { return i_ntervalChecking; }
-    int checkInterval() const              { return c_heckInterval; }
-    KNConfig::Cleanup *cleanupConfig() const { return mCleanupConf; }
+    bool fetchDescriptions() const
+    {
+        return f_etchDescriptions;
+    }
+    QDate lastNewFetch() const
+    {
+        return l_astNewFetch;
+    }
+    bool wasOpen() const
+    {
+        return w_asOpen;
+    }
+    bool useDiskCache() const
+    {
+        return u_seDiskCache;
+    }
+    KNConfig::Identity *identity() const
+    {
+        return i_dentity;
+    }
+    bool intervalChecking() const
+    {
+        return i_ntervalChecking;
+    }
+    int checkInterval() const
+    {
+        return c_heckInterval;
+    }
+    KNConfig::Cleanup *cleanupConfig() const
+    {
+        return mCleanupConf;
+    }
 
     /** Returns the cleanup configuration that should be used for this account */
     KNConfig::Cleanup *activeCleanupConfig() const;
 
     //set
-    void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
-    void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
-    void setUseDiskCache(bool b)      { u_seDiskCache=b; }
+    void setFetchDescriptions(bool b)
+    {
+        f_etchDescriptions = b;
+    }
+    void setLastNewFetch(QDate date)
+    {
+        l_astNewFetch = date;
+    }
+    void setUseDiskCache(bool b)
+    {
+        u_seDiskCache = b;
+    }
     void setCheckInterval(int c);
-    void setIntervalChecking(bool b)  { i_ntervalChecking=b; }
+    void setIntervalChecking(bool b)
+    {
+        i_ntervalChecking = b;
+    }
 
-  protected:
+protected:
     /** server specific identity */
     KNConfig::Identity *i_dentity;
     /** account specific cleanup configuration */

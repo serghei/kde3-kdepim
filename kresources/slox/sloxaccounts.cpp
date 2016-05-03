@@ -37,186 +37,202 @@
 #include <qdom.h>
 #include <qstring.h>
 
-SloxAccounts::SloxAccounts( SloxBase *res, const KURL &baseUrl )
-  : mBaseUrl( baseUrl ), mRes( res )
+SloxAccounts::SloxAccounts(SloxBase *res, const KURL &baseUrl)
+    : mBaseUrl(baseUrl), mRes(res)
 {
-  kdDebug() << "SloxAccounts(): " << baseUrl << endl;
+    kdDebug() << "SloxAccounts(): " << baseUrl << endl;
 
-  mDownloadJob = 0;
+    mDownloadJob = 0;
 
-  QString server = mBaseUrl.host();
+    QString server = mBaseUrl.host();
 
-  QStringList l = QStringList::split( '.', server );
+    QStringList l = QStringList::split('.', server);
 
-  if ( l.count() < 2 ) mDomain = server;
-  else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
+    if(l.count() < 2) mDomain = server;
+    else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
 
-  readAccounts();
+    readAccounts();
 }
 
 SloxAccounts::~SloxAccounts()
 {
-  kdDebug() << "~SloxAccounts()" << endl;
+    kdDebug() << "~SloxAccounts()" << endl;
 
-  if ( mDownloadJob ) mDownloadJob->kill();
+    if(mDownloadJob) mDownloadJob->kill();
 }
 
-void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
+void SloxAccounts::insertUser(const QString &id, const KABC::Addressee &a)
 {
-  kdDebug() << "SloxAccount::insertUser() " << id << endl;
+    kdDebug() << "SloxAccount::insertUser() " << id << endl;
 
-  mUsers.replace( id, a );
+    mUsers.replace(id, a);
 
-  QString email = a.preferredEmail();
+    QString email = a.preferredEmail();
 
-  QString url = "http://" + mBaseUrl.host() + "/servlet/webdav.freebusy?username=";
-  url += id + "&server=" + mDomain;
+    QString url = "http://" + mBaseUrl.host() + "/servlet/webdav.freebusy?username=";
+    url += id + "&server=" + mDomain;
 
-  KCal::FreeBusyUrlStore::self()->writeUrl( email, url );
+    KCal::FreeBusyUrlStore::self()->writeUrl(email, url);
 }
 
-KABC::Addressee SloxAccounts::lookupUser( const QString &id )
+KABC::Addressee SloxAccounts::lookupUser(const QString &id)
 {
-  QMap<QString, KABC::Addressee>::ConstIterator it;
-  it = mUsers.find( id );
-  if ( it == mUsers.end() ) {
+    QMap<QString, KABC::Addressee>::ConstIterator it;
+    it = mUsers.find(id);
+    if(it == mUsers.end())
+    {
+        requestAccounts();
+        return KABC::Addressee();
+    }
+    else
+    {
+        return *it;
+    }
+}
+
+QString SloxAccounts::lookupId(const QString &email)
+{
+    kdDebug() << "SloxAccounts::lookupId() " << email << endl;
+
+    QMap<QString, KABC::Addressee>::ConstIterator it;
+    for(it = mUsers.begin(); it != mUsers.end(); ++it)
+    {
+        kdDebug() << "PREF: " << (*it).preferredEmail() << endl;
+        kdDebug() << "KEY: " << it.key() << endl;
+        if((*it).preferredEmail() == email) return it.key();
+    }
     requestAccounts();
-    return KABC::Addressee();
-  } else {
-    return *it;
-  }
-}
 
-QString SloxAccounts::lookupId( const QString &email )
-{
-  kdDebug() << "SloxAccounts::lookupId() " << email << endl;
-
-  QMap<QString, KABC::Addressee>::ConstIterator it;
-  for( it = mUsers.begin(); it != mUsers.end(); ++it ) {
-    kdDebug() << "PREF: " << (*it).preferredEmail() << endl;
-    kdDebug() << "KEY: " << it.key() << endl;
-    if ( (*it).preferredEmail() == email ) return it.key();
-  }
-  requestAccounts();
-
-  int pos = email.find( '@' );
-  if ( pos < 0 ) return email;
-  else return email.left( pos );
+    int pos = email.find('@');
+    if(pos < 0) return email;
+    else return email.left(pos);
 }
 
 void SloxAccounts::requestAccounts()
 {
-  kdDebug() << "SloxAccounts::requestAccounts()" << endl;
+    kdDebug() << "SloxAccounts::requestAccounts()" << endl;
 
-  if ( mDownloadJob ) {
-    kdDebug() << "SloxAccount::requestAccounts(): Download still in progress"
-              << endl;
-    return;
-  }
+    if(mDownloadJob)
+    {
+        kdDebug() << "SloxAccount::requestAccounts(): Download still in progress"
+                  << endl;
+        return;
+    }
 
-  if ( mRes->resType() == "slox" ) {
-    KURL url = mBaseUrl;
-    url.addPath( "/servlet/webdav.groupuser" );
-    url.setQuery( "?user=*&group=*&groupres=*&res=*&details=t" );
+    if(mRes->resType() == "slox")
+    {
+        KURL url = mBaseUrl;
+        url.addPath("/servlet/webdav.groupuser");
+        url.setQuery("?user=*&group=*&groupres=*&res=*&details=t");
 
-    kdDebug() << "SloxAccounts::requestAccounts() URL: " << url << endl;
+        kdDebug() << "SloxAccounts::requestAccounts() URL: " << url << endl;
 
-    mDownloadJob = KIO::file_copy( url, cacheFile(), -1, true, false, false );
-  } else if ( mRes->resType() == "ox" ) {
-    KURL url = mBaseUrl;
-    url.setPath( "/servlet/webdav.groupuser/" );
+        mDownloadJob = KIO::file_copy(url, cacheFile(), -1, true, false, false);
+    }
+    else if(mRes->resType() == "ox")
+    {
+        KURL url = mBaseUrl;
+        url.setPath("/servlet/webdav.groupuser/");
 
-    QDomDocument doc;
-    QDomElement root = WebdavHandler::addDavElement( doc, doc, "propfind" );
-    QDomElement prop = WebdavHandler::addDavElement( doc, root, "prop" );
-    WebdavHandler::addSloxElement( mRes, doc, prop, "user", "*" );
-    WebdavHandler::addSloxElement( mRes, doc, prop, "group", "*" );
-    WebdavHandler::addSloxElement( mRes, doc, prop, "resource", "*" );
-    WebdavHandler::addSloxElement( mRes, doc, prop, "resourcegroup", "*" );
+        QDomDocument doc;
+        QDomElement root = WebdavHandler::addDavElement(doc, doc, "propfind");
+        QDomElement prop = WebdavHandler::addDavElement(doc, root, "prop");
+        WebdavHandler::addSloxElement(mRes, doc, prop, "user", "*");
+        WebdavHandler::addSloxElement(mRes, doc, prop, "group", "*");
+        WebdavHandler::addSloxElement(mRes, doc, prop, "resource", "*");
+        WebdavHandler::addSloxElement(mRes, doc, prop, "resourcegroup", "*");
 
-    kdDebug() << k_funcinfo << doc.toString( 2 ) << endl;
+        kdDebug() << k_funcinfo << doc.toString(2) << endl;
 
-    mDownloadJob = KIO::davPropFind( url, doc, "0", false );
-  }
+        mDownloadJob = KIO::davPropFind(url, doc, "0", false);
+    }
 
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotResult( KIO::Job * ) ) );
+    connect(mDownloadJob, SIGNAL(result(KIO::Job *)),
+            SLOT(slotResult(KIO::Job *)));
 }
 
-void SloxAccounts::slotResult( KIO::Job *job )
+void SloxAccounts::slotResult(KIO::Job *job)
 {
-  kdDebug() << "SloxAccounts::slotResult()" << endl;
+    kdDebug() << "SloxAccounts::slotResult()" << endl;
 
-  if ( job->error() ) {
-    job->showErrorDialog( 0 );
-  } else {
-    if ( mRes->resType() == "ox" ) {
-      QFile f( cacheFile() );
-      if ( !f.open( IO_WriteOnly ) ) {
-        kdWarning() << "Unable to open '" << cacheFile() << "'" << endl;
-        return;
-      }
-      QTextStream stream ( &f );
-      stream << static_cast<KIO::DavJob*>( mDownloadJob )->response();
-      f.close();
+    if(job->error())
+    {
+        job->showErrorDialog(0);
     }
-    readAccounts();
-  }
+    else
+    {
+        if(mRes->resType() == "ox")
+        {
+            QFile f(cacheFile());
+            if(!f.open(IO_WriteOnly))
+            {
+                kdWarning() << "Unable to open '" << cacheFile() << "'" << endl;
+                return;
+            }
+            QTextStream stream(&f);
+            stream << static_cast<KIO::DavJob *>(mDownloadJob)->response();
+            f.close();
+        }
+        readAccounts();
+    }
 
-  mDownloadJob = 0;
+    mDownloadJob = 0;
 }
 
 QString SloxAccounts::cacheFile() const
 {
-  QString host = mBaseUrl.host();
+    QString host = mBaseUrl.host();
 
-  QString file = locateLocal( "cache", "slox/accounts_" + host );
+    QString file = locateLocal("cache", "slox/accounts_" + host);
 
-  kdDebug() << "SloxAccounts::cacheFile(): " << file << endl;
+    kdDebug() << "SloxAccounts::cacheFile(): " << file << endl;
 
-  return file;
+    return file;
 }
 
 void SloxAccounts::readAccounts()
 {
-  kdDebug() << "SloxAccounts::readAccounts()" << endl;
+    kdDebug() << "SloxAccounts::readAccounts()" << endl;
 
-  QFile f( cacheFile() );
-  if ( !f.open( IO_ReadOnly ) ) {
-    kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
-    requestAccounts();
-    return;
-  }
-
-  QDomDocument doc;
-  doc.setContent( &f );
-
-//  kdDebug() << "SLOX ACCOUNTS: " << doc.toString( 2 ) << endl;
-
-  QDomElement docElement = doc.documentElement();
-
-  mUsers.clear();
-
-  QDomNodeList nodes = doc.elementsByTagName( mRes->resType() == "ox" ? "ox:user" : "user" );
-  for( uint i = 0; i < nodes.count(); ++i ) {
-    QDomElement element = nodes.item(i).toElement();
-    QString id;
-    KABC::Addressee a;
-    QDomNode n;
-    for( n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-      QDomElement e = n.toElement();
-      QString tag = e.tagName();
-      // remove XML namespace
-      tag = tag.right( tag.length() - ( tag.find( ':' ) + 1 ) );
-      QString value = e.text();
-      if ( tag == "uid" ) id = value;
-      else if ( tag == "mail" ) a.insertEmail( value, true );
-      else if ( tag == "forename" ) a.setGivenName( value );
-      else if ( tag == "surename" ) a.setFamilyName( value );
+    QFile f(cacheFile());
+    if(!f.open(IO_ReadOnly))
+    {
+        kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
+        requestAccounts();
+        return;
     }
-//     kdDebug() << "MAIL: " << a.preferredEmail() << endl;
-    insertUser( id, a );
-  }
+
+    QDomDocument doc;
+    doc.setContent(&f);
+
+    //  kdDebug() << "SLOX ACCOUNTS: " << doc.toString( 2 ) << endl;
+
+    QDomElement docElement = doc.documentElement();
+
+    mUsers.clear();
+
+    QDomNodeList nodes = doc.elementsByTagName(mRes->resType() == "ox" ? "ox:user" : "user");
+    for(uint i = 0; i < nodes.count(); ++i)
+    {
+        QDomElement element = nodes.item(i).toElement();
+        QString id;
+        KABC::Addressee a;
+        QDomNode n;
+        for(n = element.firstChild(); !n.isNull(); n = n.nextSibling())
+        {
+            QDomElement e = n.toElement();
+            QString tag = e.tagName();
+            // remove XML namespace
+            tag = tag.right(tag.length() - (tag.find(':') + 1));
+            QString value = e.text();
+            if(tag == "uid") id = value;
+            else if(tag == "mail") a.insertEmail(value, true);
+            else if(tag == "forename") a.setGivenName(value);
+            else if(tag == "surename") a.setFamilyName(value);
+        }
+        //     kdDebug() << "MAIL: " << a.preferredEmail() << endl;
+        insertUser(id, a);
+    }
 }
 
 #include "sloxaccounts.moc"

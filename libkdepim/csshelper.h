@@ -42,38 +42,38 @@ class QString;
 namespace KPIM {
 
 class KDE_EXPORT CSSHelper {
-  public:
+public:
     /** Construct a CSSHelper object and set its font and color settings to
         default values.
         Sub-Classes should put their config loading here.
      */
-    CSSHelper( const QPaintDeviceMetrics &pdm );
+    CSSHelper(const QPaintDeviceMetrics &pdm);
 
     /** @return HTML head including style sheet definitions and the
         &gt;body&lt; tag */
-    QString htmlHead( bool fixedFont = false ) const;
+    QString htmlHead(bool fixedFont = false) const;
 
     /** @return The collected CSS definitions as a string */
-    QString cssDefinitions( bool fixedFont = false ) const;
+    QString cssDefinitions(bool fixedFont = false) const;
 
     /** @return a &lt;div&gt; start tag with embedded style
         information suitable for quoted text with quote level @p level */
-    QString quoteFontTag( int level ) const;
+    QString quoteFontTag(int level) const;
     /** @return a &lt;div&gt; start tag with embedded style
         information suitable for non-quoted text */
     QString nonQuotedFontTag() const;
 
-    QFont bodyFont( bool fixedFont = false, bool printing = false ) const;
+    QFont bodyFont(bool fixedFont = false, bool printing = false) const;
 
-    void setBodyFont( const QFont& font );
-    void setPrintFont( const QFont& font );
+    void setBodyFont(const QFont &font);
+    void setPrintFont(const QFont &font);
 
-  protected:
+protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */
     void recalculatePGPColors();
 
-  protected:
+protected:
     QFont mBodyFont, mPrintFont, mFixedFont, mFixedPrintFont;
     QFont mQuoteFont[3];
     QColor mQuoteColor[3];
@@ -84,23 +84,23 @@ class KDE_EXPORT CSSHelper {
     QColor mForegroundColor, mLinkColor, mVisitedLinkColor, mBackgroundColor;
     // colors for PGP (Frame, Header, Body)
     QColor cPgpOk1F, cPgpOk1H, cPgpOk1B,
-    cPgpOk0F, cPgpOk0H, cPgpOk0B,
-    cPgpWarnF, cPgpWarnH, cPgpWarnB,
-    cPgpErrF, cPgpErrH, cPgpErrB,
-    cPgpEncrF, cPgpEncrH, cPgpEncrB;
+           cPgpOk0F, cPgpOk0H, cPgpOk0B,
+           cPgpWarnF, cPgpWarnH, cPgpWarnB,
+           cPgpErrF, cPgpErrH, cPgpErrB,
+           cPgpEncrF, cPgpEncrH, cPgpEncrB;
     // color of frame of warning preceding the source of HTML messages
     QColor cHtmlWarning;
 
-  private:
-    int fontSize( bool fixed, bool print = false ) const;
-     // returns CSS rules specific to the print media type
-    QString printCssDefinitions( bool fixed ) const;
+private:
+    int fontSize(bool fixed, bool print = false) const;
+    // returns CSS rules specific to the print media type
+    QString printCssDefinitions(bool fixed) const;
     // returns CSS rules specific to the screen media type
-    QString screenCssDefinitions( const CSSHelper * helper, bool fixed ) const;
+    QString screenCssDefinitions(const CSSHelper *helper, bool fixed) const;
     // returns CSS rules common to both screen and print media types
     QString commonCssDefinitions() const;
 
-  private:
+private:
     const QPaintDeviceMetrics mMetrics;
 
 };

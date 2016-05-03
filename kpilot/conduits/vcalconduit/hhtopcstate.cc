@@ -39,129 +39,130 @@
 
 HHToPCState::HHToPCState()
 {
-	fState = eHHToPC;
-	fPilotindex = 0;
+    fState = eHHToPC;
+    fPilotindex = 0;
 }
 
 HHToPCState::~HHToPCState()
 {
 }
 
-void HHToPCState::startSync( ConduitAction *ca )
+void HHToPCState::startSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Starting HHToPCState." << endl;
+    DEBUGKPILOT << fname << ": Starting HHToPCState." << endl;
 
-	if ( vccb->syncMode() == ConduitAction::SyncMode::eCopyHHToPC )
-	{
-		fNextState = new CleanUpState();
-	}
-	else
-	{
-		fNextState = new PCToHHState();
-	}
+    if(vccb->syncMode() == ConduitAction::SyncMode::eCopyHHToPC)
+    {
+        fNextState = new CleanUpState();
+    }
+    else
+    {
+        fNextState = new PCToHHState();
+    }
 
-	fStarted = true;
-	vccb->setHasNextRecord( true );
+    fStarted = true;
+    vccb->setHasNextRecord(true);
 }
 
-void HHToPCState::handleRecord( ConduitAction *ca )
+void HHToPCState::handleRecord(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	PilotRecord *r = 0L;
-	PilotRecord *s = 0L;
+    PilotRecord *r = 0L;
+    PilotRecord *s = 0L;
 
-	if ( vccb->isFullSync() )
-	{
-		r = vccb->database()->readRecordByIndex( fPilotindex++ );
-	}
-	else
-	{
-		r = vccb->database()->readNextModifiedRec();
-	}
+    if(vccb->isFullSync())
+    {
+        r = vccb->database()->readRecordByIndex(fPilotindex++);
+    }
+    else
+    {
+        r = vccb->database()->readNextModifiedRec();
+    }
 
-	if (!r)
-	{
-		vccb->privateBase()->updateIncidences();
-		vccb->setHasNextRecord( false );
-		return;
-	}
+    if(!r)
+    {
+        vccb->privateBase()->updateIncidences();
+        vccb->setHasNextRecord(false);
+        return;
+    }
 
-	// let subclasses do something with the record before we try to sync
-	vccb->preRecord( r );
+    // let subclasses do something with the record before we try to sync
+    vccb->preRecord(r);
 
-	bool archiveRecord = ( r->isArchived() );
-	s = vccb->localDatabase()->readRecordById( r->id() );
-	
-	if ( !s || vccb->isFirstSync() )
-	{
+    bool archiveRecord = (r->isArchived());
+    s = vccb->localDatabase()->readRecordById(r->id());
+
+    if(!s || vccb->isFirstSync())
+    {
 #ifdef DEBUG
-		if ( r->id() > 0 && !s )
-		{
-			DEBUGKPILOT << "-------------------------------------------------";
-			DEBUGKPILOT << "--------------------------" << endl;
-			DEBUGKPILOT << fname << ": Could not read palm record with ID ";
-			DEBUGKPILOT << r->id() << endl;
-		}
+        if(r->id() > 0 && !s)
+        {
+            DEBUGKPILOT << "-------------------------------------------------";
+            DEBUGKPILOT << "--------------------------" << endl;
+            DEBUGKPILOT << fname << ": Could not read palm record with ID ";
+            DEBUGKPILOT << r->id() << endl;
+        }
 #endif
-		if ( !r->isDeleted() 
-			|| ( vccb->config()->syncArchived() && archiveRecord ) )
-		{
-			KCal::Incidence *e = vccb->addRecord( r );
-			if ( vccb->config()->syncArchived() && archiveRecord )  {
-				e->setSyncStatus( KCal::Incidence::SYNCDEL );
-			}
-		}
-	}
-	else
-	{
-		if ( r->isDeleted() )
-		{
-			if ( vccb->config()->syncArchived() && archiveRecord )
-			{
-				vccb->changeRecord( r, s );
-			}
-			else
-			{
-				vccb->deleteRecord( r, s );
-			}
-		}
-		else
-		{
-			vccb->changeRecord( r, s );
-		}
-	}
+        if(!r->isDeleted()
+                || (vccb->config()->syncArchived() && archiveRecord))
+        {
+            KCal::Incidence *e = vccb->addRecord(r);
+            if(vccb->config()->syncArchived() && archiveRecord)
+            {
+                e->setSyncStatus(KCal::Incidence::SYNCDEL);
+            }
+        }
+    }
+    else
+    {
+        if(r->isDeleted())
+        {
+            if(vccb->config()->syncArchived() && archiveRecord)
+            {
+                vccb->changeRecord(r, s);
+            }
+            else
+            {
+                vccb->deleteRecord(r, s);
+            }
+        }
+        else
+        {
+            vccb->changeRecord(r, s);
+        }
+    }
 
-	KPILOT_DELETE(r);
-	KPILOT_DELETE(s);
+    KPILOT_DELETE(r);
+    KPILOT_DELETE(s);
 }
 
-void HHToPCState::finishSync( ConduitAction *ca )
+void HHToPCState::finishSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Finished HHToPCState." << endl;
-	vccb->setState( fNextState );
+    DEBUGKPILOT << fname << ": Finished HHToPCState." << endl;
+    vccb->setState(fNextState);
 }
 
 /*

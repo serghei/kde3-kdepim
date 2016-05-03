@@ -39,33 +39,33 @@ class QCString;
 
 namespace KMail {
 
-  namespace Interface {
-    class BodyPartFormatter;
-  }
+namespace Interface {
+class BodyPartFormatter;
+}
 
-  class BodyPartFormatterFactory {
+class BodyPartFormatterFactory {
     class gcc_shut_up;
     friend class ::KMail::BodyPartFormatterFactory::gcc_shut_up;
-  public:
+public:
     ~BodyPartFormatterFactory();
 
-    static const BodyPartFormatterFactory * instance();
+    static const BodyPartFormatterFactory *instance();
 
-    const Interface::BodyPartFormatter * createFor( const char * type, const char * subtype ) const;
-    const Interface::BodyPartFormatter * createFor( const QString & type, const QString & subtype ) const;
-    const Interface::BodyPartFormatter * createFor( const QCString & type, const QCString & subtype ) const;
+    const Interface::BodyPartFormatter *createFor(const char *type, const char *subtype) const;
+    const Interface::BodyPartFormatter *createFor(const QString &type, const QString &subtype) const;
+    const Interface::BodyPartFormatter *createFor(const QCString &type, const QCString &subtype) const;
 
     //
     // Only boring stuff below:
     //
-  private:
+private:
     BodyPartFormatterFactory();
-    static BodyPartFormatterFactory * mSelf;
-  private:
+    static BodyPartFormatterFactory *mSelf;
+private:
     // disabled
-    const BodyPartFormatterFactory & operator=( const BodyPartFormatterFactory & );
-    BodyPartFormatterFactory( const BodyPartFormatterFactory & );
-  };
+    const BodyPartFormatterFactory &operator=(const BodyPartFormatterFactory &);
+    BodyPartFormatterFactory(const BodyPartFormatterFactory &);
+};
 
 } // namespace KMail
 

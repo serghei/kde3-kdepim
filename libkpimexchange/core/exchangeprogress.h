@@ -26,26 +26,25 @@ class QComboBox;
 
 namespace KPIM {
 
-class ExchangeProgress : public KProgressDialog
-{
-  Q_OBJECT
-  
-  public:
-    ExchangeProgress(QWidget *parent=0);
+class ExchangeProgress : public KProgressDialog {
+    Q_OBJECT
+
+public:
+    ExchangeProgress(QWidget *parent = 0);
     virtual ~ExchangeProgress();
-    
-  public slots:
+
+public slots:
     void slotTransferStarted();
     void slotTransferFinished();
-    
-  signals:
-    void complete( ExchangeProgress* );
 
-  private:
+signals:
+    void complete(ExchangeProgress *);
+
+private:
     int m_total;
     int m_finished;
-    
-  private:
+
+private:
     void updateLabel();
 };
 

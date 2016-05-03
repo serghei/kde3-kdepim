@@ -40,24 +40,31 @@ namespace KCal {
 /**
   This class provides the base class common to all calendar components.
 */
-class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
-{
-  public:
+class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer {
+public:
     /**
       This class implements a visitor for adding an Incidence to a resource
       supporting addEvent(), addTodo() and addJournal() calls.
     */
     template<class T>
-    class AddVisitor : public IncidenceBase::Visitor
-    {
-      public:
-        AddVisitor( T *r ) : mResource( r ) {}
+    class AddVisitor : public IncidenceBase::Visitor {
+    public:
+        AddVisitor(T *r) : mResource(r) {}
 
-        bool visit( Event *e ) { return mResource->addEvent( e ); }
-        bool visit( Todo *t ) { return mResource->addTodo( t ); }
-        bool visit( Journal *j ) { return mResource->addJournal( j ); }
+        bool visit(Event *e)
+        {
+            return mResource->addEvent(e);
+        }
+        bool visit(Todo *t)
+        {
+            return mResource->addTodo(t);
+        }
+        bool visit(Journal *j)
+        {
+            return mResource->addJournal(j);
+        }
 
-      private:
+    private:
         T *mResource;
     };
 
@@ -66,21 +73,33 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       supporting deleteEvent(), deleteTodo() and deleteJournal() calls.
     */
     template<class T>
-    class DeleteVisitor : public IncidenceBase::Visitor
-    {
-      public:
-        DeleteVisitor( T *r ) : mResource( r ) {}
+    class DeleteVisitor : public IncidenceBase::Visitor {
+    public:
+        DeleteVisitor(T *r) : mResource(r) {}
 
-        bool visit( Event *e ) { mResource->deleteEvent( e ); return true; }
-        bool visit( Todo *t ) { mResource->deleteTodo( t ); return true; }
-        bool visit( Journal *j ) { mResource->deleteJournal( j ); return true; }
+        bool visit(Event *e)
+        {
+            mResource->deleteEvent(e);
+            return true;
+        }
+        bool visit(Todo *t)
+        {
+            mResource->deleteTodo(t);
+            return true;
+        }
+        bool visit(Journal *j)
+        {
+            mResource->deleteJournal(j);
+            return true;
+        }
 
-      private:
+    private:
         T *mResource;
     };
 
     /** Enumeration for describing an event's status.  */
-    enum Status {
+    enum Status
+    {
         StatusNone, StatusTentative, StatusConfirmed, StatusCompleted,
         StatusNeedsAction, StatusCanceled, StatusInProcess, StatusDraft,
         StatusFinal,
@@ -93,11 +112,11 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     typedef ListBase<Incidence> List;
 
     Incidence();
-    Incidence( const Incidence & );
+    Incidence(const Incidence &);
     ~Incidence();
 
-    Incidence& operator=( const Incidence &i );
-    bool operator==( const Incidence & ) const;
+    Incidence &operator=(const Incidence &i);
+    bool operator==(const Incidence &) const;
 
     /**
       Return copy of this object. The returned object is owned by the caller.
@@ -110,10 +129,10 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       @param readonly If true, the incidence is set to readonly, if false the
                       incidence is set to readwrite.
     */
-    void setReadOnly( bool readonly );
+    void setReadOnly(bool readonly);
 
     /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
-    void setFloats( bool f );
+    void setFloats(bool f);
 
     /**
       Recreate event. The event is made a new unique event, but already stored
@@ -125,7 +144,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Set creation date.
     */
-    void setCreated( const QDateTime & );
+    void setCreated(const QDateTime &);
     /**
       Return time and date of creation.
     */
@@ -134,7 +153,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Set the number of revisions this event has seen.
     */
-    void setRevision( int rev );
+    void setRevision(int rev);
     /**
       Return the number of revisions this event has seen.
     */
@@ -143,16 +162,19 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Set starting date/time.
     */
-    virtual void setDtStart( const QDateTime &dtStart );
+    virtual void setDtStart(const QDateTime &dtStart);
     /**
       Return the incidence's ending date/time as a QDateTime.
     */
-    virtual QDateTime dtEnd() const  { return QDateTime(); }
+    virtual QDateTime dtEnd() const
+    {
+        return QDateTime();
+    }
 
     /**
       Set the long description.
     */
-    void setDescription( const QString &description );
+    void setDescription(const QString &description);
     /**
       Return long description.
     */
@@ -161,7 +183,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Set short summary.
     */
-    void setSummary( const QString &summary );
+    void setSummary(const QString &summary);
     /**
       Return short summary.
     */
@@ -170,7 +192,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Set categories.
     */
-    void setCategories( const QStringList &categories );
+    void setCategories(const QStringList &categories);
     /**
       Set categories based on a comma delimited string.
     */
@@ -218,9 +240,9 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     void removeRelation(Incidence *);
 
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %%%%%  Recurrence-related methods
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%  Recurrence-related methods
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Return the recurrence rule associated with this incidence. If there is
@@ -241,12 +263,12 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       Returns true if the date specified is one on which the incidence will
       recur.
     */
-    virtual bool recursOn( const QDate &qd ) const;
+    virtual bool recursOn(const QDate &qd) const;
     /**
       Returns true if the date/time specified is one on which the incidence will
       recur.
     */
-    bool recursAt( const QDateTime &qdt ) const;
+    bool recursAt(const QDateTime &qdt) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at some time
@@ -256,7 +278,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       @return the start date/time of all occurences that overlap with the given
           date. Empty list if the incidence does not overlap with the date at all
     */
-    virtual QValueList<QDateTime> startDateTimesForDate( const QDate &date ) const;
+    virtual QValueList<QDateTime> startDateTimesForDate(const QDate &date) const;
 
     /**
       Calculates the start date/time for all recurrences that happen at the given
@@ -266,28 +288,28 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
           date/time. Empty list if the incidence does not happen at the given
           time at all.
     */
-    virtual QValueList<QDateTime> startDateTimesForDateTime( const QDateTime &datetime ) const;
+    virtual QValueList<QDateTime> startDateTimesForDateTime(const QDateTime &datetime) const;
 
     /** Return the end time of the occurrence if it starts at the given date/time */
-    virtual QDateTime endDateForStart( const QDateTime &startDt ) const;
+    virtual QDateTime endDateForStart(const QDateTime &startDt) const;
 
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %%%%%  Attachment-related methods
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%  Attachment-related methods
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Add attachment.
     */
-    void addAttachment( Attachment *attachment );
+    void addAttachment(Attachment *attachment);
     /**
       Remove and delete a specific attachment.
     */
-    void deleteAttachment( Attachment *attachment );
+    void deleteAttachment(Attachment *attachment);
     /**
       Remove and delete all attachments with this mime type.
     */
-    void deleteAttachments( const QString &mime );
+    void deleteAttachments(const QString &mime);
     /**
       Return list of all associated attachments.
     */
@@ -295,22 +317,22 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Find a list of attachments with this mime type.
     */
-    Attachment::List attachments( const QString &mime ) const;
+    Attachment::List attachments(const QString &mime) const;
     /**
       Remove and delete all attachments.
     */
     void clearAttachments();
 
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %%%%%  Secrecy and Status methods
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%  Secrecy and Status methods
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Sets secrecy status. This can be Public, Private or Confidential. See
       separate enum.
     */
-    void setSecrecy( int );
+    void setSecrecy(int);
     /**
       Return the event's secrecy.
     */
@@ -326,19 +348,19 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Return human-readable translated name of secrecy class.
     */
-    static QString secrecyName( int );
+    static QString secrecyName(int);
 
     /**
       Sets the incidence status to a standard status value. See
       separate enum. Note that StatusX cannot be specified.
     */
-    void setStatus( Status status );
+    void setStatus(Status status);
     /**
       Sets the incidence status to a non-standard status value.
       @param status non-standard status string. If empty,
       the incidence status will be set to StatusNone.
     */
-    void setCustomStatus( const QString &status );
+    void setCustomStatus(const QString &status);
     /**
       Return the event's status.
     */
@@ -350,17 +372,17 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Return human-readable translated name of status value.
     */
-    static QString statusName( Status );
+    static QString statusName(Status);
 
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %%%%%  Other methods
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%  Other methods
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       Set resources used, such as Office, Car, etc.
     */
-    void setResources( const QStringList &resources );
+    void setResources(const QStringList &resources);
     /**
       Return list of current resources.
     */
@@ -371,7 +393,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       9, 0 is undefined, 1 the highest, 9 the lowest priority (decreasing
       order).
     */
-    void setPriority( int priority );
+    void setPriority(int priority);
     /**
       Return priority. The priority is a number between 1 and 9. 1 is highest
       priority. If the priority is undefined 0 is returned.
@@ -379,9 +401,9 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     int priority() const;
 
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %%%%%  Alarm-related methods
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%  Alarm-related methods
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     /**
       All alarms that are associated with this incidence.
@@ -394,11 +416,11 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /**
       Add an alarm which is associated with this incidence.
     */
-    void addAlarm( Alarm * );
+    void addAlarm(Alarm *);
     /**
       Remove an alarm that is associated with this incidence.
     */
-    void removeAlarm( Alarm * );
+    void removeAlarm(Alarm *);
     /**
       Remove all alarms that are associated with this incidence.
     */
@@ -409,9 +431,9 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     bool isAlarmEnabled() const;
 
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// %%%%%  Other methods
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    // %%%%%  Other methods
+    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -433,7 +455,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       end up with more than one resource having events with the same UID,
       if you have access to other peoples resources.
     */
-    void setSchedulingID( const QString& sid );
+    void setSchedulingID(const QString &sid);
     /**
       Return the event's/todo's scheduling ID. Does not make sense for journals
       If this is not set, it will return uid().
@@ -443,14 +465,17 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     /** Observer interface for the recurrence class. If the recurrence is changed,
         this method will be called for the incidence the recurrence object
         belongs to. */
-    virtual void recurrenceUpdated( Recurrence * );
-  protected:
+    virtual void recurrenceUpdated(Recurrence *);
+protected:
     /** Return the end date/time of the base incidence (e.g. due date/time for
        to-dos, end date/time for events).
        This method needs to be reimplemented by derived classes. */
-    virtual QDateTime endDateRecurrenceBase() const { return dtStart(); }
+    virtual QDateTime endDateRecurrenceBase() const
+    {
+        return dtStart();
+    }
 
-  private:
+private:
     int mRevision;
 
     // base components of jounal, event and todo

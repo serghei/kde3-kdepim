@@ -34,13 +34,12 @@ namespace KOrg {
   @short interface for main calendar view widget
   @author Cornelius Schumacher
 */
-class CalendarViewBase : public QWidget
-{
-  public:
-    CalendarViewBase( QWidget *parent, const char *name )
-      : QWidget( parent, name ) {}
+class CalendarViewBase : public QWidget {
+public:
+    CalendarViewBase(QWidget *parent, const char *name)
+        : QWidget(parent, name) {}
     virtual ~CalendarViewBase() {}
-  
+
     virtual KCal::Calendar *calendar() = 0;
 
     virtual QDate startDate() = 0;
@@ -48,12 +47,12 @@ class CalendarViewBase : public QWidget
 
     virtual Incidence *currentSelection() = 0;
 
-    virtual void addView( KOrg::BaseView * ) = 0;
+    virtual void addView(KOrg::BaseView *) = 0;
 
     /** changes the view to be the currently selected view */
-    virtual void showView( KOrg::BaseView * ) = 0;
+    virtual void showView(KOrg::BaseView *) = 0;
 
-  public slots:
+public slots:
     virtual void updateView() = 0;
     virtual void updateCategories() = 0;
 };

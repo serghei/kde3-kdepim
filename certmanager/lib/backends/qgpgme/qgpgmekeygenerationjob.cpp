@@ -45,42 +45,48 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( GpgME::Context * context )
-  : KeyGenerationJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyGenerationJob" ),
-    QGpgMEJob( this, context ),
-    mPubKeyDataProvider( 0 ),
-    mPubKey( 0 )
+Kleo::QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob(GpgME::Context *context)
+    : KeyGenerationJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEKeyGenerationJob"),
+      QGpgMEJob(this, context),
+      mPubKeyDataProvider(0),
+      mPubKey(0)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {
-  delete mPubKey; mPubKey = 0;
-  delete mPubKeyDataProvider; mPubKeyDataProvider = 0;
+Kleo::QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob()
+{
+    delete mPubKey;
+    mPubKey = 0;
+    delete mPubKeyDataProvider;
+    mPubKeyDataProvider = 0;
 }
 
-GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
-  assert( !mPubKey );
+GpgME::Error Kleo::QGpgMEKeyGenerationJob::start(const QString &parameters)
+{
+    assert(!mPubKey);
 
-  // set up empty data object for the public key data
-  if ( mCtx->protocol() == GpgME::Context::CMS ) {
-    mPubKeyDataProvider = new QGpgME::QByteArrayDataProvider();
-    mPubKey = new GpgME::Data( mPubKeyDataProvider );
-    assert( !mPubKey->isNull() );
-  }
+    // set up empty data object for the public key data
+    if(mCtx->protocol() == GpgME::Context::CMS)
+    {
+        mPubKeyDataProvider = new QGpgME::QByteArrayDataProvider();
+        mPubKey = new GpgME::Data(mPubKeyDataProvider);
+        assert(!mPubKey->isNull());
+    }
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err =
-    mCtx->startKeyGeneration( parameters.utf8().data(), mPubKey ? *mPubKey : GpgME::Data::null );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err =
+        mCtx->startKeyGeneration(parameters.utf8().data(), mPubKey ? *mPubKey : GpgME::Data::null);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->keyGenerationResult(), mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray() );
+void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mCtx->keyGenerationResult(), mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray());
 }
 
 #include "qgpgmekeygenerationjob.moc"

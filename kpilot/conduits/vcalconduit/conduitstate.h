@@ -32,55 +32,65 @@
 
 /**
  * This class defines the current state of the vcal-conduitbase. Subclasses of
- * this class can do the things that are needed, in methods defined here, for 
+ * this class can do the things that are needed, in methods defined here, for
  * the state that they define.
  */
-class ConduitState
-{
+class ConduitState {
 public:
-	enum state_t {
-		eTest,
-		eInit,
-		ePCToHH,
-		eHHToPC,
-		eDeleteUnsyncedHH,
-		eDeleteUnsyncedPC,
-		eCleanUp
-	};
+    enum state_t
+    {
+        eTest,
+        eInit,
+        ePCToHH,
+        eHHToPC,
+        eDeleteUnsyncedHH,
+        eDeleteUnsyncedPC,
+        eCleanUp
+    };
 
 protected:
-	state_t fState;
-	bool fStarted;
+    state_t fState;
+    bool fStarted;
 
 public:
-	ConduitState(){ fState = eInit; fStarted = false; };
-	virtual ~ConduitState() {};
+    ConduitState()
+    {
+        fState = eInit;
+        fStarted = false;
+    };
+    virtual ~ConduitState() {};
 
-	/**
-	 * Prepare for a sync in the current state. Don't forget to set fState to 
-	 * true in this method. Otherwise the state won't handle records.
-	 */
-	virtual void startSync( ConduitAction * ) = 0;
-	
-	/**
-	 * Sync the next record in row.
-	 */
-	virtual void handleRecord( ConduitAction * ) = 0;
+    /**
+     * Prepare for a sync in the current state. Don't forget to set fState to
+     * true in this method. Otherwise the state won't handle records.
+     */
+    virtual void startSync(ConduitAction *) = 0;
 
-	/**
-	 * Clean up after all records are synced and enter next state.
-	 */
-	virtual void finishSync( ConduitAction * ) = 0;
+    /**
+     * Sync the next record in row.
+     */
+    virtual void handleRecord(ConduitAction *) = 0;
 
-	/**
-	 * Returns the state type.
-	 */
-	state_t state() { return fState; };
+    /**
+     * Clean up after all records are synced and enter next state.
+     */
+    virtual void finishSync(ConduitAction *) = 0;
 
-	/**
-	 * Returns wether or not this state has started.
-	 */
-	bool started() { return fStarted; };
+    /**
+     * Returns the state type.
+     */
+    state_t state()
+    {
+        return fState;
+    };
+
+    /**
+     * Returns wether or not this state has started.
+     */
+    bool started()
+    {
+        return fStarted;
+    };
 };
 
 #endif

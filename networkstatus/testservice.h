@@ -27,23 +27,22 @@
 
 class ServiceIface_stub;
 
-class TestService : virtual public QObject, ProviderIface
-{
-Q_OBJECT
+class TestService : virtual public QObject, ProviderIface {
+    Q_OBJECT
 public:
-	TestService();
-	virtual ~TestService();
-	int status( const QString & network );
-	int establish( const QString & network );
-	int shutdown( const QString & network );
-	void simulateFailure();
-	void simulateDisconnect();
+    TestService();
+    virtual ~TestService();
+    int status(const QString &network);
+    int establish(const QString &network);
+    int shutdown(const QString &network);
+    void simulateFailure();
+    void simulateDisconnect();
 protected slots:
-	void slotStatusChange();
+    void slotStatusChange();
 private:
-	ServiceIface_stub * m_service;
-	NetworkStatus::EnumStatus m_status;
-	NetworkStatus::EnumStatus m_nextStatus;
+    ServiceIface_stub *m_service;
+    NetworkStatus::EnumStatus m_status;
+    NetworkStatus::EnumStatus m_nextStatus;
 };
 
 #endif

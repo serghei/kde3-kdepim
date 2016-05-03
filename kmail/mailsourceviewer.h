@@ -46,24 +46,22 @@
  */
 namespace KMail {
 
-class MailSourceHighlighter : public QSyntaxHighlighter
-{
+class MailSourceHighlighter : public QSyntaxHighlighter {
 public:
-  MailSourceHighlighter( QTextEdit* edit )
-    : QSyntaxHighlighter( edit )
-  {}
-  int highlightParagraph( const QString& text, int ); 
+    MailSourceHighlighter(QTextEdit *edit)
+        : QSyntaxHighlighter(edit)
+    {}
+    int highlightParagraph(const QString &text, int);
 };
 
 
-class MailSourceViewer : public KTextBrowser
-{
+class MailSourceViewer : public KTextBrowser {
 public:
-  MailSourceViewer( QWidget *parent = 0, const char *name = 0 );
-  ~MailSourceViewer();
-  void setText( const QString& text );
+    MailSourceViewer(QWidget *parent = 0, const char *name = 0);
+    ~MailSourceViewer();
+    void setText(const QString &text);
 private:
-  MailSourceHighlighter *mSourceHighLighter;
+    MailSourceHighlighter *mSourceHighLighter;
 };
 
 }

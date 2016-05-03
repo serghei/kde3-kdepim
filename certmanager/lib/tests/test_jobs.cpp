@@ -49,60 +49,68 @@
 
 #include <memory>
 
-static const char * protocol = 0;
+static const char *protocol = 0;
 
 static void testSign()
 {
-  const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
-  assert( proto );
+    const Kleo::CryptoBackend::Protocol *proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() :
+            Kleo::CryptoBackendFactory::instance()->smime() ;
+    assert(proto);
 
-  kdDebug() << "Using protocol " << proto->name() << endl;
+    kdDebug() << "Using protocol " << proto->name() << endl;
 
 
-  std::vector<GpgME::Key> signingKeys;
+    std::vector<GpgME::Key> signingKeys;
 
-  std::auto_ptr<Kleo::KeyListJob> listJob( proto->keyListJob( false, false, true ) ); // use validating keylisting
-  if ( listJob.get() ) {
-      // ##### Adjust this to your own identity
-      listJob->exec( "faure@kde.org", true /*secret*/, signingKeys );
-      assert( !signingKeys.empty() );
-  } else {
-      assert( 0 ); // job failed
-  }
+    std::auto_ptr<Kleo::KeyListJob> listJob(proto->keyListJob(false, false, true));     // use validating keylisting
+    if(listJob.get())
+    {
+        // ##### Adjust this to your own identity
+        listJob->exec("faure@kde.org", true /*secret*/, signingKeys);
+        assert(!signingKeys.empty());
+    }
+    else
+    {
+        assert(0);   // job failed
+    }
 
-  Kleo::SignJob* job = proto->signJob( true, true );
+    Kleo::SignJob *job = proto->signJob(true, true);
 
-  QCString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
-  QByteArray plainText;
-  plainText.duplicate( cText.data(), cText.length() ); // hrmpf...
-  kdDebug() << k_funcinfo << "plainText=" << cText.data() << endl;
+    QCString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
+    QByteArray plainText;
+    plainText.duplicate(cText.data(), cText.length());   // hrmpf...
+    kdDebug() << k_funcinfo << "plainText=" << cText.data() << endl;
 
-  kdDebug() << k_funcinfo << " signing with " << signingKeys[0].primaryFingerprint() << endl;
+    kdDebug() << k_funcinfo << " signing with " << signingKeys[0].primaryFingerprint() << endl;
 
-  QByteArray signature;
-  const GpgME::SigningResult res =
-    job->exec( signingKeys, plainText, GpgME::Context::Clearsigned, signature );
-  if ( res.error().isCanceled() ) {
-    kdDebug() << "signing was canceled by user" << endl;
-    return;
-  }
-  if ( res.error() ) {
-    kdDebug() << "signing failed: " << res.error().asString() << endl;
-    return;
-  }
-  kdDebug() << k_funcinfo << "signing resulted in signature="
-	    << QCString( signature.data(), signature.size() + 1 ) << endl;
+    QByteArray signature;
+    const GpgME::SigningResult res =
+        job->exec(signingKeys, plainText, GpgME::Context::Clearsigned, signature);
+    if(res.error().isCanceled())
+    {
+        kdDebug() << "signing was canceled by user" << endl;
+        return;
+    }
+    if(res.error())
+    {
+        kdDebug() << "signing failed: " << res.error().asString() << endl;
+        return;
+    }
+    kdDebug() << k_funcinfo << "signing resulted in signature="
+              << QCString(signature.data(), signature.size() + 1) << endl;
 }
 
-int main( int argc, char** argv ) {
-  protocol = "openpgp";
-  if ( argc == 2 ) {
-    protocol = argv[1];
-    argc = 1; // hide from KDE
-  }
-  KAboutData aboutData( "test_jobs", "Signing Job Test", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+int main(int argc, char **argv)
+{
+    protocol = "openpgp";
+    if(argc == 2)
+    {
+        protocol = argv[1];
+        argc = 1; // hide from KDE
+    }
+    KAboutData aboutData("test_jobs", "Signing Job Test", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KApplication app;
 
-  testSign();
+    testSign();
 }

@@ -31,67 +31,74 @@
 
 #include "datechecker.h"
 
-DateChecker::DateChecker( QObject *parent, const char *name )
-  : QObject( parent, name ), mUpdateTimer( 0 )
+DateChecker::DateChecker(QObject *parent, const char *name)
+    : QObject(parent, name), mUpdateTimer(0)
 {
-  enableRollover( FollowMonth );
+    enableRollover(FollowMonth);
 }
 
 DateChecker::~DateChecker()
 {
 }
 
-void DateChecker::enableRollover( RolloverType r )
+void DateChecker::enableRollover(RolloverType r)
 {
-  switch( r ) {
-    case None:
-      if ( mUpdateTimer ) {
-        mUpdateTimer->stop();
-        delete mUpdateTimer;
-        mUpdateTimer = 0;
-      }
-      break;
-    case FollowDay:
-    case FollowMonth:
-      if ( !mUpdateTimer ) {
-        mUpdateTimer = new QTimer( this, "mUpdateTimer" );
-        connect( mUpdateTimer, SIGNAL( timeout() ),
-                 SLOT( possiblyPastMidnight() ) );
-      }
-      mUpdateTimer->start( 0, true );
-      mLastDayChecked = QDate::currentDate();
-  }
-  mUpdateRollover = r;
+    switch(r)
+    {
+        case None:
+            if(mUpdateTimer)
+            {
+                mUpdateTimer->stop();
+                delete mUpdateTimer;
+                mUpdateTimer = 0;
+            }
+            break;
+        case FollowDay:
+        case FollowMonth:
+            if(!mUpdateTimer)
+            {
+                mUpdateTimer = new QTimer(this, "mUpdateTimer");
+                connect(mUpdateTimer, SIGNAL(timeout()),
+                        SLOT(possiblyPastMidnight()));
+            }
+            mUpdateTimer->start(0, true);
+            mLastDayChecked = QDate::currentDate();
+    }
+    mUpdateRollover = r;
 }
 
 void DateChecker::passedMidnight()
 {
-  QDate today = QDate::currentDate();
+    QDate today = QDate::currentDate();
 
-  if ( today.month() != mLastDayChecked.month() ) {
-     if ( mUpdateRollover == FollowMonth ) {
-       emit monthPassed( today );
-     }
-  }
-  emit dayPassed( today );
+    if(today.month() != mLastDayChecked.month())
+    {
+        if(mUpdateRollover == FollowMonth)
+        {
+            emit monthPassed(today);
+        }
+    }
+    emit dayPassed(today);
 }
 
 void DateChecker::possiblyPastMidnight()
 {
-  if ( mLastDayChecked != QDate::currentDate() ) {
-    passedMidnight();
-    mLastDayChecked = QDate::currentDate();
-  }
-  // Set the timer to go off 1 second after midnight
-  // or after 8 minutes, whichever comes first.
-  if ( mUpdateTimer ) {
-    QTime now = QTime::currentTime();
-    QTime midnight = QTime( 23, 59, 59 );
-    int msecsWait = QMIN( 480000, now.msecsTo( midnight ) + 2000 );
+    if(mLastDayChecked != QDate::currentDate())
+    {
+        passedMidnight();
+        mLastDayChecked = QDate::currentDate();
+    }
+    // Set the timer to go off 1 second after midnight
+    // or after 8 minutes, whichever comes first.
+    if(mUpdateTimer)
+    {
+        QTime now = QTime::currentTime();
+        QTime midnight = QTime(23, 59, 59);
+        int msecsWait = QMIN(480000, now.msecsTo(midnight) + 2000);
 
-    mUpdateTimer->stop();
-    mUpdateTimer->start( msecsWait, true );
-  }
+        mUpdateTimer->stop();
+        mUpdateTimer->start(msecsWait, true);
+    }
 }
 
 #include "datechecker.moc"

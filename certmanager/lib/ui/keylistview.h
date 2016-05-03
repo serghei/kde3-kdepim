@@ -45,71 +45,85 @@ class QColor;
 
 namespace Kleo {
 
-  // work around moc parser bug...
+// work around moc parser bug...
 #define TEMPLATE_TYPENAME(T) template <typename T>
-  TEMPLATE_TYPENAME(T)
-  inline T * lvi_cast( QListViewItem * item ) {
+TEMPLATE_TYPENAME(T)
+inline T *lvi_cast(QListViewItem *item)
+{
     return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
-      ? static_cast<T*>( item ) : 0 ;
-  }
+           ? static_cast<T *>(item) : 0 ;
+}
 
-  TEMPLATE_TYPENAME(T)
-  inline const T * lvi_cast( const QListViewItem * item ) {
+TEMPLATE_TYPENAME(T)
+inline const T *lvi_cast(const QListViewItem *item)
+{
     return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
-      ? static_cast<const T*>( item ) : 0 ;
-  }
+           ? static_cast<const T *>(item) : 0 ;
+}
 #undef TEMPLATE_TYPENAME
 
-  class KeyListView;
+class KeyListView;
 
-  class KDE_EXPORT KeyListViewItem : public QListViewItem {
-  public:
-    KeyListViewItem( KeyListView * parent, const GpgME::Key & key );
-    KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key );
-    KeyListViewItem( KeyListViewItem * parent, const GpgME::Key & key );
-    KeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Key & key );
+class KDE_EXPORT KeyListViewItem : public QListViewItem {
+public:
+    KeyListViewItem(KeyListView *parent, const GpgME::Key &key);
+    KeyListViewItem(KeyListView *parent, KeyListViewItem *after, const GpgME::Key &key);
+    KeyListViewItem(KeyListViewItem *parent, const GpgME::Key &key);
+    KeyListViewItem(KeyListViewItem *parent, KeyListViewItem *after, const GpgME::Key &key);
     ~KeyListViewItem();
 
-    void setKey( const GpgME::Key & key );
-    const GpgME::Key & key() const { return mKey; }
+    void setKey(const GpgME::Key &key);
+    const GpgME::Key &key() const
+    {
+        return mKey;
+    }
 
     enum { RTTI_MASK = 0xFFFFFFF0, RTTI = 0x2C1362E0 };
 
     //
     // only boring stuff below:
     //
-    virtual QString toolTip( int column ) const;
+    virtual QString toolTip(int column) const;
 
     /*! \reimp for covariant return */
-    KeyListView * listView() const;
+    KeyListView *listView() const;
     /*! \reimp for covariant return */
-    KeyListViewItem * nextSibling() const;
+    KeyListViewItem *nextSibling() const;
     /*! \reimp */
-    int compare( QListViewItem * other, int col, bool ascending ) const;
+    int compare(QListViewItem *other, int col, bool ascending) const;
     /*! \reimp to allow for key() overload above */
-    QString key( int col, bool ascending ) const { return QListViewItem::key( col, ascending ); }
+    QString key(int col, bool ascending) const
+    {
+        return QListViewItem::key(col, ascending);
+    }
     /*! \reimp */
-    int rtti() const { return RTTI; }
+    int rtti() const
+    {
+        return RTTI;
+    }
     /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
+    void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     /*! \reimp */
-    void insertItem( QListViewItem * item );
+    void insertItem(QListViewItem *item);
     /*! \reimp */
-    void takeItem( QListViewItem * item );
+    void takeItem(QListViewItem *item);
 
-  private:
+private:
     GpgME::Key mKey;
-  };
+};
 
-  class KDE_EXPORT SubkeyKeyListViewItem : public KeyListViewItem {
-  public:
-    SubkeyKeyListViewItem( KeyListView * parent, const GpgME::Subkey & subkey );
-    SubkeyKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
-    SubkeyKeyListViewItem( KeyListViewItem * parent, const GpgME::Subkey & subkey );
-    SubkeyKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
+class KDE_EXPORT SubkeyKeyListViewItem : public KeyListViewItem {
+public:
+    SubkeyKeyListViewItem(KeyListView *parent, const GpgME::Subkey &subkey);
+    SubkeyKeyListViewItem(KeyListView *parent, KeyListViewItem *after, const GpgME::Subkey &subkey);
+    SubkeyKeyListViewItem(KeyListViewItem *parent, const GpgME::Subkey &subkey);
+    SubkeyKeyListViewItem(KeyListViewItem *parent, KeyListViewItem *after, const GpgME::Subkey &subkey);
 
-    void setSubkey( const GpgME::Subkey & subkey );
-    const GpgME::Subkey & subkey() const { return mSubkey; }
+    void setSubkey(const GpgME::Subkey &subkey);
+    const GpgME::Subkey &subkey() const
+    {
+        return mSubkey;
+    }
 
     enum { RTTI = KeyListViewItem::RTTI + 1 };
 
@@ -117,31 +131,37 @@ namespace Kleo {
     // only boring stuff below:
     //
     /*! \reimp */
-    QString toolTip( int col ) const;
+    QString toolTip(int col) const;
     /*! \reimp */
-    QString text( int col ) const;
+    QString text(int col) const;
     /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
+    const QPixmap *pixmap(int col) const;
     /*! \reimp */
-    int compare( QListViewItem * other, int col, bool ascending ) const;
+    int compare(QListViewItem *other, int col, bool ascending) const;
     /*! \reimp */
-    int rtti() const { return RTTI; }
+    int rtti() const
+    {
+        return RTTI;
+    }
     /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
+    void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
 
-  private:
+private:
     GpgME::Subkey mSubkey;
-  };
+};
 
-  class KDE_EXPORT UserIDKeyListViewItem : public KeyListViewItem {
-  public:
-    UserIDKeyListViewItem( KeyListView * parent, const GpgME::UserID & userid );
-    UserIDKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID & userid );
-    UserIDKeyListViewItem( KeyListViewItem * parent, const GpgME::UserID & userid );
-    UserIDKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::UserID & userid );
+class KDE_EXPORT UserIDKeyListViewItem : public KeyListViewItem {
+public:
+    UserIDKeyListViewItem(KeyListView *parent, const GpgME::UserID &userid);
+    UserIDKeyListViewItem(KeyListView *parent, KeyListViewItem *after, const GpgME::UserID &userid);
+    UserIDKeyListViewItem(KeyListViewItem *parent, const GpgME::UserID &userid);
+    UserIDKeyListViewItem(KeyListViewItem *parent, KeyListViewItem *after, const GpgME::UserID &userid);
 
-    void setUserID( const GpgME::UserID & userid );
-    const GpgME::UserID userID() const { return mUserID; }
+    void setUserID(const GpgME::UserID &userid);
+    const GpgME::UserID userID() const
+    {
+        return mUserID;
+    }
 
     enum { RTTI = KeyListViewItem::RTTI + 2 };
 
@@ -149,31 +169,37 @@ namespace Kleo {
     // only boring stuff below:
     //
     /*! \reimp */
-    QString toolTip( int col ) const;
+    QString toolTip(int col) const;
     /*! \reimp */
-    QString text( int col ) const;
+    QString text(int col) const;
     /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
+    const QPixmap *pixmap(int col) const;
     /*! \reimp */
-    int compare( QListViewItem * other, int col, bool ascending ) const;
+    int compare(QListViewItem *other, int col, bool ascending) const;
     /*! \reimp */
-    int rtti() const { return RTTI; }
+    int rtti() const
+    {
+        return RTTI;
+    }
     /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
+    void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
 
-  private:
+private:
     GpgME::UserID mUserID;
-  };
+};
 
-  class KDE_EXPORT SignatureKeyListViewItem : public KeyListViewItem {
-  public:
-    SignatureKeyListViewItem( KeyListView * parent, const GpgME::UserID::Signature & sig );
-    SignatureKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
-    SignatureKeyListViewItem( KeyListViewItem * parent, const GpgME::UserID::Signature & sig );
-    SignatureKeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
+class KDE_EXPORT SignatureKeyListViewItem : public KeyListViewItem {
+public:
+    SignatureKeyListViewItem(KeyListView *parent, const GpgME::UserID::Signature &sig);
+    SignatureKeyListViewItem(KeyListView *parent, KeyListViewItem *after, const GpgME::UserID::Signature &sig);
+    SignatureKeyListViewItem(KeyListViewItem *parent, const GpgME::UserID::Signature &sig);
+    SignatureKeyListViewItem(KeyListViewItem *parent, KeyListViewItem *after, const GpgME::UserID::Signature &sig);
 
-    void setSignature( const GpgME::UserID::Signature & sig );
-    const GpgME::UserID::Signature & signature() const { return mSignature; }
+    void setSignature(const GpgME::UserID::Signature &sig);
+    const GpgME::UserID::Signature &signature() const
+    {
+        return mSignature;
+    }
 
     enum { RTTI = KeyListViewItem::RTTI + 3 };
 
@@ -181,143 +207,182 @@ namespace Kleo {
     // only boring stuff below:
     //
     /*! \reimp */
-    QString toolTip( int col ) const;
+    QString toolTip(int col) const;
     /*! \reimp */
-    QString text( int col ) const;
+    QString text(int col) const;
     /*! \reimp */
-    const QPixmap * pixmap( int col ) const;
+    const QPixmap *pixmap(int col) const;
     /*! \reimp */
-    int compare( QListViewItem * other, int col, bool ascending ) const;
+    int compare(QListViewItem *other, int col, bool ascending) const;
     /*! \reimp */
-    int rtti() const { return RTTI; }
+    int rtti() const
+    {
+        return RTTI;
+    }
     /*! \reimp */
-    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
+    void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
 
-  private:
+private:
     GpgME::UserID::Signature mSignature;
-  };
+};
 
 
-  class KDE_EXPORT KeyListView : public KListView {
+class KDE_EXPORT KeyListView : public KListView {
     Q_OBJECT
     friend class KeyListViewItem;
-  public:
+public:
 
     class KDE_EXPORT ColumnStrategy {
     public:
-      virtual ~ColumnStrategy();
-      virtual QString title( int column ) const = 0;
-      virtual int width( int column, const QFontMetrics & fm ) const;
-      virtual QListView::WidthMode widthMode( int ) const { return QListView::Manual; }
+        virtual ~ColumnStrategy();
+        virtual QString title(int column) const = 0;
+        virtual int width(int column, const QFontMetrics &fm) const;
+        virtual QListView::WidthMode widthMode(int) const
+        {
+            return QListView::Manual;
+        }
 
-      virtual QString text( const GpgME::Key & key, int column ) const = 0;
-      virtual QString toolTip( const GpgME::Key & key, int column ) const;
-      virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
-      virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
+        virtual QString text(const GpgME::Key &key, int column) const = 0;
+        virtual QString toolTip(const GpgME::Key &key, int column) const;
+        virtual const QPixmap *pixmap(const GpgME::Key &, int) const
+        {
+            return 0;
+        }
+        virtual int compare(const GpgME::Key &key1, const GpgME::Key &key2, const int column) const;
 
-      virtual QString subkeyText( const GpgME::Subkey &, int ) const { return QString::null; }
-      virtual QString subkeyToolTip( const GpgME::Subkey & subkey, int column ) const;
-      virtual const QPixmap * subkeyPixmap( const GpgME::Subkey &, int ) const { return 0; }
-      virtual int subkeyCompare( const GpgME::Subkey & subkey1, const GpgME::Subkey & subkey2, const int column ) const;
+        virtual QString subkeyText(const GpgME::Subkey &, int) const
+        {
+            return QString::null;
+        }
+        virtual QString subkeyToolTip(const GpgME::Subkey &subkey, int column) const;
+        virtual const QPixmap *subkeyPixmap(const GpgME::Subkey &, int) const
+        {
+            return 0;
+        }
+        virtual int subkeyCompare(const GpgME::Subkey &subkey1, const GpgME::Subkey &subkey2, const int column) const;
 
-      virtual QString userIDText( const GpgME::UserID &, int ) const { return QString::null; }
-      virtual QString userIDToolTip( const GpgME::UserID & userID, int column ) const;
-      virtual const QPixmap * userIDPixmap( const GpgME::UserID &, int ) const { return 0; }
-      virtual int userIDCompare( const GpgME::UserID & userID1, const GpgME::UserID & userID2, const int column ) const;
+        virtual QString userIDText(const GpgME::UserID &, int) const
+        {
+            return QString::null;
+        }
+        virtual QString userIDToolTip(const GpgME::UserID &userID, int column) const;
+        virtual const QPixmap *userIDPixmap(const GpgME::UserID &, int) const
+        {
+            return 0;
+        }
+        virtual int userIDCompare(const GpgME::UserID &userID1, const GpgME::UserID &userID2, const int column) const;
 
-      virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString::null; }
-      virtual QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
-      virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
-      virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
+        virtual QString signatureText(const GpgME::UserID::Signature &, int) const
+        {
+            return QString::null;
+        }
+        virtual QString signatureToolTip(const GpgME::UserID::Signature &sig, int column) const;
+        virtual const QPixmap *signaturePixmap(const GpgME::UserID::Signature &, int) const
+        {
+            return 0;
+        }
+        virtual int signatureCompare(const GpgME::UserID::Signature &sig1, const GpgME::UserID::Signature &sig2, const int column) const;
     };
 
     class KDE_EXPORT DisplayStrategy {
     public:
-      virtual ~DisplayStrategy();
-      //font
-      virtual QFont keyFont( const GpgME::Key &, const QFont & ) const;
-      virtual QFont subkeyFont( const GpgME::Subkey &, const QFont & ) const;
-      virtual QFont useridFont( const GpgME::UserID &, const QFont &  ) const;
-      virtual QFont signatureFont( const GpgME::UserID::Signature & , const QFont & ) const;
-      //foreground
-      virtual QColor keyForeground( const GpgME::Key & , const QColor & ) const;
-      virtual QColor subkeyForeground( const GpgME::Subkey &, const QColor &  ) const;
-      virtual QColor useridForeground( const GpgME::UserID &, const QColor &  ) const;
-      virtual QColor signatureForeground( const GpgME::UserID::Signature &, const QColor &  ) const;
-      //background
-      virtual QColor keyBackground( const GpgME::Key &, const QColor &  ) const;
-      virtual QColor subkeyBackground( const GpgME::Subkey &, const QColor &  ) const;
-      virtual QColor useridBackground( const GpgME::UserID &, const QColor & ) const;
-      virtual QColor signatureBackground( const GpgME::UserID::Signature &, const QColor &  ) const;
+        virtual ~DisplayStrategy();
+        //font
+        virtual QFont keyFont(const GpgME::Key &, const QFont &) const;
+        virtual QFont subkeyFont(const GpgME::Subkey &, const QFont &) const;
+        virtual QFont useridFont(const GpgME::UserID &, const QFont &) const;
+        virtual QFont signatureFont(const GpgME::UserID::Signature &, const QFont &) const;
+        //foreground
+        virtual QColor keyForeground(const GpgME::Key &, const QColor &) const;
+        virtual QColor subkeyForeground(const GpgME::Subkey &, const QColor &) const;
+        virtual QColor useridForeground(const GpgME::UserID &, const QColor &) const;
+        virtual QColor signatureForeground(const GpgME::UserID::Signature &, const QColor &) const;
+        //background
+        virtual QColor keyBackground(const GpgME::Key &, const QColor &) const;
+        virtual QColor subkeyBackground(const GpgME::Subkey &, const QColor &) const;
+        virtual QColor useridBackground(const GpgME::UserID &, const QColor &) const;
+        virtual QColor signatureBackground(const GpgME::UserID::Signature &, const QColor &) const;
     };
 
-    KeyListView( const ColumnStrategy * strategy,
-		 const DisplayStrategy * display=0,
-		 QWidget * parent=0, const char * name=0, WFlags f=0 );
+    KeyListView(const ColumnStrategy *strategy,
+                const DisplayStrategy *display = 0,
+                QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
     ~KeyListView();
 
-    const ColumnStrategy * columnStrategy() const { return mColumnStrategy; }
-    const DisplayStrategy * displayStrategy() const { return mDisplayStrategy; }
+    const ColumnStrategy *columnStrategy() const
+    {
+        return mColumnStrategy;
+    }
+    const DisplayStrategy *displayStrategy() const
+    {
+        return mDisplayStrategy;
+    }
 
-    bool hierarchical() const { return mHierarchical; }
-    virtual void setHierarchical( bool hier );
+    bool hierarchical() const
+    {
+        return mHierarchical;
+    }
+    virtual void setHierarchical(bool hier);
 
-    void flushKeys() { slotUpdateTimeout(); }
+    void flushKeys()
+    {
+        slotUpdateTimeout();
+    }
 
     bool hasSelection() const;
 
-    KeyListViewItem * itemByFingerprint( const QCString & ) const;
+    KeyListViewItem *itemByFingerprint(const QCString &) const;
 
-  signals:
-    void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
-    void returnPressed( Kleo::KeyListViewItem* );
-    void selectionChanged( Kleo::KeyListViewItem* );
-    void contextMenu( Kleo::KeyListViewItem*, const QPoint& );
+signals:
+    void doubleClicked(Kleo::KeyListViewItem *, const QPoint &, int);
+    void returnPressed(Kleo::KeyListViewItem *);
+    void selectionChanged(Kleo::KeyListViewItem *);
+    void contextMenu(Kleo::KeyListViewItem *, const QPoint &);
 
-  public slots:
-    virtual void slotAddKey( const GpgME::Key & key );
-    virtual void slotRefreshKey( const GpgME::Key & key );
+public slots:
+    virtual void slotAddKey(const GpgME::Key &key);
+    virtual void slotRefreshKey(const GpgME::Key &key);
 
     //
     // Only boring stuff below:
     //
-  private slots:
-    void slotEmitDoubleClicked( QListViewItem*, const QPoint&, int );
-    void slotEmitReturnPressed( QListViewItem* );
-    void slotEmitSelectionChanged( QListViewItem* );
-    void slotEmitContextMenu( KListView*, QListViewItem*, const QPoint& );
+private slots:
+    void slotEmitDoubleClicked(QListViewItem *, const QPoint &, int);
+    void slotEmitReturnPressed(QListViewItem *);
+    void slotEmitSelectionChanged(QListViewItem *);
+    void slotEmitContextMenu(KListView *, QListViewItem *, const QPoint &);
     void slotUpdateTimeout();
 
-  public:
+public:
     /*! \reimp for covariant return */
-    KeyListViewItem * selectedItem() const;
+    KeyListViewItem *selectedItem() const;
     /*! \reimp */
     QPtrList<KeyListViewItem> selectedItems() const;
     /*! \reimp for covariant return */
-    KeyListViewItem * firstChild() const;
+    KeyListViewItem *firstChild() const;
     /*! \reimp */
     void clear();
     /*! \reimp */
-    void insertItem( QListViewItem * );
+    void insertItem(QListViewItem *);
     /*! \reimp */
-    void takeItem( QListViewItem * );
+    void takeItem(QListViewItem *);
 
-  private:
-    void doHierarchicalInsert( const GpgME::Key & );
+private:
+    void doHierarchicalInsert(const GpgME::Key &);
     void gatherScattered();
-    void scatterGathered( QListViewItem * );
-    void registerItem( KeyListViewItem * );
-    void deregisterItem( const KeyListViewItem * );
+    void scatterGathered(QListViewItem *);
+    void registerItem(KeyListViewItem *);
+    void deregisterItem(const KeyListViewItem *);
 
-  private:
-    const ColumnStrategy * mColumnStrategy;
-    const DisplayStrategy * mDisplayStrategy;
+private:
+    const ColumnStrategy *mColumnStrategy;
+    const DisplayStrategy *mDisplayStrategy;
     bool mHierarchical;
 
     class Private;
-    Private * d;
-  };
+    Private *d;
+};
 }
 
 #endif // __KLEO_KEYLISTVIEW_H__

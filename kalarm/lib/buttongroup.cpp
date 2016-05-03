@@ -26,39 +26,39 @@
 #include "buttongroup.moc"
 
 
-ButtonGroup::ButtonGroup(QWidget* parent, const char* name)
-	: QButtonGroup(parent, name)
+ButtonGroup::ButtonGroup(QWidget *parent, const char *name)
+    : QButtonGroup(parent, name)
 {
-	connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
+    connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
 }
 
-ButtonGroup::ButtonGroup(const QString& title, QWidget* parent, const char* name)
-	: QButtonGroup(title, parent, name)
+ButtonGroup::ButtonGroup(const QString &title, QWidget *parent, const char *name)
+    : QButtonGroup(title, parent, name)
 {
-	connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
+    connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
 }
 
-ButtonGroup::ButtonGroup(int strips, Qt::Orientation orient, QWidget* parent, const char* name)
-	: QButtonGroup(strips, orient, parent, name)
+ButtonGroup::ButtonGroup(int strips, Qt::Orientation orient, QWidget *parent, const char *name)
+    : QButtonGroup(strips, orient, parent, name)
 {
-	connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
+    connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
 }
 
-ButtonGroup::ButtonGroup(int strips, Qt::Orientation orient, const QString& title, QWidget* parent, const char* name)
-	: QButtonGroup(strips, orient, title, parent, name)
+ButtonGroup::ButtonGroup(int strips, Qt::Orientation orient, const QString &title, QWidget *parent, const char *name)
+    : QButtonGroup(strips, orient, title, parent, name)
 {
-	connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
+    connect(this, SIGNAL(clicked(int)), SIGNAL(buttonSet(int)));
 }
 
 /******************************************************************************
  * Inserts a button in the group.
  * This should really be a virtual method...
  */
-int ButtonGroup::insert(QButton* button, int id)
+int ButtonGroup::insert(QButton *button, int id)
 {
-	id = QButtonGroup::insert(button, id);
-	connect(button, SIGNAL(toggled(bool)), SLOT(slotButtonToggled(bool)));
-	return id;
+    id = QButtonGroup::insert(button, id);
+    connect(button, SIGNAL(toggled(bool)), SLOT(slotButtonToggled(bool)));
+    return id;
 }
 
 /******************************************************************************
@@ -66,5 +66,5 @@ int ButtonGroup::insert(QButton* button, int id)
  */
 void ButtonGroup::slotButtonToggled(bool)
 {
-	emit buttonSet(selectedId());
+    emit buttonSet(selectedId());
 }

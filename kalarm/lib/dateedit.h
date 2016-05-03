@@ -34,57 +34,65 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class DateEdit : public KDateEdit
-{
-		Q_OBJECT
-	public:
-		/** Constructor.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		explicit DateEdit(QWidget* parent = 0, const char* name = 0);
-		/** Returns true if the widget contains a valid date. */
-		bool         isValid() const              { return date().isValid(); }
-		/** Returns the earliest date which can be entered.
-		 *  If there is no minimum date, returns an invalid date.
-		 */
-		const QDate& minDate() const              { return mMinDate; }
-		/** Returns the latest date which can be entered.
-		 *  If there is no maximum date, returns an invalid date.
-		 */
-		const QDate& maxDate() const              { return mMaxDate; }
-		/** Sets the earliest date which can be entered.
-		 *  @param date Earliest date allowed. If invalid, any minimum limit is removed.
-		 *  @param errorDate Error message to be displayed when a date earlier than
-		 *         @p date is entered. Set to QString::null to use the default error message.
-		 */
-		void         setMinDate(const QDate& date, const QString& errorDate = QString::null);
-		/** Sets the latest date which can be entered.
-		 *  @param date Latest date allowed. If invalid, any maximum limit is removed.
-		 *  @param errorDate Error message to be displayed when a date later than
-		 *         @p date is entered. Set to QString::null to use the default error message.
-		 */
-		void         setMaxDate(const QDate& date, const QString& errorDate = QString::null);
-		/** Sets the date held in the widget to an invalid date. */
-		void         setInvalid();
+class DateEdit : public KDateEdit {
+    Q_OBJECT
+public:
+    /** Constructor.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    explicit DateEdit(QWidget *parent = 0, const char *name = 0);
+    /** Returns true if the widget contains a valid date. */
+    bool         isValid() const
+    {
+        return date().isValid();
+    }
+    /** Returns the earliest date which can be entered.
+     *  If there is no minimum date, returns an invalid date.
+     */
+    const QDate &minDate() const
+    {
+        return mMinDate;
+    }
+    /** Returns the latest date which can be entered.
+     *  If there is no maximum date, returns an invalid date.
+     */
+    const QDate &maxDate() const
+    {
+        return mMaxDate;
+    }
+    /** Sets the earliest date which can be entered.
+     *  @param date Earliest date allowed. If invalid, any minimum limit is removed.
+     *  @param errorDate Error message to be displayed when a date earlier than
+     *         @p date is entered. Set to QString::null to use the default error message.
+     */
+    void         setMinDate(const QDate &date, const QString &errorDate = QString::null);
+    /** Sets the latest date which can be entered.
+     *  @param date Latest date allowed. If invalid, any maximum limit is removed.
+     *  @param errorDate Error message to be displayed when a date later than
+     *         @p date is entered. Set to QString::null to use the default error message.
+     */
+    void         setMaxDate(const QDate &date, const QString &errorDate = QString::null);
+    /** Sets the date held in the widget to an invalid date. */
+    void         setInvalid();
 
-	protected:
-		virtual void mousePressEvent(QMouseEvent*);
-		virtual void mouseReleaseEvent(QMouseEvent*);
-		virtual void mouseMoveEvent(QMouseEvent*);
-		virtual void keyPressEvent(QKeyEvent*);
-		virtual void keyReleaseEvent(QKeyEvent*);
+protected:
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyReleaseEvent(QKeyEvent *);
 
-	private slots:
-		void         newDateEntered(const QDate&);
+private slots:
+    void         newDateEntered(const QDate &);
 
-	private:
-		void         pastLimitMessage(const QDate& limit, const QString& error, const QString& defaultError);
+private:
+    void         pastLimitMessage(const QDate &limit, const QString &error, const QString &defaultError);
 
-		QDate        mMinDate;             // minimum allowed date, or invalid for no minimum
-		QDate        mMaxDate;             // maximum allowed date, or invalid for no maximum
-		QString      mMinDateErrString;    // error message when entered date < mMinDate
-		QString      mMaxDateErrString;    // error message when entered date > mMaxDate
+    QDate        mMinDate;             // minimum allowed date, or invalid for no minimum
+    QDate        mMaxDate;             // maximum allowed date, or invalid for no maximum
+    QString      mMinDateErrString;    // error message when entered date < mMinDate
+    QString      mMaxDateErrString;    // error message when entered date > mMaxDate
 };
 
 #endif // DATEEDIT_H

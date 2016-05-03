@@ -40,71 +40,70 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kontactconfig( QWidget *parent, const char * ) {
-    return new KcmKontact( parent, "kcmkontact" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_kontactconfig(QWidget *parent, const char *)
+    {
+        return new KcmKontact(parent, "kcmkontact");
+    }
 }
 
-class PluginItem : public QListViewItem
-{
-  public:
-    PluginItem( QListView *parent, const KService::Ptr &ptr )
-      : QListViewItem( parent, ptr->name(), ptr->comment(), ptr->library() ),
-        mPtr( ptr )
+class PluginItem : public QListViewItem {
+public:
+    PluginItem(QListView *parent, const KService::Ptr &ptr)
+        : QListViewItem(parent, ptr->name(), ptr->comment(), ptr->library()),
+          mPtr(ptr)
     {
     }
 
     KService::Ptr servicePtr() const
     {
-      return mPtr;
+        return mPtr;
     }
 
-  private:
+private:
     KService::Ptr mPtr;
 };
 
-KcmKontact::KcmKontact( QWidget *parent, const char *name )
-  : KPrefsModule( Kontact::Prefs::self(), parent, name )
+KcmKontact::KcmKontact(QWidget *parent, const char *name)
+    : KPrefsModule(Kontact::Prefs::self(), parent, name)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
-  QBoxLayout *pluginStartupLayout = new QHBoxLayout( topLayout );
-  topLayout->addStretch();
+    QBoxLayout *topLayout = new QVBoxLayout(this);
+    QBoxLayout *pluginStartupLayout = new QHBoxLayout(topLayout);
+    topLayout->addStretch();
 
-  KPrefsWidBool *forceStartupPlugin = addWidBool( Kontact::Prefs::self()->forceStartupPluginItem(), this );
-  pluginStartupLayout->addWidget( forceStartupPlugin->checkBox() );
+    KPrefsWidBool *forceStartupPlugin = addWidBool(Kontact::Prefs::self()->forceStartupPluginItem(), this);
+    pluginStartupLayout->addWidget(forceStartupPlugin->checkBox());
 
-  PluginSelection *selection = new PluginSelection( Kontact::Prefs::self()->forcedStartupPluginItem(), this );
-  addWid( selection );
+    PluginSelection *selection = new PluginSelection(Kontact::Prefs::self()->forcedStartupPluginItem(), this);
+    addWid(selection);
 
-  pluginStartupLayout->addWidget( selection->comboBox() );
-  selection->comboBox()->setEnabled( false );
+    pluginStartupLayout->addWidget(selection->comboBox());
+    selection->comboBox()->setEnabled(false);
 
-  connect( forceStartupPlugin->checkBox(), SIGNAL( toggled( bool ) ),
-           selection->comboBox(), SLOT( setEnabled( bool ) ) );
-  load();
+    connect(forceStartupPlugin->checkBox(), SIGNAL(toggled(bool)),
+            selection->comboBox(), SLOT(setEnabled(bool)));
+    load();
 }
 
-const KAboutData* KcmKontact::aboutData() const
+const KAboutData *KcmKontact::aboutData() const
 {
-  KAboutData *about = new KAboutData( I18N_NOOP( "kontactconfig" ),
-                                      I18N_NOOP( "KDE Kontact" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 Cornelius Schumacher" ) );
+    KAboutData *about = new KAboutData(I18N_NOOP("kontactconfig"),
+                                       I18N_NOOP("KDE Kontact"),
+                                       0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c), 2003 Cornelius Schumacher"));
 
-  about->addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+    about->addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
+    about->addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
 
-  return about;
+    return about;
 }
 
 
-PluginSelection::PluginSelection( KConfigSkeleton::ItemString *item, QWidget *parent )
+PluginSelection::PluginSelection(KConfigSkeleton::ItemString *item, QWidget *parent)
 {
-  mItem = item;
-  mPluginCombo = new QComboBox( parent );
-  connect( mPluginCombo, SIGNAL( activated( int ) ), SIGNAL( changed() ) );
+    mItem = item;
+    mPluginCombo = new QComboBox(parent);
+    connect(mPluginCombo, SIGNAL(activated(int)), SIGNAL(changed()));
 }
 
 PluginSelection::~PluginSelection()
@@ -113,40 +112,41 @@ PluginSelection::~PluginSelection()
 
 void PluginSelection::readConfig()
 {
-  const KTrader::OfferList offers = KTrader::self()->query(
-      QString::fromLatin1( "Kontact/Plugin" ),
-      QString( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
+    const KTrader::OfferList offers = KTrader::self()->query(
+                                          QString::fromLatin1("Kontact/Plugin"),
+                                          QString("[X-KDE-KontactPluginVersion] == %1").arg(KONTACT_PLUGIN_VERSION));
 
-  int activeComponent = 0;
-  mPluginCombo->clear();
-  for ( KService::List::ConstIterator it = offers.begin(); it != offers.end(); ++it ) {
-    KService::Ptr service = *it;
-    // skip summary only plugins
-    QVariant var = service->property( "X-KDE-KontactPluginHasPart" );
-    if ( var.isValid() && var.toBool() == false )
-      continue;
-    mPluginCombo->insertItem( service->name() );
-    mPluginList.append( service );
+    int activeComponent = 0;
+    mPluginCombo->clear();
+    for(KService::List::ConstIterator it = offers.begin(); it != offers.end(); ++it)
+    {
+        KService::Ptr service = *it;
+        // skip summary only plugins
+        QVariant var = service->property("X-KDE-KontactPluginHasPart");
+        if(var.isValid() && var.toBool() == false)
+            continue;
+        mPluginCombo->insertItem(service->name());
+        mPluginList.append(service);
 
-    if ( service->property("X-KDE-PluginInfo-Name").toString() == mItem->value() )
-      activeComponent = mPluginList.count() - 1;
-  }
+        if(service->property("X-KDE-PluginInfo-Name").toString() == mItem->value())
+            activeComponent = mPluginList.count() - 1;
+    }
 
-  mPluginCombo->setCurrentItem( activeComponent );
+    mPluginCombo->setCurrentItem(activeComponent);
 }
 
 void PluginSelection::writeConfig()
 {
-  KService::Ptr ptr = *( mPluginList.at( mPluginCombo->currentItem() ) );
-  mItem->setValue( ptr->property("X-KDE-PluginInfo-Name").toString() );
+    KService::Ptr ptr = *(mPluginList.at(mPluginCombo->currentItem()));
+    mItem->setValue(ptr->property("X-KDE-PluginInfo-Name").toString());
 }
 
 QValueList<QWidget *> PluginSelection::widgets() const
 {
-  QValueList<QWidget *> widgets;
-  widgets.append( mPluginCombo );
+    QValueList<QWidget *> widgets;
+    widgets.append(mPluginCombo);
 
-  return widgets;
+    return widgets;
 }
 
 #include "kcmkontact.moc"

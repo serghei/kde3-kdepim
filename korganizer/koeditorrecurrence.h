@@ -44,55 +44,51 @@ class Incidence;
 }
 using namespace KCal;
 
-class RecurBase : public QWidget
-{
-  public:
-    RecurBase( QWidget *parent = 0, const char *name = 0 );
+class RecurBase : public QWidget {
+public:
+    RecurBase(QWidget *parent = 0, const char *name = 0);
 
-    void setFrequency( int );
+    void setFrequency(int);
     int frequency();
     // FIXME: If we want to adjust the recurrence when the start/due date change,
     // we need to reimplement this method in the derived classes!
-    void setDateTimes( const QDateTime &/*start*/, const QDateTime &/*end*/ ) {}
+    void setDateTimes(const QDateTime &/*start*/, const QDateTime &/*end*/) {}
 
     QWidget *frequencyEdit();
 
-  protected:
-    static QComboBox *createWeekCountCombo( QWidget *parent=0, const char *name=0 );
-    static QComboBox *createWeekdayCombo( QWidget *parent=0, const char *name=0 );
-    static QComboBox *createMonthNameCombo( QWidget *parent=0, const char *name=0 );
-    QBoxLayout *createFrequencySpinBar( QWidget *parent, QLayout *layout,
-    QString everyText, QString unitText );
+protected:
+    static QComboBox *createWeekCountCombo(QWidget *parent = 0, const char *name = 0);
+    static QComboBox *createWeekdayCombo(QWidget *parent = 0, const char *name = 0);
+    static QComboBox *createMonthNameCombo(QWidget *parent = 0, const char *name = 0);
+    QBoxLayout *createFrequencySpinBar(QWidget *parent, QLayout *layout,
+                                       QString everyText, QString unitText);
 
-  private:
+private:
     QSpinBox *mFrequencyEdit;
 };
 
-class RecurDaily : public RecurBase
-{
-  public:
-    RecurDaily( QWidget *parent = 0, const char *name = 0 );
+class RecurDaily : public RecurBase {
+public:
+    RecurDaily(QWidget *parent = 0, const char *name = 0);
 };
 
-class RecurWeekly : public RecurBase
-{
-  public:
-    RecurWeekly( QWidget *parent = 0, const char *name = 0 );
+class RecurWeekly : public RecurBase {
+public:
+    RecurWeekly(QWidget *parent = 0, const char *name = 0);
 
-    void setDays( const QBitArray & );
+    void setDays(const QBitArray &);
     QBitArray days();
 
-  private:
+private:
     QCheckBox *mDayBoxes[7];
 };
 
-class RecurMonthly : public RecurBase
-{
-  public:
-    RecurMonthly( QWidget *parent = 0, const char *name = 0 );
+class RecurMonthly : public RecurBase {
+public:
+    RecurMonthly(QWidget *parent = 0, const char *name = 0);
 
-    void setByDay( int day );
-    void setByPos( int count, int weekday );
+    void setByDay(int day);
+    void setByPos(int count, int weekday);
 
     bool byDay();
     bool byPos();
@@ -102,7 +98,7 @@ class RecurMonthly : public RecurBase
     int count();
     int weekday();
 
-  private:
+private:
     QRadioButton *mByDayRadio;
     QComboBox *mByDayCombo;
 
@@ -111,16 +107,15 @@ class RecurMonthly : public RecurBase
     QComboBox *mByPosWeekdayCombo;
 };
 
-class RecurYearly : public RecurBase
-{
-  public:
+class RecurYearly : public RecurBase {
+public:
     enum YearlyType { byDay, byPos, byMonth };
 
-    RecurYearly( QWidget *parent = 0, const char *name = 0 );
+    RecurYearly(QWidget *parent = 0, const char *name = 0);
 
-    void setByDay( int day );
-    void setByPos( int count, int weekday, int month );
-    void setByMonth( int day, int month );
+    void setByDay(int day);
+    void setByPos(int count, int weekday, int month);
+    void setByMonth(int day, int month);
 
     YearlyType getType();
 
@@ -131,7 +126,7 @@ class RecurYearly : public RecurBase
     int monthDay();
     int month();
 
-  private:
+private:
     QRadioButton *mByMonthRadio;
     QRadioButton *mByPosRadio;
     QRadioButton *mByDayRadio;
@@ -146,24 +141,23 @@ class RecurYearly : public RecurBase
     QSpinBox *mByDaySpin;
 };
 
-class RecurrenceChooser : public QWidget
-{
+class RecurrenceChooser : public QWidget {
     Q_OBJECT
-  public:
-    RecurrenceChooser( QWidget *parent = 0, const char *name = 0 );
+public:
+    RecurrenceChooser(QWidget *parent = 0, const char *name = 0);
 
     enum { Daily, Weekly, Monthly, Yearly };
 
-    void setType( int );
+    void setType(int);
     int type();
 
-  signals:
-    void chosen( int );
+signals:
+    void chosen(int);
 
-  protected slots:
+protected slots:
     void emitChoice();
 
-  private:
+private:
     QComboBox *mTypeCombo;
 
     QRadioButton *mDailyButton;
@@ -172,81 +166,76 @@ class RecurrenceChooser : public QWidget
     QRadioButton *mYearlyButton;
 };
 
-class ExceptionsBase
-{
-  public:
-    virtual void setDates( const DateList & ) = 0;
+class ExceptionsBase {
+public:
+    virtual void setDates(const DateList &) = 0;
     virtual DateList dates() = 0;
 };
 
-class ExceptionsWidget : public QWidget, public ExceptionsBase
-{
+class ExceptionsWidget : public QWidget, public ExceptionsBase {
     Q_OBJECT
-  public:
-    ExceptionsWidget( QWidget *parent = 0, const char *name = 0 );
+public:
+    ExceptionsWidget(QWidget *parent = 0, const char *name = 0);
 
-    void setDates( const DateList & );
+    void setDates(const DateList &);
     DateList dates();
 
-  protected slots:
+protected slots:
     void addException();
     void changeException();
     void deleteException();
 
-  private:
+private:
     KDateEdit *mExceptionDateEdit;
     QListBox *mExceptionList;
     DateList mExceptionDates;
 };
 
-class ExceptionsDialog : public KDialogBase, public ExceptionsBase
-{
-  public:
-    ExceptionsDialog( QWidget *parent, const char *name = 0 );
+class ExceptionsDialog : public KDialogBase, public ExceptionsBase {
+public:
+    ExceptionsDialog(QWidget *parent, const char *name = 0);
 
-    void setDates( const DateList & );
+    void setDates(const DateList &);
     DateList dates();
 
-  private:
+private:
     ExceptionsWidget *mExceptions;
 };
 
-class RecurrenceRangeBase
-{
-  public:
-    virtual void setDefaults( const QDateTime &from ) = 0;
+class RecurrenceRangeBase {
+public:
+    virtual void setDefaults(const QDateTime &from) = 0;
 
-    virtual void setDuration( int ) = 0;
+    virtual void setDuration(int) = 0;
     virtual int duration() = 0;
 
-    virtual void setEndDate( const QDate & ) = 0;
+    virtual void setEndDate(const QDate &) = 0;
     virtual QDate endDate() = 0;
 
-    virtual void setDateTimes( const QDateTime &start,
-                               const QDateTime &end = QDateTime() ) = 0;
+    virtual void setDateTimes(const QDateTime &start,
+                              const QDateTime &end = QDateTime()) = 0;
 };
 
-class RecurrenceRangeWidget : public QWidget, public RecurrenceRangeBase
-{
+class RecurrenceRangeWidget : public QWidget, public RecurrenceRangeBase {
     Q_OBJECT
-  public:
-    RecurrenceRangeWidget( QWidget *parent = 0, const char *name = 0 );
+public:
+    RecurrenceRangeWidget(QWidget *parent = 0, const char *name = 0);
 
-    void setDefaults( const QDateTime &from );
+    void setDefaults(const QDateTime &from);
 
-    void setDuration( int );
+    void setDuration(int);
     int duration();
 
-    void setEndDate( const QDate & );
+    void setEndDate(const QDate &);
     QDate endDate();
 
-    void setDateTimes( const QDateTime &start,
-                       const QDateTime &end = QDateTime() );
+    void setDateTimes(const QDateTime &start,
+                      const QDateTime &end = QDateTime());
 
-  protected slots:
+protected slots:
     void showCurrentRange();
 
-  private:
+private:
     QGroupBox *mRangeGroupBox;
     QLabel *mStartDateLabel;
     QRadioButton *mNoEndDateButton;
@@ -256,61 +245,59 @@ class RecurrenceRangeWidget : public QWidget, public RecurrenceRangeBase
     KDateEdit *mEndDateEdit;
 };
 
-class RecurrenceRangeDialog : public KDialogBase, public RecurrenceRangeBase
-{
-  public:
-    RecurrenceRangeDialog( QWidget *parent = 0, const char *name = 0 );
+class RecurrenceRangeDialog : public KDialogBase, public RecurrenceRangeBase {
+public:
+    RecurrenceRangeDialog(QWidget *parent = 0, const char *name = 0);
 
-    void setDefaults( const QDateTime &from );
+    void setDefaults(const QDateTime &from);
 
-    void setDuration( int );
+    void setDuration(int);
     int duration();
 
-    void setEndDate( const QDate & );
+    void setEndDate(const QDate &);
     QDate endDate();
 
-    void setDateTimes( const QDateTime &start,
-                       const QDateTime &end = QDateTime() );
+    void setDateTimes(const QDateTime &start,
+                      const QDateTime &end = QDateTime());
 
-  private:
+private:
     RecurrenceRangeWidget *mRecurrenceRangeWidget;
 };
 
-class KOEditorRecurrence : public QWidget
-{
+class KOEditorRecurrence : public QWidget {
     Q_OBJECT
-  public:
-    KOEditorRecurrence ( QWidget *parent = 0, const char *name = 0 );
+public:
+    KOEditorRecurrence(QWidget *parent = 0, const char *name = 0);
     virtual ~KOEditorRecurrence();
 
     enum { Daily, Weekly, Monthly, Yearly };
 
     /** Set widgets to default values */
-    void setDefaults( const QDateTime &from, const QDateTime &to, bool allday );
+    void setDefaults(const QDateTime &from, const QDateTime &to, bool allday);
     /** Read event object and setup widgets accordingly */
-    void readIncidence( Incidence * );
+    void readIncidence(Incidence *);
     /** Write event settings to event object */
-    void writeIncidence( Incidence * );
+    void writeIncidence(Incidence *);
 
     /** Check if the input is valid. */
     bool validateInput();
 
     bool doesRecur();
 
-  public slots:
-    void setRecurrenceEnabled( bool );
-    void setDateTimes( const QDateTime &start, const QDateTime &end );
-    void setDateTimeStr( const QString & );
+public slots:
+    void setRecurrenceEnabled(bool);
+    void setDateTimes(const QDateTime &start, const QDateTime &end);
+    void setDateTimeStr(const QString &);
 
-  signals:
-    void dateTimesChanged( const QDateTime &start, const QDateTime &end );
+signals:
+    void dateTimesChanged(const QDateTime &start, const QDateTime &end);
 
-  protected slots:
-    void showCurrentRule( int );
+protected slots:
+    void showCurrentRule(int);
     void showExceptionsDialog();
     void showRecurrenceRangeDialog();
 
-  private:
+private:
     QCheckBox *mEnabledCheck;
 
     QGroupBox *mTimeGroupBox;
@@ -338,14 +325,16 @@ class KOEditorRecurrence : public QWidget
     QDateTime mEventStartDt;
 };
 
-class KOEditorRecurrenceDialog : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    KOEditorRecurrenceDialog( QWidget *parent );
-    KOEditorRecurrence* editor() const { return mRecurrence; }
+class KOEditorRecurrenceDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    KOEditorRecurrenceDialog(QWidget *parent);
+    KOEditorRecurrence *editor() const
+    {
+        return mRecurrence;
+    }
 
-  private:
+private:
     KOEditorRecurrence *mRecurrence;
 };
 

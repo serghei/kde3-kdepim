@@ -40,56 +40,56 @@
 static const char TMPL_DIALOG_NAME[] = "TemplateDialog";
 
 
-TemplateDlg* TemplateDlg::mInstance = 0;
+TemplateDlg *TemplateDlg::mInstance = 0;
 
 
-TemplateDlg::TemplateDlg(QWidget* parent, const char* name)
-	: KDialogBase(KDialogBase::Plain, i18n("Alarm Templates"), Close, Ok, parent, name, false, true)
+TemplateDlg::TemplateDlg(QWidget *parent, const char *name)
+    : KDialogBase(KDialogBase::Plain, i18n("Alarm Templates"), Close, Ok, parent, name, false, true)
 {
-	QWidget* topWidget = plainPage();
-	QBoxLayout* topLayout = new QHBoxLayout(topWidget);
-	topLayout->setSpacing(spacingHint());
+    QWidget *topWidget = plainPage();
+    QBoxLayout *topLayout = new QHBoxLayout(topWidget);
+    topLayout->setSpacing(spacingHint());
 
-	QBoxLayout* layout = new QVBoxLayout(topLayout);
-	mTemplateList = new TemplateListView(true, i18n("The list of alarm templates"), topWidget);
-	mTemplateList->setSelectionMode(QListView::Extended);
-	mTemplateList->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-	connect(mTemplateList, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
-	layout->addWidget(mTemplateList);
+    QBoxLayout *layout = new QVBoxLayout(topLayout);
+    mTemplateList = new TemplateListView(true, i18n("The list of alarm templates"), topWidget);
+    mTemplateList->setSelectionMode(QListView::Extended);
+    mTemplateList->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
+    connect(mTemplateList, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
+    layout->addWidget(mTemplateList);
 
-	layout = new QVBoxLayout(topLayout);
-	QPushButton* button = new QPushButton(i18n("&New..."), topWidget);
-	connect(button, SIGNAL(clicked()), SLOT(slotNew()));
-	QWhatsThis::add(button, i18n("Create a new alarm template"));
-	layout->addWidget(button);
+    layout = new QVBoxLayout(topLayout);
+    QPushButton *button = new QPushButton(i18n("&New..."), topWidget);
+    connect(button, SIGNAL(clicked()), SLOT(slotNew()));
+    QWhatsThis::add(button, i18n("Create a new alarm template"));
+    layout->addWidget(button);
 
-	mEditButton = new QPushButton(i18n("&Edit..."), topWidget);
-	connect(mEditButton, SIGNAL(clicked()), SLOT(slotEdit()));
-	QWhatsThis::add(mEditButton, i18n("Edit the currently highlighted alarm template"));
-	layout->addWidget(mEditButton);
+    mEditButton = new QPushButton(i18n("&Edit..."), topWidget);
+    connect(mEditButton, SIGNAL(clicked()), SLOT(slotEdit()));
+    QWhatsThis::add(mEditButton, i18n("Edit the currently highlighted alarm template"));
+    layout->addWidget(mEditButton);
 
-	mCopyButton = new QPushButton(i18n("Co&py"), topWidget);
-	connect(mCopyButton, SIGNAL(clicked()), SLOT(slotCopy()));
-	QWhatsThis::add(mCopyButton,
-	      i18n("Create a new alarm template based on a copy of the currently highlighted template"));
-	layout->addWidget(mCopyButton);
+    mCopyButton = new QPushButton(i18n("Co&py"), topWidget);
+    connect(mCopyButton, SIGNAL(clicked()), SLOT(slotCopy()));
+    QWhatsThis::add(mCopyButton,
+                    i18n("Create a new alarm template based on a copy of the currently highlighted template"));
+    layout->addWidget(mCopyButton);
 
-	mDeleteButton = new QPushButton(i18n("&Delete"), topWidget);
-	connect(mDeleteButton, SIGNAL(clicked()), SLOT(slotDelete()));
-	QWhatsThis::add(mDeleteButton, i18n("Delete the currently highlighted alarm template"));
-	layout->addWidget(mDeleteButton);
+    mDeleteButton = new QPushButton(i18n("&Delete"), topWidget);
+    connect(mDeleteButton, SIGNAL(clicked()), SLOT(slotDelete()));
+    QWhatsThis::add(mDeleteButton, i18n("Delete the currently highlighted alarm template"));
+    layout->addWidget(mDeleteButton);
 
-	KAccel* accel = new KAccel(this);
-	accel->insert(KStdAccel::SelectAll, mTemplateList, SLOT(slotSelectAll()));
-	accel->insert(KStdAccel::Deselect, mTemplateList, SLOT(slotDeselect()));
-	accel->readSettings();
+    KAccel *accel = new KAccel(this);
+    accel->insert(KStdAccel::SelectAll, mTemplateList, SLOT(slotSelectAll()));
+    accel->insert(KStdAccel::Deselect, mTemplateList, SLOT(slotDeselect()));
+    accel->readSettings();
 
-	mTemplateList->refresh();
-	slotSelectionChanged();          // enable/disable buttons as appropriate
+    mTemplateList->refresh();
+    slotSelectionChanged();          // enable/disable buttons as appropriate
 
-	QSize s;
-	if (KAlarm::readConfigWindowSize(TMPL_DIALOG_NAME, s))
-		resize(s);
+    QSize s;
+    if(KAlarm::readConfigWindowSize(TMPL_DIALOG_NAME, s))
+        resize(s);
 }
 
 /******************************************************************************
@@ -97,18 +97,18 @@ TemplateDlg::TemplateDlg(QWidget* parent, const char* name)
 */
 TemplateDlg::~TemplateDlg()
 {
-	mInstance = 0;
+    mInstance = 0;
 }
 
 /******************************************************************************
 *  Create an instance, if none already exists.
 */
-TemplateDlg* TemplateDlg::create(QWidget* parent, const char* name)
+TemplateDlg *TemplateDlg::create(QWidget *parent, const char *name)
 {
-	if (mInstance)
-		return 0;
-	mInstance = new TemplateDlg(parent, name);
-	return mInstance;
+    if(mInstance)
+        return 0;
+    mInstance = new TemplateDlg(parent, name);
+    return mInstance;
 }
 
 /******************************************************************************
@@ -117,7 +117,7 @@ TemplateDlg* TemplateDlg::create(QWidget* parent, const char* name)
 */
 void TemplateDlg::slotNew()
 {
-	createTemplate(0, this, mTemplateList);
+    createTemplate(0, this, mTemplateList);
 }
 
 /******************************************************************************
@@ -126,30 +126,30 @@ void TemplateDlg::slotNew()
 */
 void TemplateDlg::slotCopy()
 {
-	TemplateListViewItem* item = mTemplateList->selectedItem();
-	if (item)
-	{
-		KAEvent event = item->event();
-		createTemplate(&event, mTemplateList);
-	}
+    TemplateListViewItem *item = mTemplateList->selectedItem();
+    if(item)
+    {
+        KAEvent event = item->event();
+        createTemplate(&event, mTemplateList);
+    }
 }
 
 /******************************************************************************
 *  Create a new template.
 *  If 'event' is non-zero, base the new template on an existing event or template.
 */
-void TemplateDlg::createTemplate(const KAEvent* event, QWidget* parent, TemplateListView* view)
+void TemplateDlg::createTemplate(const KAEvent *event, QWidget *parent, TemplateListView *view)
 {
-	EditAlarmDlg editDlg(true, i18n("New Alarm Template"), parent, 0, event);
-	if (editDlg.exec() == QDialog::Accepted)
-	{
-		KAEvent event;
-		editDlg.getEvent(event);
+    EditAlarmDlg editDlg(true, i18n("New Alarm Template"), parent, 0, event);
+    if(editDlg.exec() == QDialog::Accepted)
+    {
+        KAEvent event;
+        editDlg.getEvent(event);
 
-		// Add the template to the displayed lists and to the calendar file
-		KAlarm::addTemplate(event, view, &editDlg);
-		Undo::saveAdd(event);
-	}
+        // Add the template to the displayed lists and to the calendar file
+        KAlarm::addTemplate(event, view, &editDlg);
+        Undo::saveAdd(event);
+    }
 }
 
 /******************************************************************************
@@ -158,23 +158,23 @@ void TemplateDlg::createTemplate(const KAEvent* event, QWidget* parent, Template
 */
 void TemplateDlg::slotEdit()
 {
-	TemplateListViewItem* item = mTemplateList->selectedItem();
-	if (item)
-	{
-		KAEvent event = item->event();
-		EditAlarmDlg editDlg(true, i18n("Edit Alarm Template"), this, 0, &event);
-		if (editDlg.exec() == QDialog::Accepted)
-		{
-			KAEvent newEvent;
-			editDlg.getEvent(newEvent);
-			QString id = event.id();
-			newEvent.setEventID(id);
+    TemplateListViewItem *item = mTemplateList->selectedItem();
+    if(item)
+    {
+        KAEvent event = item->event();
+        EditAlarmDlg editDlg(true, i18n("Edit Alarm Template"), this, 0, &event);
+        if(editDlg.exec() == QDialog::Accepted)
+        {
+            KAEvent newEvent;
+            editDlg.getEvent(newEvent);
+            QString id = event.id();
+            newEvent.setEventID(id);
 
-			// Update the event in the displays and in the calendar file
-			KAlarm::updateTemplate(newEvent, mTemplateList, &editDlg);
-			Undo::saveEdit(event, newEvent);
-		}
-	}
+            // Update the event in the displays and in the calendar file
+            KAlarm::updateTemplate(newEvent, mTemplateList, &editDlg);
+            Undo::saveEdit(event, newEvent);
+        }
+    }
 }
 
 /******************************************************************************
@@ -183,37 +183,37 @@ void TemplateDlg::slotEdit()
 */
 void TemplateDlg::slotDelete()
 {
-	QValueList<EventListViewItemBase*> items = mTemplateList->selectedItems();
-	int n = items.count();
-	if (KMessageBox::warningContinueCancel(this, i18n("Do you really want to delete the selected alarm template?",
-	                                                  "Do you really want to delete the %n selected alarm templates?", n),
-	                                       i18n("Delete Alarm Template", "Delete Alarm Templates", n), KGuiItem(i18n("&Delete"), "editdelete"))
-		    != KMessageBox::Continue)
-		return;
+    QValueList<EventListViewItemBase *> items = mTemplateList->selectedItems();
+    int n = items.count();
+    if(KMessageBox::warningContinueCancel(this, i18n("Do you really want to delete the selected alarm template?",
+                                          "Do you really want to delete the %n selected alarm templates?", n),
+                                          i18n("Delete Alarm Template", "Delete Alarm Templates", n), KGuiItem(i18n("&Delete"), "editdelete"))
+            != KMessageBox::Continue)
+        return;
 
-	int warnErr = 0;
-	KAlarm::UpdateStatus status = KAlarm::UPDATE_OK;
-	QValueList<KAEvent> events;
-	AlarmCalendar::templateCalendar()->startUpdate();    // prevent multiple saves of the calendar until we're finished
-	for (QValueList<EventListViewItemBase*>::Iterator it = items.begin();  it != items.end();  ++it)
-	{
-		TemplateListViewItem* item = (TemplateListViewItem*)(*it);
-		events.append(item->event());
-		KAlarm::UpdateStatus st = KAlarm::deleteTemplate(item->event());
-		if (st != KAlarm::UPDATE_OK)
-		{
-			status = st;
-			++warnErr;
-		}
-	}
-	if (!AlarmCalendar::templateCalendar()->endUpdate())    // save the calendar now
-	{
-		status = KAlarm::SAVE_FAILED;
-		warnErr = items.count();
-	}
-	Undo::saveDeletes(events);
-	if (warnErr)
-		displayUpdateError(this, status, KAlarm::ERR_TEMPLATE, warnErr);
+    int warnErr = 0;
+    KAlarm::UpdateStatus status = KAlarm::UPDATE_OK;
+    QValueList<KAEvent> events;
+    AlarmCalendar::templateCalendar()->startUpdate();    // prevent multiple saves of the calendar until we're finished
+    for(QValueList<EventListViewItemBase *>::Iterator it = items.begin();  it != items.end();  ++it)
+    {
+        TemplateListViewItem *item = (TemplateListViewItem *)(*it);
+        events.append(item->event());
+        KAlarm::UpdateStatus st = KAlarm::deleteTemplate(item->event());
+        if(st != KAlarm::UPDATE_OK)
+        {
+            status = st;
+            ++warnErr;
+        }
+    }
+    if(!AlarmCalendar::templateCalendar()->endUpdate())     // save the calendar now
+    {
+        status = KAlarm::SAVE_FAILED;
+        warnErr = items.count();
+    }
+    Undo::saveDeletes(events);
+    if(warnErr)
+        displayUpdateError(this, status, KAlarm::ERR_TEMPLATE, warnErr);
 }
 
 /******************************************************************************
@@ -223,19 +223,19 @@ void TemplateDlg::slotDelete()
 */
 void TemplateDlg::slotSelectionChanged()
 {
-	int count = mTemplateList->selectedCount();
-	mEditButton->setEnabled(count == 1);
-	mCopyButton->setEnabled(count == 1);
-	mDeleteButton->setEnabled(count);
+    int count = mTemplateList->selectedCount();
+    mEditButton->setEnabled(count == 1);
+    mCopyButton->setEnabled(count == 1);
+    mDeleteButton->setEnabled(count);
 }
 
 /******************************************************************************
 *  Called when the dialog's size has changed.
 *  Records the new size in the config file.
 */
-void TemplateDlg::resizeEvent(QResizeEvent* re)
+void TemplateDlg::resizeEvent(QResizeEvent *re)
 {
-	if (isVisible())
-		KAlarm::writeConfigWindowSize(TMPL_DIALOG_NAME, re->size());
-	KDialog::resizeEvent(re);
+    if(isVisible())
+        KAlarm::writeConfigWindowSize(TMPL_DIALOG_NAME, re->size());
+    KDialog::resizeEvent(re);
 }

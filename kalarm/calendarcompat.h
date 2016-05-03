@@ -24,17 +24,18 @@
 /* @file calendarcompat.h - compatibility for old calendar file formats */
 
 #include <qstring.h>
-namespace KCal { class Calendar; }
+namespace KCal {
+class Calendar;
+}
 
 
-class CalendarCompat
-{
-	public:
-		static void fix(KCal::Calendar&, const QString& localFile = QString::null);
+class CalendarCompat {
+public:
+    static void fix(KCal::Calendar &, const QString &localFile = QString::null);
 
-	private:
-		static int  readKAlarmVersion(KCal::Calendar&, QString& subVersion);
-		static bool isUTC(const QString& localFile);
+private:
+    static int  readKAlarmVersion(KCal::Calendar &, QString &subVersion);
+    static bool isUTC(const QString &localFile);
 };
 
 #endif // CALENDARCOMPAT_H

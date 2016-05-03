@@ -12,11 +12,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // Declarations in this file
 
-  class c4_Handler;         // not defined here
+class c4_Handler;         // not defined here
 
-  extern c4_Handler* f4_CreateFormat(const c4_Property&, c4_HandlerSeq&);
-  extern int f4_ClearFormat(char);
-  extern int f4_CompareFormat(char, const c4_Bytes&, const c4_Bytes&);
+extern c4_Handler *f4_CreateFormat(const c4_Property &, c4_HandlerSeq &);
+extern int f4_ClearFormat(char);
+extern int f4_CompareFormat(char, const c4_Bytes &, const c4_Bytes &);
 
 /////////////////////////////////////////////////////////////////////////////
 

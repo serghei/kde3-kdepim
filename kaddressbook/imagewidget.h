@@ -35,16 +35,15 @@
 /**
   Small helper class
  */
-class ImageLoader : public QObject
-{
-  Q_OBJECT
+class ImageLoader : public QObject {
+    Q_OBJECT
 
-  public:
-    ImageLoader( QWidget *parent );
+public:
+    ImageLoader(QWidget *parent);
 
-    KABC::Picture loadPicture( const KURL &url, bool *ok );
+    KABC::Picture loadPicture(const KURL &url, bool *ok);
 
-  private:
+private:
     KABC::Picture mPicture;
     QWidget *mParent;
 };
@@ -52,36 +51,35 @@ class ImageLoader : public QObject
 /**
   Small helper class
  */
-class ImageButton : public QPushButton
-{
-  Q_OBJECT
+class ImageButton : public QPushButton {
+    Q_OBJECT
 
-  public:
-    ImageButton( const QString &title, QWidget *parent );
+public:
+    ImageButton(const QString &title, QWidget *parent);
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-    void setPicture( const KABC::Picture &picture );
+    void setPicture(const KABC::Picture &picture);
     KABC::Picture picture() const;
 
-    void setImageLoader( ImageLoader *loader );
+    void setImageLoader(ImageLoader *loader);
 
-  signals:
+signals:
     void changed();
-    void urlDropped( const KURL& );
+    void urlDropped(const KURL &);
 
-  protected:
-    virtual void dragEnterEvent( QDragEnterEvent *event );
-    virtual void dropEvent( QDropEvent *event );
-    virtual void mouseMoveEvent( QMouseEvent *event );
-    virtual void mousePressEvent( QMouseEvent *event );
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dropEvent(QDropEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void contextMenuEvent(QContextMenuEvent *event);
 
-  private slots:
+private slots:
     void load();
     void clear();
 
-  private:
+private:
     void startDrag();
     void updateGUI();
 
@@ -93,61 +91,64 @@ class ImageButton : public QPushButton
 };
 
 
-class ImageBaseWidget : public QWidget
-{
-  Q_OBJECT
+class ImageBaseWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    ImageBaseWidget( const QString &title, QWidget *parent, const char *name = 0 );
+public:
+    ImageBaseWidget(const QString &title, QWidget *parent, const char *name = 0);
     ~ImageBaseWidget();
 
     /**
       Sets the photo object.
      */
-    void setImage( const KABC::Picture &photo );
+    void setImage(const KABC::Picture &photo);
 
     /**
       Returns a photo object.
      */
     KABC::Picture image() const;
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     ImageButton *mImageButton;
     ImageLoader *mImageLoader;
 
     bool mReadOnly;
 };
 
-class ImageWidget : public KAB::ContactEditorWidget
-{
-  public:
-    ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+class ImageWidget : public KAB::ContactEditorWidget {
+public:
+    ImageWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
 
-    int logicalWidth() const { return 2; }
+    int logicalWidth() const
+    {
+        return 2;
+    }
 
-  private:
+private:
     ImageBaseWidget *mPhotoWidget;
     ImageBaseWidget *mLogoWidget;
 };
 
-class ImageWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+class ImageWidgetFactory : public KAB::ContactEditorWidgetFactory {
+public:
+    KAB::ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
     {
-      return new ImageWidget( ab, parent, name );
+        return new ImageWidget(ab, parent, name);
     }
 
-    QString pageIdentifier() const { return "misc"; }
+    QString pageIdentifier() const
+    {
+        return "misc";
+    }
 };
 
 #endif

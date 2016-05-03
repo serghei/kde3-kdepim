@@ -24,29 +24,29 @@
 
 #include <qvbox.h>
 
-HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent, const char * name )
-	: BoxContainer( parent, name ),
-	box( 0 )	
+HVContainer::HVContainer(Qt::Orientation orientation, QObject *parent, const char *name)
+    : BoxContainer(parent, name),
+      box(0)
 {
-	if( orientation == Qt::Horizontal )
-		box = new QHBox( 0, "hbox" );
-	else
-		box = new QVBox( 0, "vbox" );
+    if(orientation == Qt::Horizontal)
+        box = new QHBox(0, "hbox");
+    else
+        box = new QVBox(0, "vbox");
 }
 
 HVContainer::~HVContainer()
 {
-	delete box;
+    delete box;
 }
 
 void HVContainer::showBox()
 {
-	box->show();
+    box->show();
 }
-	
-BoxContainerItem* HVContainer::newBoxInstance() const
+
+BoxContainerItem *HVContainer::newBoxInstance() const
 {
-	return new HVItem( box, "horizontal/vertical item" );
+    return new HVItem(box, "horizontal/vertical item");
 }
 
 #include "hvcontainer.moc"

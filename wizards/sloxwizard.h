@@ -26,9 +26,8 @@
 class KLineEdit;
 class QCheckBox;
 
-class KDE_EXPORT SloxWizard : public KConfigWizard
-{
-  public:
+class KDE_EXPORT SloxWizard : public KConfigWizard {
+public:
     SloxWizard();
     ~SloxWizard();
 
@@ -36,7 +35,7 @@ class KDE_EXPORT SloxWizard : public KConfigWizard
     void usrReadConfig();
     void usrWriteConfig();
 
-  private:
+private:
     KLineEdit *mServerEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;

@@ -49,179 +49,188 @@
 #include "korg_uniqueapp.h"
 
 typedef KGenericFactory< KOrganizerPlugin, Kontact::Core > KOrganizerPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_korganizerplugin,
-                            KOrganizerPluginFactory( "kontact_korganizerplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_korganizerplugin,
+                           KOrganizerPluginFactory("kontact_korganizerplugin"))
 
-KOrganizerPlugin::KOrganizerPlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "korganizer" ),
-    mIface( 0 )
+KOrganizerPlugin::KOrganizerPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "korganizer"),
+      mIface(0)
 {
 
-  setInstance( KOrganizerPluginFactory::instance() );
-  instance()->iconLoader()->addAppDir("kdepim");
+    setInstance(KOrganizerPluginFactory::instance());
+    instance()->iconLoader()->addAppDir("kdepim");
 
-  insertNewAction( new KAction( i18n( "New Event..." ), "newappointment",
-                   CTRL+SHIFT+Key_E, this, SLOT( slotNewEvent() ), actionCollection(),
-                   "new_event" ) );
+    insertNewAction(new KAction(i18n("New Event..."), "newappointment",
+                                CTRL + SHIFT + Key_E, this, SLOT(slotNewEvent()), actionCollection(),
+                                "new_event"));
 
-  insertSyncAction( new KAction( i18n( "Synchronize Calendar" ), "reload",
-                   0, this, SLOT( slotSyncEvents() ), actionCollection(),
-                   "korganizer_sync" ) );
+    insertSyncAction(new KAction(i18n("Synchronize Calendar"), "reload",
+                                 0, this, SLOT(slotSyncEvents()), actionCollection(),
+                                 "korganizer_sync"));
 
-  mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
-      new Kontact::UniqueAppHandlerFactory<KOrganizerUniqueAppHandler>(), this );
+    mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
+        new Kontact::UniqueAppHandlerFactory<KOrganizerUniqueAppHandler>(), this);
 }
 
 KOrganizerPlugin::~KOrganizerPlugin()
 {
 }
 
-Kontact::Summary *KOrganizerPlugin::createSummaryWidget( QWidget *parent )
+Kontact::Summary *KOrganizerPlugin::createSummaryWidget(QWidget *parent)
 {
-  return new SummaryWidget( this, parent );
+    return new SummaryWidget(this, parent);
 }
 
 KParts::ReadOnlyPart *KOrganizerPlugin::createPart()
 {
-  KParts::ReadOnlyPart *part = loadPart();
+    KParts::ReadOnlyPart *part = loadPart();
 
-  if ( !part )
-    return 0;
+    if(!part)
+        return 0;
 
-  mIface = new KCalendarIface_stub( dcopClient(), "kontact", "CalendarIface" );
+    mIface = new KCalendarIface_stub(dcopClient(), "kontact", "CalendarIface");
 
-  return part;
+    return part;
 }
 
 QString KOrganizerPlugin::tipFile() const
 {
-  QString file = ::locate("data", "korganizer/tips");
-  return file;
+    QString file = ::locate("data", "korganizer/tips");
+    return file;
 }
 
 QStringList KOrganizerPlugin::invisibleToolbarActions() const
 {
-  QStringList invisible;
-  invisible += "new_event";
-  invisible += "new_todo";
-  invisible += "new_journal";
+    QStringList invisible;
+    invisible += "new_event";
+    invisible += "new_todo";
+    invisible += "new_journal";
 
-  invisible += "view_todo";
-  invisible += "view_journal";
-  return invisible;
+    invisible += "view_todo";
+    invisible += "view_journal";
+    return invisible;
 }
 
 void KOrganizerPlugin::select()
 {
-  interface()->showEventView();
+    interface()->showEventView();
 }
 
 KCalendarIface_stub *KOrganizerPlugin::interface()
 {
-  if ( !mIface ) {
-    part();
-  }
-  Q_ASSERT( mIface );
-  return mIface;
+    if(!mIface)
+    {
+        part();
+    }
+    Q_ASSERT(mIface);
+    return mIface;
 }
 
 void KOrganizerPlugin::slotNewEvent()
 {
-  interface()->openEventEditor( "" );
+    interface()->openEventEditor("");
 }
 
 void KOrganizerPlugin::slotSyncEvents()
 {
-  DCOPRef ref( "kmail", "KMailICalIface" );
-  ref.send( "triggerSync", QString("Calendar") );
+    DCOPRef ref("kmail", "KMailICalIface");
+    ref.send("triggerSync", QString("Calendar"));
 }
 
-bool KOrganizerPlugin::createDCOPInterface( const QString& serviceType )
+bool KOrganizerPlugin::createDCOPInterface(const QString &serviceType)
 {
-  kdDebug(5602) << k_funcinfo << serviceType << endl;
-  if ( serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar" ) {
-    if ( part() )
-      return true;
-  }
+    kdDebug(5602) << k_funcinfo << serviceType << endl;
+    if(serviceType == "DCOP/Organizer" || serviceType == "DCOP/Calendar")
+    {
+        if(part())
+            return true;
+    }
 
-  return false;
+    return false;
 }
 
 bool KOrganizerPlugin::isRunningStandalone()
 {
-  return mUniqueAppWatcher->isRunningStandalone();
+    return mUniqueAppWatcher->isRunningStandalone();
 }
 
-bool KOrganizerPlugin::canDecodeDrag( QMimeSource *mimeSource )
+bool KOrganizerPlugin::canDecodeDrag(QMimeSource *mimeSource)
 {
-  return QTextDrag::canDecode( mimeSource ) ||
-         KPIM::MailListDrag::canDecode( mimeSource );
+    return QTextDrag::canDecode(mimeSource) ||
+           KPIM::MailListDrag::canDecode(mimeSource);
 }
 
-void KOrganizerPlugin::processDropEvent( QDropEvent *event )
+void KOrganizerPlugin::processDropEvent(QDropEvent *event)
 {
-  QString text;
+    QString text;
 
-  KABC::VCardConverter converter;
-  if ( KVCardDrag::canDecode( event ) && KVCardDrag::decode( event, text ) ) {
-    KABC::Addressee::List contacts = converter.parseVCards( text );
-    KABC::Addressee::List::Iterator it;
+    KABC::VCardConverter converter;
+    if(KVCardDrag::canDecode(event) && KVCardDrag::decode(event, text))
+    {
+        KABC::Addressee::List contacts = converter.parseVCards(text);
+        KABC::Addressee::List::Iterator it;
 
-    QStringList attendees;
-    for ( it = contacts.begin(); it != contacts.end(); ++it ) {
-      QString email = (*it).fullEmail();
-      if ( email.isEmpty() )
-        attendees.append( (*it).realName() + "<>" );
-      else
-        attendees.append( email );
+        QStringList attendees;
+        for(it = contacts.begin(); it != contacts.end(); ++it)
+        {
+            QString email = (*it).fullEmail();
+            if(email.isEmpty())
+                attendees.append((*it).realName() + "<>");
+            else
+                attendees.append(email);
+        }
+
+        interface()->openEventEditor(i18n("Meeting"), QString::null, QString::null,
+                                     attendees);
+        return;
     }
 
-    interface()->openEventEditor( i18n( "Meeting" ), QString::null, QString::null,
-                                  attendees );
-    return;
-  }
-
-  if ( QTextDrag::decode( event, text ) ) {
-    kdDebug(5602) << "DROP:" << text << endl;
-    interface()->openEventEditor( text );
-    return;
-  }
-
-  KPIM::MailList mails;
-  if ( KPIM::MailListDrag::decode( event, mails ) ) {
-    if ( mails.count() != 1 ) {
-      KMessageBox::sorry( core(),
-                          i18n("Drops of multiple mails are not supported." ) );
-    } else {
-      KPIM::MailSummary mail = mails.first();
-      QString txt = i18n("From: %1\nTo: %2\nSubject: %3").arg( mail.from() )
-                    .arg( mail.to() ).arg( mail.subject() );
-
-      KTempFile tf;
-      tf.setAutoDelete( true );
-      QString uri = QString::fromLatin1("kmail:") + QString::number( mail.serialNumber() );
-      tf.file()->writeBlock( event->encodedData( "message/rfc822" ) );
-      tf.close();
-      interface()->openEventEditor( i18n("Mail: %1").arg( mail.subject() ), txt,
-                                    uri, tf.name(), QStringList(), "message/rfc822" );
+    if(QTextDrag::decode(event, text))
+    {
+        kdDebug(5602) << "DROP:" << text << endl;
+        interface()->openEventEditor(text);
+        return;
     }
-    return;
-  }
 
-  KMessageBox::sorry( core(), i18n("Cannot handle drop events of type '%1'.")
-                              .arg( event->format() ) );
+    KPIM::MailList mails;
+    if(KPIM::MailListDrag::decode(event, mails))
+    {
+        if(mails.count() != 1)
+        {
+            KMessageBox::sorry(core(),
+                               i18n("Drops of multiple mails are not supported."));
+        }
+        else
+        {
+            KPIM::MailSummary mail = mails.first();
+            QString txt = i18n("From: %1\nTo: %2\nSubject: %3").arg(mail.from())
+                          .arg(mail.to()).arg(mail.subject());
+
+            KTempFile tf;
+            tf.setAutoDelete(true);
+            QString uri = QString::fromLatin1("kmail:") + QString::number(mail.serialNumber());
+            tf.file()->writeBlock(event->encodedData("message/rfc822"));
+            tf.close();
+            interface()->openEventEditor(i18n("Mail: %1").arg(mail.subject()), txt,
+                                         uri, tf.name(), QStringList(), "message/rfc822");
+        }
+        return;
+    }
+
+    KMessageBox::sorry(core(), i18n("Cannot handle drop events of type '%1'.")
+                       .arg(event->format()));
 }
 
-void KOrganizerPlugin::loadProfile( const QString& directory )
+void KOrganizerPlugin::loadProfile(const QString &directory)
 {
-  DCOPRef ref( "korganizer", "KOrganizerIface" );
-  ref.send( "loadProfile", directory );
+    DCOPRef ref("korganizer", "KOrganizerIface");
+    ref.send("loadProfile", directory);
 }
 
-void KOrganizerPlugin::saveToProfile( const QString& directory ) const
+void KOrganizerPlugin::saveToProfile(const QString &directory) const
 {
-  DCOPRef ref( "korganizer", "KOrganizerIface" );
-  ref.send( "saveToProfile", directory );
+    DCOPRef ref("korganizer", "KOrganizerIface");
+    ref.send("saveToProfile", directory);
 }
 
 #include "korganizerplugin.moc"

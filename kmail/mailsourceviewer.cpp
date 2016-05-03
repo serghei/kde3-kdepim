@@ -43,42 +43,49 @@
 
 namespace KMail {
 
-int MailSourceHighlighter::highlightParagraph( const QString& text, int ) {
-  QRegExp regexp( "^([\\w-]+:\\s)" );
-  if( regexp.search( text ) != -1 ) {
-    QFont font = textEdit()->currentFont();
-    font.setBold( true );
-    setFormat( 0, regexp.matchedLength(), font );
-  }
-  return 0;
+int MailSourceHighlighter::highlightParagraph(const QString &text, int)
+{
+    QRegExp regexp("^([\\w-]+:\\s)");
+    if(regexp.search(text) != -1)
+    {
+        QFont font = textEdit()->currentFont();
+        font.setBold(true);
+        setFormat(0, regexp.matchedLength(), font);
+    }
+    return 0;
 }
 
-MailSourceViewer::MailSourceViewer( QWidget *parent, const char *name )
-  : KTextBrowser( parent, name ), mSourceHighLighter( 0 )
+MailSourceViewer::MailSourceViewer(QWidget *parent, const char *name)
+    : KTextBrowser(parent, name), mSourceHighLighter(0)
 {
-  setWFlags( WDestructiveClose );
-  QAccel *accel = new QAccel( this, "browser close-accel" );
-  accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
-  accel->connectItem( accel->insertItem( Qt::Key_W+CTRL ), this , SLOT( close() ));
-  setWordWrap( KTextBrowser::NoWrap );
-  KWin::setIcons(winId(), kapp->icon(), kapp->miniIcon());
+    setWFlags(WDestructiveClose);
+    QAccel *accel = new QAccel(this, "browser close-accel");
+    accel->connectItem(accel->insertItem(Qt::Key_Escape), this , SLOT(close()));
+    accel->connectItem(accel->insertItem(Qt::Key_W + CTRL), this , SLOT(close()));
+    setWordWrap(KTextBrowser::NoWrap);
+    KWin::setIcons(winId(), kapp->icon(), kapp->miniIcon());
 }
 
 MailSourceViewer::~MailSourceViewer()
 {
-  delete mSourceHighLighter; mSourceHighLighter = 0;
+    delete mSourceHighLighter;
+    mSourceHighLighter = 0;
 }
 
-void MailSourceViewer::setText( const QString& text )
+void MailSourceViewer::setText(const QString &text)
 {
-  delete mSourceHighLighter; mSourceHighLighter = 0;
-  if ( text.length() > 500000 ) {
-    setTextFormat( Qt::LogText );
-  } else {
-    setTextFormat( Qt::PlainText );
-    mSourceHighLighter = new MailSourceHighlighter( this );
-  }
-  KTextBrowser::setText( text );
+    delete mSourceHighLighter;
+    mSourceHighLighter = 0;
+    if(text.length() > 500000)
+    {
+        setTextFormat(Qt::LogText);
+    }
+    else
+    {
+        setTextFormat(Qt::PlainText);
+        mSourceHighLighter = new MailSourceHighlighter(this);
+    }
+    KTextBrowser::setText(text);
 }
 
 }

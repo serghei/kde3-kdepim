@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -30,36 +30,35 @@
 
 namespace Schema {
 
-class Element
-{
-  public:
+class Element {
+public:
     typedef QValueList<Element> List;
-    typedef QValueList<Element*> PtrList;
+    typedef QValueList<Element *> PtrList;
 
     Element();
 
-    Element( const QString &name, int type, int minOccurs = 1, int maxOccurs = 1, 
-             bool qualified = false, const QString &defaultValue = QString(),
-             const QString &fixedValue = QString() );
+    Element(const QString &name, int type, int minOccurs = 1, int maxOccurs = 1,
+            bool qualified = false, const QString &defaultValue = QString(),
+            const QString &fixedValue = QString());
 
     QString name() const;
 
-    void setType( int id );
+    void setType(int id);
     int type() const;
 
-    void setTypeName( const QString &typeName );
+    void setTypeName(const QString &typeName);
     QString typeName() const;
 
-    void setDocumentation( const QString &documentation );
+    void setDocumentation(const QString &documentation);
     QString documentation() const;
 
-    void setGroupId( int group );
+    void setGroupId(int group);
     int groupId() const;
 
-    void setMinOccurs( int minOccurs );
+    void setMinOccurs(int minOccurs);
     int minOccurs() const;
 
-    void setMaxOccurs( int maxOccurs );
+    void setMaxOccurs(int maxOccurs);
     int maxOccurs() const;
 
     QString defaultValue() const;
@@ -67,10 +66,10 @@ class Element
 
     bool isQualified() const;
 
-    void setOccurrence( int occurrence );
+    void setOccurrence(int occurrence);
     int occurrence() const;
 
-  private:
+private:
     QString mName;
     int mType;
     QString mTypeName;

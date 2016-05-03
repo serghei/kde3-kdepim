@@ -41,34 +41,33 @@ class QCheckBox;
 class KDateWidget;
 class TodoEditorBase;
 
-class TodoEditor : public KDialogBase
-{
-	Q_OBJECT
+class TodoEditor : public KDialogBase {
+    Q_OBJECT
 
 
 public:
-	TodoEditor(PilotTodoEntry *todo,
-		struct ToDoAppInfo *appInfo,
-		QWidget *parent, const char *name=0L);
-	~TodoEditor();
+    TodoEditor(PilotTodoEntry *todo,
+               struct ToDoAppInfo *appInfo,
+               QWidget *parent, const char *name = 0L);
+    ~TodoEditor();
 
 
 signals:
-	void recordChangeComplete ( PilotTodoEntry* );
+    void recordChangeComplete(PilotTodoEntry *);
 
 public slots:
-	void slotOk();
-	void slotCancel();
-	void updateRecord(PilotTodoEntry *);
+    void slotOk();
+    void slotCancel();
+    void updateRecord(PilotTodoEntry *);
 
 private:
-	TodoEditorBase*fWidget;
-	bool fDeleteOnCancel;
+    TodoEditorBase *fWidget;
+    bool fDeleteOnCancel;
 
-	PilotTodoEntry* fTodo;
-	struct ToDoAppInfo *fAppInfo;
+    PilotTodoEntry *fTodo;
+    struct ToDoAppInfo *fAppInfo;
 
-	void fillFields();
+    void fillFields();
 };
 #endif
 

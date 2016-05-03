@@ -70,26 +70,25 @@
 *   the virtual tickle() method; deals with cancels through the
 *   shared fDone variable.
 */
-class TickleThread : public QThread
-{
+class TickleThread : public QThread {
 public:
-	TickleThread(KPilotLink *d, bool *done, int timeout) :
-		QThread(),
-		fHandle(d),
-		fDone(done),
-		fTimeout(timeout)
-	{ };
-	virtual ~TickleThread();
+    TickleThread(KPilotLink *d, bool *done, int timeout) :
+        QThread(),
+        fHandle(d),
+        fDone(done),
+        fTimeout(timeout)
+    { };
+    virtual ~TickleThread();
 
-	virtual void run();
+    virtual void run();
 
-	static const int ChecksPerSecond = 5;
-	static const int SecondsPerTickle = 5;
+    static const int ChecksPerSecond = 5;
+    static const int SecondsPerTickle = 5;
 
 private:
-	KPilotLink *fHandle;
-	bool *fDone;
-	int fTimeout;
+    KPilotLink *fHandle;
+    bool *fDone;
+    int fTimeout;
 } ;
 
 TickleThread::~TickleThread()
@@ -98,35 +97,35 @@ TickleThread::~TickleThread()
 
 void TickleThread::run()
 {
-	FUNCTIONSETUP;
-	int subseconds = ChecksPerSecond;
-	int ticktock = SecondsPerTickle;
-	int timeout = fTimeout;
-	DEBUGKPILOT << fname << ": Running for "
-		<< timeout << " seconds." << endl;
-	DEBUGKPILOT << fname << ": Done @" << (void *) fDone << endl;
+    FUNCTIONSETUP;
+    int subseconds = ChecksPerSecond;
+    int ticktock = SecondsPerTickle;
+    int timeout = fTimeout;
+    DEBUGKPILOT << fname << ": Running for "
+                << timeout << " seconds." << endl;
+    DEBUGKPILOT << fname << ": Done @" << (void *) fDone << endl;
 
-	while (!(*fDone))
-	{
-		QThread::msleep(1000/ChecksPerSecond);
-		if (!(--subseconds))
-		{
-			if (timeout)
-			{
-				if (!(--timeout))
-				{
-					QApplication::postEvent(fHandle, new QEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
-					break;
-				}
-			}
-			subseconds=ChecksPerSecond;
-			if (!(--ticktock))
-			{
-				ticktock=SecondsPerTickle;
-				fHandle->tickle();
-			}
-		}
-	}
+    while(!(*fDone))
+    {
+        QThread::msleep(1000 / ChecksPerSecond);
+        if(!(--subseconds))
+        {
+            if(timeout)
+            {
+                if(!(--timeout))
+                {
+                    QApplication::postEvent(fHandle, new QEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
+                    break;
+                }
+            }
+            subseconds = ChecksPerSecond;
+            if(!(--ticktock))
+            {
+                ticktock = SecondsPerTickle;
+                fHandle->tickle();
+            }
+        }
+    }
 }
 
 
@@ -137,47 +136,47 @@ void TickleThread::run()
 
 
 
-KPilotLink::KPilotLink( QObject *parent, const char *name ) :
-	QObject( parent, name ),
-	fPilotPath(QString::null),
-	fPilotUser(0L),
-	fPilotSysInfo(0L),
-	fTickleDone(true),
-	fTickleThread(0L)
+KPilotLink::KPilotLink(QObject *parent, const char *name) :
+    QObject(parent, name),
+    fPilotPath(QString::null),
+    fPilotUser(0L),
+    fPilotSysInfo(0L),
+    fTickleDone(true),
+    fTickleThread(0L)
 
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fPilotUser = new KPilotUser();
-	strncpy( fPilotUser->data()->username, "Henk Westbroek",
-		sizeof(fPilotUser->data()->username)-1);
-	fPilotUser->setLastSuccessfulSyncDate( 1139171019 );
+    fPilotUser = new KPilotUser();
+    strncpy(fPilotUser->data()->username, "Henk Westbroek",
+            sizeof(fPilotUser->data()->username) - 1);
+    fPilotUser->setLastSuccessfulSyncDate(1139171019);
 
-	fPilotSysInfo = new KPilotSysInfo();
-	memset(fPilotSysInfo->sysInfo()->prodID, 0,
-		sizeof(fPilotSysInfo->sysInfo()->prodID));
-	strncpy(fPilotSysInfo->sysInfo()->prodID, "LocalLink",
-		sizeof(fPilotSysInfo->sysInfo()->prodID)-1);
-	fPilotSysInfo->sysInfo()->prodIDLength =
-		strlen(fPilotSysInfo->sysInfo()->prodID);
+    fPilotSysInfo = new KPilotSysInfo();
+    memset(fPilotSysInfo->sysInfo()->prodID, 0,
+           sizeof(fPilotSysInfo->sysInfo()->prodID));
+    strncpy(fPilotSysInfo->sysInfo()->prodID, "LocalLink",
+            sizeof(fPilotSysInfo->sysInfo()->prodID) - 1);
+    fPilotSysInfo->sysInfo()->prodIDLength =
+        strlen(fPilotSysInfo->sysInfo()->prodID);
 }
 
 KPilotLink::~KPilotLink()
 {
-	FUNCTIONSETUP;
-	KPILOT_DELETE(fPilotUser);
-	KPILOT_DELETE(fPilotSysInfo);
+    FUNCTIONSETUP;
+    KPILOT_DELETE(fPilotUser);
+    KPILOT_DELETE(fPilotSysInfo);
 }
 
 /* virtual */ bool KPilotLink::event(QEvent *e)
 {
-	if ((int)e->type() == EventTickleTimeout)
-	{
-		stopTickle();
-		emit timeout();
-		return true;
-	}
-	else return QObject::event(e);
+    if((int)e->type() == EventTickleTimeout)
+    {
+        stopTickle();
+        emit timeout();
+        return true;
+    }
+    else return QObject::event(e);
 }
 
 /*
@@ -185,88 +184,88 @@ Start a tickle thread with the indicated timeout.
 */
 void KPilotLink::startTickle(unsigned int timeout)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	Q_ASSERT(fTickleDone);
+    Q_ASSERT(fTickleDone);
 
-	/*
-	** We've told the thread to finish up, but it hasn't
-	** done so yet - so wait for it to do so, should be
-	** only 200ms at most.
-	*/
-	if (fTickleDone && fTickleThread)
-	{
-		fTickleThread->wait();
-		KPILOT_DELETE(fTickleThread);
-	}
+    /*
+    ** We've told the thread to finish up, but it hasn't
+    ** done so yet - so wait for it to do so, should be
+    ** only 200ms at most.
+    */
+    if(fTickleDone && fTickleThread)
+    {
+        fTickleThread->wait();
+        KPILOT_DELETE(fTickleThread);
+    }
 
-	DEBUGKPILOT << fname << ": Done @" << (void *) (&fTickleDone) << endl;
+    DEBUGKPILOT << fname << ": Done @" << (void *)(&fTickleDone) << endl;
 
-	fTickleDone = false;
-	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
-	fTickleThread->start();
+    fTickleDone = false;
+    fTickleThread = new TickleThread(this, &fTickleDone, timeout);
+    fTickleThread->start();
 }
 
 void KPilotLink::stopTickle()
 {
-	FUNCTIONSETUP;
-	fTickleDone = true;
-	if (fTickleThread)
-	{
-		fTickleThread->wait();
-		KPILOT_DELETE(fTickleThread);
-	}
+    FUNCTIONSETUP;
+    fTickleDone = true;
+    if(fTickleThread)
+    {
+        fTickleThread->wait();
+        KPILOT_DELETE(fTickleThread);
+    }
 }
 
-unsigned int KPilotLink::installFiles(const QStringList & l, const bool deleteFiles)
+unsigned int KPilotLink::installFiles(const QStringList &l, const bool deleteFiles)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QStringList::ConstIterator i,e;
-	unsigned int k = 0;
-	unsigned int n = 0;
-	unsigned int total = l.count();
+    QStringList::ConstIterator i, e;
+    unsigned int k = 0;
+    unsigned int n = 0;
+    unsigned int total = l.count();
 
-	for (i = l.begin(), e = l.end(); i != e; ++i)
-	{
-		emit logProgress(QString::null,
-			(int) ((100.0 / total) * (float) n));
+    for(i = l.begin(), e = l.end(); i != e; ++i)
+    {
+        emit logProgress(QString::null,
+                         (int)((100.0 / total) * (float) n));
 
-		if (installFile(*i, deleteFiles))
-			k++;
-		n++;
-	}
-	emit logProgress(QString::null, 100);
+        if(installFile(*i, deleteFiles))
+            k++;
+        n++;
+    }
+    emit logProgress(QString::null, 100);
 
-	return k;
+    return k;
 }
 
-void KPilotLink::addSyncLogEntry(const QString & entry, bool log)
+void KPilotLink::addSyncLogEntry(const QString &entry, bool log)
 {
-	FUNCTIONSETUP;
-	if (entry.isEmpty()) return;
+    FUNCTIONSETUP;
+    if(entry.isEmpty()) return;
 
-	addSyncLogEntryImpl(entry);
-	if (log)
-	{
-		emit logMessage(entry);
-	}
+    addSyncLogEntryImpl(entry);
+    if(log)
+    {
+        emit logMessage(entry);
+    }
 }
 
 
 /* virtual */ int KPilotLink::openConduit()
 {
-	return 0;
+    return 0;
 }
 
 /* virtual */ int KPilotLink::pilotSocket() const
 {
-	return -1;
+    return -1;
 }
 
-/* virtual */ PilotDatabase *KPilotLink::database( const DBInfo *info )
+/* virtual */ PilotDatabase *KPilotLink::database(const DBInfo *info)
 {
-	FUNCTIONSETUP;
-	return database( Pilot::fromPilot( info->name ) );
+    FUNCTIONSETUP;
+    return database(Pilot::fromPilot(info->name));
 }
 

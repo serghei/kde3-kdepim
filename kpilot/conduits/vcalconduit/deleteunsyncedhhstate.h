@@ -35,19 +35,18 @@ class VCalConduitBase;
 /**
  * State to handle delete unsynced pc records. @see vcal-conduitstate.h
  */
-class DeleteUnsyncedHHState : public ConduitState
-{
+class DeleteUnsyncedHHState : public ConduitState {
 private:
-	ConduitState *fNextState;
-	int fPilotIndex;
+    ConduitState *fNextState;
+    int fPilotIndex;
 
 public:
-	DeleteUnsyncedHHState();
-	virtual ~DeleteUnsyncedHHState();
+    DeleteUnsyncedHHState();
+    virtual ~DeleteUnsyncedHHState();
 
-	virtual void startSync( ConduitAction* );
-	virtual void handleRecord( ConduitAction* );
-	virtual void finishSync( ConduitAction* );
+    virtual void startSync(ConduitAction *);
+    virtual void handleRecord(ConduitAction *);
+    virtual void finishSync(ConduitAction *);
 };
 
 #endif

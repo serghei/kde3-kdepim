@@ -25,22 +25,20 @@
 #include <qobject.h>
 #include <kxmlguiclient.h>
 
-namespace Komposer
-{
-  class Core;
+namespace Komposer {
+class Core;
 
-  class Plugin : public QObject,
-                 virtual public KXMLGUIClient
-  {
+class Plugin : public QObject,
+    virtual public KXMLGUIClient {
     Q_OBJECT
-  public:
+public:
     virtual ~Plugin();
 
-  signals:
-    void statusMessage( const QString & );
+signals:
+    void statusMessage(const QString &);
     void readyForUnload();
 
-  protected slots:
+protected slots:
     /**
      * Called when a new message is created.
      */
@@ -59,16 +57,16 @@ namespace Komposer
 
     virtual void aboutToUnload();
 
-  protected:
+protected:
     Core *core() const;
-  protected:
+protected:
     friend class PluginManager;
-    Plugin( QObject *parent, const char *name, const QStringList& args = QStringList() );
+    Plugin(QObject *parent, const char *name, const QStringList &args = QStringList());
 
-  private:
+private:
     class Private;
     Private *d;
-  };
+};
 
 }
 

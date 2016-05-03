@@ -24,22 +24,21 @@
 
 #include <qwidget.h>
 
-class OverViewPage : public QWidget
-{
-  Q_OBJECT
+class OverViewPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    OverViewPage( QWidget *parent, const char *name = 0 );
+public:
+    OverViewPage(QWidget *parent, const char *name = 0);
     ~OverViewPage();
 
-  private slots:
+private slots:
     void showWizardEGroupware();
     void showWizardKolab();
     void showWizardSlox();
     void showWizardGroupwise();
     void showWizardExchange();
 
-  signals:
+signals:
     void cancel();
 };
 

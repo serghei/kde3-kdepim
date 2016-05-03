@@ -1,6 +1,6 @@
 /*
     This file is part of libkdepim.
-    Copyright (c) 2004 Daniel Molkentin <molkentin@kde.org> 
+    Copyright (c) 2004 Daniel Molkentin <molkentin@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,32 +26,34 @@
 
 namespace KPIM {
 
-/** 
+/**
   This class provides a KLineEdit which contains a greyed-out hinting
   text as long as the user didn't enter any text
 
   @short LineEdit with customizable "Click here" text
   @author Daniel Molkentin
 */
-class KDE_EXPORT ClickLineEdit : public KLineEdit
-{
-  Q_OBJECT
-  Q_PROPERTY( QString clickMessage READ clickMessage WRITE setClickMessage )
-  public:
-    ClickLineEdit( QWidget *parent, const QString &msg = QString::null, const char* name = 0 );
+class KDE_EXPORT ClickLineEdit : public KLineEdit {
+    Q_OBJECT
+    Q_PROPERTY(QString clickMessage READ clickMessage WRITE setClickMessage)
+public:
+    ClickLineEdit(QWidget *parent, const QString &msg = QString::null, const char *name = 0);
     ~ClickLineEdit();
 
-    void setClickMessage( const QString &msg );
-    QString clickMessage() const { return mClickMessage; } 
-  
-    virtual void setText( const QString& txt );
+    void setClickMessage(const QString &msg);
+    QString clickMessage() const
+    {
+        return mClickMessage;
+    }
 
-  protected:
-    virtual void drawContents( QPainter *p );
-    virtual void focusInEvent( QFocusEvent *ev );
-    virtual void focusOutEvent( QFocusEvent *ev );
+    virtual void setText(const QString &txt);
 
-  private:
+protected:
+    virtual void drawContents(QPainter *p);
+    virtual void focusInEvent(QFocusEvent *ev);
+    virtual void focusOutEvent(QFocusEvent *ev);
+
+private:
     QString mClickMessage;
     bool mDrawClickMsg;
 

@@ -28,10 +28,9 @@ class QCheckBox;
 class QSpinBox;
 class QGroupBox;
 
-class KDE_EXPORT GroupwiseWizard : public KConfigWizard
-{
+class KDE_EXPORT GroupwiseWizard : public KConfigWizard {
     Q_OBJECT
-  public:
+public:
     GroupwiseWizard();
     ~GroupwiseWizard();
 
@@ -39,10 +38,10 @@ class KDE_EXPORT GroupwiseWizard : public KConfigWizard
     void usrReadConfig();
     void usrWriteConfig();
 
-  protected slots:
-    void slotAboutToShowPage( QWidget * );
+protected slots:
+    void slotAboutToShowPage(QWidget *);
 
-  private:
+private:
     KLineEdit *mServerEdit;
     KLineEdit *mPathEdit;
     QSpinBox *mPortEdit;

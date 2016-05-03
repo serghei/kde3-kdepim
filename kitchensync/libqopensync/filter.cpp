@@ -26,7 +26,7 @@
 using namespace QSync;
 
 Filter::Filter()
-  : mFilter( 0 )
+    : mFilter(0)
 {
 }
 
@@ -36,20 +36,20 @@ Filter::~Filter()
 
 bool Filter::isValid() const
 {
-  return (mFilter != 0);
+    return (mFilter != 0);
 }
 
-void Filter::setConfiguration( const QString &configuration )
+void Filter::setConfiguration(const QString &configuration)
 {
-  Q_ASSERT( mFilter );
+    Q_ASSERT(mFilter);
 
-  osync_filter_set_config( mFilter, (const char*)configuration.utf8() );
+    osync_filter_set_config(mFilter, (const char *)configuration.utf8());
 }
 
 QString Filter::configuration() const
 {
-  Q_ASSERT( mFilter );
+    Q_ASSERT(mFilter);
 
-  return QString::fromUtf8( osync_filter_get_config( mFilter ) );
+    return QString::fromUtf8(osync_filter_get_config(mFilter));
 }
 

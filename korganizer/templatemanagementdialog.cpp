@@ -45,88 +45,92 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-TemplateManagementDialog::TemplateManagementDialog(QWidget *parent, const QStringList &templates )
-    :KDialogBase( parent, "template_management_dialog", true,
-                        i18n("Manage Templates"), Ok|Cancel, Ok, true , i18n("Apply Template")),
-      m_templates( templates ), m_newTemplate( QString::null ), m_changed( false )
+TemplateManagementDialog::TemplateManagementDialog(QWidget *parent, const QStringList &templates)
+    : KDialogBase(parent, "template_management_dialog", true,
+                  i18n("Manage Templates"), Ok | Cancel, Ok, true , i18n("Apply Template")),
+      m_templates(templates), m_newTemplate(QString::null), m_changed(false)
 {
-  m_base = new TemplateManagementDialog_base( this, "template_management_dialog_base" );
-  setMainWidget( m_base );
-  connect( m_base->m_buttonAdd, SIGNAL( clicked() ),
-           SLOT( slotAddTemplate() ) );
-  connect( m_base->m_buttonDelete, SIGNAL( clicked() ),
-           SLOT( slotDeleteTemplate() ) );
-  m_base->m_listBox->insertStringList( m_templates );
-  connect( m_base->m_listBox, SIGNAL( selectionChanged( QListBoxItem * ) ),
-           SLOT( slotUpdateDeleteButton( QListBoxItem * ) ) );
-  connect( m_base->m_buttonApply, SIGNAL( clicked() ),
-           SLOT( slotApplyTemplate() ) );
+    m_base = new TemplateManagementDialog_base(this, "template_management_dialog_base");
+    setMainWidget(m_base);
+    connect(m_base->m_buttonAdd, SIGNAL(clicked()),
+            SLOT(slotAddTemplate()));
+    connect(m_base->m_buttonDelete, SIGNAL(clicked()),
+            SLOT(slotDeleteTemplate()));
+    m_base->m_listBox->insertStringList(m_templates);
+    connect(m_base->m_listBox, SIGNAL(selectionChanged(QListBoxItem *)),
+            SLOT(slotUpdateDeleteButton(QListBoxItem *)));
+    connect(m_base->m_buttonApply, SIGNAL(clicked()),
+            SLOT(slotApplyTemplate()));
 
 }
 
 void TemplateManagementDialog::slotAddTemplate()
 {
-  bool ok;
-  bool duplicate = false;
-  const QString newTemplate = KInputDialog::getText( i18n("Template Name"),
-                                       i18n("Please enter a name for the new template:"),
-                                       i18n("New Template"), &ok );
-  if ( newTemplate.isEmpty() || !ok ) return;
-  if ( m_templates.find( newTemplate) != m_templates.end() ) {
-    int rc = KMessageBox::warningContinueCancel( this, i18n("A template with that name already exists, do you want to overwrite it?."), i18n("Duplicate Template Name"), i18n("Overwrite"));
-    if ( rc == KMessageBox::Cancel ) {
-      QTimer::singleShot(0, this, SLOT( slotAddTemplate() ) );
-      return;
+    bool ok;
+    bool duplicate = false;
+    const QString newTemplate = KInputDialog::getText(i18n("Template Name"),
+                                i18n("Please enter a name for the new template:"),
+                                i18n("New Template"), &ok);
+    if(newTemplate.isEmpty() || !ok) return;
+    if(m_templates.find(newTemplate) != m_templates.end())
+    {
+        int rc = KMessageBox::warningContinueCancel(this, i18n("A template with that name already exists, do you want to overwrite it?."),
+                 i18n("Duplicate Template Name"), i18n("Overwrite"));
+        if(rc == KMessageBox::Cancel)
+        {
+            QTimer::singleShot(0, this, SLOT(slotAddTemplate()));
+            return;
+        }
+        duplicate = true;
     }
-    duplicate = true;
-  }
-  if ( !duplicate ) {
-    m_templates.append( newTemplate );
-    m_base->m_listBox->clear();
-    m_base->m_listBox->insertStringList( m_templates );
-  }
-  m_newTemplate = newTemplate;
-  m_changed = true;
-  // From this point on we need to keep the original event around until the user has
-  // closed the dialog, applying a template would make little sense
-  m_base->m_buttonApply->setEnabled( false );
-  // neither does adding it again
-  m_base->m_buttonAdd->setEnabled( false );
+    if(!duplicate)
+    {
+        m_templates.append(newTemplate);
+        m_base->m_listBox->clear();
+        m_base->m_listBox->insertStringList(m_templates);
+    }
+    m_newTemplate = newTemplate;
+    m_changed = true;
+    // From this point on we need to keep the original event around until the user has
+    // closed the dialog, applying a template would make little sense
+    m_base->m_buttonApply->setEnabled(false);
+    // neither does adding it again
+    m_base->m_buttonAdd->setEnabled(false);
 }
 
 void TemplateManagementDialog::slotDeleteTemplate()
 {
-  QListBoxItem *const item = m_base->m_listBox->selectedItem();
-  if ( !item ) return; // can't happen (TM)
-  unsigned int current = m_base->m_listBox->index(item);
-  m_templates.remove( item->text() );
-  m_base->m_listBox->removeItem( m_base->m_listBox->currentItem() );
-  m_changed = true;
-  m_base->m_listBox->setSelected(QMAX(current -1, 0), true);
+    QListBoxItem *const item = m_base->m_listBox->selectedItem();
+    if(!item) return;    // can't happen (TM)
+    unsigned int current = m_base->m_listBox->index(item);
+    m_templates.remove(item->text());
+    m_base->m_listBox->removeItem(m_base->m_listBox->currentItem());
+    m_changed = true;
+    m_base->m_listBox->setSelected(QMAX(current - 1, 0), true);
 }
 
-void TemplateManagementDialog::slotUpdateDeleteButton( QListBoxItem *item )
+void TemplateManagementDialog::slotUpdateDeleteButton(QListBoxItem *item)
 {
-  m_base->m_buttonDelete->setEnabled( item != 0 );
+    m_base->m_buttonDelete->setEnabled(item != 0);
 }
 
 void TemplateManagementDialog::slotApplyTemplate()
 {
-  // Once the user has applied the current template to the event, it makes no sense to add it again
-  m_base->m_buttonAdd->setEnabled( false );
-  const QString &cur = m_base->m_listBox->currentText();
-  if ( !cur.isEmpty() && cur != m_newTemplate )
-    emit loadTemplate( cur );
+    // Once the user has applied the current template to the event, it makes no sense to add it again
+    m_base->m_buttonAdd->setEnabled(false);
+    const QString &cur = m_base->m_listBox->currentText();
+    if(!cur.isEmpty() && cur != m_newTemplate)
+        emit loadTemplate(cur);
 }
 
 void TemplateManagementDialog::slotOk()
 {
-  // failure is not an option *cough*
-  if ( !m_newTemplate.isEmpty() )
-    emit saveTemplate( m_newTemplate );
-  if ( m_changed )
-    emit templatesChanged( m_templates );
-  KDialogBase::slotOk();
+    // failure is not an option *cough*
+    if(!m_newTemplate.isEmpty())
+        emit saveTemplate(m_newTemplate);
+    if(m_changed)
+        emit templatesChanged(m_templates);
+    KDialogBase::slotOk();
 }
 
 

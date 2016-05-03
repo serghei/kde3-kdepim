@@ -43,12 +43,12 @@
 
 using namespace KCal;
 
-ResourceFeaturePlan::ResourceFeaturePlan( const KConfig *config )
-  : ResourceCached( config ), mLock( true )
+ResourceFeaturePlan::ResourceFeaturePlan(const KConfig *config)
+    : ResourceCached(config), mLock(true)
 {
-  mPrefs = new Prefs;
+    mPrefs = new Prefs;
 
-  if ( config ) readConfig( config );
+    if(config) readConfig(config);
 }
 
 ResourceFeaturePlan::~ResourceFeaturePlan()
@@ -57,95 +57,100 @@ ResourceFeaturePlan::~ResourceFeaturePlan()
 
 Prefs *ResourceFeaturePlan::prefs()
 {
-  return mPrefs;
+    return mPrefs;
 }
 
-void ResourceFeaturePlan::readConfig( const KConfig * )
+void ResourceFeaturePlan::readConfig(const KConfig *)
 {
-  mPrefs->readConfig();
+    mPrefs->readConfig();
 }
 
-void ResourceFeaturePlan::writeConfig( KConfig *config )
+void ResourceFeaturePlan::writeConfig(KConfig *config)
 {
-  ResourceCalendar::writeConfig( config );
+    ResourceCalendar::writeConfig(config);
 
-  mPrefs->writeConfig();
+    mPrefs->writeConfig();
 }
 
 bool ResourceFeaturePlan::doLoad()
 {
-  kdDebug() << "ResourceFeaturePlan::load()" << endl;
+    kdDebug() << "ResourceFeaturePlan::load()" << endl;
 
-  mCalendar.close();
+    mCalendar.close();
 
-  FeaturesParser parser;
+    FeaturesParser parser;
 
-  Features *features = parser.parseFile( mPrefs->filename() );
+    Features *features = parser.parseFile(mPrefs->filename());
 
-  if ( !features ) {
-    return false;
-  } else {
-    Category::List categories = features->categoryList();
+    if(!features)
+    {
+        return false;
+    }
+    else
+    {
+        Category::List categories = features->categoryList();
 
-    KCal::Todo *masterTodo = new KCal::Todo;
-    masterTodo->setSummary( i18n("Feature Plan") );
-    mCalendar.addTodo( masterTodo );
+        KCal::Todo *masterTodo = new KCal::Todo;
+        masterTodo->setSummary(i18n("Feature Plan"));
+        mCalendar.addTodo(masterTodo);
 
-    insertCategories( categories, masterTodo );
-  }
-  
-  emit resourceChanged( this );
+        insertCategories(categories, masterTodo);
+    }
 
-  return true;
+    emit resourceChanged(this);
+
+    return true;
 }
 
-void ResourceFeaturePlan::insertCategories( const Category::List &categories,
-                                            Todo *parent )
+void ResourceFeaturePlan::insertCategories(const Category::List &categories,
+        Todo *parent)
 {
-  Category::List::ConstIterator it;
-  for( it = categories.begin(); it != categories.end(); ++it ) {
-    Category *c = *it;
-  
-    Todo *categoryTodo = new Todo;
-    categoryTodo->setSummary( c->name() );
-    categoryTodo->setRelatedTo( parent );
+    Category::List::ConstIterator it;
+    for(it = categories.begin(); it != categories.end(); ++it)
+    {
+        Category *c = *it;
 
-    insertCategories( c->categoryList(), categoryTodo );  
-  
-    Feature::List features = (*it)->featureList();
-    Feature::List::ConstIterator it2;
-    for( it2 = features.begin(); it2 != features.end(); ++it2 ) {
-      Feature *f = *it2;
-      Todo *todo = new Todo;
+        Todo *categoryTodo = new Todo;
+        categoryTodo->setSummary(c->name());
+        categoryTodo->setRelatedTo(parent);
 
-      QString summary = f->summary();
-      int pos = summary.find( '\n' );
-      if ( pos > 0 ) summary = summary.left( pos ) + "...";
-      todo->setSummary( summary );
-      
-      todo->setDescription( f->summary() );
- 
-      todo->setRelatedTo( categoryTodo );
-      
-      int completed;
-      if ( f->status() == "done" ) completed = 100;
-      else if ( f->status() == "inprogress" ) completed = 50;
-      else completed = 0;
-      todo->setPercentComplete( completed );
- 
-      mCalendar.addTodo( todo );
+        insertCategories(c->categoryList(), categoryTodo);
+
+        Feature::List features = (*it)->featureList();
+        Feature::List::ConstIterator it2;
+        for(it2 = features.begin(); it2 != features.end(); ++it2)
+        {
+            Feature *f = *it2;
+            Todo *todo = new Todo;
+
+            QString summary = f->summary();
+            int pos = summary.find('\n');
+            if(pos > 0) summary = summary.left(pos) + "...";
+            todo->setSummary(summary);
+
+            todo->setDescription(f->summary());
+
+            todo->setRelatedTo(categoryTodo);
+
+            int completed;
+            if(f->status() == "done") completed = 100;
+            else if(f->status() == "inprogress") completed = 50;
+            else completed = 0;
+            todo->setPercentComplete(completed);
+
+            mCalendar.addTodo(todo);
+        }
     }
-  }
 }
 
 bool ResourceFeaturePlan::doSave()
 {
-  return true;
+    return true;
 }
 
 KABC::Lock *ResourceFeaturePlan::lock()
 {
-  return &mLock;
+    return &mLock;
 }
 
 

@@ -27,8 +27,7 @@
 #include <klistview.h>
 #include <kurl.h>
 
-namespace Akregator
-{
+namespace Akregator {
 class Feed;
 class Folder;
 class NodeList;
@@ -36,45 +35,44 @@ class TreeNode;
 class TreeNodeItem;
 class TagNodeList;
 
-class NodeListView : public KListView
-{
-Q_OBJECT
+class NodeListView : public KListView {
+    Q_OBJECT
 public:
-    NodeListView( QWidget *parent = 0, const char *name = 0 );
+    NodeListView(QWidget *parent = 0, const char *name = 0);
     virtual ~NodeListView();
-    
+
     /** sets the feed list to show. Disconnects from the old feed list, if there is any. */
-    void setNodeList(NodeList* nodeList);
+    void setNodeList(NodeList *nodeList);
 
     /** Returns root node ("All Feeds").
         * @return root node
         */
-    Folder* rootNode();
-    
+    Folder *rootNode();
+
     /** Returns the currently selected node, @c null when no one is selected.
         @return selected node
         */
-    TreeNode* selectedNode();
+    TreeNode *selectedNode();
 
     /** selects @c node, if it exists
         * @param node the node to select
         */
-    void setSelectedNode(TreeNode* node);
+    void setSelectedNode(TreeNode *node);
 
     /** Find first node with title @c title
         returns 0 if no node was found
     @param title
     @return node
-        */ 
-    TreeNode* findNodeByTitle(const QString& title);
+        */
+    TreeNode *findNodeByTitle(const QString &title);
 
     /** ensures that @c node is visible. */
-    void ensureNodeVisible(TreeNode* node);
+    void ensureNodeVisible(TreeNode *node);
 
     /** activates in-place renaming for the item of @c node */
-    void startNodeRenaming(TreeNode* node);
-    
-    
+    void startNodeRenaming(TreeNode *node);
+
+
     /** reimplemented: clears the view and creates the root node ("All Feeds") */
     virtual void clear();
 
@@ -82,7 +80,7 @@ public:
     void setShowTagFolders(bool enabled);
 
 public slots:
-    
+
     /** go one item up */
     void slotItemUp();
     /** go one item down */
@@ -100,78 +98,78 @@ public slots:
     void slotNextFeed();
     void slotPrevUnreadFeed();
     void slotNextUnreadFeed();
-    
+
 signals:
-    void signalDropped (KURL::List &, TreeNode*, Folder*);
-    void signalNodeSelected(TreeNode*);
-    void signalRootNodeChanged(NodeListView*, TreeNode*);
-    void signalContextMenu(KListView*, TreeNode*, const QPoint&);
+    void signalDropped(KURL::List &, TreeNode *, Folder *);
+    void signalNodeSelected(TreeNode *);
+    void signalRootNodeChanged(NodeListView *, TreeNode *);
+    void signalContextMenu(KListView *, TreeNode *, const QPoint &);
 
 public:         // compat with KDE-3.x assertions, remove for KDE 4
-// protected:
+    // protected:
 
     /** Find item belonging to tree node @c node, @c null when node is not in tree
     @return item representing node
     @param node a tree node */
 
-    TreeNodeItem* findNodeItem(TreeNode* node);
+    TreeNodeItem *findNodeItem(TreeNode *node);
 
     /** reimplemented to return TreeNodeItem* */
-    virtual TreeNodeItem* findItemByTitle(const QString& text, int column, ComparisonFlags compare = ExactMatch | CaseSensitive ) const;
+    virtual TreeNodeItem *findItemByTitle(const QString &text, int column, ComparisonFlags compare = ExactMatch | CaseSensitive) const;
 
     /** observe @c node: connect status change signals of @c node to slots */
-    virtual void connectToNode(TreeNode* node);
+    virtual void connectToNode(TreeNode *node);
 
     /** stop observing @c node: disconnect from status change signals of @c node */
-    virtual void disconnectFromNode(TreeNode* node);
+    virtual void disconnectFromNode(TreeNode *node);
 
-    virtual void connectToNodeList(NodeList* list);
-    virtual void disconnectFromNodeList(NodeList* list);
-    
-    virtual void drawContentsOffset( QPainter * p, int ox, int oy,
-                                        int cx, int cy, int cw, int ch );
-    virtual void contentsDragMoveEvent(QDragMoveEvent* event);
+    virtual void connectToNodeList(NodeList *list);
+    virtual void disconnectFromNodeList(NodeList *list);
+
+    virtual void drawContentsOffset(QPainter *p, int ox, int oy,
+                                    int cx, int cy, int cw, int ch);
+    virtual void contentsDragMoveEvent(QDragMoveEvent *event);
     virtual bool acceptDrag(QDropEvent *event) const;
-    virtual void movableDropEvent(QListViewItem* parent, QListViewItem* afterme);
+    virtual void movableDropEvent(QListViewItem *parent, QListViewItem *afterme);
 
     virtual QDragObject *dragObject();
-            
+
 
 protected slots:
-    
 
-    void slotDropped(QDropEvent *e, QListViewItem* after);
-    void slotRootNodeChanged(TreeNode*);
-    virtual void slotSelectionChanged(QListViewItem* item);
-    virtual void slotContextMenu(KListView* list, QListViewItem* item, const QPoint& p);
-    virtual void slotItemRenamed(QListViewItem* item, int col, const QString& text);
-    virtual void slotFeedFetchStarted(Feed* feed);
-    virtual void slotFeedFetchAborted(Feed* feed);
-    virtual void slotFeedFetchError(Feed* feed);
-    virtual void slotFeedFetchCompleted(Feed* feed);
+
+    void slotDropped(QDropEvent *e, QListViewItem *after);
+    void slotRootNodeChanged(TreeNode *);
+    virtual void slotSelectionChanged(QListViewItem *item);
+    virtual void slotContextMenu(KListView *list, QListViewItem *item, const QPoint &p);
+    virtual void slotItemRenamed(QListViewItem *item, int col, const QString &text);
+    virtual void slotFeedFetchStarted(Feed *feed);
+    virtual void slotFeedFetchAborted(Feed *feed);
+    virtual void slotFeedFetchError(Feed *feed);
+    virtual void slotFeedFetchCompleted(Feed *feed);
     void openFolder();
 
     /** called when a node is added to the tree. If no item for the node exists, it will be created */
-    virtual void slotNodeAdded(TreeNode* node);
-    
-    /** Called when a node in the tree is taken out of the tree (parent->removeChild()) 
-    
-    Removes a node and its children from the tree. Note that it doesn't delete the corresponding view items (get deleted only when the node itself gets deleted) */
-    virtual void slotNodeRemoved(Folder* parent, TreeNode* node);
-    
-    /** deletes the item belonging to the deleted node */
-    virtual void slotNodeDestroyed(TreeNode* node);
-    
-    /** update the item belonging to the node */
-    virtual void slotNodeChanged(TreeNode* node);
+    virtual void slotNodeAdded(TreeNode *node);
 
-    virtual void slotNodeListDestroyed(NodeList*);
+    /** Called when a node in the tree is taken out of the tree (parent->removeChild())
+
+    Removes a node and its children from the tree. Note that it doesn't delete the corresponding view items (get deleted only when the node itself gets deleted) */
+    virtual void slotNodeRemoved(Folder *parent, TreeNode *node);
+
+    /** deletes the item belonging to the deleted node */
+    virtual void slotNodeDestroyed(TreeNode *node);
+
+    /** update the item belonging to the node */
+    virtual void slotNodeChanged(TreeNode *node);
+
+    virtual void slotNodeListDestroyed(NodeList *);
 
 public:         // compat with KDE-3.x assertions, remove for KDE 4
-// private:
+    // private:
     friend class ConnectNodeVisitor;
     class ConnectNodeVisitor;
-    
+
     friend class DisconnectNodeVisitor;
     class DisconnectNodeVisitor;
 
@@ -180,25 +178,24 @@ public:         // compat with KDE-3.x assertions, remove for KDE 4
 
     friend class DeleteItemVisitor;
     class DeleteItemVisitor;
-    
+
     friend class DragAndDropVisitor;
     class DragAndDropVisitor;
 
     class NodeListViewPrivate;
-    NodeListViewPrivate* d;
+    NodeListViewPrivate *d;
 };
 
 
-class TagNodeListView : public NodeListView
-{
+class TagNodeListView : public NodeListView {
     Q_OBJECT
-    public:
-        TagNodeListView(QWidget *parent = 0, const char *name = 0) {} 
-        virtual ~TagNodeListView() {}
+public:
+    TagNodeListView(QWidget *parent = 0, const char *name = 0) {}
+    virtual ~TagNodeListView() {}
 
-    private:
-        class TagNodeListViewPrivate;
-        TagNodeListViewPrivate* d;
+private:
+    class TagNodeListViewPrivate;
+    TagNodeListViewPrivate *d;
 };
 
 } // namespace Akregator

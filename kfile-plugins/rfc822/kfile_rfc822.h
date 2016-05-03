@@ -24,14 +24,13 @@
 
 class QStringList;
 
-class KRfc822Plugin: public KFilePlugin
-{
+class KRfc822Plugin: public KFilePlugin {
     Q_OBJECT
-    
+
 public:
-    KRfc822Plugin( QObject *parent, const char *name, const QStringList& args );
-    
-    virtual bool readInfo( KFileMetaInfo& info, uint what);
+    KRfc822Plugin(QObject *parent, const char *name, const QStringList &args);
+
+    virtual bool readInfo(KFileMetaInfo &info, uint what);
 };
 
 #endif

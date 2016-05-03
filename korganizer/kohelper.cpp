@@ -34,51 +34,56 @@
 #include "koprefs.h"
 #include "kohelper.h"
 
-QColor KOHelper::resourceColor( KCal::Calendar*calendar, KCal::Incidence*incidence )
+QColor KOHelper::resourceColor(KCal::Calendar *calendar, KCal::Incidence *incidence)
 {
-  QColor resourceColor = QColor(); //Default invalid color
-  //FIXME: dynamic_cast are dirty, Better We implements interface to get the color
-  // from the calendar
-  KCal::CalendarResources *calendarResource = dynamic_cast<KCal::CalendarResources*>( calendar );
+    QColor resourceColor = QColor(); //Default invalid color
+    //FIXME: dynamic_cast are dirty, Better We implements interface to get the color
+    // from the calendar
+    KCal::CalendarResources *calendarResource = dynamic_cast<KCal::CalendarResources *>(calendar);
 
-  if ( calendarResource ) {
-    KCal::ResourceCalendar *resourceCalendar = calendarResource->resource( incidence );
+    if(calendarResource)
+    {
+        KCal::ResourceCalendar *resourceCalendar = calendarResource->resource(incidence);
 
-    if( resourceCalendar ) {
-      QString identifier = resourceCalendar->identifier();
-      resourceColor = *KOPrefs::instance()->resourceColor( identifier );
+        if(resourceCalendar)
+        {
+            QString identifier = resourceCalendar->identifier();
+            resourceColor = *KOPrefs::instance()->resourceColor(identifier);
 
-      if ( !resourceCalendar->subresources().isEmpty() ) {
-        identifier = resourceCalendar->subresourceIdentifier( incidence );
-       if ( identifier.isEmpty() )
-         identifier = resourceCalendar->identifier();
-       QColor subrescolor( *KOPrefs::instance()->resourceColor( identifier ) );
-       if ( subrescolor.isValid() )
-         resourceColor = subrescolor;
-      }
+            if(!resourceCalendar->subresources().isEmpty())
+            {
+                identifier = resourceCalendar->subresourceIdentifier(incidence);
+                if(identifier.isEmpty())
+                    identifier = resourceCalendar->identifier();
+                QColor subrescolor(*KOPrefs::instance()->resourceColor(identifier));
+                if(subrescolor.isValid())
+                    resourceColor = subrescolor;
+            }
+        }
+        //   } else {
+        //     kdDebug(5850) << "resourceColor: Calendar is not a CalendarResources" <<endl;
     }
-//   } else {
-//     kdDebug(5850) << "resourceColor: Calendar is not a CalendarResources" <<endl;
-  }
-  return resourceColor;
+    return resourceColor;
 }
 
-QString KOHelper::resourceLabel(KCal::Calendar * calendar, KCal::Incidence * incidence)
+QString KOHelper::resourceLabel(KCal::Calendar *calendar, KCal::Incidence *incidence)
 {
-  KCal::CalendarResources *calendarResource = dynamic_cast<KCal::CalendarResources*>( calendar );
-  if ( !calendarResource || ! incidence )
-    return QString();
+    KCal::CalendarResources *calendarResource = dynamic_cast<KCal::CalendarResources *>(calendar);
+    if(!calendarResource || ! incidence)
+        return QString();
 
-  KCal::ResourceCalendar *resourceCalendar = calendarResource->resource( incidence );
-  if( resourceCalendar ) {
-    if ( !resourceCalendar->subresources().isEmpty() ) {
-      QString subRes = resourceCalendar->subresourceIdentifier( incidence );
-      if ( subRes.isEmpty() )
+    KCal::ResourceCalendar *resourceCalendar = calendarResource->resource(incidence);
+    if(resourceCalendar)
+    {
+        if(!resourceCalendar->subresources().isEmpty())
+        {
+            QString subRes = resourceCalendar->subresourceIdentifier(incidence);
+            if(subRes.isEmpty())
+                return resourceCalendar->resourceName();
+            return resourceCalendar->labelForSubresource(subRes);
+        }
         return resourceCalendar->resourceName();
-      return resourceCalendar->labelForSubresource( subRes );
     }
-    return resourceCalendar->resourceName();
-  }
 
-  return QString();
+    return QString();
 }

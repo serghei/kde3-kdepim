@@ -30,41 +30,40 @@ struct CustomTemplateItem;
 typedef QDict<CustomTemplateItem> CustomTemplateItemList;
 class KShortcut;
 
-class CustomTemplates : public CustomTemplatesBase
-{
-  Q_OBJECT
+class CustomTemplates : public CustomTemplatesBase {
+    Q_OBJECT
 
-  public:
+public:
 
     enum Type { TUniversal, TReply, TReplyAll, TForward };
 
-  public:
+public:
 
-    CustomTemplates( QWidget *parent = 0, const char *name = 0 );
+    CustomTemplates(QWidget *parent = 0, const char *name = 0);
     ~CustomTemplates();
 
     void load();
     void save();
 
-    QString indexToType( int index );
+    QString indexToType(int index);
 
-  public slots:
+public slots:
 
-    void slotInsertCommand( QString cmd, int adjustCursor = 0 );
+    void slotInsertCommand(QString cmd, int adjustCursor = 0);
 
     void slotTextChanged();
 
     void slotAddClicked();
     void slotRemoveClicked();
     void slotListSelectionChanged();
-    void slotTypeActivated( int index );
-    void slotShortcutCaptured( const KShortcut &shortcut );
+    void slotTypeActivated(int index);
+    void slotShortcutCaptured(const KShortcut &shortcut);
 
-  signals:
+signals:
 
     void changed();
 
-  protected:
+protected:
 
     QListViewItem *mCurrentItem;
     CustomTemplateItemList mItemList;
@@ -77,16 +76,16 @@ class CustomTemplates : public CustomTemplatesBase
 
 struct CustomTemplateItem
 {
-  CustomTemplateItem() {}
-  CustomTemplateItem( const QString &name,
-                      const QString &content,
-                      KShortcut &shortcut,
-                      CustomTemplates::Type type ) :
-    mName( name ), mContent( content ), mShortcut(shortcut), mType( type ) {}
+    CustomTemplateItem() {}
+    CustomTemplateItem(const QString &name,
+                       const QString &content,
+                       KShortcut &shortcut,
+                       CustomTemplates::Type type) :
+        mName(name), mContent(content), mShortcut(shortcut), mType(type) {}
 
-  QString mName, mContent;
-  KShortcut mShortcut;
-  CustomTemplates::Type mType;
+    QString mName, mContent;
+    KShortcut mShortcut;
+    CustomTemplates::Type mType;
 };
 
 #endif // CUSTOMTEMPLATES_H

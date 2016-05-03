@@ -36,52 +36,51 @@
 
 class QLineEdit;
 
-class AddressEditor : public KDialogBase
-{
-	Q_OBJECT
+class AddressEditor : public KDialogBase {
+    Q_OBJECT
 
 
 public:
-	AddressEditor(PilotAddress *address,
-		PilotAddressInfo *appInfo,
-		QWidget *parent, const char *name=0L);
-	~AddressEditor();
+    AddressEditor(PilotAddress *address,
+                  PilotAddressInfo *appInfo,
+                  QWidget *parent, const char *name = 0L);
+    ~AddressEditor();
 
 
 signals:
-	void recordChangeComplete ( PilotAddress* );
+    void recordChangeComplete(PilotAddress *);
 
 public slots:
-	void slotOk();
-	void slotCancel();
-	void updateRecord(PilotAddress *);
+    void slotOk();
+    void slotCancel();
+    void updateRecord(PilotAddress *);
 
 private:
-	bool fDeleteOnCancel;
+    bool fDeleteOnCancel;
 
-	PilotAddress* fAddress;
-	PilotAddressInfo *fAppInfo;
-	// entry fields
-	QLineEdit *fCustom4Field;
-	QLineEdit *fCustom3Field;
-	QLineEdit *fCustom2Field;
-	QLineEdit *fCustom1Field;
-	QLineEdit *fCountryField;
-	QLineEdit *fZipField;
-	QLineEdit *fStateField;
-	QLineEdit *fCityField;
-	QLineEdit *fAddressField;
-	QLineEdit *fPhoneField[5];
-	QLineEdit *fCompanyField;
-	QLineEdit *fTitleField;
-	QLineEdit *fFirstNameField;
-	QLineEdit *fLastNameField;
-	// phone labels (changing!)
-	QLabel    *m_phoneLabel[5];
+    PilotAddress *fAddress;
+    PilotAddressInfo *fAppInfo;
+    // entry fields
+    QLineEdit *fCustom4Field;
+    QLineEdit *fCustom3Field;
+    QLineEdit *fCustom2Field;
+    QLineEdit *fCustom1Field;
+    QLineEdit *fCountryField;
+    QLineEdit *fZipField;
+    QLineEdit *fStateField;
+    QLineEdit *fCityField;
+    QLineEdit *fAddressField;
+    QLineEdit *fPhoneField[5];
+    QLineEdit *fCompanyField;
+    QLineEdit *fTitleField;
+    QLineEdit *fFirstNameField;
+    QLineEdit *fLastNameField;
+    // phone labels (changing!)
+    QLabel    *m_phoneLabel[5];
 
-	void initLayout();
-	void fillFields();
-	QString phoneLabelText(PilotAddress *, const PhoneSlot &i);
+    void initLayout();
+    void fillFields();
+    QString phoneLabelText(PilotAddress *, const PhoneSlot &i);
 };
 #endif
 

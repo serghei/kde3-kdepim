@@ -37,41 +37,43 @@ class QLabel;
 class QProgressBar;
 class QVBox;
 
-class GroupItem : public KWidgetListItem
-{
-  Q_OBJECT
+class GroupItem : public KWidgetListItem {
+    Q_OBJECT
 
-  public:
-    GroupItem( KWidgetList*, SyncProcess *syncProcess );
+public:
+    GroupItem(KWidgetList *, SyncProcess *syncProcess);
     ~GroupItem();
 
-    SyncProcess *syncProcess() const { return mSyncProcess; }
+    SyncProcess *syncProcess() const
+    {
+        return mSyncProcess;
+    }
 
     void update();
 
     void clear();
 
-  signals:
-    void synchronizeGroup( SyncProcess *syncProcess );
-    void abortSynchronizeGroup( SyncProcess *syncProcess );
-    void configureGroup( SyncProcess *syncProcess );
+signals:
+    void synchronizeGroup(SyncProcess *syncProcess);
+    void abortSynchronizeGroup(SyncProcess *syncProcess);
+    void configureGroup(SyncProcess *syncProcess);
 
-  protected slots:
-    void conflict( QSync::SyncMapping );
-    void change( const QSync::SyncChangeUpdate& );
-    void mapping( const QSync::SyncMappingUpdate& );
-    void engine( const QSync::SyncEngineUpdate& );
-    void member( const QSync::SyncMemberUpdate& );
+protected slots:
+    void conflict(QSync::SyncMapping);
+    void change(const QSync::SyncChangeUpdate &);
+    void mapping(const QSync::SyncMappingUpdate &);
+    void engine(const QSync::SyncEngineUpdate &);
+    void member(const QSync::SyncMemberUpdate &);
 
     void synchronize();
     void configure();
 
-    void engineChanged( QSync::Engine *engine );
+    void engineChanged(QSync::Engine *engine);
 
-  private:
+private:
     SyncProcess *mSyncProcess;
     QSync::CallbackHandler *mCallbackHandler;
-    QValueList<MemberItem*> mMemberItems;
+    QValueList<MemberItem *> mMemberItems;
 
     QLabel *mIcon;
     QLabel *mGroupName;
@@ -87,18 +89,23 @@ class GroupItem : public KWidgetListItem
     bool mSynchronizing;
 };
 
-class MemberItem : public QWidget
-{
-  public:
-    MemberItem( QWidget *parent, SyncProcess *syncProcess,
-                const QSync::Member &member );
+class MemberItem : public QWidget {
+public:
+    MemberItem(QWidget *parent, SyncProcess *syncProcess,
+               const QSync::Member &member);
 
-    SyncProcess* syncProcess() const { return mSyncProcess; }
-    QSync::Member member() const { return mMember; }
+    SyncProcess *syncProcess() const
+    {
+        return mSyncProcess;
+    }
+    QSync::Member member() const
+    {
+        return mMember;
+    }
 
-    void setStatusMessage( const QString &msg );
+    void setStatusMessage(const QString &msg);
 
-  private:
+private:
     SyncProcess *mSyncProcess;
     QSync::Member mMember;
 

@@ -32,28 +32,27 @@ class QComboBox;
 class QTimer;
 class KLineEdit;
 
-class IncSearchWidget : public QWidget
-{
-  Q_OBJECT
+class IncSearchWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    IncSearchWidget( QWidget *parent, const char *name = 0 );
+public:
+    IncSearchWidget(QWidget *parent, const char *name = 0);
     ~IncSearchWidget();
 
     KABC::Field::List currentFields() const;
 
-    void setCurrentItem( int pos );
+    void setCurrentItem(int pos);
     int currentItem() const;
 
     void clear();
 
-  signals:
+signals:
     /**
       This signal is emitted whenever the text in the input
       widget is changed. You can get the sorting field by
       @ref currentField.
      */
-    void doSearch( const QString& text );
+    void doSearch(const QString &text);
 
     /**
       Emitted when the up key is pressed.
@@ -65,24 +64,24 @@ class IncSearchWidget : public QWidget
      */
     void scrollDown();
 
-  public slots:
-    void setViewFields( const KABC::Field::List& );
+public slots:
+    void setViewFields(const KABC::Field::List &);
 
-  private slots:
+private slots:
     void announceDoSearch();
     void timeout();
 
-  protected:
-    virtual void keyPressEvent( QKeyEvent* );
+protected:
+    virtual void keyPressEvent(QKeyEvent *);
 
-  private:
+private:
     void initFields();
 
-    QComboBox* mFieldCombo;
-    KLineEdit* mSearchText;
+    QComboBox *mFieldCombo;
+    KLineEdit *mSearchText;
     KABC::Field::List mFieldList;
     KABC::Field::List mViewFields;
-    QTimer* mInputTimer;
+    QTimer *mInputTimer;
 };
 
 #endif

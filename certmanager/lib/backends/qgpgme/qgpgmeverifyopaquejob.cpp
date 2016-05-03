@@ -45,46 +45,51 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( GpgME::Context * context )
-  : VerifyOpaqueJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyOpaqueJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob(GpgME::Context *context)
+    : VerifyOpaqueJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEVerifyOpaqueJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {
+Kleo::QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob()
+{
 }
 
-void Kleo::QGpgMEVerifyOpaqueJob::setup( const QByteArray & signedData ) {
-  assert( !mInData );
-  assert( !mOutData );
+void Kleo::QGpgMEVerifyOpaqueJob::setup(const QByteArray &signedData)
+{
+    assert(!mInData);
+    assert(!mOutData);
 
-  createInData( signedData );
-  createOutData();
+    createInData(signedData);
+    createOutData();
 }
 
-GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
-  setup( signedData );
+GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start(const QByteArray &signedData)
+{
+    setup(signedData);
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startOpaqueSignatureVerification(*mInData, *mOutData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {
-  setup( signedData );
-  const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  getAuditLog();
-  return res;
+GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec(const QByteArray &signedData, QByteArray &plainText)
+{
+    setup(signedData);
+    const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature(*mInData, *mOutData);
+    plainText = mOutDataDataProvider->data();
+    getAuditLog();
+    return res;
 }
 
-void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult(), mOutDataDataProvider->data() );
+void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mCtx->verificationResult(), mOutDataDataProvider->data());
 }
 
 

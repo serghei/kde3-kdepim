@@ -39,48 +39,48 @@
 
 
 ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :
-	VCalWidgetSetupBase(w,n)
+    VCalWidgetSetupBase(w, n)
 {
-	FUNCTIONSETUP;
-	fConduitName = i18n("To-do");
-	KAboutData *fAbout = new KAboutData("todoConduit",
-		I18N_NOOP("To-do Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the To-do Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
-	fAbout->addAuthor("Dan Pilone",
-		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Preston Brown",
-		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Herwin-Jan Steehouwer",
-		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
-		"groot@kde.org",
-		"http://www.cs.kun.nl/~adridg/kpilot");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Maintainer"),
-		"reinhold@kainhofer.com",
-		"http://reinhold.kainhofer.com/Linux/");
+    FUNCTIONSETUP;
+    fConduitName = i18n("To-do");
+    KAboutData *fAbout = new KAboutData("todoConduit",
+                                        I18N_NOOP("To-do Conduit for KPilot"),
+                                        KPILOT_VERSION,
+                                        I18N_NOOP("Configures the To-do Conduit for KPilot"),
+                                        KAboutData::License_GPL,
+                                        "(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
+    fAbout->addAuthor("Dan Pilone",
+                      I18N_NOOP("Original Author"));
+    fAbout->addAuthor("Preston Brown",
+                      I18N_NOOP("Original Author"));
+    fAbout->addAuthor("Herwin-Jan Steehouwer",
+                      I18N_NOOP("Original Author"));
+    fAbout->addAuthor("Adriaan de Groot",
+                      I18N_NOOP("Maintainer"),
+                      "groot@kde.org",
+                      "http://www.cs.kun.nl/~adridg/kpilot");
+    fAbout->addAuthor("Reinhold Kainhofer",
+                      I18N_NOOP("Maintainer"),
+                      "reinhold@kainhofer.com",
+                      "http://reinhold.kainhofer.com/Linux/");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
 
-	fConfigWidget->fSyncDestination->setTitle(i18n("To-do Destination"));
+    fConfigWidget->fSyncDestination->setTitle(i18n("To-do Destination"));
 }
 
 ToDoWidgetSetup::~ToDoWidgetSetup()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 /* static */ ConduitConfigBase *ToDoWidgetSetup::create(QWidget *w, const char *n)
 {
-	return new ToDoWidgetSetup(w,n);
+    return new ToDoWidgetSetup(w, n);
 }
 
-VCalConduitSettings*ToDoWidgetSetup::config()
+VCalConduitSettings *ToDoWidgetSetup::config()
 {
-  return TodoConduit::theConfig();
+    return TodoConduit::theConfig();
 }
 

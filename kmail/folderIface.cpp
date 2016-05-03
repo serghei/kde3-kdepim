@@ -45,59 +45,59 @@
 
 namespace KMail {
 
-FolderIface::FolderIface( const QString& vpath )
-  : DCOPObject( "FolderIface" ), mPath( vpath )
+FolderIface::FolderIface(const QString &vpath)
+    : DCOPObject("FolderIface"), mPath(vpath)
 {
-  //kdDebug(5006)<<"FolderIface folder = "<< mPath <<endl;
-  mFolder = kmkernel->folderMgr()->getFolderByURL( mPath );
-  if ( !mFolder )
-    mFolder = kmkernel->imapFolderMgr()->getFolderByURL( mPath );
-  if ( !mFolder )
-    mFolder = kmkernel->dimapFolderMgr()->getFolderByURL( mPath );
-  Q_ASSERT( mFolder );
+    //kdDebug(5006)<<"FolderIface folder = "<< mPath <<endl;
+    mFolder = kmkernel->folderMgr()->getFolderByURL(mPath);
+    if(!mFolder)
+        mFolder = kmkernel->imapFolderMgr()->getFolderByURL(mPath);
+    if(!mFolder)
+        mFolder = kmkernel->dimapFolderMgr()->getFolderByURL(mPath);
+    Q_ASSERT(mFolder);
 }
 
 QString
 FolderIface::path() const
 {
-  return mPath;
+    return mPath;
 }
 
 QString
 FolderIface::displayName() const
 {
-  return mFolder->label();
+    return mFolder->label();
 }
 
 QString
 FolderIface::displayPath() const
 {
-  return mFolder->prettyURL();
+    return mFolder->prettyURL();
 }
 
 bool
 FolderIface::usesCustomIcons() const
 {
-  return mFolder->useCustomIcons();
+    return mFolder->useCustomIcons();
 }
 
 QString
 FolderIface::normalIconPath() const
 {
-  return mFolder->normalIconPath();
+    return mFolder->normalIconPath();
 }
 
 QString
 FolderIface::unreadIconPath() const
 {
-  return mFolder->unreadIconPath();
+    return mFolder->unreadIconPath();
 }
 
 int
 FolderIface::messages()
 {
-  // if the folder isn't open then return the cached count
-  return mFolder->count( !mFolder->isOpened() );
+    // if the folder isn't open then return the cached count
+    return mFolder->count(!mFolder->isOpened());
 }
 
 int

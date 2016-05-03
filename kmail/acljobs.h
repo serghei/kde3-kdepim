@@ -37,18 +37,19 @@
 
 namespace KMail {
 
-  /// One entry in the ACL list: user and permissions
-  struct ACLListEntry {
+/// One entry in the ACL list: user and permissions
+struct ACLListEntry
+{
     ACLListEntry() {} // for QValueVector
-    ACLListEntry( const QString& u, const QString& irl, int p )
-      : userId( u ), internalRightsList( irl ), permissions( p ), changed( false ) {}
+    ACLListEntry(const QString &u, const QString &irl, int p)
+        : userId(u), internalRightsList(irl), permissions(p), changed(false) {}
     QString userId;
     QString internalRightsList; ///< protocol-dependent string (e.g. IMAP rights list)
     int permissions; ///< based on the ACLPermissions enum
     bool changed; ///< special flag for KMFolderCachedImap
-  };
+};
 
-  typedef QValueVector<ACLListEntry> ACLList;
+typedef QValueVector<ACLListEntry> ACLList;
 
 /**
  * This namespace contains functions that return jobs for ACL operations.
@@ -59,10 +60,11 @@ namespace KMail {
  */
 namespace ACLJobs {
 
-  /// Bitfield modelling the possible permissions.
-  /// This is modelled after the imap4 permissions except that Read is "rs".
-  /// The semantics of the bits is protocol-dependent.
-  enum ACLPermissions {
+/// Bitfield modelling the possible permissions.
+/// This is modelled after the imap4 permissions except that Read is "rs".
+/// The semantics of the bits is protocol-dependent.
+enum ACLPermissions
+{
     List = 1,
     Read = 2,
     WriteFlags = 4,
@@ -76,99 +78,105 @@ namespace ACLJobs {
     AllWrite = List | Read | WriteFlags | Insert | Post | Create | Delete | WriteSeenFlag,
     // alias for "all permissions"
     All = List | Read | WriteFlags | Insert | Post | Create | Delete | Administer | WriteSeenFlag
-  };
-  /// Set the permissions for a given user on a given url
-  KIO::SimpleJob* setACL( KIO::Slave* slave, const KURL& url, const QString& user, unsigned int permissions );
+};
+/// Set the permissions for a given user on a given url
+KIO::SimpleJob *setACL(KIO::Slave *slave, const KURL &url, const QString &user, unsigned int permissions);
 
-  class DeleteACLJob;
-  /// Delete the permissions for a given user on a given url
-  DeleteACLJob* deleteACL( KIO::Slave* slave, const KURL& url, const QString& user );
+class DeleteACLJob;
+/// Delete the permissions for a given user on a given url
+DeleteACLJob *deleteACL(KIO::Slave *slave, const KURL &url, const QString &user);
 
-  class GetACLJob;
-  /// List all ACLs for a given url
-  GetACLJob* getACL( KIO::Slave* slave, const KURL& url );
+class GetACLJob;
+/// List all ACLs for a given url
+GetACLJob *getACL(KIO::Slave *slave, const KURL &url);
 
-  class GetUserRightsJob;
-  /// Get the users' rights for a given url
-  GetUserRightsJob* getUserRights( KIO::Slave* slave, const KURL& url );
+class GetUserRightsJob;
+/// Get the users' rights for a given url
+GetUserRightsJob *getUserRights(KIO::Slave *slave, const KURL &url);
 
-  class MultiSetACLJob;
-  /// Set and delete a list of permissions for different users on a given url
-  MultiSetACLJob* multiSetACL( KIO::Slave* slave, const KURL& url, const ACLList& acl );
+class MultiSetACLJob;
+/// Set and delete a list of permissions for different users on a given url
+MultiSetACLJob *multiSetACL(KIO::Slave *slave, const KURL &url, const ACLList &acl);
 
-  /// List all ACLs for a given url
-  class GetACLJob : public KIO::SimpleJob
-  {
+/// List all ACLs for a given url
+class GetACLJob : public KIO::SimpleJob {
     Q_OBJECT
-  public:
-    GetACLJob( const KURL& url, const QByteArray &packedArgs,
-               bool showProgressInfo );
+public:
+    GetACLJob(const KURL &url, const QByteArray &packedArgs,
+              bool showProgressInfo);
 
-    const ACLList& entries() const { return m_entries; }
+    const ACLList &entries() const
+    {
+        return m_entries;
+    }
 
-  protected slots:
-    void slotInfoMessage( KIO::Job*, const QString& );
-  private:
+protected slots:
+    void slotInfoMessage(KIO::Job *, const QString &);
+private:
     ACLList m_entries;
-  };
+};
 
-  /// Get the users' rights for a given url
-  class GetUserRightsJob : public KIO::SimpleJob
-  {
+/// Get the users' rights for a given url
+class GetUserRightsJob : public KIO::SimpleJob {
     Q_OBJECT
-  public:
-    GetUserRightsJob( const KURL& url, const QByteArray &packedArgs,
-                      bool showProgressInfo );
-    unsigned int permissions() const { return m_permissions; }
+public:
+    GetUserRightsJob(const KURL &url, const QByteArray &packedArgs,
+                     bool showProgressInfo);
+    unsigned int permissions() const
+    {
+        return m_permissions;
+    }
 
-  protected slots:
-    void slotInfoMessage( KIO::Job*, const QString& );
-  private:
+protected slots:
+    void slotInfoMessage(KIO::Job *, const QString &);
+private:
     unsigned int m_permissions;
-  };
+};
 
-  /// Delete the permissions for a given user on a given url
-  /// This class only exists to store the userid in the job
-  class DeleteACLJob : public KIO::SimpleJob
-  {
+/// Delete the permissions for a given user on a given url
+/// This class only exists to store the userid in the job
+class DeleteACLJob : public KIO::SimpleJob {
     Q_OBJECT
-  public:
-    DeleteACLJob( const KURL& url, const QString& userId,
-                  const QByteArray &packedArgs,
-                  bool showProgressInfo );
+public:
+    DeleteACLJob(const KURL &url, const QString &userId,
+                 const QByteArray &packedArgs,
+                 bool showProgressInfo);
 
-    QString userId() const { return mUserId; }
+    QString userId() const
+    {
+        return mUserId;
+    }
 
-  private:
+private:
     QString mUserId;
-  };
+};
 
-  /// Set and delete a list of permissions for different users on a given url
-  class MultiSetACLJob : public KIO::Job {
+/// Set and delete a list of permissions for different users on a given url
+class MultiSetACLJob : public KIO::Job {
     Q_OBJECT
 
-  public:
-    MultiSetACLJob( KIO::Slave* slave, const KURL& url, const ACLList& acl, bool showProgressInfo );
+public:
+    MultiSetACLJob(KIO::Slave *slave, const KURL &url, const ACLList &acl, bool showProgressInfo);
 
-  signals:
+signals:
     // Emitted when a given user's permissions were successfully changed.
     // This allows the caller to keep track of what exactly was done (and handle errors better)
-    void aclChanged( const QString& userId, int permissions );
+    void aclChanged(const QString &userId, int permissions);
 
-  protected slots:
+protected slots:
     virtual void slotStart();
-    virtual void slotResult( KIO::Job *job );
+    virtual void slotResult(KIO::Job *job);
 
-  private:
-    KIO::Slave* mSlave;
+private:
+    KIO::Slave *mSlave;
     const KURL mUrl;
     const ACLList mACLList;
     ACLList::const_iterator mACLListIterator;
-  };
+};
 
 
 #ifndef NDEBUG
-  QString permissionsToString( unsigned int permissions );
+QString permissionsToString(unsigned int permissions);
 #endif
 }
 

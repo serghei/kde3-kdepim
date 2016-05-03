@@ -36,30 +36,30 @@
 #include "job.h"
 
 namespace GpgME {
-  class Error;
-  class Key;
+class Error;
+class Key;
 }
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous deleters
+/**
+   @short An abstract base class for asynchronous deleters
 
-     To use a DeleteJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the delete with a call
-     to start(). This call might fail, in which case the DeleteJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a DeleteJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the delete with a call
+   to start(). This call might fail, in which case the DeleteJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the DeleteJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class DeleteJob : public Job {
+   After result() is emitted, the DeleteJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class DeleteJob : public Job {
     Q_OBJECT
-  protected:
-    DeleteJob( QObject * parent, const char * name );
-  public:
+protected:
+    DeleteJob(QObject *parent, const char *name);
+public:
     ~DeleteJob();
 
     /**
@@ -67,11 +67,11 @@ namespace Kleo {
        delete, \a allowSecretKeyDeletion specifies if a key may also
        be deleted if the secret key part is available, too.
     */
-    virtual GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion=false ) = 0;
+    virtual GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion = false) = 0;
 
-  signals:
-    void result( const GpgME::Error & result );
-  };
+signals:
+    void result(const GpgME::Error &result);
+};
 
 }
 

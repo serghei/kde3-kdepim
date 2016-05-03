@@ -30,28 +30,28 @@ class Resource;
 class Ticket;
 }
 
-typedef struct {
-  KABC::Ticket *ticket;
-  uint counter;
+typedef struct
+{
+    KABC::Ticket *ticket;
+    uint counter;
 } LockEntry;
 
-class KABLock
-{
-  public:
+class KABLock {
+public:
     ~KABLock();
 
-    static KABLock *self( KABC::AddressBook *ab );
+    static KABLock *self(KABC::AddressBook *ab);
 
-    bool lock( KABC::Resource* );
-    bool unlock( KABC::Resource* );
+    bool lock(KABC::Resource *);
+    bool unlock(KABC::Resource *);
 
-  protected:
-    KABLock( KABC::AddressBook *ab );
+protected:
+    KABLock(KABC::AddressBook *ab);
 
-  private:
+private:
     static KABLock *mSelf;
 
-    QMap<KABC::Resource*, LockEntry> mLocks;
+    QMap<KABC::Resource *, LockEntry> mLocks;
     KABC::AddressBook *mAddressBook;
 };
 

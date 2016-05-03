@@ -33,8 +33,7 @@ class QDomDocument;
 class QDomNode;
 class QString;
 
-namespace Akregator
-{
+namespace Akregator {
 
 class Article;
 class Feed;
@@ -43,9 +42,8 @@ class TreeNode;
 
 /** The model of a feed tree, represents an OPML document. Contains an additional root node "All Feeds" which isn't stored. Note that a node instance must not be in more than one FeedList at a time! When deleting the feed list, all contained nodes are deleted! */
 
-class KDE_EXPORT FeedList : public NodeList
-{
-Q_OBJECT
+class KDE_EXPORT FeedList : public NodeList {
+    Q_OBJECT
 public:
 
     FeedList(QObject *parent = 0, const char *name = 0);
@@ -54,49 +52,52 @@ public:
     ~FeedList();
 
     /** appends another feed list as sub tree. The root node of @c list is ignored. NOTE: nodes are _moved_ from @c list to this feed list, not copied */
-    
-    void append(FeedList* list, Folder* parent=0, TreeNode* after=0);
+
+    void append(FeedList *list, Folder *parent = 0, TreeNode *after = 0);
 
     /** reads an OPML document and appends the items to this list
         @param doc the OPML document to parse
         @return whether parsing was successful or not (TODO: make errors more detailed)
     */
-    virtual bool readFromXML(const QDomDocument& doc);
+    virtual bool readFromXML(const QDomDocument &doc);
 
     /** exports the feed list as OPML. The root node ("All Feeds") is ignored! */
     virtual QDomDocument toXML() const;
 
     /** returns a feed object for a given feed URL. If the feed list does not contain a feed with @c url, NULL is returned. If it contains the same feed multiple times, any of the Feed objects is returned. */
-    Feed* findByURL(const QString& feedURL) const;
+    Feed *findByURL(const QString &feedURL) const;
 
-    Article findArticle(const QString& feedURL, const QString& guid) const;
+    Article findArticle(const QString &feedURL, const QString &guid) const;
 
 signals:
 
-    void signalDestroyed(FeedList*);
+    void signalDestroyed(FeedList *);
 
 protected:
 
-    virtual void addNode(TreeNode* node, bool preserveID);
-    virtual void removeNode(TreeNode* node);
+    virtual void addNode(TreeNode *node, bool preserveID);
+    virtual void removeNode(TreeNode *node);
 
 public:         // compat with KDE-3.x assertions, remove for KDE 4
-// private:
+    // private:
 
-    void parseChildNodes(QDomNode &node, Folder* parent);
+    void parseChildNodes(QDomNode &node, Folder *parent);
 
     // never call these
-    FeedList(const FeedList&) : NodeList() {}
-    FeedList& operator=(const FeedList&) { return *this; }
+    FeedList(const FeedList &) : NodeList() {}
+    FeedList &operator=(const FeedList &)
+    {
+        return *this;
+    }
 
     friend class AddNodeVisitor;
     class AddNodeVisitor;
 
     friend class RemoveNodeVisitor;
     class RemoveNodeVisitor;
-    
+
     class FeedListPrivate;
-    FeedListPrivate* d;
+    FeedListPrivate *d;
 };
 
 }

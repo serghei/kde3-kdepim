@@ -28,21 +28,21 @@
 
 #include "groupwarewizard.h"
 
-GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+GroupwareWizard::GroupwareWizard(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  setCaption( i18n( "KDE Groupware Wizard" ) );
+    setCaption(i18n("KDE Groupware Wizard"));
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  mOverViewPage = new OverViewPage( this );
+    mOverViewPage = new OverViewPage(this);
 
-  layout->addWidget( mOverViewPage );
+    layout->addWidget(mOverViewPage);
 
-  connect( mOverViewPage, SIGNAL( cancel() ),
-           qApp, SLOT( quit() ) );
+    connect(mOverViewPage, SIGNAL(cancel()),
+            qApp, SLOT(quit()));
 
-  resize( 400, 200 );
+    resize(400, 200);
 }
 
 GroupwareWizard::~GroupwareWizard()

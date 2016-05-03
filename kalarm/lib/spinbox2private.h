@@ -31,21 +31,23 @@
 * The widget is actually a whole spin box, but only the buttons are displayed.
 =============================================================================*/
 
-class ExtraSpinBox : public SpinBox
-{
-		Q_OBJECT
-	public:
-		explicit ExtraSpinBox(QWidget* parent, const char* name = 0)
-		             : SpinBox(parent, name), mNewStylePending(false) { }
-		ExtraSpinBox(int minValue, int maxValue, int step, QWidget* parent, const char* name = 0)
-		             : SpinBox(minValue, maxValue, step, parent, name), mNewStylePending(false) { }
-	signals:
-		void         styleUpdated();
-	protected:
-		virtual void paintEvent(QPaintEvent*);
-		virtual void styleChange(QStyle&)    { mNewStylePending = true; }
-	private:
-		bool         mNewStylePending;  // style has changed, but not yet repainted
+class ExtraSpinBox : public SpinBox {
+    Q_OBJECT
+public:
+    explicit ExtraSpinBox(QWidget *parent, const char *name = 0)
+        : SpinBox(parent, name), mNewStylePending(false) { }
+    ExtraSpinBox(int minValue, int maxValue, int step, QWidget *parent, const char *name = 0)
+        : SpinBox(minValue, maxValue, step, parent, name), mNewStylePending(false) { }
+signals:
+    void         styleUpdated();
+protected:
+    virtual void paintEvent(QPaintEvent *);
+    virtual void styleChange(QStyle &)
+    {
+        mNewStylePending = true;
+    }
+private:
+    bool         mNewStylePending;  // style has changed, but not yet repainted
 };
 
 
@@ -57,32 +59,49 @@ class ExtraSpinBox : public SpinBox
 * Mirroring in this way allows styles with rounded corners to display correctly.
 =============================================================================*/
 
-class SpinMirror : public QCanvasView
-{
-		Q_OBJECT
-	public:
-		explicit SpinMirror(SpinBox*, QWidget* parent = 0, const char* name = 0);
-		void         setReadOnly(bool ro)        { mReadOnly = ro; }
-		bool         isReadOnly() const          { return mReadOnly; }
-		void         setNormalButtons(const QPixmap&);
-		void         redraw(const QPixmap&);
+class SpinMirror : public QCanvasView {
+    Q_OBJECT
+public:
+    explicit SpinMirror(SpinBox *, QWidget *parent = 0, const char *name = 0);
+    void         setReadOnly(bool ro)
+    {
+        mReadOnly = ro;
+    }
+    bool         isReadOnly() const
+    {
+        return mReadOnly;
+    }
+    void         setNormalButtons(const QPixmap &);
+    void         redraw(const QPixmap &);
 
-	public slots:
-		virtual void resize(int w, int h);
+public slots:
+    virtual void resize(int w, int h);
 
-	protected:
-		virtual void contentsMousePressEvent(QMouseEvent* e)        { contentsMouseEvent(e); }
-		virtual void contentsMouseReleaseEvent(QMouseEvent* e)      { contentsMouseEvent(e); }
-		virtual void contentsMouseMoveEvent(QMouseEvent* e)         { contentsMouseEvent(e); }
-		virtual void contentsMouseDoubleClickEvent(QMouseEvent* e)  { contentsMouseEvent(e); }
+protected:
+    virtual void contentsMousePressEvent(QMouseEvent *e)
+    {
+        contentsMouseEvent(e);
+    }
+    virtual void contentsMouseReleaseEvent(QMouseEvent *e)
+    {
+        contentsMouseEvent(e);
+    }
+    virtual void contentsMouseMoveEvent(QMouseEvent *e)
+    {
+        contentsMouseEvent(e);
+    }
+    virtual void contentsMouseDoubleClickEvent(QMouseEvent *e)
+    {
+        contentsMouseEvent(e);
+    }
 
-	private:
-		void         contentsMouseEvent(QMouseEvent*);
+private:
+    void         contentsMouseEvent(QMouseEvent *);
 
-		SpinBox*     mSpinbox;        // spinbox whose spin buttons are being mirrored
-		QWidget*     mSpinWidget;     // spin buttons in mSpinbox
-		QPixmap      mNormalButtons;  // image of spin buttons in unpressed state
-		bool         mReadOnly;       // value cannot be changed
+    SpinBox     *mSpinbox;        // spinbox whose spin buttons are being mirrored
+    QWidget     *mSpinWidget;     // spin buttons in mSpinbox
+    QPixmap      mNormalButtons;  // image of spin buttons in unpressed state
+    bool         mReadOnly;       // value cannot be changed
 };
 
 #endif // SPINBOX2PRIVATE_H

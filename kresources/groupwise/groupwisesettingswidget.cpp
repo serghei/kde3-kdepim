@@ -24,27 +24,27 @@
 
 #include "groupwisesettingswidget.h"
 
-GroupWiseSettingsWidget::GroupWiseSettingsWidget( QWidget * parent )
-: GroupWiseSettingsWidgetBase( parent )
+GroupWiseSettingsWidget::GroupWiseSettingsWidget(QWidget *parent)
+    : GroupWiseSettingsWidgetBase(parent)
 {
-  connect( m_settingsList, SIGNAL( itemRenamed( QListViewItem *, int ) ),
-          this, SLOT( slotItemRenamed( QListViewItem *, int ) ) );
+    connect(m_settingsList, SIGNAL(itemRenamed(QListViewItem *, int)),
+            this, SLOT(slotItemRenamed(QListViewItem *, int)));
 }
 
-void GroupWiseSettingsWidget::slotItemRenamed( QListViewItem * item, int )
+void GroupWiseSettingsWidget::slotItemRenamed(QListViewItem *item, int)
 {
-  kdDebug() << "GroupWiseSettingsWidget::slotItemRenamed() - " << item->text( 1 ) << " changed to " << item->text( 2 ) << endl;
-  m_dirtySettings.insert( item->text( 1 ), item->text( 2 ) );
+    kdDebug() << "GroupWiseSettingsWidget::slotItemRenamed() - " << item->text(1) << " changed to " << item->text(2) << endl;
+    m_dirtySettings.insert(item->text(1), item->text(2));
 }
 
 QMap<QString, QString> GroupWiseSettingsWidget::dirtySettings()
 {
-  return m_dirtySettings;
+    return m_dirtySettings;
 }
 
 void GroupWiseSettingsWidget::reset()
 {
-  m_dirtySettings.clear();
+    m_dirtySettings.clear();
 }
 
 #include "groupwisesettingswidget.moc"

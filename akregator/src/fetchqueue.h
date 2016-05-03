@@ -34,53 +34,52 @@ namespace Akregator {
 class Feed;
 class TreeNode;
 
-class KDE_EXPORT FetchQueue : public QObject
-{
+class KDE_EXPORT FetchQueue : public QObject {
     Q_OBJECT
 
-    public:
+public:
 
-        FetchQueue(QObject* parent=0, const char* name=0);
-        virtual ~FetchQueue();
+    FetchQueue(QObject *parent = 0, const char *name = 0);
+    virtual ~FetchQueue();
 
-        /** returns true when no feeds are neither fetching nor queued */
-        bool isEmpty() const;
-        
-        /** adds a feed to the queue */
-        void addFeed(Feed *f);
+    /** returns true when no feeds are neither fetching nor queued */
+    bool isEmpty() const;
 
-    public slots:
-    
-        /** aborts currently fetching feeds and empties the queue */
-        void slotAbort();
-        
-    signals:
+    /** adds a feed to the queue */
+    void addFeed(Feed *f);
 
-        void signalStarted();
-        void signalStopped();
-        void fetched(Feed*);
-        void fetchError(Feed*);
+public slots:
 
-    protected: 
+    /** aborts currently fetching feeds and empties the queue */
+    void slotAbort();
 
-        /** fetches the next feed in the queue, unless the maximum of concurrent fetches is reached */
-        void fetchNextFeed();
-        
-        void feedDone(Feed *f);
-        void connectToFeed(Feed* feed);
-        void disconnectFromFeed(Feed* feed);
+signals:
 
-    protected slots:
-        
-        void slotNodeDestroyed(TreeNode* node);
-        void slotFeedFetched(Feed *);
-        void slotFetchError(Feed *);
-        void slotFetchAborted(Feed *);
-        
-    private:
+    void signalStarted();
+    void signalStopped();
+    void fetched(Feed *);
+    void fetchError(Feed *);
 
-        class FetchQueuePrivate;
-        FetchQueuePrivate* d;
+protected:
+
+    /** fetches the next feed in the queue, unless the maximum of concurrent fetches is reached */
+    void fetchNextFeed();
+
+    void feedDone(Feed *f);
+    void connectToFeed(Feed *feed);
+    void disconnectFromFeed(Feed *feed);
+
+protected slots:
+
+    void slotNodeDestroyed(TreeNode *node);
+    void slotFeedFetched(Feed *);
+    void slotFetchError(Feed *);
+    void slotFetchAborted(Feed *);
+
+private:
+
+    class FetchQueuePrivate;
+    FetchQueuePrivate *d;
 };
 
 } // namespace Akregator

@@ -34,94 +34,93 @@ namespace Backend {
 /**
  * Metakit implementation of Storage interface
  */
-class StorageMK4Impl : public Storage
-{
+class StorageMK4Impl : public Storage {
     Q_OBJECT
-    public:
+public:
 
-        StorageMK4Impl();     
-        StorageMK4Impl(const StorageMK4Impl&);
-        StorageMK4Impl &operator =(const StorageMK4Impl&);
-        virtual ~StorageMK4Impl();
+    StorageMK4Impl();
+    StorageMK4Impl(const StorageMK4Impl &);
+    StorageMK4Impl &operator =(const StorageMK4Impl &);
+    virtual ~StorageMK4Impl();
 
 
-        /** KGlobal::dirs()->saveLocation("data", "akregator")+"/Archive" */
-        static QString defaultArchivePath();
-        
-        /** sets the directory where the metakit files will be stored.
-            
-            @param archivePath the path to the archive, or QString::null to reset it to the default.
-         */   
-        void setArchivePath(const QString& archivePath);
+    /** KGlobal::dirs()->saveLocation("data", "akregator")+"/Archive" */
+    static QString defaultArchivePath();
 
-        /** returns the path to the metakit archives */
-        QString archivePath() const;
+    /** sets the directory where the metakit files will be stored.
 
-        
-        
-        virtual void initialize(const QStringList& params);
-        /**
-         * Open storage and prepare it for work.
-         * @return true on success.
-         */
-        virtual bool open(bool autoCommit = false);
+        @param archivePath the path to the archive, or QString::null to reset it to the default.
+     */
+    void setArchivePath(const QString &archivePath);
 
-        /**
-         * Commit changes made in feeds and articles, making them persistent.
-         * @return true on success.
-         */
-        virtual bool commit();
+    /** returns the path to the metakit archives */
+    QString archivePath() const;
 
-        /**
-         * Rollback changes made in feeds and articles, reverting to last committed values.
-         * @returns true on success.
-         */
-        virtual bool rollback();
 
-        /**
-         * Closes storage, freeing all allocated resources. Called from destructor, so you don't need to call it directly.
-         * @return true on success.
-         */
-        virtual bool close();
 
-        /**
-         * @return Article archive for feed at given url.
-         */
-        virtual FeedStorage* archiveFor(const QString &url);
-        virtual bool autoCommit() const;
-        virtual int unreadFor(const QString &url);
-        virtual void setUnreadFor(const QString &url, int unread);
-        virtual int totalCountFor(const QString &url);
-        virtual void setTotalCountFor(const QString &url, int total);
-        virtual int lastFetchFor(const QString& url);
-        virtual void setLastFetchFor(const QString& url, int lastFetch);
-        
-        virtual QStringList feeds() const;
-       
-        virtual void storeFeedList(const QString& opmlStr);
-        virtual QString restoreFeedList() const;
+    virtual void initialize(const QStringList &params);
+    /**
+     * Open storage and prepare it for work.
+     * @return true on success.
+     */
+    virtual bool open(bool autoCommit = false);
 
-        virtual void storeTagSet(const QString& xmlStr);
-        virtual QString restoreTagSet() const; 
-  
-        /** adds all feed storages from a source to this storage
-            existing articles are replaced
-        */
-        virtual void add(Storage* source);
-        
-        /** deletes all feed storages in this archive */
-        virtual void clear();
-        
-        virtual bool taggingEnabled() const;
-        
-        void markDirty();
+    /**
+     * Commit changes made in feeds and articles, making them persistent.
+     * @return true on success.
+     */
+    virtual bool commit();
 
-    protected slots:
-        virtual void slotCommit();
-        
-    private:
-        class StorageMK4ImplPrivate;
-        StorageMK4ImplPrivate *d;
+    /**
+     * Rollback changes made in feeds and articles, reverting to last committed values.
+     * @returns true on success.
+     */
+    virtual bool rollback();
+
+    /**
+     * Closes storage, freeing all allocated resources. Called from destructor, so you don't need to call it directly.
+     * @return true on success.
+     */
+    virtual bool close();
+
+    /**
+     * @return Article archive for feed at given url.
+     */
+    virtual FeedStorage *archiveFor(const QString &url);
+    virtual bool autoCommit() const;
+    virtual int unreadFor(const QString &url);
+    virtual void setUnreadFor(const QString &url, int unread);
+    virtual int totalCountFor(const QString &url);
+    virtual void setTotalCountFor(const QString &url, int total);
+    virtual int lastFetchFor(const QString &url);
+    virtual void setLastFetchFor(const QString &url, int lastFetch);
+
+    virtual QStringList feeds() const;
+
+    virtual void storeFeedList(const QString &opmlStr);
+    virtual QString restoreFeedList() const;
+
+    virtual void storeTagSet(const QString &xmlStr);
+    virtual QString restoreTagSet() const;
+
+    /** adds all feed storages from a source to this storage
+        existing articles are replaced
+    */
+    virtual void add(Storage *source);
+
+    /** deletes all feed storages in this archive */
+    virtual void clear();
+
+    virtual bool taggingEnabled() const;
+
+    void markDirty();
+
+protected slots:
+    virtual void slotCommit();
+
+private:
+    class StorageMK4ImplPrivate;
+    StorageMK4ImplPrivate *d;
 };
 
 }

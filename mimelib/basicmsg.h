@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -51,7 +51,7 @@ public:
     // been parsed.  BasicMessage takes responsibility for deleting the
     // DwMessage object passed to the constructor, therefore, make sure
     // it is allocated on the free store.
-    BasicMessage(DwMessage* aMsg);
+    BasicMessage(DwMessage *aMsg);
 
     virtual ~BasicMessage();
 
@@ -61,10 +61,10 @@ public:
     //   argument.
     // Use this function to set a parsed DwMessage for a BasicMessage that
     // was created using the default constructor.
-    void TakeMessage(DwMessage* aMsg);
+    void TakeMessage(DwMessage *aMsg);
 
     // Return the BasicMessage contents as a string
-    const DwString& AsString();
+    const DwString &AsString();
 
     // Set fields that are either automatically set (Message-id)
     // or that do not change from one message to another (MIME-Version).
@@ -73,68 +73,68 @@ public:
     // this class, you may want to set the date field automatically to
     // the current date and time in this member function.
     virtual void SetAutomaticFields();
-    
+
     // Get or set the 'Date' header field
-    const DwString& DateStr() const;
+    const DwString &DateStr() const;
     DwUint32 Date() const;
     void SetDate(DwUint32 aUnixTime);
 
     // Get or set the 'To' header field
-    const DwString& To() const;
-    void SetTo(const DwString& aStr);
+    const DwString &To() const;
+    void SetTo(const DwString &aStr);
 
     // Get or set the 'Cc' header field
-    const DwString& Cc() const;
-    void SetCc(const DwString& aStr);
+    const DwString &Cc() const;
+    void SetCc(const DwString &aStr);
 
     // Get or set the 'Bcc' header field
-    const DwString& Bcc() const;
-    void SetBcc(const DwString& aStr);
+    const DwString &Bcc() const;
+    void SetBcc(const DwString &aStr);
 
     // Get or set the 'From' header field
-    const DwString& From() const;
-    void SetFrom(const DwString& aStr);
+    const DwString &From() const;
+    void SetFrom(const DwString &aStr);
 
     // Get or set the 'Subject' header field
-    const DwString& Subject() const;
-    void SetSubject(const DwString& aStr);
+    const DwString &Subject() const;
+    void SetSubject(const DwString &aStr);
 
     // Get or set the 'Content-Type' header field
     // + The member functions that involve enumerated types (ints)
     //   will work only for well-known types or subtypes.
     // Type
-    const DwString& TypeStr() const;
+    const DwString &TypeStr() const;
     int Type() const;
-    void SetTypeStr(const DwString& aStr);
+    void SetTypeStr(const DwString &aStr);
     void SetType(int aType);
     // Subtype
-    const DwString& SubtypeStr() const;
+    const DwString &SubtypeStr() const;
     int Subtype() const;
-    void SetSubtypeStr(const DwString& aStr);
+    void SetSubtypeStr(const DwString &aStr);
     void SetSubtype(int aSubtype);
 
     // Get or set the 'Content-Transfer-Encoding' header field
     // + The member functions that involve enumerated types (ints)
     //   will work only for well-known encodings
-    const DwString& ContentTransferEncodingStr() const;
+    const DwString &ContentTransferEncodingStr() const;
     int ContentTransferEncoding() const;
-    void SetContentTransferEncodingStr(const DwString& aStr);
+    void SetContentTransferEncodingStr(const DwString &aStr);
     void SetContentTransferEncoding(int aCte);
 
     // Cte is short for ContentTransferEncoding.
     // These functions are an alternative to the ones with longer names.
-    const DwString& CteStr() const;
+    const DwString &CteStr() const;
     int Cte() const;
-    void SetCteStr(const DwString& aStr);
+    void SetCteStr(const DwString &aStr);
     void SetCte(int aCte);
 
     // Get or set the message body
-    const DwString& Body() const;
-    void SetBody(const DwString& aStr);
+    const DwString &Body() const;
+    void SetBody(const DwString &aStr);
 
 protected:
 
-    DwMessage* mMessage;
+    DwMessage *mMessage;
     DwString   mEmptyString;
 
 };

@@ -28,25 +28,24 @@
 
 class KComboBox;
 
-class EnumInputField : public SimpleInputField
-{
-  Q_OBJECT
+class EnumInputField : public SimpleInputField {
+    Q_OBJECT
 
-  public:
-    EnumInputField( const QString &name, const Schema::SimpleType *type );
+public:
+    EnumInputField(const QString &name, const Schema::SimpleType *type);
 
-    virtual void setXMLData( const QDomElement &element );
-    virtual void xmlData( QDomDocument &document, QDomElement &parent );
+    virtual void setXMLData(const QDomElement &element);
+    virtual void xmlData(QDomDocument &document, QDomElement &parent);
 
-    virtual void setData( const QString &data );
+    virtual void setData(const QString &data);
     virtual QString data() const;
 
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual QWidget *createWidget(QWidget *parent);
 
-  private slots:
-    void inputChanged( int );
+private slots:
+    void inputChanged(int);
 
-  private:
+private:
     KComboBox *mInputWidget;
     QString mValue;
     QStringList mEnums;

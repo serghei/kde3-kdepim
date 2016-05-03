@@ -8,17 +8,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -38,29 +38,36 @@
 #include "manager.h"
 #include "memvector.h"
 
-struct stringarray {
-	public:
-		stringarray( std::string );
-		~stringarray();
-		typedef unsigned index_type;
+struct stringarray
+{
+public:
+    stringarray(std::string);
+    ~stringarray();
+    typedef unsigned index_type;
 
-		index_type add( std::string );
-		void erase( index_type );
-		void clear();
+    index_type add(std::string);
+    void erase(index_type);
+    void clear();
 
-		const char* get_cstr( index_type idx ) const;
-		std::string get( index_type idx ) const { return std::string( get_cstr( idx ) ); }
+    const char *get_cstr(index_type idx) const;
+    std::string get(index_type idx) const
+    {
+        return std::string(get_cstr(idx));
+    }
 
-		unsigned size() const { return indeces_.size(); }
+    unsigned size() const
+    {
+        return indeces_.size();
+    }
 
-		void print( std::ostream& ) const;
-		void verify() const;
-		static void remove( std::string );
-	private:
-		void init_structure();
+    void print(std::ostream &) const;
+    void verify() const;
+    static void remove(std::string);
+private:
+    void init_structure();
 
-		boost::scoped_ptr<memory_manager> data_;
-		memvector<uint32_t> indeces_;
+    boost::scoped_ptr<memory_manager> data_;
+    memvector<uint32_t> indeces_;
 };
 
 

@@ -40,165 +40,182 @@
 #include <qpainter.h>
 
 class YearPrintFactory : public KOrg::PrintPluginFactory {
-  public:
-    KOrg::PrintPlugin *create() { return new CalPrintYear; }
+public:
+    KOrg::PrintPlugin *create()
+    {
+        return new CalPrintYear;
+    }
 };
 
-K_EXPORT_COMPONENT_FACTORY( libkorg_yearlyprint, YearPrintFactory )
+K_EXPORT_COMPONENT_FACTORY(libkorg_yearlyprint, YearPrintFactory)
 
 
 /**************************************************************
  *           Print Year
  **************************************************************/
 
-QWidget *CalPrintYear::createConfigWidget( QWidget *w )
+QWidget *CalPrintYear::createConfigWidget(QWidget *w)
 {
-  return new CalPrintYearConfig_Base( w );
+    return new CalPrintYearConfig_Base(w);
 }
 
 void CalPrintYear::readSettingsWidget()
 {
-  CalPrintYearConfig_Base *cfg =
-      dynamic_cast<CalPrintYearConfig_Base*>( mConfigWidget );
-  if ( cfg ) {
-    mYear = cfg->mYear->value();
-    mPages = cfg->mPages->currentText().toInt();
-    mSubDaysEvents = (cfg->mSubDays->currentItem()==0)?Text:TimeBoxes;
-    mHolidaysEvents = (cfg->mHolidays->currentItem()==0)?Text:TimeBoxes;
-  }
+    CalPrintYearConfig_Base *cfg =
+        dynamic_cast<CalPrintYearConfig_Base *>(mConfigWidget);
+    if(cfg)
+    {
+        mYear = cfg->mYear->value();
+        mPages = cfg->mPages->currentText().toInt();
+        mSubDaysEvents = (cfg->mSubDays->currentItem() == 0) ? Text : TimeBoxes;
+        mHolidaysEvents = (cfg->mHolidays->currentItem() == 0) ? Text : TimeBoxes;
+    }
 }
 
 void CalPrintYear::setSettingsWidget()
 {
-  CalPrintYearConfig_Base *cfg =
-      dynamic_cast<CalPrintYearConfig_Base*>( mConfigWidget );
-  if ( cfg ) {
-    const KCalendarSystem *calsys = calendarSystem();
-    QDate start;
-    calsys->setYMD( start, mYear, 1, 1 );
-    int months = calsys->monthsInYear( start );
-    int pages=0, prevPages=0;
-    for ( int i=1; i<= months; ++i ) {
-      pages = (months-1)/i + 1;
-      if ( pages != prevPages ) {
-        prevPages = pages;
-        cfg->mPages->insertItem( QString::number( pages ), 0 );
-      }
+    CalPrintYearConfig_Base *cfg =
+        dynamic_cast<CalPrintYearConfig_Base *>(mConfigWidget);
+    if(cfg)
+    {
+        const KCalendarSystem *calsys = calendarSystem();
+        QDate start;
+        calsys->setYMD(start, mYear, 1, 1);
+        int months = calsys->monthsInYear(start);
+        int pages = 0, prevPages = 0;
+        for(int i = 1; i <= months; ++i)
+        {
+            pages = (months - 1) / i + 1;
+            if(pages != prevPages)
+            {
+                prevPages = pages;
+                cfg->mPages->insertItem(QString::number(pages), 0);
+            }
+        }
+
+        cfg->mYear->setValue(mYear);
+        cfg->mPages->setCurrentText(QString::number(mPages));
+
+        cfg->mSubDays->setCurrentItem((mSubDaysEvents == Text) ? 0 : 1);
+        cfg->mHolidays->setCurrentItem((mHolidaysEvents == Text) ? 0 : 1);
     }
-
-    cfg->mYear->setValue( mYear );
-    cfg->mPages->setCurrentText( QString::number( mPages ) );
-
-    cfg->mSubDays->setCurrentItem( (mSubDaysEvents==Text)?0:1 );
-    cfg->mHolidays->setCurrentItem( (mHolidaysEvents==Text)?0:1 );
-  }
 }
 
 void CalPrintYear::loadConfig()
 {
-  if ( mConfig ) {
-    mYear = mConfig->readNumEntry( "Year", 2007 );
-    mPages = mConfig->readNumEntry( "Pages", 1 );
-    mSubDaysEvents = mConfig->readNumEntry( "ShowSubDayEventsAs", TimeBoxes );
-    mHolidaysEvents = mConfig->readNumEntry( "ShowHolidaysAs", Text );
-  }
-  setSettingsWidget();
+    if(mConfig)
+    {
+        mYear = mConfig->readNumEntry("Year", 2007);
+        mPages = mConfig->readNumEntry("Pages", 1);
+        mSubDaysEvents = mConfig->readNumEntry("ShowSubDayEventsAs", TimeBoxes);
+        mHolidaysEvents = mConfig->readNumEntry("ShowHolidaysAs", Text);
+    }
+    setSettingsWidget();
 }
 
 void CalPrintYear::saveConfig()
 {
-  kdDebug(5850) << "CalPrintYear::saveConfig()" << endl;
+    kdDebug(5850) << "CalPrintYear::saveConfig()" << endl;
 
-  readSettingsWidget();
-  if ( mConfig ) {
-    mConfig->writeEntry( "Year", mYear );
-    mConfig->writeEntry( "Pages", mPages );
-    mConfig->writeEntry( "Pages", mPages );
-    mConfig->writeEntry( "ShowSubDayEventsAs", mSubDaysEvents );
-    mConfig->writeEntry( "ShowHolidaysAs", mHolidaysEvents );
-  }
+    readSettingsWidget();
+    if(mConfig)
+    {
+        mConfig->writeEntry("Year", mYear);
+        mConfig->writeEntry("Pages", mPages);
+        mConfig->writeEntry("Pages", mPages);
+        mConfig->writeEntry("ShowSubDayEventsAs", mSubDaysEvents);
+        mConfig->writeEntry("ShowHolidaysAs", mHolidaysEvents);
+    }
 }
 
 KPrinter::Orientation CalPrintYear::defaultOrientation()
 {
-  return ( mPages == 1 )?(KPrinter::Landscape):(KPrinter::Portrait);
+    return (mPages == 1) ? (KPrinter::Landscape) : (KPrinter::Portrait);
 }
 
 
-void CalPrintYear::setDateRange( const QDate& from, const QDate& to )
+void CalPrintYear::setDateRange(const QDate &from, const QDate &to)
 {
-  CalPrintPluginBase::setDateRange( from, to );
-  CalPrintYearConfig_Base *cfg =
-      dynamic_cast<CalPrintYearConfig_Base*>( mConfigWidget );
-  if ( cfg ) {
-    cfg->mYear->setValue( from.year() );
-  }
+    CalPrintPluginBase::setDateRange(from, to);
+    CalPrintYearConfig_Base *cfg =
+        dynamic_cast<CalPrintYearConfig_Base *>(mConfigWidget);
+    if(cfg)
+    {
+        cfg->mYear->setValue(from.year());
+    }
 }
 
-void CalPrintYear::print( QPainter &p, int width, int height )
+void CalPrintYear::print(QPainter &p, int width, int height)
 {
-kdDebug()<<"CalPrintYear::print, width: "<<width<<", height: "<<height<<endl;
-  QRect headerBox( 0, 0, width, headerHeight() );
-kdDebug()<<"headerBox: "<<headerBox<<endl;
-  const KCalendarSystem *calsys = calendarSystem();
-  KLocale *locale = KGlobal::locale();
-  if ( !calsys || !locale ) return;
+    kdDebug() << "CalPrintYear::print, width: " << width << ", height: " << height << endl;
+    QRect headerBox(0, 0, width, headerHeight());
+    kdDebug() << "headerBox: " << headerBox << endl;
+    const KCalendarSystem *calsys = calendarSystem();
+    KLocale *locale = KGlobal::locale();
+    if(!calsys || !locale) return;
 
-  QDate start;
-  calsys->setYMD( start, mYear, 1, 1 );
+    QDate start;
+    calsys->setYMD(start, mYear, 1, 1);
 
-  // Determine the nr of months and the max nr of days per month (dependent on
-  // calendar system!!!!)
-  QDate temp( start );
-  int months = calsys->monthsInYear( start );
-  int maxdays = 1;
-  for ( int i = 1; i< months; ++i ) {
-    maxdays = QMAX( maxdays, temp.daysInMonth() );
-    temp = calsys->addMonths( temp, 1 );
-  }
-
-  // Now determine the months per page so that the printout fits on
-  // exactly mPages pages
-  int monthsPerPage = (months-1) / mPages + 1;
-  int pages = (months-1) / monthsPerPage + 1;
-  int thismonth = 0;
-  temp = start;
-  for ( int page = 0; page < pages; ++page ) {
-    if ( page > 0 ) {
-      mPrinter->newPage();
+    // Determine the nr of months and the max nr of days per month (dependent on
+    // calendar system!!!!)
+    QDate temp(start);
+    int months = calsys->monthsInYear(start);
+    int maxdays = 1;
+    for(int i = 1; i < months; ++i)
+    {
+        maxdays = QMAX(maxdays, temp.daysInMonth());
+        temp = calsys->addMonths(temp, 1);
     }
-    QDate end( calsys->addMonths( start, monthsPerPage ) );
-    end = calsys->addDays( end, -1 );
-    QString title;
-    if ( orientation() == KPrinter::Landscape ) {
-      title = i18n("date from - to", "%1 - %2");
-    } else {
-      title = i18n("date from -\nto", "%1 -\n%2");
+
+    // Now determine the months per page so that the printout fits on
+    // exactly mPages pages
+    int monthsPerPage = (months - 1) / mPages + 1;
+    int pages = (months - 1) / monthsPerPage + 1;
+    int thismonth = 0;
+    temp = start;
+    for(int page = 0; page < pages; ++page)
+    {
+        if(page > 0)
+        {
+            mPrinter->newPage();
+        }
+        QDate end(calsys->addMonths(start, monthsPerPage));
+        end = calsys->addDays(end, -1);
+        QString title;
+        if(orientation() == KPrinter::Landscape)
+        {
+            title = i18n("date from - to", "%1 - %2");
+        }
+        else
+        {
+            title = i18n("date from -\nto", "%1 -\n%2");
+        }
+        drawHeader(p, title
+                   .arg(locale->formatDate(start))
+                   .arg(locale->formatDate(end)),
+                   calsys->addMonths(start, -1), calsys->addMonths(start, monthsPerPage),
+                   headerBox);
+
+        QRect monthesBox(headerBox);
+        monthesBox.setTop(monthesBox.bottom() + padding());
+        monthesBox.setBottom(height);
+
+        drawBox(p, BOX_BORDER_WIDTH, monthesBox);
+        float monthwidth = float(monthesBox.width()) / float(monthsPerPage);
+
+        for(int j = 0; j < monthsPerPage; ++j)
+        {
+            if(++thismonth > months) break;
+            int xstart = int(j * monthwidth + 0.5);
+            int xend = int((j + 1) * monthwidth + 0.5);
+            QRect monthBox(xstart, monthesBox.top(), xend - xstart, monthesBox.height());
+            drawMonth(p, temp, monthBox, maxdays, mSubDaysEvents, mHolidaysEvents);
+
+            temp = calsys->addMonths(temp, 1);
+        }
+        start = calsys->addMonths(start, monthsPerPage);
     }
-    drawHeader( p, title
-        .arg( locale->formatDate( start ) )
-        .arg( locale->formatDate( end ) ),
-      calsys->addMonths( start, -1), calsys->addMonths( start, monthsPerPage ),
-      headerBox );
-
-    QRect monthesBox( headerBox );
-    monthesBox.setTop( monthesBox.bottom() + padding() );
-    monthesBox.setBottom( height );
-
-    drawBox( p, BOX_BORDER_WIDTH, monthesBox );
-    float monthwidth = float(monthesBox.width()) / float( monthsPerPage );
-
-    for ( int j=0; j<monthsPerPage; ++j ) {
-      if ( ++thismonth > months ) break;
-      int xstart = int(j*monthwidth + 0.5);
-      int xend = int((j+1)*monthwidth + 0.5);
-      QRect monthBox( xstart, monthesBox.top(), xend-xstart, monthesBox.height() );
-      drawMonth( p, temp, monthBox, maxdays, mSubDaysEvents, mHolidaysEvents );
-
-      temp = calsys->addMonths( temp, 1 );
-    }
-    start = calsys->addMonths( start, monthsPerPage );
-  }
 }
 
 #endif

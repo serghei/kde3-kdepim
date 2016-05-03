@@ -29,52 +29,52 @@ class Label;
 /**
  * Item for a horizontal or vertical displayed window.
  */
-class HVItem : public BoxContainerItem
-{ Q_OBJECT
+class HVItem : public BoxContainerItem {
+    Q_OBJECT
 public:
-	HVItem( QWidget *parent = 0, const char *name = 0 );
-	~HVItem();
-	
-	/**
-	 * This function calles show() to the label.
-	 */
-	virtual void showBox();
-	
-public slots:
-	/**
-	 * Sets the number of new messages.
-	 *
-	 * @param count The number of unread messages.
-	 * @param newMessages Are there any new messages?
-	 */
-	void setCount( const int count, const bool newMessages );
-	
-	/**
-	 * This function sets the tooltip @p string to a box.
-	 * @param string The tooltip to be added.
-	 */
-	virtual void setTooltip( const QString& string );
-	
-	/**
-	 * This slot triggered when the passive popup is to be shown. It is transported
-	 * to BoxContainerItem, but so it is possible to change the arguments.
-	 */
-	void slotShowPassivePopup( QPtrList< KornMailSubject >* list, int total, bool date, const QString& );
-	
-	/**
-	 * This slot triggered when the passive popup is to be shown. It is transported
-	 * to BoxContainerItem, but so it is possible to change the arguments.
-	 */
-	void slotShowPassivePopup( const QString& errorMessage, const QString& name );
+    HVItem(QWidget *parent = 0, const char *name = 0);
+    ~HVItem();
 
-	/**
-	 * Trigered if the popup-menu is to be shown
-	 */
-	virtual void doPopup();
+    /**
+     * This function calles show() to the label.
+     */
+    virtual void showBox();
+
+public slots:
+    /**
+     * Sets the number of new messages.
+     *
+     * @param count The number of unread messages.
+     * @param newMessages Are there any new messages?
+     */
+    void setCount(const int count, const bool newMessages);
+
+    /**
+     * This function sets the tooltip @p string to a box.
+     * @param string The tooltip to be added.
+     */
+    virtual void setTooltip(const QString &string);
+
+    /**
+     * This slot triggered when the passive popup is to be shown. It is transported
+     * to BoxContainerItem, but so it is possible to change the arguments.
+     */
+    void slotShowPassivePopup(QPtrList< KornMailSubject > *list, int total, bool date, const QString &);
+
+    /**
+     * This slot triggered when the passive popup is to be shown. It is transported
+     * to BoxContainerItem, but so it is possible to change the arguments.
+     */
+    void slotShowPassivePopup(const QString &errorMessage, const QString &name);
+
+    /**
+     * Trigered if the popup-menu is to be shown
+     */
+    virtual void doPopup();
 private:
-	Label *_label;
-	KPopupMenu *_popup;
-	KActionCollection *_actions;
+    Label *_label;
+    KPopupMenu *_popup;
+    KActionCollection *_actions;
 };
 
 #endif //MK_HVITEM_H

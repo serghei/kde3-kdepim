@@ -42,46 +42,45 @@ user-generated tag with some magic in the id to make it (probably) unique: id: A
 mapped from a blog category: id: http://ablog.org/blog#Funny name: Funny
 tag from some ontology: id: http://foo/ont/AnimalTaxonomy/mammals, name: Mammals, scheme: http://foo/ont/AnimalTaxonomy
 */
-class KDE_EXPORT Tag
-{
+class KDE_EXPORT Tag {
     friend class TagSet;
-    
-    public:
+
+public:
 
     /** creates a tag with given id, name and scheme. If name is QString::null, the id is used as name. If id is QString::null, the object is considered as NULL object (see isNull())*/
-    Tag(const QString& id, const QString& name=QString::null, const QString& scheme=QString::null);
+    Tag(const QString &id, const QString &name = QString::null, const QString &scheme = QString::null);
 
     /** creates a null tag (isNull() is @c true) */
     Tag();
-   
-    Tag(const Tag& other);
+
+    Tag(const Tag &other);
 
     /** creates a tag from a Atom-1.0-like (term, scheme, label) category.
 
       @c term is a string that identifies the tag, Examples are: "General", "KDE", "Personal"
       @c scheme (optional) classification scheme the term belongs to
       @c label/name the (optinal) human-readable name of the tag, synonymous to @c name
-      
+
       Example:
-      
+
       @code
       Create
 
       <category term="foo" scheme="http://del.icio.us/tag"  label="Del.icio.us tag for foo"/>
 
       using Tag::fromCategory("foo", "http://del.icio.us/tag", "Del.icio.us tag for foo")
-      
+
       The @c id is built using 'scheme + "/" + term': The example gets id = "http://del.icio.us/tag/foo"
       @encode
     */
-    static Tag fromCategory(const QString& term, const QString& scheme=QString::null, const QString& name=QString::null);
+    static Tag fromCategory(const QString &term, const QString &scheme = QString::null, const QString &name = QString::null);
 
     virtual ~Tag();
 
     /** returns whether this is a null object (equal to id().isNull())*/
 
     bool isNull() const;
-    
+
     /** tag identifier, used as key throughout the app and archive. Must be unique in the tag set. Can be an arbitrary unicode string, an URI etc. */
     QString id() const;
 
@@ -91,31 +90,31 @@ class KDE_EXPORT Tag
     /** (optional) classfication scheme this tag belongs to */
     QString scheme() const;
 
-    void setName(const QString& name);
+    void setName(const QString &name);
 
     QString icon() const;
-    void setIcon(const QString& icon);
+    void setIcon(const QString &icon);
 
-    Tag& operator=(const Tag& other);
+    Tag &operator=(const Tag &other);
 
-    /** compares tags by name. If names are equal, id's are compared. 
+    /** compares tags by name. If names are equal, id's are compared.
         a < b iff a.name < b.name || (a.name == b.name && a.id < b.id) */
-    bool operator<(const Tag& other) const;
+    bool operator<(const Tag &other) const;
 
     /** tags are equal when their id's are equal, name is ignored */
-    bool operator==(const Tag& other) const;
+    bool operator==(const Tag &other) const;
 
 
-    protected:
+protected:
     /** called by TagSet */
-    void addedToTagSet(TagSet* tagSet) const;
+    void addedToTagSet(TagSet *tagSet) const;
 
-/** called by TagSet */
-    void removedFromTagSet(TagSet* tagSet) const;
-    private:
+    /** called by TagSet */
+    void removedFromTagSet(TagSet *tagSet) const;
+private:
 
     class TagPrivate;
-    TagPrivate* d;
+    TagPrivate *d;
 };
 
 

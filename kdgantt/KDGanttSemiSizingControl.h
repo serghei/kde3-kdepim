@@ -40,50 +40,49 @@
 class QPushButton;
 class QBoxLayout;
 
-class KDGanttSemiSizingControl : public KDGanttSizingControl
-{
-    Q_PROPERTY( ArrowPosition arrowPosition READ arrowPosition WRITE setArrowPosition )
-    Q_ENUMS( ArrowPosition )
+class KDGanttSemiSizingControl : public KDGanttSizingControl {
+    Q_PROPERTY(ArrowPosition arrowPosition READ arrowPosition WRITE setArrowPosition)
+    Q_ENUMS(ArrowPosition)
     Q_OBJECT
 
 public:
     enum ArrowPosition { Before, After };
 
-    KDGanttSemiSizingControl( QWidget* parent = 0, const char* name = 0 );
-    KDGanttSemiSizingControl( Orientation orientation, QWidget* parent = 0,
-                           const char* name = 0 );
-    KDGanttSemiSizingControl( ArrowPosition arrowPosition,
-                         Orientation orientation, QWidget* parent = 0,
-                         const char* name = 0 );
+    KDGanttSemiSizingControl(QWidget *parent = 0, const char *name = 0);
+    KDGanttSemiSizingControl(Orientation orientation, QWidget *parent = 0,
+                             const char *name = 0);
+    KDGanttSemiSizingControl(ArrowPosition arrowPosition,
+                             Orientation orientation, QWidget *parent = 0,
+                             const char *name = 0);
 
-    void setMinimizedWidget( QWidget* widget );
-    void setMaximizedWidget( QWidget* widget );
-    QWidget* minimizedWidget() const;
-    QWidget* maximizedWidget() const;
+    void setMinimizedWidget(QWidget *widget);
+    void setMaximizedWidget(QWidget *widget);
+    QWidget *minimizedWidget() const;
+    QWidget *maximizedWidget() const;
 
-    void setOrientation( Qt::Orientation orientation );
+    void setOrientation(Qt::Orientation orientation);
     Qt::Orientation orientation() const;
 
-    void setArrowPosition( ArrowPosition arrowPosition );
+    void setArrowPosition(ArrowPosition arrowPosition);
     ArrowPosition arrowPosition() const;
 
 public slots:
-    virtual void minimize( bool minimize );
-    virtual void restore( bool restore );
+    virtual void minimize(bool minimize);
+    virtual void restore(bool restore);
 
 protected:
     void setup();
     void init();
     enum Direction {Left, Right, Up, Down };
-    QPixmap pixmap( Direction );
+    QPixmap pixmap(Direction);
 
 private:
     Orientation _orient;
     ArrowPosition _arrowPos;
-    QWidget* _minimizedWidget;
-    QWidget* _maximizedWidget;
-    QBoxLayout* _layout;
-    QPushButton* _but;
+    QWidget *_minimizedWidget;
+    QWidget *_maximizedWidget;
+    QBoxLayout *_layout;
+    QPushButton *_but;
 };
 
 

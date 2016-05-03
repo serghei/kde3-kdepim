@@ -38,103 +38,114 @@
 
 using namespace KPIM;
 
-struct CollectingProcess::Private {
-  Private() : stdoutSize( 0 ), stderrSize( 0 )
+struct CollectingProcess::Private
+{
+    Private() : stdoutSize(0), stderrSize(0)
     {}
 
-  uint stdoutSize;
-  QValueList<QByteArray> stdoutBuffer;
-  uint stderrSize;
-  QValueList<QByteArray> stderrBuffer;
+    uint stdoutSize;
+    QValueList<QByteArray> stdoutBuffer;
+    uint stderrSize;
+    QValueList<QByteArray> stderrBuffer;
 };
 
 
-CollectingProcess::CollectingProcess( QObject * parent, const char * name )
-  : KProcess( parent, name )
+CollectingProcess::CollectingProcess(QObject *parent, const char *name)
+    : KProcess(parent, name)
 {
-  d = new Private();
+    d = new Private();
 }
 
-CollectingProcess::~CollectingProcess() {
-  delete d; d = 0;
-}
-
-bool CollectingProcess::start( RunMode runmode, Communication comm ) {
-  // prevent duplicate connection
-  disconnect( this, SIGNAL( receivedStdout( KProcess *, char *, int ) ),
-              this, SLOT( slotReceivedStdout( KProcess *, char *, int ) ) );
-  if ( comm & Stdout ) {
-    connect( this, SIGNAL( receivedStdout( KProcess *, char *, int ) ),
-             this, SLOT( slotReceivedStdout( KProcess *, char *, int ) ) );
-  }
-  // prevent duplicate connection
-  disconnect( this, SIGNAL( receivedStderr( KProcess *, char *, int ) ),
-              this, SLOT( slotReceivedStderr( KProcess *, char *, int ) ) );
-  if ( comm & Stderr ) {
-    connect( this, SIGNAL( receivedStderr( KProcess *, char *, int ) ),
-             this, SLOT( slotReceivedStderr( KProcess *, char *, int ) ) );
-  }
-  return KProcess::start( runmode, comm );
-}
-
-void CollectingProcess::slotReceivedStdout( KProcess *, char *buf, int len )
+CollectingProcess::~CollectingProcess()
 {
-  QByteArray b;
-  b.duplicate( buf, len );
-  d->stdoutBuffer.append( b );
-  d->stdoutSize += len;
+    delete d;
+    d = 0;
 }
 
-void CollectingProcess::slotReceivedStderr( KProcess *, char *buf, int len )
+bool CollectingProcess::start(RunMode runmode, Communication comm)
 {
-  QByteArray b;
-  b.duplicate( buf, len );
-  d->stderrBuffer.append( b );
-  d->stderrSize += len;
+    // prevent duplicate connection
+    disconnect(this, SIGNAL(receivedStdout(KProcess *, char *, int)),
+               this, SLOT(slotReceivedStdout(KProcess *, char *, int)));
+    if(comm & Stdout)
+    {
+        connect(this, SIGNAL(receivedStdout(KProcess *, char *, int)),
+                this, SLOT(slotReceivedStdout(KProcess *, char *, int)));
+    }
+    // prevent duplicate connection
+    disconnect(this, SIGNAL(receivedStderr(KProcess *, char *, int)),
+               this, SLOT(slotReceivedStderr(KProcess *, char *, int)));
+    if(comm & Stderr)
+    {
+        connect(this, SIGNAL(receivedStderr(KProcess *, char *, int)),
+                this, SLOT(slotReceivedStderr(KProcess *, char *, int)));
+    }
+    return KProcess::start(runmode, comm);
+}
+
+void CollectingProcess::slotReceivedStdout(KProcess *, char *buf, int len)
+{
+    QByteArray b;
+    b.duplicate(buf, len);
+    d->stdoutBuffer.append(b);
+    d->stdoutSize += len;
+}
+
+void CollectingProcess::slotReceivedStderr(KProcess *, char *buf, int len)
+{
+    QByteArray b;
+    b.duplicate(buf, len);
+    d->stderrBuffer.append(b);
+    d->stderrSize += len;
 }
 
 QByteArray CollectingProcess::collectedStdout()
 {
-  if ( d->stdoutSize == 0 ) {
-    return QByteArray();
-  }
+    if(d->stdoutSize == 0)
+    {
+        return QByteArray();
+    }
 
-  uint offset = 0;
-  QByteArray b( d->stdoutSize );
-  for ( QValueList<QByteArray>::const_iterator it = d->stdoutBuffer.begin();
-        it != d->stdoutBuffer.end();
-        ++it ) {
-    memcpy( b.data() + offset, (*it).data(), (*it).size() );
-    offset += (*it).size();
-  }
-  d->stdoutBuffer.clear();
-  d->stdoutSize = 0;
+    uint offset = 0;
+    QByteArray b(d->stdoutSize);
+    for(QValueList<QByteArray>::const_iterator it = d->stdoutBuffer.begin();
+            it != d->stdoutBuffer.end();
+            ++it)
+    {
+        memcpy(b.data() + offset, (*it).data(), (*it).size());
+        offset += (*it).size();
+    }
+    d->stdoutBuffer.clear();
+    d->stdoutSize = 0;
 
-  return b;
+    return b;
 }
 
 QByteArray CollectingProcess::collectedStderr()
 {
-  if ( d->stderrSize == 0 ) {
-    return QByteArray();
-  }
+    if(d->stderrSize == 0)
+    {
+        return QByteArray();
+    }
 
-  uint offset = 0;
-  QByteArray b( d->stderrSize );
-  for ( QValueList<QByteArray>::const_iterator it = d->stderrBuffer.begin();
-        it != d->stderrBuffer.end();
-        ++it ) {
-    memcpy( b.data() + offset, (*it).data(), (*it).size() );
-    offset += (*it).size();
-  }
-  d->stderrBuffer.clear();
-  d->stderrSize = 0;
+    uint offset = 0;
+    QByteArray b(d->stderrSize);
+    for(QValueList<QByteArray>::const_iterator it = d->stderrBuffer.begin();
+            it != d->stderrBuffer.end();
+            ++it)
+    {
+        memcpy(b.data() + offset, (*it).data(), (*it).size());
+        offset += (*it).size();
+    }
+    d->stderrBuffer.clear();
+    d->stderrSize = 0;
 
-  return b;
+    return b;
 }
 
-void CollectingProcess::virtual_hook( int id, void * data ) {
-  KProcess::virtual_hook( id, data );
+void CollectingProcess::virtual_hook(int id, void *data)
+{
+    KProcess::virtual_hook(id, data);
 }
 
 #include "collectingprocess.moc"

@@ -30,21 +30,21 @@
 
 #include "exchangedialog.h"
 
-ExchangeDialog::ExchangeDialog( const QDate &_start, const QDate &_end, QWidget *parent)
-  : KDialogBase(Plain,i18n("Exchange Plugin"),Ok|Cancel,Ok,parent)
+ExchangeDialog::ExchangeDialog(const QDate &_start, const QDate &_end, QWidget *parent)
+    : KDialogBase(Plain, i18n("Exchange Plugin"), Ok | Cancel, Ok, parent)
 {
-  QFrame *topFrame = plainPage();
-  QGridLayout *topLayout = new QGridLayout( topFrame, 2, 2, 3 );
+    QFrame *topFrame = plainPage();
+    QGridLayout *topLayout = new QGridLayout(topFrame, 2, 2, 3);
 
-  QLabel *label = new QLabel(i18n("Start date:"),topFrame);
-  topLayout->addWidget(label, 0, 0);
+    QLabel *label = new QLabel(i18n("Start date:"), topFrame);
+    topLayout->addWidget(label, 0, 0);
 
-  m_start = new KDateWidget( _start, topFrame );
-  topLayout->addWidget( m_start, 0, 1 );
+    m_start = new KDateWidget(_start, topFrame);
+    topLayout->addWidget(m_start, 0, 1);
 
-  m_end = new KDateWidget( _end, topFrame );
-  topLayout->addWidget( new QLabel( i18n( "End date:" ), topFrame ), 1, 0 );
-  topLayout->addWidget( m_end, 1, 1 );
+    m_end = new KDateWidget(_end, topFrame);
+    topLayout->addWidget(new QLabel(i18n("End date:"), topFrame), 1, 0);
+    topLayout->addWidget(m_end, 1, 1);
 }
 
 ExchangeDialog::~ExchangeDialog()
@@ -53,6 +53,6 @@ ExchangeDialog::~ExchangeDialog()
 
 void ExchangeDialog::slotOk()
 {
-  accept();
+    accept();
 }
 #include "exchangedialog.moc"

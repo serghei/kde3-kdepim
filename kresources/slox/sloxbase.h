@@ -28,87 +28,88 @@ class Resource;
 }
 
 class KDE_EXPORT SloxBase {
-  public:
-    enum Field {
-      ObjectId = 0, // system fields
-      ClientId,
-      FolderId,
-      LastSync,
-      ObjectType,
-      ObjectStatus,
-      CreatedBy,
-      Categories,
-      IncidenceTitle, // incidence fields
-      Description,
-      Participants,
-      Participant,
-      Reminder,
-      RecurrenceType, // recurrence fields
-      RecurrenceEnd,
-      RecurrenceDailyFreq,
-      RecurrenceWeeklyFreq,
-      RecurrenceMonthlyFreq,
-      RecurrenceMonthlyDay,
-      RecurrenceYearlyDay,
-      RecurrenceYearlyMonth,
-      RecurrenceMonthly2Freq,
-      RecurrenceMonthly2Day,
-      RecurrenceMonthly2Pos,
-      RecurrenceYearly2Day,
-      RecurrenceYearly2Pos,
-      RecurrenceYearly2Month,
-      RecurrenceDelEx,
-      EventBegin,   // event fields
-      EventEnd,
-      Location,
-      FullTime,
-      TaskBegin,    // task fields
-      TaskEnd,
-      Priority,
-      PercentComplete,
-      FamilyName,   // contact fields
-      GivenName,
-      SecondName,
-      DisplayName,
-      Title,
-      Suffix,
-      Role,
-      Organization,
-      Department,
-      PrimaryEmail,
-      SecondaryEmail1,
-      SecondaryEmail2,
-      SecondaryEmail3,
-      Birthday,
-      Url,
-      Comment,
-      Image,
-      InstantMsg,
-      Office,
-      Profession,
-      ManagersName,
-      AssistantsName,
-      SpousesName,
-      Anniversary,
-      NickName,
-      Street,      // address fields
-      PostalCode,
-      City,
-      State,
-      Country,
-      HomePrefix,  // address type prefixes
-      BusinessPrefix,
-      OtherPrefix
+public:
+    enum Field
+    {
+        ObjectId = 0, // system fields
+        ClientId,
+        FolderId,
+        LastSync,
+        ObjectType,
+        ObjectStatus,
+        CreatedBy,
+        Categories,
+        IncidenceTitle, // incidence fields
+        Description,
+        Participants,
+        Participant,
+        Reminder,
+        RecurrenceType, // recurrence fields
+        RecurrenceEnd,
+        RecurrenceDailyFreq,
+        RecurrenceWeeklyFreq,
+        RecurrenceMonthlyFreq,
+        RecurrenceMonthlyDay,
+        RecurrenceYearlyDay,
+        RecurrenceYearlyMonth,
+        RecurrenceMonthly2Freq,
+        RecurrenceMonthly2Day,
+        RecurrenceMonthly2Pos,
+        RecurrenceYearly2Day,
+        RecurrenceYearly2Pos,
+        RecurrenceYearly2Month,
+        RecurrenceDelEx,
+        EventBegin,   // event fields
+        EventEnd,
+        Location,
+        FullTime,
+        TaskBegin,    // task fields
+        TaskEnd,
+        Priority,
+        PercentComplete,
+        FamilyName,   // contact fields
+        GivenName,
+        SecondName,
+        DisplayName,
+        Title,
+        Suffix,
+        Role,
+        Organization,
+        Department,
+        PrimaryEmail,
+        SecondaryEmail1,
+        SecondaryEmail2,
+        SecondaryEmail3,
+        Birthday,
+        Url,
+        Comment,
+        Image,
+        InstantMsg,
+        Office,
+        Profession,
+        ManagersName,
+        AssistantsName,
+        SpousesName,
+        Anniversary,
+        NickName,
+        Street,      // address fields
+        PostalCode,
+        City,
+        State,
+        Country,
+        HomePrefix,  // address type prefixes
+        BusinessPrefix,
+        OtherPrefix
     };
 
-    SloxBase( KRES::Resource *res );
+    SloxBase(KRES::Resource *res);
 
-    QString decodeText( const QString &text );
-    QString fieldName( Field f );
+    QString decodeText(const QString &text);
+    QString fieldName(Field f);
     QString resType() const;
-    QString boolToStr( bool b );
+    QString boolToStr(bool b);
 
-  private:
+private:
     KRES::Resource *mRes;
 };
 

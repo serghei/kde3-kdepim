@@ -43,87 +43,96 @@
 
 using namespace KPIM;
 
-IdentityCombo::IdentityCombo( IdentityManager* manager, QWidget * parent, const char * name )
-  : QComboBox( false, parent, name ), mIdentityManager( manager )
+IdentityCombo::IdentityCombo(IdentityManager *manager, QWidget *parent, const char *name)
+    : QComboBox(false, parent, name), mIdentityManager(manager)
 {
-  reloadCombo();
-  reloadUoidList();
-  connect( this, SIGNAL(activated(int)), SLOT(slotEmitChanged(int)) );
-  connect( manager, SIGNAL(changed()),
-	   SLOT(slotIdentityManagerChanged()) );
+    reloadCombo();
+    reloadUoidList();
+    connect(this, SIGNAL(activated(int)), SLOT(slotEmitChanged(int)));
+    connect(manager, SIGNAL(changed()),
+            SLOT(slotIdentityManagerChanged()));
 }
 
-QString IdentityCombo::currentIdentityName() const {
-  return mIdentityManager->identities()[ currentItem() ];
+QString IdentityCombo::currentIdentityName() const
+{
+    return mIdentityManager->identities()[ currentItem() ];
 }
 
-uint IdentityCombo::currentIdentity() const {
-  return mUoidList[ currentItem() ];
+uint IdentityCombo::currentIdentity() const
+{
+    return mUoidList[ currentItem() ];
 }
 
-void IdentityCombo::setCurrentIdentity( const Identity & identity ) {
-  setCurrentIdentity( identity.uoid() );
+void IdentityCombo::setCurrentIdentity(const Identity &identity)
+{
+    setCurrentIdentity(identity.uoid());
 }
 
-void IdentityCombo::setCurrentIdentity( const QString & name ) {
-  int idx = mIdentityManager->identities().findIndex( name );
-  if ( idx < 0 ) return;
-  if ( idx == currentItem() ) return;
+void IdentityCombo::setCurrentIdentity(const QString &name)
+{
+    int idx = mIdentityManager->identities().findIndex(name);
+    if(idx < 0) return;
+    if(idx == currentItem()) return;
 
-  blockSignals( true ); // just in case Qt gets fixed to emit activated() here
-  setCurrentItem( idx );
-  blockSignals( false );
+    blockSignals(true);   // just in case Qt gets fixed to emit activated() here
+    setCurrentItem(idx);
+    blockSignals(false);
 
-  slotEmitChanged( idx );
+    slotEmitChanged(idx);
 }
 
-void IdentityCombo::setCurrentIdentity( uint uoid ) {
-  int idx = mUoidList.findIndex( uoid );
-  if ( idx < 0 ) return;
-  if ( idx == currentItem() ) return;
+void IdentityCombo::setCurrentIdentity(uint uoid)
+{
+    int idx = mUoidList.findIndex(uoid);
+    if(idx < 0) return;
+    if(idx == currentItem()) return;
 
-  blockSignals( true ); // just in case Qt gets fixed to emit activated() here
-  setCurrentItem( idx );
-  blockSignals( false );
+    blockSignals(true);   // just in case Qt gets fixed to emit activated() here
+    setCurrentItem(idx);
+    blockSignals(false);
 
-  slotEmitChanged( idx );
+    slotEmitChanged(idx);
 }
 
-void IdentityCombo::reloadCombo() {
-  QStringList identities = mIdentityManager->identities();
-  // the IM should prevent this from happening:
-  assert( !identities.isEmpty() );
-  identities.first() = i18n("%1 (Default)").arg( identities.first() );
-  clear();
-  insertStringList( identities );
+void IdentityCombo::reloadCombo()
+{
+    QStringList identities = mIdentityManager->identities();
+    // the IM should prevent this from happening:
+    assert(!identities.isEmpty());
+    identities.first() = i18n("%1 (Default)").arg(identities.first());
+    clear();
+    insertStringList(identities);
 }
 
-void IdentityCombo::reloadUoidList() {
-  mUoidList.clear();
-  IdentityManager::ConstIterator it;
-  for ( it = mIdentityManager->begin() ; it != mIdentityManager->end() ; ++it )
-    mUoidList << (*it).uoid();
+void IdentityCombo::reloadUoidList()
+{
+    mUoidList.clear();
+    IdentityManager::ConstIterator it;
+    for(it = mIdentityManager->begin() ; it != mIdentityManager->end() ; ++it)
+        mUoidList << (*it).uoid();
 }
 
-void IdentityCombo::slotIdentityManagerChanged() {
-  uint oldIdentity = mUoidList[ currentItem() ];
+void IdentityCombo::slotIdentityManagerChanged()
+{
+    uint oldIdentity = mUoidList[ currentItem() ];
 
-  reloadUoidList();
-  int idx = mUoidList.findIndex( oldIdentity );
+    reloadUoidList();
+    int idx = mUoidList.findIndex(oldIdentity);
 
-  blockSignals( true );
-  reloadCombo();
-  setCurrentItem( idx < 0 ? 0 : idx );
-  blockSignals( false );
+    blockSignals(true);
+    reloadCombo();
+    setCurrentItem(idx < 0 ? 0 : idx);
+    blockSignals(false);
 
-  if ( idx < 0 )
-    // apparently our oldIdentity got deleted:
-    slotEmitChanged( currentItem() );
+    if(idx < 0)
+        // apparently our oldIdentity got deleted:
+        slotEmitChanged(currentItem());
 }
 
-void IdentityCombo::slotEmitChanged( int idx ) {
-  emit identityChanged( mIdentityManager->identities()[idx] );
-  emit identityChanged( mUoidList[idx] );
+void IdentityCombo::slotEmitChanged(int idx)
+{
+    emit identityChanged(mIdentityManager->identities()[idx]);
+    emit identityChanged(mUoidList[idx]);
 }
 
 #include "identitycombo.moc"

@@ -38,30 +38,31 @@
 #include "qgpgmejob.h"
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
+class Error;
+class Context;
+class Key;
 }
 
 namespace Kleo {
 
-  class QGpgMEDeleteJob : public DeleteJob, private QGpgMEJob {
+class QGpgMEDeleteJob : public DeleteJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEDeleteJob( GpgME::Context * context );
+public:
+    QGpgMEDeleteJob(GpgME::Context *context);
     ~QGpgMEDeleteJob();
 
     /*! \reimp from DeleteJob */
-    GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion );
+    GpgME::Error start(const GpgME::Key &key, bool allowSecretKeyDeletion);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+};
 
 }
 

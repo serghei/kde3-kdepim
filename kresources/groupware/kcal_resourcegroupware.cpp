@@ -47,254 +47,271 @@
 using namespace KCal;
 
 ResourceGroupware::ResourceGroupware()
-  : ResourceCached( 0 ), mLock( true ),
-    mProgress( 0 )
+    : ResourceCached(0), mLock(true),
+      mProgress(0)
 {
-  init();
+    init();
 
-  mPrefs->addGroupPrefix( identifier() );
+    mPrefs->addGroupPrefix(identifier());
 }
 
-ResourceGroupware::ResourceGroupware( const KConfig *config )
-  : ResourceCached( config ), mLock( true )
+ResourceGroupware::ResourceGroupware(const KConfig *config)
+    : ResourceCached(config), mLock(true)
 {
-  init();
+    init();
 
-  mPrefs->addGroupPrefix( identifier() );
+    mPrefs->addGroupPrefix(identifier());
 
-  if ( config ) readConfig( config );
+    if(config) readConfig(config);
 }
 
 ResourceGroupware::~ResourceGroupware()
 {
-  disableChangeNotification();
+    disableChangeNotification();
 
-  delete mPrefs;
-  mPrefs = 0;
+    delete mPrefs;
+    mPrefs = 0;
 }
 
 void ResourceGroupware::init()
 {
-  mDownloadJob = 0;
-  mProgress = 0;
-  
-  mIsShowingError = false;
+    mDownloadJob = 0;
+    mProgress = 0;
 
-  mPrefs = new GroupwarePrefsBase();
-  
-  setType( "groupware" );
+    mIsShowingError = false;
 
-  enableChangeNotification();
+    mPrefs = new GroupwarePrefsBase();
+
+    setType("groupware");
+
+    enableChangeNotification();
 }
 
 GroupwarePrefsBase *ResourceGroupware::prefs()
 {
-  return mPrefs;
+    return mPrefs;
 }
 
-void ResourceGroupware::readConfig( const KConfig *config )
+void ResourceGroupware::readConfig(const KConfig *config)
 {
-  kdDebug() << "KCal::ResourceGroupware::readConfig()" << endl;
+    kdDebug() << "KCal::ResourceGroupware::readConfig()" << endl;
 
-  mPrefs->readConfig();
+    mPrefs->readConfig();
 
-  ResourceCached::readConfig( config );
+    ResourceCached::readConfig(config);
 }
 
-void ResourceGroupware::writeConfig( KConfig *config )
+void ResourceGroupware::writeConfig(KConfig *config)
 {
-  kdDebug() << "KCal::ResourceGroupware::writeConfig()" << endl;
+    kdDebug() << "KCal::ResourceGroupware::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
+    ResourceCalendar::writeConfig(config);
 
-  mPrefs->writeConfig();
+    mPrefs->writeConfig();
 
-  ResourceCached::writeConfig( config );
+    ResourceCached::writeConfig(config);
 }
 
 bool ResourceGroupware::doOpen()
 {
-  return true;
+    return true;
 }
 
 void ResourceGroupware::doClose()
 {
-  ResourceCached::doClose();
+    ResourceCached::doClose();
 }
 
 bool ResourceGroupware::doLoad()
 {
-  kdDebug() << "ResourceGroupware::load()" << endl;
+    kdDebug() << "ResourceGroupware::load()" << endl;
 
-  if ( mIsShowingError ) {
-    kdDebug() << "Still showing error" << endl;
-    return true;
-  }
-
-  if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
-    return false;
-  }
-
-  mCalendar.close();
-
-  disableChangeNotification();
-  loadCache();
-  enableChangeNotification();
-
-  emit resourceChanged( this );
-
-  clearChanges();
-
-  KURL url( prefs()->url() );
-  url.setUser( prefs()->user() );
-  url.setPass( prefs()->password() );
-
-  kdDebug() << "Download URL: " << url << endl;
-
-  mJobData = QString::null;
-
-  mDownloadJob = KPIM::GroupwareJob::getCalendar( url );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
-  connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
-           SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
-
-  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-    KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
-  connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           SLOT( cancelLoad() ) );
-
-  return true;
-}
-
-void ResourceGroupware::slotJobResult( KIO::Job *job )
-{
-  kdDebug() << "ResourceGroupware::slotJobResult(): " << endl;
-
-  if ( job->error() ) {
-    mIsShowingError = true;
-    loadError( job->errorString() );
-    mIsShowingError = false;
-  } else {
-    disableChangeNotification();
-
-    clearCache();
-
-     // FIXME: This does not take into account the time zone!
-    CalendarLocal calendar;
-    ICalFormat ical;
-    if ( !ical.fromString( &calendar, mJobData ) ) {
-      loadError( i18n("Error parsing calendar data.") );
-    } else {
-      Incidence::List incidences = calendar.incidences();
-      Incidence::List::ConstIterator it;
-      for( it = incidences.begin(); it != incidences.end(); ++it ) {
-//        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
-        Incidence *i = (*it)->clone();
-        QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
-        QString local = idMapper().localId( remote );
-        if ( local.isEmpty() ) {
-          idMapper().setRemoteId( i->uid(), remote );
-        } else {
-          i->setUid( local );
-        }
-        addIncidence( i );
-      }
+    if(mIsShowingError)
+    {
+        kdDebug() << "Still showing error" << endl;
+        return true;
     }
-    saveCache();
+
+    if(mDownloadJob)
+    {
+        kdWarning() << "Download still in progress" << endl;
+        return false;
+    }
+
+    mCalendar.close();
+
+    disableChangeNotification();
+    loadCache();
     enableChangeNotification();
+
+    emit resourceChanged(this);
 
     clearChanges();
 
-    emit resourceChanged( this );
-    emit resourceLoaded( this );
-  }
+    KURL url(prefs()->url());
+    url.setUser(prefs()->user());
+    url.setPass(prefs()->password());
 
-  mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
+    kdDebug() << "Download URL: " << url << endl;
+
+    mJobData = QString::null;
+
+    mDownloadJob = KPIM::GroupwareJob::getCalendar(url);
+    connect(mDownloadJob, SIGNAL(result(KIO::Job *)),
+            SLOT(slotJobResult(KIO::Job *)));
+    connect(mDownloadJob, SIGNAL(data(KIO::Job *, const QByteArray &)),
+            SLOT(slotJobData(KIO::Job *, const QByteArray &)));
+
+    mProgress = KPIM::ProgressManager::instance()->createProgressItem(
+                    KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar"));
+    connect(mProgress,
+            SIGNAL(progressItemCanceled(KPIM::ProgressItem *)),
+            SLOT(cancelLoad()));
+
+    return true;
 }
 
-void ResourceGroupware::slotJobData( KIO::Job *, const QByteArray &data )
+void ResourceGroupware::slotJobResult(KIO::Job *job)
 {
-//  kdDebug() << "ResourceGroupware::slotJobData()" << endl;
+    kdDebug() << "ResourceGroupware::slotJobResult(): " << endl;
 
-  mJobData.append( data.data() );
+    if(job->error())
+    {
+        mIsShowingError = true;
+        loadError(job->errorString());
+        mIsShowingError = false;
+    }
+    else
+    {
+        disableChangeNotification();
+
+        clearCache();
+
+        // FIXME: This does not take into account the time zone!
+        CalendarLocal calendar;
+        ICalFormat ical;
+        if(!ical.fromString(&calendar, mJobData))
+        {
+            loadError(i18n("Error parsing calendar data."));
+        }
+        else
+        {
+            Incidence::List incidences = calendar.incidences();
+            Incidence::List::ConstIterator it;
+            for(it = incidences.begin(); it != incidences.end(); ++it)
+            {
+                //        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
+                Incidence *i = (*it)->clone();
+                QString remote = (*it)->customProperty("GWRESOURCE", "UID");
+                QString local = idMapper().localId(remote);
+                if(local.isEmpty())
+                {
+                    idMapper().setRemoteId(i->uid(), remote);
+                }
+                else
+                {
+                    i->setUid(local);
+                }
+                addIncidence(i);
+            }
+        }
+        saveCache();
+        enableChangeNotification();
+
+        clearChanges();
+
+        emit resourceChanged(this);
+        emit resourceLoaded(this);
+    }
+
+    mDownloadJob = 0;
+    if(mProgress) mProgress->setComplete();
+    mProgress = 0;
+}
+
+void ResourceGroupware::slotJobData(KIO::Job *, const QByteArray &data)
+{
+    //  kdDebug() << "ResourceGroupware::slotJobData()" << endl;
+
+    mJobData.append(data.data());
 }
 
 void ResourceGroupware::loadFinished()
 {
-  saveCache();
-  enableChangeNotification();
+    saveCache();
+    enableChangeNotification();
 
-  emit resourceChanged( this );
-  emit resourceLoaded( this );
+    emit resourceChanged(this);
+    emit resourceLoaded(this);
 }
 
 bool ResourceGroupware::doSave()
 {
-  kdDebug() << "KCal::ResourceGroupware::doSave()" << endl;
+    kdDebug() << "KCal::ResourceGroupware::doSave()" << endl;
 
-  saveCache();
+    saveCache();
 
-  if ( !hasChanges() ) {
-    kdDebug() << "No changes" << endl;
-    return true;
-  }
-  
-  if ( !confirmSave() ) return false;
+    if(!hasChanges())
+    {
+        kdDebug() << "No changes" << endl;
+        return true;
+    }
+
+    if(!confirmSave()) return false;
 
 #if 0
-  Incidence::List::ConstIterator it;
+    Incidence::List::ConstIterator it;
 
-  Incidence::List added = addedIncidences();
-  for( it = added.begin(); it != added.end(); ++it ) {
-    if ( mServer->addIncidence( *it, this ) ) {
-      clearChange( *it );
-      saveCache();
+    Incidence::List added = addedIncidences();
+    for(it = added.begin(); it != added.end(); ++it)
+    {
+        if(mServer->addIncidence(*it, this))
+        {
+            clearChange(*it);
+            saveCache();
+        }
     }
-  }
-  Incidence::List changed = changedIncidences();
-  for( it = changed.begin(); it != changed.end(); ++it ) {
-    if ( mServer->changeIncidence( *it ) ) clearChange( *it );
-  }
-  Incidence::List deleted = deletedIncidences();
-  for( it = deleted.begin(); it != deleted.end(); ++it ) {
-    if ( mServer->deleteIncidence( *it ) ) clearChange( *it );
-  }
+    Incidence::List changed = changedIncidences();
+    for(it = changed.begin(); it != changed.end(); ++it)
+    {
+        if(mServer->changeIncidence(*it)) clearChange(*it);
+    }
+    Incidence::List deleted = deletedIncidences();
+    for(it = deleted.begin(); it != deleted.end(); ++it)
+    {
+        if(mServer->deleteIncidence(*it)) clearChange(*it);
+    }
 #endif
 
-  return true;
+    return true;
 }
 
 // FIXME: Put this into ResourceCached
 bool ResourceGroupware::confirmSave()
 {
-  if ( !hasChanges() ) return true;
+    if(!hasChanges()) return true;
 
-  ConfirmSaveDialog dlg( resourceName(), 0 );
+    ConfirmSaveDialog dlg(resourceName(), 0);
 
-  dlg.addIncidences( addedIncidences(), i18n("Added") );
-  dlg.addIncidences( changedIncidences(), i18n("Changed") );
-  dlg.addIncidences( deletedIncidences(), i18n("Deleted") );
+    dlg.addIncidences(addedIncidences(), i18n("Added"));
+    dlg.addIncidences(changedIncidences(), i18n("Changed"));
+    dlg.addIncidences(deletedIncidences(), i18n("Deleted"));
 
-  int result = dlg.exec();
-  return result == QDialog::Accepted;
+    int result = dlg.exec();
+    return result == QDialog::Accepted;
 }
 
 KABC::Lock *ResourceGroupware::lock()
 {
-  return &mLock;
+    return &mLock;
 }
 
 void ResourceGroupware::cancelLoad()
 {
-  if ( mDownloadJob ) mDownloadJob->kill();
-  mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
+    if(mDownloadJob) mDownloadJob->kill();
+    mDownloadJob = 0;
+    if(mProgress) mProgress->setComplete();
+    mProgress = 0;
 }
 
 #include "kcal_resourcegroupware.moc"

@@ -36,8 +36,12 @@ class KSelectAction;
 
 class FilterSelectionWidget;
 
-namespace KAB { class Core; }
-namespace KABC { class AddressBook; }
+namespace KAB {
+class Core;
+}
+namespace KABC {
+class AddressBook;
+}
 
 /**
   The view manager manages the views and everything related to them. The
@@ -47,12 +51,11 @@ namespace KABC { class AddressBook; }
   The view manager will also create and manage all dialogs directly related to
   views (ie: AddView, ConfigureView, DeleteView, etc).
  */
-class ViewManager : public QWidget
-{
-  Q_OBJECT
+class ViewManager : public QWidget {
+    Q_OBJECT
 
-  public:
-    ViewManager( KAB::Core *core, QWidget *parent, const char *name = 0 );
+public:
+    ViewManager(KAB::Core *core, QWidget *parent, const char *name = 0);
     ~ViewManager();
 
     void restoreSettings();
@@ -64,16 +67,16 @@ class ViewManager : public QWidget
     QStringList selectedEmails() const;
     KABC::Addressee::List selectedAddressees() const;
 
-    void setFilterSelectionWidget( FilterSelectionWidget *wdg );
+    void setFilterSelectionWidget(FilterSelectionWidget *wdg);
 
     KABC::Field *currentSortField() const;
     KABC::Field::List viewFields() const;
 
-  public slots:
-    void setSelected( const QString &uid = QString::null, bool selected = true );
-    void setFirstSelected( bool selected = true );
+public slots:
+    void setSelected(const QString &uid = QString::null, bool selected = true);
+    void setFirstSelected(bool selected = true);
 
-    void refreshView( const QString &uid = QString::null );
+    void refreshView(const QString &uid = QString::null);
     void editView();
     void deleteView();
     void addView();
@@ -81,13 +84,13 @@ class ViewManager : public QWidget
     void scrollUp();
     void scrollDown();
 
-  protected slots:
+protected slots:
     /**
       Called whenever the user drops something in the active view.
       This method will try to decode what was dropped, and if it was
       a valid addressee, add it to the addressbook.
      */
-    void dropped( QDropEvent* );
+    void dropped(QDropEvent *);
 
     /**
       Called whenever the user attempts to start a drag in the view.
@@ -96,16 +99,16 @@ class ViewManager : public QWidget
      */
     void startDrag();
 
-  signals:
+signals:
     /**
       Emitted whenever the user selects an entry in the view.
      */
-    void selected( const QString &uid );
+    void selected(const QString &uid);
 
     /**
       Emitted whenever the user activates an entry in the view.
      */
-    void executed( const QString &uid );
+    void executed(const QString &uid);
 
     /**
       Emitted whenever the address book is modified in some way.
@@ -115,7 +118,7 @@ class ViewManager : public QWidget
     /**
       Emitted whenever a url is dragged on a view.
      */
-    void urlDropped( const KURL& );
+    void urlDropped(const KURL &);
 
     /**
       Emitted whenever the sort field of a view has changed.
@@ -127,17 +130,17 @@ class ViewManager : public QWidget
      */
     void viewFieldsChanged();
 
-  private slots:
-    void setActiveView( const QString &name );
-    void setActiveFilter( int index );
+private slots:
+    void setActiveView(const QString &name);
+    void setActiveFilter(int index);
     void configureFilters();
 
-  private:
+private:
     void createViewFactories();
     QStringList filterNames() const;
-    int filterPosition( const QString &name ) const;
+    int filterPosition(const QString &name) const;
     QStringList viewNames() const;
-    int viewPosition( const QString &name ) const;
+    int viewPosition(const QString &name) const;
     void initActions();
     void initGUI();
 

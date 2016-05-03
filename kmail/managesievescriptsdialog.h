@@ -14,39 +14,39 @@ class SieveJob;
 class SieveEditor;
 
 class ManageSieveScriptsDialog : public KDialogBase {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ManageSieveScriptsDialog( QWidget * parent=0, const char * name=0 );
-  ~ManageSieveScriptsDialog();
+    ManageSieveScriptsDialog(QWidget *parent = 0, const char *name = 0);
+    ~ManageSieveScriptsDialog();
 
 private slots:
-  void slotRefresh();
-  void slotItem( KMail::SieveJob *, const QString &, bool );
-  void slotResult( KMail::SieveJob *, bool, const QString &, bool );
-  void slotContextMenuRequested( QListViewItem *, const QPoint & );
-  void slotDoubleClicked( QListViewItem * );
-  void slotSelectionChanged( QListViewItem * );
-  void slotNewScript();
-  void slotEditScript();
-  void slotDeleteScript();
-  void slotGetResult( KMail::SieveJob *, bool, const QString &, bool );
-  void slotPutResult( KMail::SieveJob *, bool );
-  void slotSieveEditorOkClicked();
-  void slotSieveEditorCancelClicked();
+    void slotRefresh();
+    void slotItem(KMail::SieveJob *, const QString &, bool);
+    void slotResult(KMail::SieveJob *, bool, const QString &, bool);
+    void slotContextMenuRequested(QListViewItem *, const QPoint &);
+    void slotDoubleClicked(QListViewItem *);
+    void slotSelectionChanged(QListViewItem *);
+    void slotNewScript();
+    void slotEditScript();
+    void slotDeleteScript();
+    void slotGetResult(KMail::SieveJob *, bool, const QString &, bool);
+    void slotPutResult(KMail::SieveJob *, bool);
+    void slotSieveEditorOkClicked();
+    void slotSieveEditorCancelClicked();
 
 private:
-  void killAllJobs();
-  void changeActiveScript( QCheckListItem * );
+    void killAllJobs();
+    void changeActiveScript(QCheckListItem *);
 
 private:
-  QListView * mListView;
-  SieveEditor * mSieveEditor;
-  QMap<KMail::SieveJob*,QCheckListItem*> mJobs;
-  QMap<QCheckListItem*,KURL> mUrls;
-  QMap<QCheckListItem*,QCheckListItem*> mSelectedItems;
-  QCheckListItem * mContextMenuItem;
-  KURL mCurrentURL;
-  bool mWasActive : 1;
+    QListView *mListView;
+    SieveEditor *mSieveEditor;
+    QMap<KMail::SieveJob *, QCheckListItem *> mJobs;
+    QMap<QCheckListItem *, KURL> mUrls;
+    QMap<QCheckListItem *, QCheckListItem *> mSelectedItems;
+    QCheckListItem *mContextMenuItem;
+    KURL mCurrentURL;
+    bool mWasActive : 1;
 };
 
 }

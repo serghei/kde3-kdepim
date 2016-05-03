@@ -31,45 +31,45 @@
 #include <libkcal/icalformat.h>
 
 namespace KPIM {
-	
+
 class ExchangeProgress;
 class ExchangeAccount;
 
 class ExchangeDownload : public QObject {
     Q_OBJECT
-  public:
-    ExchangeDownload( ExchangeAccount* account, QWidget* window=0 );
-   ~ExchangeDownload();
+public:
+    ExchangeDownload(ExchangeAccount *account, QWidget *window = 0);
+    ~ExchangeDownload();
 
-    void download( KCal::Calendar* calendar, 
-         const QDate& start, const QDate& end, bool showProgress );
-    void download( const QDate& start, const QDate& end, bool showProgress );
- 
-  signals:
+    void download(KCal::Calendar *calendar,
+                  const QDate &start, const QDate &end, bool showProgress);
+    void download(const QDate &start, const QDate &end, bool showProgress);
+
+signals:
     void startDownload();
     void finishDownload();
 
-    void gotEvent( KCal::Event* event, const KURL& url );
-    void finished( ExchangeDownload*, int result, const QString& moreInfo );
-    void finished( ExchangeDownload*, int result, const QString& moreInfo, QPtrList<KCal::Event>& events );
+    void gotEvent(KCal::Event *event, const KURL &url);
+    void finished(ExchangeDownload *, int result, const QString &moreInfo);
+    void finished(ExchangeDownload *, int result, const QString &moreInfo, QPtrList<KCal::Event> &events);
 
-  private slots:
-    void slotSearchResult( KIO::Job *job );
-    void slotMasterResult( KIO::Job* job );
-    void slotPropFindResult( KIO::Job * );
+private slots:
+    void slotSearchResult(KIO::Job *job);
+    void slotMasterResult(KIO::Job *job);
+    void slotPropFindResult(KIO::Job *);
 
-  private:
-    void handleAppointments( const QDomDocument &, bool recurrence );
-    void readAppointment( const KURL& url );
-    void handleRecurrence( QString uid );
-    void finishUp( int result, const QString& moreInfo=QString::null );
-    void finishUp( int result, KIO::Job* job );
+private:
+    void handleAppointments(const QDomDocument &, bool recurrence);
+    void readAppointment(const KURL &url);
+    void handleRecurrence(QString uid);
+    void finishUp(int result, const QString &moreInfo = QString::null);
+    void finishUp(int result, KIO::Job *job);
 
     void increaseDownloads();
     void decreaseDownloads();
 
-    QString dateSelectQuery( const QDate& start, const QDate& end );
-    
+    QString dateSelectQuery(const QDate &start, const QDate &end);
+
     KCal::Calendar *mCalendar;
     KCal::ICalFormat *mFormat;
     QPtrList<KCal::Event> *mEvents;
@@ -78,9 +78,9 @@ class ExchangeDownload : public QObject {
     int mDownloadsBusy;
     QDomDocument mResponse;
 
-    QMap<QString,int> m_uids; // This keeps track of uids we already covered. Especially useful for
-    	// recurring events.
-    QWidget* mWindow;
+    QMap<QString, int> m_uids; // This keeps track of uids we already covered. Especially useful for
+    // recurring events.
+    QWidget *mWindow;
 };
 
 }

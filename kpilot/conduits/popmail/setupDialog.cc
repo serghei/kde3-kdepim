@@ -58,99 +58,99 @@
 
 
 
-PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new PopMailWidget(p,"PopMailWidget"))
+PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p, const char *n) :
+    ConduitConfigBase(p, n),
+    fConfigWidget(new PopMailWidget(p, "PopMailWidget"))
 {
-	FUNCTIONSETUP;
-	fConduitName = i18n("KMail");
-	KAboutData *fAbout = new KAboutData("popmailConduit",
-		I18N_NOOP("Mail Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Mail Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
-		"groot@kde.org",
-		"http://www.kpilot.org/");
-	fAbout->addAuthor("Dan Pilone",
-		I18N_NOOP("Original Author"));
-	fAbout->addCredit("Michael Kropfberger",
-		I18N_NOOP("POP3 code"));
-	fAbout->addCredit("Marko Gr&ouml;nroos",
-		I18N_NOOP("SMTP support and redesign"),
-		"magi@iki.fi",
-		"http://www.iki.fi/magi/");
+    FUNCTIONSETUP;
+    fConduitName = i18n("KMail");
+    KAboutData *fAbout = new KAboutData("popmailConduit",
+                                        I18N_NOOP("Mail Conduit for KPilot"),
+                                        KPILOT_VERSION,
+                                        I18N_NOOP("Configures the Mail Conduit for KPilot"),
+                                        KAboutData::License_GPL,
+                                        "(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot");
+    fAbout->addAuthor("Adriaan de Groot",
+                      I18N_NOOP("Maintainer"),
+                      "groot@kde.org",
+                      "http://www.kpilot.org/");
+    fAbout->addAuthor("Dan Pilone",
+                      I18N_NOOP("Original Author"));
+    fAbout->addCredit("Michael Kropfberger",
+                      I18N_NOOP("POP3 code"));
+    fAbout->addCredit("Marko Gr&ouml;nroos",
+                      I18N_NOOP("SMTP support and redesign"),
+                      "magi@iki.fi",
+                      "http://www.iki.fi/magi/");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->fTabWidget,fAbout);
-	fWidget=fConfigWidget;
+    ConduitConfigBase::addAboutPage(fConfigWidget->fTabWidget, fAbout);
+    fWidget = fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fSendMode,SIGNAL(activated(int)));
-	CM(fEmailFrom,SIGNAL(textChanged(const QString &)));
-	CM(fSignature,SIGNAL(textChanged(const QString &)));
+    CM(fSendMode, SIGNAL(activated(int)));
+    CM(fEmailFrom, SIGNAL(textChanged(const QString &)));
+    CM(fSignature, SIGNAL(textChanged(const QString &)));
 #undef CM
 
-	connect(fConfigWidget->fSendMode,SIGNAL(activated(int)),
-		this,SLOT(toggleSendMode(int)));
+    connect(fConfigWidget->fSendMode, SIGNAL(activated(int)),
+            this, SLOT(toggleSendMode(int)));
 
 }
 
 void PopMailWidgetConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	MailConduitSettings::self()->readConfig();
+    MailConduitSettings::self()->readConfig();
 #define WR(a,b,c) MailConduitSettings::set##a(fConfigWidget->b->c);
-	WR(SyncOutgoing,fSendMode,currentItem());
-	WR(EmailAddress,fEmailFrom,text());
-	WR(Signature,fSignature,url());
+    WR(SyncOutgoing, fSendMode, currentItem());
+    WR(EmailAddress, fEmailFrom, text());
+    WR(Signature, fSignature, url());
 #undef WR
 
-	MailConduitSettings::self()->writeConfig();
-	unmodified();
+    MailConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 void PopMailWidgetConfig::load()
 {
-	FUNCTIONSETUP;
-	MailConduitSettings::self()->config()->sync();
-	MailConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    MailConduitSettings::self()->config()->sync();
+    MailConduitSettings::self()->readConfig();
 
 #define RD(a,b,c) fConfigWidget->a->b(MailConduitSettings::c())
-	RD(fSendMode,setCurrentItem,syncOutgoing);
-	RD(fEmailFrom,setText,emailAddress);
-	RD(fSignature,setURL,signature);
+    RD(fSendMode, setCurrentItem, syncOutgoing);
+    RD(fEmailFrom, setText, emailAddress);
+    RD(fSignature, setURL, signature);
 #undef RD
 
-	toggleSendMode(fConfigWidget->fSendMode->currentItem());
+    toggleSendMode(fConfigWidget->fSendMode->currentItem());
 
-	MailConduitSettings::self()->writeConfig();
-	unmodified();
+    MailConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 
 /* slot */ void PopMailWidgetConfig::toggleSendMode(int i)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Got mode " << i << endl;
+    DEBUGKPILOT << fname << ": Got mode " << i << endl;
 #endif
 
 #define E(a,b) fConfigWidget->a->setEnabled(b)
-	switch(i)
-	{
-	case SendKMail :
-		E(fEmailFrom,true);
-		E(fSignature,true);
-		break;
-	case NoSend : /* FALLTHRU */
-	default :
-		E(fEmailFrom,false);
-		E(fSignature,false);
-		break;
-	}
+    switch(i)
+    {
+        case SendKMail :
+            E(fEmailFrom, true);
+            E(fSignature, true);
+            break;
+        case NoSend : /* FALLTHRU */
+        default :
+            E(fEmailFrom, false);
+            E(fSignature, false);
+            break;
+    }
 #undef E
 }
 

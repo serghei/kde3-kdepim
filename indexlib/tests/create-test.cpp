@@ -6,22 +6,25 @@ using namespace ::boost::unit_test;
 
 namespace create_test {
 
-const char* fname = "create-test-delete-me/////";
-	
-void cleanup() {
-	indexlib::remove( fname );
+const char *fname = "create-test-delete-me/////";
+
+void cleanup()
+{
+    indexlib::remove(fname);
 }
 
-void simple() {
-	cleanup();
-	std::auto_ptr<indexlib::index> ptr = indexlib::create( fname );
-	BOOST_CHECK( ptr.get() );
+void simple()
+{
+    cleanup();
+    std::auto_ptr<indexlib::index> ptr = indexlib::create(fname);
+    BOOST_CHECK(ptr.get());
 }
 
-test_suite* get_suite() {
-	test_suite* test = BOOST_TEST_SUITE( "Create tests" );
-	test->add( BOOST_TEST_CASE( &simple ) );
-	return test;
+test_suite *get_suite()
+{
+    test_suite *test = BOOST_TEST_SUITE("Create tests");
+    test->add(BOOST_TEST_CASE(&simple));
+    return test;
 }
 
 }

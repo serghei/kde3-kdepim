@@ -31,98 +31,103 @@
 
 using namespace Kontact;
 
-class Core::Private
-{
+class Core::Private {
 public:
-  QString lastErrorMessage;
+    QString lastErrorMessage;
 };
 
-Core::Core( QWidget *parent, const char *name )
-  : KParts::MainWindow( parent, name )
+Core::Core(QWidget *parent, const char *name)
+    : KParts::MainWindow(parent, name)
 {
-  d = new Private;
-  QTimer* timer = new QTimer( this );
-  mLastDate = QDate::currentDate();
-  connect(timer, SIGNAL( timeout() ), SLOT( checkNewDay() ) );
-  timer->start( 1000*60 );
+    d = new Private;
+    QTimer *timer = new QTimer(this);
+    mLastDate = QDate::currentDate();
+    connect(timer, SIGNAL(timeout()), SLOT(checkNewDay()));
+    timer->start(1000 * 60);
 }
 
 Core::~Core()
 {
-  delete d;
+    delete d;
 }
 
-KParts::ReadOnlyPart *Core::createPart( const char *libname )
+KParts::ReadOnlyPart *Core::createPart(const char *libname)
 {
-  kdDebug(5601) << "Core::createPart(): " << libname << endl;
+    kdDebug(5601) << "Core::createPart(): " << libname << endl;
 
-  QMap<QCString,KParts::ReadOnlyPart *>::ConstIterator it;
-  it = mParts.find( libname );
-  if ( it != mParts.end() ) return it.data();
+    QMap<QCString, KParts::ReadOnlyPart *>::ConstIterator it;
+    it = mParts.find(libname);
+    if(it != mParts.end()) return it.data();
 
-  kdDebug(5601) << "Creating new KPart" << endl;
+    kdDebug(5601) << "Creating new KPart" << endl;
 
-  int error = 0;
-  KParts::ReadOnlyPart *part =
-      KParts::ComponentFactory::
-          createPartInstanceFromLibrary<KParts::ReadOnlyPart>
-              ( libname, this, 0, this, "kontact", QStringList(), &error );
+    int error = 0;
+    KParts::ReadOnlyPart *part =
+        KParts::ComponentFactory::
+        createPartInstanceFromLibrary<KParts::ReadOnlyPart>
+        (libname, this, 0, this, "kontact", QStringList(), &error);
 
-  KParts::ReadOnlyPart *pimPart = dynamic_cast<KParts::ReadOnlyPart*>( part );
-  if ( pimPart ) {
-    mParts.insert( libname, pimPart );
-    QObject::connect( pimPart, SIGNAL( destroyed( QObject * ) ),
-                      SLOT( slotPartDestroyed( QObject * ) ) );
-  } else {
-    // TODO move to KParts::ComponentFactory
-    switch( error ) {
-    case KParts::ComponentFactory::ErrNoServiceFound:
-      d->lastErrorMessage = i18n( "No service found" );
-      break;
-    case KParts::ComponentFactory::ErrServiceProvidesNoLibrary:
-      d->lastErrorMessage = i18n( "Program error: the .desktop file for the service does not have a Library key." );
-      break;
-    case KParts::ComponentFactory::ErrNoLibrary:
-      d->lastErrorMessage = KLibLoader::self()->lastErrorMessage();
-      break;
-    case KParts::ComponentFactory::ErrNoFactory:
-      d->lastErrorMessage = i18n( "Program error: the library %1 does not provide a factory." ).arg( libname );
-      break;
-    case KParts::ComponentFactory::ErrNoComponent:
-      d->lastErrorMessage = i18n( "Program error: the library %1 does not support creating components of the specified type" ).arg( libname );
-      break;
+    KParts::ReadOnlyPart *pimPart = dynamic_cast<KParts::ReadOnlyPart *>(part);
+    if(pimPart)
+    {
+        mParts.insert(libname, pimPart);
+        QObject::connect(pimPart, SIGNAL(destroyed(QObject *)),
+                         SLOT(slotPartDestroyed(QObject *)));
     }
-    kdWarning(5601) << d->lastErrorMessage << endl;
-  }
+    else
+    {
+        // TODO move to KParts::ComponentFactory
+        switch(error)
+        {
+            case KParts::ComponentFactory::ErrNoServiceFound:
+                d->lastErrorMessage = i18n("No service found");
+                break;
+            case KParts::ComponentFactory::ErrServiceProvidesNoLibrary:
+                d->lastErrorMessage = i18n("Program error: the .desktop file for the service does not have a Library key.");
+                break;
+            case KParts::ComponentFactory::ErrNoLibrary:
+                d->lastErrorMessage = KLibLoader::self()->lastErrorMessage();
+                break;
+            case KParts::ComponentFactory::ErrNoFactory:
+                d->lastErrorMessage = i18n("Program error: the library %1 does not provide a factory.").arg(libname);
+                break;
+            case KParts::ComponentFactory::ErrNoComponent:
+                d->lastErrorMessage = i18n("Program error: the library %1 does not support creating components of the specified type").arg(libname);
+                break;
+        }
+        kdWarning(5601) << d->lastErrorMessage << endl;
+    }
 
-  return pimPart;
+    return pimPart;
 }
 
-void Core::slotPartDestroyed( QObject * obj )
+void Core::slotPartDestroyed(QObject *obj)
 {
-  // the part was deleted, we need to remove it from the part map to not return
-  // a dangling pointer in createPart
-  QMap<QCString, KParts::ReadOnlyPart*>::Iterator end = mParts.end();
-  QMap<QCString, KParts::ReadOnlyPart*>::Iterator it = mParts.begin();
-  for ( ; it != end; ++it ) {
-    if ( it.data() == obj ) {
-      mParts.remove( it );
-      return;
+    // the part was deleted, we need to remove it from the part map to not return
+    // a dangling pointer in createPart
+    QMap<QCString, KParts::ReadOnlyPart *>::Iterator end = mParts.end();
+    QMap<QCString, KParts::ReadOnlyPart *>::Iterator it = mParts.begin();
+    for(; it != end; ++it)
+    {
+        if(it.data() == obj)
+        {
+            mParts.remove(it);
+            return;
+        }
     }
-  }
 }
 
 void Core::checkNewDay()
 {
-  if ( mLastDate != QDate::currentDate() )
-    emit dayChanged( QDate::currentDate() );
+    if(mLastDate != QDate::currentDate())
+        emit dayChanged(QDate::currentDate());
 
-  mLastDate = QDate::currentDate();
+    mLastDate = QDate::currentDate();
 }
 
 QString Core::lastErrorMessage() const
 {
-  return d->lastErrorMessage;
+    return d->lastErrorMessage;
 }
 
 #include "core.moc"

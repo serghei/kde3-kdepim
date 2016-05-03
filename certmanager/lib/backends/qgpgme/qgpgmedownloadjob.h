@@ -38,29 +38,30 @@
 #include "qgpgmejob.h"
 
 namespace GpgME {
-  class Error;
-  class Context;
+class Error;
+class Context;
 }
 
 namespace Kleo {
 
-  class QGpgMEDownloadJob : public DownloadJob, private QGpgMEJob {
+class QGpgMEDownloadJob : public DownloadJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEDownloadJob( GpgME::Context * context );
+public:
+    QGpgMEDownloadJob(GpgME::Context *context);
     ~QGpgMEDownloadJob();
 
     /*! \reimp from DownloadJob */
-    GpgME::Error start( const QStringList & fingerprints );
+    GpgME::Error start(const QStringList &fingerprints);
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
-  };
+};
 
 }
 

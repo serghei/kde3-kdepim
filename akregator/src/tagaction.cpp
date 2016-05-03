@@ -36,21 +36,20 @@
 
 namespace Akregator {
 
-class TagAction::TagActionPrivate
-{
-    public:
+class TagAction::TagActionPrivate {
+public:
     Tag tag;
     //QMap<int, QPopupMenu*> idToPopup;
     //QMap<QPopupMenu*, int> popupToId;
 };
- 
-TagAction::TagAction(const Tag& tag, const QObject *receiver, const char *slot, QObject *parent)
+
+TagAction::TagAction(const Tag &tag, const QObject *receiver, const char *slot, QObject *parent)
 //KAction (const QString &text, const KShortcut &cut, const QObject *receiver, const char *slot, QObject *parent, const char *name=0)
-       : KToggleAction(tag.name(), KShortcut(), 0, 0, parent), d(new TagActionPrivate)
+    : KToggleAction(tag.name(), KShortcut(), 0, 0, parent), d(new TagActionPrivate)
 {
-     d->tag = tag;
-     connect(this, SIGNAL(toggled(const Tag&, bool)), receiver, slot);
-     connect(this, SIGNAL(toggled(bool)), this, SLOT(slotToggled(bool)));
+    d->tag = tag;
+    connect(this, SIGNAL(toggled(const Tag &, bool)), receiver, slot);
+    connect(this, SIGNAL(toggled(bool)), this, SLOT(slotToggled(bool)));
 }
 
 TagAction::~TagAction()
@@ -88,11 +87,11 @@ int TagAction::plug(QWidget* widget, int index)
     }
     if (kapp && !kapp->authorizeKAction(name()))
         return -1;
-    
+
    TagMenuItem* item = new TagMenuItem(d->tag);
     int id = popup->insertItem(TagMenuItem::checkBoxIconSet(isChecked(), popup->colorGroup()), item, -1, index);
-   
-    
+
+
     popup->connectItem (id, this, SLOT(slotActivated()));
 
     d->popupToId[popup] = id;
@@ -100,8 +99,8 @@ int TagAction::plug(QWidget* widget, int index)
 
     if ( id == -1 )
         return id;
-    
-    return id;   
+
+    return id;
 }
 */
 void TagAction::slotToggled(bool enabled)

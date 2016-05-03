@@ -53,7 +53,7 @@
 #include "kmobile_selectiondialog.h"
 
 KMobile::KMobile()
-    : KMainWindow( 0, "kmobile" )
+    : KMainWindow(0, "kmobile")
 {
     m_config = new KConfig("kmobilerc");
 
@@ -74,8 +74,8 @@ KMobile::KMobile()
     setAutoSaveSettings();
 
     // allow the view to change the statusbar and caption
-    connect(m_view, SIGNAL(signalChangeStatusbar(const QString&)),
-            this,   SLOT(changeStatusbar(const QString&)));
+    connect(m_view, SIGNAL(signalChangeStatusbar(const QString &)),
+            this,   SLOT(changeStatusbar(const QString &)));
 
     // restore all configured devices
     restoreAll();
@@ -88,7 +88,7 @@ KMobile::KMobile()
 
 KMobile::~KMobile()
 {
-   delete m_config;
+    delete m_config;
 }
 
 void KMobile::setupActions()
@@ -105,17 +105,17 @@ void KMobile::setupActions()
     KStdAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
 
     new KAction(i18n("&Add Device..."), "folder_new", 0,
-		this, SLOT(addDevice()), actionCollection(), "device_add");
-    new KAction( KGuiItem( i18n("&Remove Device"), "edittrash", i18n("Remove this device") ),
-		"Delete", this,  SLOT(removeDevice()), actionCollection(), "device_remove");
+                this, SLOT(addDevice()), actionCollection(), "device_add");
+    new KAction(KGuiItem(i18n("&Remove Device"), "edittrash", i18n("Remove this device")),
+                "Delete", this,  SLOT(removeDevice()), actionCollection(), "device_remove");
     new KAction(i18n("Re&name Device..."), 0, Key_F2,
-		this, SLOT(renameDevice()), actionCollection(), "device_rename");
+                this, SLOT(renameDevice()), actionCollection(), "device_rename");
     new KAction(i18n("&Configure Device..."), "configure", 0,
-		this, SLOT(configDevice()), actionCollection(), "device_configure");
+                this, SLOT(configDevice()), actionCollection(), "device_configure");
 
     createGUI();
 
-    connect( kapp, SIGNAL(aboutToQuit()), this, SLOT(saveAll()) );
+    connect(kapp, SIGNAL(aboutToQuit()), this, SLOT(saveAll()));
 }
 
 
@@ -150,12 +150,12 @@ void KMobile::showMinimized()
 
 void KMobile::saveAll()
 {
-    m_view->saveAll(); 
+    m_view->saveAll();
 }
 
 void KMobile::restoreAll()
 {
-    m_view->restoreAll(); 
+    m_view->restoreAll();
 }
 
 void KMobile::fileSave()
@@ -189,7 +189,7 @@ void KMobile::optionsShowToolbar()
 {
     // this is all very cut and paste code for showing/hiding the
     // toolbar
-    if (m_toolbarAction->isChecked())
+    if(m_toolbarAction->isChecked())
         toolBar()->show();
     else
         toolBar()->hide();
@@ -199,7 +199,7 @@ void KMobile::optionsShowStatusbar()
 {
     // this is all very cut and paste code for showing/hiding the
     // statusbar
-    if (m_statusbarAction->isChecked())
+    if(m_statusbarAction->isChecked())
         statusBar()->show();
     else
         statusBar()->hide();
@@ -230,7 +230,7 @@ void KMobile::optionsPreferences()
     // popup some sort of preference dialog, here
 #if 0
     KMobilePreferences dlg;
-    if (dlg.exec())
+    if(dlg.exec())
     {
         // redo your settings
     }
@@ -242,8 +242,8 @@ void KMobile::renameDevice()
 {
     // rename the current selected device
     QIconViewItem *item = m_view->currentItem();
-    if (item)
-       item->rename();
+    if(item)
+        item->rename();
 }
 
 /*
@@ -252,62 +252,64 @@ void KMobile::renameDevice()
 
 void KMobile::addDevice()
 {
-  KMobile_SelectionDialog *dialog = new KMobile_SelectionDialog(m_view);
-  if (!dialog)
-    return;
+    KMobile_SelectionDialog *dialog = new KMobile_SelectionDialog(m_view);
+    if(!dialog)
+        return;
 
-  dialog->setCaption( i18n("Add New Mobile or Portable Device") );
+    dialog->setCaption(i18n("Add New Mobile or Portable Device"));
 
-  dialog->helpText->setText( i18n("Please select the category to which your new device belongs:") );
-  dialog->addButton->setText( i18n("&Scan for New Devices...") );
-  dialog->addButton->setDisabled(true);
-  dialog->iconView->connect( dialog->iconView, SIGNAL(doubleClicked(QIconViewItem*)),
-			dialog, SLOT(accept()) );
-  dialog->selectButton->setText( i18n("&Add") );
-  dialog->selectButton->connect( dialog->selectButton, SIGNAL(clicked()), dialog, SLOT(accept()) );
-  dialog->cancelButton->connect( dialog->cancelButton, SIGNAL(clicked()), dialog, SLOT(reject()) );
+    dialog->helpText->setText(i18n("Please select the category to which your new device belongs:"));
+    dialog->addButton->setText(i18n("&Scan for New Devices..."));
+    dialog->addButton->setDisabled(true);
+    dialog->iconView->connect(dialog->iconView, SIGNAL(doubleClicked(QIconViewItem *)),
+                              dialog, SLOT(accept()));
+    dialog->selectButton->setText(i18n("&Add"));
+    dialog->selectButton->connect(dialog->selectButton, SIGNAL(clicked()), dialog, SLOT(accept()));
+    dialog->cancelButton->connect(dialog->cancelButton, SIGNAL(clicked()), dialog, SLOT(reject()));
 
-  KTrader::OfferList list = KMobileItem::getMobileDevicesList();
-  KTrader::OfferListIterator it;
-  KService::Ptr ptr;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    ptr = *it;
-    kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
-		.arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment());
+    KTrader::OfferList list = KMobileItem::getMobileDevicesList();
+    KTrader::OfferListIterator it;
+    KService::Ptr ptr;
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        ptr = *it;
+        kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
+                  .arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment());
 
-    QString iconName = ptr->icon();
-    if (iconName.isEmpty())
-	iconName = KMOBILE_ICON_UNKNOWN;
-    QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Desktop );
-    
-    QIconViewItem *item;
-    item = new QIconViewItem( dialog->iconView, ptr->name(), pm );
+        QString iconName = ptr->icon();
+        if(iconName.isEmpty())
+            iconName = KMOBILE_ICON_UNKNOWN;
+        QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Desktop);
 
-    //if (!ptr->comment().isNull())
-    //	QToolTip::add(item->pixmap(), ptr->comment() );
-  }
+        QIconViewItem *item;
+        item = new QIconViewItem(dialog->iconView, ptr->name(), pm);
 
-  int index = -1;
-  if (dialog->exec() == QDialog::Accepted)
-     index = dialog->iconView->currentItem()->index(); // get index of selected item
-  delete dialog;
+        //if (!ptr->comment().isNull())
+        //	QToolTip::add(item->pixmap(), ptr->comment() );
+    }
 
-  if (index<0 || index>=(int)list.count())
-    return;
+    int index = -1;
+    if(dialog->exec() == QDialog::Accepted)
+        index = dialog->iconView->currentItem()->index(); // get index of selected item
+    delete dialog;
 
-  ptr = list[index];
+    if(index < 0 || index >= (int)list.count())
+        return;
 
-  // add the new device to the list
-  if (!m_view->addNewDevice(m_config, ptr)) {
-	KMessageBox::error(this, 
-		QString("<qt>KMobile could not load the <b>%1</b> Device Driver.<p>"
-		     "Please use the Skeleton- or Gnokii Device Driver during development.<p>"
-		     "This driver will still be visible, but you won't be able to access it "
-		     "from Konqueror or any other application.</qt>").arg(ptr->name()),
-		kapp->name());
-  }
+    ptr = list[index];
 
-  saveAll();
+    // add the new device to the list
+    if(!m_view->addNewDevice(m_config, ptr))
+    {
+        KMessageBox::error(this,
+                           QString("<qt>KMobile could not load the <b>%1</b> Device Driver.<p>"
+                                   "Please use the Skeleton- or Gnokii Device Driver during development.<p>"
+                                   "This driver will still be visible, but you won't be able to access it "
+                                   "from Konqueror or any other application.</qt>").arg(ptr->name()),
+                           kapp->name());
+    }
+
+    saveAll();
 }
 
 #if 0
@@ -315,69 +317,71 @@ void KMobile::addDevice()
  * show dialog to user, in which he may choose and select one of the already
  * configured mobile devices.
  */
-KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent, 
-		enum KMobileDevice::ClassType /*type*/, enum KMobileDevice::Capabilities /*caps*/ )
+KMobileDevice *KMobileFactory::chooseDeviceDialog(QWidget *parent,
+        enum KMobileDevice::ClassType /*type*/, enum KMobileDevice::Capabilities /*caps*/)
 {
-  int num;
+    int num;
 
-  m_parent = parent;
+    m_parent = parent;
 
-  // do we already have some devices configured ?
-  num = readDevicesList();
-  if (!num) {
-     int answ;
-     answ = KMessageBox::questionYesNo(parent,
-		i18n( "<qt>You have no mobile devices configured yet.<p>"
-			"Do you want to add a device now ?</qt>" ),
-		i18n( "KDE Mobile Device Access" ), KStdGuiItem::add(), i18n("Do Not Add") );
-     if (answ != KMessageBox::Yes)
-	return 0L;
-     // add a new device
-     addDeviceDialog(parent);
-  }
-  num = readDevicesList();
-  if (!num) 
-    return 0L;
+    // do we already have some devices configured ?
+    num = readDevicesList();
+    if(!num)
+    {
+        int answ;
+        answ = KMessageBox::questionYesNo(parent,
+        i18n("<qt>You have no mobile devices configured yet.<p>"
+        "Do you want to add a device now ?</qt>"),
+        i18n("KDE Mobile Device Access"), KStdGuiItem::add(), i18n("Do Not Add"));
+        if(answ != KMessageBox::Yes)
+            return 0L;
+        // add a new device
+        addDeviceDialog(parent);
+    }
+    num = readDevicesList();
+    if(!num)
+        return 0L;
 
-  // let the user select one of the configured devices
-  KMobile_selectiondialog *dialog = new KMobile_selectiondialog(parent);
-  if (!dialog)
-    return 0L;
+    // let the user select one of the configured devices
+    KMobile_selectiondialog *dialog = new KMobile_selectiondialog(parent);
+    if(!dialog)
+        return 0L;
 
-  dialog->addButton->connect( dialog->addButton, SIGNAL(clicked()), this, SLOT(slotAddDevice()) );
-  dialog->iconView->connect( dialog->iconView, SIGNAL(doubleClicked(QIconViewItem*)),
-			dialog, SLOT(accept()) );
-  dialog->selectButton->connect( dialog->selectButton, SIGNAL(clicked()), dialog, SLOT(accept()) );
-  dialog->cancelButton->connect( dialog->cancelButton, SIGNAL(clicked()), dialog, SLOT(reject()) );
+    dialog->addButton->connect(dialog->addButton, SIGNAL(clicked()), this, SLOT(slotAddDevice()));
+    dialog->iconView->connect(dialog->iconView, SIGNAL(doubleClicked(QIconViewItem *)),
+    dialog, SLOT(accept()));
+    dialog->selectButton->connect(dialog->selectButton, SIGNAL(clicked()), dialog, SLOT(accept()));
+    dialog->cancelButton->connect(dialog->cancelButton, SIGNAL(clicked()), dialog, SLOT(reject()));
 
-  for (int i=0; i<countDevices(); i++) {
-    KService::Ptr ptr;
-    ptr = ServiceForEntry(i);
-    if (!ptr)
-	continue;
+    for(int i = 0; i < countDevices(); i++)
+    {
+        KService::Ptr ptr;
+        ptr = ServiceForEntry(i);
+        if(!ptr)
+            continue;
 
-    // kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'   #%5\n")
-    //		.arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment()).arg(i);
+        // kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'   #%5\n")
+        //		.arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment()).arg(i);
 
-    QString iconName = ptr->icon();
-    if (iconName.isEmpty())
-	iconName = KMOBILE_ICON_UNKNOWN;
-    QPixmap pm( ::locate("icon", iconName+".png") );
-    
-    QIconViewItem *item;
-    item = new QIconViewItem( dialog->iconView, ptr->name(), pm );
+        QString iconName = ptr->icon();
+        if(iconName.isEmpty())
+            iconName = KMOBILE_ICON_UNKNOWN;
+        QPixmap pm(::locate("icon", iconName + ".png"));
 
-  }
+        QIconViewItem *item;
+        item = new QIconViewItem(dialog->iconView, ptr->name(), pm);
 
-  int index = -1;
-  if (dialog->exec() == QDialog::Accepted)
-     index = dialog->iconView->currentItem()->index(); // get index of selected item
-  delete dialog;
+    }
 
-  if (index<0 || index>=countDevices())
-    return 0L;
+    int index = -1;
+    if(dialog->exec() == QDialog::Accepted)
+        index = dialog->iconView->currentItem()->index(); // get index of selected item
+    delete dialog;
 
-  return getDevice(index);
+    if(index < 0 || index >= countDevices())
+        return 0L;
+
+    return getDevice(index);
 }
 #endif
 
@@ -386,19 +390,19 @@ void KMobile::removeDevice()
 {
     // remove the current selected device
     QIconViewItem *item = m_view->currentItem();
-    if (item)
-       m_view->removeDevice( item->text() );
+    if(item)
+        m_view->removeDevice(item->text());
 }
 
 void KMobile::configDevice()
 {
     // configure the current selected device
     QIconViewItem *item = m_view->currentItem();
-    if (item)
-       m_view->configDevice( item->text() );
+    if(item)
+        m_view->configDevice(item->text());
 }
 
-void KMobile::changeStatusbar(const QString& text)
+void KMobile::changeStatusbar(const QString &text)
 {
     // display the text on the statusbar
     statusBar()->message(text);

@@ -32,67 +32,69 @@
 
 using namespace KCal;
 
-ExchangeCalendarUploadItem::ExchangeCalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type )
-    : GroupwareUploadItem( type )
+ExchangeCalendarUploadItem::ExchangeCalendarUploadItem(CalendarAdaptor *adaptor, KCal::Incidence *incidence,
+        KPIM::GroupwareUploadItem::UploadType type)
+    : GroupwareUploadItem(type)
 {
-  if ( incidence && adaptor ) {
-    if ( incidence->type() == "Event" ) mItemType = KPIM::FolderLister::Event;
-    else if ( incidence->type() == "Todo" ) mItemType = KPIM::FolderLister::Todo;
-    else if ( incidence->type() == "Journal" ) mItemType = KPIM::FolderLister::Journal;
-kdDebug()<<"mItemType=="<<mItemType<<endl;
+    if(incidence && adaptor)
+    {
+        if(incidence->type() == "Event") mItemType = KPIM::FolderLister::Event;
+        else if(incidence->type() == "Todo") mItemType = KPIM::FolderLister::Todo;
+        else if(incidence->type() == "Journal") mItemType = KPIM::FolderLister::Journal;
+        kdDebug() << "mItemType==" << mItemType << endl;
 
-    setUrl( incidence->customProperty( adaptor->identifier(), "storagelocation" ) );
-    setUid( incidence->uid() );
+        setUrl(incidence->customProperty(adaptor->identifier(), "storagelocation"));
+        setUid(incidence->uid());
 
-    ExchangeConverterCalendar format;
-    format.setTimeZone( adaptor->resource()->timeZoneId() );
-    mDavData = format.createWebDAV( incidence );
-  }
+        ExchangeConverterCalendar format;
+        format.setTimeZone(adaptor->resource()->timeZoneId());
+        mDavData = format.createWebDAV(incidence);
+    }
 }
 
-KIO::TransferJob *ExchangeCalendarUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseUrl )
+KIO::TransferJob *ExchangeCalendarUploadItem::createUploadJob(KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseUrl)
 {
-kdDebug()<<"ExchangeCalendarUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseUrl.url()<<endl;
-  Q_ASSERT( adaptor );
-  if ( !adaptor ) return 0;
-  KURL upUrl( url() );
-  adaptor->adaptUploadUrl( upUrl );
-  kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
- 
-  KIO::DavJob *job = KIO::davPropPatch( upUrl, mDavData, false );
-  return job;
+    kdDebug() << "ExchangeCalendarUploadItem::createUploadJob, adaptor=" << adaptor << ", URL=" << baseUrl.url() << endl;
+    Q_ASSERT(adaptor);
+    if(!adaptor) return 0;
+    KURL upUrl(url());
+    adaptor->adaptUploadUrl(upUrl);
+    kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
+
+    KIO::DavJob *job = KIO::davPropPatch(upUrl, mDavData, false);
+    return job;
 }
 
-KIO::TransferJob *ExchangeCalendarUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *ExchangeCalendarUploadItem::createUploadNewJob(KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl)
 {
-kdDebug()<<"ExchangeCalendarUploadItem::createUploadNewJob"<<endl;
-  KURL url( baseurl );
-  // TODO: Check if this URL doesn't exist yet!
-  url.addPath( uid() + ".EML" );
-  setUrl( url );
-//url.addPath("newItem.EML");
-kdDebug()<<"Upload path: "<<url.url()<<endl;
-  return createUploadJob( adaptor, url );
+    kdDebug() << "ExchangeCalendarUploadItem::createUploadNewJob" << endl;
+    KURL url(baseurl);
+    // TODO: Check if this URL doesn't exist yet!
+    url.addPath(uid() + ".EML");
+    setUrl(url);
+    //url.addPath("newItem.EML");
+    kdDebug() << "Upload path: " << url.url() << endl;
+    return createUploadJob(adaptor, url);
 }
 
 
 
 ExchangeCalendarAdaptor::ExchangeCalendarAdaptor() : DavCalendarAdaptor()
 {
-  /* FIXME Set the progress item messages from the concrete job?*/
-  setDownloadProgressMessage( i18n( "Downloading items" ) );
-  setUploadProgressMessage( i18n( "Uploading items" ) );
+    /* FIXME Set the progress item messages from the concrete job?*/
+    setDownloadProgressMessage(i18n("Downloading items"));
+    setUploadProgressMessage(i18n("Uploading items"));
 }
 
-void ExchangeCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
+void ExchangeCalendarAdaptor::customAdaptDownloadUrl(KURL &url)
 {
-  url = WebdavHandler::toDAV( url );
+    url = WebdavHandler::toDAV(url);
 }
 
-void ExchangeCalendarAdaptor::customAdaptUploadUrl( KURL &url )
+void ExchangeCalendarAdaptor::customAdaptUploadUrl(KURL &url)
 {
-  url = WebdavHandler::toDAV( url );
-//   url.setPath( url.path() + "/NewItem.EML" );
+    url = WebdavHandler::toDAV(url);
+    //   url.setPath( url.path() + "/NewItem.EML" );
 }
 
 
@@ -115,69 +117,82 @@ void ExchangeDelete::findUidSingleMaster( QString const& uid )
 */
 
 
-QString ExchangeCalendarAdaptor::defaultNewItemName( KPIM::GroupwareUploadItem *item ) {
-  if ( item ) return item->uid()+".EML";
-  else return QString::null;
+QString ExchangeCalendarAdaptor::defaultNewItemName(KPIM::GroupwareUploadItem *item)
+{
+    if(item) return item->uid() + ".EML";
+    else return QString::null;
 }
 
-KPIM::GroupwareUploadItem *ExchangeCalendarAdaptor::newUploadItem( KCal::Incidence*it,
-           KPIM::GroupwareUploadItem::UploadType type )
+KPIM::GroupwareUploadItem *ExchangeCalendarAdaptor::newUploadItem(KCal::Incidence *it,
+        KPIM::GroupwareUploadItem::UploadType type)
 {
-  return new ExchangeCalendarUploadItem( this, it, type );
+    return new ExchangeCalendarUploadItem(this, it, type);
 }
 
-bool ExchangeCalendarAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ )
+bool ExchangeCalendarAdaptor::interpretUploadJob(KIO::Job *job, const QString &/*jobData*/)
 {
-  kdDebug(7000) << "ExchangeCalendarAdaptor::interpretUploadJob " << endl;
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  bool error = job->error();
-  const QString err = job->errorString();
+    kdDebug(7000) << "ExchangeCalendarAdaptor::interpretUploadJob " << endl;
+    KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
+    bool error = job->error();
+    const QString err = job->errorString();
 
-  if ( davjob ) {
-    if ( error ) {
-      emit itemUploadError( davjob->url(), err );
-      return false;
-    } else {
-      QDomDocument doc( davjob->response() );
-      // TODO: extract the href and the items that got a 404. If there's
-      // something important among them, issue the "usual" not-all-settings-uploaded
-      // warning to the user.
-      
-      // We don't know the local id here (and we don't want to extract it from
-      // the idMapper, that's the task of the receiver
-      emit itemUploaded( uidFromJob( job ), davjob->url() );
+    if(davjob)
+    {
+        if(error)
+        {
+            emit itemUploadError(davjob->url(), err);
+            return false;
+        }
+        else
+        {
+            QDomDocument doc(davjob->response());
+            // TODO: extract the href and the items that got a 404. If there's
+            // something important among them, issue the "usual" not-all-settings-uploaded
+            // warning to the user.
+
+            // We don't know the local id here (and we don't want to extract it from
+            // the idMapper, that's the task of the receiver
+            emit itemUploaded(uidFromJob(job), davjob->url());
+        }
+        return true;
     }
-    return true;
-  } else {
-    return false;
-  }
+    else
+    {
+        return false;
+    }
 }
 
-bool ExchangeCalendarAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ )
+bool ExchangeCalendarAdaptor::interpretUploadNewJob(KIO::Job *job, const QString &/*jobData*/)
 {
-// TODO: How does the incidence mapper know the old/new ids???
-  kdDebug(7000) << "ExchangeCalendarAdaptor::interpretUploadNewJob " << endl;
-  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
-  bool error = job->error();
-  const QString err = job->errorString();
+    // TODO: How does the incidence mapper know the old/new ids???
+    kdDebug(7000) << "ExchangeCalendarAdaptor::interpretUploadNewJob " << endl;
+    KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
+    bool error = job->error();
+    const QString err = job->errorString();
 
-  if ( davjob ) {
-    if ( error ) {
-      emit itemUploadNewError( idMapper()->localId( davjob->url().path() ), err );
-      return false;
-    } else {
-      QDomDocument doc( davjob->response() );
-      // TODO: extract the href and the items that got a 404. If there's
-      // something important among them, issue the "usual" not-all-settings-uploaded
-      // warning to the user.
+    if(davjob)
+    {
+        if(error)
+        {
+            emit itemUploadNewError(idMapper()->localId(davjob->url().path()), err);
+            return false;
+        }
+        else
+        {
+            QDomDocument doc(davjob->response());
+            // TODO: extract the href and the items that got a 404. If there's
+            // something important among them, issue the "usual" not-all-settings-uploaded
+            // warning to the user.
 
-      // We don't know the local id here (and we don't want to extract it from
-      // the idMapper, that's the task of the receiver
-      emit itemUploadedNew( uidFromJob( job ), davjob->url() );
+            // We don't know the local id here (and we don't want to extract it from
+            // the idMapper, that's the task of the receiver
+            emit itemUploadedNew(uidFromJob(job), davjob->url());
+        }
+        return true;
     }
-    return true;
-  } else {
-    return false;
-  }
+    else
+    {
+        return false;
+    }
 }
 

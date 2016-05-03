@@ -39,42 +39,47 @@
 #include <algorithm>
 #include <iterator>
 
-HierarchyAnalyser::HierarchyAnalyser( QObject * parent, const char * name )
-  : QObject( parent, name )
+HierarchyAnalyser::HierarchyAnalyser(QObject *parent, const char *name)
+    : QObject(parent, name)
 {
 
 }
 
-HierarchyAnalyser::~HierarchyAnalyser() {
-  
+HierarchyAnalyser::~HierarchyAnalyser()
+{
+
 }
 
-void HierarchyAnalyser::slotNextKey( const GpgME::Key & key ) {
-  if ( key.isNull() )
-    return;
-  if ( key.isRoot() || !key.chainID() || !*key.chainID() )
-    // root keys have themselves as issuer - we don't want them to
-    // have parents, though:
-    mSubjectsByIssuer[0].push_back( key );
-  else
-    mSubjectsByIssuer[key.chainID()].push_back( key );
+void HierarchyAnalyser::slotNextKey(const GpgME::Key &key)
+{
+    if(key.isNull())
+        return;
+    if(key.isRoot() || !key.chainID() || !*key.chainID())
+        // root keys have themselves as issuer - we don't want them to
+        // have parents, though:
+        mSubjectsByIssuer[0].push_back(key);
+    else
+        mSubjectsByIssuer[key.chainID()].push_back(key);
 }
 
-const std::vector<GpgME::Key> & HierarchyAnalyser::subjectsForIssuer( const char * issuer_dn ) const {
-  static const std::vector<GpgME::Key> empty;
-  std::map< QCString, std::vector<GpgME::Key> >::const_iterator it =
-    mSubjectsByIssuer.find( issuer_dn );
-  return it == mSubjectsByIssuer.end() ? empty : it->second ;
+const std::vector<GpgME::Key> &HierarchyAnalyser::subjectsForIssuer(const char *issuer_dn) const
+{
+    static const std::vector<GpgME::Key> empty;
+    std::map< QCString, std::vector<GpgME::Key> >::const_iterator it =
+        mSubjectsByIssuer.find(issuer_dn);
+    return it == mSubjectsByIssuer.end() ? empty : it->second ;
 }
 
-std::vector<GpgME::Key> HierarchyAnalyser::subjectsForIssuerRecursive( const char * issuer_dn ) const {
-  std::vector<GpgME::Key> keys = subjectsForIssuer( issuer_dn );
-  for ( unsigned int i = 0 ; i < keys.size() ; ++i ) // can't use iterators here, since appending would invalidate them
-    if ( const char * fpr = keys[i].primaryFingerprint() ) {
-      const std::vector<GpgME::Key> & tmp = subjectsForIssuer( fpr );
-      std::copy( tmp.begin(), tmp.end(), std::back_inserter( keys ) );
-    }
-  return keys;
+std::vector<GpgME::Key> HierarchyAnalyser::subjectsForIssuerRecursive(const char *issuer_dn) const
+{
+    std::vector<GpgME::Key> keys = subjectsForIssuer(issuer_dn);
+    for(unsigned int i = 0 ; i < keys.size() ; ++i)    // can't use iterators here, since appending would invalidate them
+        if(const char *fpr = keys[i].primaryFingerprint())
+        {
+            const std::vector<GpgME::Key> &tmp = subjectsForIssuer(fpr);
+            std::copy(tmp.begin(), tmp.end(), std::back_inserter(keys));
+        }
+    return keys;
 }
 
 

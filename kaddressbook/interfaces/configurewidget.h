@@ -35,10 +35,9 @@ class AddressBook;
 
 namespace KAB {
 
-class KDE_EXPORT ConfigureWidget : public QWidget
-{
-  public:
-    ConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+class KDE_EXPORT ConfigureWidget : public QWidget {
+public:
+    ConfigureWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~ConfigureWidget();
 
     /**
@@ -47,7 +46,7 @@ class KDE_EXPORT ConfigureWidget : public QWidget
       values from the config file.
       Important: Don't change the group of cfg!
      */
-    virtual void restoreSettings( KConfig *cfg );
+    virtual void restoreSettings(KConfig *cfg);
 
     /**
       This method is called after the user clicked the 'Ok' button.
@@ -55,7 +54,7 @@ class KDE_EXPORT ConfigureWidget : public QWidget
       the GUI to the config file.
       Important: Don't change the group of cfg!
      */
-    virtual void saveSettings( KConfig *cfg );
+    virtual void saveSettings(KConfig *cfg);
 
 
     /**
@@ -63,7 +62,7 @@ class KDE_EXPORT ConfigureWidget : public QWidget
      */
     KABC::AddressBook *addressBook() const;
 
-  private:
+private:
     KABC::AddressBook *mAddressBook;
 };
 

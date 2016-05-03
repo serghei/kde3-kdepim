@@ -38,36 +38,39 @@
 #include <kconfig.h>
 #include <klocale.h>
 
-ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
-  : KCMultiDialog( KDialogBase::IconList, i18n( "Configure" ), parent, name, modal )
+ConfigureDialog::ConfigureDialog(QWidget *parent, const char *name, bool modal)
+    : KCMultiDialog(KDialogBase::IconList, i18n("Configure"), parent, name, modal)
 {
-  KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
-  showButton( User1, true );
+    KWin::setIcons(winId(), kapp->icon(), kapp->miniIcon());
+    showButton(User1, true);
 
-  addModule( "kleopatra_config_dirserv", false );
-  addModule( "kleopatra_config_appear", false );
-  addModule( "kleopatra_config_dnorder", false );
+    addModule("kleopatra_config_dirserv", false);
+    addModule("kleopatra_config_appear", false);
+    addModule("kleopatra_config_dnorder", false);
 
-  // We store the size of the dialog on hide, because otherwise
-  // the KCMultiDialog starts with the size of the first kcm, not
-  // the largest one. This way at least after the first showing of
-  // the largest kcm the size is kept.
-  const KConfigGroup geometry( KGlobal::config(), "Geometry" );
-  const int width = geometry.readNumEntry( "ConfigureDialogWidth" );
-  const int height = geometry.readNumEntry( "ConfigureDialogHeight" );
-  if ( width != 0 && height != 0 ) {
-     setMinimumSize( width, height );
-  }
+    // We store the size of the dialog on hide, because otherwise
+    // the KCMultiDialog starts with the size of the first kcm, not
+    // the largest one. This way at least after the first showing of
+    // the largest kcm the size is kept.
+    const KConfigGroup geometry(KGlobal::config(), "Geometry");
+    const int width = geometry.readNumEntry("ConfigureDialogWidth");
+    const int height = geometry.readNumEntry("ConfigureDialogHeight");
+    if(width != 0 && height != 0)
+    {
+        setMinimumSize(width, height);
+    }
 
 }
 
-void ConfigureDialog::hideEvent( QHideEvent * ) {
-  KConfigGroup geometry( KGlobal::config(), "Geometry" );
-  geometry.writeEntry( "ConfigureDialogWidth", width() );
-  geometry.writeEntry( "ConfigureDialogHeight",height() );
+void ConfigureDialog::hideEvent(QHideEvent *)
+{
+    KConfigGroup geometry(KGlobal::config(), "Geometry");
+    geometry.writeEntry("ConfigureDialogWidth", width());
+    geometry.writeEntry("ConfigureDialogHeight", height());
 }
 
-ConfigureDialog::~ConfigureDialog() {
+ConfigureDialog::~ConfigureDialog()
+{
 }
 
 #include "configuredialog.moc"

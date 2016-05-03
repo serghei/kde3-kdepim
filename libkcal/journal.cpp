@@ -33,12 +33,12 @@ Journal::~Journal()
 
 Journal *Journal::clone()
 {
-  return new Journal( *this );
+    return new Journal(*this);
 }
 
 
-bool Journal::operator==( const Journal& j2 ) const
+bool Journal::operator==(const Journal &j2) const
 {
-    return static_cast<const Incidence&>(*this) == static_cast<const Incidence&>(j2);
+    return static_cast<const Incidence &>(*this) == static_cast<const Incidence &>(j2);
 }
 

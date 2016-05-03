@@ -26,46 +26,68 @@
 
 namespace KWSDL {
 
-class Port
-{
-  public:
+class Port {
+public:
     typedef QValueList<Port> List;
 
-    class Operation
-    {
-      public:
+    class Operation {
+    public:
         typedef QValueList<Operation> List;
         typedef QMap<QString, Operation> Map;
 
         Operation();
-        Operation( const QString &name, const QString &input, const QString &output );
+        Operation(const QString &name, const QString &input, const QString &output);
 
-        void setName( const QString &name ) { mName = name; }
-        QString name() const { return mName; }
+        void setName(const QString &name)
+        {
+            mName = name;
+        }
+        QString name() const
+        {
+            return mName;
+        }
 
-        void setInput( const QString &input ) { mInput = input; }
-        QString input() const { return mInput; }
+        void setInput(const QString &input)
+        {
+            mInput = input;
+        }
+        QString input() const
+        {
+            return mInput;
+        }
 
-        void setOutput( const QString &output ) { mOutput = output; }
-        QString output() const { return mOutput; }
+        void setOutput(const QString &output)
+        {
+            mOutput = output;
+        }
+        QString output() const
+        {
+            return mOutput;
+        }
 
-      private:
+    private:
         QString mName;
         QString mInput;
         QString mOutput;
     };
 
     Port();
-    Port( const QString &name );
+    Port(const QString &name);
 
-    void setName( const QString &name ) { mName = name; }
-    QString name() const { return mName; }
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
+    QString name() const
+    {
+        return mName;
+    }
 
-    void addOperation( const Operation &operation );
-    Operation operation( const QString &name ) const;
+    void addOperation(const Operation &operation);
+    Operation operation(const QString &name) const;
     Operation::List operations() const;
 
-  private:
+private:
     QString mName;
     Operation::List mOperations;
 };

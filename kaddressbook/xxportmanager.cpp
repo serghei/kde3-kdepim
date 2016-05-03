@@ -41,10 +41,10 @@
 KURL XXPortManager::importURL = KURL();
 QString XXPortManager::importData = QString::null;
 
-XXPortManager::XXPortManager( KAB::Core *core, QObject *parent, const char *name )
-  : QObject( parent, name ), mCore( core )
+XXPortManager::XXPortManager(KAB::Core *core, QObject *parent, const char *name)
+    : QObject(parent, name), mCore(core)
 {
-  loadPlugins();
+    loadPlugins();
 }
 
 XXPortManager::~XXPortManager()
@@ -59,101 +59,108 @@ void XXPortManager::saveSettings()
 {
 }
 
-void XXPortManager::importVCard( const KURL &url )
+void XXPortManager::importVCard(const KURL &url)
 {
-  importURL = url;
-  slotImport( "vcard", "<empty>" );
-  importURL = KURL();
+    importURL = url;
+    slotImport("vcard", "<empty>");
+    importURL = KURL();
 }
 
-void XXPortManager::importVCardFromData( const QString &vCard )
+void XXPortManager::importVCardFromData(const QString &vCard)
 {
-  importData = vCard;
-  slotImport( "vcard", "<empty>" );
-  importData = "";
+    importData = vCard;
+    slotImport("vcard", "<empty>");
+    importData = "";
 }
 
-void XXPortManager::slotImport( const QString &identifier, const QString &data )
+void XXPortManager::slotImport(const QString &identifier, const QString &data)
 {
-  KAB::XXPort *obj = mXXPortObjects[ identifier ];
-  if ( !obj ) {
-    KMessageBox::error( mCore->widget(), i18n( "<qt>No import plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
-    return;
-  }
+    KAB::XXPort *obj = mXXPortObjects[ identifier ];
+    if(!obj)
+    {
+        KMessageBox::error(mCore->widget(), i18n("<qt>No import plugin available for <b>%1</b>.</qt>").arg(identifier));
+        return;
+    }
 
-  KABC::Resource *resource = mCore->requestResource( mCore->widget() );
-  if ( !resource )
-    return;
+    KABC::Resource *resource = mCore->requestResource(mCore->widget());
+    if(!resource)
+        return;
 
-  KABC::AddresseeList list = obj->importContacts( data );
-  KABC::AddresseeList::Iterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
-    (*it).setResource( resource );
+    KABC::AddresseeList list = obj->importContacts(data);
+    KABC::AddresseeList::Iterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+        (*it).setResource(resource);
 
-  if ( !list.isEmpty() ) {
-    NewCommand *command = new NewCommand( mCore->addressBook(), list );
-    mCore->commandHistory()->addCommand( command );
-    emit modified();
-  }
+    if(!list.isEmpty())
+    {
+        NewCommand *command = new NewCommand(mCore->addressBook(), list);
+        mCore->commandHistory()->addCommand(command);
+        emit modified();
+    }
 }
 
-void XXPortManager::slotExport( const QString &identifier, const QString &data )
+void XXPortManager::slotExport(const QString &identifier, const QString &data)
 {
-  KAB::XXPort *obj = mXXPortObjects[ identifier ];
-  if ( !obj ) {
-    KMessageBox::error( mCore->widget(), i18n( "<qt>No export plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
-    return;
-  }
+    KAB::XXPort *obj = mXXPortObjects[ identifier ];
+    if(!obj)
+    {
+        KMessageBox::error(mCore->widget(), i18n("<qt>No export plugin available for <b>%1</b>.</qt>").arg(identifier));
+        return;
+    }
 
-  KABC::AddresseeList addrList;
-  XXPortSelectDialog dlg( mCore, obj->requiresSorting(), mCore->widget() );
-  if ( dlg.exec() )
-    addrList = dlg.contacts();
-  else
-    return;
+    KABC::AddresseeList addrList;
+    XXPortSelectDialog dlg(mCore, obj->requiresSorting(), mCore->widget());
+    if(dlg.exec())
+        addrList = dlg.contacts();
+    else
+        return;
 
-  if ( !obj->exportContacts( addrList, data ) )
-    KMessageBox::error( mCore->widget(), i18n( "Unable to export contacts." ) );
+    if(!obj->exportContacts(addrList, data))
+        KMessageBox::error(mCore->widget(), i18n("Unable to export contacts."));
 }
 
 void XXPortManager::loadPlugins()
 {
-  mXXPortObjects.clear();
+    mXXPortObjects.clear();
 
-  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/XXPort",
-    QString( "[X-KDE-KAddressBook-XXPortPluginVersion] == %1" ).arg( KAB_XXPORT_PLUGIN_VERSION ) );
-  KTrader::OfferList::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    if ( !(*it)->hasServiceType( "KAddressBook/XXPort" ) )
-      continue;
+    const KTrader::OfferList plugins = KTrader::self()->query("KAddressBook/XXPort",
+                                       QString("[X-KDE-KAddressBook-XXPortPluginVersion] == %1").arg(KAB_XXPORT_PLUGIN_VERSION));
+    KTrader::OfferList::ConstIterator it;
+    for(it = plugins.begin(); it != plugins.end(); ++it)
+    {
+        if(!(*it)->hasServiceType("KAddressBook/XXPort"))
+            continue;
 
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
-    if ( !factory ) {
-      kdDebug(5720) << "XXPortManager::loadExtensions(): Factory creation failed" << endl;
-      continue;
+        KLibFactory *factory = KLibLoader::self()->factory((*it)->library().latin1());
+        if(!factory)
+        {
+            kdDebug(5720) << "XXPortManager::loadExtensions(): Factory creation failed" << endl;
+            continue;
+        }
+
+        KAB::XXPortFactory *xxportFactory = static_cast<KAB::XXPortFactory *>(factory);
+
+        if(!xxportFactory)
+        {
+            kdDebug(5720) << "XXPortManager::loadExtensions(): Cast failed" << endl;
+            continue;
+        }
+
+        KAB::XXPort *obj = xxportFactory->xxportObject(mCore->addressBook(), mCore->widget());
+        if(obj)
+        {
+            if(mCore->guiClient())
+                mCore->guiClient()->insertChildClient(obj);
+
+            mXXPortObjects.insert(obj->identifier(), obj);
+            connect(obj, SIGNAL(exportActivated(const QString &, const QString &)),
+                    this, SLOT(slotExport(const QString &, const QString &)));
+            connect(obj, SIGNAL(importActivated(const QString &, const QString &)),
+                    this, SLOT(slotImport(const QString &, const QString &)));
+
+            obj->setKApplication(kapp);
+        }
     }
-
-    KAB::XXPortFactory *xxportFactory = static_cast<KAB::XXPortFactory*>( factory );
-
-    if ( !xxportFactory ) {
-      kdDebug(5720) << "XXPortManager::loadExtensions(): Cast failed" << endl;
-      continue;
-    }
-
-    KAB::XXPort *obj = xxportFactory->xxportObject( mCore->addressBook(), mCore->widget() );
-    if ( obj ) {
-      if ( mCore->guiClient() )
-        mCore->guiClient()->insertChildClient( obj );
-
-      mXXPortObjects.insert( obj->identifier(), obj );
-      connect( obj, SIGNAL( exportActivated( const QString&, const QString& ) ),
-               this, SLOT( slotExport( const QString&, const QString& ) ) );
-      connect( obj, SIGNAL( importActivated( const QString&, const QString& ) ),
-               this, SLOT( slotImport( const QString&, const QString& ) ) );
-
-      obj->setKApplication( kapp );
-    }
-  }
 }
 
 #include "xxportmanager.moc"

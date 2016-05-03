@@ -58,214 +58,220 @@
 
 #include "fileInstallWidget.moc"
 
-FileInstallWidget::FileInstallWidget(QWidget * parent,
-	const QString & path) :
-	PilotComponent(parent, "component_files", path),
-	fSaveFileList(false),
-	fInstaller(0L)
+FileInstallWidget::FileInstallWidget(QWidget *parent,
+                                     const QString &path) :
+    PilotComponent(parent, "component_files", path),
+    fSaveFileList(false),
+    fInstaller(0L)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QGridLayout *grid = new QGridLayout(this, 5, 5, SPACING);
+    QGridLayout *grid = new QGridLayout(this, 5, 5, SPACING);
 
-	QLabel *label = new QLabel(i18n("Files to install:"), this);
+    QLabel *label = new QLabel(i18n("Files to install:"), this);
 
-	grid->addWidget(label, 1, 1);
+    grid->addWidget(label, 1, 1);
 
-	QPushButton *abutton;
+    QPushButton *abutton;
 
     abutton = addButton = new QPushButton(i18n("Add File..."), this);
-	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
-	grid->addWidget(abutton, 3, 1);
-	QWhatsThis::add(abutton,
-		i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
+    connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
+    grid->addWidget(abutton, 3, 1);
+    QWhatsThis::add(abutton,
+                    i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
 
-	abutton = clearButton= new QPushButton(i18n("Clear List"), this);
-	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
-	grid->addWidget(abutton, 4, 1);
-	QWhatsThis::add(abutton,
-		i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
+    abutton = clearButton = new QPushButton(i18n("Clear List"), this);
+    connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
+    grid->addWidget(abutton, 4, 1);
+    QWhatsThis::add(abutton,
+                    i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
-	fIconView = new KIconView(this);
-	connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
-		this, SLOT(slotDropEvent(QDropEvent *, const QValueList<QIconDragItem> &)));
-	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
-	QWhatsThis::add(fIconView,
-		i18n
-		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
-	fIconView->setAcceptDrops(true);
+    fIconView = new KIconView(this);
+    connect(fIconView, SIGNAL(dropped(QDropEvent *, const QValueList<QIconDragItem> &)),
+            this, SLOT(slotDropEvent(QDropEvent *, const QValueList<QIconDragItem> &)));
+    grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
+    QWhatsThis::add(fIconView,
+                    i18n
+                    ("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
+    fIconView->setAcceptDrops(true);
     fIconView->setSelectionMode(QIconView::Extended);
-	fIconView->viewport()->installEventFilter(this);
+    fIconView->viewport()->installEventFilter(this);
 
-	grid->setRowStretch(2, 100);
-	grid->setColStretch(2, 50);
-	grid->setColStretch(2, 50);
-	grid->addColSpacing(4, SPACING);
-	grid->addRowSpacing(5, SPACING);
+    grid->setRowStretch(2, 100);
+    grid->setColStretch(2, 50);
+    grid->setColStretch(2, 50);
+    grid->addColSpacing(4, SPACING);
+    grid->addRowSpacing(5, SPACING);
 
-	fInstaller = new FileInstaller;
-	connect(fInstaller, SIGNAL(filesChanged()),
-		this, SLOT(refreshFileInstallList()));
+    fInstaller = new FileInstaller;
+    connect(fInstaller, SIGNAL(filesChanged()),
+            this, SLOT(refreshFileInstallList()));
 
 }
 
 FileInstallWidget::~FileInstallWidget()
 {
-	KPILOT_DELETE(fInstaller);
+    KPILOT_DELETE(fInstaller);
 }
 
 static inline bool pdbOrPrc(const QString &s)
 {
-	return s.endsWith(CSL1(".pdb"),false) || s.endsWith(CSL1(".prc"),false) ;
+    return s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false) ;
 }
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	KURL::List urls;
-	if(!KURLDrag::decode(event, urls)) {
-		event->accept(false);
-		return;
-	}
+    KURL::List urls;
+    if(!KURLDrag::decode(event, urls))
+    {
+        event->accept(false);
+        return;
+    }
 
-	KURL::List::const_iterator it;
-	QString filename;
-    for ( it = urls.begin(); it != urls.end(); ++it ) {
-		filename = (*it).fileName();
-		if(!pdbOrPrc(filename)) {
-			event->accept(false);
-			return;
-		}
-	}
-	event->accept(true);
+    KURL::List::const_iterator it;
+    QString filename;
+    for(it = urls.begin(); it != urls.end(); ++it)
+    {
+        filename = (*it).fileName();
+        if(!pdbOrPrc(filename))
+        {
+            event->accept(false);
+            return;
+        }
+    }
+    event->accept(true);
 }
 
 bool FileInstallWidget::eventFilter(QObject *watched, QEvent *event)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
     if(watched == fIconView->viewport())
     {
-        if(event->type() == QEvent::DragEnter) {
-    		dragEnterEvent(static_cast<QDragEnterEvent*>(event));
+        if(event->type() == QEvent::DragEnter)
+        {
+            dragEnterEvent(static_cast<QDragEnterEvent *>(event));
             return true;
         }
 
         // We have to skip the DragMove event, because it seems to override the
         // accept state, when it is set to false by dragEnterEvent() (event->accept(false);)
-        if(event->type() == QEvent::DragMove) {
+        if(event->type() == QEvent::DragMove)
+        {
             return true;
         }
 
-        if(event->type() == QEvent::MouseButtonPress) {
-            contextMenu(static_cast<QMouseEvent*>(event));
+        if(event->type() == QEvent::MouseButtonPress)
+        {
+            contextMenu(static_cast<QMouseEvent *>(event));
         }
     }
 
-	return false;
+    return false;
 }
 
-void FileInstallWidget::dropEvent(QDropEvent * drop)
+void FileInstallWidget::dropEvent(QDropEvent *drop)
 {
-	FUNCTIONSETUP;
-	if (!shown) return;
+    FUNCTIONSETUP;
+    if(!shown) return;
 
-	KURL::List list;
+    KURL::List list;
 
-	if (!KURLDrag::decode(drop, list) || list.isEmpty())
-		return;
+    if(!KURLDrag::decode(drop, list) || list.isEmpty())
+        return;
 
 #ifdef DEBUG
-	DEBUGKPILOT << ": Got " << list.first().prettyURL() << endl;
+    DEBUGKPILOT << ": Got " << list.first().prettyURL() << endl;
 #endif
 
-	QStringList files;
-	for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
-	{
-	   if ((*it).isLocalFile())
-	      files << (*it).path();
-	}
+    QStringList files;
+    for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
+    {
+        if((*it).isLocalFile())
+            files << (*it).path();
+    }
 
-	fInstaller->addFiles(files, this );
+    fInstaller->addFiles(files, this);
 }
 
-void FileInstallWidget::slotDropEvent(QDropEvent * drop, const QValueList<QIconDragItem> & /*lst*/)
+void FileInstallWidget::slotDropEvent(QDropEvent *drop, const QValueList<QIconDragItem> & /*lst*/)
 {
-	FUNCTIONSETUP;
-	dropEvent(drop);
+    FUNCTIONSETUP;
+    dropEvent(drop);
 }
 
 void FileInstallWidget::slotClearButton()
 {
-	FUNCTIONSETUP;
-	fInstaller->clearPending();
+    FUNCTIONSETUP;
+    fInstaller->clearPending();
 }
 
 void FileInstallWidget::showComponent()
 {
-	FUNCTIONSETUP;
-	refreshFileInstallList();
+    FUNCTIONSETUP;
+    refreshFileInstallList();
 }
 
 void FileInstallWidget::slotAddFile()
 {
-	FUNCTIONSETUP;
-	if (!shown) return;
+    FUNCTIONSETUP;
+    if(!shown) return;
 
-	QStringList fileNames = KFileDialog::getOpenFileNames(
-		QString::null, i18n("*.pdb *.prc|PalmOS Databases (*.pdb *.prc)"));
+    QStringList fileNames = KFileDialog::getOpenFileNames(
+                                QString::null, i18n("*.pdb *.prc|PalmOS Databases (*.pdb *.prc)"));
 
-	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
-	{
-		fInstaller->addFile(*fileName, this );
-	}
+    for(QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
+    {
+        fInstaller->addFile(*fileName, this);
+    }
 }
 
 bool FileInstallWidget::preHotSync(QString &)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fIconView->setEnabled(false);
-	fInstaller->setEnabled(false);
-	addButton->setEnabled(false);
-	clearButton->setEnabled(false);
+    fIconView->setEnabled(false);
+    fInstaller->setEnabled(false);
+    addButton->setEnabled(false);
+    clearButton->setEnabled(false);
 
-	return true;
+    return true;
 }
 
 void FileInstallWidget::postHotSync()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fInstaller->setEnabled(true);
-	fIconView->setEnabled(true);
-	addButton->setEnabled(true);
-	clearButton->setEnabled(true);
-	if (shown) refreshFileInstallList();
+    fInstaller->setEnabled(true);
+    fIconView->setEnabled(true);
+    addButton->setEnabled(true);
+    clearButton->setEnabled(true);
+    if(shown) refreshFileInstallList();
 }
 
 
 void FileInstallWidget::refreshFileInstallList()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QStringList fileNames = fInstaller->fileNames();
-	QPixmap kpilotIcon = KGlobal::iconLoader()->loadIcon(CSL1("kpilot"), KIcon::Desktop);
+    QStringList fileNames = fInstaller->fileNames();
+    QPixmap kpilotIcon = KGlobal::iconLoader()->loadIcon(CSL1("kpilot"), KIcon::Desktop);
 
-	fIconView->clear();
+    fIconView->clear();
 
-	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
-	{
-		if(pdbOrPrc(*fileName))
-		{
-			new KIconViewItem(fIconView, *fileName, kpilotIcon);
-		}
-		else
-		{
-			new KIconViewItem(fIconView, *fileName);
-		}
-	}
+    for(QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
+    {
+        if(pdbOrPrc(*fileName))
+        {
+            new KIconViewItem(fIconView, *fileName, kpilotIcon);
+        }
+        else
+        {
+            new KIconViewItem(fIconView, *fileName);
+        }
+    }
 }
 
 void FileInstallWidget::contextMenu(QMouseEvent *event)
@@ -286,9 +292,10 @@ void FileInstallWidget::contextMenu(QMouseEvent *event)
     QPopupMenu popup(fIconView);
 
     item = fIconView->findItem(event->pos());
-    if(item) {
+    if(item)
+    {
         // Popup for the right clicked item
-        popup.insertItem(i18n("Delete a single file item","Delete"), 10);
+        popup.insertItem(i18n("Delete a single file item", "Delete"), 10);
     }
 
     popup.insertItem(i18n("Delete selected files"), 11);

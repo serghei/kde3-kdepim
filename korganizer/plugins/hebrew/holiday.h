@@ -17,30 +17,29 @@
 /**
 @author Jonathan Singer
 */
-class Holiday
-{
+class Holiday {
 public:
 
-  Holiday();
-  ~Holiday();
+    Holiday();
+    ~Holiday();
 
-  static QStringList FindHoliday(int month, int day, int weekday,
-                                 int kvia, bool leap_year_p,
-                                 bool israel_p, int day_number,
-                                 int year);
+    static QStringList FindHoliday(int month, int day, int weekday,
+                                   int kvia, bool leap_year_p,
+                                   bool israel_p, int day_number,
+                                   int year);
 
-  static QString Sfirah(int);
+    static QString Sfirah(int);
 
-  static bool CholP;
-  static bool OmerP;
-  static bool ParshaP;
+    static bool CholP;
+    static bool OmerP;
+    static bool ParshaP;
 
 private:
 
-  static QStringList holidays;
-  static int HolidayFlags;        //supposed to be extern
+    static QStringList holidays;
+    static int HolidayFlags;        //supposed to be extern
 
-//parsha Parsha_lookup;
+    //parsha Parsha_lookup;
 };
 
 #endif

@@ -37,43 +37,46 @@
 
 #include "kde2_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_kde2_xxport, KDE2XXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER(libkaddrbk_kde2_xxport, KDE2XXPort)
 
-KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::XXPort( ab, parent, name )
+KDE2XXPort::KDE2XXPort(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::XXPort(ab, parent, name)
 {
-  createImportAction( i18n( "Import KDE 2 Addressbook..." ) );
+    createImportAction(i18n("Import KDE 2 Addressbook..."));
 }
 
-KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
+KABC::AddresseeList KDE2XXPort::importContacts(const QString &) const
 {
-  QString fileName = locateLocal( "data", "kabc/std.vcf" );
-  if ( !QFile::exists( fileName ) ) {
-    KMessageBox::sorry( parentWidget(), i18n( "<qt>Could not find a KDE 2 address book <b>%1</b>.</qt>" ).arg( fileName ) );
+    QString fileName = locateLocal("data", "kabc/std.vcf");
+    if(!QFile::exists(fileName))
+    {
+        KMessageBox::sorry(parentWidget(), i18n("<qt>Could not find a KDE 2 address book <b>%1</b>.</qt>").arg(fileName));
+        return KABC::AddresseeList();
+    }
+
+    int result = KMessageBox::questionYesNoCancel(parentWidget(),
+                 i18n("Override previously imported entries?"),
+                 i18n("Import KDE 2 Addressbook"), i18n("Import"), i18n("Do Not Import"));
+
+    if(!result) return KABC::AddresseeList();
+
+    KProcess proc;
+
+    if(result == KMessageBox::Yes)
+    {
+        proc << "kab2kabc";
+        proc << "--override";
+    }
+    else if(result == KMessageBox::No)
+        proc << "kab2kabc";
+    else
+        kdDebug(5720) << "KAddressBook::importKDE2(): Unknow return value." << endl;
+
+    proc.start(KProcess::Block);
+
+    addressBook()->load();
+
     return KABC::AddresseeList();
-  }
-
-  int result = KMessageBox::questionYesNoCancel( parentWidget(),
-      i18n( "Override previously imported entries?" ),
-      i18n( "Import KDE 2 Addressbook" ), i18n("Import"), i18n("Do Not Import") );
-
-  if ( !result ) return KABC::AddresseeList();
-
-  KProcess proc;
-
-  if ( result == KMessageBox::Yes ) {
-    proc << "kab2kabc";
-    proc << "--override";
-  } else if ( result == KMessageBox::No )
-    proc << "kab2kabc";
-  else
-    kdDebug(5720) << "KAddressBook::importKDE2(): Unknow return value." << endl;
-
-  proc.start( KProcess::Block );
-
-  addressBook()->load();
-
-  return KABC::AddresseeList();
 }
 
 #include "kde2_xxport.moc"

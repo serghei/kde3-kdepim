@@ -43,54 +43,58 @@
 
 #include <assert.h>
 
-Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
-				      QWidget * creator, const char * name, WFlags f )
-  : QProgressDialog( creator, name, false, f ), mBaseText( baseText )
+Kleo::ProgressDialog::ProgressDialog(Job *job, const QString &baseText,
+                                     QWidget *creator, const char *name, WFlags f)
+    : QProgressDialog(creator, name, false, f), mBaseText(baseText)
 {
-  assert( job );
-  setBar( new ProgressBar( this, "replacement progressbar in Kleo::ProgressDialog" ) );
+    assert(job);
+    setBar(new ProgressBar(this, "replacement progressbar in Kleo::ProgressDialog"));
 
-  setMinimumDuration( 2000 /*ms*/ );
-  setAutoReset( false );
-  setAutoClose( false );
-  setLabelText( baseText );
-  setProgress( 0, 0 ); // activate busy indicator
+    setMinimumDuration(2000 /*ms*/);
+    setAutoReset(false);
+    setAutoClose(false);
+    setLabelText(baseText);
+    setProgress(0, 0);   // activate busy indicator
 
-  connect( job, SIGNAL(progress(const QString&,int,int)),
-	   SLOT(slotProgress(const QString&,int,int)) );
-  connect( job, SIGNAL(done()), SLOT(slotDone()) );
-  connect( this, SIGNAL(canceled()),
-	   job, SLOT(slotCancel()) );
+    connect(job, SIGNAL(progress(const QString &, int, int)),
+            SLOT(slotProgress(const QString &, int, int)));
+    connect(job, SIGNAL(done()), SLOT(slotDone()));
+    connect(this, SIGNAL(canceled()),
+            job, SLOT(slotCancel()));
 
-  QTimer::singleShot( minimumDuration(), this, SLOT(forceShow()) );
+    QTimer::singleShot(minimumDuration(), this, SLOT(forceShow()));
 }
 
-Kleo::ProgressDialog::~ProgressDialog() {
+Kleo::ProgressDialog::~ProgressDialog()
+{
 
 }
 
-void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
-  if ( 0 < ms && ms < minimumDuration() )
-    QTimer::singleShot( ms, this, SLOT(forceShow()) );
-  QProgressDialog::setMinimumDuration( ms );
+void Kleo::ProgressDialog::setMinimumDuration(int ms)
+{
+    if(0 < ms && ms < minimumDuration())
+        QTimer::singleShot(ms, this, SLOT(forceShow()));
+    QProgressDialog::setMinimumDuration(ms);
 }
 
-void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int total ) {
-  kdDebug(5150) << "Kleo::ProgressDialog::slotProgress( \"" << what << "\", "
-		<< current << ", " << total << " )" << endl;
-  if ( mBaseText.isEmpty() )
-    setLabelText( what );
-  else if ( what.isEmpty() )
-    setLabelText( mBaseText );
-  else
-    setLabelText( i18n( "%1: %2" ).arg( mBaseText, what ) );
-  setProgress( current, total );
+void Kleo::ProgressDialog::slotProgress(const QString &what, int current, int total)
+{
+    kdDebug(5150) << "Kleo::ProgressDialog::slotProgress( \"" << what << "\", "
+                  << current << ", " << total << " )" << endl;
+    if(mBaseText.isEmpty())
+        setLabelText(what);
+    else if(what.isEmpty())
+        setLabelText(mBaseText);
+    else
+        setLabelText(i18n("%1: %2").arg(mBaseText, what));
+    setProgress(current, total);
 }
 
-void Kleo::ProgressDialog::slotDone() {
-  kdDebug(5150) << "Kleo::ProgressDialog::slotDone()" << endl;
-  hide();
-  deleteLater();
+void Kleo::ProgressDialog::slotDone()
+{
+    kdDebug(5150) << "Kleo::ProgressDialog::slotDone()" << endl;
+    hide();
+    deleteLater();
 }
 
 

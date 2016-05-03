@@ -42,44 +42,46 @@ class QGridLayout;
 class QLabel;
 class KURLLabel;
 
-class SummaryWidget : public Kontact::Summary, public DCOPObject
-{
-  Q_OBJECT
-  K_DCOP
+class SummaryWidget : public Kontact::Summary, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
-  public:
-    SummaryWidget( QWidget *parent, const char *name = 0 );
+public:
+    SummaryWidget(QWidget *parent, const char *name = 0);
     virtual ~SummaryWidget();
 
-    int summaryHeight() const { return 1; }
+    int summaryHeight() const
+    {
+        return 1;
+    }
 
     QStringList configModules() const;
 
-  k_dcop:
+k_dcop:
     // all the information is pushed to Kontact by the daemon, to remove the chance of Kontact calling a daemon
     // that is blocked for some reason, and blocking itself.
-    void receiveDaemonStatusDetails( QDateTime, QString, QStringList, QString, QString, QString, bool );
-  private slots:
+    void receiveDaemonStatusDetails(QDateTime, QString, QStringList, QString, QString, QString, bool);
+private slots:
     void updateView();
-    void showSyncLog( const QString &filename );
+    void showSyncLog(const QString &filename);
     void startKPilot();
-    void slotAppRemoved( const QCString & );
-  private:
+    void slotAppRemoved(const QCString &);
+private:
     QTimer mTimer;
 
-    QLabel*mSyncTimeTextLabel;
-    QLabel*mSyncTimeLabel;
-    KURLLabel*mShowSyncLogLabel;
-    QLabel*mPilotUserTextLabel;
-    QLabel*mPilotUserLabel;
-    QLabel*mPilotDeviceTextLabel;
-    QLabel*mPilotDeviceLabel;
-    QLabel*mDaemonStatusTextLabel;
-    QLabel*mDaemonStatusLabel;
-    QLabel*mConduitsTextLabel;
-    QLabel*mConduitsLabel;
-    QLabel*mNoConnectionLabel;
-    KURLLabel*mNoConnectionStartLabel;
+    QLabel *mSyncTimeTextLabel;
+    QLabel *mSyncTimeLabel;
+    KURLLabel *mShowSyncLogLabel;
+    QLabel *mPilotUserTextLabel;
+    QLabel *mPilotUserLabel;
+    QLabel *mPilotDeviceTextLabel;
+    QLabel *mPilotDeviceLabel;
+    QLabel *mDaemonStatusTextLabel;
+    QLabel *mDaemonStatusLabel;
+    QLabel *mConduitsTextLabel;
+    QLabel *mConduitsLabel;
+    QLabel *mNoConnectionLabel;
+    KURLLabel *mNoConnectionStartLabel;
 
     QGridLayout *mLayout;
 

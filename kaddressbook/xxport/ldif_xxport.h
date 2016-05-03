@@ -27,21 +27,23 @@
 
 #include <xxport.h>
 
-class LDIFXXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class LDIFXXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    LDIFXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "ldif"; }
+    QString identifier() const
+    {
+        return "ldif";
+    }
 
-  public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    KABC::AddresseeList importContacts( const QString &data ) const;
+public slots:
+    bool exportContacts(const KABC::AddresseeList &list, const QString &data);
+    KABC::AddresseeList importContacts(const QString &data) const;
 
-  private:
-    void doExport( QFile *fp, const KABC::AddresseeList &list );
+private:
+    void doExport(QFile *fp, const KABC::AddresseeList &list);
 };
 
 #endif

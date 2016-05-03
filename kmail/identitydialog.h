@@ -43,46 +43,46 @@ class QStringList;
 class TemplatesConfiguration;
 class KPushButton;
 namespace Kleo {
-  class EncryptionKeyRequester;
-  class SigningKeyRequester;
+class EncryptionKeyRequester;
+class SigningKeyRequester;
 }
 namespace KPIM {
-  class Identity;
+class Identity;
 }
 namespace KMail {
-  class SignatureConfigurator;
-  class XFaceConfigurator;
-  class DictionaryComboBox;
-  class FolderRequester;
+class SignatureConfigurator;
+class XFaceConfigurator;
+class DictionaryComboBox;
+class FolderRequester;
 }
 
 namespace KMail {
 
-  class IdentityDialog : public KDialogBase {
+class IdentityDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    IdentityDialog( QWidget * parent=0, const char * name = 0 );
+public:
+    IdentityDialog(QWidget *parent = 0, const char *name = 0);
     virtual ~IdentityDialog();
 
-    void setIdentity( /*_not_ const*/ KPIM::Identity & ident );
+    void setIdentity(/*_not_ const*/ KPIM::Identity &ident);
 
-    void updateIdentity( KPIM::Identity & ident );
+    void updateIdentity(KPIM::Identity &ident);
 
-  public slots:
-    void slotUpdateTransportCombo( const QStringList & sl );
+public slots:
+    void slotUpdateTransportCombo(const QStringList &sl);
 
-  protected slots:
-    void slotAboutToShow( QWidget * w );
+protected slots:
+    void slotAboutToShow(QWidget *w);
     /*! \reimp */
     void slotOk();
     // copy default templates to identity templates
     void slotCopyGlobal();
 
-  private:
-    bool checkFolderExists( const QString & folder, const QString & msg );
-    bool validateAddresses( const QString & addresses );
+private:
+    bool checkFolderExists(const QString &folder, const QString &msg);
+    bool validateAddresses(const QString &addresses);
 
-  protected:
+protected:
     // "general" tab:
     QLineEdit                    *mNameEdit;
     QLineEdit                    *mOrganizationEdit;
@@ -111,7 +111,7 @@ namespace KMail {
     KMail::SignatureConfigurator *mSignatureConfigurator;
     // "X-Face" tab:
     KMail::XFaceConfigurator *mXFaceConfigurator;
-  };
+};
 
 } // namespace KMail
 

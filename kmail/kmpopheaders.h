@@ -15,49 +15,49 @@
 #include "kmmessage.h"
 
 
-enum KMPopFilterAction {Down=0, Later=1, Delete=2, NoAction=3}; //Keep these corresponding to the column numbers in the dialog for easier coding
-								//or change mapToAction and mapToColumn in KMPopHeadersView
+enum KMPopFilterAction {Down = 0, Later = 1, Delete = 2, NoAction = 3}; //Keep these corresponding to the column numbers in the dialog for easier coding
+//or change mapToAction and mapToColumn in KMPopHeadersView
 
 class KMPopHeaders {
 public:
 
-  KMPopHeaders();
-  ~KMPopHeaders();
-  /** constructor */
-  KMPopHeaders(const QString& aId, const QString& aUid, KMPopFilterAction aAction);
+    KMPopHeaders();
+    ~KMPopHeaders();
+    /** constructor */
+    KMPopHeaders(const QString &aId, const QString &aUid, KMPopFilterAction aAction);
 
-  /** returns the id of the message */
-  QString id() const;
+    /** returns the id of the message */
+    QString id() const;
 
-  /** returns the uid of the message */
-  QString uid() const;
+    /** returns the uid of the message */
+    QString uid() const;
 
-  /** returns the header of the message */
-  KMMessage * header() const;
+    /** returns the header of the message */
+    KMMessage *header() const;
 
-  /** set the header of the message */
-  void setHeader(KMMessage *aHeader);
+    /** set the header of the message */
+    void setHeader(KMMessage *aHeader);
 
-  /** No descriptions */
-  KMPopFilterAction action() const;
+    /** No descriptions */
+    KMPopFilterAction action() const;
 
-  /** No descriptions */
-  void setAction(KMPopFilterAction aAction);
-  /** No descriptions */
-  bool ruleMatched();
-  /** No descriptions */
-  void setRuleMatched(bool b);
+    /** No descriptions */
+    void setAction(KMPopFilterAction aAction);
+    /** No descriptions */
+    bool ruleMatched();
+    /** No descriptions */
+    void setRuleMatched(bool b);
 protected: // Protected attributes
-  /** */
-  KMPopFilterAction mAction;
-  /**  */
-  QString mId;
-  /**  */
-  QString mUid;
-  /**  */
-  bool mRuleMatched;
-  /**  */
-  KMMessage *mHeader;
+    /** */
+    KMPopFilterAction mAction;
+    /**  */
+    QString mId;
+    /**  */
+    QString mUid;
+    /**  */
+    bool mRuleMatched;
+    /**  */
+    KMMessage *mHeader;
 };
 
 #endif

@@ -26,56 +26,55 @@ class KTNEFView;
 class KTNEFParser;
 class KTNEFAttach;
 
-class KTNEFMain : public KMainWindow
-{
-	Q_OBJECT
+class KTNEFMain : public KMainWindow {
+    Q_OBJECT
 
 public:
-	KTNEFMain(QWidget *parent = 0, const char *name = 0);
-	~KTNEFMain();
+    KTNEFMain(QWidget *parent = 0, const char *name = 0);
+    ~KTNEFMain();
 
-	void loadFile(const QString& filename);
+    void loadFile(const QString &filename);
 
 protected slots:
-	void openFile();
-	void viewFile();
-	void viewFileAs();
-	void extractFile();
-	void extractFileTo();
-	void propertiesFile();
-	void optionDefaultDir();
-	void extractAllFiles();
-	void slotEditToolbars();
-	void slotNewToolbarConfig();
-	void slotShowMessageProperties();
-	void slotShowMessageText();
-	void slotSaveMessageText();
+    void openFile();
+    void viewFile();
+    void viewFileAs();
+    void extractFile();
+    void extractFileTo();
+    void propertiesFile();
+    void optionDefaultDir();
+    void extractAllFiles();
+    void slotEditToolbars();
+    void slotNewToolbarConfig();
+    void slotShowMessageProperties();
+    void slotShowMessageText();
+    void slotSaveMessageText();
 
-	void viewSelectionChanged();
-	void viewRightButtonPressed(QListViewItem *item, const QPoint& p, int c);
-	void viewDoubleClicked(QListViewItem*);
-	void viewDragRequested( const QValueList<KTNEFAttach*>& list );
+    void viewSelectionChanged();
+    void viewRightButtonPressed(QListViewItem *item, const QPoint &p, int c);
+    void viewDoubleClicked(QListViewItem *);
+    void viewDragRequested(const QValueList<KTNEFAttach *> &list);
     void slotConfigureKeys();
-//protected:
-//	void closeEvent(QCloseEvent *e);
+    //protected:
+    //	void closeEvent(QCloseEvent *e);
 
 private:
-	void setupStatusbar();
-	void setupActions();
-	void setupTNEF();
-	void enableExtractAll(bool on = true);
-	void enableSingleAction(bool on = true);
-	void cleanup();
+    void setupStatusbar();
+    void setupActions();
+    void setupTNEF();
+    void enableExtractAll(bool on = true);
+    void enableSingleAction(bool on = true);
+    void cleanup();
 
-	void extractTo(const QString& dirname);
-	QString extractTemp(KTNEFAttach *att);
+    void extractTo(const QString &dirname);
+    QString extractTemp(KTNEFAttach *att);
 
 private:
-	KTNEFView	*view_;
-	KTNEFParser	*parser_;
-	QString		filename_;
-	QString		defaultdir_;
-	QString		lastdir_;
+    KTNEFView	*view_;
+    KTNEFParser	*parser_;
+    QString		filename_;
+    QString		defaultdir_;
+    QString		lastdir_;
 };
 
 #endif

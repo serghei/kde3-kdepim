@@ -11,11 +11,12 @@
 
 int KornApp::newInstance()
 {
-	if( _instanceCount ) {
-		_shell->optionDlg();
-	}
-	_instanceCount++;
+    if(_instanceCount)
+    {
+        _shell->optionDlg();
+    }
+    _instanceCount++;
 
-	return 0;
+    return 0;
 }
 #include "kornapp.moc"

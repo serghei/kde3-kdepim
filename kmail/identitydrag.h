@@ -38,27 +38,27 @@
 
 namespace KMail {
 
-  /** @short A QDragObject for KPIM::Identity
-      @author Marc Mutz <mutz@kde.org>
-  **/
-  class IdentityDrag : public QDragObject {
+/** @short A QDragObject for KPIM::Identity
+    @author Marc Mutz <mutz@kde.org>
+**/
+class IdentityDrag : public QDragObject {
     Q_OBJECT
-  public:
-    IdentityDrag( const KPIM::Identity & ident,
-		  QWidget * dragSource=0, const char * name=0 );
+public:
+    IdentityDrag(const KPIM::Identity &ident,
+                 QWidget *dragSource = 0, const char *name = 0);
 
-  public:
+public:
     virtual ~IdentityDrag() {}
 
-    const char * format( int i ) const; // reimp. QMimeSource
-    QByteArray encodedData( const char * mimetype ) const; // dto.
+    const char *format(int i) const;    // reimp. QMimeSource
+    QByteArray encodedData(const char *mimetype) const;    // dto.
 
-    static bool canDecode( const QMimeSource * e );
-    static bool decode( const QMimeSource * e, KPIM::Identity & ident );
+    static bool canDecode(const QMimeSource *e);
+    static bool decode(const QMimeSource *e, KPIM::Identity &ident);
 
-  protected:
+protected:
     KPIM::Identity mIdent;
-  };
+};
 
 } // namespace KMail
 

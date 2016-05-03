@@ -31,36 +31,35 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
-class IDMapping
-{
+class IDMapping {
 public:
-	IDMapping();
-	
-	IDMapping( const QString &conduit );
-	
-	IDMapping( const IDMapping &m );
-	
-	IDMapping operator=( const IDMapping &m );
-	
-	void setUid( const QString &uid );
-	
-	void setPid( recordid_t uid );
-	
-	void setLastSyncTime( const QDateTime &datetime );
-	
-	QString conduit() const;
-	
-	QString uid() const;
-	
-	recordid_t pid() const;
-	
-	QDateTime lastSyncTime() const;
+    IDMapping();
+
+    IDMapping(const QString &conduit);
+
+    IDMapping(const IDMapping &m);
+
+    IDMapping operator=(const IDMapping &m);
+
+    void setUid(const QString &uid);
+
+    void setPid(recordid_t uid);
+
+    void setLastSyncTime(const QDateTime &datetime);
+
+    QString conduit() const;
+
+    QString uid() const;
+
+    recordid_t pid() const;
+
+    QDateTime lastSyncTime() const;
 
 private:
-	QString fConduit;
-	QString fUid;
-	recordid_t fPid;
-	QDateTime fLastSync;
+    QString fConduit;
+    QString fUid;
+    recordid_t fPid;
+    QDateTime fLastSync;
 };
 
 #endif

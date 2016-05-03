@@ -43,14 +43,14 @@ class AlarmListItem;
 
 class AlarmDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    AlarmDialog( QWidget *parent = 0, const char *name = 0 );
+public:
+    AlarmDialog(QWidget *parent = 0, const char *name = 0);
     virtual ~AlarmDialog();
 
-    void addIncidence( Incidence *incidence, const QDateTime &reminderAt );
+    void addIncidence(Incidence *incidence, const QDateTime &reminderAt);
     void eventNotification();
 
-  public slots:
+public slots:
     void slotOk();
     void slotUser1();
     void slotUser2();
@@ -62,18 +62,18 @@ class AlarmDialog : public KDialogBase {
     void suspendAll();
     void dismissAll();
 
-  signals:
-    void reminderCount( int count );
+signals:
+    void reminderCount(int count);
 
-  private slots:
+private slots:
     void updateButtons();
     void showDetails();
 
-  private:
+private:
     bool startKOrganizer();
     void setTimer();
     int activeCount();
-    QValueList<AlarmListItem*> selectedItems() const;
+    QValueList<AlarmListItem *> selectedItems() const;
 
     KListView *mIncidenceListView;
     KOEventViewer *mDetailView;

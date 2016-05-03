@@ -21,19 +21,19 @@
 #include "slider.moc"
 
 
-Slider::Slider(QWidget* parent, const char* name)
-	: QSlider(parent, name),
-	  mReadOnly(false)
+Slider::Slider(QWidget *parent, const char *name)
+    : QSlider(parent, name),
+      mReadOnly(false)
 { }
 
-Slider::Slider(Orientation o, QWidget* parent, const char* name)
-	: QSlider(o, parent, name),
-	  mReadOnly(false)
+Slider::Slider(Orientation o, QWidget *parent, const char *name)
+    : QSlider(o, parent, name),
+      mReadOnly(false)
 { }
 
-Slider::Slider(int minval, int maxval, int pageStep, int value, Orientation o, QWidget* parent, const char* name)
-	: QSlider(minval, maxval, pageStep, value, o, parent, name),
-	  mReadOnly(false)
+Slider::Slider(int minval, int maxval, int pageStep, int value, Orientation o, QWidget *parent, const char *name)
+    : QSlider(minval, maxval, pageStep, value, o, parent, name),
+      mReadOnly(false)
 { }
 
 /******************************************************************************
@@ -42,44 +42,44 @@ Slider::Slider(int minval, int maxval, int pageStep, int value, Orientation o, Q
 */
 void Slider::setReadOnly(bool ro)
 {
-	mReadOnly = ro;
+    mReadOnly = ro;
 }
 
 /******************************************************************************
 *  Event handlers to intercept events if in read-only mode.
 *  Any events which could change the slider value are discarded.
 */
-void Slider::mousePressEvent(QMouseEvent* e)
+void Slider::mousePressEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	QSlider::mousePressEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    QSlider::mousePressEvent(e);
 }
 
-void Slider::mouseReleaseEvent(QMouseEvent* e)
+void Slider::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		QSlider::mouseReleaseEvent(e);
+    if(!mReadOnly)
+        QSlider::mouseReleaseEvent(e);
 }
 
-void Slider::mouseMoveEvent(QMouseEvent* e)
+void Slider::mouseMoveEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		QSlider::mouseMoveEvent(e);
+    if(!mReadOnly)
+        QSlider::mouseMoveEvent(e);
 }
 
-void Slider::keyPressEvent(QKeyEvent* e)
+void Slider::keyPressEvent(QKeyEvent *e)
 {
-	if (!mReadOnly  ||  e->key() == Qt::Key_Escape)
-		QSlider::keyPressEvent(e);
+    if(!mReadOnly  ||  e->key() == Qt::Key_Escape)
+        QSlider::keyPressEvent(e);
 }
 
-void Slider::keyReleaseEvent(QKeyEvent* e)
+void Slider::keyReleaseEvent(QKeyEvent *e)
 {
-	if (!mReadOnly)
-		QSlider::keyReleaseEvent(e);
+    if(!mReadOnly)
+        QSlider::keyReleaseEvent(e);
 }

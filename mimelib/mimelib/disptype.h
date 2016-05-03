@@ -69,8 +69,8 @@ class DW_EXPORT DwDispositionType : public DwFieldBody {
 public:
 
     DwDispositionType();
-    DwDispositionType(const DwDispositionType& aDispType);
-    DwDispositionType(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwDispositionType(const DwDispositionType &aDispType);
+    DwDispositionType(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwDispositionType} object's string representation to the empty
     //. string and sets its parent to {\tt NULL}.
@@ -89,7 +89,7 @@ public:
 
     virtual ~DwDispositionType();
 
-    const DwDispositionType& operator = (const DwDispositionType& aDispType);
+    const DwDispositionType &operator = (const DwDispositionType &aDispType);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aDispType}.  The parent node of the {\tt DwDipositionType}
     //. object is not changed.
@@ -114,7 +114,7 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwDispositionType} object on the free store that
     //. has the same value as this {\tt DwDispositionType} object.  The basic
@@ -132,32 +132,32 @@ public:
     //. {\tt DwMime::kDispTypeNull}, {\tt DwMime::kDispTypeUnknown},
     //. {\tt DwMime::kDispTypeInline}, and {\tt DwMime::kDispTypeAttachment}.
 
-    const DwString& DispositionTypeStr() const;
+    const DwString &DispositionTypeStr() const;
     //. Returns the disposition-type as a string.
 
-    void SetDispositionTypeStr(const DwString& aStr);
+    void SetDispositionTypeStr(const DwString &aStr);
     //. Sets the disposition-type from a string.
 
-    const DwString& Filename() const;
+    const DwString &Filename() const;
     //. This convenience function returns the value from the filename
     //. parameter, if present.  If no filename parameter is present,
     //. an empty string is returned.
 
-    void SetFilename(const DwString& aStr);
+    void SetFilename(const DwString &aStr);
     //. This convenience function sets the value of the filename parameter
     //. to {\tt aStr}.
 
-    DwParameter* FirstParameter() const;
+    DwParameter *FirstParameter() const;
     //. Returns the first {\tt DwParameter} object in the list managed by
     //. this {\tt DwDispositionType} object, or {\tt NULL} if no parameters are
     //. present.  Use {\tt DwParameter::Next()} to iterate through the list.
 
-    void AddParameter(DwParameter* aParam);
+    void AddParameter(DwParameter *aParam);
     //. Adds a {\tt DwParameter} object to the list managed by this
     //. {\tt DwDispositionType} object.
 
-    static DwDispositionType* NewDispositionType(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwDispositionType *NewDispositionType(const DwString &aStr,
+            DwMessageComponent *aParent);
     //. Creates a new {\tt DwDispositionType} object on the free store.
     //. If the static data member {\tt sNewDispositionType} is {\tt NULL},
     //. this member function will create a new {\tt DwDispositionType}
@@ -167,34 +167,34 @@ public:
     //. {\tt DwDispositionType}, and return that object.
 
     //+ Var sNewDispositionType
-    static DwDispositionType* (*sNewDispositionType)(const DwString&,
-        DwMessageComponent*);
+    static DwDispositionType *(*sNewDispositionType)(const DwString &,
+            DwMessageComponent *);
     //. If {\tt sNewDispositionType} is not {\tt NULL}, it is assumed to
     //. point to a  user-supplied function that returns an object from a
     //. class derived from {\tt DwDispositionType}.
 
 protected:
 
-    void _AddParameter(DwParameter* aParam);
+    void _AddParameter(DwParameter *aParam);
     //. Adds a parameter to the list without setting the is-modified flag.
 
     virtual void EnumToStr();
     virtual void StrToEnum();
     void DeleteParameterList();
-    void CopyParameterList(DwParameter* aFirst);
+    void CopyParameterList(DwParameter *aFirst);
 
     int mDispositionType;
     DwString mDispositionTypeStr;
     DwString mFilenameStr;
-    DwParameter* mFirstParameter;
+    DwParameter *mFirstParameter;
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -212,7 +212,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

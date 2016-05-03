@@ -30,16 +30,21 @@
 
 namespace KOrg {
 
-class Part : public KParts::Part
-{
-  public:
-    static int interfaceVersion() { return 2; }
-    static QString serviceType() { return "KOrganizer/Part"; }
+class Part : public KParts::Part {
+public:
+    static int interfaceVersion()
+    {
+        return 2;
+    }
+    static QString serviceType()
+    {
+        return "KOrganizer/Part";
+    }
 
     typedef QPtrList<Part> List;
 
-    Part( MainWindow *parent, const char *name )
-      : KParts::Part( parent?(parent->topLevelWidget()):0, name ), mMainWindow( parent ) {}
+    Part(MainWindow *parent, const char *name)
+        : KParts::Part(parent ? (parent->topLevelWidget()) : 0, name), mMainWindow(parent) {}
 
     virtual ~Part() {}
 
@@ -47,22 +52,24 @@ class Part : public KParts::Part
     /** short name of the part, used as category in the keybindings dialog */
     virtual QString shortInfo() = 0;
 
-    MainWindow *mainWindow() { return mMainWindow; }
+    MainWindow *mainWindow()
+    {
+        return mMainWindow;
+    }
 
-  private:
+private:
     MainWindow *mMainWindow;
 };
 
-class PartFactory : public KLibFactory
-{
-  public:
-    virtual Part *create( MainWindow *parent, const char *name = 0 ) = 0;
+class PartFactory : public KLibFactory {
+public:
+    virtual Part *create(MainWindow *parent, const char *name = 0) = 0;
 
-  protected:
-    virtual QObject *createObject( QObject *, const char *,const char *,
-                                   const QStringList & )
+protected:
+    virtual QObject *createObject(QObject *, const char *, const char *,
+                                  const QStringList &)
     {
-      return 0;
+        return 0;
     }
 };
 

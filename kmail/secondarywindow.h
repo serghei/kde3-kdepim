@@ -37,26 +37,25 @@ class QCloseEvent;
 
 namespace KMail {
 
-  /**
-   *  Window class for secondary KMail window like the composer window and
-   *  the separate message window.
-   */
-  class SecondaryWindow : public KMainWindow
-  {
+/**
+ *  Window class for secondary KMail window like the composer window and
+ *  the separate message window.
+ */
+class SecondaryWindow : public KMainWindow {
     Q_OBJECT
 
-  public:
-    SecondaryWindow( const char * name = 0 );
+public:
+    SecondaryWindow(const char *name = 0);
     ~SecondaryWindow();
 
-  protected:
+protected:
     /**
      *  Reimplemented because we don't want the application to quit when the
      *  last _visible_ secondary window is closed in case a system tray applet
      *  exists.
      */
-    virtual void closeEvent( QCloseEvent * );
-  };
+    virtual void closeEvent(QCloseEvent *);
+};
 
 } // namespace KMail
 

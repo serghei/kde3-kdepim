@@ -36,14 +36,14 @@
 #include <kmessagebox.h>
 
 namespace GpgME {
-    class SigningResult;
-    class EncryptionResult;
-    class DecryptionResult;
-    class VerificationResult;
+class SigningResult;
+class EncryptionResult;
+class DecryptionResult;
+class VerificationResult;
 }
 
 namespace Kleo {
-    class Job;
+class Job;
 }
 
 class QWidget;
@@ -51,31 +51,39 @@ class QString;
 
 namespace Kleo {
 
-    class KDE_EXPORT MessageBox {
-    public:
-        static void information( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
-        static void information( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, int options=KMessageBox::Notify );
-        static void error( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
-        static void error( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, int options=KMessageBox::Notify );
+class KDE_EXPORT MessageBox {
+public:
+    static void information(QWidget *parent, const GpgME::SigningResult &result, const Kleo::Job *job, const QString &caption,
+                            int options = KMessageBox::Notify);
+    static void information(QWidget *parent, const GpgME::SigningResult &result, const Kleo::Job *job, int options = KMessageBox::Notify);
+    static void error(QWidget *parent, const GpgME::SigningResult &result, const Kleo::Job *job, const QString &caption,
+                      int options = KMessageBox::Notify);
+    static void error(QWidget *parent, const GpgME::SigningResult &result, const Kleo::Job *job, int options = KMessageBox::Notify);
 
-        static void information( QWidget * parent, const GpgME::EncryptionResult & result, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
-        static void information( QWidget * parent, const GpgME::EncryptionResult & result, const Kleo::Job * job, int options=KMessageBox::Notify );
-        static void error( QWidget * parent, const GpgME::EncryptionResult & result, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
-        static void error( QWidget * parent, const GpgME::EncryptionResult & result, const Kleo::Job * job, int options=KMessageBox::Notify );
+    static void information(QWidget *parent, const GpgME::EncryptionResult &result, const Kleo::Job *job, const QString &caption,
+                            int options = KMessageBox::Notify);
+    static void information(QWidget *parent, const GpgME::EncryptionResult &result, const Kleo::Job *job, int options = KMessageBox::Notify);
+    static void error(QWidget *parent, const GpgME::EncryptionResult &result, const Kleo::Job *job, const QString &caption,
+                      int options = KMessageBox::Notify);
+    static void error(QWidget *parent, const GpgME::EncryptionResult &result, const Kleo::Job *job, int options = KMessageBox::Notify);
 
-        static void information( QWidget * parent, const GpgME::SigningResult & sresult, const GpgME::EncryptionResult & eresult, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
-        static void information( QWidget * parent, const GpgME::SigningResult & sresult, const GpgME::EncryptionResult & eresult, const Kleo::Job * job, int options=KMessageBox::Notify );
-        static void error( QWidget * parent, const GpgME::SigningResult & sresult, const GpgME::EncryptionResult & eresult, const Kleo::Job * job, const QString & caption, int options=KMessageBox::Notify );
-        static void error( QWidget * parent, const GpgME::SigningResult & sresult, const GpgME::EncryptionResult & eresult, const Kleo::Job * job, int options=KMessageBox::Notify );
+    static void information(QWidget *parent, const GpgME::SigningResult &sresult, const GpgME::EncryptionResult &eresult, const Kleo::Job *job,
+                            const QString &caption, int options = KMessageBox::Notify);
+    static void information(QWidget *parent, const GpgME::SigningResult &sresult, const GpgME::EncryptionResult &eresult, const Kleo::Job *job,
+                            int options = KMessageBox::Notify);
+    static void error(QWidget *parent, const GpgME::SigningResult &sresult, const GpgME::EncryptionResult &eresult, const Kleo::Job *job,
+                      const QString &caption, int options = KMessageBox::Notify);
+    static void error(QWidget *parent, const GpgME::SigningResult &sresult, const GpgME::EncryptionResult &eresult, const Kleo::Job *job,
+                      int options = KMessageBox::Notify);
 
-        static void auditLog( QWidget * parent, const Kleo::Job * job, const QString & caption );
-        static void auditLog( QWidget * parent, const Kleo::Job * job );
-        static void auditLog( QWidget * parent, const QString & log, const QString & caption );
-        static void auditLog( QWidget * parent, const QString & log );
+    static void auditLog(QWidget *parent, const Kleo::Job *job, const QString &caption);
+    static void auditLog(QWidget *parent, const Kleo::Job *job);
+    static void auditLog(QWidget *parent, const QString &log, const QString &caption);
+    static void auditLog(QWidget *parent, const QString &log);
 
-    private:
-        static void make( QWidget * parent, QMessageBox::Icon icon, const QString & text, const Kleo::Job * job, const QString & caption, int options );
-    };
+private:
+    static void make(QWidget *parent, QMessageBox::Icon icon, const QString &text, const Kleo::Job *job, const QString &caption, int options);
+};
 
 
 }

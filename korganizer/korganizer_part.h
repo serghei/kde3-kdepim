@@ -39,9 +39,9 @@ class CalendarView;
 class ActionManager;
 
 namespace KCal {
-  class CalendarResources;
-  class Calendar;
-  class Incidence;
+class CalendarResources;
+class Calendar;
+class Incidence;
 }
 using namespace KCal;
 namespace KParts {
@@ -52,12 +52,11 @@ class CalendarViewBase;
 }
 
 class KOrganizerPart: public KParts::ReadOnlyPart,
-                      public KOrg::MainWindow
-{
+    public KOrg::MainWindow {
     Q_OBJECT
-  public:
-    KOrganizerPart( QWidget *parentWidget, const char *widgetName,
-                    QObject *parent, const char *name, const QStringList & );
+public:
+    KOrganizerPart(QWidget *parentWidget, const char *widgetName,
+                   QObject *parent, const char *name, const QStringList &);
     virtual ~KOrganizerPart();
 
     static KAboutData *createAboutData();
@@ -65,41 +64,50 @@ class KOrganizerPart: public KParts::ReadOnlyPart,
     virtual KOrg::CalendarViewBase *view() const;
 
     /** Load calendar file from URL. Merge into current calendar, if \a merge is true. */
-    virtual bool openURL( const KURL &url, bool merge = false );
+    virtual bool openURL(const KURL &url, bool merge = false);
     /** Save calendar file to URL of current calendar */
     virtual bool saveURL();
     /** Save calendar file to URL */
-    virtual bool saveAsURL( const KURL &kurl );
+    virtual bool saveAsURL(const KURL &kurl);
 
     /** Get current URL */
     virtual KURL getCurrentURL() const;
 
-    virtual KXMLGUIFactory *mainGuiFactory() { return factory(); }
-    virtual KXMLGUIClient *mainGuiClient() { return this; }
+    virtual KXMLGUIFactory *mainGuiFactory()
+    {
+        return factory();
+    }
+    virtual KXMLGUIClient *mainGuiClient()
+    {
+        return this;
+    }
     virtual QWidget *topLevelWidget();
     virtual ActionManager *actionManager();
-    virtual KActionCollection *getActionCollection() const { return actionCollection(); }
-    virtual void showStatusMessage( const QString &message );
+    virtual KActionCollection *getActionCollection() const
+    {
+        return actionCollection();
+    }
+    virtual void showStatusMessage(const QString &message);
 
     void setTitle();
 
-  public slots:
-    void slotChangeInfo( Incidence * );
+public slots:
+    void slotChangeInfo(Incidence *);
 
-  protected:
+protected:
     virtual bool openFile();
 
-  protected slots:
-    void startCompleted( KProcess * );
+protected slots:
+    void startCompleted(KProcess *);
 
-  private:
+private:
     CalendarView *mView;
     ActionManager *mActionManager;
     KParts::StatusBarExtension *mStatusBarExtension;
     QWidget *mTopLevelWidget;
 
-  signals:
-    void textChanged( const QString & );
+signals:
+    void textChanged(const QString &);
 };
 
 #endif

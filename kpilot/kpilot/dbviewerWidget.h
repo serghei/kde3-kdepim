@@ -40,51 +40,54 @@ class PilotLocalDatabase;
 class PilotRecord;
 class KListView;
 
-class GenericDBWidget : public PilotComponent
-{
-Q_OBJECT
+class GenericDBWidget : public PilotComponent {
+    Q_OBJECT
 
 public:
-	GenericDBWidget(QWidget* parent, const QString& dbpath);
-	virtual ~GenericDBWidget();
+    GenericDBWidget(QWidget *parent, const QString &dbpath);
+    virtual ~GenericDBWidget();
 
-	// Pilot component methods
-	/* virtual */ void showComponent();
-	/* virtual */ void hideComponent();
+    // Pilot component methods
+    /* virtual */ void showComponent();
+    /* virtual */ void hideComponent();
 
-	QString getCurrentDB() const {  return currentDB; }
+    QString getCurrentDB() const
+    {
+        return currentDB;
+    }
 protected:
-	void setupWidget();
+    void setupWidget();
 
 protected slots:
-	void slotSelected(const QString &dbname);
-	void slotDBType(int mode);
-	void reset();
-	void slotAddRecord();
-	void slotEditRecord();
-	bool slotEditRecord(QListViewItem*);
-	void slotDeleteRecord();
-	void slotShowAppInfo();
-	void slotShowDBInfo();
-	void enableWidgets(bool enable);
-	void writeRecord(PilotRecord*r);
+    void slotSelected(const QString &dbname);
+    void slotDBType(int mode);
+    void reset();
+    void slotAddRecord();
+    void slotEditRecord();
+    bool slotEditRecord(QListViewItem *);
+    void slotDeleteRecord();
+    void slotShowAppInfo();
+    void slotShowDBInfo();
+    void enableWidgets(bool enable);
+    void writeRecord(PilotRecord *r);
 
 private:
-	KListBox*fDBList;
-	KComboBox*fDBType;
-	KTextEdit*fDBInfo;
-	KPushButton*fDBInfoButton, *fAppInfoButton;
-	KListView*fRecordList;
-	KPushButton*fAddRecord, *fEditRecord, *fDeleteRecord;
+    KListBox *fDBList;
+    KComboBox *fDBType;
+    KTextEdit *fDBInfo;
+    KPushButton *fDBInfoButton, *fAppInfoButton;
+    KListView *fRecordList;
+    KPushButton *fAddRecord, *fEditRecord, *fDeleteRecord;
 
-	enum eDBType {
-		eDatabase,
-		eApplication
-	} currentDBtype;
+    enum eDBType
+    {
+        eDatabase,
+        eApplication
+    } currentDBtype;
 
-	PilotLocalDatabase*fDB;
-	QString currentDB;
-	QPtrList<PilotRecord> fRecList;
+    PilotLocalDatabase *fDB;
+    QString currentDB;
+    QPtrList<PilotRecord> fRecList;
 };
 
 

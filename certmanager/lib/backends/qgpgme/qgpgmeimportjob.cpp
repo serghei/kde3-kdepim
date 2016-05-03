@@ -45,41 +45,46 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEImportJob::QGpgMEImportJob( GpgME::Context * context )
-  : ImportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEImportJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEImportJob::QGpgMEImportJob(GpgME::Context *context)
+    : ImportJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEImportJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEImportJob::~QGpgMEImportJob() {
+Kleo::QGpgMEImportJob::~QGpgMEImportJob()
+{
 }
 
-void Kleo::QGpgMEImportJob::setup( const QByteArray & keyData ) {
-  assert( !mInData );
+void Kleo::QGpgMEImportJob::setup(const QByteArray &keyData)
+{
+    assert(!mInData);
 
-  createInData( keyData );
+    createInData(keyData);
 }
 
-GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
-  setup( keyData );
+GpgME::Error Kleo::QGpgMEImportJob::start(const QByteArray &keyData)
+{
+    setup(keyData);
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startKeyImport( *mInData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startKeyImport(*mInData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
-  setup( keyData );
-  return mCtx->importKeys( *mInData );
+GpgME::ImportResult Kleo::QGpgMEImportJob::exec(const QByteArray &keyData)
+{
+    setup(keyData);
+    return mCtx->importKeys(*mInData);
 }
 
-void Kleo::QGpgMEImportJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->importResult() );
+void Kleo::QGpgMEImportJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mCtx->importResult());
 }
 
 

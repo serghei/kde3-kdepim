@@ -16,23 +16,22 @@ class KKeyButton;
 class KActionCollection;
 class KShortcut;
 
-class SnippetDlg : public SnippetDlgBase
-{
+class SnippetDlg : public SnippetDlgBase {
     Q_OBJECT
 
 public:
-    SnippetDlg( KActionCollection* ac, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+    SnippetDlg(KActionCollection *ac, QWidget *parent = 0, const char *name = 0, bool modal = FALSE, WFlags fl = 0);
     ~SnippetDlg();
 
-    void setShowShortcut( bool show );
+    void setShowShortcut(bool show);
 
-    QLabel* textLabel3;
-    QLabel* textLabelGroup;
-    KKeyButton* keyButton;
-    KActionCollection* actionCollection;
+    QLabel *textLabel3;
+    QLabel *textLabelGroup;
+    KKeyButton *keyButton;
+    KActionCollection *actionCollection;
 
 private slots:
-    void slotCapturedShortcut( const KShortcut& );
+    void slotCapturedShortcut(const KShortcut &);
 
 protected slots:
     virtual void languageChange();

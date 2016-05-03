@@ -33,55 +33,53 @@ class KAction;
 class KToolBarPopupAction;
 class QString;
 
-namespace Akregator
-{
-    
-    // the back/forward navigation was taken from KDevelop. Kudos to the KDevelop team!
-    class PageViewer : public Viewer
-    {
-        Q_OBJECT
-        public:
-            PageViewer(QWidget* parent, const char* name);
-            virtual ~PageViewer();
-            virtual bool openURL(const KURL &url);
+namespace Akregator {
 
-        protected:
+// the back/forward navigation was taken from KDevelop. Kudos to the KDevelop team!
+class PageViewer : public Viewer {
+    Q_OBJECT
+public:
+    PageViewer(QWidget *parent, const char *name);
+    virtual ~PageViewer();
+    virtual bool openURL(const KURL &url);
 
-            class HistoryEntry;
-            void addHistoryEntry(const KURL& url);
-            void restoreHistoryEntry(const QValueList<HistoryEntry>::Iterator& entry);
-            void updateHistoryEntry();
+protected:
 
-        protected slots:
+    class HistoryEntry;
+    void addHistoryEntry(const KURL &url);
+    void restoreHistoryEntry(const QValueList<HistoryEntry>::Iterator &entry);
+    void updateHistoryEntry();
 
-            void slotSetCaption(const QString& cap);
-            void slotBack();
-            void slotForward();
-            void slotReload();
-            void slotStop();
+protected slots:
 
-            virtual void slotPaletteOrFontChanged();
+    void slotSetCaption(const QString &cap);
+    void slotBack();
+    void slotForward();
+    void slotReload();
+    void slotStop();
 
-            void slotStarted(KIO::Job *);
-            void slotCompleted();
-            void slotCancelled(const QString &errMsg);
-            void slotBackAboutToShow();
-            void slotForwardAboutToShow();
-            void slotPopupActivated( int id );
-            virtual void slotPopupMenu(KXMLGUIClient*, const QPoint&, const KURL&, const KParts::URLArgs&, KParts::BrowserExtension::PopupFlags, mode_t);
-            
-            void slotGlobalBookmarkArticle();
-            
-            virtual void slotOpenURLRequest(const KURL& url, const KParts::URLArgs& args);
-            virtual void urlSelected(const QString &url, int button, int state, const QString &_target, KParts::URLArgs args);
-            
-        signals:
-            void setTabIcon(const QPixmap&);
+    virtual void slotPaletteOrFontChanged();
 
-        private:
-            class PageViewerPrivate;
-            PageViewerPrivate* d;
-    };
+    void slotStarted(KIO::Job *);
+    void slotCompleted();
+    void slotCancelled(const QString &errMsg);
+    void slotBackAboutToShow();
+    void slotForwardAboutToShow();
+    void slotPopupActivated(int id);
+    virtual void slotPopupMenu(KXMLGUIClient *, const QPoint &, const KURL &, const KParts::URLArgs &, KParts::BrowserExtension::PopupFlags, mode_t);
+
+    void slotGlobalBookmarkArticle();
+
+    virtual void slotOpenURLRequest(const KURL &url, const KParts::URLArgs &args);
+    virtual void urlSelected(const QString &url, int button, int state, const QString &_target, KParts::URLArgs args);
+
+signals:
+    void setTabIcon(const QPixmap &);
+
+private:
+    class PageViewerPrivate;
+    PageViewerPrivate *d;
+};
 }
 
 #endif // PAGEVIEWER_H

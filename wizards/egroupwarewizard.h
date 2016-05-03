@@ -27,9 +27,8 @@
 class KLineEdit;
 class QCheckBox;
 
-class KDE_EXPORT EGroupwareWizard : public KConfigWizard
-{
-  public:
+class KDE_EXPORT EGroupwareWizard : public KConfigWizard {
+public:
     EGroupwareWizard();
     ~EGroupwareWizard();
 
@@ -38,7 +37,7 @@ class KDE_EXPORT EGroupwareWizard : public KConfigWizard
     void usrReadConfig();
     void usrWriteConfig();
 
-  private:
+private:
     KLineEdit *mServerEdit;
     KLineEdit *mDomainEdit;
     KLineEdit *mUserEdit;

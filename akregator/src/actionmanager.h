@@ -36,25 +36,24 @@ namespace Akregator {
 /** interface for accessing actions, popup menus etc. from widgets.
     (Extracted from the implementation to avoid dependencies between widgets and  Akregator::Part).
  */
-class ActionManager : public QObject
-{
-    public:
+class ActionManager : public QObject {
+public:
 
-        static ActionManager* getInstance();
-        static void setInstance(ActionManager* manager);
+    static ActionManager *getInstance();
+    static void setInstance(ActionManager *manager);
 
-        ActionManager(QObject* parent=0, const char* name=0);
-        virtual ~ActionManager();
+    ActionManager(QObject *parent = 0, const char *name = 0);
+    virtual ~ActionManager();
 
-        virtual KAction* action(const char* name, const char* classname=0) = 0;
-        virtual QWidget* container(const char* name) = 0;
-        
-    private:
+    virtual KAction *action(const char *name, const char *classname = 0) = 0;
+    virtual QWidget *container(const char *name) = 0;
 
-        static ActionManager* m_self;
+private:
 
-        class ActionManagerPrivate;
-        ActionManagerPrivate* d;
+    static ActionManager *m_self;
+
+    class ActionManagerPrivate;
+    ActionManagerPrivate *d;
 };
 
 } // namespace Akregator

@@ -38,31 +38,33 @@
 class QGridLayout;
 class QString;
 
-class SummaryWidget : public Kontact::Summary, public DCOPObject
-{
-  Q_OBJECT
-  K_DCOP
+class SummaryWidget : public Kontact::Summary, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
-  public:
-    SummaryWidget( Kontact::Plugin *plugin, QWidget *parent, const char *name = 0 );
+public:
+    SummaryWidget(Kontact::Plugin *plugin, QWidget *parent, const char *name = 0);
 
-    int summaryHeight() const { return 1; }
+    int summaryHeight() const
+    {
+        return 1;
+    }
     QStringList configModules() const;
 
-  k_dcop_hidden:
+k_dcop_hidden:
     void slotUnreadCountChanged();
 
-  protected:
-    virtual bool eventFilter( QObject *obj, QEvent* e );
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *e);
 
-  public slots:
-    virtual void updateSummary( bool force );
+public slots:
+    virtual void updateSummary(bool force);
 
-  private slots:
-    void selectFolder( const QString& );
+private slots:
+    void selectFolder(const QString &);
 
-  private:
-    void updateFolderList( const QStringList& folders );
+private:
+    void updateFolderList(const QStringList &folders);
 
     QPtrList<QLabel> mLabels;
     QGridLayout *mLayout;

@@ -41,59 +41,57 @@ class SimpleNodeSelector;
 /** \brief A dialog with a simple listview displaying a feed list for selection purposes
      Use this dialog if you want the user to select a node from the feed list where FeedListView is inappropriate (e.g. in a filter dialog)  */
 
-class SelectNodeDialog : public KDialogBase
-{
+class SelectNodeDialog : public KDialogBase {
     Q_OBJECT
-    public:
-        SelectNodeDialog(FeedList* feedList, QWidget* parent=0, char* name=0);
-        virtual ~SelectNodeDialog();
-        
-        TreeNode* selectedNode() const;
+public:
+    SelectNodeDialog(FeedList *feedList, QWidget *parent = 0, char *name = 0);
+    virtual ~SelectNodeDialog();
 
-    public slots:
+    TreeNode *selectedNode() const;
 
-        virtual void slotSelectNode(TreeNode* node);
+public slots:
 
-    protected slots:
-        
-        virtual void slotNodeSelected(TreeNode* node);
- 
-    private:
-       class SelectNodeDialogPrivate;
-       SelectNodeDialogPrivate* d;
+    virtual void slotSelectNode(TreeNode *node);
+
+protected slots:
+
+    virtual void slotNodeSelected(TreeNode *node);
+
+private:
+    class SelectNodeDialogPrivate;
+    SelectNodeDialogPrivate *d;
 };
 
-class SimpleNodeSelector : public QWidget
-{
+class SimpleNodeSelector : public QWidget {
     Q_OBJECT
 
-    public:
-        SimpleNodeSelector(FeedList* feedList, QWidget* parent=0, const char* name=0);
-        virtual ~SimpleNodeSelector();
+public:
+    SimpleNodeSelector(FeedList *feedList, QWidget *parent = 0, const char *name = 0);
+    virtual ~SimpleNodeSelector();
 
-        TreeNode* selectedNode() const;
-        
-    public slots:
-        void slotSelectNode(TreeNode* node);
+    TreeNode *selectedNode() const;
 
-    signals:
-        void signalNodeSelected(TreeNode* node);
+public slots:
+    void slotSelectNode(TreeNode *node);
 
-    protected slots:
+signals:
+    void signalNodeSelected(TreeNode *node);
 
-        virtual void slotItemSelected(QListViewItem* item);
+protected slots:
 
-        virtual void slotNodeDestroyed(TreeNode* node);
-        virtual void slotFeedListDestroyed(FeedList* list);
+    virtual void slotItemSelected(QListViewItem *item);
 
-    public:         // compat with KDE-3.x assertions, remove for KDE 4
-//     private:
+    virtual void slotNodeDestroyed(TreeNode *node);
+    virtual void slotFeedListDestroyed(FeedList *list);
 
-        class SimpleNodeSelectorPrivate;
-        SimpleNodeSelectorPrivate* d;
+public:         // compat with KDE-3.x assertions, remove for KDE 4
+    //     private:
 
-        friend class NodeVisitor;
-        class NodeVisitor;
+    class SimpleNodeSelectorPrivate;
+    SimpleNodeSelectorPrivate *d;
+
+    friend class NodeVisitor;
+    class NodeVisitor;
 };
 
 

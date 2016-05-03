@@ -24,24 +24,25 @@
 #include <ktextedit.h>
 
 
-class PageFrame : public QFrame
-{
-		Q_OBJECT
-	public:
-		PageFrame(QWidget* parent = 0, const char* name = 0) : QFrame(parent, name) { }
-	protected:
-		virtual void     showEvent(QShowEvent*)    { emit shown(); }
-	signals:
-		void             shown();
+class PageFrame : public QFrame {
+    Q_OBJECT
+public:
+    PageFrame(QWidget *parent = 0, const char *name = 0) : QFrame(parent, name) { }
+protected:
+    virtual void     showEvent(QShowEvent *)
+    {
+        emit shown();
+    }
+signals:
+    void             shown();
 };
 
-class TextEdit : public KTextEdit
-{
-		Q_OBJECT
-	public:
-		TextEdit(QWidget* parent, const char* name = 0);
-	protected:
-		virtual void dragEnterEvent(QDragEnterEvent*);
+class TextEdit : public KTextEdit {
+    Q_OBJECT
+public:
+    TextEdit(QWidget *parent, const char *name = 0);
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *);
 };
 
 #endif // EDITDLGPRIVATE_H

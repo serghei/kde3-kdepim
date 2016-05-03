@@ -34,78 +34,78 @@
 #include "viewconfigurefilterpage.h"
 #include "filter.h"
 
-ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
-                                                  const char *name )
-  : QWidget( parent, name )
+ViewConfigureFilterPage::ViewConfigureFilterPage(QWidget *parent,
+        const char *name)
+    : QWidget(parent, name)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+    QBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-  mFilterGroup = new QButtonGroup();
-  connect( mFilterGroup, SIGNAL( clicked( int ) ), SLOT( buttonClicked( int ) ) );
+    mFilterGroup = new QButtonGroup();
+    connect(mFilterGroup, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
-  QLabel *label = new QLabel( i18n( "The default filter will be activated whenever"
-  " this view is displayed. This feature allows you to configure views that only"
-  " interact with certain types of information based on the filter. Once the view"
-  " is activated, the filter can be changed at anytime." ), this );
-  label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak );
-  topLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("The default filter will be activated whenever"
+                                    " this view is displayed. This feature allows you to configure views that only"
+                                    " interact with certain types of information based on the filter. Once the view"
+                                    " is activated, the filter can be changed at anytime."), this);
+    label->setAlignment(Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak);
+    topLayout->addWidget(label);
 
-  QWidget *spacer = new QWidget( this );
-  spacer->setMinimumHeight( 5 );
-  topLayout->addWidget( spacer );
+    QWidget *spacer = new QWidget(this);
+    spacer->setMinimumHeight(5);
+    topLayout->addWidget(spacer);
 
-  QRadioButton *button = new QRadioButton( i18n( "No default filter" ), this );
-  mFilterGroup->insert( button );
-  topLayout->addWidget( button );
+    QRadioButton *button = new QRadioButton(i18n("No default filter"), this);
+    mFilterGroup->insert(button);
+    topLayout->addWidget(button);
 
-  button = new QRadioButton( i18n( "Use last active filter" ), this );
-  mFilterGroup->insert( button );
-  topLayout->addWidget( button );
+    button = new QRadioButton(i18n("Use last active filter"), this);
+    mFilterGroup->insert(button);
+    topLayout->addWidget(button);
 
-  QBoxLayout *comboLayout = new QHBoxLayout();
-  topLayout->addLayout( comboLayout );
-  button = new QRadioButton( i18n( "Use filter:" ), this );
-  mFilterGroup->insert( button );
-  comboLayout->addWidget( button );
+    QBoxLayout *comboLayout = new QHBoxLayout();
+    topLayout->addLayout(comboLayout);
+    button = new QRadioButton(i18n("Use filter:"), this);
+    mFilterGroup->insert(button);
+    comboLayout->addWidget(button);
 
-  mFilterCombo = new KComboBox( this );
-  comboLayout->addWidget( mFilterCombo );
+    mFilterCombo = new KComboBox(this);
+    comboLayout->addWidget(mFilterCombo);
 
-  topLayout->addStretch( 100 );
+    topLayout->addStretch(100);
 }
 
 ViewConfigureFilterPage::~ViewConfigureFilterPage()
 {
-  delete mFilterGroup;
+    delete mFilterGroup;
 }
 
-void ViewConfigureFilterPage::restoreSettings( KConfig *config )
+void ViewConfigureFilterPage::restoreSettings(KConfig *config)
 {
-  mFilterCombo->clear();
+    mFilterCombo->clear();
 
-  // Load the filter combo
-  const Filter::List list = Filter::restore( config, "Filter" );
-  Filter::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
-    mFilterCombo->insertItem( (*it).name() );
+    // Load the filter combo
+    const Filter::List list = Filter::restore(config, "Filter");
+    Filter::List::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+        mFilterCombo->insertItem((*it).name());
 
-  int id = config->readNumEntry( "DefaultFilterType", 1 );
-  mFilterGroup->setButton( id );
-  buttonClicked( id );
+    int id = config->readNumEntry("DefaultFilterType", 1);
+    mFilterGroup->setButton(id);
+    buttonClicked(id);
 
-  if ( id == 2 ) // has default filter
-    mFilterCombo->setCurrentText( config->readEntry( "DefaultFilterName" ) );
+    if(id == 2)    // has default filter
+        mFilterCombo->setCurrentText(config->readEntry("DefaultFilterName"));
 }
 
-void ViewConfigureFilterPage::saveSettings( KConfig *config )
+void ViewConfigureFilterPage::saveSettings(KConfig *config)
 {
-  config->writeEntry( "DefaultFilterName", mFilterCombo->currentText() );
-  config->writeEntry( "DefaultFilterType", mFilterGroup->id( mFilterGroup->selected() ) );
+    config->writeEntry("DefaultFilterName", mFilterCombo->currentText());
+    config->writeEntry("DefaultFilterType", mFilterGroup->id(mFilterGroup->selected()));
 }
 
-void ViewConfigureFilterPage::buttonClicked( int id )
+void ViewConfigureFilterPage::buttonClicked(int id)
 {
-  mFilterCombo->setEnabled( id == 2 );
+    mFilterCombo->setEnabled(id == 2);
 }
 
 #include "viewconfigurefilterpage.moc"

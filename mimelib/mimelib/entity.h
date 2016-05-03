@@ -71,8 +71,8 @@ class DW_EXPORT DwEntity : public DwMessageComponent {
 public:
 
     DwEntity();
-    DwEntity(const DwEntity& aEntity);
-    DwEntity(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwEntity(const DwEntity &aEntity);
+    DwEntity(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwEntity} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -90,7 +90,7 @@ public:
 
     virtual ~DwEntity();
 
-    const DwEntity& operator = (const DwEntity& aEntity);
+    const DwEntity &operator = (const DwEntity &aEntity);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aEntity}.  The parent node of the {\tt DwEntity} object
     //. is not changed.
@@ -111,9 +111,9 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual void Assemble(DwHeaders& aHeaders, DwBody& aBody);
+    virtual void Assemble(DwHeaders &aHeaders, DwBody &aBody);
     // Assemble *without* first assembling the Header and the Body.
-    
+
     virtual void Assemble();
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. executes the assemble method for {\tt DwEntity} objects.  The
@@ -130,36 +130,42 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    bool hasHeaders() const { return 0 != mHeaders; }
+    bool hasHeaders() const
+    {
+        return 0 != mHeaders;
+    }
 
-    DwHeaders& Headers() const;
+    DwHeaders &Headers() const;
     //. This function returns the {\tt DwHeaders} object contained by
     //. this object.
 
-    DwBody& Body() const;
+    DwBody &Body() const;
     //. This function returns the {\tt DwBody} object contained by this object.
 
     int BodySize() const;
     //. Get the size of the Body
 
-    void SetBodySize( int size ) { mBodySize = size; }
+    void SetBodySize(int size)
+    {
+        mBodySize = size;
+    }
     //. Explicitly set the size of the Body
-    //. This is needed if the body is empty but you know the size and others 
+    //. This is needed if the body is empty but you know the size and others
     //. should be able to access it
 
 protected:
 
-    DwHeaders* mHeaders;
-    DwBody*    mBody;
+    DwHeaders *mHeaders;
+    DwBody    *mBody;
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
     int mBodySize; // normally mBody->AsString().length()
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -177,7 +183,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

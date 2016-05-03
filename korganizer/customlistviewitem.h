@@ -29,35 +29,43 @@
 #include <klistview.h>
 
 template<class T>
-class CustomListViewItem : public KListViewItem
-{
-  public:
-    CustomListViewItem( T data, KListView *parent ) :
-      KListViewItem( parent ), mData( data ) { updateItem(); };
-    CustomListViewItem( T data, KListView *parent, KListViewItem* after ) :
-      KListViewItem( parent, after ), mData( data ) { updateItem(); };
+class CustomListViewItem : public KListViewItem {
+public:
+    CustomListViewItem(T data, KListView *parent) :
+        KListViewItem(parent), mData(data)
+    {
+        updateItem();
+    };
+    CustomListViewItem(T data, KListView *parent, KListViewItem *after) :
+        KListViewItem(parent, after), mData(data)
+    {
+        updateItem();
+    };
     ~CustomListViewItem() {};
-    
+
     void updateItem() {};
 
-    T data() const { return mData; }
+    T data() const
+    {
+        return mData;
+    }
 
     QString key(int column, bool) const
     {
-      QMap<int,QString>::ConstIterator it = mKeyMap.find(column);
-      if (it == mKeyMap.end()) return text(column);
-      else return *it;
+        QMap<int, QString>::ConstIterator it = mKeyMap.find(column);
+        if(it == mKeyMap.end()) return text(column);
+        else return *it;
     }
 
-    void setSortKey(int column,const QString &key)
+    void setSortKey(int column, const QString &key)
     {
-      mKeyMap.insert(column,key);
+        mKeyMap.insert(column, key);
     }
 
-  private:
+private:
     T mData;
 
-    QMap<int,QString> mKeyMap;
+    QMap<int, QString> mKeyMap;
 };
 
 #endif

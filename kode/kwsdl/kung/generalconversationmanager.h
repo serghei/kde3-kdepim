@@ -26,14 +26,13 @@
 
 #include "conversationmanager.h"
 
-class GeneralConversationManager : public ConversationManager
-{
-  public:
-    GeneralConversationManager( const KWSDL::WSDL &wsdl );
+class GeneralConversationManager : public ConversationManager {
+public:
+    GeneralConversationManager(const KWSDL::WSDL &wsdl);
 
-    virtual QStringList nextActions( const QString &currentAction, const QString &condition = QString() );
+    virtual QStringList nextActions(const QString &currentAction, const QString &condition = QString());
 
-  private:
+private:
     KWSDL::WSDL mWSDL;
 
     KWSDL::Message::List mInputMessages;

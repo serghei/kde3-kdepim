@@ -16,59 +16,58 @@
 
 struct DateResult
 {
-  int year;
-  int month;
-  int day;
-  int day_of_week;
+    int year;
+    int month;
+    int day;
+    int day_of_week;
 
-  int hebrew_month_length, secular_month_length;
-  bool hebrew_leap_year_p, secular_leap_year_p;
-  int kvia;
-  int hebrew_day_number;
+    int hebrew_month_length, secular_month_length;
+    bool hebrew_leap_year_p, secular_leap_year_p;
+    int kvia;
+    int hebrew_day_number;
 };
 
 /**
 @author Jonathan Singer
 */
-class Converter
-{
+class Converter {
 public:
 
-  Converter();
-  ~Converter();
+    Converter();
+    ~Converter();
 
-  static bool hebrew_leap_year_p(int year);
-  static bool gregorian_leap_year_p(int year);
+    static bool hebrew_leap_year_p(int year);
+    static bool gregorian_leap_year_p(int year);
 
-  static long absolute_from_gregorian(int year, int month, int day);
-  static long absolute_from_hebrew(int year, int month, int day);
+    static long absolute_from_gregorian(int year, int month, int day);
+    static long absolute_from_hebrew(int year, int month, int day);
 
-  static void gregorian_from_absolute(long date, int *yearp,
-                                      int *monthp, int *dayp);
-  static void hebrew_from_absolute(long date, int *yearp, int *monthp,
-                                   int *dayp);
+    static void gregorian_from_absolute(long date, int *yearp,
+                                        int *monthp, int *dayp);
+    static void hebrew_from_absolute(long date, int *yearp, int *monthp,
+                                     int *dayp);
 
-  static int hebrew_months_in_year(int year);
-  static int hebrew_month_length(int year, int month);
-  static int secular_month_length(int year, int month);
+    static int hebrew_months_in_year(int year);
+    static int hebrew_month_length(int year, int month);
+    static int secular_month_length(int year, int month);
 
-  static long hebrew_elapsed_days(int year);
-  static long hebrew_elapsed_days2(int year);
-  static int hebrew_year_length(int year);
+    static long hebrew_elapsed_days(int year);
+    static long hebrew_elapsed_days2(int year);
+    static int hebrew_year_length(int year);
 
-  static void finish_up(long absolute, int hyear, int hmonth,
-                        int syear, int smonth,
-                        struct DateResult *result);
+    static void finish_up(long absolute, int hyear, int hmonth,
+                          int syear, int smonth,
+                          struct DateResult *result);
 
-  static void SecularToHebrewConversion(int year, int month, int day,
-                                        struct DateResult *result);
-  static void HebrewToSecularConversion(int year, int month, int day,
-                                        struct DateResult *result);
+    static void SecularToHebrewConversion(int year, int month, int day,
+                                          struct DateResult *result);
+    static void HebrewToSecularConversion(int year, int month, int day,
+                                          struct DateResult *result);
 
 private:
 
-  static QStringList HebrewMonthNames;
-  static QStringList SecularMonthNames;
+    static QStringList HebrewMonthNames;
+    static QStringList SecularMonthNames;
 
 };
 

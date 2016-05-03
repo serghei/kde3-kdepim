@@ -38,25 +38,24 @@
 class QTimer;
 
 namespace KNetwork {
-    class KBufferedSocket;
+class KBufferedSocket;
 }
 
 
-class KDE_EXPORT KNotesNetworkReceiver : public QObject
-{
+class KDE_EXPORT KNotesNetworkReceiver : public QObject {
     Q_OBJECT
 public:
-    KNotesNetworkReceiver( KNetwork::KBufferedSocket * );
+    KNotesNetworkReceiver(KNetwork::KBufferedSocket *);
     ~KNotesNetworkReceiver();
 
 signals:
-    void sigNoteReceived( const QString &, const QString & );
+    void sigNoteReceived(const QString &, const QString &);
 
 private slots:
     void slotDataAvailable();
     void slotReceptionTimeout();
     void slotConnectionClosed();
-    void slotError( int err );
+    void slotError(int err);
 
 private:
     QTimer *m_timer;       // to avoid memory and connection floods

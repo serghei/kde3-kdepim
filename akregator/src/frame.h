@@ -27,71 +27,67 @@
 
 #include <qobject.h>
 
-namespace KParts
-{
-    class ReadOnlyPart;
+namespace KParts {
+class ReadOnlyPart;
 }
 
-namespace KPIM
-{
-    class ProgressItem;
+namespace KPIM {
+class ProgressItem;
 }
 
-namespace Akregator
-{
+namespace Akregator {
 
-    class Frame : public QObject
-    {
-        Q_OBJECT
+class Frame : public QObject {
+    Q_OBJECT
 
-        public:
-            Frame(QObject *parent, KParts::ReadOnlyPart *part, QWidget *w, const QString& tit, bool watchSignals=true);
-            virtual ~Frame();
+public:
+    Frame(QObject *parent, KParts::ReadOnlyPart *part, QWidget *w, const QString &tit, bool watchSignals = true);
+    virtual ~Frame();
 
-            enum {Idle, Started, Completed, Canceled};
+    enum {Idle, Started, Completed, Canceled};
 
-            KParts::ReadOnlyPart *part() const;
-            QWidget *widget() const;
-            const QString& title() const;
-            const QString& caption() const;
-            int state() const;
-            int progress() const;
-            const QString& statusText() const;
-            
-            /** if set to true, the part is deleted when the frame is deleted. Set to @c false by default */
-            void setAutoDeletePart(bool autoDelete);
+    KParts::ReadOnlyPart *part() const;
+    QWidget *widget() const;
+    const QString &title() const;
+    const QString &caption() const;
+    int state() const;
+    int progress() const;
+    const QString &statusText() const;
 
-        public slots:
-            void setStarted();
-            void setCanceled(const QString &);
-            void setCompleted();
-            void setState(int);
-            void setProgress(int);
-            void setCaption(const QString &);
-            void setTitle(const QString &);
-            void setStatusText(const QString &); 
+    /** if set to true, the part is deleted when the frame is deleted. Set to @c false by default */
+    void setAutoDeletePart(bool autoDelete);
 
-        signals:
-            void captionChanged(const QString &);
-            void titleChanged(Frame*, const QString&);
-            void started();
-            void canceled(const QString &);
-            void completed();
-            void loadingProgress(int);
-            void statusText(const QString &);
+public slots:
+    void setStarted();
+    void setCanceled(const QString &);
+    void setCompleted();
+    void setState(int);
+    void setProgress(int);
+    void setCaption(const QString &);
+    void setTitle(const QString &);
+    void setStatusText(const QString &);
 
-        private:
-            KParts::ReadOnlyPart *m_part;
-            QWidget *m_widget;
-            QString m_title;
-            QString m_caption;
-            int m_state;
-            int m_progress;
-            QString m_statusText;
-            QString m_progressId;
-            KPIM::ProgressItem *m_progressItem;
-            bool m_autoDeletePart;
-    };
+signals:
+    void captionChanged(const QString &);
+    void titleChanged(Frame *, const QString &);
+    void started();
+    void canceled(const QString &);
+    void completed();
+    void loadingProgress(int);
+    void statusText(const QString &);
+
+private:
+    KParts::ReadOnlyPart *m_part;
+    QWidget *m_widget;
+    QString m_title;
+    QString m_caption;
+    int m_state;
+    int m_progress;
+    QString m_statusText;
+    QString m_progressId;
+    KPIM::ProgressItem *m_progressItem;
+    bool m_autoDeletePart;
+};
 }
 
 #endif

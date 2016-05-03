@@ -135,8 +135,8 @@ class DW_EXPORT DwHeaders : public DwMessageComponent {
 public:
 
     DwHeaders();
-    DwHeaders(const DwHeaders& aHeaders);
-    DwHeaders(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwHeaders(const DwHeaders &aHeaders);
+    DwHeaders(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwHeaders} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -154,7 +154,7 @@ public:
 
     virtual ~DwHeaders();
 
-    const DwHeaders& operator = (const DwHeaders& aHeaders);
+    const DwHeaders &operator = (const DwHeaders &aHeaders);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aHeaders}.  The parent node of the {\tt DwHeaders} object
     //. is not changed.
@@ -190,7 +190,7 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwHeaders} on the free store that has the same
     //. value as this {\tt DwHeaders} object.  The basic idea is that of
@@ -250,60 +250,60 @@ public:
     //. whether a particular well-known header field is present in this
     //. object's collection of header fields.
 
-    DwBool HasField(const char* aFieldName) const;
-    DwBool HasField(const DwString& aFieldName) const;
+    DwBool HasField(const char *aFieldName) const;
+    DwBool HasField(const DwString &aFieldName) const;
     //. Returns true if the header field specified by {\tt aFieldName} is
     //. present in this object's collection of header fields.  These member
     //. functions are used for extension fields or user-defined fields.
 
-    DwAddressList&  Bcc();
-    DwAddressList&  Cc();
-    DwText&         Comments();
-    DwDateTime&     Date();
-    DwText&         Encrypted();
-    DwMailboxList&  From();
-    DwText&         InReplyTo();
-    DwText&         Keywords();
-    DwMsgId&        MessageId();
-    DwText&         Received();
-    DwText&         References();
-    DwAddressList&  ReplyTo();
-    DwAddressList&  ResentBcc();
-    DwAddressList&  ResentCc();
-    DwDateTime&     ResentDate();
-    DwMailboxList&  ResentFrom();
-    DwMsgId&        ResentMessageId();
-    DwAddressList&  ResentReplyTo();
-    DwMailbox&      ResentSender();
-    DwAddressList&  ResentTo();
-    DwAddress&      ReturnPath();
-    DwMailbox&      Sender();
-    DwText&         Subject();
-    DwAddressList&  To();
+    DwAddressList  &Bcc();
+    DwAddressList  &Cc();
+    DwText         &Comments();
+    DwDateTime     &Date();
+    DwText         &Encrypted();
+    DwMailboxList  &From();
+    DwText         &InReplyTo();
+    DwText         &Keywords();
+    DwMsgId        &MessageId();
+    DwText         &Received();
+    DwText         &References();
+    DwAddressList  &ReplyTo();
+    DwAddressList  &ResentBcc();
+    DwAddressList  &ResentCc();
+    DwDateTime     &ResentDate();
+    DwMailboxList  &ResentFrom();
+    DwMsgId        &ResentMessageId();
+    DwAddressList  &ResentReplyTo();
+    DwMailbox      &ResentSender();
+    DwAddressList  &ResentTo();
+    DwAddress      &ReturnPath();
+    DwMailbox      &Sender();
+    DwText         &Subject();
+    DwAddressList  &To();
     // RFC-822 fields
     //
-    DwText& Approved();
-    DwText& Control();
-    DwText& Distribution();
-    DwText& Expires();
-    DwText& FollowupTo();
-    DwText& Lines();
-    DwText& Newsgroups();
-    DwText& Organization();
-    DwText& Path();
-    DwText& Summary();
-    DwText& Xref();
+    DwText &Approved();
+    DwText &Control();
+    DwText &Distribution();
+    DwText &Expires();
+    DwText &FollowupTo();
+    DwText &Lines();
+    DwText &Newsgroups();
+    DwText &Organization();
+    DwText &Path();
+    DwText &Summary();
+    DwText &Xref();
     // RFC-1036 fields (USENET messages)
     //
-    DwText&         ContentDescription();
-    DwMsgId&        ContentId();
-    DwMechanism&    ContentTransferEncoding();
-    DwMechanism&    Cte();
-    DwMediaType&    ContentType();
-    DwText&         MimeVersion();
+    DwText         &ContentDescription();
+    DwMsgId        &ContentId();
+    DwMechanism    &ContentTransferEncoding();
+    DwMechanism    &Cte();
+    DwMediaType    &ContentType();
+    DwText         &MimeVersion();
     // RFC-2045 fields
     //
-    DwDispositionType& ContentDisposition();
+    DwDispositionType &ContentDisposition();
     // RFC-1806 Content-Disposition field
     //
     //. Each member function in this group returns a reference to a
@@ -312,7 +312,7 @@ public:
     //. corresponding {\tt Has<Field>()} function to test if the header
     //. field already exists without creating it.
 
-    DwFieldBody& FieldBody(const DwString& aFieldName);
+    DwFieldBody &FieldBody(const DwString &aFieldName);
     //. Returns a reference to the {\tt DwFieldBody} object for a particular
     //. header field with field name {\tt aFieldName}.  If the header field
     //. does not already exist, it is created.  Use {\tt HasField()}
@@ -320,7 +320,7 @@ public:
     //. This member function allows access to extension fields or
     //. user-defined fields.
 
-    std::vector<DwFieldBody*> AllFieldBodies(const DwString& aFieldName);
+    std::vector<DwFieldBody *> AllFieldBodies(const DwString &aFieldName);
     //. Returns a vector of pointers to the {\tt DwFieldBody} objects for
     //. all header fields with field name {\tt aFieldName}.  If the header
     //. field does not already exist, it is created.  Use {\tt HasField()}
@@ -332,21 +332,21 @@ public:
     //. Returns the number of {\tt DwField} objects contained by this
     //. {\tt DwHeaders} object.
 
-    DwField* FirstField() const;
+    DwField *FirstField() const;
     //. Returns a pointer to the first {\tt DwField} object contained by
     //. this {\tt DwHeaders} object.  Use this member function to begin an
     //. iteration over the entire list of {\tt DwField} objects.
     //. Continue the iteration by calling {\tt DwField::Next()} on each
     //. {\tt DwField} object.
 
-    DwField* FindField(const char* aFieldName) const;
-    DwField* FindField(const DwString& aFieldName) const;
+    DwField *FindField(const char *aFieldName) const;
+    DwField *FindField(const DwString &aFieldName) const;
     //. Searches for a header field by its field name.  Returns {\tt NULL}
     //. if the field is not found.  This is an {\it advanced} function:
     //. most applications should use the {\tt <Field>()} or
     //. {\tt Has<Field>()} family of functions.
 
-    void AddOrReplaceField(DwField* aField);
+    void AddOrReplaceField(DwField *aField);
     //. Adds a {\tt DwField} object to the list.  If a header field with
     //. the same field name already exists, it is replaced by the new
     //. header field.
@@ -358,7 +358,7 @@ public:
     //. {\tt <Field>()} (e.g. {\tt To()}, {\tt ContentType()}, and so on)
     //. and {\tt FieldBody()} to add header fields.
 
-    void AddField(DwField* aField);
+    void AddField(DwField *aField);
     //. Adds a {\tt DwField} object to the list. If a header field with
     //. the same field name already exists, it is {\it not} replaced;
     //. thus, duplicate header fields may occur when using this member
@@ -372,7 +372,7 @@ public:
     //. {\tt <Field>()} (e.g. {\tt To()}, {\tt ContentType()}, and so on)
     //. and {\tt FieldBody()} for adding header fields.
 
-    void AddFieldAt(int aPos, DwField* aField);
+    void AddFieldAt(int aPos, DwField *aField);
     //. This member functions follows the semantics of {\tt AddField()}
     //. except that {\tt aPos} specifies a position for adding the field.
     //. A position of 1 indicates the beginning of the list.  A position of
@@ -382,15 +382,15 @@ public:
     //. {\tt <Field>()} (e.g. {\tt To()}, {\tt ContentType()}, and so on)
     //. and {\tt FieldBody()} for adding header fields.
 
-    void RemoveField(DwField* aField);
+    void RemoveField(DwField *aField);
     //. Removes the {\tt DwField} object from the list.  The {\tt DwField}
     //. object is not deleted.
 
     void DeleteAllFields();
     //. Removes all {\tt DwField} objects from the list and deletes them.
 
-    static DwHeaders* NewHeaders(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwHeaders *NewHeaders(const DwString &aStr,
+                                 DwMessageComponent *aParent);
     //. Creates a new {\tt DwHeaders} object on the free store.
     //. If the static data member {\tt sNewHeaders} is {\tt NULL},
     //. this member function will create a new {\tt DwHeaders}
@@ -400,28 +400,28 @@ public:
     //. {\tt DwHeaders}, and return that object.
 
     //+ Var sNewHeaders
-    static DwHeaders* (*sNewHeaders)(const DwString&, DwMessageComponent*);
+    static DwHeaders *(*sNewHeaders)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewHeaders} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived from
     //. {\tt DwHeaders}.
 
 protected:
 
-    void _AddField(DwField* aField);
+    void _AddField(DwField *aField);
     //. Add field but don't set the is-modified flag
 
-    DwField* mFirstField;
-    DwField* mLastField;
+    DwField *mFirstField;
+    DwField *mLastField;
 
 protected:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
-    void CopyFields(DwField* aFirst);
+    void CopyFields(DwField *aFirst);
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -439,12 +439,12 @@ public:
 
 private:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 
 
-inline DwField* DwHeaders::FirstField() const
+inline DwField *DwHeaders::FirstField() const
 {
     return mFirstField;
 }

@@ -29,14 +29,13 @@
 
 namespace KODE {
 
-class KDE_EXPORT MemberVariable : public Variable
-{
-  public:
+class KDE_EXPORT MemberVariable : public Variable {
+public:
     typedef QValueList<MemberVariable> List;
 
     MemberVariable();
-    MemberVariable( const QString &name, const QString &type,
-                    bool isStatic = false );
+    MemberVariable(const QString &name, const QString &type,
+                   bool isStatic = false);
 };
 
 }

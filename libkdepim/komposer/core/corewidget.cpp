@@ -24,8 +24,8 @@
 
 using namespace Komposer;
 
-CoreWidget::CoreWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+CoreWidget::CoreWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
 }
 

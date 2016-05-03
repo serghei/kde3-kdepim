@@ -49,87 +49,120 @@
 #include <qlabel.h>
 #include <qtextedit.h>
 
-ConfigGui::ConfigGui( const QSync::Member &member, QWidget *parent )
-  : QWidget( parent ), mMember( member )
+ConfigGui::ConfigGui(const QSync::Member &member, QWidget *parent)
+    : QWidget(parent), mMember(member)
 {
-  mTopLayout = new QVBoxLayout( this );
-  mTopLayout->setSpacing( KDialog::spacingHint() );
-  mTopLayout->setMargin( KDialog::marginHint() );
+    mTopLayout = new QVBoxLayout(this);
+    mTopLayout->setSpacing(KDialog::spacingHint());
+    mTopLayout->setMargin(KDialog::marginHint());
 
-  QBoxLayout *nameLayout = new QHBoxLayout( mTopLayout );
+    QBoxLayout *nameLayout = new QHBoxLayout(mTopLayout);
 
-  QLabel *label = new QLabel( i18n("Name:"), this );
-  nameLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Name:"), this);
+    nameLayout->addWidget(label);
 
-  mNameEdit = new KLineEdit( this );
-  nameLayout->addWidget( mNameEdit );
+    mNameEdit = new KLineEdit(this);
+    nameLayout->addWidget(mNameEdit);
 }
 
-void ConfigGui::setInstanceName( const QString &t )
+void ConfigGui::setInstanceName(const QString &t)
 {
-  mNameEdit->setText( t );
+    mNameEdit->setText(t);
 }
 
 QString ConfigGui::instanceName() const
 {
-  return mNameEdit->text();
+    return mNameEdit->text();
 }
 
-ConfigGui *ConfigGui::Factory::create( const QSync::Member &member,
-  QWidget *parent )
+ConfigGui *ConfigGui::Factory::create(const QSync::Member &member,
+                                      QWidget *parent)
 {
-  QString name = member.pluginName();
-  if ( name == "file-sync" ) {
-    return new ConfigGuiFile( member, parent );
-  } else if ( name == "palm-sync" ) {
-    return new ConfigGuiPalm( member, parent );
-  } else if ( name == "irmc-sync" ) {
-    return new ConfigGuiIRMC( member, parent );
-  } else if ( name == "syncml-obex-client" ) {
-    return new ConfigGuiSyncmlObex( member, parent );
-  } else if ( name == "syncml-http-server" ) {
-    return new ConfigGuiSyncmlHttp( member, parent );
-  } else if ( name == "opie-sync" ) {
-    return new ConfigGuiOpie( member, parent );
-  } else if ( name == "gnokii-sync" ) {
-    return new ConfigGuiGnokii( member, parent );
-  } else if ( name == "gpe-sync" ) {
-    return new ConfigGuiGpe( member, parent );
-  } else if ( name == "google-calendar" ) {
-    return new ConfigGuiGoogleCalendar( member, parent );
-  } else if ( name == "ldap-sync" ) {
-    return new ConfigGuiLdap( member, parent );
-  } else if ( name == "kdepim-sync" ) {
-    return new ConfigGuiBlank( member, parent ); 
-  } else if ( name == "jescs-sync" ) {
-    return new ConfigGuiJescs( member, parent );
-  } else if ( name == "evo2-sync" ) {
-    return new ConfigGuiEvo2( member, parent );
-  } else if ( name == "moto-sync" ) {
-    return new ConfigGuiMoto( member, parent );
-  } else if ( name == "synce-plugin" ) {
-    return new ConfigGuiSynce( member, parent );
-  } else if ( name == "sunbird-sync" ) {
-    return new ConfigGuiSunbird( member, parent );
-  } else {
-    return new ConfigGuiXml( member, parent );
-  }
+    QString name = member.pluginName();
+    if(name == "file-sync")
+    {
+        return new ConfigGuiFile(member, parent);
+    }
+    else if(name == "palm-sync")
+    {
+        return new ConfigGuiPalm(member, parent);
+    }
+    else if(name == "irmc-sync")
+    {
+        return new ConfigGuiIRMC(member, parent);
+    }
+    else if(name == "syncml-obex-client")
+    {
+        return new ConfigGuiSyncmlObex(member, parent);
+    }
+    else if(name == "syncml-http-server")
+    {
+        return new ConfigGuiSyncmlHttp(member, parent);
+    }
+    else if(name == "opie-sync")
+    {
+        return new ConfigGuiOpie(member, parent);
+    }
+    else if(name == "gnokii-sync")
+    {
+        return new ConfigGuiGnokii(member, parent);
+    }
+    else if(name == "gpe-sync")
+    {
+        return new ConfigGuiGpe(member, parent);
+    }
+    else if(name == "google-calendar")
+    {
+        return new ConfigGuiGoogleCalendar(member, parent);
+    }
+    else if(name == "ldap-sync")
+    {
+        return new ConfigGuiLdap(member, parent);
+    }
+    else if(name == "kdepim-sync")
+    {
+        return new ConfigGuiBlank(member, parent);
+    }
+    else if(name == "jescs-sync")
+    {
+        return new ConfigGuiJescs(member, parent);
+    }
+    else if(name == "evo2-sync")
+    {
+        return new ConfigGuiEvo2(member, parent);
+    }
+    else if(name == "moto-sync")
+    {
+        return new ConfigGuiMoto(member, parent);
+    }
+    else if(name == "synce-plugin")
+    {
+        return new ConfigGuiSynce(member, parent);
+    }
+    else if(name == "sunbird-sync")
+    {
+        return new ConfigGuiSunbird(member, parent);
+    }
+    else
+    {
+        return new ConfigGuiXml(member, parent);
+    }
 }
 
 
-ConfigGuiXml::ConfigGuiXml( const QSync::Member &member, QWidget *parent )
-  : ConfigGui( member, parent )
+ConfigGuiXml::ConfigGuiXml(const QSync::Member &member, QWidget *parent)
+    : ConfigGui(member, parent)
 {
-  mTextEdit = new QTextEdit( this );
-  topLayout()->addWidget( mTextEdit );  
+    mTextEdit = new QTextEdit(this);
+    topLayout()->addWidget(mTextEdit);
 }
 
-void ConfigGuiXml::load( const QString &xml )
+void ConfigGuiXml::load(const QString &xml)
 {
-  mTextEdit->setText( xml );
+    mTextEdit->setText(xml);
 }
 
 QString ConfigGuiXml::save() const
 {
-  return mTextEdit->text();
+    return mTextEdit->text();
 }

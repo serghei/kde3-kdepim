@@ -41,77 +41,77 @@
 
 
 PrintDialog::PrintDialog()
-  : KDialogBase(0, "PrintDialog", true, i18n("Print Dialog"), Ok|Cancel,
-      Ok, true )
+    : KDialogBase(0, "PrintDialog", true, i18n("Print Dialog"), Ok | Cancel,
+                  Ok, true)
 {
-  QWidget *page = new QWidget( this );
-  setMainWidget(page);
-  int year, month;
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    int year, month;
 
-  QVBoxLayout *layout = new QVBoxLayout(page, KDialog::spacingHint());
-  layout->addSpacing(10);
-  layout->addStretch(1);
+    QVBoxLayout *layout = new QVBoxLayout(page, KDialog::spacingHint());
+    layout->addSpacing(10);
+    layout->addStretch(1);
 
-  // Date Range
-  QGroupBox *rangeGroup = new QGroupBox(1, Horizontal, i18n("Date Range"),
-      page);
-  layout->addWidget(rangeGroup);
+    // Date Range
+    QGroupBox *rangeGroup = new QGroupBox(1, Horizontal, i18n("Date Range"),
+                                          page);
+    layout->addWidget(rangeGroup);
 
-  QWidget *rangeWidget = new QWidget(rangeGroup);
-  QHBoxLayout *rangeLayout = new QHBoxLayout(rangeWidget, 0, spacingHint());
+    QWidget *rangeWidget = new QWidget(rangeGroup);
+    QHBoxLayout *rangeLayout = new QHBoxLayout(rangeWidget, 0, spacingHint());
 
-  rangeLayout->addWidget(new QLabel(i18n("From:"), rangeWidget));
-  _from = new KDateEdit(rangeWidget);
+    rangeLayout->addWidget(new QLabel(i18n("From:"), rangeWidget));
+    _from = new KDateEdit(rangeWidget);
 
-  // Default from date to beginning of the month
-  year = QDate::currentDate().year();
-  month = QDate::currentDate().month();
-  _from->setDate(QDate(year, month, 1));
-  rangeLayout->addWidget(_from);
-  rangeLayout->addWidget(new QLabel(i18n("To:"), rangeWidget));
-  _to = new KDateEdit(rangeWidget);
-  rangeLayout->addWidget(_to);
+    // Default from date to beginning of the month
+    year = QDate::currentDate().year();
+    month = QDate::currentDate().month();
+    _from->setDate(QDate(year, month, 1));
+    rangeLayout->addWidget(_from);
+    rangeLayout->addWidget(new QLabel(i18n("To:"), rangeWidget));
+    _to = new KDateEdit(rangeWidget);
+    rangeLayout->addWidget(_to);
 
-  layout->addSpacing(10);
-  layout->addStretch(1);
+    layout->addSpacing(10);
+    layout->addStretch(1);
 
-  _allTasks = new QComboBox( page );
-  _allTasks->insertItem( i18n( "Selected Task" ) );
-  _allTasks->insertItem( i18n( "All Tasks" ) );
-  layout->addWidget( _allTasks );
+    _allTasks = new QComboBox(page);
+    _allTasks->insertItem(i18n("Selected Task"));
+    _allTasks->insertItem(i18n("All Tasks"));
+    layout->addWidget(_allTasks);
 
-  _perWeek = new QCheckBox( i18n( "Summarize per week" ), page );
-  layout->addWidget( _perWeek );
-  _totalsOnly = new QCheckBox( i18n( "Totals only" ), page );
-  layout->addWidget( _totalsOnly );
+    _perWeek = new QCheckBox(i18n("Summarize per week"), page);
+    layout->addWidget(_perWeek);
+    _totalsOnly = new QCheckBox(i18n("Totals only"), page);
+    layout->addWidget(_totalsOnly);
 
-  layout->addSpacing(10);
-  layout->addStretch(1);
+    layout->addSpacing(10);
+    layout->addStretch(1);
 }
 
 QDate PrintDialog::from() const
 {
-  return _from->date();
+    return _from->date();
 }
 
 QDate PrintDialog::to() const
 {
-  return _to->date();
+    return _to->date();
 }
 
 bool PrintDialog::perWeek() const
 {
-  return _perWeek->isChecked();
+    return _perWeek->isChecked();
 }
 
 bool PrintDialog::allTasks() const
 {
-  return _allTasks->currentItem() == 1;
+    return _allTasks->currentItem() == 1;
 }
 
 bool PrintDialog::totalsOnly() const
 {
-  return _totalsOnly->isChecked();
+    return _totalsOnly->isChecked();
 }
 
 #include "printdialog.moc"

@@ -39,97 +39,109 @@
 
 
 class JournalPrintFactory : public KOrg::PrintPluginFactory {
-  public:
-    KOrg::PrintPlugin *create() { return new CalPrintJournal; }
+public:
+    KOrg::PrintPlugin *create()
+    {
+        return new CalPrintJournal;
+    }
 };
 
-K_EXPORT_COMPONENT_FACTORY( libkorg_journalprint, JournalPrintFactory )
+K_EXPORT_COMPONENT_FACTORY(libkorg_journalprint, JournalPrintFactory)
 
 
 /**************************************************************
  *           Print Journal
  **************************************************************/
 
-QWidget *CalPrintJournal::createConfigWidget( QWidget *w )
+QWidget *CalPrintJournal::createConfigWidget(QWidget *w)
 {
-  return new CalPrintJournalConfig_Base( w );
+    return new CalPrintJournalConfig_Base(w);
 }
 
 void CalPrintJournal::readSettingsWidget()
 {
-  CalPrintJournalConfig_Base *cfg =
-      dynamic_cast<CalPrintJournalConfig_Base*>( mConfigWidget );
-  if ( cfg ) {
-    mFromDate = cfg->mFromDate->date();
-    mToDate = cfg->mToDate->date();
-    mUseDateRange = (cfg->mDateRangeGroup->selectedId() == 1);
-  }
+    CalPrintJournalConfig_Base *cfg =
+        dynamic_cast<CalPrintJournalConfig_Base *>(mConfigWidget);
+    if(cfg)
+    {
+        mFromDate = cfg->mFromDate->date();
+        mToDate = cfg->mToDate->date();
+        mUseDateRange = (cfg->mDateRangeGroup->selectedId() == 1);
+    }
 }
 
 void CalPrintJournal::setSettingsWidget()
 {
-  CalPrintJournalConfig_Base *cfg =
-      dynamic_cast<CalPrintJournalConfig_Base*>( mConfigWidget );
-  if ( cfg ) {
-    cfg->mFromDate->setDate( mFromDate );
-    cfg->mToDate->setDate( mToDate );
+    CalPrintJournalConfig_Base *cfg =
+        dynamic_cast<CalPrintJournalConfig_Base *>(mConfigWidget);
+    if(cfg)
+    {
+        cfg->mFromDate->setDate(mFromDate);
+        cfg->mToDate->setDate(mToDate);
 
-    cfg->mDateRangeGroup->setButton( (mUseDateRange)?1:0 );
-  }
+        cfg->mDateRangeGroup->setButton((mUseDateRange) ? 1 : 0);
+    }
 }
 
 void CalPrintJournal::loadConfig()
 {
-  if ( mConfig ) {
-    mUseDateRange = mConfig->readBoolEntry( "JournalsInRange", false );
-  }
-  setSettingsWidget();
+    if(mConfig)
+    {
+        mUseDateRange = mConfig->readBoolEntry("JournalsInRange", false);
+    }
+    setSettingsWidget();
 }
 
 void CalPrintJournal::saveConfig()
 {
-  kdDebug(5850) << "CalPrintJournal::saveConfig()" << endl;
+    kdDebug(5850) << "CalPrintJournal::saveConfig()" << endl;
 
-  readSettingsWidget();
-  if ( mConfig ) {
-    mConfig->writeEntry( "JournalsInRange", mUseDateRange );
-  }
-}
-
-void CalPrintJournal::setDateRange( const QDate& from, const QDate& to )
-{
-  CalPrintPluginBase::setDateRange( from, to );
-  CalPrintJournalConfig_Base *cfg =
-      dynamic_cast<CalPrintJournalConfig_Base*>( mConfigWidget );
-  if ( cfg ) {
-    cfg->mFromDate->setDate( from );
-    cfg->mToDate->setDate( to );
-  }
-}
-
-void CalPrintJournal::print( QPainter &p, int width, int height )
-{
-  int x=0, y=0;
-  Journal::List journals( mCalendar->journals() );
-  if ( mUseDateRange ) {
-    Journal::List allJournals = journals;
-    journals.clear();
-    Journal::List::Iterator it = allJournals.begin();
-    for ( ; it != allJournals.end(); ++it ) {
-      QDate dt = (*it)->dtStart().date();
-      if ( mFromDate <= dt && dt <= mToDate ) {
-        journals.append( *it );
-      }
+    readSettingsWidget();
+    if(mConfig)
+    {
+        mConfig->writeEntry("JournalsInRange", mUseDateRange);
     }
-  }
+}
 
-  drawHeader( p, i18n("Journal entries"), QDate(), QDate(), QRect( 0, 0, width, headerHeight() ) );
-  y = headerHeight() + 15;
+void CalPrintJournal::setDateRange(const QDate &from, const QDate &to)
+{
+    CalPrintPluginBase::setDateRange(from, to);
+    CalPrintJournalConfig_Base *cfg =
+        dynamic_cast<CalPrintJournalConfig_Base *>(mConfigWidget);
+    if(cfg)
+    {
+        cfg->mFromDate->setDate(from);
+        cfg->mToDate->setDate(to);
+    }
+}
 
-  Journal::List::Iterator it = journals.begin();
-  for ( ; it != journals.end(); ++it ) {
-    drawJournal( *it, p, x, y, width, height );
-  }
+void CalPrintJournal::print(QPainter &p, int width, int height)
+{
+    int x = 0, y = 0;
+    Journal::List journals(mCalendar->journals());
+    if(mUseDateRange)
+    {
+        Journal::List allJournals = journals;
+        journals.clear();
+        Journal::List::Iterator it = allJournals.begin();
+        for(; it != allJournals.end(); ++it)
+        {
+            QDate dt = (*it)->dtStart().date();
+            if(mFromDate <= dt && dt <= mToDate)
+            {
+                journals.append(*it);
+            }
+        }
+    }
+
+    drawHeader(p, i18n("Journal entries"), QDate(), QDate(), QRect(0, 0, width, headerHeight()));
+    y = headerHeight() + 15;
+
+    Journal::List::Iterator it = journals.begin();
+    for(; it != journals.end(); ++it)
+    {
+        drawJournal(*it, p, x, y, width, height);
+    }
 }
 
 #endif

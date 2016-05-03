@@ -40,41 +40,41 @@
 #include "qgpgmejob.h"
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
+class Error;
+class Context;
+class Key;
 }
 
 namespace Kleo {
 
-  class QGpgMEKeyListJob : public KeyListJob, private QGpgMEJob {
+class QGpgMEKeyListJob : public KeyListJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEKeyListJob( GpgME::Context * context );
+public:
+    QGpgMEKeyListJob(GpgME::Context *context);
     ~QGpgMEKeyListJob();
 
     /*! \reimp from KeyListJob */
-    GpgME::Error start( const QStringList & patterns, bool secretOnly );
+    GpgME::Error start(const QStringList &patterns, bool secretOnly);
 
     /*! \reimp from KeyListJob */
-    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys );
+    GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly, std::vector<GpgME::Key> &keys);
 
     /*! \reimp from Job */
-    void showErrorDialog( QWidget * parent, const QString & caption ) const;
+    void showErrorDialog(QWidget *parent, const QString &caption) const;
 
-  private slots:
-    void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
+private slots:
+    void slotNextKeyEvent(GpgME::Context *context, const GpgME::Key &key);
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e);
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error &) {} // unused, we implement slotOperationDoneEvent ourselves.
-    void setup( const QStringList &, bool );
-    GpgME::KeyListResult attemptSyncKeyListing( std::vector<GpgME::Key> & );
+private:
+    void doOperationDoneEvent(const GpgME::Error &) {}  // unused, we implement slotOperationDoneEvent ourselves.
+    void setup(const QStringList &, bool);
+    GpgME::KeyListResult attemptSyncKeyListing(std::vector<GpgME::Key> &);
 
-  private:
+private:
     GpgME::KeyListResult mResult;
     bool mSecretOnly;
-  };
+};
 
 }
 

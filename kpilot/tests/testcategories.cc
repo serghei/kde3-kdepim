@@ -44,172 +44,173 @@
 // Name of an actual DB
 #define MEMO_NAME "MemoDB"
 
-QStringList categories( const PilotAppInfoBase *appinfo )
+QStringList categories(const PilotAppInfoBase *appinfo)
 {
-	QStringList cats;
+    QStringList cats;
 
-	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT; i++)
-	{
-		QString cat = appinfo->categoryName(i);
-		if (!cat.isEmpty())
-		{
-			QString s = CSL1("(%1:%2)").arg(i).arg(cat);
-			cats.append(s);
-		}
-	}
+    for(unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
+    {
+        QString cat = appinfo->categoryName(i);
+        if(!cat.isEmpty())
+        {
+            QString s = CSL1("(%1:%2)").arg(i).arg(cat);
+            cats.append(s);
+        }
+    }
 
-	return cats;
+    return cats;
 }
 
-QStringList listCategories( const QString &dir, const char *dbname )
+QStringList listCategories(const QString &dir, const char *dbname)
 {
-	QStringList cats;
-	PilotLocalDatabase *database = new PilotLocalDatabase( dir, dbname );
-	if (!database->isOpen()) return cats;
+    QStringList cats;
+    PilotLocalDatabase *database = new PilotLocalDatabase(dir, dbname);
+    if(!database->isOpen()) return cats;
 
-	PilotAppInfoBase *appinfo = new PilotAppInfoBase( database );
-	appinfo->dump();
+    PilotAppInfoBase *appinfo = new PilotAppInfoBase(database);
+    appinfo->dump();
 
-	cats = categories( appinfo );
+    cats = categories(appinfo);
 
-	delete appinfo;
-	delete database;
-	return cats;
+    delete appinfo;
+    delete database;
+    return cats;
 }
 
 void badAppInfoCreation()
 {
-	FUNCTIONSETUP;
-	PilotAppInfoBase *appinfo = new PilotAppInfoBase( 0L );
-	appinfo->dump();
-	KPILOT_DELETE( appinfo ) ;
+    FUNCTIONSETUP;
+    PilotAppInfoBase *appinfo = new PilotAppInfoBase(0L);
+    appinfo->dump();
+    KPILOT_DELETE(appinfo) ;
 
-	PilotLocalDatabase *database = new PilotLocalDatabase( BOGUS_NAME );
-	appinfo = new PilotAppInfoBase( database );
-	appinfo->dump();
-	KPILOT_DELETE( appinfo );
+    PilotLocalDatabase *database = new PilotLocalDatabase(BOGUS_NAME);
+    appinfo = new PilotAppInfoBase(database);
+    appinfo->dump();
+    KPILOT_DELETE(appinfo);
 }
 
-void categoryNames( const QString &dir )
+void categoryNames(const QString &dir)
 {
-	PilotLocalDatabase *database = new PilotLocalDatabase( dir, MEMO_NAME );
-	if (!database->isOpen())
-	{
-		WARNINGKPILOT << "Can not open database '" << MEMO_NAME << "'" << endl;
-		return;
-	}
+    PilotLocalDatabase *database = new PilotLocalDatabase(dir, MEMO_NAME);
+    if(!database->isOpen())
+    {
+        WARNINGKPILOT << "Can not open database '" << MEMO_NAME << "'" << endl;
+        return;
+    }
 
-	PilotAppInfoBase *appinfo = new PilotAppInfoBase( database );
-	appinfo->dump();
+    PilotAppInfoBase *appinfo = new PilotAppInfoBase(database);
+    appinfo->dump();
 
-	DEBUGKPILOT << "# Done dumping" << endl;
+    DEBUGKPILOT << "# Done dumping" << endl;
 
-	if (!appinfo->categoryInfo())
-	{
-		WARNINGKPILOT << "Could not read required database" << endl;
-		return;
-	}
+    if(!appinfo->categoryInfo())
+    {
+        WARNINGKPILOT << "Could not read required database" << endl;
+        return;
+    }
 
-	const char *funnyname = "OneTwoThreeFourFiveSixSevenEight";
-	const int funnyname_length = strlen(funnyname);
+    const char *funnyname = "OneTwoThreeFourFiveSixSevenEight";
+    const int funnyname_length = strlen(funnyname);
 
-	if (funnyname_length < 20)
-	{
-		WARNINGKPILOT << "String of example category names is too short." << endl;
-		return;
-	}
+    if(funnyname_length < 20)
+    {
+        WARNINGKPILOT << "String of example category names is too short." << endl;
+        return;
+    }
 
-	DEBUGKPILOT << "# Updating category names with various lengths." << endl;
-	DEBUGKPILOT << "# Expect three truncation errors and two bad category numbers." << endl;
-	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT+2; i++)
-	{
-		QString name = QString::fromLatin1(funnyname+funnyname_length-i-3);
-		if (!appinfo->setCategoryName(i,name))
-		{
-			WARNINGKPILOT << "Failed to set category " << i << " name to <" << name << ">" << endl;
-		}
-		else
-		{
-			QString categoryname = appinfo->categoryName(i);
-			if (categoryname != name)
-			{
-				WARNINGKPILOT << "Category name " << i
-					<< " set to <" << name
-					<< "> and returns <"
-					<< categoryname << ">" << endl;
-			}
-		}
-	}
+    DEBUGKPILOT << "# Updating category names with various lengths." << endl;
+    DEBUGKPILOT << "# Expect three truncation errors and two bad category numbers." << endl;
+    for(unsigned int i = 0; i < Pilot::CATEGORY_COUNT + 2; i++)
+    {
+        QString name = QString::fromLatin1(funnyname + funnyname_length - i - 3);
+        if(!appinfo->setCategoryName(i, name))
+        {
+            WARNINGKPILOT << "Failed to set category " << i << " name to <" << name << ">" << endl;
+        }
+        else
+        {
+            QString categoryname = appinfo->categoryName(i);
+            if(categoryname != name)
+            {
+                WARNINGKPILOT << "Category name " << i
+                              << " set to <" << name
+                              << "> and returns <"
+                              << categoryname << ">" << endl;
+            }
+        }
+    }
 
-	DEBUGKPILOT << "# Final categories\n#   " << categories( appinfo ).join("\n#   ") << endl;
+    DEBUGKPILOT << "# Final categories\n#   " << categories(appinfo).join("\n#   ") << endl;
 }
 
 static const KCmdLineOptions options[] =
 {
-	{"verbose", "Verbose output", 0},
-	{"data-dir <path>","Set data directory", "."},
-	KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    {"data-dir <path>", "Set data directory", "."},
+    KCmdLineLastOption
 };
 
 
 int main(int argc, char **argv)
 {
-	KApplication::disableAutoDcopRegistration();
+    KApplication::disableAutoDcopRegistration();
 
-	KAboutData aboutData("testcategories","Test Categories","0.1");
-	KCmdLineArgs::init(argc,argv,&aboutData);
-	KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("testcategories", "Test Categories", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	KApplication app( false, false );
+    KApplication app(false, false);
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
 #ifdef DEBUG
-	debug_level= (args->isSet("verbose")) ? 4 : 0;
+    debug_level = (args->isSet("verbose")) ? 4 : 0;
 #endif
 
-	Q_UNUSED(argc);
-	Q_UNUSED(argv);
+    Q_UNUSED(argc);
+    Q_UNUSED(argv);
 
-	static const char *files[] = {
-		MEMO_NAME,
-		"AddressDB",
-		"MailDB",
-		"ToDoDB",
-		0L
-	};
+    static const char *files[] =
+    {
+        MEMO_NAME,
+        "AddressDB",
+        "MailDB",
+        "ToDoDB",
+        0L
+    };
 
-	QString datadir = args->getOption("data-dir");
+    QString datadir = args->getOption("data-dir");
 
-	DEBUGKPILOT << "### testcategories\n#\n#" << endl;
-	DEBUGKPILOT << "# Listing categories from database files.\n#" << endl;
+    DEBUGKPILOT << "### testcategories\n#\n#" << endl;
+    DEBUGKPILOT << "# Listing categories from database files.\n#" << endl;
 
-	Pilot::setupPilotCodec( CSL1("Latin1") );
+    Pilot::setupPilotCodec(CSL1("Latin1"));
 
-	// Include arbitrary break-off point, in case
-	for (unsigned int i = 0; i<sizeof(files)/sizeof(const char *) ; i++)
-	{
-		if (!files[i])
-		{
-			break;
-		}
-		DEBUGKPILOT << "# Categories (" << files[i] << "): " << endl;
-		DEBUGKPILOT << "#   " << listCategories( datadir, files[i] ).join("\n#   ") << "\n#\n";
-	}
-	// Should bail, not crash
-	DEBUGKPILOT << "# Categories (nonexistent): " << endl;
-	(void) listCategories( datadir, "nonexistent" );
+    // Include arbitrary break-off point, in case
+    for(unsigned int i = 0; i < sizeof(files) / sizeof(const char *) ; i++)
+    {
+        if(!files[i])
+        {
+            break;
+        }
+        DEBUGKPILOT << "# Categories (" << files[i] << "): " << endl;
+        DEBUGKPILOT << "#   " << listCategories(datadir, files[i]).join("\n#   ") << "\n#\n";
+    }
+    // Should bail, not crash
+    DEBUGKPILOT << "# Categories (nonexistent): " << endl;
+    (void) listCategories(datadir, "nonexistent");
 
-	DEBUGKPILOT << "# Categories (bogus): " << endl;
-	(void) listCategories( datadir, BOGUS_NAME );
+    DEBUGKPILOT << "# Categories (bogus): " << endl;
+    (void) listCategories(datadir, BOGUS_NAME);
 
-	DEBUGKPILOT << "#\n# Trying to pass broken pointers to category functions.\n# Four errors are expected.\n#" << endl;
-	badAppInfoCreation();
+    DEBUGKPILOT << "#\n# Trying to pass broken pointers to category functions.\n# Four errors are expected.\n#" << endl;
+    badAppInfoCreation();
 
-	DEBUGKPILOT << "#\n# Checking category names." << endl;
-	categoryNames( datadir );
+    DEBUGKPILOT << "#\n# Checking category names." << endl;
+    categoryNames(datadir);
 
-	DEBUGKPILOT << "# OK.\n" << endl;
-	return 0;
+    DEBUGKPILOT << "# OK.\n" << endl;
+    return 0;
 }
 

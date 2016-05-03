@@ -26,22 +26,22 @@
 
 using namespace KIO;
 
-KIO::TransferJob *GroupwareJob::getCalendar( const KURL &u )
+KIO::TransferJob *GroupwareJob::getCalendar(const KURL &u)
 {
-  KURL url = u;
-  url.setPath( "/calendar/" );
+    KURL url = u;
+    url.setPath("/calendar/");
 
-  kdDebug() << "GroupwareJob::getCalendar(): URL: " << url << endl;
+    kdDebug() << "GroupwareJob::getCalendar(): URL: " << url << endl;
 
-  return KIO::get( url, false, false );
+    return KIO::get(url, false, false);
 }
 
-KIO::TransferJob *GroupwareJob::getAddressBook( const KURL &u )
+KIO::TransferJob *GroupwareJob::getAddressBook(const KURL &u)
 {
-  KURL url = u;
-  url.setPath( "/addressbook/" );
+    KURL url = u;
+    url.setPath("/addressbook/");
 
-  kdDebug() << "GroupwareJob::getAddressBook(): URL: " << url << endl;
+    kdDebug() << "GroupwareJob::getAddressBook(): URL: " << url << endl;
 
-  return KIO::get( url, false, false );
+    return KIO::get(url, false, false);
 }

@@ -34,16 +34,14 @@
 
 #include "kcalendariface.h"
 
-namespace KCal
-{
-  class Calendar;
-  class CalendarResources;
-  class Incidence;
-  class ResourceCalendar;
+namespace KCal {
+class Calendar;
+class CalendarResources;
+class Incidence;
+class ResourceCalendar;
 }
-namespace KOrg
-{
-  class MainWindow;
+namespace KOrg {
+class MainWindow;
 }
 
 class KAction;
@@ -71,19 +69,21 @@ using namespace KCal;
   actions are in one location.
   It also provides DCOP interface[s].
 */
-class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
-{
+class KDE_EXPORT ActionManager : public QObject, public KCalendarIface {
     Q_OBJECT
-  public:
-    ActionManager( KXMLGUIClient *client, CalendarView *widget,
-                   QObject *parent, KOrg::MainWindow *mainWindow,
-                   bool isPart );
+public:
+    ActionManager(KXMLGUIClient *client, CalendarView *widget,
+                  QObject *parent, KOrg::MainWindow *mainWindow,
+                  bool isPart);
     virtual ~ActionManager();
 
     /** Peform initialization that requires this* to be full constructed */
     void init();
 
-    CalendarView *view() const { return mCalendarView; }
+    CalendarView *view() const
+    {
+        return mCalendarView;
+    }
 
     /**
       Create Calendar object based on local file and set it on the view.
@@ -106,35 +106,38 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
     */
     bool saveResourceCalendar();
 
-  public slots:
+public slots:
     /** Add a new resource */
-    bool addResource( const KURL &mUrl );
+    bool addResource(const KURL &mUrl);
     /**
       Open calendar file from URL. Merge into current calendar, if \a merge is
       true.
     */
-    bool openURL( const KURL &url, bool merge = false );
+    bool openURL(const KURL &url, bool merge = false);
     /** Save calendar file to URL of current calendar */
     bool saveURL();
     /** Save calendar file to URL */
-    bool saveAsURL( const KURL &kurl );
+    bool saveAsURL(const KURL &kurl);
     /** Save calendar if it is modified by the user. Ask user what to do. */
     bool saveModifiedURL();
 
     void exportHTML();
-    void exportHTML( HTMLExportSettings * );
-  public:
+    void exportHTML(HTMLExportSettings *);
+public:
     /** Get current URL */
-    KURL url() const { return mURL; }
+    KURL url() const
+    {
+        return mURL;
+    }
 
     /** Is there a instance with this URL? */
-    static KOrg::MainWindow* findInstance( const KURL &url );
+    static KOrg::MainWindow *findInstance(const KURL &url);
     /** Open calendar file from URL */
-    bool openURL( const QString &url );
+    bool openURL(const QString &url);
     /** Open calendar file from URL */
-    bool mergeURL( const QString &url );
+    bool mergeURL(const QString &url);
     /** Save calendar file to URL */
-    bool saveAsURL( const QString &url );
+    bool saveAsURL(const QString &url);
     /** Close calendar file opened from URL */
     void closeURL();
     /** Get current URL as QString */
@@ -145,81 +148,81 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
       @param force If true, all recurrences and sub-todos (if applicable) will be
                          deleted without prompting for confirmation.
     */
-    virtual bool deleteIncidence( const QString& uid, bool force = false );
+    virtual bool deleteIncidence(const QString &uid, bool force = false);
 
-    bool editIncidence( const QString& uid );
+    bool editIncidence(const QString &uid);
 
     /**
       Add an incidence to the active calendar.
       @param ical A calendar in iCalendar format containing the incidence.
     */
 
-    bool addIncidence( const QString& ical );
+    bool addIncidence(const QString &ical);
 
     //// Implementation of the DCOP interface
-    virtual ResourceRequestReply resourceRequest( const QValueList<QPair<QDateTime, QDateTime> >& busy,
-                                                  const QCString& resource,
-                                                  const QString& vCalIn );
+    virtual ResourceRequestReply resourceRequest(const QValueList<QPair<QDateTime, QDateTime> > &busy,
+            const QCString &resource,
+            const QString &vCalIn);
 
-    void openEventEditor( const QString& );
-    void openEventEditor( const QString& summary,
-                          const QString& description,
-                          const QString& attachment );
-    void openEventEditor( const QString& summary,
-                          const QString& description,
-                          const QString& attachment,
-                          const QStringList& attendees );
-    void openEventEditor( const QString& summary,
-                          const QString& description,
-                          const QString& uri,
-                          const QString& file,
-                          const QStringList& attendees,
-                          const QString& attachmentMimetype );
+    void openEventEditor(const QString &);
+    void openEventEditor(const QString &summary,
+                         const QString &description,
+                         const QString &attachment);
+    void openEventEditor(const QString &summary,
+                         const QString &description,
+                         const QString &attachment,
+                         const QStringList &attendees);
+    void openEventEditor(const QString &summary,
+                         const QString &description,
+                         const QString &uri,
+                         const QString &file,
+                         const QStringList &attendees,
+                         const QString &attachmentMimetype);
 
-    void openTodoEditor( const QString& );
-    void openTodoEditor( const QString& summary,
-                         const QString& description,
-                         const QString& attachment );
-    void openTodoEditor( const QString& summary,
-                         const QString& description,
-                         const QString& attachment,
-                         const QStringList& attendees );
-    void openTodoEditor( const QString& summary,
-                         const QString& description,
-                         const QString& uri,
-                         const QString& file,
-                         const QStringList& attendees,
-                         const QString& attachmentMimetype );
+    void openTodoEditor(const QString &);
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QString &attachment);
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QString &attachment,
+                        const QStringList &attendees);
+    void openTodoEditor(const QString &summary,
+                        const QString &description,
+                        const QString &uri,
+                        const QString &file,
+                        const QStringList &attendees,
+                        const QString &attachmentMimetype);
 
-    void openJournalEditor( const QDate& date );
-    void openJournalEditor( const QString& text, const QDate& date );
-    void openJournalEditor( const QString& text );
-   //TODO:
-   // void openJournalEditor( const QString& summary,
-   //                         const QString& description,
-   //                         const QString& attachment );
+    void openJournalEditor(const QDate &date);
+    void openJournalEditor(const QString &text, const QDate &date);
+    void openJournalEditor(const QString &text);
+    //TODO:
+    // void openJournalEditor( const QString& summary,
+    //                         const QString& description,
+    //                         const QString& attachment );
 
     void showJournalView();
     void showTodoView();
     void showEventView();
 
-    void goDate( const QDate& );
-    void goDate( const QString& );
-    void showDate( const QDate &date );
+    void goDate(const QDate &);
+    void goDate(const QString &);
+    void showDate(const QDate &date);
 
     QString localFileName();
 
     bool queryClose();
 
-    void loadProfile( const QString & path );
+    void loadProfile(const QString &path);
 
-    void saveToProfile( const QString & path ) const;
+    void saveToProfile(const QString &path) const;
 
-  signals:
+signals:
     /**
       Emitted when the "New" action is activated.
     */
-    void actionNew( const KURL &url = KURL() );
+    void actionNew(const KURL &url = KURL());
 
     /**
       When change is made to options dialog, the topwidget will catch this
@@ -235,9 +238,9 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
     void closingDown();
 
     /** Indicates that a new resource was added */
-    void resourceAdded( ResourceCalendar * );
+    void resourceAdded(ResourceCalendar *);
 
-  public slots:
+public slots:
     /**
       Options dialog made a changed to the configuration. we catch this
       and notify all widgets which need to update their configuration.
@@ -246,7 +249,7 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
 
     void setDestinationPolicy();
 
-    void processIncidenceSelection( Incidence * );
+    void processIncidenceSelection(Incidence *);
     void keyBindings();
 
     /**
@@ -261,14 +264,14 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
     void writeSettings();
 
     /* Session management */
-    void saveProperties( KConfig * );
-    void readProperties( KConfig * );
+    void saveProperties(KConfig *);
+    void readProperties(KConfig *);
 
     void loadParts();
 
-    void importCalendar( const KURL &url );
+    void importCalendar(const KURL &url);
 
-  protected slots:
+protected slots:
 
     /** open new window */
     void file_new();
@@ -278,7 +281,7 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
 
     /** open a file from the list of recent files. Also called from file_open()
         after the URL is obtained from the user. */
-    void file_open( const KURL &url );
+    void file_open(const KURL &url);
 
     /** import a calendar from another program like ical. */
     void file_icalimport();
@@ -333,34 +336,34 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
 
     void setTitle();
 
-    void updateUndoAction( const QString & );
+    void updateUndoAction(const QString &);
 
-    void updateRedoAction( const QString & );
+    void updateRedoAction(const QString &);
 
-    void slotImportDialogFinished( ImportDialog * );
+    void slotImportDialogFinished(ImportDialog *);
 
-  protected:
+protected:
     /** Get URL for saving. Opens FileDialog. */
     KURL getSaveURL();
 
-    void showStatusMessageOpen( const KURL &url, bool merge );
+    void showStatusMessageOpen(const KURL &url, bool merge);
 
-    void initCalendar( Calendar *cal );
+    void initCalendar(Calendar *cal);
 
     /**
       Return widget used as parent for dialogs and message boxes.
     */
     QWidget *dialogParent();
 
-  private slots:
-    void dumpText( const QString & );  // only for debugging purposes
+private slots:
+    void dumpText(const QString &);    // only for debugging purposes
 
-  private:
+private:
     class ActionStringsVisitor;
 
     /** Create all the actions. */
     void initActions();
-    void enableIncidenceActions( bool enable );
+    void enableIncidenceActions(bool enable);
 
     KOrg::Part::List mParts; // List of parts loaded
     KURL mURL;      // URL of calendar file
@@ -382,12 +385,12 @@ class KDE_EXPORT ActionManager : public QObject, public KCalendarIface
     KToggleAction *mTodoViewShowAction;
     KToggleAction *mResourceViewShowAction;
     KToggleAction *mEventViewerShowAction;
-//     KToggleAction *mToggleAlarmAction;
+    //     KToggleAction *mToggleAlarmAction;
 
     KAction *mShowIncidenceAction;
     KAction *mEditIncidenceAction;
     KAction *mDeleteIncidenceAction;
-//     KAction *mAssignResourceAction;
+    //     KAction *mAssignResourceAction;
 
     KAction *mCutAction;
     KAction *mCopyAction;

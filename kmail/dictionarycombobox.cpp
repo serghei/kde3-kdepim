@@ -42,107 +42,117 @@
 
 namespace KMail {
 
-  DictionaryComboBox::DictionaryComboBox( QWidget * parent, const char * name )
-    : QComboBox( false, parent, name ),
-      mSpellConfig( 0 ),
-      mDefaultDictionary( 0 )
-  {
+DictionaryComboBox::DictionaryComboBox(QWidget *parent, const char *name)
+    : QComboBox(false, parent, name),
+      mSpellConfig(0),
+      mDefaultDictionary(0)
+{
     reloadCombo();
-    connect( this, SIGNAL( activated( int ) ),
-             this, SLOT( slotDictionaryChanged( int ) ) );
-    connect( this, SIGNAL( dictionaryChanged( int ) ),
-             mSpellConfig, SLOT( sSetDictionary( int ) ) );
-  }
+    connect(this, SIGNAL(activated(int)),
+            this, SLOT(slotDictionaryChanged(int)));
+    connect(this, SIGNAL(dictionaryChanged(int)),
+            mSpellConfig, SLOT(sSetDictionary(int)));
+}
 
-  DictionaryComboBox::~DictionaryComboBox()
-  {
+DictionaryComboBox::~DictionaryComboBox()
+{
     delete mSpellConfig;
     mSpellConfig = 0;
-  }
+}
 
-  QString DictionaryComboBox::currentDictionaryName() const
-  {
+QString DictionaryComboBox::currentDictionaryName() const
+{
     return currentText();
-  }
+}
 
-  QString DictionaryComboBox::currentDictionary() const
-  {
+QString DictionaryComboBox::currentDictionary() const
+{
     QString dict = mDictionaries[ currentItem() ];
-    if ( dict.isEmpty() )
-      return "<default>";
+    if(dict.isEmpty())
+        return "<default>";
     else
-      return dict;
-  }
+        return dict;
+}
 
-  void DictionaryComboBox::setCurrentByDictionaryName( const QString & name )
-  {
-    if ( name.isEmpty() )
-      return;
-
-    for ( int i = 0; i < count(); ++i ) {
-      if ( text( i ) == name ) {
-        if ( i != currentItem() ) {
-          setCurrentItem( i );
-          slotDictionaryChanged( i );
-        }
+void DictionaryComboBox::setCurrentByDictionaryName(const QString &name)
+{
+    if(name.isEmpty())
         return;
-      }
+
+    for(int i = 0; i < count(); ++i)
+    {
+        if(text(i) == name)
+        {
+            if(i != currentItem())
+            {
+                setCurrentItem(i);
+                slotDictionaryChanged(i);
+            }
+            return;
+        }
     }
-  }
+}
 
-  void DictionaryComboBox::setCurrentByDictionary( const QString & dictionary )
-  {
-    if ( !dictionary.isEmpty() ) {
-      // first handle the special case of the default dictionary
-      if ( dictionary == "<default>" ) {
-        if ( 0 != currentItem() ) {
-          setCurrentItem( 0 );
-          slotDictionaryChanged( 0 );
+void DictionaryComboBox::setCurrentByDictionary(const QString &dictionary)
+{
+    if(!dictionary.isEmpty())
+    {
+        // first handle the special case of the default dictionary
+        if(dictionary == "<default>")
+        {
+            if(0 != currentItem())
+            {
+                setCurrentItem(0);
+                slotDictionaryChanged(0);
+            }
+            return;
         }
-        return;
-      }
 
-      int i = 0;
-      for ( QStringList::ConstIterator it = mDictionaries.begin();
-            it != mDictionaries.end();
-            ++it, ++i ) {
-        if ( *it == dictionary ) {
-          if ( i != currentItem() ) {
-            setCurrentItem( i );
-            slotDictionaryChanged( i );
-          }
-          return;
+        int i = 0;
+        for(QStringList::ConstIterator it = mDictionaries.begin();
+                it != mDictionaries.end();
+                ++it, ++i)
+        {
+            if(*it == dictionary)
+            {
+                if(i != currentItem())
+                {
+                    setCurrentItem(i);
+                    slotDictionaryChanged(i);
+                }
+                return;
+            }
         }
-      }
     }
 
     // If dictionary is empty or doesn't exist fall back to the global default
-    if ( mDefaultDictionary != currentItem() ) {
-      setCurrentItem( mDefaultDictionary );
-      slotDictionaryChanged( mDefaultDictionary );
+    if(mDefaultDictionary != currentItem())
+    {
+        setCurrentItem(mDefaultDictionary);
+        slotDictionaryChanged(mDefaultDictionary);
     }
-  }
+}
 
-  KSpellConfig* DictionaryComboBox::spellConfig() const
-  {
+KSpellConfig *DictionaryComboBox::spellConfig() const
+{
     return mSpellConfig;
-  }
+}
 
-  void DictionaryComboBox::reloadCombo()
-  {
+void DictionaryComboBox::reloadCombo()
+{
     delete mSpellConfig;
-    mSpellConfig = new KSpellConfig( 0, 0, 0, false );
-    mSpellConfig->fillDicts( this, &mDictionaries );
+    mSpellConfig = new KSpellConfig(0, 0, 0, false);
+    mSpellConfig->fillDicts(this, &mDictionaries);
     mDefaultDictionary = currentItem();
-  }
+}
 
-  void DictionaryComboBox::slotDictionaryChanged( int idx )
-  {
-    kdDebug( 5006 ) << "DictionaryComboBox::slotDictionaryChanged( " << idx
-                    << " )" << endl;
-    emit dictionaryChanged( mDictionaries[idx] );
-    emit dictionaryChanged( idx );
-  }
+void DictionaryComboBox::slotDictionaryChanged(int idx)
+{
+    kdDebug(5006) << "DictionaryComboBox::slotDictionaryChanged( " << idx
+                  << " )" << endl;
+    emit dictionaryChanged(mDictionaries[idx]);
+    emit dictionaryChanged(idx);
+}
 
 } // namespace KMail
 

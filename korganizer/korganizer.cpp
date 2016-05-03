@@ -86,225 +86,241 @@ using namespace KParts;
 #include "korganizer.moc"
 using namespace KOrg;
 
-KOrganizer::KOrganizer( const char *name )
-  : KParts::MainWindow( 0, name ),
-    KOrg::MainWindow()
+KOrganizer::KOrganizer(const char *name)
+    : KParts::MainWindow(0, name),
+      KOrg::MainWindow()
 {
-  // Set this to be the group leader for all subdialogs - this means
-  // modal subdialogs will only affect this dialog, not the other windows
-  setWFlags( getWFlags() | WGroupLeader );
+    // Set this to be the group leader for all subdialogs - this means
+    // modal subdialogs will only affect this dialog, not the other windows
+    setWFlags(getWFlags() | WGroupLeader);
 
-  kdDebug(5850) << "KOrganizer::KOrganizer()" << endl;
-  KOCore::self()->addXMLGUIClient( this, this );
-//  setMinimumSize(600,400);  // make sure we don't get resized too small...
+    kdDebug(5850) << "KOrganizer::KOrganizer()" << endl;
+    KOCore::self()->addXMLGUIClient(this, this);
+    //  setMinimumSize(600,400);  // make sure we don't get resized too small...
 
-  mCalendarView = new CalendarView( this, "KOrganizer::CalendarView" );
-  setCentralWidget(mCalendarView);
+    mCalendarView = new CalendarView(this, "KOrganizer::CalendarView");
+    setCentralWidget(mCalendarView);
 
-  mActionManager = new ActionManager( this, mCalendarView, this, this, false );
-  (void)new KOrganizerIfaceImpl( mActionManager, this, "IfaceImpl" );
+    mActionManager = new ActionManager(this, mCalendarView, this, this, false);
+    (void)new KOrganizerIfaceImpl(mActionManager, this, "IfaceImpl");
 }
 
 KOrganizer::~KOrganizer()
 {
-  delete mActionManager;
+    delete mActionManager;
 
-  KOCore::self()->removeXMLGUIClient( this );
+    KOCore::self()->removeXMLGUIClient(this);
 }
 
-void KOrganizer::init( bool document )
+void KOrganizer::init(bool document)
 {
-  kdDebug(5850) << "KOrganizer::init() "
-            << ( document ? "hasDocument" : "resources" ) << endl;
+    kdDebug(5850) << "KOrganizer::init() "
+                  << (document ? "hasDocument" : "resources") << endl;
 
-  setHasDocument( document );
+    setHasDocument(document);
 
-  // Create calendar object, which manages all calendar information associated
-  // with this calendar view window.
-  if ( hasDocument() ) {
-    mActionManager->createCalendarLocal();
-  } else {
-    mActionManager->createCalendarResources();
-  }
-
-  mActionManager->init();
-  connect( mActionManager, SIGNAL( actionNew( const KURL & ) ),
-           SLOT( newMainWindow( const KURL & ) ) );
-
-  mActionManager->loadParts();
-
-  initActions();
-  readSettings();
-
-  KStatusBar *bar = statusBar();
-
-  bar->insertItem( "", ID_GENERAL, 10 );
-  connect( bar, SIGNAL( pressed( int ) ), SLOT( statusBarPressed( int ) ) );
-
-  KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( bar, this );
-  progressDialog->hide();
-
-  KPIM::StatusbarProgressWidget *progressWidget;
-  progressWidget = new KPIM::StatusbarProgressWidget( progressDialog, bar );
-  progressWidget->show();
-
-  bar->addWidget( progressWidget, 0, true );
-
-  connect( mActionManager->view(), SIGNAL( statusMessage( const QString & ) ),
-           SLOT( showStatusMessage( const QString & ) ) );
-
-  setStandardToolBarMenuEnabled( true );
-  setTitle();
-
-  kdDebug(5850) << "KOrganizer::KOrganizer() done" << endl;
-}
-
-void KOrganizer::newMainWindow( const KURL &url )
-{
-  KOrganizer *korg = new KOrganizer();
-  if ( url.isValid() || url.isEmpty() ) {
-    korg->init( true );
-    if ( korg->openURL( url ) || url.isEmpty() ) {
-      korg->show();
-    } else {
-      delete korg;
+    // Create calendar object, which manages all calendar information associated
+    // with this calendar view window.
+    if(hasDocument())
+    {
+        mActionManager->createCalendarLocal();
     }
-  } else {
-    korg->init( false );
-    korg->show();
-  }
+    else
+    {
+        mActionManager->createCalendarResources();
+    }
+
+    mActionManager->init();
+    connect(mActionManager, SIGNAL(actionNew(const KURL &)),
+            SLOT(newMainWindow(const KURL &)));
+
+    mActionManager->loadParts();
+
+    initActions();
+    readSettings();
+
+    KStatusBar *bar = statusBar();
+
+    bar->insertItem("", ID_GENERAL, 10);
+    connect(bar, SIGNAL(pressed(int)), SLOT(statusBarPressed(int)));
+
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog(bar, this);
+    progressDialog->hide();
+
+    KPIM::StatusbarProgressWidget *progressWidget;
+    progressWidget = new KPIM::StatusbarProgressWidget(progressDialog, bar);
+    progressWidget->show();
+
+    bar->addWidget(progressWidget, 0, true);
+
+    connect(mActionManager->view(), SIGNAL(statusMessage(const QString &)),
+            SLOT(showStatusMessage(const QString &)));
+
+    setStandardToolBarMenuEnabled(true);
+    setTitle();
+
+    kdDebug(5850) << "KOrganizer::KOrganizer() done" << endl;
+}
+
+void KOrganizer::newMainWindow(const KURL &url)
+{
+    KOrganizer *korg = new KOrganizer();
+    if(url.isValid() || url.isEmpty())
+    {
+        korg->init(true);
+        if(korg->openURL(url) || url.isEmpty())
+        {
+            korg->show();
+        }
+        else
+        {
+            delete korg;
+        }
+    }
+    else
+    {
+        korg->init(false);
+        korg->show();
+    }
 }
 
 void KOrganizer::readSettings()
 {
-  // read settings from the KConfig, supplying reasonable
-  // defaults where none are to be found
+    // read settings from the KConfig, supplying reasonable
+    // defaults where none are to be found
 
-  KConfig *config = KOGlobals::self()->config();
+    KConfig *config = KOGlobals::self()->config();
 
-  mActionManager->readSettings();
+    mActionManager->readSettings();
 
-  config->sync();
+    config->sync();
 }
 
 
 void KOrganizer::writeSettings()
 {
-  kdDebug(5850) << "KOrganizer::writeSettings" << endl;
+    kdDebug(5850) << "KOrganizer::writeSettings" << endl;
 
-  KConfig *config = KOGlobals::self()->config();
+    KConfig *config = KOGlobals::self()->config();
 
-  mActionManager->writeSettings();
-  config->sync();
+    mActionManager->writeSettings();
+    config->sync();
 }
 
 
 void KOrganizer::initActions()
 {
 
-  setInstance( KGlobal::instance() );
+    setInstance(KGlobal::instance());
 
-  setXMLFile( "korganizerui.rc" );
-  setStandardToolBarMenuEnabled( true );
-  createStandardStatusBarAction();
+    setXMLFile("korganizerui.rc");
+    setStandardToolBarMenuEnabled(true);
+    createStandardStatusBarAction();
 
-  KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(configureToolbars() ), actionCollection());
-  KStdAction::quit( this, SLOT( close() ), actionCollection() );
-  setAutoSaveSettings();
+    KStdAction::keyBindings(guiFactory(), SLOT(configureShortcuts()), actionCollection());
+    KStdAction::configureToolbars(this, SLOT(configureToolbars()), actionCollection());
+    KStdAction::quit(this, SLOT(close()), actionCollection());
+    setAutoSaveSettings();
 
-  createGUI( 0 );
+    createGUI(0);
 }
 
 bool KOrganizer::queryClose()
 {
-  kdDebug(5850) << "KOrganizer::queryClose()" << endl;
+    kdDebug(5850) << "KOrganizer::queryClose()" << endl;
 
-  bool close = mActionManager->queryClose();
+    bool close = mActionManager->queryClose();
 
-  // Write configuration. I don't know if it really makes sense doing it this
-  // way, when having opened multiple calendars in different CalendarViews.
-  if ( close ) writeSettings();
+    // Write configuration. I don't know if it really makes sense doing it this
+    // way, when having opened multiple calendars in different CalendarViews.
+    if(close) writeSettings();
 
-  return close;
+    return close;
 }
 
 bool KOrganizer::queryExit()
 {
-  // Don't call writeSettings here, because filename isn't valid anymore. It is
-  // now called in queryClose.
-//  writeSettings();
-  return true;
+    // Don't call writeSettings here, because filename isn't valid anymore. It is
+    // now called in queryClose.
+    //  writeSettings();
+    return true;
 }
 
-void KOrganizer::statusBarPressed( int /*id*/ )
+void KOrganizer::statusBarPressed(int /*id*/)
 {
 }
 
-void KOrganizer::showStatusMessage( const QString &message )
+void KOrganizer::showStatusMessage(const QString &message)
 {
-  statusBar()->message(message,2000);
+    statusBar()->message(message, 2000);
 }
 
-bool KOrganizer::openURL( const KURL &url, bool merge )
+bool KOrganizer::openURL(const KURL &url, bool merge)
 {
-  return mActionManager->openURL( url, merge );
+    return mActionManager->openURL(url, merge);
 }
 
 bool KOrganizer::saveURL()
 {
-  return mActionManager->saveURL();
+    return mActionManager->saveURL();
 }
 
-bool KOrganizer::saveAsURL( const KURL & kurl )
+bool KOrganizer::saveAsURL(const KURL &kurl)
 {
-  return mActionManager->saveAsURL( kurl )  ;
+    return mActionManager->saveAsURL(kurl)  ;
 }
 
 KURL KOrganizer::getCurrentURL() const
 {
-  return mActionManager->url();
+    return mActionManager->url();
 }
 
-void KOrganizer::saveProperties( KConfig *config )
+void KOrganizer::saveProperties(KConfig *config)
 {
-  return mActionManager->saveProperties( config );
+    return mActionManager->saveProperties(config);
 }
 
-void KOrganizer::readProperties( KConfig *config )
+void KOrganizer::readProperties(KConfig *config)
 {
-  return mActionManager->readProperties( config );
+    return mActionManager->readProperties(config);
 }
 
 KOrg::CalendarViewBase *KOrganizer::view() const
 {
-  return mActionManager->view();
+    return mActionManager->view();
 }
 
 void KOrganizer::setTitle()
 {
-//  kdDebug(5850) << "KOrganizer::setTitle" << endl;
+    //  kdDebug(5850) << "KOrganizer::setTitle" << endl;
 
-  QString title;
-  if ( !hasDocument() ) {
-    title = i18n("Calendar");
-  } else {
-    KURL url = mActionManager->url();
+    QString title;
+    if(!hasDocument())
+    {
+        title = i18n("Calendar");
+    }
+    else
+    {
+        KURL url = mActionManager->url();
 
-    if ( !url.isEmpty() ) {
-      if ( url.isLocalFile() ) title = url.fileName();
-      else title = url.prettyURL();
-    } else {
-      title = i18n("New Calendar");
+        if(!url.isEmpty())
+        {
+            if(url.isLocalFile()) title = url.fileName();
+            else title = url.prettyURL();
+        }
+        else
+        {
+            title = i18n("New Calendar");
+        }
+
+        if(mCalendarView->isReadOnly())
+        {
+            title += " [" + i18n("read-only") + "]";
+        }
     }
 
-    if ( mCalendarView->isReadOnly() ) {
-      title += " [" + i18n("read-only") + "]";
-    }
-  }
+    title += " - <" + mCalendarView->currentFilterName() + "> ";
 
-  title += " - <" + mCalendarView->currentFilterName() + "> ";
-
-  setCaption( title, !mCalendarView->isReadOnly() &&
-                      mCalendarView->isModified() );
+    setCaption(title, !mCalendarView->isReadOnly() &&
+               mCalendarView->isModified());
 }

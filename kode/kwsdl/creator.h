@@ -26,20 +26,31 @@
 
 namespace KWSDL {
 
-class Creator
-{
-  public:
+class Creator {
+public:
     Creator();
 
-    void setOutputDirectory( const QString &outputDirectory ) { mOutputDirectory = outputDirectory; }
-    QString outputDirectory() const { return mOutputDirectory; }
+    void setOutputDirectory(const QString &outputDirectory)
+    {
+        mOutputDirectory = outputDirectory;
+    }
+    QString outputDirectory() const
+    {
+        return mOutputDirectory;
+    }
 
-    void setNameSpace( const QString &nameSpace ) { mNameSpace = nameSpace; }
-    QString nameSpace() const { return mNameSpace; }
+    void setNameSpace(const QString &nameSpace)
+    {
+        mNameSpace = nameSpace;
+    }
+    QString nameSpace() const
+    {
+        return mNameSpace;
+    }
 
-    void create( const KODE::Class::List &list );
+    void create(const KODE::Class::List &list);
 
-  private:
+private:
     QString mOutputDirectory;
     QString mNameSpace;
 };

@@ -42,38 +42,38 @@ class QString;
 class QObject;
 
 namespace KMail {
-  /**
-   * @short An interface to filter/search rule widget handlers
-   */
-  class RuleWidgetHandler {
-  public:
+/**
+ * @short An interface to filter/search rule widget handlers
+ */
+class RuleWidgetHandler {
+public:
     virtual ~RuleWidgetHandler() {}
 
-    virtual QWidget * createFunctionWidget( int number,
-                                            QWidgetStack *functionStack,
-                                            const QObject *receiver ) const = 0;
-    virtual QWidget * createValueWidget( int number,
-                                         QWidgetStack *valueStack,
-                                         const QObject *receiver ) const = 0;
-    virtual KMSearchRule::Function function( const QCString & field,
-                                             const QWidgetStack *functionStack ) const = 0;
-    virtual QString value( const QCString & field,
-                           const QWidgetStack *functionStack,
-                           const QWidgetStack *valueStack ) const = 0;
-    virtual QString prettyValue( const QCString & field,
-                                 const QWidgetStack *functionStack,
-                                 const QWidgetStack *valueStack ) const = 0;
-    virtual bool handlesField( const QCString & field ) const = 0;
-    virtual void reset( QWidgetStack *functionStack,
-                        QWidgetStack *valueStack ) const = 0;
-    virtual bool setRule( QWidgetStack *functionStack,
-                          QWidgetStack *valueStack,
-                          const KMSearchRule *rule ) const = 0;
-    virtual bool update( const QCString & field,
-                         QWidgetStack *functionStack,
-                         QWidgetStack *valueStack ) const = 0;
+    virtual QWidget *createFunctionWidget(int number,
+                                          QWidgetStack *functionStack,
+                                          const QObject *receiver) const = 0;
+    virtual QWidget *createValueWidget(int number,
+                                       QWidgetStack *valueStack,
+                                       const QObject *receiver) const = 0;
+    virtual KMSearchRule::Function function(const QCString &field,
+                                            const QWidgetStack *functionStack) const = 0;
+    virtual QString value(const QCString &field,
+                          const QWidgetStack *functionStack,
+                          const QWidgetStack *valueStack) const = 0;
+    virtual QString prettyValue(const QCString &field,
+                                const QWidgetStack *functionStack,
+                                const QWidgetStack *valueStack) const = 0;
+    virtual bool handlesField(const QCString &field) const = 0;
+    virtual void reset(QWidgetStack *functionStack,
+                       QWidgetStack *valueStack) const = 0;
+    virtual bool setRule(QWidgetStack *functionStack,
+                         QWidgetStack *valueStack,
+                         const KMSearchRule *rule) const = 0;
+    virtual bool update(const QCString &field,
+                        QWidgetStack *functionStack,
+                        QWidgetStack *valueStack) const = 0;
 
-  };
+};
 
 } // namespace KMail
 

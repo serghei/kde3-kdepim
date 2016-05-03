@@ -40,145 +40,150 @@
 using namespace Kolab;
 
 
-KCal::Journal* Journal::xmlToJournal( const QString& xml, const QString& tz )
+KCal::Journal *Journal::xmlToJournal(const QString &xml, const QString &tz)
 {
-  Journal journal( tz );
-  journal.load( xml );
-  KCal::Journal* kcalJournal = new KCal::Journal();
-  journal.saveTo( kcalJournal );
-  return kcalJournal;
+    Journal journal(tz);
+    journal.load(xml);
+    KCal::Journal *kcalJournal = new KCal::Journal();
+    journal.saveTo(kcalJournal);
+    return kcalJournal;
 }
 
-QString Journal::journalToXML( KCal::Journal* kcalJournal, const QString& tz )
+QString Journal::journalToXML(KCal::Journal *kcalJournal, const QString &tz)
 {
-  Journal journal( tz, kcalJournal );
-  return journal.saveXML();
+    Journal journal(tz, kcalJournal);
+    return journal.saveXML();
 }
 
-Journal::Journal( const QString& tz, KCal::Journal* journal )
-  : KolabBase( tz )
+Journal::Journal(const QString &tz, KCal::Journal *journal)
+    : KolabBase(tz)
 {
-  if ( journal )
-    setFields( journal );
+    if(journal)
+        setFields(journal);
 }
 
 Journal::~Journal()
 {
 }
 
-void Journal::setSummary( const QString& summary )
+void Journal::setSummary(const QString &summary)
 {
-  mSummary = summary;
+    mSummary = summary;
 }
 
 QString Journal::summary() const
 {
-  return mSummary;
+    return mSummary;
 }
 
-void Journal::setStartDate( const QDateTime& startDate )
+void Journal::setStartDate(const QDateTime &startDate)
 {
-  mStartDate = startDate;
+    mStartDate = startDate;
 }
 
 QDateTime Journal::startDate() const
 {
-  return mStartDate;
+    return mStartDate;
 }
 
-void Journal::setEndDate( const QDateTime& endDate )
+void Journal::setEndDate(const QDateTime &endDate)
 {
-  mEndDate = endDate;
+    mEndDate = endDate;
 }
 
 QDateTime Journal::endDate() const
 {
-  return mEndDate;
+    return mEndDate;
 }
 
-bool Journal::loadAttribute( QDomElement& element )
+bool Journal::loadAttribute(QDomElement &element)
 {
-  QString tagName = element.tagName();
+    QString tagName = element.tagName();
 
-  if ( tagName == "summary" )
-    setSummary( element.text() );
-  else if ( tagName == "start-date" )
-    setStartDate( stringToDateTime( element.text() ) );
-  else
-    // Not handled here
-    return KolabBase::loadAttribute( element );
+    if(tagName == "summary")
+        setSummary(element.text());
+    else if(tagName == "start-date")
+        setStartDate(stringToDateTime(element.text()));
+    else
+        // Not handled here
+        return KolabBase::loadAttribute(element);
 
-  // We handled this
-  return true;
+    // We handled this
+    return true;
 }
 
-bool Journal::saveAttributes( QDomElement& element ) const
+bool Journal::saveAttributes(QDomElement &element) const
 {
-  // Save the base class elements
-  KolabBase::saveAttributes( element );
+    // Save the base class elements
+    KolabBase::saveAttributes(element);
 
-  writeString( element, "summary", summary() );
-  writeString( element, "start-date", dateTimeToString( startDate() ) );
+    writeString(element, "summary", summary());
+    writeString(element, "start-date", dateTimeToString(startDate()));
 
-  return true;
+    return true;
 }
 
 
-bool Journal::loadXML( const QDomDocument& document )
+bool Journal::loadXML(const QDomDocument &document)
 {
-  QDomElement top = document.documentElement();
+    QDomElement top = document.documentElement();
 
-  if ( top.tagName() != "journal" ) {
-    qWarning( "XML error: Top tag was %s instead of the expected Journal",
-              top.tagName().ascii() );
-    return false;
-  }
+    if(top.tagName() != "journal")
+    {
+        qWarning("XML error: Top tag was %s instead of the expected Journal",
+                 top.tagName().ascii());
+        return false;
+    }
 
-  for ( QDomNode n = top.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    if ( n.isComment() )
-      continue;
-    if ( n.isElement() ) {
-      QDomElement e = n.toElement();
-      if ( !loadAttribute( e ) ) {
-        // Unhandled tag - save for later storage
-        //qDebug( "Unhandled tag: %s", e.toCString().data() );
-      }
-    } else
-      qDebug( "Node is not a comment or an element???" );
-  }
+    for(QDomNode n = top.firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        if(n.isComment())
+            continue;
+        if(n.isElement())
+        {
+            QDomElement e = n.toElement();
+            if(!loadAttribute(e))
+            {
+                // Unhandled tag - save for later storage
+                //qDebug( "Unhandled tag: %s", e.toCString().data() );
+            }
+        }
+        else
+            qDebug("Node is not a comment or an element???");
+    }
 
-  return true;
+    return true;
 }
 
 QString Journal::saveXML() const
 {
-  QDomDocument document = domTree();
-  QDomElement element = document.createElement( "journal" );
-  element.setAttribute( "version", "1.0" );
-  saveAttributes( element );
-  document.appendChild( element );
-  return document.toString();
+    QDomDocument document = domTree();
+    QDomElement element = document.createElement("journal");
+    element.setAttribute("version", "1.0");
+    saveAttributes(element);
+    document.appendChild(element);
+    return document.toString();
 }
 
-void Journal::saveTo( KCal::Journal* journal )
+void Journal::saveTo(KCal::Journal *journal)
 {
-  KolabBase::saveTo( journal );
+    KolabBase::saveTo(journal);
 
-  journal->setSummary( summary() );
-  journal->setDtStart( utcToLocal( startDate() ) );
+    journal->setSummary(summary());
+    journal->setDtStart(utcToLocal(startDate()));
 }
 
-void Journal::setFields( const KCal::Journal* journal )
+void Journal::setFields(const KCal::Journal *journal)
 {
-  // Set baseclass fields
-  KolabBase::setFields( journal );
+    // Set baseclass fields
+    KolabBase::setFields(journal);
 
-  // Set our own fields
-  setSummary( journal->summary() );
-  setStartDate( localToUTC( journal->dtStart() ) );
+    // Set our own fields
+    setSummary(journal->summary());
+    setStartDate(localToUTC(journal->dtStart()));
 }
 
 QString Journal::productID() const
 {
-  return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
+    return QString("KOrganizer ") + korgVersion + ", Kolab resource";
 }

@@ -38,28 +38,28 @@
 #include <kdepimmacros.h>
 namespace Kleo {
 
-  class Job;
+class Job;
 
-  /**
-     @short A progress dialog for Kleo::Jobs
-  */
-  class KDE_EXPORT ProgressDialog : public QProgressDialog {
+/**
+   @short A progress dialog for Kleo::Jobs
+*/
+class KDE_EXPORT ProgressDialog : public QProgressDialog {
     Q_OBJECT
-  public:
-    ProgressDialog( Job * job, const QString & baseText,
-		    QWidget * creator=0, const char * name=0, WFlags f=0  );
+public:
+    ProgressDialog(Job *job, const QString &baseText,
+                   QWidget *creator = 0, const char *name = 0, WFlags f = 0);
     ~ProgressDialog();
 
-  public slots:
+public slots:
     /*! reimplementation */
-    void setMinimumDuration( int ms );
+    void setMinimumDuration(int ms);
 
-  private slots:
-    void slotProgress( const QString & what, int current, int total );
+private slots:
+    void slotProgress(const QString &what, int current, int total);
     void slotDone();
-  private:
+private:
     QString mBaseText;
-  };
+};
 
 }
 

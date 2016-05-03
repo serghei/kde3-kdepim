@@ -38,64 +38,71 @@
 
 using namespace KCal;
 
-ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceRemoteConfig::ResourceRemoteConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
-  mainLayout->setSpacing( KDialog::spacingHint() );
+    resize(245, 115);
+    QGridLayout *mainLayout = new QGridLayout(this, 2, 2);
+    mainLayout->setSpacing(KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Download from:" ), this );
+    QLabel *label = new QLabel(i18n("Download from:"), this);
 
-  mDownloadUrl = new KURLRequester( this );
-  mDownloadUrl->setMode( KFile::File );
-  mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mDownloadUrl, 1, 1 );
+    mDownloadUrl = new KURLRequester(this);
+    mDownloadUrl->setMode(KFile::File);
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(mDownloadUrl, 1, 1);
 
-  label = new QLabel( i18n( "Upload to:" ), this );
-  mUploadUrl = new KURLRequester( this );
-  mUploadUrl->setMode( KFile::File );
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUploadUrl, 2, 1 );
+    label = new QLabel(i18n("Upload to:"), this);
+    mUploadUrl = new KURLRequester(this);
+    mUploadUrl->setMode(KFile::File);
+    mainLayout->addWidget(label, 2, 0);
+    mainLayout->addWidget(mUploadUrl, 2, 1);
 
-  mReloadConfig = new ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 3, 3, 0, 1 );
+    mReloadConfig = new ResourceCachedReloadConfig(this);
+    mainLayout->addMultiCellWidget(mReloadConfig, 3, 3, 0, 1);
 
-  mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 0, 1 );
+    mSaveConfig = new ResourceCachedSaveConfig(this);
+    mainLayout->addMultiCellWidget(mSaveConfig, 4, 4, 0, 1);
 }
 
-void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
+void ResourceRemoteConfig::loadSettings(KRES::Resource *resource)
 {
-  ResourceRemote *res = static_cast<ResourceRemote *>( resource );
-  if ( res ) {
-    mDownloadUrl->setURL( res->downloadUrl().url() );
-    mUploadUrl->setURL( res->uploadUrl().url() );
-    mReloadConfig->loadSettings( res );
-    mSaveConfig->loadSettings( res );
-  } else {
-    kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
-  }
-}
-
-void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
-{
-  ResourceRemote* res = static_cast<ResourceRemote*>( resource );
-  if ( res ) {
-    res->setDownloadUrl( KURL( mDownloadUrl->url() ) );
-    res->setUploadUrl( KURL( mUploadUrl->url() ) );
-    mReloadConfig->saveSettings( res );
-    mSaveConfig->saveSettings( res );
-
-
-    if ( mUploadUrl->url().isEmpty() && !resource->readOnly() ) {
-      KMessageBox::information( this, i18n( "You have specified no upload URL, "
-			    "the calendar will be read-only." ), "RemoteResourseNoUploadURL" );
-      resource->setReadOnly( true );
+    ResourceRemote *res = static_cast<ResourceRemote *>(resource);
+    if(res)
+    {
+        mDownloadUrl->setURL(res->downloadUrl().url());
+        mUploadUrl->setURL(res->uploadUrl().url());
+        mReloadConfig->loadSettings(res);
+        mSaveConfig->loadSettings(res);
     }
-  } else {
-    kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
-  }
+    else
+    {
+        kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
+    }
+}
+
+void ResourceRemoteConfig::saveSettings(KRES::Resource *resource)
+{
+    ResourceRemote *res = static_cast<ResourceRemote *>(resource);
+    if(res)
+    {
+        res->setDownloadUrl(KURL(mDownloadUrl->url()));
+        res->setUploadUrl(KURL(mUploadUrl->url()));
+        mReloadConfig->saveSettings(res);
+        mSaveConfig->saveSettings(res);
+
+
+        if(mUploadUrl->url().isEmpty() && !resource->readOnly())
+        {
+            KMessageBox::information(this, i18n("You have specified no upload URL, "
+                                                "the calendar will be read-only."), "RemoteResourseNoUploadURL");
+            resource->setReadOnly(true);
+        }
+    }
+    else
+    {
+        kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
+    }
 }
 
 #include "resourceremoteconfig.moc"

@@ -39,77 +39,77 @@
 
 DeleteUnsyncedHHState::DeleteUnsyncedHHState()
 {
-	fState = eDeleteUnsyncedHH;
+    fState = eDeleteUnsyncedHH;
 }
 
 DeleteUnsyncedHHState::~DeleteUnsyncedHHState()
 {
 }
 
-void DeleteUnsyncedHHState::startSync( ConduitAction *ca )
+void DeleteUnsyncedHHState::startSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Starting DeleteUnsyncedHHState." << endl;
-	
-	fPilotIndex = 0;
-	fNextState = new DeleteUnsyncedPCState();
-	
-	vccb->setHasNextRecord( true );
-	fStarted = true;
+    DEBUGKPILOT << fname << ": Starting DeleteUnsyncedHHState." << endl;
+
+    fPilotIndex = 0;
+    fNextState = new DeleteUnsyncedPCState();
+
+    vccb->setHasNextRecord(true);
+    fStarted = true;
 }
 
-void DeleteUnsyncedHHState::handleRecord( ConduitAction *ca )
+void DeleteUnsyncedHHState::handleRecord(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	PilotRecord *r = vccb->localDatabase()->readRecordByIndex( fPilotIndex++ );
-	// if either we don't have a record, or if we're copying everything
-	// from the handheld to the pc, then we don't have anything to do
-	// here.  the latter is because if we're copying HH->PC, then by
-	// definition, we will have everything from the HH on the PC and
-	// therefore can't possibly have anything that needs to be deleted
-	// from it.
-	if ( !r
-		|| ( vccb->syncMode().mode() == ConduitAction::SyncMode::eCopyHHToPC ) )
-	{
-		vccb->setHasNextRecord( false );
-		return;
-	}
+    PilotRecord *r = vccb->localDatabase()->readRecordByIndex(fPilotIndex++);
+    // if either we don't have a record, or if we're copying everything
+    // from the handheld to the pc, then we don't have anything to do
+    // here.  the latter is because if we're copying HH->PC, then by
+    // definition, we will have everything from the HH on the PC and
+    // therefore can't possibly have anything that needs to be deleted
+    // from it.
+    if(!r
+            || (vccb->syncMode().mode() == ConduitAction::SyncMode::eCopyHHToPC))
+    {
+        vccb->setHasNextRecord(false);
+        return;
+    }
 
-	KCal::Incidence *e = vccb->privateBase()->findIncidence( r->id() );
-	if ( !e )
-	{
-		DEBUGKPILOT << "Didn't find incidence with id = " << r->id()
-			<< ", deleting it" << endl;
-		vccb->deletePalmRecord( NULL, r );
-	}
+    KCal::Incidence *e = vccb->privateBase()->findIncidence(r->id());
+    if(!e)
+    {
+        DEBUGKPILOT << "Didn't find incidence with id = " << r->id()
+                    << ", deleting it" << endl;
+        vccb->deletePalmRecord(NULL, r);
+    }
 
-	KPILOT_DELETE( r );
+    KPILOT_DELETE(r);
 }
 
-void DeleteUnsyncedHHState::finishSync( ConduitAction *ca )
+void DeleteUnsyncedHHState::finishSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Finishing DeleteUnsyncedHHState." << endl;
-	vccb->setState( fNextState );
+    DEBUGKPILOT << fname << ": Finishing DeleteUnsyncedHHState." << endl;
+    vccb->setState(fNextState);
 }

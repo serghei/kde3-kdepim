@@ -57,90 +57,90 @@
 #include "kandyview.h"
 #include "kandyview.moc"
 
-KandyView::KandyView(CommandScheduler *scheduler,QWidget *parent)
+KandyView::KandyView(CommandScheduler *scheduler, QWidget *parent)
     : QWidget(parent)
 {
-  mModified = false;
-  mScheduler = scheduler;
+    mModified = false;
+    mScheduler = scheduler;
 
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
 
-  QSplitter *mainSplitter = new QSplitter( Horizontal, this );
-  topLayout->addWidget( mainSplitter );
+    QSplitter *mainSplitter = new QSplitter(Horizontal, this);
+    topLayout->addWidget(mainSplitter);
 
-  QWidget *commandBox = new QWidget( mainSplitter );
+    QWidget *commandBox = new QWidget(mainSplitter);
 
-  QBoxLayout *commandLayout = new QVBoxLayout( commandBox );
-  commandLayout->setMargin( KDialog::marginHint() );
-  commandLayout->setSpacing( KDialog::spacingHint() );
+    QBoxLayout *commandLayout = new QVBoxLayout(commandBox);
+    commandLayout->setMargin(KDialog::marginHint());
+    commandLayout->setSpacing(KDialog::spacingHint());
 
-  mCommandList = new QListView( commandBox );
-  mCommandList->addColumn( i18n( "Name" ) );
-  mCommandList->addColumn( i18n( "Command" ) );
-  mCommandList->addColumn( i18n( "Hex" ) );
-  commandLayout->addWidget( mCommandList );
+    mCommandList = new QListView(commandBox);
+    mCommandList->addColumn(i18n("Name"));
+    mCommandList->addColumn(i18n("Command"));
+    mCommandList->addColumn(i18n("Hex"));
+    commandLayout->addWidget(mCommandList);
 
-  connect( mCommandList, SIGNAL( doubleClicked(QListViewItem*) ),
-           SLOT( executeCommand() ) );
+    connect(mCommandList, SIGNAL(doubleClicked(QListViewItem *)),
+            SLOT(executeCommand()));
 
-  QPushButton *buttonAdd = new QPushButton( i18n("Add..."), commandBox );
-  commandLayout->addWidget( buttonAdd );
-  connect( buttonAdd, SIGNAL( clicked() ), SLOT( addCommand() ) );
+    QPushButton *buttonAdd = new QPushButton(i18n("Add..."), commandBox);
+    commandLayout->addWidget(buttonAdd);
+    connect(buttonAdd, SIGNAL(clicked()), SLOT(addCommand()));
 
-  QPushButton *buttonEdit = new QPushButton( i18n("Edit..."), commandBox );
-  commandLayout->addWidget( buttonEdit );
-  connect( buttonEdit, SIGNAL( clicked() ), SLOT( editCommand() ) );
+    QPushButton *buttonEdit = new QPushButton(i18n("Edit..."), commandBox);
+    commandLayout->addWidget(buttonEdit);
+    connect(buttonEdit, SIGNAL(clicked()), SLOT(editCommand()));
 
-  QPushButton *buttonDelete = new QPushButton( i18n("Delete"), commandBox );
-  commandLayout->addWidget( buttonDelete );
-  connect( buttonDelete, SIGNAL( clicked() ), SLOT( deleteCommand() ) );
+    QPushButton *buttonDelete = new QPushButton(i18n("Delete"), commandBox);
+    commandLayout->addWidget(buttonDelete);
+    connect(buttonDelete, SIGNAL(clicked()), SLOT(deleteCommand()));
 
-  QPushButton *buttonExecute = new QPushButton( i18n("Execute"), commandBox );
-  commandLayout->addWidget( buttonExecute );
-  connect( buttonExecute, SIGNAL( clicked() ), SLOT( executeCommand() ) );
+    QPushButton *buttonExecute = new QPushButton(i18n("Execute"), commandBox);
+    commandLayout->addWidget(buttonExecute);
+    connect(buttonExecute, SIGNAL(clicked()), SLOT(executeCommand()));
 
-  QSplitter *ioSplitter = new QSplitter( Vertical, mainSplitter );
+    QSplitter *ioSplitter = new QSplitter(Vertical, mainSplitter);
 
-  QWidget *inBox = new QWidget( ioSplitter );
-  
-  QBoxLayout *inLayout = new QVBoxLayout( inBox );
+    QWidget *inBox = new QWidget(ioSplitter);
 
-  QLabel *inLabel = new QLabel( i18n("Input:"), inBox );
-  inLabel->setMargin( 2 );
-  inLayout->addWidget( inLabel );
+    QBoxLayout *inLayout = new QVBoxLayout(inBox);
 
-  mInput = new QTextEdit( inBox );
-  inLayout->addWidget( mInput );
-  
-  QWidget *outBox = new QWidget( ioSplitter );
+    QLabel *inLabel = new QLabel(i18n("Input:"), inBox);
+    inLabel->setMargin(2);
+    inLayout->addWidget(inLabel);
 
-  QBoxLayout *outLayout = new QVBoxLayout( outBox );
+    mInput = new QTextEdit(inBox);
+    inLayout->addWidget(mInput);
 
-  QLabel *outLabel = new QLabel( i18n( "Output:"), outBox );
-  outLabel->setMargin( 2 );
-  outLayout->addWidget( outLabel );
+    QWidget *outBox = new QWidget(ioSplitter);
 
-  mOutput = new QTextEdit( outBox );
-  mOutput->setReadOnly( true );
-  outLayout->addWidget( mOutput );
+    QBoxLayout *outLayout = new QVBoxLayout(outBox);
 
-  QVBox *resultBox = new QVBox( mainSplitter );
+    QLabel *outLabel = new QLabel(i18n("Output:"), outBox);
+    outLabel->setMargin(2);
+    outLayout->addWidget(outLabel);
 
-  QLabel *resultLabel = new QLabel( i18n("Result:"), resultBox );
-  resultLabel->setMargin( 2 );
-    
-  mResultView = new QTextEdit( resultBox );
-  mResultView->setReadOnly( true );
-  
-  connect (mInput,SIGNAL(returnPressed()),SLOT(processLastLine()));
+    mOutput = new QTextEdit(outBox);
+    mOutput->setReadOnly(true);
+    outLayout->addWidget(mOutput);
 
-  connect(mScheduler->modem(),SIGNAL(gotLine(const char *)),
-          SLOT(appendOutput(const char *)));
+    QVBox *resultBox = new QVBox(mainSplitter);
 
-  connect(mScheduler,SIGNAL(result(const QString &)),
-          mResultView,SLOT(setText(const QString &)));
-  connect(mScheduler,SIGNAL(commandProcessed(ATCommand *)),
-          SLOT(setResult(ATCommand *)));
+    QLabel *resultLabel = new QLabel(i18n("Result:"), resultBox);
+    resultLabel->setMargin(2);
+
+    mResultView = new QTextEdit(resultBox);
+    mResultView->setReadOnly(true);
+
+    connect(mInput, SIGNAL(returnPressed()), SLOT(processLastLine()));
+
+    connect(mScheduler->modem(), SIGNAL(gotLine(const char *)),
+            SLOT(appendOutput(const char *)));
+
+    connect(mScheduler, SIGNAL(result(const QString &)),
+            mResultView, SLOT(setText(const QString &)));
+    connect(mScheduler, SIGNAL(commandProcessed(ATCommand *)),
+            SLOT(setResult(ATCommand *)));
 }
 
 KandyView::~KandyView()
@@ -157,163 +157,176 @@ void KandyView::print(QPainter *, int, int)
 void KandyView::importPhonebook()
 {
 #if 0
-  createMobileGui();
-  connect (mMobileGui,SIGNAL(phonebookRead()),mMobileGui,SLOT(writeKab()));
-  mMobileGui->readPhonebook();
+    createMobileGui();
+    connect(mMobileGui, SIGNAL(phonebookRead()), mMobileGui, SLOT(writeKab()));
+    mMobileGui->readPhonebook();
 #endif
 }
 
-void KandyView::slotSetTitle(const QString& title)
+void KandyView::slotSetTitle(const QString &title)
 {
     emit signalChangeCaption(title);
 }
 
 void KandyView::processLastLine()
 {
-  int para = 0;
-  int row = 0;
-  mInput->getCursorPosition( &para, &row );
-  
-  if ( para > 0 ) {
-    mLastInput = mInput->text( para - 1 );
+    int para = 0;
+    int row = 0;
+    mInput->getCursorPosition(&para, &row);
 
-    kdDebug(5960) << "processLastLine(): " << mLastInput << endl;
+    if(para > 0)
+    {
+        mLastInput = mInput->text(para - 1);
 
-    mScheduler->execute(mLastInput);
-  }
+        kdDebug(5960) << "processLastLine(): " << mLastInput << endl;
+
+        mScheduler->execute(mLastInput);
+    }
 }
 
 void KandyView::appendOutput(const char *line)
 {
-//  kdDebug(5960) << "OUT: " << line << endl;
-  mOutput->append(line);
-  mOutput->setCursorPosition(mOutput->paragraphs()-1,0);
+    //  kdDebug(5960) << "OUT: " << line << endl;
+    mOutput->append(line);
+    mOutput->setCursorPosition(mOutput->paragraphs() - 1, 0);
 }
 
 void KandyView::setResult(ATCommand *command)
 {
-  if (command == 0) {
-    kdDebug(5960) << "KandyView::setResult(): Error! No command." << endl;
-    mResultView->setText(i18n("Error"));
-    return;
-  }
-  
-//  kdDebug(5960) << "KandyView::setResult(): " << endl << mResult << endl
-//            << mLastCommand->processOutput(mResult) << endl;
-  
-  mResultView->setText(command->cmdName() + ":\n" + command->processOutput());
+    if(command == 0)
+    {
+        kdDebug(5960) << "KandyView::setResult(): Error! No command." << endl;
+        mResultView->setText(i18n("Error"));
+        return;
+    }
+
+    //  kdDebug(5960) << "KandyView::setResult(): " << endl << mResult << endl
+    //            << mLastCommand->processOutput(mResult) << endl;
+
+    mResultView->setText(command->cmdName() + ":\n" + command->processOutput());
 }
 
 void KandyView::addCommand()
 {
-  ATCommand *cmd = new ATCommand(mLastInput);
+    ATCommand *cmd = new ATCommand(mLastInput);
 
-  CmdPropertiesDialog *dlg = new CmdPropertiesDialog(cmd,this,"cmdprop",true);
+    CmdPropertiesDialog *dlg = new CmdPropertiesDialog(cmd, this, "cmdprop", true);
 
-  int result = dlg->exec();
+    int result = dlg->exec();
 
-  if (result == QDialog::Accepted) {
-    new CommandItem(mCommandList,cmd);
-    mScheduler->commandSet()->addCommand(cmd);
-    setModified();
-  } else {
-    delete cmd;
-  }
+    if(result == QDialog::Accepted)
+    {
+        new CommandItem(mCommandList, cmd);
+        mScheduler->commandSet()->addCommand(cmd);
+        setModified();
+    }
+    else
+    {
+        delete cmd;
+    }
 }
 
 void KandyView::editCommand()
 {
-  QListViewItem *item = mCommandList->currentItem();
-  if (item) {
-    CommandItem *cmdItem = (CommandItem *)item;
-    ATCommand *cmd = cmdItem->command();
+    QListViewItem *item = mCommandList->currentItem();
+    if(item)
+    {
+        CommandItem *cmdItem = (CommandItem *)item;
+        ATCommand *cmd = cmdItem->command();
 
-    CmdPropertiesDialog *dlg = new CmdPropertiesDialog(cmd,this,"cmdprop",true);
+        CmdPropertiesDialog *dlg = new CmdPropertiesDialog(cmd, this, "cmdprop", true);
 
-    int result = dlg->exec();
+        int result = dlg->exec();
 
-    if (result == QDialog::Accepted) {
-      cmdItem->setItemText();
-      setModified();
+        if(result == QDialog::Accepted)
+        {
+            cmdItem->setItemText();
+            setModified();
+        }
     }
-  }
 }
 
 void KandyView::executeCommand()
 {
-  CommandItem *item = (CommandItem *)(mCommandList->currentItem());
-  if (item) {
-    ATCommand *cmd = item->command();
-    QPtrList<ATParameter> paraList = cmd->parameters();
-    for(uint i=0;i<paraList.count();++i) {
-      ATParameter *p = paraList.at(i);
-      if (p->userInput()) {
-        bool ok = false;
-        QString value = KInputDialog::getText(QString::null,
-            i18n("Enter value for %1:").arg(p->name()),QString::null,&ok,this);
-        if (!ok)
-          return;
-        p->setValue(value);
-      }
+    CommandItem *item = (CommandItem *)(mCommandList->currentItem());
+    if(item)
+    {
+        ATCommand *cmd = item->command();
+        QPtrList<ATParameter> paraList = cmd->parameters();
+        for(uint i = 0; i < paraList.count(); ++i)
+        {
+            ATParameter *p = paraList.at(i);
+            if(p->userInput())
+            {
+                bool ok = false;
+                QString value = KInputDialog::getText(QString::null,
+                                                      i18n("Enter value for %1:").arg(p->name()), QString::null, &ok, this);
+                if(!ok)
+                    return;
+                p->setValue(value);
+            }
+        }
+        kdDebug(5960) << "KandyView::executeCommand(): " << cmd->cmd() << endl;
+        mScheduler->execute(cmd);
     }
-    kdDebug(5960) << "KandyView::executeCommand(): " << cmd->cmd() << endl;
-    mScheduler->execute(cmd);
-  }
 }
 
 void KandyView::deleteCommand()
 {
-  CommandItem *item = dynamic_cast<CommandItem *>(mCommandList->currentItem());
-  if (item) {
-    mScheduler->commandSet()->deleteCommand(item->command());
-    delete item;
-    setModified();
-  }
+    CommandItem *item = dynamic_cast<CommandItem *>(mCommandList->currentItem());
+    if(item)
+    {
+        mScheduler->commandSet()->deleteCommand(item->command());
+        delete item;
+        setModified();
+    }
 }
 
-bool KandyView::loadFile(const QString& filename)
+bool KandyView::loadFile(const QString &filename)
 {
-  mCommandList->clear();
+    mCommandList->clear();
 
-  if (!mScheduler->loadProfile(filename)) return false;
+    if(!mScheduler->loadProfile(filename)) return false;
 
-  QPtrList<ATCommand> *cmds = mScheduler->commandSet()->commandList();
+    QPtrList<ATCommand> *cmds = mScheduler->commandSet()->commandList();
 
-  for(uint i=0;i<cmds->count();++i) {
-    new CommandItem(mCommandList,cmds->at(i));
-  }
+    for(uint i = 0; i < cmds->count(); ++i)
+    {
+        new CommandItem(mCommandList, cmds->at(i));
+    }
 
-  KConfig *config = KGlobal::config();
-  config->setGroup("General");
-  config->writeEntry("CurrentProfile",filename);
+    KConfig *config = KGlobal::config();
+    config->setGroup("General");
+    config->writeEntry("CurrentProfile", filename);
 
-  setModified(false);
+    setModified(false);
 
-  return true;
+    return true;
 }
 
-bool KandyView::saveFile(const QString& filename)
+bool KandyView::saveFile(const QString &filename)
 {
-  if (!mScheduler->saveProfile(filename)) return false;
+    if(!mScheduler->saveProfile(filename)) return false;
 
-  KConfig *config = KGlobal::config();
-  config->setGroup("General");
-  config->writeEntry("CurrentProfile",filename);
+    KConfig *config = KGlobal::config();
+    config->setGroup("General");
+    config->writeEntry("CurrentProfile", filename);
 
-  setModified(false);
+    setModified(false);
 
-  return true;
+    return true;
 }
 
 void KandyView::setModified(bool modified)
 {
-  if (modified != mModified) {
-    mModified = modified;
-    emit modifiedChanged(mModified);
-  }
+    if(modified != mModified)
+    {
+        mModified = modified;
+        emit modifiedChanged(mModified);
+    }
 }
 
 bool KandyView::isModified()
 {
-  return mModified;
+    return mModified;
 }

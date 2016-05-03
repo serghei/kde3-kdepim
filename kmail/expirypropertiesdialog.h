@@ -28,41 +28,40 @@ class KMFolder;
 
 namespace KMail {
 
-  class FolderRequester;
+class FolderRequester;
 
-class ExpiryPropertiesDialog : public KDialogBase
-{
+class ExpiryPropertiesDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-    ExpiryPropertiesDialog( KMFolderTree* tree, KMFolder* folder );
+    ExpiryPropertiesDialog(KMFolderTree *tree, KMFolder *folder);
     ~ExpiryPropertiesDialog();
 
-    QCheckBox* expireReadMailCB;
-    QSpinBox* expireReadMailSB;
-    QLabel* labelDays;
-    QCheckBox* expireUnreadMailCB;
-    QSpinBox* expireUnreadMailSB;
-    QLabel* labelDays2;
-    QLabel* expiryActionLabel;
-    QRadioButton* moveToRB;
+    QCheckBox *expireReadMailCB;
+    QSpinBox *expireReadMailSB;
+    QLabel *labelDays;
+    QCheckBox *expireUnreadMailCB;
+    QSpinBox *expireUnreadMailSB;
+    QLabel *labelDays2;
+    QLabel *expiryActionLabel;
+    QRadioButton *moveToRB;
     FolderRequester *folderSelector;
-    QRadioButton* deletePermanentlyRB;
-    QLabel* note;
-    QButtonGroup* actionsGroup;
+    QRadioButton *deletePermanentlyRB;
+    QLabel *note;
+    QButtonGroup *actionsGroup;
 
 protected slots:
     void slotOk();
     void slotUpdateControls();
 
 protected:
-    QVBoxLayout* globalVBox;
-    QHBoxLayout* readHBox;
-    QHBoxLayout* unreadHBox;
-    QHBoxLayout* expiryActionHBox;
-    QVBoxLayout* actionsHBox;
-    QHBoxLayout* moveToHBox;
-    KMFolder* mFolder;
+    QVBoxLayout *globalVBox;
+    QHBoxLayout *readHBox;
+    QHBoxLayout *unreadHBox;
+    QHBoxLayout *expiryActionHBox;
+    QVBoxLayout *actionsHBox;
+    QHBoxLayout *moveToHBox;
+    KMFolder *mFolder;
 };
 } // namespace
 #endif // EXPIRYPROPERTIESDIALOG_H

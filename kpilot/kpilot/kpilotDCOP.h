@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -33,41 +33,44 @@
 #include <dcopobject.h>
 
 
-class KPilotDCOP : virtual public DCOPObject
-{
-	K_DCOP
+class KPilotDCOP : virtual public DCOPObject {
+    K_DCOP
 
 public:
-	enum DaemonMessages {
-		None=0,
-		StartOfHotSync=1,
-		EndOfHotSync=2,
-		DaemonQuit=4 } ;
-	enum KPilotStatus {
-		Startup=1,
-		WaitingForDaemon=2,
-		Normal=10,
-		UIBusy=100,
-		Error=101 } ;
+    enum DaemonMessages
+    {
+        None = 0,
+        StartOfHotSync = 1,
+        EndOfHotSync = 2,
+        DaemonQuit = 4
+    } ;
+    enum KPilotStatus
+    {
+        Startup = 1,
+        WaitingForDaemon = 2,
+        Normal = 10,
+        UIBusy = 100,
+        Error = 101
+    } ;
 
 k_dcop:
-	/**
-	* This is the method the daemon uses to report
-	* changes in its state.
-	*/
-	virtual ASYNC daemonStatus(int) = 0;
+    /**
+    * This is the method the daemon uses to report
+    * changes in its state.
+    */
+    virtual ASYNC daemonStatus(int) = 0;
 
-	/**
-	* This is the method the daemon uses to popup
-	* the configure dialog.
-	*/
-	virtual ASYNC configure() = 0;
-	virtual ASYNC configureWizard() = 0;
+    /**
+    * This is the method the daemon uses to popup
+    * the configure dialog.
+    */
+    virtual ASYNC configure() = 0;
+    virtual ASYNC configureWizard() = 0;
 
-	/**
-	* Report KPilot's state back to the daemon.
-	*/
-	virtual int kpilotStatus() = 0;
+    /**
+    * Report KPilot's state back to the daemon.
+    */
+    virtual int kpilotStatus() = 0;
 } ;
 
 

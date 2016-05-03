@@ -28,34 +28,32 @@ class KNArticleFilter;
 class KNFilterDialog;
 
 
-class KNFilterSelectAction : public KActionMenu
-{
-  Q_OBJECT
+class KNFilterSelectAction : public KActionMenu {
+    Q_OBJECT
 
-  public:
-    KNFilterSelectAction( const QString& text, const QString& pix,
-                          QObject* parent, const char *name );
+public:
+    KNFilterSelectAction(const QString &text, const QString &pix,
+                         QObject *parent, const char *name);
     ~KNFilterSelectAction();
 
     void setCurrentItem(int id);
 
-  protected slots:
+protected slots:
     void slotMenuActivated(int id);
 
-  signals:
+signals:
     void activated(int id);
 
-  private:
+private:
     int currentItem;
 };
 
 
-class KNFilterManager : public QObject
-{
-  Q_OBJECT
+class KNFilterManager : public QObject {
+    Q_OBJECT
 
-  public:
-    KNFilterManager(QObject * parent = 0, const char * name = 0);
+public:
+    KNFilterManager(QObject *parent = 0, const char *name = 0);
     ~KNFilterManager();
 
     void readOptions();
@@ -63,7 +61,10 @@ class KNFilterManager : public QObject
 
     void prepareShutdown();
 
-    KNArticleFilter* currentFilter()        { return currFilter; }
+    KNArticleFilter *currentFilter()
+    {
+        return currFilter;
+    }
 
     void startConfig(KNConfig::FilterListWidget *fs);
     void endConfig();
@@ -79,25 +80,25 @@ class KNFilterManager : public QObject
     // be available when the config dialog is called
     void setMenuAction(KNFilterSelectAction *a, KAction *keybA);
 
-  protected:
+protected:
     void loadFilters();
     void saveFilterLists();
-    KNArticleFilter* setFilter(const int id);
-    KNArticleFilter* byID(int id);
+    KNArticleFilter *setFilter(const int id);
+    KNArticleFilter *byID(int id);
     void updateMenu();
 
-    QValueList<KNArticleFilter*> mFilterList;
+    QValueList<KNArticleFilter *> mFilterList;
     KNConfig::FilterListWidget *fset;
     KNArticleFilter *currFilter;
     KNFilterSelectAction *a_ctFilter;
     QValueList<int> menuOrder;
     bool commitNeeded;
 
-  protected slots:
+protected slots:
     void slotMenuActivated(int id);
     void slotShowFilterChooser();
 
-  signals:
+signals:
     void filterChanged(KNArticleFilter *f);
 
 };

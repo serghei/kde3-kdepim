@@ -30,30 +30,28 @@
 
 class KPluginInfo;
 
-class PluginView : public KListView
-{
-  Q_OBJECT
+class PluginView : public KListView {
+    Q_OBJECT
 
-  public:
-    PluginView( QWidget *parent, const char *name = 0 );
+public:
+    PluginView(QWidget *parent, const char *name = 0);
     ~PluginView();
 };
 
-class KCMKontactSummary : public KCModule
-{
-  Q_OBJECT
+class KCMKontactSummary : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMKontactSummary( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMKontactSummary(QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
     virtual void save();
     virtual void defaults();
 
-  private slots:
-    void itemClicked( QListViewItem* );
+private slots:
+    void itemClicked(QListViewItem *);
 
-  private:
+private:
     PluginView *mPluginView;
 
     KPluginInfo::List mPluginList;

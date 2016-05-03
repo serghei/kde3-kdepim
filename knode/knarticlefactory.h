@@ -32,50 +32,50 @@ class KNSendErrorDialog;
 class KNNntpAccount;
 
 namespace KNConfig {
-  class Identity;
+class Identity;
 }
 
 
 class KNArticleFactory : public QObject , public KNJobConsumer {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum replyType { RTgroup, RTmail, RTboth };
 
-    KNArticleFactory(QObject *p=0, const char *n=0);
+    KNArticleFactory(QObject *p = 0, const char *n = 0);
     ~KNArticleFactory();
 
     //factory methods
     void createPosting(KNNntpAccount *a);
     void createPosting(KNGroup *g);
-    void createReply(KNRemoteArticle *a, QString selectedText=QString::null, bool post=true, bool mail=false);
+    void createReply(KNRemoteArticle *a, QString selectedText = QString::null, bool post = true, bool mail = false);
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);
     void createMail(KMime::Headers::AddressField *address);
 
     // send a mail via an external program...
-    void sendMailExternal(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
+    void sendMailExternal(const QString &address = QString::null, const QString &subject = QString::null, const QString &body = QString::null);
 
     //article handling
     void edit(KNLocalArticle *a);
-    void sendArticles( KNLocalArticle::List &l, bool now = true );
+    void sendArticles(KNLocalArticle::List &l, bool now = true);
     void sendOutbox();
 
     //composer handling
     bool closeComposeWindows();    // try to close all composers, return false if user objects
     void deleteComposerForArticle(KNLocalArticle *a);
-    KNComposer* findComposer(KNLocalArticle *a);
+    KNComposer *findComposer(KNLocalArticle *a);
     void configChanged();
 
-  protected:
+protected:
     //job handling
     void processJob(KNJobData *j); //reimplemented from KNJobConsumer
 
     //article generation
     // col: group or account
-    KNLocalArticle* newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders=true, KNArticle *origPost=0);
+    KNLocalArticle *newArticle(KNCollection *col, QString &sig, QCString defChset, bool withXHeaders = true, KNArticle *origPost = 0);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);
@@ -83,10 +83,10 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //send-errors
     void showSendErrorDialog();
 
-    QValueList<KNComposer*> mCompList;
+    QValueList<KNComposer *> mCompList;
     KNSendErrorDialog *s_endErrDlg;
 
-  protected slots:
+protected slots:
     void slotComposerDone(KNComposer *com);
     void slotSendErrorDialogDone();
 
@@ -95,19 +95,19 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
 class KNSendErrorDialog : public KDialogBase  {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNSendErrorDialog();
     ~KNSendErrorDialog();
 
     void append(const QString &subject, const QString &error);
 
-  protected:
+protected:
     class LBoxItem : public KNListBoxItem {
-      public:
-        LBoxItem(const QString &e, const QString &t, QPixmap *p=0)
-          : KNListBoxItem(t, p) , error(e)  {}
+    public:
+        LBoxItem(const QString &e, const QString &t, QPixmap *p = 0)
+            : KNListBoxItem(t, p) , error(e)  {}
         ~LBoxItem() {}
 
         QString error;
@@ -117,7 +117,7 @@ class KNSendErrorDialog : public KDialogBase  {
     QLabel *e_rror;
     QPixmap p_ixmap;
 
-  protected slots:
+protected slots:
     void slotHighlighted(int idx);
 };
 

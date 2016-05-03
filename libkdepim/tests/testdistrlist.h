@@ -21,8 +21,7 @@
 
 #include <qobject.h>
 
-class TestDistrList : public QObject
-{
+class TestDistrList : public QObject {
     Q_OBJECT
 
 public:
@@ -40,7 +39,7 @@ public:
     void testDeleteList();
 
 private:
-    bool check(const QString& txt, QString a, QString b);
+    bool check(const QString &txt, QString a, QString b);
 };
 
 #endif

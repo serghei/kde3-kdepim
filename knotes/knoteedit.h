@@ -35,23 +35,22 @@ class KFontAction;
 class KFontSizeAction;
 
 
-class KDE_EXPORT KNoteEdit : public KTextEdit
-{
+class KDE_EXPORT KNoteEdit : public KTextEdit {
     Q_OBJECT
 public:
-    KNoteEdit( KActionCollection *actions, QWidget *parent=0, const char *name=0 );
+    KNoteEdit(KActionCollection *actions, QWidget *parent = 0, const char *name = 0);
     ~KNoteEdit();
 
-    void setText( const QString& text );
-    void setTextFont( const QFont& font );
-    void setTextColor( const QColor& color );
-    void setTabStop( int tabs );
-    void setAutoIndentMode( bool newmode );
+    void setText(const QString &text);
+    void setTextFont(const QFont &font);
+    void setTextColor(const QColor &color);
+    void setTabStop(int tabs);
+    void setAutoIndentMode(bool newmode);
 
 public slots:
-    virtual void setTextFormat( TextFormat f );
+    virtual void setTextFormat(TextFormat f);
 
-    void textStrikeOut( bool );
+    void textStrikeOut(bool);
 
     void textColor();
 
@@ -69,22 +68,25 @@ public slots:
     //void textDecreaseIndent();
 
 protected:
-    virtual void contentsDragEnterEvent( QDragEnterEvent *e );
-    virtual void contentsDropEvent( QDropEvent *e );
+    virtual void contentsDragEnterEvent(QDragEnterEvent *e);
+    virtual void contentsDropEvent(QDropEvent *e);
 
 private slots:
     void slotReturnPressed();
 
-    void fontChanged( const QFont &f );
-    void colorChanged( const QColor &c );
-    void alignmentChanged( int a );
-    void verticalAlignmentChanged( VerticalAlignment a );
+    void fontChanged(const QFont &f);
+    void colorChanged(const QColor &c);
+    void alignmentChanged(int a);
+    void verticalAlignmentChanged(VerticalAlignment a);
 
 private:
     void autoIndent();
 
-    virtual bool linksEnabled() const { return true; }
-    virtual void emitLinkClicked( const QString &s );
+    virtual bool linksEnabled() const
+    {
+        return true;
+    }
+    virtual void emitLinkClicked(const QString &s);
 
     void enableRichTextActions();
     void disableRichTextActions();

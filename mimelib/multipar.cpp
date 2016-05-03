@@ -26,9 +26,9 @@
 
 
 MultipartBodyPart::MultipartBodyPart()
-  : mType("Text"),
-    mSubtype("Plain"),
-    mCte("7bit")
+    : mType("Text"),
+      mSubtype("Plain"),
+      mCte("7bit")
 {
 }
 
@@ -38,7 +38,7 @@ MultipartBodyPart::~MultipartBodyPart()
 }
 
 
-const DwString& MultipartBodyPart::TypeStr() const
+const DwString &MultipartBodyPart::TypeStr() const
 {
     return mType;
 }
@@ -51,7 +51,7 @@ int MultipartBodyPart::Type() const
 }
 
 
-void MultipartBodyPart::SetTypeStr(const DwString& aStr)
+void MultipartBodyPart::SetTypeStr(const DwString &aStr)
 {
     mType = aStr;
 }
@@ -64,7 +64,7 @@ void MultipartBodyPart::SetType(int aType)
 
 
 
-const DwString& MultipartBodyPart::SubtypeStr() const
+const DwString &MultipartBodyPart::SubtypeStr() const
 {
     return mSubtype;
 }
@@ -77,7 +77,7 @@ int MultipartBodyPart::Subtype() const
 }
 
 
-void MultipartBodyPart::SetSubtypeStr(const DwString& aStr)
+void MultipartBodyPart::SetSubtypeStr(const DwString &aStr)
 {
     mSubtype = aStr;
 }
@@ -89,7 +89,7 @@ void MultipartBodyPart::SetSubtype(int aSubtype)
 }
 
 
-const DwString& MultipartBodyPart::ContentTransferEncodingStr() const
+const DwString &MultipartBodyPart::ContentTransferEncodingStr() const
 {
     return mCte;
 }
@@ -102,7 +102,7 @@ int MultipartBodyPart::ContentTransferEncoding() const
 }
 
 
-void MultipartBodyPart::SetContentTransferEncodingStr(const DwString& aStr)
+void MultipartBodyPart::SetContentTransferEncodingStr(const DwString &aStr)
 {
     mCte = aStr;
 }
@@ -114,7 +114,7 @@ void MultipartBodyPart::SetContentTransferEncoding(int aCte)
 }
 
 
-const DwString& MultipartBodyPart::CteStr() const
+const DwString &MultipartBodyPart::CteStr() const
 {
     return mCte;
 }
@@ -127,7 +127,7 @@ int MultipartBodyPart::Cte() const
 }
 
 
-void MultipartBodyPart::SetCteStr(const DwString& aStr)
+void MultipartBodyPart::SetCteStr(const DwString &aStr)
 {
     mCte = aStr;
 }
@@ -139,36 +139,36 @@ void MultipartBodyPart::SetCte(int aCte)
 }
 
 
-const DwString& MultipartBodyPart::ContentDescription() const
+const DwString &MultipartBodyPart::ContentDescription() const
 {
     return mContentDescription;
 }
 
 
-void MultipartBodyPart::SetContentDescription(const DwString& aStr)
+void MultipartBodyPart::SetContentDescription(const DwString &aStr)
 {
     mContentDescription = aStr;
 }
 
 
-const DwString& MultipartBodyPart::ContentDisposition() const
+const DwString &MultipartBodyPart::ContentDisposition() const
 {
     return mContentDisposition;
 }
 
-void MultipartBodyPart::SetContentDisposition(const DwString& aStr)
+void MultipartBodyPart::SetContentDisposition(const DwString &aStr)
 {
     mContentDisposition = aStr;
 }
 
 
-const DwString& MultipartBodyPart::Body() const
+const DwString &MultipartBodyPart::Body() const
 {
     return mBody;
 }
 
 
-void MultipartBodyPart::SetBody(const DwString& aStr)
+void MultipartBodyPart::SetBody(const DwString &aStr)
 {
     mBody = aStr;
 }
@@ -182,8 +182,8 @@ MultipartMessage::MultipartMessage()
 }
 
 
-MultipartMessage::MultipartMessage(DwMessage* aMsg)
-  : BasicMessage(aMsg)
+MultipartMessage::MultipartMessage(DwMessage *aMsg)
+    : BasicMessage(aMsg)
 {
 }
 
@@ -199,7 +199,7 @@ void MultipartMessage::SetAutomaticFields()
 
     // Set the type to 'Multipart' and the subtype to 'Mixed'
 
-    DwMediaType& contentType = mMessage->Headers().ContentType();
+    DwMediaType &contentType = mMessage->Headers().ContentType();
     contentType.SetType(DwMime::kTypeMultipart);
     contentType.SetSubtype(DwMime::kSubtypeMixed);
 
@@ -212,8 +212,9 @@ void MultipartMessage::SetAutomaticFields()
 int MultipartMessage::NumberOfParts() const
 {
     int count = 0;
-    DwBodyPart* part = mMessage->Body().FirstBodyPart();
-    while (part) {
+    DwBodyPart *part = mMessage->Body().FirstBodyPart();
+    while(part)
+    {
         ++count;
         part = part->Next();
     }
@@ -221,29 +222,33 @@ int MultipartMessage::NumberOfParts() const
 }
 
 
-void MultipartMessage::BodyPart(int aIdx, MultipartBodyPart& aPart)
+void MultipartMessage::BodyPart(int aIdx, MultipartBodyPart &aPart)
 {
     // Get the DwBodyPart for this index
 
-    DwBodyPart* part = mMessage->Body().FirstBodyPart();
-    for (int curIdx=0; curIdx < aIdx && part; ++curIdx) {
+    DwBodyPart *part = mMessage->Body().FirstBodyPart();
+    for(int curIdx = 0; curIdx < aIdx && part; ++curIdx)
+    {
         part = part->Next();
     }
 
     // If the DwBodyPart was found get the header fields and body
 
-    if (part != 0) {
-        DwHeaders& headers = part->Headers();
+    if(part != 0)
+    {
+        DwHeaders &headers = part->Headers();
 
         // Content-type
 
-        if (headers.HasContentType()) {
-            const DwString& type    = headers.ContentType().TypeStr();
-            const DwString& subtype = headers.ContentType().SubtypeStr();
+        if(headers.HasContentType())
+        {
+            const DwString &type    = headers.ContentType().TypeStr();
+            const DwString &subtype = headers.ContentType().SubtypeStr();
             aPart.SetTypeStr(type);
             aPart.SetSubtypeStr(subtype);
         }
-        else {
+        else
+        {
             // Set to defaults
             aPart.SetTypeStr("Text");
             aPart.SetSubtypeStr("Plain");
@@ -251,45 +256,52 @@ void MultipartMessage::BodyPart(int aIdx, MultipartBodyPart& aPart)
 
         // Content-transfer-encoding
 
-        if (headers.HasContentTransferEncoding()) {
-            const DwString& cte = headers.ContentTransferEncoding().AsString();
+        if(headers.HasContentTransferEncoding())
+        {
+            const DwString &cte = headers.ContentTransferEncoding().AsString();
             aPart.SetCteStr(cte);
         }
-        else {
+        else
+        {
             // Set to default
             aPart.SetCteStr("7bit");
         }
 
         // Content-description
 
-        if (headers.HasContentDescription()) {
-            const DwString& desc = headers.ContentDescription().AsString();
+        if(headers.HasContentDescription())
+        {
+            const DwString &desc = headers.ContentDescription().AsString();
             aPart.SetContentDescription(desc);
         }
-        else {
+        else
+        {
             aPart.SetContentDescription("");
         }
 
         // Content-disposition
 
-        if (headers.HasContentDisposition()) {
-            const DwString& disp = headers.ContentDisposition().AsString();
+        if(headers.HasContentDisposition())
+        {
+            const DwString &disp = headers.ContentDisposition().AsString();
             aPart.SetContentDisposition(disp);
         }
-        else {
+        else
+        {
             aPart.SetContentDisposition("");
         }
 
         // Body
 
-        const DwString& body = part->Body().AsString();
+        const DwString &body = part->Body().AsString();
         aPart.SetBody(body);
     }
 
     // If the body part was not found, set all MultipartBodyPart attributes
     // to empty values.  This only happens if you don't pay attention to
     // the value returned from NumberOfParts().
-    else {
+    else
+    {
         aPart.SetTypeStr("");
         aPart.SetSubtypeStr("");
         aPart.SetCteStr("");
@@ -300,79 +312,92 @@ void MultipartMessage::BodyPart(int aIdx, MultipartBodyPart& aPart)
 }
 
 
-void MultipartMessage::SetBodyPart(int aIdx, const MultipartBodyPart& aPart)
+void MultipartMessage::SetBodyPart(int aIdx, const MultipartBodyPart &aPart)
 {
-    DwBody& body = mMessage->Body();
+    DwBody &body = mMessage->Body();
     int numParts = NumberOfParts();
-    DwBodyPart* part = 0;
+    DwBodyPart *part = 0;
     // If indexed part exists already, just replace its values
-    if (0 <= aIdx && aIdx < numParts) {
+    if(0 <= aIdx && aIdx < numParts)
+    {
         part = body.FirstBodyPart();
-        for (int curIdx=0; curIdx < aIdx; ++curIdx) {
+        for(int curIdx = 0; curIdx < aIdx; ++curIdx)
+        {
             part = part->Next();
         }
     }
     // Otherwise, add as many new parts as necessary.
-    else if (numParts <= aIdx) {
-        while (numParts <= aIdx) {
+    else if(numParts <= aIdx)
+    {
+        while(numParts <= aIdx)
+        {
             part = DwBodyPart::NewBodyPart(mEmptyString, 0);
             body.AddBodyPart(part);
             ++numParts;
         }
     }
-    else /* if (aIdx < 0) */ {
+    else /* if (aIdx < 0) */
+    {
         // error!
         return;
     }
 
-    const DwString& type     = aPart.TypeStr();
-    const DwString& subtype  = aPart.SubtypeStr();
-    const DwString& cte      = aPart.CteStr();
-    const DwString& contDesc = aPart.ContentDescription();
-    const DwString& contDisp = aPart.ContentDisposition();
-    const DwString& bodyStr  = aPart.Body();
+    const DwString &type     = aPart.TypeStr();
+    const DwString &subtype  = aPart.SubtypeStr();
+    const DwString &cte      = aPart.CteStr();
+    const DwString &contDesc = aPart.ContentDescription();
+    const DwString &contDisp = aPart.ContentDisposition();
+    const DwString &bodyStr  = aPart.Body();
 
-    DwHeaders& headers = part->Headers();
-    if (!type.empty() && !subtype.empty()) {
+    DwHeaders &headers = part->Headers();
+    if(!type.empty() && !subtype.empty())
+    {
         headers.ContentType().SetTypeStr(type);
         headers.ContentType().SetSubtypeStr(subtype);
     }
-    if (!cte.empty()) {
+    if(!cte.empty())
+    {
         headers.Cte().FromString(cte);
     }
-    if (!contDesc.empty()) {
+    if(!contDesc.empty())
+    {
         headers.ContentDescription().FromString(contDesc);
     }
-    if (!contDisp.empty()) {
+    if(!contDisp.empty())
+    {
         headers.ContentDisposition().FromString(contDisp);
     }
     part->Body().FromString(bodyStr);
 }
 
 
-void MultipartMessage::AddBodyPart(const MultipartBodyPart& aPart)
+void MultipartMessage::AddBodyPart(const MultipartBodyPart &aPart)
 {
-    DwBodyPart* part = DwBodyPart::NewBodyPart(mEmptyString, 0);
+    DwBodyPart *part = DwBodyPart::NewBodyPart(mEmptyString, 0);
 
-    const DwString& type     = aPart.TypeStr();
-    const DwString& subtype  = aPart.SubtypeStr();
-    const DwString& cte      = aPart.CteStr();
-    const DwString& contDesc = aPart.ContentDescription();
-    const DwString& contDisp = aPart.ContentDisposition();
-    const DwString& bodyStr  = aPart.Body();
+    const DwString &type     = aPart.TypeStr();
+    const DwString &subtype  = aPart.SubtypeStr();
+    const DwString &cte      = aPart.CteStr();
+    const DwString &contDesc = aPart.ContentDescription();
+    const DwString &contDisp = aPart.ContentDisposition();
+    const DwString &bodyStr  = aPart.Body();
 
-    DwHeaders& headers = part->Headers();
-    if (!type.empty() && !subtype.empty()) {
+    DwHeaders &headers = part->Headers();
+    if(!type.empty() && !subtype.empty())
+    {
         headers.ContentType().SetTypeStr(type);
         headers.ContentType().SetSubtypeStr(subtype);
     }
-    if (!cte.empty()) {
+    if(!cte.empty())
+    {
         headers.Cte().FromString(cte);
     }
-    if (!contDesc.empty()) {
+    if(!contDesc.empty())
+    {
         headers.ContentDescription().FromString(contDesc);
     }
-    if (!contDisp.empty()) {
+    if(!contDisp.empty())
+    {
         headers.ContentDisposition().FromString(contDisp);
     }
     part->Body().FromString(bodyStr);

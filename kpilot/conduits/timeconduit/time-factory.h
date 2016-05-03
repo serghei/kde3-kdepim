@@ -31,10 +31,9 @@
 #define DIR_PCToPalm 0
 #define DIR_PalmToPC 1
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_time();
+    void *init_conduit_time();
 
 }
 

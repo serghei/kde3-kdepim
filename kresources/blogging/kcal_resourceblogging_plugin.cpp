@@ -30,12 +30,11 @@ using namespace KCal;
 typedef KRES::PluginFactory< ResourceBlogging, ResourceBloggingConfig > BloggingFactory;
 //K_EXPORT_COMPONENT_FACTORY( kcal_blogging, BloggingFactory )
 
-extern "C"
-{
-  void *init_kcal_blogging()
-  {
-    KGlobal::locale()->insertCatalogue( "kdepimresources" );
-    KGlobal::locale()->insertCatalogue( "kres_blogging" );
-    return new BloggingFactory;
-  }
+extern "C" {
+    void *init_kcal_blogging()
+    {
+        KGlobal::locale()->insertCatalogue("kdepimresources");
+        KGlobal::locale()->insertCatalogue("kres_blogging");
+        return new BloggingFactory;
+    }
 }

@@ -48,164 +48,172 @@ class LogWidget;
 
 
 
-class KPilotInstaller : public KMainWindow, public KPilotDCOP
-{
-Q_OBJECT
+class KPilotInstaller : public KMainWindow, public KPilotDCOP {
+    Q_OBJECT
 
 public:
-	KPilotInstaller();
-	KPilotInstaller(QStrList& fileList);
-	~KPilotInstaller();
+    KPilotInstaller();
+    KPilotInstaller(QStrList &fileList);
+    ~KPilotInstaller();
 
-	/**
-	* Return a string with the version identifier (ie.
-	* "KPilot v3.1b11") if kind == 0; otherwise return
-	* a "long" string about KPilot -- currently the
-	* id of kpilot.o
-	*/
-	static const char *version(int kind);
-
-
-	// Adds 'name' to the pull down menu of components
-	void addComponentPage(PilotComponent *, const QString &name);
+    /**
+    * Return a string with the version identifier (ie.
+    * "KPilot v3.1b11") if kind == 0; otherwise return
+    * a "long" string about KPilot -- currently the
+    * id of kpilot.o
+    */
+    static const char *version(int kind);
 
 
-	KPilotStatus status() const { return fAppStatus; } ;
+    // Adds 'name' to the pull down menu of components
+    void addComponentPage(PilotComponent *, const QString &name);
+
+
+    KPilotStatus status() const
+    {
+        return fAppStatus;
+    } ;
 
 
 protected:
-	void closeEvent(QCloseEvent *e);
-	KJanusWidget *getManagingWidget() { return fManagingWidget; }
+    void closeEvent(QCloseEvent *e);
+    KJanusWidget *getManagingWidget()
+    {
+        return fManagingWidget;
+    }
 
-	/**
-	* Provide access to the daemon's DCOP interface
-	* through an object of the stub class.
-	*/
+    /**
+    * Provide access to the daemon's DCOP interface
+    * through an object of the stub class.
+    */
 protected:
-	PilotDaemonDCOP_stub &getDaemon() { return *fDaemonStub; } ;
+    PilotDaemonDCOP_stub &getDaemon()
+    {
+        return *fDaemonStub;
+    } ;
 private:
-	PilotDaemonDCOP_stub *fDaemonStub;
+    PilotDaemonDCOP_stub *fDaemonStub;
 
-	/**
-	* Handle the functionality of kill-daemon-on-exit and
-	* kill-daemon-if-started-by-my by killing it in those
-	* cases.
-	*/
+    /**
+    * Handle the functionality of kill-daemon-on-exit and
+    * kill-daemon-if-started-by-my by killing it in those
+    * cases.
+    */
 protected:
-	void killDaemonIfNeeded();
+    void killDaemonIfNeeded();
 
 public slots:
-	/**
-	* These are slots for the menu actions for each kind of
-	* sync that can be requested.
-	*/
-	void slotRestoreRequested();
-	void slotBackupRequested();
-	void slotHotSyncRequested();
-	void slotFullSyncRequested();
-	void slotHHtoPCRequested();
-	void slotPCtoHHRequested();
+    /**
+    * These are slots for the menu actions for each kind of
+    * sync that can be requested.
+    */
+    void slotRestoreRequested();
+    void slotBackupRequested();
+    void slotHotSyncRequested();
+    void slotFullSyncRequested();
+    void slotHHtoPCRequested();
+    void slotPCtoHHRequested();
 
-	void startDaemonIfNeeded();
+    void startDaemonIfNeeded();
 
-	/**
-	* These are slots for the standard Configure ...
-	* actions and not interesting. The show toolbar
-	* functionality is in kdelibs starting with KDE 3.1,
-	* but we need to remain backwards compatible.
-	*/
-	void optionsConfigureKeys();
-	void optionsConfigureToolbars();
+    /**
+    * These are slots for the standard Configure ...
+    * actions and not interesting. The show toolbar
+    * functionality is in kdelibs starting with KDE 3.1,
+    * but we need to remain backwards compatible.
+    */
+    void optionsConfigureKeys();
+    void optionsConfigureToolbars();
 
 
 public:
-	/**
-	* This is the DCOP interface from the daemon to KPilot.
-	*/
-	virtual ASYNC daemonStatus(int);
-	virtual int kpilotStatus();
+    /**
+    * This is the DCOP interface from the daemon to KPilot.
+    */
+    virtual ASYNC daemonStatus(int);
+    virtual int kpilotStatus();
 
 public slots:
-	/**
-	* This is the DCOP interface from the daemon to KPilot
-	* to configure KPilot.
-	*/
-	virtual ASYNC configure();
-	virtual ASYNC configureWizard();
+    /**
+    * This is the DCOP interface from the daemon to KPilot
+    * to configure KPilot.
+    */
+    virtual ASYNC configure();
+    virtual ASYNC configureWizard();
 
 protected:
-	void readConfig();
+    void readConfig();
 
 
-	/**
-	* Run all the internal conduits' presync functions.
-	*/
-	bool componentPreSync();
-	void setupSync(int kind,const QString& msg);
-	void componentPostSync();
-	/**
-	* Run after a configuration change to force
-	* the viewers to re-load data.
-	*/
-	void componentUpdate();
+    /**
+    * Run all the internal conduits' presync functions.
+    */
+    bool componentPreSync();
+    void setupSync(int kind, const QString &msg);
+    void componentPostSync();
+    /**
+    * Run after a configuration change to force
+    * the viewers to re-load data.
+    */
+    void componentUpdate();
 
-	void initIcons();
-	void initMenu();
-	void setupWidget();
-	void initComponents();
+    void initIcons();
+    void initMenu();
+    void setupWidget();
+    void initComponents();
 
-	/**
-	* This is the private-d-pointer, KPilot style. Not everything
-	* has moved there yet.
-	*/
-	class KPilotPrivate;
-	KPilotPrivate *fP;
+    /**
+    * This is the private-d-pointer, KPilot style. Not everything
+    * has moved there yet.
+    */
+    class KPilotPrivate;
+    KPilotPrivate *fP;
 
 private:
-	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
-	KJanusWidget    *fManagingWidget;
-	bool fDaemonWasRunning;
+    bool            fQuitAfterCopyComplete; // Used for GUI-less interface
+    KJanusWidget    *fManagingWidget;
+    bool fDaemonWasRunning;
 
-	KPilotStatus fAppStatus;
+    KPilotStatus fAppStatus;
 
-	FileInstallWidget *fFileInstallWidget;
-	LogWidget *fLogWidget;
+    FileInstallWidget *fFileInstallWidget;
+    LogWidget *fLogWidget;
 
-	// Used to track if dialog is visible - needed for new DCOP calls
-	bool fConfigureKPilotDialogInUse;
+    // Used to track if dialog is visible - needed for new DCOP calls
+    bool fConfigureKPilotDialogInUse;
 
 
 protected slots:
-	void quit();
-	void fileInstalled(int which);
-	void slotNewToolbarConfig();
+    void quit();
+    void fileInstalled(int which);
+    void slotNewToolbarConfig();
 
-	/**
-	 * Get the daemon to reset the link. This uses reloadSettings()
-	 * to achieve this result - the daemon calls reset() in there.
-	 */
-	void slotResetLink();
+    /**
+     * Get the daemon to reset the link. This uses reloadSettings()
+     * to achieve this result - the daemon calls reset() in there.
+     */
+    void slotResetLink();
 
-	/**
-	 * Indicate that a particular component has been selected (through
-	 * whatever mechanism). This will make that component visible and
-	 * adjust any other user-visible state to indicate that that component
-	 * is now active.
-	 *
-	 * This should be called (possibly by the component itself!)
-	 * or activated through the signal mechanism.
-	 * */
-	void slotSelectComponent( PilotComponent *c );
-	void slotAboutToShowComponent( QWidget *c );
+    /**
+     * Indicate that a particular component has been selected (through
+     * whatever mechanism). This will make that component visible and
+     * adjust any other user-visible state to indicate that that component
+     * is now active.
+     *
+     * This should be called (possibly by the component itself!)
+     * or activated through the signal mechanism.
+     * */
+    void slotSelectComponent(PilotComponent *c);
+    void slotAboutToShowComponent(QWidget *c);
 
-	/**
-	* Delayed initialization of the components.
-	* This improves perceived startup time.
-	*/
-	void initializeComponents();
+    /**
+    * Delayed initialization of the components.
+    * This improves perceived startup time.
+    */
+    void initializeComponents();
 
 signals:
-	void modeSelected(int selected);
+    void modeSelected(int selected);
 };
 
 

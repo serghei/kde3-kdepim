@@ -44,40 +44,40 @@
 
 
 KNotesConfigBase::KNotesConfigBase(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
-	fConfigWidget(0L)
+    ConduitConfigBase(w, n),
+    fConfigWidget(0L)
 {
-	fConfigWidget = new KNotesWidget(w);
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,KNotesConduitFactory::about());
-	fWidget = fConfigWidget;
-	QObject::connect(fConfigWidget->fDeleteNoteForMemo,SIGNAL(clicked()),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fSuppressConfirm,SIGNAL(clicked()),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fDeleteNoteForMemo,SIGNAL(toggled(bool)),
-		fConfigWidget->fSuppressConfirm,SLOT(setEnabled(bool)));
-	fConduitName=i18n("KNotes");
+    fConfigWidget = new KNotesWidget(w);
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, KNotesConduitFactory::about());
+    fWidget = fConfigWidget;
+    QObject::connect(fConfigWidget->fDeleteNoteForMemo, SIGNAL(clicked()),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fSuppressConfirm, SIGNAL(clicked()),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fDeleteNoteForMemo, SIGNAL(toggled(bool)),
+                     fConfigWidget->fSuppressConfirm, SLOT(setEnabled(bool)));
+    fConduitName = i18n("KNotes");
 }
 
 void KNotesConfigBase::commit()
 {
-	KNotesConduitSettings::setDeleteNoteForMemo( fConfigWidget->fDeleteNoteForMemo->isChecked() );
-	KNotesConduitSettings::setSuppressKNotesConfirm(fConfigWidget->fSuppressConfirm->isChecked());
-	KNotesConduitSettings::self()->writeConfig();
-	unmodified();
+    KNotesConduitSettings::setDeleteNoteForMemo(fConfigWidget->fDeleteNoteForMemo->isChecked());
+    KNotesConduitSettings::setSuppressKNotesConfirm(fConfigWidget->fSuppressConfirm->isChecked());
+    KNotesConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 void KNotesConfigBase::load()
 {
-	KNotesConduitSettings::self()->readConfig();
-	fConfigWidget->fDeleteNoteForMemo->setChecked(KNotesConduitSettings::deleteNoteForMemo() );
-	fConfigWidget->fSuppressConfirm->setChecked(KNotesConduitSettings::suppressKNotesConfirm() );
-	fConfigWidget->fSuppressConfirm->setEnabled(KNotesConduitSettings::deleteNoteForMemo());
-	unmodified();
+    KNotesConduitSettings::self()->readConfig();
+    fConfigWidget->fDeleteNoteForMemo->setChecked(KNotesConduitSettings::deleteNoteForMemo());
+    fConfigWidget->fSuppressConfirm->setChecked(KNotesConduitSettings::suppressKNotesConfirm());
+    fConfigWidget->fSuppressConfirm->setEnabled(KNotesConduitSettings::deleteNoteForMemo());
+    unmodified();
 }
 
 /* static */ ConduitConfigBase *KNotesConfigBase::create(QWidget *w, const char *n)
 {
-	return new KNotesConfigBase(w,n);
+    return new KNotesConfigBase(w, n);
 }
 

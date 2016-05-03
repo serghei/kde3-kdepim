@@ -40,56 +40,56 @@
 
 
 typedef KGenericFactory<KNodePlugin, Kontact::Core> KNodePluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_knodeplugin,
-                            KNodePluginFactory( "kontact_knodeplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_knodeplugin,
+                           KNodePluginFactory("kontact_knodeplugin"))
 
 
-KNodePlugin::KNodePlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "knode" ), mStub(0)
+KNodePlugin::KNodePlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "knode"), mStub(0)
 {
-  setInstance( KNodePluginFactory::instance() );
+    setInstance(KNodePluginFactory::instance());
 
-  insertNewAction( new KAction( i18n( "New Article..." ), "mail_new", CTRL+SHIFT+Key_A,
-                   this, SLOT( slotPostArticle() ), actionCollection(), "post_article" ) );
+    insertNewAction(new KAction(i18n("New Article..."), "mail_new", CTRL + SHIFT + Key_A,
+                                this, SLOT(slotPostArticle()), actionCollection(), "post_article"));
 
-  mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
-      new Kontact::UniqueAppHandlerFactory<KNodeUniqueAppHandler>(), this );
+    mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
+        new Kontact::UniqueAppHandlerFactory<KNodeUniqueAppHandler>(), this);
 }
 
 KNodePlugin::~KNodePlugin()
 {
 }
 
-bool KNodePlugin::createDCOPInterface( const QString& /*serviceType*/ )
+bool KNodePlugin::createDCOPInterface(const QString & /*serviceType*/)
 {
-  return false;
+    return false;
 }
 
 bool KNodePlugin::isRunningStandalone()
 {
-  return mUniqueAppWatcher->isRunningStandalone();
+    return mUniqueAppWatcher->isRunningStandalone();
 }
 
 QStringList KNodePlugin::invisibleToolbarActions() const
 {
-  return QStringList( "article_postNew" );
+    return QStringList("article_postNew");
 }
 
 void KNodePlugin::slotPostArticle()
 {
-  (void) part(); // ensure part is loaded
-  Q_ASSERT( mStub );
-  if ( mStub )
-    mStub->postArticle();
+    (void) part(); // ensure part is loaded
+    Q_ASSERT(mStub);
+    if(mStub)
+        mStub->postArticle();
 }
 
-KParts::ReadOnlyPart* KNodePlugin::createPart()
+KParts::ReadOnlyPart *KNodePlugin::createPart()
 {
-  KParts::ReadOnlyPart *part = loadPart();
-  if ( !part ) return 0;
+    KParts::ReadOnlyPart *part = loadPart();
+    if(!part) return 0;
 
-  mStub = new KNodeIface_stub( dcopClient(), "knode", "KNodeIface" );
-  return part;
+    mStub = new KNodeIface_stub(dcopClient(), "knode", "KNodeIface");
+    return part;
 }
 
 ////
@@ -97,23 +97,24 @@ KParts::ReadOnlyPart* KNodePlugin::createPart()
 #include "../../../knode/knode_options.h"
 void KNodeUniqueAppHandler::loadCommandLineOptions()
 {
-    KCmdLineArgs::addCmdLineOptions( knode_options );
+    KCmdLineArgs::addCmdLineOptions(knode_options);
 }
 
 int KNodeUniqueAppHandler::newInstance()
 {
     // Ensure part is loaded
     (void)plugin()->part();
-    DCOPRef knode( "knode", "KNodeIface" );
-    DCOPReply reply = knode.call( "handleCommandLine" );
+    DCOPRef knode("knode", "KNodeIface");
+    DCOPReply reply = knode.call("handleCommandLine");
 #if 0
-    if ( reply.isValid() ) {
+    if(reply.isValid())
+    {
         bool handled = reply;
         kdDebug(5602) << k_funcinfo << "handled=" << handled << endl;
-        if ( !handled )
+        if(!handled)
 #endif
-    // in all cases, bring knode plugin to front
-    return Kontact::UniqueAppHandler::newInstance();
+            // in all cases, bring knode plugin to front
+            return Kontact::UniqueAppHandler::newInstance();
 #if 0
     }
     return 0;

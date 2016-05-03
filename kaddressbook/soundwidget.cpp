@@ -39,141 +39,145 @@
 
 #include "soundwidget.h"
 
-SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
+SoundWidget::SoundWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::ContactEditorWidget(ab, parent, name), mReadOnly(false)
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(this, 2, 3, KDialog::marginHint(),
+            KDialog::spacingHint());
 
-  QLabel *label = new QLabel( this );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "multimedia",
-                    KIcon::Desktop, KIcon::SizeMedium ) );
-  label->setAlignment( Qt::AlignTop );
-  topLayout->addMultiCellWidget( label, 0, 1, 0, 0 );
+    QLabel *label = new QLabel(this);
+    label->setPixmap(KGlobal::iconLoader()->loadIcon("multimedia",
+                     KIcon::Desktop, KIcon::SizeMedium));
+    label->setAlignment(Qt::AlignTop);
+    topLayout->addMultiCellWidget(label, 0, 1, 0, 0);
 
-  mPlayButton = new QPushButton( i18n( "Play" ), this );
-  mPlayButton->setEnabled( false );
-  topLayout->addWidget( mPlayButton, 0, 1 );
+    mPlayButton = new QPushButton(i18n("Play"), this);
+    mPlayButton->setEnabled(false);
+    topLayout->addWidget(mPlayButton, 0, 1);
 
-  mSoundUrl = new KURLRequester( this );
-  topLayout->addWidget( mSoundUrl, 0, 2 );
+    mSoundUrl = new KURLRequester(this);
+    topLayout->addWidget(mSoundUrl, 0, 2);
 
-  mUseSoundUrl = new QCheckBox( i18n( "Store as URL" ), this );
-  mUseSoundUrl->setEnabled( false );
-  topLayout->addWidget( mUseSoundUrl, 1, 2 );
+    mUseSoundUrl = new QCheckBox(i18n("Store as URL"), this);
+    mUseSoundUrl->setEnabled(false);
+    topLayout->addWidget(mUseSoundUrl, 1, 2);
 
-  connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
-           SLOT( setModified() ) );
-  connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
-           SLOT( urlChanged( const QString& ) ) );
-  connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
-           SLOT( setModified() ) );
-  connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
-           mPlayButton, SLOT( setDisabled( bool ) ) );
-  connect( mSoundUrl, SIGNAL( urlSelected( const QString& ) ),
-           SLOT( loadSound() ) );
-  connect( mSoundUrl, SIGNAL( urlSelected( const QString& ) ),
-           SLOT( updateGUI() ) );
-  connect( mPlayButton, SIGNAL( clicked() ),
-           SLOT( playSound() ) );
+    connect(mSoundUrl, SIGNAL(textChanged(const QString &)),
+            SLOT(setModified()));
+    connect(mSoundUrl, SIGNAL(textChanged(const QString &)),
+            SLOT(urlChanged(const QString &)));
+    connect(mUseSoundUrl, SIGNAL(toggled(bool)),
+            SLOT(setModified()));
+    connect(mUseSoundUrl, SIGNAL(toggled(bool)),
+            mPlayButton, SLOT(setDisabled(bool)));
+    connect(mSoundUrl, SIGNAL(urlSelected(const QString &)),
+            SLOT(loadSound()));
+    connect(mSoundUrl, SIGNAL(urlSelected(const QString &)),
+            SLOT(updateGUI()));
+    connect(mPlayButton, SIGNAL(clicked()),
+            SLOT(playSound()));
 
-  QWhatsThis::add( this, i18n( "This field stores a sound file which contains the name of the contact to clarify the pronunciation." ) );
-  QWhatsThis::add( mUseSoundUrl, i18n( "Save only the URL to the sound file, not the whole object." ) );
+    QWhatsThis::add(this, i18n("This field stores a sound file which contains the name of the contact to clarify the pronunciation."));
+    QWhatsThis::add(mUseSoundUrl, i18n("Save only the URL to the sound file, not the whole object."));
 }
 
 SoundWidget::~SoundWidget()
 {
 }
 
-void SoundWidget::loadContact( KABC::Addressee *addr )
+void SoundWidget::loadContact(KABC::Addressee *addr)
 {
-  bool blocked = signalsBlocked();
-  blockSignals( true );
+    bool blocked = signalsBlocked();
+    blockSignals(true);
 
-  KABC::Sound sound = addr->sound();
-  if ( sound.isIntern() ) {
-    mSound.setData( sound.data() );
-    mPlayButton->setEnabled( true );
-    mUseSoundUrl->setChecked( false );
-  } else {
-    mSoundUrl->setURL( sound.url() );
-    mPlayButton->setEnabled( false );
-    if ( !sound.url().isEmpty() )
-      mUseSoundUrl->setChecked( true );
-  }
+    KABC::Sound sound = addr->sound();
+    if(sound.isIntern())
+    {
+        mSound.setData(sound.data());
+        mPlayButton->setEnabled(true);
+        mUseSoundUrl->setChecked(false);
+    }
+    else
+    {
+        mSoundUrl->setURL(sound.url());
+        mPlayButton->setEnabled(false);
+        if(!sound.url().isEmpty())
+            mUseSoundUrl->setChecked(true);
+    }
 
-  blockSignals( blocked );
+    blockSignals(blocked);
 }
 
-void SoundWidget::storeContact( KABC::Addressee *addr )
+void SoundWidget::storeContact(KABC::Addressee *addr)
 {
-  KABC::Sound sound;
+    KABC::Sound sound;
 
-  if ( mUseSoundUrl->isChecked() )
-    sound.setUrl( mSoundUrl->url() );
-  else
-    sound.setData( mSound.data() );
+    if(mUseSoundUrl->isChecked())
+        sound.setUrl(mSoundUrl->url());
+    else
+        sound.setData(mSound.data());
 
-  addr->setSound( sound );
+    addr->setSound(sound);
 }
 
-void SoundWidget::setReadOnly( bool readOnly )
+void SoundWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
-  mSoundUrl->setEnabled( !mReadOnly );
+    mReadOnly = readOnly;
+    mSoundUrl->setEnabled(!mReadOnly);
 }
 
 void SoundWidget::playSound()
 {
-  KTempFile tmp;
+    KTempFile tmp;
 
-  tmp.file()->writeBlock( mSound.data() );
-  tmp.close();
+    tmp.file()->writeBlock(mSound.data());
+    tmp.close();
 
-  KAudioPlayer::play( tmp.name() );
+    KAudioPlayer::play(tmp.name());
 
-  // we can't remove the sound file from within the program, because
-  // KAudioPlay uses a async dcop call... :(
+    // we can't remove the sound file from within the program, because
+    // KAudioPlay uses a async dcop call... :(
 }
 
 void SoundWidget::loadSound()
 {
-  QString fileName;
+    QString fileName;
 
-  KURL url( mSoundUrl->url() );
+    KURL url(mSoundUrl->url());
 
-  if ( url.isEmpty() )
-    return;
+    if(url.isEmpty())
+        return;
 
-  if ( url.isLocalFile() )
-    fileName = url.path();
-  else if ( !KIO::NetAccess::download( url, fileName, this ) )
-    return;
+    if(url.isLocalFile())
+        fileName = url.path();
+    else if(!KIO::NetAccess::download(url, fileName, this))
+        return;
 
-  QFile file( fileName );
-  if ( !file.open( IO_ReadOnly ) )
-    return;
+    QFile file(fileName);
+    if(!file.open(IO_ReadOnly))
+        return;
 
-  mSound.setData( file.readAll() );
+    mSound.setData(file.readAll());
 
-  file.close();
+    file.close();
 
-  if ( !url.isLocalFile() )
-    KIO::NetAccess::removeTempFile( fileName );
+    if(!url.isLocalFile())
+        KIO::NetAccess::removeTempFile(fileName);
 }
 
 void SoundWidget::updateGUI()
 {
-  mUseSoundUrl->setEnabled( !mReadOnly );
+    mUseSoundUrl->setEnabled(!mReadOnly);
 }
 
-void SoundWidget::urlChanged( const QString &url )
+void SoundWidget::urlChanged(const QString &url)
 {
-  if ( !mUseSoundUrl->isChecked() ) {
-    bool state = !url.isEmpty();
-    mPlayButton->setEnabled( state );
-    mUseSoundUrl->setEnabled( state && !mSound.isIntern() );
-  }
+    if(!mUseSoundUrl->isChecked())
+    {
+        bool state = !url.isEmpty();
+        mPlayButton->setEnabled(state);
+        mUseSoundUrl->setEnabled(state && !mSound.isIntern());
+    }
 }
 
 #include "soundwidget.moc"

@@ -43,68 +43,69 @@ namespace KPIM {
  * @author Antonio Larrosa <larrosa@kde.org>
  * @since 3.4
  */
-class KDE_EXPORT KPixmapRegionSelectorDialog : public KDialogBase
-{
+class KDE_EXPORT KPixmapRegionSelectorDialog : public KDialogBase {
 public:
-   /**
-    * The constructor of an empty KPixmapRegionSelectorDialog, you have to call
-    * later the setPixmap method of the KPixmapRegionSelectorWidget widget of
-    * the new object.
-    */
-   KPixmapRegionSelectorDialog(QWidget *parent=0L, const char *name=0L,
-                      bool modal = false );
-   /**
-    * The destructor of the dialog
-    */
-   ~KPixmapRegionSelectorDialog();
+    /**
+     * The constructor of an empty KPixmapRegionSelectorDialog, you have to call
+     * later the setPixmap method of the KPixmapRegionSelectorWidget widget of
+     * the new object.
+     */
+    KPixmapRegionSelectorDialog(QWidget *parent = 0L, const char *name = 0L,
+                                bool modal = false);
+    /**
+     * The destructor of the dialog
+     */
+    ~KPixmapRegionSelectorDialog();
 
-   /**
-    * @returns the KPixmapRegionSelectorWidget widget so that additional
-    * parameters can be set by using it.
-    */
-   KPIM::KPixmapRegionSelectorWidget *pixmapRegionSelectorWidget() const
-      { return m_pixmapSelectorWidget; }
+    /**
+     * @returns the KPixmapRegionSelectorWidget widget so that additional
+     * parameters can be set by using it.
+     */
+    KPIM::KPixmapRegionSelectorWidget *pixmapRegionSelectorWidget() const
+    {
+        return m_pixmapSelectorWidget;
+    }
 
-   /**
-    * Creates a modal dialog, lets the user to select a region of the @p pixmap
-    * and returns when the dialog is closed.
-    *
-    * @returns the selected rectangle, or an invalid rectangle if the user
-    * pressed the Cancel button.
-    */
-   static QRect getSelectedRegion(const QPixmap &pixmap, QWidget *parent = 0L );
+    /**
+     * Creates a modal dialog, lets the user to select a region of the @p pixmap
+     * and returns when the dialog is closed.
+     *
+     * @returns the selected rectangle, or an invalid rectangle if the user
+     * pressed the Cancel button.
+     */
+    static QRect getSelectedRegion(const QPixmap &pixmap, QWidget *parent = 0L);
 
-   /**
-    * Creates a modal dialog, lets the user to select a region of the @p pixmap
-    * with the same aspect ratio than @p aspectRatioWidth x @p aspectRatioHeight
-    * and returns when the dialog is closed.
-    *
-    * @returns the selected rectangle, or an invalid rectangle if the user
-    * pressed the Cancel button.
-    */
-   static QRect getSelectedRegion(const QPixmap &pixmap, int aspectRatioWidth, int aspectRatioHeight, QWidget *parent = 0L );
+    /**
+     * Creates a modal dialog, lets the user to select a region of the @p pixmap
+     * with the same aspect ratio than @p aspectRatioWidth x @p aspectRatioHeight
+     * and returns when the dialog is closed.
+     *
+     * @returns the selected rectangle, or an invalid rectangle if the user
+     * pressed the Cancel button.
+     */
+    static QRect getSelectedRegion(const QPixmap &pixmap, int aspectRatioWidth, int aspectRatioHeight, QWidget *parent = 0L);
 
-   /**
-    * Creates a modal dialog, lets the user to select a region of the @p pixmap
-    * and returns when the dialog is closed.
-    *
-    * @returns the selected image, or an invalid image if the user
-    * pressed the Cancel button.
-    */
-   static QImage getSelectedImage(const QPixmap &pixmap, QWidget *parent = 0L );
+    /**
+     * Creates a modal dialog, lets the user to select a region of the @p pixmap
+     * and returns when the dialog is closed.
+     *
+     * @returns the selected image, or an invalid image if the user
+     * pressed the Cancel button.
+     */
+    static QImage getSelectedImage(const QPixmap &pixmap, QWidget *parent = 0L);
 
-   /**
-    * Creates a modal dialog, lets the user to select a region of the @p pixmap
-    * with the same aspect ratio than @p aspectRatioWidth x @p aspectRatioHeight
-    * and returns when the dialog is closed.
-    *
-    * @returns the selected image, or an invalid image if the user
-    * pressed the Cancel button.
-    */
-   static QImage getSelectedImage(const QPixmap &pixmap, int aspectRatioWidth, int aspectRatioHeight, QWidget *parent = 0L );
+    /**
+     * Creates a modal dialog, lets the user to select a region of the @p pixmap
+     * with the same aspect ratio than @p aspectRatioWidth x @p aspectRatioHeight
+     * and returns when the dialog is closed.
+     *
+     * @returns the selected image, or an invalid image if the user
+     * pressed the Cancel button.
+     */
+    static QImage getSelectedImage(const QPixmap &pixmap, int aspectRatioWidth, int aspectRatioHeight, QWidget *parent = 0L);
 
 protected:
-   KPIM::KPixmapRegionSelectorWidget *m_pixmapSelectorWidget;
+    KPIM::KPixmapRegionSelectorWidget *m_pixmapSelectorWidget;
 };
 
 }

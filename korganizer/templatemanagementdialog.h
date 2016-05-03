@@ -45,29 +45,29 @@
 #include <kdialogbase.h>
 
 class TemplateManagementDialog: public KDialogBase {
-Q_OBJECT
-  public:
-    TemplateManagementDialog( QWidget *parent, const QStringList& templates );
+    Q_OBJECT
+public:
+    TemplateManagementDialog(QWidget *parent, const QStringList &templates);
 
-  signals:
+signals:
     /* Emitted whenever the user hits apply, indicating that the currently selected template
     should be loaded into to the incidence editor which triggered this. */
-    void loadTemplate( const QString& templateName );
+    void loadTemplate(const QString &templateName);
     /* Emitted whenever the user wants to add teh current incidence as a template
     with the given name. */
-    void saveTemplate( const QString& templateName );
+    void saveTemplate(const QString &templateName);
     /* Emitted when the dialog changed the list of templates. Calling code can the replace
        the list that was handed in with the one this signal transports. */
-    void templatesChanged( const QStringList& templates );
-    
-  protected slots:
+    void templatesChanged(const QStringList &templates);
+
+protected slots:
     void slotAddTemplate();
     void slotDeleteTemplate();
     void slotApplyTemplate();
-    void slotUpdateDeleteButton( QListBoxItem *item );
+    void slotUpdateDeleteButton(QListBoxItem *item);
     void slotOk();
-    
-  private:
+
+private:
     TemplateManagementDialog_base *m_base;
     QStringList m_templates;
     QString m_newTemplate;

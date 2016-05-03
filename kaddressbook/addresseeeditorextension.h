@@ -27,12 +27,11 @@
 #include "addresseeeditorbase.h"
 #include "extensionwidget.h"
 
-class AddresseeEditorExtension : public KAB::ExtensionWidget
-{
-  Q_OBJECT
+class AddresseeEditorExtension : public KAB::ExtensionWidget {
+    Q_OBJECT
 
-  public:
-    AddresseeEditorExtension( KAB::Core *core, QWidget *parent, const char *name = 0 );
+public:
+    AddresseeEditorExtension(KAB::Core *core, QWidget *parent, const char *name = 0);
     ~AddresseeEditorExtension();
 
     /**
@@ -51,7 +50,7 @@ class AddresseeEditorExtension : public KAB::ExtensionWidget
      */
     virtual QString identifier() const;
 
-  private:
+private:
     AddresseeEditorBase *mAddresseeEditor;
     bool mDirty;
 };

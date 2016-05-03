@@ -28,77 +28,80 @@
 
 using namespace Scalix;
 
-FolderAttributeParser::FolderAttributeParser( const QString &attribute )
+FolderAttributeParser::FolderAttributeParser(const QString &attribute)
 {
-  QStringList parts = QStringList::split( ",", attribute, false );
+    QStringList parts = QStringList::split(",", attribute, false);
 
-  for ( uint i = 0; i < parts.count(); ++i ) {
-    if ( parts[i].startsWith( "\\X-SpecialFolder=" ) )
-      mFolderName = parts[i].mid( 17 );
-    else if ( parts[i].startsWith( "\\X-FolderClass=" ) )
-      mFolderClass = parts[i].mid( 15 );
-  }
+    for(uint i = 0; i < parts.count(); ++i)
+    {
+        if(parts[i].startsWith("\\X-SpecialFolder="))
+            mFolderName = parts[i].mid(17);
+        else if(parts[i].startsWith("\\X-FolderClass="))
+            mFolderClass = parts[i].mid(15);
+    }
 }
 
 QString FolderAttributeParser::folderClass() const
 {
-  return mFolderClass;
+    return mFolderClass;
 }
 
 QString FolderAttributeParser::folderName() const
 {
-  return mFolderName;
+    return mFolderName;
 }
 
-KMFolder* Utils::findStandardResourceFolder( KMFolderDir* folderParentDir,
-                                             KMail::FolderContentsType contentsType,
-                                             const QStringList &attributes )
+KMFolder *Utils::findStandardResourceFolder(KMFolderDir *folderParentDir,
+        KMail::FolderContentsType contentsType,
+        const QStringList &attributes)
 {
-  QMap<int, QString> typeMap;
-  typeMap.insert( KMail::ContentsTypeCalendar, "IPF.Appointment" );
-  typeMap.insert( KMail::ContentsTypeContact, "IPF.Contact" );
-  typeMap.insert( KMail::ContentsTypeNote, "IPF.StickyNote" );
-  typeMap.insert( KMail::ContentsTypeTask, "IPF.Task" );
+    QMap<int, QString> typeMap;
+    typeMap.insert(KMail::ContentsTypeCalendar, "IPF.Appointment");
+    typeMap.insert(KMail::ContentsTypeContact, "IPF.Contact");
+    typeMap.insert(KMail::ContentsTypeNote, "IPF.StickyNote");
+    typeMap.insert(KMail::ContentsTypeTask, "IPF.Task");
 
-  if ( !typeMap.contains( contentsType ) )
-    return 0;
+    if(!typeMap.contains(contentsType))
+        return 0;
 
-  for ( uint i = 0; i < attributes.count(); ++i ) {
-    FolderAttributeParser parser( attributes[ i ] );
-    if ( parser.folderClass() == typeMap[ contentsType ] ) {
-      KMFolderNode* node = folderParentDir->hasNamedFolder( parser.folderName() );
-      if ( node && !node->isDir() )
-        return static_cast<KMFolder*>( node );
+    for(uint i = 0; i < attributes.count(); ++i)
+    {
+        FolderAttributeParser parser(attributes[ i ]);
+        if(parser.folderClass() == typeMap[ contentsType ])
+        {
+            KMFolderNode *node = folderParentDir->hasNamedFolder(parser.folderName());
+            if(node && !node->isDir())
+                return static_cast<KMFolder *>(node);
+        }
     }
-  }
 
-  return 0;
+    return 0;
 }
 
-KMail::FolderContentsType Utils::scalixIdToContentsType( const QString &name )
+KMail::FolderContentsType Utils::scalixIdToContentsType(const QString &name)
 {
-  if ( name == "IPF.Appointment" )
-    return KMail::ContentsTypeCalendar;
-  else if ( name == "IPF.Contact" )
-    return KMail::ContentsTypeContact;
-  else if ( name == "IPF.StickyNote" )
-    return KMail::ContentsTypeNote;
-  else if ( name == "IPF.Task" )
-    return KMail::ContentsTypeTask;
-  else
-    return KMail::ContentsTypeMail;
+    if(name == "IPF.Appointment")
+        return KMail::ContentsTypeCalendar;
+    else if(name == "IPF.Contact")
+        return KMail::ContentsTypeContact;
+    else if(name == "IPF.StickyNote")
+        return KMail::ContentsTypeNote;
+    else if(name == "IPF.Task")
+        return KMail::ContentsTypeTask;
+    else
+        return KMail::ContentsTypeMail;
 }
 
-QString Utils::contentsTypeToScalixId( KMail::FolderContentsType type )
+QString Utils::contentsTypeToScalixId(KMail::FolderContentsType type)
 {
-  if ( type == KMail::ContentsTypeCalendar )
-    return "IPF.Appointment";
-  else if ( type == KMail::ContentsTypeContact )
-    return "IPF.Contact";
-  else if ( type == KMail::ContentsTypeNote )
-    return "IPF.StickyNote";
-  else if ( type == KMail::ContentsTypeTask )
-    return "IPF.Task";
-  else
-    return "IPF.Note";
+    if(type == KMail::ContentsTypeCalendar)
+        return "IPF.Appointment";
+    else if(type == KMail::ContentsTypeContact)
+        return "IPF.Contact";
+    else if(type == KMail::ContentsTypeNote)
+        return "IPF.StickyNote";
+    else if(type == KMail::ContentsTypeTask)
+        return "IPF.Task";
+    else
+        return "IPF.Note";
 }

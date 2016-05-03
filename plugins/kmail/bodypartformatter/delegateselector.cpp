@@ -28,27 +28,27 @@
 #include <qlabel.h>
 #include <qvbox.h>
 
-DelegateSelector::DelegateSelector(QWidget * parent)
-  : KDialogBase( parent, 0, true, i18n("Select delegate"), Ok|Cancel, Ok, true )
+DelegateSelector::DelegateSelector(QWidget *parent)
+    : KDialogBase(parent, 0, true, i18n("Select delegate"), Ok | Cancel, Ok, true)
 {
-  QVBox *page = makeVBoxMainWidget();
+    QVBox *page = makeVBoxMainWidget();
 
-  QHBox *delegateBox = new QHBox( page );
-  new QLabel( i18n("Delegate:"), delegateBox );
-  mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
+    QHBox *delegateBox = new QHBox(page);
+    new QLabel(i18n("Delegate:"), delegateBox);
+    mDelegate = new KPIM::AddresseeLineEdit(delegateBox);
 
-  mRsvp = new QCheckBox( i18n("Keep me informed about status changes of this incidence."), page );
-  mRsvp->setChecked( true );
+    mRsvp = new QCheckBox(i18n("Keep me informed about status changes of this incidence."), page);
+    mRsvp->setChecked(true);
 }
 
 QString DelegateSelector::delegate() const
 {
-  return mDelegate->text();
+    return mDelegate->text();
 }
 
 bool DelegateSelector::rsvp() const
 {
-  return mRsvp->isChecked();
+    return mRsvp->isChecked();
 }
 
 #include "delegateselector.moc"

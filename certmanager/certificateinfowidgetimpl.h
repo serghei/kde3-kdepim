@@ -43,45 +43,45 @@ class KProcess;
 class QListViewItem;
 
 namespace GpgME {
-  class KeyListResult;
+class KeyListResult;
 }
 
 class CertificateInfoWidgetImpl : public CertificateInfoWidget {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
-			     QWidget * parent=0, const char * name=0);
+    CertificateInfoWidgetImpl(const GpgME::Key &key, bool external,
+                              QWidget *parent = 0, const char *name = 0);
 
-  void setKey( const GpgME::Key & key );
+    void setKey(const GpgME::Key &key);
 
 signals:
-  void requestCertificateDownload( const QString & fingerprint, const QString& displayName );
+    void requestCertificateDownload(const QString &fingerprint, const QString &displayName);
 
 private slots:
-  void slotShowInfo( QListViewItem* );
-  void slotShowCertPathDetails( QListViewItem* );
-  void slotImportCertificate();
-  void slotCertificateChainListingResult( const GpgME::KeyListResult & res );
-  void slotNextKey( const GpgME::Key & key );
-  void slotKeyExistanceCheckNextCandidate( const GpgME::Key & key );
-  void slotKeyExistanceCheckFinished();
-  void slotCollectStdout(KProcess *, char *, int);
-  void slotCollectStderr(KProcess *, char *, int);
-  void slotDumpProcessExited(KProcess*);
+    void slotShowInfo(QListViewItem *);
+    void slotShowCertPathDetails(QListViewItem *);
+    void slotImportCertificate();
+    void slotCertificateChainListingResult(const GpgME::KeyListResult &res);
+    void slotNextKey(const GpgME::Key &key);
+    void slotKeyExistanceCheckNextCandidate(const GpgME::Key &key);
+    void slotKeyExistanceCheckFinished();
+    void slotCollectStdout(KProcess *, char *, int);
+    void slotCollectStderr(KProcess *, char *, int);
+    void slotDumpProcessExited(KProcess *);
 
 private:
-  void startCertificateChainListing();
-  void startCertificateDump();
-  void startKeyExistanceCheck();
-  void updateChainView();
+    void startCertificateChainListing();
+    void startCertificateDump();
+    void startKeyExistanceCheck();
+    void updateChainView();
 
 private:
-  QCString mDumpOutput;
-  QCString mDumpError;
-  QValueList<GpgME::Key> mChain;
-  bool mExternal;
-  bool mFoundIssuer;
-  bool mHaveKeyLocally;
+    QCString mDumpOutput;
+    QCString mDumpError;
+    QValueList<GpgME::Key> mChain;
+    bool mExternal;
+    bool mFoundIssuer;
+    bool mHaveKeyLocally;
 };
 
 #endif // CERTIFICATEINFOWIDGETIMPL_H

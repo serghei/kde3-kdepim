@@ -33,21 +33,21 @@
 
 namespace Akregator {
 
-class TagPropertiesDialog::TagPropertiesDialogPrivate
-{
-    public:
+class TagPropertiesDialog::TagPropertiesDialogPrivate {
+public:
     Tag tag;
-    TagPropertiesWidgetBase* widget;
+    TagPropertiesWidgetBase *widget;
 };
 
-TagPropertiesDialog::TagPropertiesDialog(QWidget *parent, const char *name) : KDialogBase(KDialogBase::Swallow, Qt::WStyle_DialogBorder, parent, name, true, i18n("Tag Properties"), KDialogBase::Ok|KDialogBase::Cancel|KDialogBase::Apply), d(new TagPropertiesDialogPrivate)
+TagPropertiesDialog::TagPropertiesDialog(QWidget *parent, const char *name) : KDialogBase(KDialogBase::Swallow, Qt::WStyle_DialogBorder, parent, name,
+            true, i18n("Tag Properties"), KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply), d(new TagPropertiesDialogPrivate)
 {
     d->widget = new TagPropertiesWidgetBase(this);
     setMainWidget(d->widget);
     d->widget->le_title->setFocus();
     enableButtonOK(false);
     enableButtonApply(false);
-    connect(d->widget->le_title, SIGNAL(textChanged(const QString&)), this, SLOT(slotTextChanged(const QString& )));
+    connect(d->widget->le_title, SIGNAL(textChanged(const QString &)), this, SLOT(slotTextChanged(const QString &)));
 }
 
 TagPropertiesDialog::~TagPropertiesDialog()
@@ -56,7 +56,7 @@ TagPropertiesDialog::~TagPropertiesDialog()
     d = 0;
 }
 
-void TagPropertiesDialog::setTag(const Tag& tag)
+void TagPropertiesDialog::setTag(const Tag &tag)
 {
     d->tag = tag;
     d->widget->le_title->setText(tag.name());
@@ -72,7 +72,7 @@ void TagPropertiesDialog::slotOk()
     KDialogBase::slotOk();
 }
 
-void TagPropertiesDialog::slotTextChanged(const QString& text)
+void TagPropertiesDialog::slotTextChanged(const QString &text)
 {
     enableButtonOK(!text.isEmpty());
     enableButtonApply(!text.isEmpty());

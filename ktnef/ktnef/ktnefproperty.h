@@ -22,42 +22,41 @@
 #include <qstring.h>
 #include <kdepimmacros.h>
 
-class KDE_EXPORT KTNEFProperty
-{
+class KDE_EXPORT KTNEFProperty {
 public:
-	enum MAPIType
-	{
-		UInt16  = 0x0002,
-		ULong   = 0x0003,
-		Float   = 0x0004,
-		Double  = 0x0005,
-		Boolean = 0x000B,
-		Object  = 0x000D,
-		Time    = 0x0040,
-		String8 = 0x001E,
-		UString = 0x001F,
-		Binary  = 0x0102
-	};
+    enum MAPIType
+    {
+        UInt16  = 0x0002,
+        ULong   = 0x0003,
+        Float   = 0x0004,
+        Double  = 0x0005,
+        Boolean = 0x000B,
+        Object  = 0x000D,
+        Time    = 0x0040,
+        String8 = 0x001E,
+        UString = 0x001F,
+        Binary  = 0x0102
+    };
 
-	KTNEFProperty();
-	KTNEFProperty( int key_, int type_, const QVariant& value_, const QVariant& name_ = QVariant() );
-	KTNEFProperty( const KTNEFProperty& p );
+    KTNEFProperty();
+    KTNEFProperty(int key_, int type_, const QVariant &value_, const QVariant &name_ = QVariant());
+    KTNEFProperty(const KTNEFProperty &p);
 
-	QString keyString();
-	QString valueString();
-	static QString formatValue( const QVariant& v, bool beautify=true );
+    QString keyString();
+    QString valueString();
+    static QString formatValue(const QVariant &v, bool beautify = true);
 
-	int key() const;
-	int type() const;
-	QVariant value() const;
-	QVariant name() const;
-	bool isVector() const;
+    int key() const;
+    int type() const;
+    QVariant value() const;
+    QVariant name() const;
+    bool isVector() const;
 
 private:
-	int _key;
-	int _type;
-	QVariant _value;
-	QVariant _name;
+    int _key;
+    int _type;
+    QVariant _value;
+    QVariant _name;
 };
 
 #endif /* KTNEFPROPERTY_H */

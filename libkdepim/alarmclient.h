@@ -28,9 +28,8 @@
   This class provides the interface for communicating with the alarm daemon. It
   can be subclassed for specific daemons.
 */
-class KDE_EXPORT AlarmClient
-{
-  public:
+class KDE_EXPORT AlarmClient {
+public:
     AlarmClient();
 
     /**

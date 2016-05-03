@@ -30,108 +30,105 @@ class QKeyEvent;
 class QDragObject;
 template <class T> class QValueList;
 
-namespace Akregator
-{
-    class Article;
-    class TreeNode;
+namespace Akregator {
+class Article;
+class TreeNode;
 
-    namespace Filters
-    {
-        class ArticleMatcher;
-    }
+namespace Filters {
+class ArticleMatcher;
+}
 
-    class ArticleListView : public KListView
-    {
-        Q_OBJECT
-        public:
-            ArticleListView(QWidget *parent = 0, const char *name = 0);
-            virtual ~ArticleListView();
-            
-            /** returns the current article, or a null article if there is none */
-            Article currentArticle() const;
-            
-            /** returns a list of currently selected articles */
-            QValueList<Article> selectedArticles() const;
-            
-            enum Columns { itemTitle, feedTitle, pubDate };
+class ArticleListView : public KListView {
+    Q_OBJECT
+public:
+    ArticleListView(QWidget *parent = 0, const char *name = 0);
+    virtual ~ArticleListView();
 
-        public slots:
+    /** returns the current article, or a null article if there is none */
+    Article currentArticle() const;
 
-            /** show article list of tree node @c node (also connects to the notification signals of the node) */
-            void slotShowNode(TreeNode* node);
-            
-            /** clears the list and disconnects from the observed node (if any) */
-            void slotClear();
-            
-            /** sets text filter and status filter
-            @param textFilter filters text
-            @param statusFilter filters status (read, unread, new) */
-            void slotSetFilter(const Akregator::Filters::ArticleMatcher& textFilter, const Akregator::Filters::ArticleMatcher& statusFilter);
+    /** returns a list of currently selected articles */
+    QValueList<Article> selectedArticles() const;
 
-            /** selects previous article in list view, first article if no article was selected */
-            void slotPreviousArticle();
+    enum Columns { itemTitle, feedTitle, pubDate };
 
-            /** selects next article in list view, first article if no article was selected */
-            void slotNextArticle();
+public slots:
 
-            /** selects previous unread article in list view, first unread article if no article was selected */
-            void slotPreviousUnreadArticle();
+    /** show article list of tree node @c node (also connects to the notification signals of the node) */
+    void slotShowNode(TreeNode *node);
 
-            /** selects next unread article in list view, first unread article if no article was selected */
-            void slotNextUnreadArticle();
+    /** clears the list and disconnects from the observed node (if any) */
+    void slotClear();
 
-        signals:
-            void signalArticleChosen(const Article& article);
-            void signalDoubleClicked(const Article&, const QPoint&, int);
-            //void signalContextMenu(KListView*, ArticleItem*, const QPoint&);
-            void signalMouseButtonPressed(int, const Article&, const QPoint &, int);
-             
-        protected:
-            /** reimplemented for kmail-like behaviour */            
-            virtual void keyPressEvent(QKeyEvent* e);
-            
-            /** applies text filter and status filter by setting visibility
-            of items accordingly */
-            virtual void applyFilters();
-            
-            /**
-             * @return count of visible articles, used for info boxes
-             */
-            int visibleArticles();
-            
-            /** Paints infobox for filtering and stuff
-             */
-            void paintInfoBox(const QString &message);
-            
-            virtual void viewportPaintEvent(QPaintEvent *e);
-            
-            void connectToNode(TreeNode* node);
-            void disconnectFromNode(TreeNode* node);
-            
-            virtual QDragObject *dragObject();
+    /** sets text filter and status filter
+    @param textFilter filters text
+    @param statusFilter filters status (read, unread, new) */
+    void slotSetFilter(const Akregator::Filters::ArticleMatcher &textFilter, const Akregator::Filters::ArticleMatcher &statusFilter);
 
-        protected slots:
+    /** selects previous article in list view, first article if no article was selected */
+    void slotPreviousArticle();
 
-            void slotArticlesAdded(TreeNode* node, const QValueList<Article>& list);
-            void slotArticlesUpdated(TreeNode* node, const QValueList<Article>& list);
-            void slotArticlesRemoved(TreeNode* node, const QValueList<Article>& list);
+    /** selects next article in list view, first article if no article was selected */
+    void slotNextArticle();
 
-            virtual void slotCurrentChanged(QListViewItem* item);
-            virtual void slotSelectionChanged();
-            virtual void slotDoubleClicked(QListViewItem* item, const QPoint& p, int i);
-            virtual void slotContextMenu(KListView* list, QListViewItem* item, const QPoint& p);
-            virtual void slotMouseButtonPressed(int, QListViewItem *, const QPoint &, int);
-            
-        public:         // compat with KDE-3.x assertions, remove for KDE 4
-	// private:
-            class ArticleListViewPrivate;
-            ArticleListViewPrivate* d;
-            
-            friend class ColumnLayoutVisitor;
-            class ColumnLayoutVisitor;
-            
-            class ArticleItem;
-    };
+    /** selects previous unread article in list view, first unread article if no article was selected */
+    void slotPreviousUnreadArticle();
+
+    /** selects next unread article in list view, first unread article if no article was selected */
+    void slotNextUnreadArticle();
+
+signals:
+    void signalArticleChosen(const Article &article);
+    void signalDoubleClicked(const Article &, const QPoint &, int);
+    //void signalContextMenu(KListView*, ArticleItem*, const QPoint&);
+    void signalMouseButtonPressed(int, const Article &, const QPoint &, int);
+
+protected:
+    /** reimplemented for kmail-like behaviour */
+    virtual void keyPressEvent(QKeyEvent *e);
+
+    /** applies text filter and status filter by setting visibility
+    of items accordingly */
+    virtual void applyFilters();
+
+    /**
+     * @return count of visible articles, used for info boxes
+     */
+    int visibleArticles();
+
+    /** Paints infobox for filtering and stuff
+     */
+    void paintInfoBox(const QString &message);
+
+    virtual void viewportPaintEvent(QPaintEvent *e);
+
+    void connectToNode(TreeNode *node);
+    void disconnectFromNode(TreeNode *node);
+
+    virtual QDragObject *dragObject();
+
+protected slots:
+
+    void slotArticlesAdded(TreeNode *node, const QValueList<Article> &list);
+    void slotArticlesUpdated(TreeNode *node, const QValueList<Article> &list);
+    void slotArticlesRemoved(TreeNode *node, const QValueList<Article> &list);
+
+    virtual void slotCurrentChanged(QListViewItem *item);
+    virtual void slotSelectionChanged();
+    virtual void slotDoubleClicked(QListViewItem *item, const QPoint &p, int i);
+    virtual void slotContextMenu(KListView *list, QListViewItem *item, const QPoint &p);
+    virtual void slotMouseButtonPressed(int, QListViewItem *, const QPoint &, int);
+
+public:         // compat with KDE-3.x assertions, remove for KDE 4
+    // private:
+    class ArticleListViewPrivate;
+    ArticleListViewPrivate *d;
+
+    friend class ColumnLayoutVisitor;
+    class ColumnLayoutVisitor;
+
+    class ArticleItem;
+};
 }
 
 #endif

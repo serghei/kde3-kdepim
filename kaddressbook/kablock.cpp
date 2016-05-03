@@ -29,14 +29,13 @@
 
 #include "kablock.h"
 
-class AddressBookWrapper : public KABC::AddressBook
-{
-  public:
-    AddressBookWrapper( KABC::AddressBook* );
+class AddressBookWrapper : public KABC::AddressBook {
+public:
+    AddressBookWrapper(KABC::AddressBook *);
 
-    KABC::Resource* getStandardResource()
+    KABC::Resource *getStandardResource()
     {
-      return standardResource();
+        return standardResource();
     }
 };
 
@@ -44,8 +43,8 @@ KABLock *KABLock::mSelf = 0;
 
 static KStaticDeleter<KABLock> kabLockDeleter;
 
-KABLock::KABLock( KABC::AddressBook *ab )
-  : mAddressBook( ab )
+KABLock::KABLock(KABC::AddressBook *ab)
+    : mAddressBook(ab)
 {
 }
 
@@ -53,56 +52,66 @@ KABLock::~KABLock()
 {
 }
 
-KABLock *KABLock::self( KABC::AddressBook *ab )
+KABLock *KABLock::self(KABC::AddressBook *ab)
 {
-  if ( !mSelf )
-    kabLockDeleter.setObject( mSelf, new KABLock( ab ) );
-  else
-    mSelf->mAddressBook = ab;
+    if(!mSelf)
+        kabLockDeleter.setObject(mSelf, new KABLock(ab));
+    else
+        mSelf->mAddressBook = ab;
 
-  return mSelf;
+    return mSelf;
 }
 
-bool KABLock::lock( KABC::Resource *resource )
+bool KABLock::lock(KABC::Resource *resource)
 {
-  if ( mLocks.find( resource ) == mLocks.end() ) { // not locked yet
-    KABC::Ticket *ticket = mAddressBook->requestSaveTicket( resource );
-    if ( !ticket ) {
-      return false;
-    } else {
-      LockEntry entry;
-      entry.ticket = ticket;
-      entry.counter = 1;
-      mLocks.insert( resource, entry );
+    if(mLocks.find(resource) == mLocks.end())        // not locked yet
+    {
+        KABC::Ticket *ticket = mAddressBook->requestSaveTicket(resource);
+        if(!ticket)
+        {
+            return false;
+        }
+        else
+        {
+            LockEntry entry;
+            entry.ticket = ticket;
+            entry.counter = 1;
+            mLocks.insert(resource, entry);
+        }
     }
-  } else {
-    LockEntry &entry = mLocks[ resource ];
-    entry.counter++;
-  }
+    else
+    {
+        LockEntry &entry = mLocks[ resource ];
+        entry.counter++;
+    }
 
-  return true;
+    return true;
 }
 
-bool KABLock::unlock( KABC::Resource *resource )
+bool KABLock::unlock(KABC::Resource *resource)
 {
-  AddressBookWrapper *wrapper = static_cast<AddressBookWrapper*>( mAddressBook );
-  if ( resource == 0 )
-    resource = wrapper->getStandardResource();
+    AddressBookWrapper *wrapper = static_cast<AddressBookWrapper *>(mAddressBook);
+    if(resource == 0)
+        resource = wrapper->getStandardResource();
 
-  if ( mLocks.find( resource ) == mLocks.end() ) { // hmm, not good...
-    return false;
-  } else {
-    LockEntry &entry = mLocks[ resource ];
-    entry.counter--;
-
-    if ( entry.counter == 0 ) {
-      mAddressBook->save( entry.ticket );
-//      # Activate in KDE 4.0
-//      mAddressBook->releaseSaveTicket( entry.ticket );
-
-      mLocks.remove( resource );
+    if(mLocks.find(resource) == mLocks.end())        // hmm, not good...
+    {
+        return false;
     }
-  }
+    else
+    {
+        LockEntry &entry = mLocks[ resource ];
+        entry.counter--;
 
-  return true;
+        if(entry.counter == 0)
+        {
+            mAddressBook->save(entry.ticket);
+            //      # Activate in KDE 4.0
+            //      mAddressBook->releaseSaveTicket( entry.ticket );
+
+            mLocks.remove(resource);
+        }
+    }
+
+    return true;
 }

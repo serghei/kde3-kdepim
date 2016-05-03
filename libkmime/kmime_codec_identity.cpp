@@ -44,66 +44,76 @@ namespace KMime {
 
 class IdentityEnDecoder : public Encoder, public Decoder {
 protected:
-  friend class IdentityCodec;
-  IdentityEnDecoder( bool withCRLF )
-    : Encoder( false )
-  {
-    kdWarning( withCRLF, 5100 ) << "IdentityEnDecoder: withCRLF isn't yet supported!" << endl;
-  }
+    friend class IdentityCodec;
+    IdentityEnDecoder(bool withCRLF)
+        : Encoder(false)
+    {
+        kdWarning(withCRLF, 5100) << "IdentityEnDecoder: withCRLF isn't yet supported!" << endl;
+    }
 
 public:
-  ~IdentityEnDecoder() {}
+    ~IdentityEnDecoder() {}
 
-  bool encode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend ) {
-    return decode( scursor, send, dcursor, dend );
-  }
-  bool decode( const char* & scursor, const char * const send,
-	       char* & dcursor, const char * const dend );
-  bool finish( char* & /*dcursor*/, const char * const /*dend*/ ) { return true; }
+    bool encode(const char *&scursor, const char *const send,
+                char *&dcursor, const char *const dend)
+    {
+        return decode(scursor, send, dcursor, dend);
+    }
+    bool decode(const char *&scursor, const char *const send,
+                char *&dcursor, const char *const dend);
+    bool finish(char *& /*dcursor*/, const char *const /*dend*/)
+    {
+        return true;
+    }
 };
 
 
-Encoder * IdentityCodec::makeEncoder( bool withCRLF ) const {
-  return new IdentityEnDecoder( withCRLF );
-}
-
-Decoder * IdentityCodec::makeDecoder( bool withCRLF ) const {
-  return new IdentityEnDecoder( withCRLF );
-}
-
-
-  /********************************************************/
-  /********************************************************/
-  /********************************************************/
-
-
-
-bool IdentityEnDecoder::decode( const char* & scursor, const char * const send,
-				char* & dcursor, const char * const dend )
+Encoder *IdentityCodec::makeEncoder(bool withCRLF) const
 {
-  const int size = kMin( send - scursor, dcursor - dend );
-  if ( size > 0 ) {
-    std::memmove( dcursor, scursor, size );
-    dcursor += size;
-    scursor += size;
-  }
-  return scursor == send;
+    return new IdentityEnDecoder(withCRLF);
 }
 
-QByteArray IdentityCodec::encode( const QByteArray & src, bool withCRLF ) const {
-  kdWarning( withCRLF, 5100 ) << "IdentityCodec::encode(): withCRLF not yet supported!" << endl;
-  return src;
+Decoder *IdentityCodec::makeDecoder(bool withCRLF) const
+{
+    return new IdentityEnDecoder(withCRLF);
 }
 
-QByteArray IdentityCodec::decode( const QByteArray & src, bool withCRLF ) const {
-  kdWarning( withCRLF, 5100 ) << "IdentityCodec::decode(): withCRLF not yet supported!" << endl;
-  return src;
+
+/********************************************************/
+/********************************************************/
+/********************************************************/
+
+
+
+bool IdentityEnDecoder::decode(const char *&scursor, const char *const send,
+                               char *&dcursor, const char *const dend)
+{
+    const int size = kMin(send - scursor, dcursor - dend);
+    if(size > 0)
+    {
+        std::memmove(dcursor, scursor, size);
+        dcursor += size;
+        scursor += size;
+    }
+    return scursor == send;
 }
 
-QCString IdentityCodec::encodeToQCString( const QByteArray & src, bool withCRLF ) const {
-  kdWarning( withCRLF, 5100 ) << "IdentityCodec::encodeToQCString(): withCRLF not yet supported!" << endl;
-  return QCString( src.data(), src.size() + 1 );
+QByteArray IdentityCodec::encode(const QByteArray &src, bool withCRLF) const
+{
+    kdWarning(withCRLF, 5100) << "IdentityCodec::encode(): withCRLF not yet supported!" << endl;
+    return src;
+}
+
+QByteArray IdentityCodec::decode(const QByteArray &src, bool withCRLF) const
+{
+    kdWarning(withCRLF, 5100) << "IdentityCodec::decode(): withCRLF not yet supported!" << endl;
+    return src;
+}
+
+QCString IdentityCodec::encodeToQCString(const QByteArray &src, bool withCRLF) const
+{
+    kdWarning(withCRLF, 5100) << "IdentityCodec::encodeToQCString(): withCRLF not yet supported!" << endl;
+    return QCString(src.data(), src.size() + 1);
 }
 
 } // namespace KMime

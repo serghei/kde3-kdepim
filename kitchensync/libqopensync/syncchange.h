@@ -28,22 +28,21 @@ class OSyncChange;
 
 namespace QSync {
 
-class SyncChange
-{
-  friend class SyncMapping;
+class SyncChange {
+    friend class SyncMapping;
 
-  public:
+public:
     enum Type
     {
-      UnknownChange,
-      AddedChange,
-      UnmodifiedChange,
-      DeletedChange,
-      ModifiedChange
+        UnknownChange,
+        AddedChange,
+        UnmodifiedChange,
+        DeletedChange,
+        ModifiedChange
     };
 
     SyncChange();
-    SyncChange( OSyncChange* );
+    SyncChange(OSyncChange *);
     ~SyncChange();
 
     /**
@@ -54,7 +53,7 @@ class SyncChange
     /**
       Sets the uid of this change.
      */
-    void setUid( const QString &uid );
+    void setUid(const QString &uid);
 
     /**
       Returns the uid of this change.
@@ -64,7 +63,7 @@ class SyncChange
     /**
       Sets the hash of this change.
      */
-    void setHash( const QString &hash );
+    void setHash(const QString &hash);
 
     /**
       Returns the hash of this change.
@@ -74,7 +73,7 @@ class SyncChange
     /**
       Sets the data provided by the plugin.
      */
-    void setData( const QString &data );
+    void setData(const QString &data);
 
     /**
       Returns the data provided by the plugin.
@@ -99,14 +98,14 @@ class SyncChange
     /**
       Sets the change type.
      */
-    void setChangeType( Type changeType );
+    void setChangeType(Type changeType);
 
     /**
       Returns the change type.
      */
     Type changeType() const;
 
-  private:
+private:
     OSyncChange *mSyncChange;
 };
 

@@ -37,40 +37,40 @@
 
 namespace Akregator {
 
-Frame::Frame(QObject * parent, KParts::ReadOnlyPart *p, QWidget *visWidget, const QString& tit, bool watchSignals)
-   :QObject(parent, "aKregatorFrame")
+Frame::Frame(QObject *parent, KParts::ReadOnlyPart *p, QWidget *visWidget, const QString &tit, bool watchSignals)
+    : QObject(parent, "aKregatorFrame")
 {
     m_autoDeletePart = false;
-    m_part=p;
-    m_widget=visWidget;
-    m_title=tit;
-    m_state=Idle;
-    m_progress=-1;
-    m_progressItem=0;
+    m_part = p;
+    m_widget = visWidget;
+    m_title = tit;
+    m_state = Idle;
+    m_progress = -1;
+    m_progressItem = 0;
 
-    if (watchSignals) // e.g, articles tab has no part
+    if(watchSignals)  // e.g, articles tab has no part
     {
-        connect(m_part, SIGNAL(setWindowCaption (const QString &)), this, SLOT(setCaption (const QString &)));
-        connect(m_part, SIGNAL(setStatusBarText (const QString &)), this, SLOT(setStatusText (const QString &)));
+        connect(m_part, SIGNAL(setWindowCaption(const QString &)), this, SLOT(setCaption(const QString &)));
+        connect(m_part, SIGNAL(setStatusBarText(const QString &)), this, SLOT(setStatusText(const QString &)));
 
-        KParts::BrowserExtension *ext=KParts::BrowserExtension::childObject( p );
-        if (ext)
-            connect( ext, SIGNAL(loadingProgress(int)), this, SLOT(setProgress(int)) );
+        KParts::BrowserExtension *ext = KParts::BrowserExtension::childObject(p);
+        if(ext)
+            connect(ext, SIGNAL(loadingProgress(int)), this, SLOT(setProgress(int)));
 
-        connect(p, SIGNAL(started(KIO::Job*)), this, SLOT(setStarted()));
+        connect(p, SIGNAL(started(KIO::Job *)), this, SLOT(setStarted()));
         connect(p, SIGNAL(completed()), this, SLOT(setCompleted()));
-        connect(p, SIGNAL(canceled(const QString &)), this, SLOT(setCanceled(const QString&)));
+        connect(p, SIGNAL(canceled(const QString &)), this, SLOT(setCanceled(const QString &)));
         connect(p, SIGNAL(completed(bool)), this, SLOT(setCompleted()));
 
-/*        KActionCollection *coll=p->actionCollection();
-        if (coll)
-        {
-            connect( coll, SIGNAL( actionStatusText( const QString & ) ),
-             this, SLOT( slotActionStatusText( const QString & ) ) );
-            connect( coll, SIGNAL( clearStatusText() ),
-             this, SLOT( slotClearStatusText() ) );
-        }
-*/
+        /*        KActionCollection *coll=p->actionCollection();
+                if (coll)
+                {
+                    connect( coll, SIGNAL( actionStatusText( const QString & ) ),
+                     this, SLOT( slotActionStatusText( const QString & ) ) );
+                    connect( coll, SIGNAL( clearStatusText() ),
+                     this, SLOT( slotClearStatusText() ) );
+                }
+        */
     }
 }
 
@@ -81,11 +81,11 @@ void Frame::setAutoDeletePart(bool autoDelete)
 
 Frame::~Frame()
 {
-    if(m_progressItem) 
+    if(m_progressItem)
     {
         m_progressItem->setComplete();
     }
-    if (m_autoDeletePart)
+    if(m_autoDeletePart)
         m_part->deleteLater();
 }
 
@@ -106,7 +106,7 @@ QWidget *Frame::widget() const
 
 void Frame::setTitle(const QString &s)
 {
-    if (m_title != s)
+    if(m_title != s)
     {
         m_title = s;
         emit titleChanged(this, s);
@@ -116,31 +116,32 @@ void Frame::setTitle(const QString &s)
 void Frame::setCaption(const QString &s)
 {
     if(m_progressItem) m_progressItem->setLabel(s);
-    m_caption=s;
+    m_caption = s;
     emit captionChanged(s);
 }
 
 void Frame::setStatusText(const QString &s)
 {
-    m_statusText=s;
+    m_statusText = s;
     m_statusText.replace(QRegExp("<[^>]*>"), "");
     emit statusText(m_statusText);
 }
 
 void Frame::setProgress(int a)
 {
-    if(m_progressItem) {
+    if(m_progressItem)
+    {
         m_progressItem->setProgress((int)a);
     }
-    m_progress=a;
+    m_progress = a;
     emit loadingProgress(a);
 }
 
 void Frame::setState(int a)
 {
-    m_state=a;
-    
-    switch (m_state)
+    m_state = a;
+
+    switch(m_state)
     {
         case Frame::Started:
             emit started();
@@ -152,21 +153,22 @@ void Frame::setState(int a)
         case Frame::Completed:
         default:
             emit completed();
-    }}
+    }
+}
 
 
 
-const QString& Frame::title() const
+const QString &Frame::title() const
 {
     return m_title;
 }
 
-const QString& Frame::caption() const
+const QString &Frame::caption() const
 {
     return m_caption;
 }
 
-const QString& Frame::statusText() const
+const QString &Frame::statusText() const
 {
     return m_statusText;
 }
@@ -174,32 +176,34 @@ const QString& Frame::statusText() const
 void Frame::setStarted()
 {
     if(m_progressId.isNull() || m_progressId.isEmpty()) m_progressId = KPIM::ProgressManager::getUniqueID();
-    m_progressItem = KPIM::ProgressManager::createProgressItem(m_progressId, QStyleSheet::escape( title() ), QString::null, false);
+    m_progressItem = KPIM::ProgressManager::createProgressItem(m_progressId, QStyleSheet::escape(title()), QString::null, false);
     m_progressItem->setStatus(i18n("Loading..."));
     //connect(m_progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotAbortFetch()));
-    m_state=Started;
+    m_state = Started;
     emit started();
 }
 
 void Frame::setCanceled(const QString &s)
 {
-    if(m_progressItem) {
+    if(m_progressItem)
+    {
         m_progressItem->setStatus(i18n("Loading canceled"));
         m_progressItem->setComplete();
         m_progressItem = 0;
     }
-    m_state=Canceled;
+    m_state = Canceled;
     emit canceled(s);
 }
 
 void Frame::setCompleted()
 {
-    if(m_progressItem) {
+    if(m_progressItem)
+    {
         m_progressItem->setStatus(i18n("Loading completed"));
         m_progressItem->setComplete();
         m_progressItem = 0;
     }
-    m_state=Completed;
+    m_state = Completed;
     emit completed();
 }
 

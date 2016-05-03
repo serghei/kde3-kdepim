@@ -34,14 +34,13 @@
 
 namespace KAB {
 
-class KDE_EXPORT ContactEditorWidget : public QWidget
-{
-  Q_OBJECT
+class KDE_EXPORT ContactEditorWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    typedef QValueList<ContactEditorWidget*> List;
+public:
+    typedef QValueList<ContactEditorWidget *> List;
 
-    ContactEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ContactEditorWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~ContactEditorWidget();
 
     /**
@@ -49,63 +48,69 @@ class KDE_EXPORT ContactEditorWidget : public QWidget
       much vertical space relative to other widgets this widget will use
       in the summary view.
     */
-    virtual int logicalHeight() const { return 1; }
+    virtual int logicalHeight() const
+    {
+        return 1;
+    }
 
     /**
       Return logical wide of the widget. This is used to calculate how
       much horizontal space relative to other widgets this widget will use
       in the summary view.
     */
-    virtual int logicalWidth() const { return 1; }
+    virtual int logicalWidth() const
+    {
+        return 1;
+    }
 
     /**
       Load the contacts data into the GUI.
      */
-    virtual void loadContact( KABC::Addressee *addr ) = 0;
+    virtual void loadContact(KABC::Addressee *addr) = 0;
 
     /**
       Save the data from the GUI into the passed contact
       object.
      */
-    virtual void storeContact( KABC::Addressee *addr ) = 0;
+    virtual void storeContact(KABC::Addressee *addr) = 0;
 
     /**
       Sets whether the contact should be presented as
       read-only. You should update your GUI in the reimplemented
       method.
      */
-    virtual void setReadOnly( bool readOnly ) = 0;
+    virtual void setReadOnly(bool readOnly) = 0;
 
     /**
       Returns whether this widget was modified.
      */
     bool modified() const;
 
-  signals:
+signals:
     /**
       Emitted whenever the page has changed, do not emit it directly,
       use setModified() instead.
      */
     void changed();
 
-  public slots:
+public slots:
     /**
       Call this slot whenever the data were changed by the user. It
       will emit the changed() signal and set the modified property.
 
       @param modified Set whether the widget was modified.
      */
-    void setModified( bool modified );
+    void setModified(bool modified);
 
     void setModified();
 
-  protected:
+protected:
     /**
       Returns a pointer to the address book object.
      */
     KABC::AddressBook *addressBook() const;
 
-  private:
+private:
     KABC::AddressBook *mAddressBook;
     bool mModified;
 
@@ -113,16 +118,18 @@ class KDE_EXPORT ContactEditorWidget : public QWidget
     ContactEditorWidgetPrivate *d;
 };
 
-class ContactEditorWidgetFactory : public KLibFactory
-{
-  public:
-    virtual ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent,
-                                               const char *name = 0 ) = 0;
+class ContactEditorWidgetFactory : public KLibFactory {
+public:
+    virtual ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent,
+            const char *name = 0) = 0;
 
     /**
       Returns the i18ned title of this tab page.
      */
-    virtual QString pageTitle() const { return ""; }
+    virtual QString pageTitle() const
+    {
+        return "";
+    }
 
     /**
       Returns the identifier of the tab page where the widget
@@ -130,11 +137,11 @@ class ContactEditorWidgetFactory : public KLibFactory
      */
     virtual QString pageIdentifier() const = 0;
 
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const char*,
-                                   const QStringList & )
+protected:
+    virtual QObject *createObject(QObject *, const char *, const char *,
+                                  const QStringList &)
     {
-      return 0;
+        return 0;
     }
 };
 

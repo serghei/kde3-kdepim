@@ -36,41 +36,55 @@ namespace KMail {
 /**
   Manages common actions that can be performed on one or more messages.
 */
-class MessageActions : public QObject
-{
-  Q_OBJECT
-  public:
-    MessageActions( KActionCollection* ac, QWidget *parent );
-    void setMessageView( KMReaderWin *msgView );
+class MessageActions : public QObject {
+    Q_OBJECT
+public:
+    MessageActions(KActionCollection *ac, QWidget *parent);
+    void setMessageView(KMReaderWin *msgView);
 
-    void setCurrentMessage( KMMessage *msg );
-    void setSelectedSernums( const QValueList<Q_UINT32> &sernums );
-    void setSelectedVisibleSernums( const QValueList<Q_UINT32> &sernums );
+    void setCurrentMessage(KMMessage *msg);
+    void setSelectedSernums(const QValueList<Q_UINT32> &sernums);
+    void setSelectedVisibleSernums(const QValueList<Q_UINT32> &sernums);
 
-    KActionMenu* replyMenu() const { return mReplyActionMenu; }
-    KAction* replyListAction() const { return mReplyListAction; }
-    KAction* createTodoAction() const { return mCreateTodoAction; }
+    KActionMenu *replyMenu() const
+    {
+        return mReplyActionMenu;
+    }
+    KAction *replyListAction() const
+    {
+        return mReplyListAction;
+    }
+    KAction *createTodoAction() const
+    {
+        return mCreateTodoAction;
+    }
 
-    KActionMenu* messageStatusMenu() const { return mStatusMenu; }
+    KActionMenu *messageStatusMenu() const
+    {
+        return mStatusMenu;
+    }
 
-    KAction* editAction() const { return mEditAction; }
+    KAction *editAction() const
+    {
+        return mEditAction;
+    }
 
-  public slots:
+public slots:
     void editCurrentMessage();
 
-  private:
+private:
     void updateActions();
     template<typename T> void replyCommand()
     {
-      if ( !mCurrentMessage )
-        return;
-      const QString text = mMessageView ? mMessageView->copyText() : "";
-      KMCommand *command = new T( mParent, mCurrentMessage, text );
-      command->start();
+        if(!mCurrentMessage)
+            return;
+        const QString text = mMessageView ? mMessageView->copyText() : "";
+        KMCommand *command = new T(mParent, mCurrentMessage, text);
+        command->start();
     }
-    void setMessageStatus( KMMsgStatus status, bool toggle = false );
+    void setMessageStatus(KMMsgStatus status, bool toggle = false);
 
-  private slots:
+private slots:
     void slotReplyToMsg();
     void slotReplyAuthorToMsg();
     void slotReplyListToMsg();
@@ -83,10 +97,10 @@ class MessageActions : public QObject
     void slotSetMsgStatusTodo();
     void slotSetMsgStatusFlag();
 
-  private:
+private:
     QWidget *mParent;
     KActionCollection *mActionCollection;
-    KMMessage* mCurrentMessage;
+    KMMessage *mCurrentMessage;
     QValueList<Q_UINT32> mSelectedSernums;
     QValueList<Q_UINT32> mVisibleSernums;
     KMReaderWin *mMessageView;

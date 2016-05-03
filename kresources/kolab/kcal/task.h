@@ -41,8 +41,8 @@
 class QDomElement;
 
 namespace KCal {
-  class Todo;
-  class ResourceKolab;
+class Todo;
+class ResourceKolab;
 }
 
 namespace Kolab {
@@ -55,73 +55,76 @@ namespace Kolab {
  */
 class Task : public Incidence {
 public:
-  /// Use this to parse an xml string to a task entry
-  /// The caller is responsible for deleting the returned task
-  static KCal::Todo* xmlToTask( const QString& xml, const QString& tz, KCal::ResourceKolab *res = 0,
-                                const QString& subResource = QString::null, Q_UINT32 sernum = 0 );
+    /// Use this to parse an xml string to a task entry
+    /// The caller is responsible for deleting the returned task
+    static KCal::Todo *xmlToTask(const QString &xml, const QString &tz, KCal::ResourceKolab *res = 0,
+                                 const QString &subResource = QString::null, Q_UINT32 sernum = 0);
 
-  /// Use this to get an xml string describing this task entry
-  static QString taskToXML( KCal::Todo*, const QString& tz );
+    /// Use this to get an xml string describing this task entry
+    static QString taskToXML(KCal::Todo *, const QString &tz);
 
-  explicit Task( KCal::ResourceKolab *res, const QString& subResource, Q_UINT32 sernum,
-                 const QString& tz, KCal::Todo* todo = 0 );
-  virtual ~Task();
+    explicit Task(KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
+                  const QString &tz, KCal::Todo *todo = 0);
+    virtual ~Task();
 
-  virtual QString type() const { return "Task"; }
+    virtual QString type() const
+    {
+        return "Task";
+    }
 
-  void saveTo( KCal::Todo* todo );
+    void saveTo(KCal::Todo *todo);
 
-  virtual void setPriority( int priority );
-  virtual int priority() const;
+    virtual void setPriority(int priority);
+    virtual int priority() const;
 
-  virtual void setPercentCompleted( int percent );
-  virtual int percentCompleted() const;
+    virtual void setPercentCompleted(int percent);
+    virtual int percentCompleted() const;
 
-  virtual void setStatus( KCal::Incidence::Status status );
-  virtual KCal::Incidence::Status status() const;
+    virtual void setStatus(KCal::Incidence::Status status);
+    virtual KCal::Incidence::Status status() const;
 
-  virtual void setParent( const QString& parentUid );
-  virtual QString parent() const;
+    virtual void setParent(const QString &parentUid);
+    virtual QString parent() const;
 
-  virtual void setHasStartDate( bool );
-  virtual bool hasStartDate() const;
+    virtual void setHasStartDate(bool);
+    virtual bool hasStartDate() const;
 
-  virtual void setDueDate( const QDateTime& date );
-  virtual QDateTime dueDate() const;
-  virtual bool hasDueDate() const;
+    virtual void setDueDate(const QDateTime &date);
+    virtual QDateTime dueDate() const;
+    virtual bool hasDueDate() const;
 
-  virtual void setCompletedDate( const QDateTime& date );
-  virtual QDateTime completedDate() const;
-  virtual bool hasCompletedDate() const;
+    virtual void setCompletedDate(const QDateTime &date);
+    virtual QDateTime completedDate() const;
+    virtual bool hasCompletedDate() const;
 
-  // Load the attributes of this class
-  virtual bool loadAttribute( QDomElement& );
+    // Load the attributes of this class
+    virtual bool loadAttribute(QDomElement &);
 
-  // Save the attributes of this class
-  virtual bool saveAttributes( QDomElement& ) const;
+    // Save the attributes of this class
+    virtual bool saveAttributes(QDomElement &) const;
 
-  // Load this task by reading the XML file
-  virtual bool loadXML( const QDomDocument& xml );
+    // Load this task by reading the XML file
+    virtual bool loadXML(const QDomDocument &xml);
 
-  // Serialize this task to an XML string
-  virtual QString saveXML() const;
+    // Serialize this task to an XML string
+    virtual QString saveXML() const;
 
 protected:
-  // Read all known fields from this ical todo
-  void setFields( const KCal::Todo* );
+    // Read all known fields from this ical todo
+    void setFields(const KCal::Todo *);
 
-  int mPriority;
-  int mPercentCompleted;
-  KCal::Incidence::Status mStatus;
-  QString mParent;
+    int mPriority;
+    int mPercentCompleted;
+    KCal::Incidence::Status mStatus;
+    QString mParent;
 
-  bool mHasStartDate;
+    bool mHasStartDate;
 
-  bool mHasDueDate;
-  QDateTime mDueDate;
+    bool mHasDueDate;
+    QDateTime mDueDate;
 
-  bool mHasCompletedDate;
-  QDateTime mCompletedDate;
+    bool mHasCompletedDate;
+    QDateTime mCompletedDate;
 };
 
 }

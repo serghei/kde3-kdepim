@@ -40,35 +40,36 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
+class Error;
+class Context;
 }
 
 namespace Kleo {
 
-  class QGpgMEVerifyDetachedJob : public VerifyDetachedJob, private QGpgMEJob {
+class QGpgMEVerifyDetachedJob : public VerifyDetachedJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEVerifyDetachedJob( GpgME::Context * context );
+public:
+    QGpgMEVerifyDetachedJob(GpgME::Context *context);
     ~QGpgMEVerifyDetachedJob();
 
     /*! \reimp from VerifyDetachedJob */
-    GpgME::Error start( const QByteArray & signature,
-			const QByteArray & signedData );
+    GpgME::Error start(const QByteArray &signature,
+                       const QByteArray &signedData);
 
     /*! \reimp from VerifyDetachedJob */
-    GpgME::VerificationResult exec( const QByteArray & signature,
-				    const QByteArray & signedData );
+    GpgME::VerificationResult exec(const QByteArray &signature,
+                                   const QByteArray &signedData);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray &, const QByteArray & );
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    void setup(const QByteArray &, const QByteArray &);
+};
 
 }
 

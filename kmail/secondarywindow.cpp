@@ -37,44 +37,46 @@
 
 namespace KMail {
 
-  //---------------------------------------------------------------------------
-  SecondaryWindow::SecondaryWindow( const char * name )
-    : KMainWindow( 0, name )
-  {
+//---------------------------------------------------------------------------
+SecondaryWindow::SecondaryWindow(const char *name)
+    : KMainWindow(0, name)
+{
     // Set this to be the group leader for all subdialogs - this means
     // modal subdialogs will only affect this window, not the other windows
-    setWFlags( getWFlags() | WGroupLeader );
+    setWFlags(getWFlags() | WGroupLeader);
 
     kapp->ref();
-  }
+}
 
 
-  //---------------------------------------------------------------------------
-  SecondaryWindow::~SecondaryWindow()
-  {
+//---------------------------------------------------------------------------
+SecondaryWindow::~SecondaryWindow()
+{
     kapp->deref();
-  }
+}
 
 
-  //---------------------------------------------------------------------------
-  void SecondaryWindow::closeEvent( QCloseEvent * e )
-  {
+//---------------------------------------------------------------------------
+void SecondaryWindow::closeEvent(QCloseEvent *e)
+{
     // if there's a system tray applet then just do what needs to be done if a
     // window is closed.
-    if ( kmkernel->haveSystemTrayApplet() ) {
-      // BEGIN of code borrowed from KMainWindow::closeEvent
-      // Save settings if auto-save is enabled, and settings have changed
-      if ( settingsDirty() && autoSaveSettings() )
-        saveAutoSaveSettings();
+    if(kmkernel->haveSystemTrayApplet())
+    {
+        // BEGIN of code borrowed from KMainWindow::closeEvent
+        // Save settings if auto-save is enabled, and settings have changed
+        if(settingsDirty() && autoSaveSettings())
+            saveAutoSaveSettings();
 
-      if ( queryClose() ) {
-        e->accept();
-      }
-      // END of code borrowed from KMainWindow::closeEvent
+        if(queryClose())
+        {
+            e->accept();
+        }
+        // END of code borrowed from KMainWindow::closeEvent
     }
     else
-      KMainWindow::closeEvent( e );
-  }
+        KMainWindow::closeEvent(e);
+}
 
 } // namespace KMail
 

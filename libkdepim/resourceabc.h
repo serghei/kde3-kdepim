@@ -41,72 +41,77 @@ namespace KPIM {
  * handle subresources.
  */
 
-class KDE_EXPORT ResourceABC : public KABC::Resource
-{
-  Q_OBJECT
+class KDE_EXPORT ResourceABC : public KABC::Resource {
+    Q_OBJECT
 
 public:
-  ResourceABC( const KConfig* );
-  virtual ~ResourceABC();
+    ResourceABC(const KConfig *);
+    virtual ~ResourceABC();
 
-  /**
-   * Get the UID to subresource map. This is necessary to implement
-   * the search order.
-   * The returned map has the UID as key and the resource it's in as
-   * the data.
-   */
-  virtual QMap<QString, QString> uidToResourceMap() const = 0;
+    /**
+     * Get the UID to subresource map. This is necessary to implement
+     * the search order.
+     * The returned map has the UID as key and the resource it's in as
+     * the data.
+     */
+    virtual QMap<QString, QString> uidToResourceMap() const = 0;
 
-  /**
-   * If this resource has subresources, return a QStringList of them.
-   * In most cases, resources do not have subresources, so this is
-   * by default just empty.
-   */
-  virtual QStringList subresources() const { return QStringList(); }
+    /**
+     * If this resource has subresources, return a QStringList of them.
+     * In most cases, resources do not have subresources, so this is
+     * by default just empty.
+     */
+    virtual QStringList subresources() const
+    {
+        return QStringList();
+    }
 
-  /**
-   * Is this subresource active or not?
-   */
-  virtual bool subresourceActive( const QString& ) const { return true; }
+    /**
+     * Is this subresource active or not?
+     */
+    virtual bool subresourceActive(const QString &) const
+    {
+        return true;
+    }
 
-  /**
-   * Is the given subresource writable?
-   */
-  virtual bool subresourceWritable( const QString& ) const = 0;
+    /**
+     * Is the given subresource writable?
+     */
+    virtual bool subresourceWritable(const QString &) const = 0;
 
-  /**
-   * Completion weight for a given subresource
-   */
-  virtual int subresourceCompletionWeight( const QString& ) const = 0;
+    /**
+     * Completion weight for a given subresource
+     */
+    virtual int subresourceCompletionWeight(const QString &) const = 0;
 
-  /**
-   * Label for a given subresource
-   */
-  virtual QString subresourceLabel( const QString& ) const = 0;
+    /**
+     * Label for a given subresource
+     */
+    virtual QString subresourceLabel(const QString &) const = 0;
 
 public slots:
-  /**
-   * (De-)activate a subresource.
-   */
-  virtual void setSubresourceActive( const QString &, bool active ) = 0;
+    /**
+     * (De-)activate a subresource.
+     */
+    virtual void setSubresourceActive(const QString &, bool active) = 0;
 
-  /**
-   * Set completion weight for a given subresource
-   */
-  virtual void setSubresourceCompletionWeight( const QString&, int weight ) = 0;
+    /**
+     * Set completion weight for a given subresource
+     */
+    virtual void setSubresourceCompletionWeight(const QString &, int weight) = 0;
 
 signals:
-  /**
-   * This signal is emitted when a subresource is added.
-   */
-  void signalSubresourceAdded( KPIM::ResourceABC *, const QString &type,
-                               const QString &subResource );
+    /**
+     * This signal is emitted when a subresource is added.
+     */
+    void signalSubresourceAdded(KPIM::ResourceABC *, const QString &type,
+                                const QString &subResource);
 
-  /**
-   * This signal is emitted when a subresource is removed.
-   */
-  void signalSubresourceRemoved( KPIM::ResourceABC *, const QString &type,
-                                 const QString &subResource );
+    /**
+     * This signal is emitted when a subresource is removed.
+     */
+    void signalSubresourceRemoved(KPIM::ResourceABC *, const QString &type,
+                                  const QString &subResource);
 
 };
 

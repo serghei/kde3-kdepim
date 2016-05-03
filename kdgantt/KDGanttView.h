@@ -67,50 +67,49 @@ class KDGanttCanvasView;
 class KDGanttViewTaskLink;
 class KDGanttMinimizeSplitter;
 
-class KDGanttView : public KDGanttMinimizeSplitter
-{
+class KDGanttView : public KDGanttMinimizeSplitter {
     Q_OBJECT
 
-    Q_PROPERTY( bool showLegend READ showLegend WRITE setShowLegend )
-    Q_PROPERTY( bool showListView READ showListView WRITE setShowListView )
-    Q_PROPERTY( bool showTaskLinks READ showTaskLinks WRITE setShowTaskLinks )
-    Q_PROPERTY( bool editorEnabled READ editorEnabled WRITE setEditorEnabled )
-    Q_PROPERTY( QDateTime horizonStart READ horizonStart WRITE setHorizonStart )
-    Q_PROPERTY( QDateTime horizonEnd READ horizonEnd WRITE setHorizonEnd )
-    Q_PROPERTY( Scale scale READ scale WRITE setScale )
-    Q_PROPERTY( YearFormat yearFormat READ yearFormat WRITE setYearFormat )
-    Q_PROPERTY( HourFormat hourFormat READ hourFormat WRITE setHourFormat )
-    Q_PROPERTY( bool showMinorTicks READ showMinorTicks WRITE setShowMinorTicks )
-    Q_PROPERTY( bool showMajorTicks READ showMajorTicks WRITE setShowMajorTicks )
-    Q_PROPERTY( bool editable READ editable WRITE setEditable )
-    Q_PROPERTY( QColor textColor READ textColor WRITE setTextColor )
-    Q_PROPERTY( int majorScaleCount READ majorScaleCount WRITE setMajorScaleCount )
-    Q_PROPERTY( int minorScaleCount READ minorScaleCount WRITE setMinorScaleCount )
-    Q_PROPERTY( int autoScaleMinorTickCount READ autoScaleMinorTickCount WRITE setAutoScaleMinorTickCount )
-    Q_PROPERTY( Scale maximumScale READ maximumScale WRITE setMaximumScale )
-    Q_PROPERTY( Scale minimumScale READ minimumScale WRITE setMinimumScale )
-    Q_PROPERTY( int minimumColumnWidth READ minimumColumnWidth WRITE setMinimumColumnWidth )
-    Q_PROPERTY( int ganttMaximumWidth READ ganttMaximumWidth WRITE setGanttMaximumWidth )
-    Q_PROPERTY( QColor weekendBackgroundColor READ weekendBackgroundColor WRITE setWeekendBackgroundColor )
-    Q_PROPERTY( QColor ganttViewBackgroundColor READ gvBackgroundColor WRITE setGvBackgroundColor )
-    Q_PROPERTY( QColor listViewBackgroundColor READ lvBackgroundColor WRITE setLvBackgroundColor )
-    Q_PROPERTY( QColor timeHeaderBackgroundColor READ timeHeaderBackgroundColor WRITE setTimeHeaderBackgroundColor )
-    Q_PROPERTY( QColor legendHeaderBackgroundColor READ legendHeaderBackgroundColor WRITE setLegendHeaderBackgroundColor )
-    Q_PROPERTY( double zoomFactor READ zoomFactor )
-    Q_PROPERTY( bool showHeaderPopupMenu READ showHeaderPopupMenu WRITE setShowHeaderPopupMenu )
-    Q_PROPERTY( bool showTimeTablePopupMenu READ showTimeTablePopupMenu WRITE setShowTimeTablePopupMenu )
-    Q_PROPERTY( bool headerVisible READ headerVisible WRITE setHeaderVisible )
-    Q_PROPERTY( bool showLegendButton READ showLegendButton	WRITE setShowLegendButton )
-    Q_PROPERTY( bool legendIsDockwindow READ legendIsDockwindow WRITE setLegendIsDockwindow )
-    Q_PROPERTY( bool displayEmptyTasksAsLine READ displayEmptyTasksAsLine WRITE setDisplayEmptyTasksAsLine )
-    Q_PROPERTY( QBrush noInformationBrush READ noInformationBrush WRITE setNoInformationBrush )
-    Q_PROPERTY( bool dragEnabled READ dragEnabled WRITE setDragEnabled )
-    Q_PROPERTY( bool dropEnabled READ dropEnabled WRITE setDropEnabled )
-    Q_PROPERTY( bool calendarMode READ calendarMode WRITE setCalendarMode )
+    Q_PROPERTY(bool showLegend READ showLegend WRITE setShowLegend)
+    Q_PROPERTY(bool showListView READ showListView WRITE setShowListView)
+    Q_PROPERTY(bool showTaskLinks READ showTaskLinks WRITE setShowTaskLinks)
+    Q_PROPERTY(bool editorEnabled READ editorEnabled WRITE setEditorEnabled)
+    Q_PROPERTY(QDateTime horizonStart READ horizonStart WRITE setHorizonStart)
+    Q_PROPERTY(QDateTime horizonEnd READ horizonEnd WRITE setHorizonEnd)
+    Q_PROPERTY(Scale scale READ scale WRITE setScale)
+    Q_PROPERTY(YearFormat yearFormat READ yearFormat WRITE setYearFormat)
+    Q_PROPERTY(HourFormat hourFormat READ hourFormat WRITE setHourFormat)
+    Q_PROPERTY(bool showMinorTicks READ showMinorTicks WRITE setShowMinorTicks)
+    Q_PROPERTY(bool showMajorTicks READ showMajorTicks WRITE setShowMajorTicks)
+    Q_PROPERTY(bool editable READ editable WRITE setEditable)
+    Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor)
+    Q_PROPERTY(int majorScaleCount READ majorScaleCount WRITE setMajorScaleCount)
+    Q_PROPERTY(int minorScaleCount READ minorScaleCount WRITE setMinorScaleCount)
+    Q_PROPERTY(int autoScaleMinorTickCount READ autoScaleMinorTickCount WRITE setAutoScaleMinorTickCount)
+    Q_PROPERTY(Scale maximumScale READ maximumScale WRITE setMaximumScale)
+    Q_PROPERTY(Scale minimumScale READ minimumScale WRITE setMinimumScale)
+    Q_PROPERTY(int minimumColumnWidth READ minimumColumnWidth WRITE setMinimumColumnWidth)
+    Q_PROPERTY(int ganttMaximumWidth READ ganttMaximumWidth WRITE setGanttMaximumWidth)
+    Q_PROPERTY(QColor weekendBackgroundColor READ weekendBackgroundColor WRITE setWeekendBackgroundColor)
+    Q_PROPERTY(QColor ganttViewBackgroundColor READ gvBackgroundColor WRITE setGvBackgroundColor)
+    Q_PROPERTY(QColor listViewBackgroundColor READ lvBackgroundColor WRITE setLvBackgroundColor)
+    Q_PROPERTY(QColor timeHeaderBackgroundColor READ timeHeaderBackgroundColor WRITE setTimeHeaderBackgroundColor)
+    Q_PROPERTY(QColor legendHeaderBackgroundColor READ legendHeaderBackgroundColor WRITE setLegendHeaderBackgroundColor)
+    Q_PROPERTY(double zoomFactor READ zoomFactor)
+    Q_PROPERTY(bool showHeaderPopupMenu READ showHeaderPopupMenu WRITE setShowHeaderPopupMenu)
+    Q_PROPERTY(bool showTimeTablePopupMenu READ showTimeTablePopupMenu WRITE setShowTimeTablePopupMenu)
+    Q_PROPERTY(bool headerVisible READ headerVisible WRITE setHeaderVisible)
+    Q_PROPERTY(bool showLegendButton READ showLegendButton	WRITE setShowLegendButton)
+    Q_PROPERTY(bool legendIsDockwindow READ legendIsDockwindow WRITE setLegendIsDockwindow)
+    Q_PROPERTY(bool displayEmptyTasksAsLine READ displayEmptyTasksAsLine WRITE setDisplayEmptyTasksAsLine)
+    Q_PROPERTY(QBrush noInformationBrush READ noInformationBrush WRITE setNoInformationBrush)
+    Q_PROPERTY(bool dragEnabled READ dragEnabled WRITE setDragEnabled)
+    Q_PROPERTY(bool dropEnabled READ dropEnabled WRITE setDropEnabled)
+    Q_PROPERTY(bool calendarMode READ calendarMode WRITE setCalendarMode)
 
-    Q_ENUMS( Scale )
-    Q_ENUMS( YearFormat )
-    Q_ENUMS( HourFormat )
+    Q_ENUMS(Scale)
+    Q_ENUMS(YearFormat)
+    Q_ENUMS(HourFormat)
 
 public:
     enum Scale { Minute, Hour, Day, Week, Month, Auto };
@@ -118,108 +117,108 @@ public:
     enum HourFormat { Hour_24, Hour_12, Hour_24_FourDigit };
     enum RepaintMode { No, Medium, Always };
 
-    KDGanttView( QWidget* parent = 0, const char* name = 0 );
+    KDGanttView(QWidget *parent = 0, const char *name = 0);
     ~KDGanttView();
 
     virtual void show();
-    virtual bool close ( bool alsoDelete );
-    void setRepaintMode( RepaintMode mode );
-    void setUpdateEnabled( bool enable);
-    bool getUpdateEnabled( )const;
+    virtual bool close(bool alsoDelete);
+    void setRepaintMode(RepaintMode mode);
+    void setUpdateEnabled(bool enable);
+    bool getUpdateEnabled()const;
 
-    void setGanttMaximumWidth( int w );
+    void setGanttMaximumWidth(int w);
     int ganttMaximumWidth() const;
-    void setShowLegend( bool show );
+    void setShowLegend(bool show);
     bool showLegend() const;
-    void setLegendIsDockwindow( bool dock );
-    bool legendIsDockwindow( ) const;
-    QDockWindow* legendDockwindow( ) const;
-    void setShowListView( bool show );
+    void setLegendIsDockwindow(bool dock);
+    bool legendIsDockwindow() const;
+    QDockWindow *legendDockwindow() const;
+    void setShowListView(bool show);
     bool showListView() const;
-    void setEditorEnabled( bool enable );
+    void setEditorEnabled(bool enable);
     bool editorEnabled() const;
-    void setListViewWidth( int );
+    void setListViewWidth(int);
     int listViewWidth();
-    void setEditable( bool editable );
+    void setEditable(bool editable);
     bool editable() const;
-    void setCalendarMode( bool mode );
+    void setCalendarMode(bool mode);
     bool calendarMode() const;
-    void setDisplaySubitemsAsGroup( bool show );
+    void setDisplaySubitemsAsGroup(bool show);
     bool displaySubitemsAsGroup() const;
-    void setDisplayEmptyTasksAsLine( bool show );
+    void setDisplayEmptyTasksAsLine(bool show);
     bool displayEmptyTasksAsLine() const;
 
-    void setHorBackgroundLines( int count = 2,
-				QBrush brush =
-				QBrush( QColor ( 200,200,200 ),
-					Qt::Dense6Pattern ));
-    int horBackgroundLines( QBrush& brush );
-    bool saveProject( QIODevice* );
-    bool loadProject( QIODevice* );
-    void print( QPrinter* printer = 0 ,
-		bool printListView = true, bool printTimeLine = true,
-		bool printLegend = false );
-    QSize drawContents( QPainter* p = 0,
-		      bool drawListView = true, bool drawTimeLine = true,
-		      bool drawLegend = false );
-    void setZoomFactor( double factor, bool absolute );
+    void setHorBackgroundLines(int count = 2,
+                               QBrush brush =
+                                   QBrush(QColor(200, 200, 200),
+                                          Qt::Dense6Pattern));
+    int horBackgroundLines(QBrush &brush);
+    bool saveProject(QIODevice *);
+    bool loadProject(QIODevice *);
+    void print(QPrinter *printer = 0 ,
+               bool printListView = true, bool printTimeLine = true,
+               bool printLegend = false);
+    QSize drawContents(QPainter *p = 0,
+                       bool drawListView = true, bool drawTimeLine = true,
+                       bool drawLegend = false);
+    void setZoomFactor(double factor, bool absolute);
     double zoomFactor() const;
     void zoomToFit();
-    void ensureVisible( KDGanttViewItem* );
-    void center( KDGanttViewItem* );
-    void centerTimeline( const QDateTime& center );
-    void centerTimelineAfterShow( const QDateTime& center );
+    void ensureVisible(KDGanttViewItem *);
+    void center(KDGanttViewItem *);
+    void centerTimeline(const QDateTime &center);
+    void centerTimelineAfterShow(const QDateTime &center);
     void setTimelineToStart();
     void setTimelineToEnd();
-    void addTicksLeft( int num = 1 );
-    void addTicksRight( int num = 1 );
-    void setShowTaskLinks( bool show );
+    void addTicksLeft(int num = 1);
+    void addTicksRight(int num = 1);
+    void setShowTaskLinks(bool show);
     bool showTaskLinks() const;
 
-    void setFont(const QFont& f);
-    void setShowHeaderPopupMenu( bool show = true,
-                                 bool showZoom = true,
-                                 bool showScale = true,
-                                 bool showTime = true,
-                                 bool showYear = true,
-                                 bool showGrid = true,
-                                 bool showPrint = false);
+    void setFont(const QFont &f);
+    void setShowHeaderPopupMenu(bool show = true,
+                                bool showZoom = true,
+                                bool showScale = true,
+                                bool showTime = true,
+                                bool showYear = true,
+                                bool showGrid = true,
+                                bool showPrint = false);
     bool showHeaderPopupMenu() const;
-    void setShowTimeTablePopupMenu( bool );
+    void setShowTimeTablePopupMenu(bool);
     bool showTimeTablePopupMenu() const;
-    void setShapes( KDGanttViewItem::Type type,
-                    KDGanttViewItem::Shape start,
-                    KDGanttViewItem::Shape middle,
-                    KDGanttViewItem::Shape end,
-		    bool overwriteExisting = true  );
-    bool shapes( KDGanttViewItem::Type type,
-                 KDGanttViewItem::Shape& start,
-                 KDGanttViewItem::Shape& middle,
-                 KDGanttViewItem::Shape& end ) const;
-    void setColors( KDGanttViewItem::Type type,
-                    const QColor& start, const QColor& middle,
-                    const QColor& end,
-		    bool overwriteExisting = true );
-    bool colors( KDGanttViewItem::Type type,
-                 QColor& start, QColor& middle, QColor& end ) const;
-    void setDefaultColor( KDGanttViewItem::Type type,
-			  const QColor&,
-			  bool overwriteExisting = true );
-    QColor defaultColor( KDGanttViewItem::Type type ) const;
-    void setHighlightColors( KDGanttViewItem::Type type,
-                             const QColor& start, const QColor& middle,
-                             const QColor& end,
-			     bool overwriteExisting = true );
-    bool highlightColors( KDGanttViewItem::Type type,
-                          QColor& start, QColor& middle, QColor& end ) const;
-    void setDefaultHighlightColor( KDGanttViewItem::Type type,
-				   const QColor&,
-				   bool overwriteExisting = true );
-    QColor defaultHighlightColor( KDGanttViewItem::Type type ) const;
-    void setTextColor( const QColor& color );
+    void setShapes(KDGanttViewItem::Type type,
+                   KDGanttViewItem::Shape start,
+                   KDGanttViewItem::Shape middle,
+                   KDGanttViewItem::Shape end,
+                   bool overwriteExisting = true);
+    bool shapes(KDGanttViewItem::Type type,
+                KDGanttViewItem::Shape &start,
+                KDGanttViewItem::Shape &middle,
+                KDGanttViewItem::Shape &end) const;
+    void setColors(KDGanttViewItem::Type type,
+                   const QColor &start, const QColor &middle,
+                   const QColor &end,
+                   bool overwriteExisting = true);
+    bool colors(KDGanttViewItem::Type type,
+                QColor &start, QColor &middle, QColor &end) const;
+    void setDefaultColor(KDGanttViewItem::Type type,
+                         const QColor &,
+                         bool overwriteExisting = true);
+    QColor defaultColor(KDGanttViewItem::Type type) const;
+    void setHighlightColors(KDGanttViewItem::Type type,
+                            const QColor &start, const QColor &middle,
+                            const QColor &end,
+                            bool overwriteExisting = true);
+    bool highlightColors(KDGanttViewItem::Type type,
+                         QColor &start, QColor &middle, QColor &end) const;
+    void setDefaultHighlightColor(KDGanttViewItem::Type type,
+                                  const QColor &,
+                                  bool overwriteExisting = true);
+    QColor defaultHighlightColor(KDGanttViewItem::Type type) const;
+    void setTextColor(const QColor &color);
     QColor textColor() const;
 
-    void setNoInformationBrush( const QBrush& brush );
+    void setNoInformationBrush(const QBrush &brush);
     QBrush noInformationBrush() const;
 
     // Link-related stuff
@@ -227,215 +226,225 @@ public:
     QPtrList<KDGanttViewTaskLinkGroup> taskLinkGroups() const;
 
     // Legend-related stuff
-    void addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text );
+    void addLegendItem(KDGanttViewItem::Shape shape, const QColor &shapeColor, const QString &text);
     void clearLegend();
     // Header-related stuff
-    void setHorizonStart( const QDateTime& start );
+    void setHorizonStart(const QDateTime &start);
     QDateTime horizonStart() const;
-    void setHorizonEnd( const QDateTime& start );
+    void setHorizonEnd(const QDateTime &start);
     QDateTime horizonEnd() const;
-    void setScale( Scale );
+    void setScale(Scale);
     Scale scale() const;
-    void setMaximumScale( Scale );
+    void setMaximumScale(Scale);
     Scale maximumScale() const;
-    void setMinimumScale( Scale );
+    void setMinimumScale(Scale);
     Scale minimumScale() const;
-    void setAutoScaleMinorTickCount( int count );
+    void setAutoScaleMinorTickCount(int count);
     int autoScaleMinorTickCount() const;
-    void setMajorScaleCount( int count );
+    void setMajorScaleCount(int count);
     int majorScaleCount() const;
-    void setMinorScaleCount( int count );
+    void setMinorScaleCount(int count);
     int minorScaleCount() const;
-    void setMinimumColumnWidth( int width );
+    void setMinimumColumnWidth(int width);
     int minimumColumnWidth() const;
-    void setYearFormat( YearFormat format );
+    void setYearFormat(YearFormat format);
     YearFormat yearFormat() const;
-    void setHourFormat( HourFormat format );
+    void setHourFormat(HourFormat format);
     HourFormat hourFormat() const;
-    void setShowMajorTicks( bool );
+    void setShowMajorTicks(bool);
     bool showMajorTicks() const;
-    void setShowMinorTicks( bool );
+    void setShowMinorTicks(bool);
     bool showMinorTicks() const;
-    void setColumnBackgroundColor( const QDateTime& column,
-                                   const QColor& color,
-				   Scale mini =  KDGanttView::Minute ,
-				   Scale maxi =  KDGanttView::Month);
+    void setColumnBackgroundColor(const QDateTime &column,
+                                  const QColor &color,
+                                  Scale mini =  KDGanttView::Minute ,
+                                  Scale maxi =  KDGanttView::Month);
 #if 0
-   // This API has been replaced with KDIntervalColorRectangle and addIntervalBackgroundColor
-    void setIntervalBackgroundColor( const QDateTime& start,
-				     const QDateTime& end,
-				     const QColor& color,
-				     Scale mini =  KDGanttView::Minute ,
-				     Scale maxi =  KDGanttView::Month);
-    bool changeBackgroundInterval( const QDateTime& oldstart,
-				   const QDateTime& oldend,
-				   const QDateTime& newstart,
-				   const QDateTime& newend );
-    bool deleteBackgroundInterval( const QDateTime& start,
-				   const QDateTime& end );
+    // This API has been replaced with KDIntervalColorRectangle and addIntervalBackgroundColor
+    void setIntervalBackgroundColor(const QDateTime &start,
+                                    const QDateTime &end,
+                                    const QColor &color,
+                                    Scale mini =  KDGanttView::Minute ,
+                                    Scale maxi =  KDGanttView::Month);
+    bool changeBackgroundInterval(const QDateTime &oldstart,
+                                  const QDateTime &oldend,
+                                  const QDateTime &newstart,
+                                  const QDateTime &newend);
+    bool deleteBackgroundInterval(const QDateTime &start,
+                                  const QDateTime &end);
 #endif
-    void addIntervalBackgroundColor( KDIntervalColorRectangle* newItem );
+    void addIntervalBackgroundColor(KDIntervalColorRectangle *newItem);
     void clearBackgroundColor();
-    QColor columnBackgroundColor( const QDateTime& column ) const;
-    void setWeekendBackgroundColor( const QColor& color );
+    QColor columnBackgroundColor(const QDateTime &column) const;
+    void setWeekendBackgroundColor(const QColor &color);
     QColor weekendBackgroundColor() const;
-    void setWeekdayBackgroundColor( const QColor& color, int weekday );
+    void setWeekdayBackgroundColor(const QColor &color, int weekday);
     QColor weekdayBackgroundColor(int weekday) const;
 
 
-    void setPaletteBackgroundColor(const QColor& col);
-    void setGvBackgroundColor ( const QColor & );
-    void setLvBackgroundColor ( const QColor & );
-    void setTimeHeaderBackgroundColor ( const QColor & );
-    void setLegendHeaderBackgroundColor ( const QColor & );
-    QColor gvBackgroundColor () const ;
-    QColor lvBackgroundColor () const ;
-    QColor timeHeaderBackgroundColor () const ;
-    QColor legendHeaderBackgroundColor () const ;
-    void addUserdefinedLegendHeaderWidget( QWidget * w );
+    void setPaletteBackgroundColor(const QColor &col);
+    void setGvBackgroundColor(const QColor &);
+    void setLvBackgroundColor(const QColor &);
+    void setTimeHeaderBackgroundColor(const QColor &);
+    void setLegendHeaderBackgroundColor(const QColor &);
+    QColor gvBackgroundColor() const ;
+    QColor lvBackgroundColor() const ;
+    QColor timeHeaderBackgroundColor() const ;
+    QColor legendHeaderBackgroundColor() const ;
+    void addUserdefinedLegendHeaderWidget(QWidget *w);
 
-    void setWeekendDays( int start, int end );
-    void weekendDays( int& start, int& end ) const;
+    void setWeekendDays(int start, int end);
+    void weekendDays(int &start, int &end) const;
 
-    static QPixmap getPixmap( KDGanttViewItem::Shape shape, const QColor& shapeColor,const QColor& backgroundColor, int itemSize);
+    static QPixmap getPixmap(KDGanttViewItem::Shape shape, const QColor &shapeColor, const QColor &backgroundColor, int itemSize);
 
-    void setHeaderVisible( bool );
+    void setHeaderVisible(bool);
     bool headerVisible() const;
 
-    void setShowLegendButton( bool show );
+    void setShowLegendButton(bool show);
     bool showLegendButton() const;
 
     // Pass-through methods from QListView
-    virtual int addColumn( const QString& label, int width = -1 );
-    virtual int addColumn( const QIconSet& iconset, const QString& label,
-                           int width = -1 );
-    virtual void removeColumn( int index );
-    KDGanttViewItem* selectedItem() const;
-    void setSelected( KDGanttViewItem*, bool );
-    KDGanttViewItem* firstChild() const;
-    KDGanttViewItem* lastItem() const;
+    virtual int addColumn(const QString &label, int width = -1);
+    virtual int addColumn(const QIconSet &iconset, const QString &label,
+                          int width = -1);
+    virtual void removeColumn(int index);
+    KDGanttViewItem *selectedItem() const;
+    void setSelected(KDGanttViewItem *, bool);
+    KDGanttViewItem *firstChild() const;
+    KDGanttViewItem *lastItem() const;
     int childCount() const;
     void clear();
 
-    void setDragEnabled( bool b );
-    void setDropEnabled( bool b );
-    void setDragDropEnabled( bool b );
+    void setDragEnabled(bool b);
+    void setDropEnabled(bool b);
+    void setDragDropEnabled(bool b);
     bool dragEnabled() const;
     bool dropEnabled() const;
     bool isDragEnabled() const;
     bool isDropEnabled() const;
 
-    virtual bool lvDropEvent ( QDropEvent *e, KDGanttViewItem*, KDGanttViewItem*);
-    virtual void lvStartDrag (KDGanttViewItem*);
-    virtual bool lvDragMoveEvent (QDragMoveEvent * e,KDGanttViewItem*, KDGanttViewItem*);
-    virtual void lvDragEnterEvent (QDragEnterEvent * e );
+    virtual bool lvDropEvent(QDropEvent *e, KDGanttViewItem *, KDGanttViewItem *);
+    virtual void lvStartDrag(KDGanttViewItem *);
+    virtual bool lvDragMoveEvent(QDragMoveEvent *e, KDGanttViewItem *, KDGanttViewItem *);
+    virtual void lvDragEnterEvent(QDragEnterEvent *e);
     virtual QSize sizeHint() const;
-    KDGanttViewItem* getItemByName( const QString& name ) const;
-    QDateTime getDateTimeForCoordX(int coordX, bool global = true ) const;
-    KDGanttViewItem* getItemByListViewPos( const QPoint& pos ) const;
-    KDGanttViewItem* getItemByGanttViewPos( const QPoint& pos ) const;
-    KDGanttViewItem* getItemAt( const QPoint& pos , bool global = true ) const;
+    KDGanttViewItem *getItemByName(const QString &name) const;
+    QDateTime getDateTimeForCoordX(int coordX, bool global = true) const;
+    KDGanttViewItem *getItemByListViewPos(const QPoint &pos) const;
+    KDGanttViewItem *getItemByGanttViewPos(const QPoint &pos) const;
+    KDGanttViewItem *getItemAt(const QPoint &pos , bool global = true) const;
 
     // setting the vertical scrollbars of the listview and the timetable
     // default values: always off for the listview, always on for the timetable
-    void setLvVScrollBarMode( QScrollView::ScrollBarMode );
-    void setGvVScrollBarMode( QScrollView::ScrollBarMode );
+    void setLvVScrollBarMode(QScrollView::ScrollBarMode);
+    void setGvVScrollBarMode(QScrollView::ScrollBarMode);
 
     void setLinkItemsEnabled(bool on);
     bool isLinkItemsEnabled() const;
 
-    KDTimeTableWidget * timeTableWidget() { return myTimeTable; }
-    KDTimeHeaderWidget * timeHeaderWidget() { return myTimeHeader; }
+    KDTimeTableWidget *timeTableWidget()
+    {
+        return myTimeTable;
+    }
+    KDTimeHeaderWidget *timeHeaderWidget()
+    {
+        return myTimeHeader;
+    }
 
-    void setFixedHorizon( bool f ) { mFixedHorizon = f; }
+    void setFixedHorizon(bool f)
+    {
+        mFixedHorizon = f;
+    }
 
 public slots:
-    void editItem( KDGanttViewItem* );
-    void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
+    void editItem(KDGanttViewItem *);
+    void zoomToSelection(const QDateTime &start,  const QDateTime  &end);
 
 signals:
-    void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);
-    void timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
-    void rescaling( KDGanttView::Scale );
-    void intervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
+    void timeIntervallSelected(const QDateTime &start,  const QDateTime  &end);
+    void timeIntervalSelected(const QDateTime &start,  const QDateTime  &end);
+    void rescaling(KDGanttView::Scale);
+    void intervalColorRectangleMoved(const QDateTime &start, const QDateTime &end);
 
     // the following signals are emitted if an item is clicked in the
     // listview (inclusive) or in the ganttview
-    void itemLeftClicked( KDGanttViewItem* );
-    void itemMidClicked( KDGanttViewItem* );
-    void itemRightClicked( KDGanttViewItem* );
-    void itemDoubleClicked( KDGanttViewItem* );
+    void itemLeftClicked(KDGanttViewItem *);
+    void itemMidClicked(KDGanttViewItem *);
+    void itemRightClicked(KDGanttViewItem *);
+    void itemDoubleClicked(KDGanttViewItem *);
 
     // The following signal is emitted when two items shall be linked
-    void linkItems( KDGanttViewItem* from, KDGanttViewItem* to, int linkType );
+    void linkItems(KDGanttViewItem *from, KDGanttViewItem *to, int linkType);
 
     // the following signals are emitted if an item is clicked in the
     // listview (exlusive) or in the ganttview
     // gv... means item in ganttview clicked
 
-    void gvCurrentChanged( KDGanttViewItem* );
-    void gvItemLeftClicked( KDGanttViewItem* );
-    void gvItemMidClicked( KDGanttViewItem* );
-    void gvItemRightClicked( KDGanttViewItem* );
-  // the point is the global position!!
-    void gvMouseButtonClicked ( int button, KDGanttViewItem* item, const QPoint & pos);
-    void gvItemDoubleClicked( KDGanttViewItem* );
+    void gvCurrentChanged(KDGanttViewItem *);
+    void gvItemLeftClicked(KDGanttViewItem *);
+    void gvItemMidClicked(KDGanttViewItem *);
+    void gvItemRightClicked(KDGanttViewItem *);
     // the point is the global position!!
-    void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
-    void gvItemMoved( KDGanttViewItem* );
+    void gvMouseButtonClicked(int button, KDGanttViewItem *item, const QPoint &pos);
+    void gvItemDoubleClicked(KDGanttViewItem *);
+    // the point is the global position!!
+    void gvContextMenuRequested(KDGanttViewItem *item, const QPoint &pos);
+    void gvItemMoved(KDGanttViewItem *);
 
     // lv... means item in listview clicked
-    void lvCurrentChanged( KDGanttViewItem* );
-    void lvItemRenamed( KDGanttViewItem* , int col, const QString & text  );
-    void lvMouseButtonPressed(  int button, KDGanttViewItem * item, const QPoint & pos, int c );
-    void lvItemLeftClicked( KDGanttViewItem* );
-    void lvItemMidClicked( KDGanttViewItem* );
-    void lvItemRightClicked( KDGanttViewItem* );
-    void lvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos, int col );
-    void lvMouseButtonClicked ( int button, KDGanttViewItem* item, const QPoint & pos, int c );
-    void lvItemDoubleClicked( KDGanttViewItem* );
-    void lvSelectionChanged( KDGanttViewItem* );
+    void lvCurrentChanged(KDGanttViewItem *);
+    void lvItemRenamed(KDGanttViewItem *, int col, const QString &text);
+    void lvMouseButtonPressed(int button, KDGanttViewItem *item, const QPoint &pos, int c);
+    void lvItemLeftClicked(KDGanttViewItem *);
+    void lvItemMidClicked(KDGanttViewItem *);
+    void lvItemRightClicked(KDGanttViewItem *);
+    void lvContextMenuRequested(KDGanttViewItem *item, const QPoint &pos, int col);
+    void lvMouseButtonClicked(int button, KDGanttViewItem *item, const QPoint &pos, int c);
+    void lvItemDoubleClicked(KDGanttViewItem *);
+    void lvSelectionChanged(KDGanttViewItem *);
 
-    void itemConfigured( KDGanttViewItem* );
+    void itemConfigured(KDGanttViewItem *);
 
-    void taskLinkLeftClicked( KDGanttViewTaskLink* );
-    void taskLinkMidClicked( KDGanttViewTaskLink* );
-    void taskLinkRightClicked( KDGanttViewTaskLink* );
-    void taskLinkDoubleClicked( KDGanttViewTaskLink* );
+    void taskLinkLeftClicked(KDGanttViewTaskLink *);
+    void taskLinkMidClicked(KDGanttViewTaskLink *);
+    void taskLinkRightClicked(KDGanttViewTaskLink *);
+    void taskLinkDoubleClicked(KDGanttViewTaskLink *);
 
-    void dateTimeDoubleClicked (const QDateTime& );
+    void dateTimeDoubleClicked(const QDateTime &);
 
-    void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
+    void dropped(QDropEvent *e, KDGanttViewItem *droppedItem, KDGanttViewItem *itemBelowMouse);
 private slots:
-    void forceRepaint( int val = 0 );
-    void slotSelectionChanged( QListViewItem* item );
-    void slotCurrentChanged ( QListViewItem * item );
-    void slotItemRenamed ( QListViewItem * item, int col, const QString & text  );
-    void slotMouseButtonPressed ( int button, QListViewItem * item, const QPoint & pos, int c );
-    void slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c );
-    void slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col );
+    void forceRepaint(int val = 0);
+    void slotSelectionChanged(QListViewItem *item);
+    void slotCurrentChanged(QListViewItem *item);
+    void slotItemRenamed(QListViewItem *item, int col, const QString &text);
+    void slotMouseButtonPressed(int button, QListViewItem *item, const QPoint &pos, int c);
+    void slotmouseButtonClicked(int button, QListViewItem *item, const QPoint &pos, int c);
+    void slotcontextMenuRequested(QListViewItem *item, const QPoint &pos, int col);
     void slotHeaderSizeChanged();
     void addTickRight();
     void addTickLeft();
-    void enableAdding( int );
-    void slot_lvDropped(QDropEvent* e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse );
+    void enableAdding(int);
+    void slot_lvDropped(QDropEvent *e, KDGanttViewItem *droppedItem, KDGanttViewItem *itemBelowMouse);
 private:
-    struct legendItem {
-      KDGanttViewItem::Shape shape;
-      QColor color;
-      QString text;
+    struct legendItem
+    {
+        KDGanttViewItem::Shape shape;
+        QColor color;
+        QString text;
     };
-    bool loadXML( const QDomDocument& doc );
-    QDomDocument saveXML( bool withPI = true ) const;
+    bool loadXML(const QDomDocument &doc);
+    QDomDocument saveXML(bool withPI = true) const;
 
-    void emptySpaceDoubleClicked( QMouseEvent* e );
+    void emptySpaceDoubleClicked(QMouseEvent *e);
 
-    static QString scaleToString( Scale scale );
-    static QString yearFormatToString( YearFormat format );
-    static QString hourFormatToString( HourFormat format );
-    static Scale stringToScale( const QString& string );
-    static YearFormat stringToYearFormat( const QString& string );
-    static HourFormat stringToHourFormat( const QString& string );
+    static QString scaleToString(Scale scale);
+    static QString yearFormatToString(YearFormat format);
+    static QString hourFormatToString(HourFormat format);
+    static Scale stringToScale(const QString &string);
+    static YearFormat stringToYearFormat(const QString &string);
+    static HourFormat stringToHourFormat(const QString &string);
 
     // PENDING(lutz) Review these
     friend class KDGanttCanvasView;
@@ -451,17 +460,17 @@ private:
     friend class KDGanttViewTaskLinkGroup;
     friend class KDLegendWidget;
 
-    KDListView * myListView;
+    KDListView *myListView;
     KDGanttCanvasView *myCanvasView;
-    KDTimeHeaderWidget * myTimeHeader;
-    KDTimeTableWidget * myTimeTable;
-    KDLegendWidget * myLegend;
-    itemAttributeDialog* myItemAttributeDialog;
-    QVBox * leftWidget,  * rightWidget;
-    QHBox * spacerLeft;
-    QScrollView* myTimeHeaderScroll;
-    QHBox* myTimeHeaderContainer ;
-    QWidget* timeHeaderSpacerWidget;
+    KDTimeHeaderWidget *myTimeHeader;
+    KDTimeTableWidget *myTimeTable;
+    KDLegendWidget *myLegend;
+    itemAttributeDialog *myItemAttributeDialog;
+    QVBox *leftWidget,  * rightWidget;
+    QHBox *spacerLeft;
+    QScrollView *myTimeHeaderScroll;
+    QHBox *myTimeHeaderContainer ;
+    QWidget *timeHeaderSpacerWidget;
     QWidget *spacerRight;
 
     bool listViewIsVisible;
@@ -478,23 +487,23 @@ private:
     bool closingBlocked;
     QDateTime dtCenterTimeLineAfterShow;
     KDGanttViewItem::Shape myDefaultShape [9];
-    QColor myColor[9],myColorHL[9];
-    bool undefinedShape[3],undefinedColor[3],undefinedColorHL[3];
+    QColor myColor[9], myColorHL[9];
+    bool undefinedShape[3], undefinedColor[3], undefinedColorHL[3];
     QColor myTextColor;
-    QColor myDefaultColor[3],myDefaultColorHL[3];
+    QColor myDefaultColor[3], myDefaultColorHL[3];
     QPtrList<KDGanttViewTaskLinkGroup> myTaskLinkGroupList;
     QPtrList<legendItem> *myLegendItems;
-    void addTaskLinkGroup(KDGanttViewTaskLinkGroup*);
-    void removeTaskLinkGroup(KDGanttViewTaskLinkGroup*);
-    int getIndex( KDGanttViewItem::Type ) const;
-    void notifyEditdialog( KDGanttViewItem * );
+    void addTaskLinkGroup(KDGanttViewTaskLinkGroup *);
+    void removeTaskLinkGroup(KDGanttViewTaskLinkGroup *);
+    int getIndex(KDGanttViewItem::Type) const;
+    void notifyEditdialog(KDGanttViewItem *);
     void initDefaults();
-    KDGanttViewItem* myCurrentItem;
+    KDGanttViewItem *myCurrentItem;
     KDGanttMinimizeSplitter *mySplitter;
     bool  mFixedHorizon;
 protected:
-  virtual QDragObject * dragObject ();
-  virtual void startDrag ();
+    virtual QDragObject *dragObject();
+    virtual void startDrag();
 };
 
 

@@ -33,45 +33,45 @@
 #include "pilotAppInfo.h"
 
 PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) :
-	fC( 0L ),
-	fLen(0),
-	fOwn(true)
+    fC(0L),
+    fLen(0),
+    fOwn(true)
 {
-	FUNCTIONSETUP;
-	int appLen = Pilot::MAX_APPINFO_SIZE;
-	unsigned char buffer[Pilot::MAX_APPINFO_SIZE];
+    FUNCTIONSETUP;
+    int appLen = Pilot::MAX_APPINFO_SIZE;
+    unsigned char buffer[Pilot::MAX_APPINFO_SIZE];
 
-	if (!d || !d->isOpen())
-	{
-		WARNINGKPILOT << "Bad database pointer." << endl;
-		fLen = 0;
-		KPILOT_DELETE( fC );
-		return;
-	}
+    if(!d || !d->isOpen())
+    {
+        WARNINGKPILOT << "Bad database pointer." << endl;
+        fLen = 0;
+        KPILOT_DELETE(fC);
+        return;
+    }
 
-	fC = new struct CategoryAppInfo;
-	fLen = appLen = d->readAppBlock(buffer,appLen);
-	unpack_CategoryAppInfo(fC, buffer, appLen);
+    fC = new struct CategoryAppInfo;
+    fLen = appLen = d->readAppBlock(buffer, appLen);
+    unpack_CategoryAppInfo(fC, buffer, appLen);
 }
 
 PilotAppInfoBase::~PilotAppInfoBase()
 {
-	if (fOwn)
-	{
-		delete fC;
-	}
+    if(fOwn)
+    {
+        delete fC;
+    }
 }
 
 bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)
 {
-	if ( (i>=Pilot::CATEGORY_COUNT) || // bad category number
-		(!categoryInfo())) // Nowhere to write to
-	{
-		return false;
-	}
+    if((i >= Pilot::CATEGORY_COUNT) ||   // bad category number
+            (!categoryInfo())) // Nowhere to write to
+    {
+        return false;
+    }
 
-	(void) Pilot::toPilot(s, categoryInfo()->name[i], Pilot::CATEGORY_SIZE - 1);
-	return true;
+    (void) Pilot::toPilot(s, categoryInfo()->name[i], Pilot::CATEGORY_SIZE - 1);
+    return true;
 }
 
 

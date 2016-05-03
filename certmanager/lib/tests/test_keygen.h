@@ -37,26 +37,26 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class KeyGenerationResult;
+class Error;
+class KeyGenerationResult;
 }
 
 class QLineEdit;
 
 class KeyGenerator : public KDialogBase {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KeyGenerator( QWidget * parent=0, const char * name=0, WFlags f=0 );
-  ~KeyGenerator();
+    KeyGenerator(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+    ~KeyGenerator();
 
 public slots:
-  void slotStartKeyGeneration();
-  void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
+    void slotStartKeyGeneration();
+    void slotResult(const GpgME::KeyGenerationResult &res, const QByteArray &keyData);
 private:
-  void showError( const GpgME::Error & err );
+    void showError(const GpgME::Error &err);
 
 private:
-  QLineEdit * mLineEdits[20];
+    QLineEdit *mLineEdits[20];
 };
 
 #endif // __KLEO_TEST_KEYGEN_H__

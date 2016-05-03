@@ -43,9 +43,8 @@
 #include "korganizer_part.h"
 
 #if 0 // unused
-class NopAlarmClient : public AlarmClient
-{
-  public:
+class NopAlarmClient : public AlarmClient {
+public:
     void startDaemon() {}
     void stopDaemon() {}
 };
@@ -57,133 +56,140 @@ static KStaticDeleter<KOGlobals> koGlobalsDeleter;
 
 KOGlobals *KOGlobals::self()
 {
-  if ( !mSelf ) {
-    koGlobalsDeleter.setObject( mSelf, new KOGlobals );
-  }
+    if(!mSelf)
+    {
+        koGlobalsDeleter.setObject(mSelf, new KOGlobals);
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 KOGlobals::KOGlobals()
-  : mHolidays(0)
+    : mHolidays(0)
 {
-  // Needed to distinguish from global KInstance
-  // in case we are a KPart
-  mOwnInstance = new KInstance( "korganizer" );
-  mOwnInstance->config()->setGroup( "General" );
-  mOwnInstance->iconLoader()->addAppDir( "kdepim" );
-  KGlobal::iconLoader()->addAppDir( "kdepim" );
+    // Needed to distinguish from global KInstance
+    // in case we are a KPart
+    mOwnInstance = new KInstance("korganizer");
+    mOwnInstance->config()->setGroup("General");
+    mOwnInstance->iconLoader()->addAppDir("kdepim");
+    KGlobal::iconLoader()->addAppDir("kdepim");
 
-  mAlarmClient = new AlarmClient;
+    mAlarmClient = new AlarmClient;
 }
 
-KConfig* KOGlobals::config() const
+KConfig *KOGlobals::config() const
 {
-  return mOwnInstance->config();
+    return mOwnInstance->config();
 }
 
 KOGlobals::~KOGlobals()
 {
-  delete mAlarmClient;
-  delete mOwnInstance;
-  delete mHolidays;
+    delete mAlarmClient;
+    delete mOwnInstance;
+    delete mHolidays;
 }
 
 const KCalendarSystem *KOGlobals::calendarSystem() const
 {
-  return KGlobal::locale()->calendar();
+    return KGlobal::locale()->calendar();
 }
 
 AlarmClient *KOGlobals::alarmClient() const
 {
-  return mAlarmClient;
+    return mAlarmClient;
 }
 
-void KOGlobals::fitDialogToScreen( QWidget *wid, bool force )
+void KOGlobals::fitDialogToScreen(QWidget *wid, bool force)
 {
-  bool resized = false;
+    bool resized = false;
 
-  int w = wid->frameSize().width();
-  int h = wid->frameSize().height();
+    int w = wid->frameSize().width();
+    int h = wid->frameSize().height();
 
-  QRect desk = KGlobalSettings::desktopGeometry( wid );
-  if ( w > desk.width() ) {
-    w = desk.width();
-    resized = true;
-  }
-  // FIXME: ugly hack.  Is the -30 really to circumvent the size of kicker?!
-  if ( h > desk.height() - 30 ) {
-    h = desk.height() - 30;
-    resized = true;
-  }
+    QRect desk = KGlobalSettings::desktopGeometry(wid);
+    if(w > desk.width())
+    {
+        w = desk.width();
+        resized = true;
+    }
+    // FIXME: ugly hack.  Is the -30 really to circumvent the size of kicker?!
+    if(h > desk.height() - 30)
+    {
+        h = desk.height() - 30;
+        resized = true;
+    }
 
-  if ( resized || force ) {
-    wid->resize( w, h );
-    wid->move( desk.x(), desk.y()+15 );
-    if ( force ) wid->setFixedSize( w, h );
-  }
+    if(resized || force)
+    {
+        wid->resize(w, h);
+        wid->move(desk.x(), desk.y() + 15);
+        if(force) wid->setFixedSize(w, h);
+    }
 }
 
 bool KOGlobals::reverseLayout()
 {
 #if QT_VERSION >= 0x030000
-  return QApplication::reverseLayout();
+    return QApplication::reverseLayout();
 #else
-  return false;
+    return false;
 #endif
 }
 
-QPixmap KOGlobals::smallIcon( const QString& name )
+QPixmap KOGlobals::smallIcon(const QString &name)
 {
-  return SmallIcon( name, mOwnInstance );
+    return SmallIcon(name, mOwnInstance);
 }
 
-QIconSet KOGlobals::smallIconSet( const QString& name, int size )
+QIconSet KOGlobals::smallIconSet(const QString &name, int size)
 {
-  return SmallIconSet( name, size, mOwnInstance );
+    return SmallIconSet(name, size, mOwnInstance);
 }
 
-QStringList KOGlobals::holiday( const QDate &date )
+QStringList KOGlobals::holiday(const QDate &date)
 {
-  QStringList hdays;
+    QStringList hdays;
 
-  if ( !mHolidays ) return hdays;
-  QValueList<KHoliday> list = mHolidays->getHolidays( date );
-  QValueList<KHoliday>::ConstIterator it = list.begin();
-  for ( ; it != list.end(); ++it ) {
-    hdays.append( (*it).text );
-  }
-  return hdays;
-}
-
-bool KOGlobals::isWorkDay( const QDate &date )
-{
-  int mask( ~( KOPrefs::instance()->mWorkWeekMask ) );
-
-  bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
-  if ( KOPrefs::instance()->mExcludeHolidays && mHolidays ) {
-    QValueList<KHoliday> list = mHolidays->getHolidays( date );
+    if(!mHolidays) return hdays;
+    QValueList<KHoliday> list = mHolidays->getHolidays(date);
     QValueList<KHoliday>::ConstIterator it = list.begin();
-    for ( ; it != list.end(); ++it ) {
-      nonWorkDay = nonWorkDay
-               || ( (*it).Category == KHolidays::HOLIDAY );
+    for(; it != list.end(); ++it)
+    {
+        hdays.append((*it).text);
     }
-  }
-  return !nonWorkDay;
+    return hdays;
+}
+
+bool KOGlobals::isWorkDay(const QDate &date)
+{
+    int mask(~(KOPrefs::instance()->mWorkWeekMask));
+
+    bool nonWorkDay = (mask & (1 << (date.dayOfWeek() - 1)));
+    if(KOPrefs::instance()->mExcludeHolidays && mHolidays)
+    {
+        QValueList<KHoliday> list = mHolidays->getHolidays(date);
+        QValueList<KHoliday>::ConstIterator it = list.begin();
+        for(; it != list.end(); ++it)
+        {
+            nonWorkDay = nonWorkDay
+                         || ((*it).Category == KHolidays::HOLIDAY);
+        }
+    }
+    return !nonWorkDay;
 }
 
 int KOGlobals::getWorkWeekMask()
 {
-  return KOPrefs::instance()->mWorkWeekMask;
+    return KOPrefs::instance()->mWorkWeekMask;
 }
 
-void KOGlobals::setHolidays( KHolidays *h )
+void KOGlobals::setHolidays(KHolidays *h)
 {
-  delete mHolidays;
-  mHolidays = h;
+    delete mHolidays;
+    mHolidays = h;
 }
 
 KHolidays *KOGlobals::holidays() const
 {
-  return mHolidays;
+    return mHolidays;
 }

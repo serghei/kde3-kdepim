@@ -29,19 +29,28 @@ namespace Parser {
     @internal
 */
 class MultiPart {
-  
+
 public:
-  MultiPart(const QCString &src, const QCString &boundary);
-  ~MultiPart() {};
-  
-  bool parse();
-  QValueList<QCString> parts()    { return p_arts; }
-  QCString preamble()     { return p_reamble; }
-  QCString epilouge()     { return e_pilouge; }
-  
+    MultiPart(const QCString &src, const QCString &boundary);
+    ~MultiPart() {};
+
+    bool parse();
+    QValueList<QCString> parts()
+    {
+        return p_arts;
+    }
+    QCString preamble()
+    {
+        return p_reamble;
+    }
+    QCString epilouge()
+    {
+        return e_pilouge;
+    }
+
 protected:
-  QCString s_rc, b_oundary, p_reamble, e_pilouge;
-  QValueList<QCString> p_arts;
+    QCString s_rc, b_oundary, p_reamble, e_pilouge;
+    QValueList<QCString> p_arts;
 };
 
 
@@ -52,24 +61,48 @@ protected:
 class NonMimeParser {
 
 public:
-  NonMimeParser(const QCString &src);
-  virtual ~NonMimeParser() {};
-  virtual bool parse() = 0;
-  bool isPartial()            { return (p_artNr>-1 && t_otalNr>-1 && t_otalNr!=1); }
-  int partialNumber()         { return p_artNr; }
-  int partialCount()          { return t_otalNr; }
-  bool hasTextPart()          { return (t_ext.length()>1); }
-  QCString textPart()         { return t_ext; }
-  QStrList binaryParts()       { return b_ins; }
-  QStrList filenames()         { return f_ilenames; }
-  QStrList mimeTypes()         { return m_imeTypes; }
+    NonMimeParser(const QCString &src);
+    virtual ~NonMimeParser() {};
+    virtual bool parse() = 0;
+    bool isPartial()
+    {
+        return (p_artNr > -1 && t_otalNr > -1 && t_otalNr != 1);
+    }
+    int partialNumber()
+    {
+        return p_artNr;
+    }
+    int partialCount()
+    {
+        return t_otalNr;
+    }
+    bool hasTextPart()
+    {
+        return (t_ext.length() > 1);
+    }
+    QCString textPart()
+    {
+        return t_ext;
+    }
+    QStrList binaryParts()
+    {
+        return b_ins;
+    }
+    QStrList filenames()
+    {
+        return f_ilenames;
+    }
+    QStrList mimeTypes()
+    {
+        return m_imeTypes;
+    }
 
 protected:
-  static QCString guessMimeType(const QCString& fileName);
+    static QCString guessMimeType(const QCString &fileName);
 
-  QCString s_rc, t_ext;
-  QStrList b_ins, f_ilenames, m_imeTypes;
-  int p_artNr, t_otalNr;
+    QCString s_rc, t_ext;
+    QStrList b_ins, f_ilenames, m_imeTypes;
+    int p_artNr, t_otalNr;
 };
 
 
@@ -80,12 +113,12 @@ protected:
 class UUEncoded : public NonMimeParser {
 
 public:
-  UUEncoded(const QCString &src, const QCString &subject);  
+    UUEncoded(const QCString &src, const QCString &subject);
 
-  virtual bool parse();
+    virtual bool parse();
 
 protected:
-  QCString s_ubject;  
+    QCString s_ubject;
 };
 
 
@@ -97,14 +130,17 @@ protected:
 class YENCEncoded : public NonMimeParser {
 
 public:
-  YENCEncoded(const QCString &src);  
+    YENCEncoded(const QCString &src);
 
-  virtual bool parse();      
-  QValueList<QByteArray> binaryParts()       { return b_ins; }
-    
+    virtual bool parse();
+    QValueList<QByteArray> binaryParts()
+    {
+        return b_ins;
+    }
+
 protected:
-  QValueList<QByteArray> b_ins;
-  static bool yencMeta( QCString& src, const QCString& name, int* value);
+    QValueList<QByteArray> b_ins;
+    static bool yencMeta(QCString &src, const QCString &name, int *value);
 };
 
 

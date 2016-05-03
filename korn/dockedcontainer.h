@@ -27,19 +27,19 @@ class BoxContainerItem;
  * This class is a implementation of a BoxContainer and does almost nothing.
  * The only thing it does is creating DocketItems.
  */
-class DockedContainer : public BoxContainer
-{ Q_OBJECT
+class DockedContainer : public BoxContainer {
+    Q_OBJECT
 public:
-	DockedContainer( QObject * parent = 0, const char * name = 0 );
-	~DockedContainer();
-	
-protected:
-	//virtual void addItem( BoxContainerItem* ); //Overiding not neccesairy
+    DockedContainer(QObject *parent = 0, const char *name = 0);
+    ~DockedContainer();
 
-	/**
-	 * @return A new instance to a DocketItem.
-	 */
-	virtual BoxContainerItem* newBoxInstance() const;
+protected:
+    //virtual void addItem( BoxContainerItem* ); //Overiding not neccesairy
+
+    /**
+     * @return A new instance to a DocketItem.
+     */
+    virtual BoxContainerItem *newBoxInstance() const;
 };
 
 #endif //MK_DOCKEDCONTAINER_H

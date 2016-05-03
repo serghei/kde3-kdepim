@@ -31,57 +31,57 @@
 
 
 
-PilotDOCBookmark::PilotDOCBookmark():PilotRecordBase(), pos(0)
+PilotDOCBookmark::PilotDOCBookmark(): PilotRecordBase(), pos(0)
 {
-	FUNCTIONSETUP;
-	memset(&bookmarkName[0], 0, 16);
+    FUNCTIONSETUP;
+    memset(&bookmarkName[0], 0, 16);
 }
 
 
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDOCBookmark()
 */
-PilotDOCBookmark::PilotDOCBookmark(PilotRecord * rec):PilotRecordBase(rec)
+PilotDOCBookmark::PilotDOCBookmark(PilotRecord *rec): PilotRecordBase(rec)
 {
-	if (rec)
-	{
-		const pi_buffer_t *b = rec->buffer();
-		unsigned int offset = 0;
-		Pilot::dlp<char *>::read(b,offset,bookmarkName,16);
-		bookmarkName[16]='\0';
-		pos = Pilot::dlp<long>::read(b,offset);
-	}
+    if(rec)
+    {
+        const pi_buffer_t *b = rec->buffer();
+        unsigned int offset = 0;
+        Pilot::dlp<char *>::read(b, offset, bookmarkName, 16);
+        bookmarkName[16] = '\0';
+        pos = Pilot::dlp<long>::read(b, offset);
+    }
 }
 
 
 
-PilotDOCBookmark::PilotDOCBookmark(const PilotDOCBookmark & e):PilotRecordBase(e)
+PilotDOCBookmark::PilotDOCBookmark(const PilotDOCBookmark &e): PilotRecordBase(e)
 {
-	FUNCTIONSETUP;
-	*this = e;
+    FUNCTIONSETUP;
+    *this = e;
 }
 
 
 
-PilotDOCBookmark & PilotDOCBookmark::operator =(const PilotDOCBookmark & e)
+PilotDOCBookmark &PilotDOCBookmark::operator =(const PilotDOCBookmark &e)
 {
-	if (this != &e)
-	{
-		strncpy(&bookmarkName[0], &e.bookmarkName[0], 16);
-		bookmarkName[16]='\0';
-		pos = e.pos;
-	}
-	return *this;
+    if(this != &e)
+    {
+        strncpy(&bookmarkName[0], &e.bookmarkName[0], 16);
+        bookmarkName[16] = '\0';
+        pos = e.pos;
+    }
+    return *this;
 }
 
 
 
 PilotRecord *PilotDOCBookmark::pack() const
 {
-	pi_buffer_t *b = pi_buffer_new( 16 + Pilot::dlp<long>::size );
-	pi_buffer_append(b, bookmarkName, 16);
-	b->data[16] = 0;
-	Pilot::dlp<long>::append(b,pos);
-	PilotRecord* rec =  new PilotRecord(b, this);
-	return rec;
+    pi_buffer_t *b = pi_buffer_new(16 + Pilot::dlp<long>::size);
+    pi_buffer_append(b, bookmarkName, 16);
+    b->data[16] = 0;
+    Pilot::dlp<long>::append(b, pos);
+    PilotRecord *rec =  new PilotRecord(b, this);
+    return rec;
 }

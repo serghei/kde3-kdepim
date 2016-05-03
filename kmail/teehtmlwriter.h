@@ -40,31 +40,31 @@ class QString;
 
 namespace KMail {
 
-  /** @short A HtmlWriter that dispatches all calls to a list of other HtmlWriters
-      @author Marc Mutz <mutz@kde.org>
-  **/
-  class TeeHtmlWriter : public KMail::HtmlWriter {
-  public:
-    TeeHtmlWriter( KMail::HtmlWriter * writer1=0, KMail::HtmlWriter * writer2=0  );
+/** @short A HtmlWriter that dispatches all calls to a list of other HtmlWriters
+    @author Marc Mutz <mutz@kde.org>
+**/
+class TeeHtmlWriter : public KMail::HtmlWriter {
+public:
+    TeeHtmlWriter(KMail::HtmlWriter *writer1 = 0, KMail::HtmlWriter *writer2 = 0);
     virtual ~TeeHtmlWriter();
 
-    void addHtmlWriter( KMail::HtmlWriter * writer );
+    void addHtmlWriter(KMail::HtmlWriter *writer);
 
     //
     // HtmlWriter Interface
     //
-    void begin( const QString & cssDefs );
+    void begin(const QString &cssDefs);
     void end();
     void reset();
-    void write( const QString & str );
-    void queue( const QString & str );
+    void write(const QString &str);
+    void queue(const QString &str);
     void flush();
-    void embedPart( const QCString & contentId, const QString & url );
+    void embedPart(const QCString &contentId, const QString &url);
 
-  private:
+private:
     /** We own the HtmlWriters added to us! */
-    QValueList<KMail::HtmlWriter*> mWriters;
-  };
+    QValueList<KMail::HtmlWriter *> mWriters;
+};
 
 } // namespace KMail
 

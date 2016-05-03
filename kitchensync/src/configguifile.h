@@ -26,15 +26,14 @@
 class KURLRequester;
 class QCheckBox;
 
-class ConfigGuiFile : public ConfigGui
-{
-  public:
-    ConfigGuiFile( const QSync::Member &, QWidget *parent );
+class ConfigGuiFile : public ConfigGui {
+public:
+    ConfigGuiFile(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     KURLRequester *mFilename;
     QCheckBox *mRecursive;
 };

@@ -36,30 +36,29 @@ class KDatePicker;
 class QPushButton;
 class KListView;
 
-class DatebookWidget : public PilotComponent
-{
-Q_OBJECT
+class DatebookWidget : public PilotComponent {
+    Q_OBJECT
 
 public:
-	DatebookWidget(QWidget* parent, const QString& dbpath);
-	virtual ~DatebookWidget();
+    DatebookWidget(QWidget *parent, const QString &dbpath);
+    virtual ~DatebookWidget();
 
-	// Pilot component methods
-	void hideComponent();
-	void showComponent();
+    // Pilot component methods
+    void hideComponent();
+    void showComponent();
 
 protected slots:
-	void slotDayChanged();
-	void slotAddEvent();
-	void slotEditEvent();
-	void slotDeleteEvent();
+    void slotDayChanged();
+    void slotAddEvent();
+    void slotEditEvent();
+    void slotDeleteEvent();
 
 private:
-	KDatePicker*fDatePicker;
-	QPushButton*fAddButton;
-	QPushButton*fEditButton;
-	QPushButton*fDeleteButton;
-	KListView*fEventList;
+    KDatePicker *fDatePicker;
+    QPushButton *fAddButton;
+    QPushButton *fEditButton;
+    QPushButton *fDeleteButton;
+    KListView *fEventList;
 };
 
 

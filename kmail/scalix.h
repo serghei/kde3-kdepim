@@ -53,29 +53,27 @@ namespace Scalix {
  * This class takes a folder attribute string as argument and provides access to the single
  * parts.
  */
-class FolderAttributeParser
-{
-  public:
-    FolderAttributeParser( const QString &attribute );
+class FolderAttributeParser {
+public:
+    FolderAttributeParser(const QString &attribute);
 
     QString folderClass() const;
     QString folderName() const;
 
-  private:
+private:
     QString mFolderClass;
     QString mFolderName;
 };
 
-class Utils
-{
-  public:
-    static KMFolder* findStandardResourceFolder( KMFolderDir* folderParentDir,
-                                                 KMail::FolderContentsType contentsType,
-                                                 const QStringList &attributes );
+class Utils {
+public:
+    static KMFolder *findStandardResourceFolder(KMFolderDir *folderParentDir,
+            KMail::FolderContentsType contentsType,
+            const QStringList &attributes);
 
-    static KMail::FolderContentsType scalixIdToContentsType( const QString &name );
+    static KMail::FolderContentsType scalixIdToContentsType(const QString &name);
 
-    static QString contentsTypeToScalixId( KMail::FolderContentsType type );
+    static QString contentsTypeToScalixId(KMail::FolderContentsType type);
 };
 
 }

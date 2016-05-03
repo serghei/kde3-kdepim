@@ -38,29 +38,29 @@
 #define CONNECT_TIMEOUT 10000
 
 
-KNotesNetworkSender::KNotesNetworkSender( const QString& hostname, int port )
-  : KBufferedSocket( hostname, QString::number( port ) ),
-    m_note( 0 ), m_title( 0 ), m_sender( 0 ), m_index( 0 )
+KNotesNetworkSender::KNotesNetworkSender(const QString &hostname, int port)
+    : KBufferedSocket(hostname, QString::number(port)),
+      m_note(0), m_title(0), m_sender(0), m_index(0)
 {
-    enableRead( false );
-    enableWrite( false );
-    setTimeout( CONNECT_TIMEOUT );
+    enableRead(false);
+    enableWrite(false);
+    setTimeout(CONNECT_TIMEOUT);
 
     // QObject:: prefix needed, otherwise the KStreamSocket::connect()
     // mehtod is called!!!
-    QObject::connect( this, SIGNAL(connected( const KResolverEntry& )), 
-                            SLOT(slotConnected( const KResolverEntry& )) );
-    QObject::connect( this, SIGNAL(gotError( int )), SLOT(slotError( int )) );
-    QObject::connect( this, SIGNAL(closed()), SLOT(slotClosed()) );
-    QObject::connect( this, SIGNAL(readyWrite()), SLOT(slotReadyWrite()) );
+    QObject::connect(this, SIGNAL(connected(const KResolverEntry &)),
+                     SLOT(slotConnected(const KResolverEntry &)));
+    QObject::connect(this, SIGNAL(gotError(int)), SLOT(slotError(int)));
+    QObject::connect(this, SIGNAL(closed()), SLOT(slotClosed()));
+    QObject::connect(this, SIGNAL(readyWrite()), SLOT(slotReadyWrite()));
 }
 
-void KNotesNetworkSender::setSenderId( const QString& sender )
+void KNotesNetworkSender::setSenderId(const QString &sender)
 {
     m_sender = sender.ascii();
 }
 
-void KNotesNetworkSender::setNote( const QString& title, const QString& text )
+void KNotesNetworkSender::setNote(const QString &title, const QString &text)
 {
     // TODO: support for unicode and rich text.
     // Mmmmmm... how to behave with such heterogeneous environment?
@@ -69,30 +69,30 @@ void KNotesNetworkSender::setNote( const QString& title, const QString& text )
     m_note = text.ascii();
 }
 
-void KNotesNetworkSender::slotConnected( const KResolverEntry& )
+void KNotesNetworkSender::slotConnected(const KResolverEntry &)
 {
-    if ( m_sender.isEmpty() )
-        m_note.prepend( m_title + "\n");
+    if(m_sender.isEmpty())
+        m_note.prepend(m_title + "\n");
     else
-        m_note.prepend( m_title + " (" + m_sender + ")\n" );
+        m_note.prepend(m_title + " (" + m_sender + ")\n");
 
-    enableWrite( true );
+    enableWrite(true);
 }
 
 void KNotesNetworkSender::slotReadyWrite()
 {
-    m_index += writeBlock( m_note.data() + m_index, m_note.length() - m_index );
+    m_index += writeBlock(m_note.data() + m_index, m_note.length() - m_index);
 
     // If end of text reached, close connection
-    if ( m_index == m_note.length() )
+    if(m_index == m_note.length())
         close();
 }
 
-void KNotesNetworkSender::slotError( int err )
+void KNotesNetworkSender::slotError(int err)
 {
-    KMessageBox::sorry( 0, i18n("Communication error: %1")
-           .arg( errorString( static_cast<KSocketBase::SocketError>(err) ) )
-    );
+    KMessageBox::sorry(0, i18n("Communication error: %1")
+                       .arg(errorString(static_cast<KSocketBase::SocketError>(err)))
+                      );
     slotClosed();
 }
 

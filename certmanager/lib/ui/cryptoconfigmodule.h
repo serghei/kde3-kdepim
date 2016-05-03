@@ -38,30 +38,30 @@
 
 namespace Kleo {
 
-  class CryptoConfig;
-  class CryptoConfigComponentGUI;
+class CryptoConfig;
+class CryptoConfigComponentGUI;
 
-  /**
-   * Crypto Config Module widget, dynamically generated from CryptoConfig
-   * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
-   */
-  class CryptoConfigModule : public KJanusWidget {
+/**
+ * Crypto Config Module widget, dynamically generated from CryptoConfig
+ * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
+ */
+class CryptoConfigModule : public KJanusWidget {
     Q_OBJECT
-  public:
-    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0, const char * name=0 );
+public:
+    CryptoConfigModule(Kleo::CryptoConfig *config, QWidget *parent = 0, const char *name = 0);
 
     void save();
     void reset(); // i.e. reload current settings, discarding user input
     void defaults();
     void cancel();
 
-  signals:
+signals:
     void changed();
 
-  private:
-    Kleo::CryptoConfig* mConfig;
+private:
+    Kleo::CryptoConfig *mConfig;
     QValueList<CryptoConfigComponentGUI *> mComponentGUIs;
-  };
+};
 
 }
 

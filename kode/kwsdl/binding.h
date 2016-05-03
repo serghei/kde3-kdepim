@@ -26,50 +26,89 @@
 
 namespace KWSDL {
 
-class Binding
-{
-  public:
+class Binding {
+public:
     typedef QValueList<Binding> List;
 
-    class Operation
-    {
-      public:
+    class Operation {
+    public:
         typedef QValueList<Operation> List;
 
-        class Item
-        {
-          public:
-            void setUse( const QString &use ) { mUse = use; }
-            QString use() const { return mUse; }
+        class Item {
+        public:
+            void setUse(const QString &use)
+            {
+                mUse = use;
+            }
+            QString use() const
+            {
+                return mUse;
+            }
 
-            void setNameSpace( const QString &nameSpace ) { mNameSpace = nameSpace; }
-            QString nameSpace() const { return mNameSpace; }
+            void setNameSpace(const QString &nameSpace)
+            {
+                mNameSpace = nameSpace;
+            }
+            QString nameSpace() const
+            {
+                return mNameSpace;
+            }
 
-            void setEncodingStyle( const QString &encodingStyle ) { mEncodingStyle = encodingStyle; }
-            QString encodingStyle() const { return mEncodingStyle; }
+            void setEncodingStyle(const QString &encodingStyle)
+            {
+                mEncodingStyle = encodingStyle;
+            }
+            QString encodingStyle() const
+            {
+                return mEncodingStyle;
+            }
 
-          private:
+        private:
             QString mUse;
             QString mNameSpace;
             QString mEncodingStyle;
         };
 
         Operation();
-        Operation( const QString &name, const QString &action );
+        Operation(const QString &name, const QString &action);
 
-        void setName( const QString &name ) { mName = name; }
-        QString name() const { return mName; }
+        void setName(const QString &name)
+        {
+            mName = name;
+        }
+        QString name() const
+        {
+            return mName;
+        }
 
-        void setAction( const QString &action ) { mAction = action; }
-        QString action() const { return mAction; }
+        void setAction(const QString &action)
+        {
+            mAction = action;
+        }
+        QString action() const
+        {
+            return mAction;
+        }
 
-        void setInput( const Item &item ) { mInput = item; }
-        Item input() const { return mInput; }
+        void setInput(const Item &item)
+        {
+            mInput = item;
+        }
+        Item input() const
+        {
+            return mInput;
+        }
 
-        void setOutput( const Item &item ) { mOutput = item; }
-        Item output() const { return mOutput; }
+        void setOutput(const Item &item)
+        {
+            mOutput = item;
+        }
+        Item output() const
+        {
+            return mOutput;
+        }
 
-      private:
+    private:
         QString mName;
         QString mAction;
         Item mInput;
@@ -77,25 +116,49 @@ class Binding
     };
 
     Binding();
-    Binding( const QString &name, const QString &type );
+    Binding(const QString &name, const QString &type);
 
-    void setName( const QString &name ) { mName = name; }
-    QString name() const { return mName; }
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
+    QString name() const
+    {
+        return mName;
+    }
 
-    void setType( const QString &type ) { mType = type; }
-    QString type() const { return mType; }
+    void setType(const QString &type)
+    {
+        mType = type;
+    }
+    QString type() const
+    {
+        return mType;
+    }
 
-    void setStyle( const QString &style ) { mStyle = style; }
-    QString style() const { return mStyle; }
+    void setStyle(const QString &style)
+    {
+        mStyle = style;
+    }
+    QString style() const
+    {
+        return mStyle;
+    }
 
-    void setTransport( const QString &transport ) { mTransport = transport; }
-    QString transport() const { return mTransport; }
+    void setTransport(const QString &transport)
+    {
+        mTransport = transport;
+    }
+    QString transport() const
+    {
+        return mTransport;
+    }
 
-    void addOperation( const Operation &operation );
-    Operation operation( const QString &name ) const;
+    void addOperation(const Operation &operation);
+    Operation operation(const QString &name) const;
     Operation::List operations() const;
 
-  private:
+private:
     QString mName;
     QString mType;
     QString mStyle;

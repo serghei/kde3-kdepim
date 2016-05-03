@@ -44,16 +44,15 @@ class KListAction;
 class KToggleAction;
 
 namespace KCal {
-    class Journal;
+class Journal;
 }
 
 
-class KDE_EXPORT KNote : public QFrame, virtual public KXMLGUIClient
-{
+class KDE_EXPORT KNote : public QFrame, virtual public KXMLGUIClient {
     Q_OBJECT
 public:
-    KNote( QDomDocument buildDoc, KCal::Journal *journal, QWidget *parent = 0,
-           const char *name = 0 );
+    KNote(QDomDocument buildDoc, KCal::Journal *journal, QWidget *parent = 0,
+          const char *name = 0);
     ~KNote();
 
     void saveData();
@@ -65,25 +64,25 @@ public:
     QString text() const;
     QString plainText() const;
 
-    void setName( const QString& name );
-    void setText( const QString& text );
+    void setName(const QString &name);
+    void setText(const QString &text);
 
     QColor fgColor() const;
     QColor bgColor() const;
-    void setColor( const QColor& fg, const QColor& bg );
+    void setColor(const QColor &fg, const QColor &bg);
 
-    void find( const QString& pattern, long options );
+    void find(const QString &pattern, long options);
 
     bool isModified() const;
 
-    void sync( const QString& app );
-    bool isNew( const QString& app ) const;
-    bool isModified( const QString& app ) const;
+    void sync(const QString &app);
+    bool isNew(const QString &app) const;
+    bool isModified(const QString &app) const;
 
-    static void setStyle( int style );
+    static void setStyle(int style);
 
 public slots:
-    void slotKill( bool force = false );
+    void slotKill(bool force = false);
 
 signals:
     void sigRequestNewNote();
@@ -91,22 +90,22 @@ signals:
     void sigNameChanged();
     void sigDataChanged();
     void sigColorChanged();
-    void sigKillNote( KCal::Journal* );
+    void sigKillNote(KCal::Journal *);
 
     void sigFindFinished();
 
 protected:
-    virtual void drawFrame( QPainter* );
-    virtual void showEvent( QShowEvent* );
-    virtual void resizeEvent( QResizeEvent* );
-    virtual void closeEvent( QCloseEvent* );
-    virtual void dropEvent( QDropEvent* );
-    virtual void dragEnterEvent( QDragEnterEvent* );
+    virtual void drawFrame(QPainter *);
+    virtual void showEvent(QShowEvent *);
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void closeEvent(QCloseEvent *);
+    virtual void dropEvent(QDropEvent *);
+    virtual void dragEnterEvent(QDragEnterEvent *);
 
-    virtual bool event( QEvent* );
-    virtual bool eventFilter( QObject*, QEvent* );
+    virtual bool event(QEvent *);
+    virtual bool eventFilter(QObject *, QEvent *);
 
-    virtual bool focusNextPrevChild( bool );
+    virtual bool focusNextPrevChild(bool);
 
 private slots:
     void slotRename();
@@ -122,30 +121,30 @@ private slots:
     void slotSetAlarm();
 
     void slotPreferences();
-    void slotPopupActionToDesktop( int id );
+    void slotPopupActionToDesktop(int id);
 
     void slotFindNext();
-    void slotHighlight( const QString& txt, int idx, int len );
+    void slotHighlight(const QString &txt, int idx, int len);
 
     void slotApplyConfig();
     void slotUpdateKeepAboveBelow();
     void slotUpdateShowInTaskbar();
     void slotUpdateDesktopActions();
 
-    void slotUpdateViewport( int, int );
+    void slotUpdateViewport(int, int);
 
 private:
     void updateFocus();
     void updateMask();
     void updateLayout();
     void updateLabelAlignment();
-    void updateBackground( int offset = -1 );
+    void updateBackground(int offset = -1);
 
     void createFold();
 
-    void toDesktop( int desktop );
+    void toDesktop(int desktop);
 
-    QString toPlainText( const QString& );
+    QString toPlainText(const QString &);
 
 private:
     QLabel        *m_label, *m_pushpin, *m_fold;

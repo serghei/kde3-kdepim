@@ -30,90 +30,90 @@
 
 
 KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
-  : QDialog(parent)
+    : QDialog(parent)
 {
-  setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
-  setIcon(SmallIcon("knode"));
-  QGroupBox *bg=new QGroupBox(this);
+    setCaption(kapp->makeStdCaption(i18n("Search for Articles")));
+    setIcon(SmallIcon("knode"));
+    QGroupBox *bg = new QGroupBox(this);
 
-  startBtn=new QPushButton(SmallIcon("mail_find"),i18n("Sea&rch"), bg);
-  startBtn->setDefault(true);
-  newBtn=new QPushButton(SmallIcon("editclear"),i18n("C&lear"), bg);
-  closeBtn=new KPushButton(KStdGuiItem::close(), bg);
+    startBtn = new QPushButton(SmallIcon("mail_find"), i18n("Sea&rch"), bg);
+    startBtn->setDefault(true);
+    newBtn = new QPushButton(SmallIcon("editclear"), i18n("C&lear"), bg);
+    closeBtn = new KPushButton(KStdGuiItem::close(), bg);
 
-  completeThreads=new QCheckBox(i18n("Sho&w complete threads"),this);
-  fcw=new KNFilterConfigWidget(this);
-  fcw->reset();
+    completeThreads = new QCheckBox(i18n("Sho&w complete threads"), this);
+    fcw = new KNFilterConfigWidget(this);
+    fcw->reset();
 
-  QHBoxLayout *topL=new QHBoxLayout(this, 5);
-  QVBoxLayout *filterL=new QVBoxLayout(this, 0, 5);
-  QVBoxLayout *btnL=new QVBoxLayout(bg, 8, 5);
+    QHBoxLayout *topL = new QHBoxLayout(this, 5);
+    QVBoxLayout *filterL = new QVBoxLayout(this, 0, 5);
+    QVBoxLayout *btnL = new QVBoxLayout(bg, 8, 5);
 
-  filterL->addWidget(completeThreads);
-  filterL->addWidget(fcw,1);
+    filterL->addWidget(completeThreads);
+    filterL->addWidget(fcw, 1);
 
-  btnL->addWidget(startBtn);
-  btnL->addWidget(newBtn);
-  btnL->addStretch(1);
-  btnL->addWidget(closeBtn);
+    btnL->addWidget(startBtn);
+    btnL->addWidget(newBtn);
+    btnL->addStretch(1);
+    btnL->addWidget(closeBtn);
 
-  topL->addLayout(filterL, 1);
-  topL->addWidget(bg);
+    topL->addLayout(filterL, 1);
+    topL->addWidget(bg);
 
-  connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked()));
-  connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
-  connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));
+    connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked()));
+    connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
+    connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));
 
-  f_ilter=new KNArticleFilter();
-  f_ilter->setLoaded(true);
-  f_ilter->setSearchFilter(true);
+    f_ilter = new KNArticleFilter();
+    f_ilter->setLoaded(true);
+    f_ilter->setSearchFilter(true);
 
-  setFixedHeight(sizeHint().height());
-  KNHelper::restoreWindowSize("searchDlg", this, sizeHint());
-  fcw->setStartFocus();
+    setFixedHeight(sizeHint().height());
+    KNHelper::restoreWindowSize("searchDlg", this, sizeHint());
+    fcw->setStartFocus();
 }
 
 
 
 KNSearchDialog::~KNSearchDialog()
 {
-  delete f_ilter;
-  KNHelper::saveWindowSize("searchDlg", size());
+    delete f_ilter;
+    KNHelper::saveWindowSize("searchDlg", size());
 }
 
 
 void KNSearchDialog::slotStartClicked()
 {
-  f_ilter->status=fcw->status->filter();
-  f_ilter->score=fcw->score->filter();
-  f_ilter->age=fcw->age->filter();
-  f_ilter->lines=fcw->lines->filter();
-  f_ilter->subject=fcw->subject->filter();
-  f_ilter->from=fcw->from->filter();
-  f_ilter->messageId=fcw->messageId->filter();
-  f_ilter->references=fcw->references->filter();
-  f_ilter->setApplyOn(completeThreads->isChecked()? 1:0);
-  emit doSearch(f_ilter);
+    f_ilter->status = fcw->status->filter();
+    f_ilter->score = fcw->score->filter();
+    f_ilter->age = fcw->age->filter();
+    f_ilter->lines = fcw->lines->filter();
+    f_ilter->subject = fcw->subject->filter();
+    f_ilter->from = fcw->from->filter();
+    f_ilter->messageId = fcw->messageId->filter();
+    f_ilter->references = fcw->references->filter();
+    f_ilter->setApplyOn(completeThreads->isChecked() ? 1 : 0);
+    emit doSearch(f_ilter);
 }
 
 
 
 void KNSearchDialog::slotNewClicked()
 {
-  fcw->reset();
+    fcw->reset();
 }
 
 
 
 void KNSearchDialog::slotCloseClicked()
 {
-  emit dialogDone();
+    emit dialogDone();
 }
 
 
-void KNSearchDialog::closeEvent( QCloseEvent * )
+void KNSearchDialog::closeEvent(QCloseEvent *)
 {
-  emit dialogDone();
+    emit dialogDone();
 }
 
 //--------------------------------

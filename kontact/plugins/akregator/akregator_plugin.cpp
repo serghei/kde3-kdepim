@@ -45,19 +45,19 @@
 namespace Akregator {
 
 typedef KGenericFactory<Akregator::Plugin, Kontact::Core > PluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_akregator,
-                            PluginFactory( "kontact_akregator" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_akregator,
+                           PluginFactory("kontact_akregator"))
 
-Plugin::Plugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "akregator" ), m_stub(0)
+Plugin::Plugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "akregator"), m_stub(0)
 {
 
-    setInstance( PluginFactory::instance() );
+    setInstance(PluginFactory::instance());
 
-    insertNewAction( new KAction( i18n( "New Feed..." ), "bookmark_add", CTRL+SHIFT+Key_F, this, SLOT( addFeed() ), actionCollection(), "feed_new" ) );
+    insertNewAction(new KAction(i18n("New Feed..."), "bookmark_add", CTRL + SHIFT + Key_F, this, SLOT(addFeed()), actionCollection(), "feed_new"));
 
     m_uniqueAppWatcher = new Kontact::UniqueAppWatcher(
-	new Kontact::UniqueAppHandlerFactory<Akregator::UniqueAppHandler>(), this );
+        new Kontact::UniqueAppHandlerFactory<Akregator::UniqueAppHandler>(), this);
 }
 
 Plugin::~Plugin()
@@ -71,28 +71,29 @@ bool Plugin::isRunningStandalone()
 
 QStringList Plugin::invisibleToolbarActions() const
 {
-    return QStringList( "file_new_contact" );
+    return QStringList("file_new_contact");
 }
 
 
 Akregator::AkregatorPartIface_stub *Plugin::interface()
 {
-    if ( !m_stub ) {
+    if(!m_stub)
+    {
         part();
     }
 
-    Q_ASSERT( m_stub );
+    Q_ASSERT(m_stub);
     return m_stub;
 }
 
 
-MyBasePart* Plugin::createPart()
+MyBasePart *Plugin::createPart()
 {
-    MyBasePart* p = loadPart();
+    MyBasePart *p = loadPart();
 
     connect(p, SIGNAL(showPart()), this, SLOT(showPart()));
-    m_stub = new Akregator::AkregatorPartIface_stub( dcopClient(), "akregator",
-                                      "AkregatorIface" );
+    m_stub = new Akregator::AkregatorPartIface_stub(dcopClient(), "akregator",
+            "AkregatorIface");
     m_stub->openStandardFeedList();
     return p;
 }
@@ -115,25 +116,27 @@ QStringList Plugin::configModules() const
     return modules;
 }
 
-void Plugin::readProperties( KConfig *config )
+void Plugin::readProperties(KConfig *config)
 {
-    if ( part() ) {
-        Akregator::Part *myPart = static_cast<Akregator::Part*>( part() );    
-        myPart->readProperties( config );
+    if(part())
+    {
+        Akregator::Part *myPart = static_cast<Akregator::Part *>(part());
+        myPart->readProperties(config);
     }
 }
 
-void Plugin::saveProperties( KConfig *config )
+void Plugin::saveProperties(KConfig *config)
 {
-    if ( part() ) {
-        Akregator::Part *myPart = static_cast<Akregator::Part*>( part() );    
-        myPart->saveProperties( config );
+    if(part())
+    {
+        Akregator::Part *myPart = static_cast<Akregator::Part *>(part());
+        myPart->saveProperties(config);
     }
 }
 
 void UniqueAppHandler::loadCommandLineOptions()
 {
-    KCmdLineArgs::addCmdLineOptions( akregator_options );
+    KCmdLineArgs::addCmdLineOptions(akregator_options);
 }
 
 int UniqueAppHandler::newInstance()
@@ -141,15 +144,15 @@ int UniqueAppHandler::newInstance()
     kdDebug(5602) << k_funcinfo << endl;
     // Ensure part is loaded
     (void)plugin()->part();
-    DCOPRef akr( "akregator", "AkregatorIface" );
-//    DCOPReply reply = kAB.call( "handleCommandLine" );
-  //  if ( reply.isValid() ) {
+    DCOPRef akr("akregator", "AkregatorIface");
+    //    DCOPReply reply = kAB.call( "handleCommandLine" );
+    //  if ( reply.isValid() ) {
     //    bool handled = reply;
-     //   kdDebug(5602) << k_funcinfo << "handled=" << handled << endl;
-     //   if ( !handled ) // no args -> simply bring kaddressbook plugin to front
-            return Kontact::UniqueAppHandler::newInstance();
-   // }
-   // return 0;
+    //   kdDebug(5602) << k_funcinfo << "handled=" << handled << endl;
+    //   if ( !handled ) // no args -> simply bring kaddressbook plugin to front
+    return Kontact::UniqueAppHandler::newInstance();
+    // }
+    // return 0;
 }
 
 } // namespace Akregator

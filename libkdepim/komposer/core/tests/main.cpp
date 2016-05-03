@@ -33,19 +33,19 @@
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    KCmdLineLastOption
 };
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( "tests","Test","0.1" );
-    KCmdLineArgs::init( argc, argv, &aboutData );
-    KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("tests", "Test", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    Q_UNUSED( args );
+    Q_UNUSED(args);
 
     TestFactory t;
     return t.runTests();

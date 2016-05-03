@@ -46,50 +46,55 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( GpgME::Context * context )
-  : DecryptVerifyJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptVerifyJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob(GpgME::Context *context)
+    : DecryptVerifyJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDecryptVerifyJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {
+Kleo::QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob()
+{
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::setup( const QByteArray & cipherText ) {
-  assert( !mInData );
-  assert( !mOutData );
+void Kleo::QGpgMEDecryptVerifyJob::setup(const QByteArray &cipherText)
+{
+    assert(!mInData);
+    assert(!mOutData);
 
-  createInData( cipherText );
-  createOutData();
+    createInData(cipherText);
+    createOutData();
 }
 
-GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
-  setup( cipherText );
+GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start(const QByteArray &cipherText)
+{
+    setup(cipherText);
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification(*mInData, *mOutData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & plainText ) {
-  setup( cipherText );
-  const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> result =
-    mCtx->decryptAndVerify( *mInData, *mOutData );
-  plainText = mOutDataDataProvider->data();
-  getAuditLog();
-  return result;
+std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
+Kleo::QGpgMEDecryptVerifyJob::exec(const QByteArray &cipherText, QByteArray &plainText)
+{
+    setup(cipherText);
+    const std::pair<GpgME::DecryptionResult, GpgME::VerificationResult> result =
+        mCtx->decryptAndVerify(*mInData, *mOutData);
+    plainText = mOutDataDataProvider->data();
+    getAuditLog();
+    return result;
 }
 
-void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(),
-	       mCtx->verificationResult(),
-	       mOutDataDataProvider->data() );
+void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mCtx->decryptionResult(),
+                mCtx->verificationResult(),
+                mOutDataDataProvider->data());
 }
 
 #include "qgpgmedecryptverifyjob.moc"

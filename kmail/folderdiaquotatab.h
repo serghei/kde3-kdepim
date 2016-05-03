@@ -37,7 +37,7 @@
 #include "quotajobs.h"
 
 namespace KMail {
-  class QuotaWidget;
+class QuotaWidget;
 }
 class QVBox;
 class QWidgetStack;
@@ -50,39 +50,38 @@ class ImapAccountBase;
  * "Quota" tab in the folder dialog
  * Internal class, only used by KMFolderDialog
  */
-class FolderDiaQuotaTab : public FolderDiaTab
-{
-  Q_OBJECT
+class FolderDiaQuotaTab : public FolderDiaTab {
+    Q_OBJECT
 
 public:
-  FolderDiaQuotaTab( KMFolderDialog* dlg, QWidget* parent, const char* name = 0 );
+    FolderDiaQuotaTab(KMFolderDialog *dlg, QWidget *parent, const char *name = 0);
 
-  virtual void load();
-  virtual bool save();
-  virtual AcceptStatus accept();
+    virtual void load();
+    virtual bool save();
+    virtual AcceptStatus accept();
 
-  static bool supports( KMFolder* refFolder );
+    static bool supports(KMFolder *refFolder);
 
 private:
-  void initializeWithValuesFromFolder( KMFolder* folder );
-  void showQuotaWidget();
+    void initializeWithValuesFromFolder(KMFolder *folder);
+    void showQuotaWidget();
 private slots:
-  // Network (KIO) slots
-  void slotConnectionResult( int, const QString& );
-  void slotReceivedQuotaInfo( KMFolder*, KIO::Job*, const KMail::QuotaInfo& );
+    // Network (KIO) slots
+    void slotConnectionResult(int, const QString &);
+    void slotReceivedQuotaInfo(KMFolder *, KIO::Job *, const KMail::QuotaInfo &);
 
 
 private:
 
-  QLabel* mLabel;
-  KMail::QuotaWidget* mQuotaWidget;
-  QWidgetStack* mStack;
-  ImapAccountBase* mImapAccount;
-  QString mImapPath;
-  KMFolderDialog* mDlg;
+    QLabel *mLabel;
+    KMail::QuotaWidget *mQuotaWidget;
+    QWidgetStack *mStack;
+    ImapAccountBase *mImapAccount;
+    QString mImapPath;
+    KMFolderDialog *mDlg;
 
-  QuotaInfo mQuotaInfo;
-  KMFolderType mFolderType;
+    QuotaInfo mQuotaInfo;
+    KMFolderType mFolderType;
 };
 
 } // end of namespace KMail

@@ -12,80 +12,87 @@ class KMFolderMgr;
 /** KMail list that manages the contents of one directory that may
  * contain folders and/or other directories.
  */
-class KMFolderDir: public KMFolderNode, public KMFolderNodeList
-{
-  Q_OBJECT
+class KMFolderDir: public KMFolderNode, public KMFolderNodeList {
+    Q_OBJECT
 
 public:
-  KMFolderDir( KMFolder * owner, KMFolderDir * parent = 0,
-               const QString& path = QString::null,
-	       KMFolderDirType = KMStandardDir );
-  virtual ~KMFolderDir();
+    KMFolderDir(KMFolder *owner, KMFolderDir *parent = 0,
+                const QString &path = QString::null,
+                KMFolderDirType = KMStandardDir);
+    virtual ~KMFolderDir();
 
-  virtual bool isDir() const { return true; }
+    virtual bool isDir() const
+    {
+        return true;
+    }
 
-  /** Read contents of directory. */
-  virtual bool reload();
+    /** Read contents of directory. */
+    virtual bool reload();
 
-  /** Return full pathname of this directory. */
-  virtual QString path() const;
+    /** Return full pathname of this directory. */
+    virtual QString path() const;
 
-  /** Returns the label of the folder for visualization. */
-  QString label() const;
+    /** Returns the label of the folder for visualization. */
+    QString label() const;
 
-  /** URL of the node for visualization purposes. */
-  virtual QString prettyURL() const;
+    /** URL of the node for visualization purposes. */
+    virtual QString prettyURL() const;
 
-  /** Create a mail folder in this directory with given name. If sysFldr==TRUE
-   the folder is marked as a (KMail) system folder.
-   Returns Folder on success. */
-  virtual KMFolder* createFolder(const QString& folderName,
-				 bool sysFldr=false,
-                                 KMFolderType folderType=KMFolderTypeMbox);
+    /** Create a mail folder in this directory with given name. If sysFldr==TRUE
+     the folder is marked as a (KMail) system folder.
+     Returns Folder on success. */
+    virtual KMFolder *createFolder(const QString &folderName,
+                                   bool sysFldr = false,
+                                   KMFolderType folderType = KMFolderTypeMbox);
 
-  /** Returns folder with given name or zero if it does not exist */
-  virtual KMFolderNode* hasNamedFolder(const QString& name);
+    /** Returns folder with given name or zero if it does not exist */
+    virtual KMFolderNode *hasNamedFolder(const QString &name);
 
-  /** Returns the folder manager that manages this folder */
-  virtual KMFolderMgr* manager() const;
+    /** Returns the folder manager that manages this folder */
+    virtual KMFolderMgr *manager() const;
 
-  /** Returns the folder whose children we are holding */
-  KMFolder* owner() const { return mOwner; }
+    /** Returns the folder whose children we are holding */
+    KMFolder *owner() const
+    {
+        return mOwner;
+    }
 
-  virtual KMFolderDirType type() const { return mDirType; }
+    virtual KMFolderDirType type() const
+    {
+        return mDirType;
+    }
 
 protected:
-  KMFolder * mOwner;
-  KMFolderDirType mDirType;
+    KMFolder *mOwner;
+    KMFolderDirType mDirType;
 };
 
 
 //-----------------------------------------------------------------------------
 
-class KMFolderRootDir: public KMFolderDir
-{
-  Q_OBJECT
+class KMFolderRootDir: public KMFolderDir {
+    Q_OBJECT
 
 public:
-  KMFolderRootDir(KMFolderMgr* manager,
-		  const QString& path=QString::null,
-		  KMFolderDirType dirType = KMStandardDir);
-  virtual ~KMFolderRootDir();
-  virtual QString path() const;
+    KMFolderRootDir(KMFolderMgr *manager,
+                    const QString &path = QString::null,
+                    KMFolderDirType dirType = KMStandardDir);
+    virtual ~KMFolderRootDir();
+    virtual QString path() const;
 
-  /** set the absolute path */
-  virtual void setPath(const QString&);
+    /** set the absolute path */
+    virtual void setPath(const QString &);
 
-  virtual QString prettyURL() const;
+    virtual QString prettyURL() const;
 
-  void setBaseURL( const QCString& baseURL );
+    void setBaseURL(const QCString &baseURL);
 
-  virtual KMFolderMgr* manager() const;
+    virtual KMFolderMgr *manager() const;
 
 protected:
-  QString mPath;
-  KMFolderMgr *mManager;
-  QCString mBaseURL;
+    QString mPath;
+    KMFolderMgr *mManager;
+    QCString mBaseURL;
 };
 
 #endif /*kmfolderdir_h*/

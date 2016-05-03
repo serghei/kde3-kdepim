@@ -40,8 +40,8 @@ class KOJournalView;
 class KOTimelineView;
 
 namespace KOrg {
-  class BaseView;
-  class MultiAgendaView;
+class BaseView;
+class MultiAgendaView;
 }
 using namespace KCal;
 
@@ -49,44 +49,52 @@ using namespace KCal;
   This class manages the views of the calendar. It owns the objects and handles
   creation and selection.
 */
-class KOViewManager : public QObject
-{
+class KOViewManager : public QObject {
     Q_OBJECT
-  public:
-    KOViewManager( CalendarView * );
+public:
+    KOViewManager(CalendarView *);
     virtual ~KOViewManager();
 
     /** changes the view to be the currently selected view */
-    void showView( KOrg::BaseView * );
+    void showView(KOrg::BaseView *);
 
-    void readSettings( KConfig *config );
-    void writeSettings( KConfig *config );
+    void readSettings(KConfig *config);
+    void writeSettings(KConfig *config);
 
     /** Read which view was shown last from config file */
-    void readCurrentView( KConfig * );
+    void readCurrentView(KConfig *);
     /** Write which view is currently shown to config file */
-    void writeCurrentView( KConfig * );
+    void writeCurrentView(KConfig *);
 
     KOrg::BaseView *currentView();
 
-    void setDocumentId( const QString & );
+    void setDocumentId(const QString &);
 
     void updateView();
-    void updateView( const QDate &start, const QDate &end );
+    void updateView(const QDate &start, const QDate &end);
 
     void raiseCurrentView();
 
-    void connectView( KOrg::BaseView * );
-    void addView( KOrg::BaseView * );
+    void connectView(KOrg::BaseView *);
+    void addView(KOrg::BaseView *);
 
     Incidence *currentSelection();
     QDate currentSelectionDate();
 
-    KOAgendaView *agendaView() const { return mAgendaView; }
-    KOrg::MultiAgendaView *multiAgendaView() const { return mAgendaSideBySideView; }
-    KOTodoView   *todoView() const { return mTodoView; }
+    KOAgendaView *agendaView() const
+    {
+        return mAgendaView;
+    }
+    KOrg::MultiAgendaView *multiAgendaView() const
+    {
+        return mAgendaSideBySideView;
+    }
+    KOTodoView   *todoView() const
+    {
+        return mTodoView;
+    }
 
-  public slots:
+public slots:
     void showWhatsNextView();
     void showListView();
     void showAgendaView();
@@ -101,7 +109,7 @@ class KOViewManager : public QObject
 
     void showEventView();
 
-    void connectTodoView( KOTodoView *todoView );
+    void connectTodoView(KOTodoView *todoView);
 
     void zoomInHorizontally();
     void zoomOutHorizontally();
@@ -110,10 +118,10 @@ class KOViewManager : public QObject
 
     void resourcesChanged();
 
-  private slots:
-    void currentAgendaViewTabChanged( QWidget* );
-  private:
-    QWidget* widgetForView( KOrg::BaseView* ) const;
+private slots:
+    void currentAgendaViewTabChanged(QWidget *);
+private:
+    QWidget *widgetForView(KOrg::BaseView *) const;
     CalendarView *mMainView;
 
     KOAgendaView    *mAgendaView;

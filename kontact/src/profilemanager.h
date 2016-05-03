@@ -32,18 +32,17 @@
 template <class T> class QValueList;
 
 namespace KIO {
-    class Job;
+class Job;
 }
 
 namespace Kontact {
 
-class Profile
-{
+class Profile {
     friend class ProfileManager;
 public:
     Profile();
 
-    explicit Profile( const QString& id, bool isLocal = false );
+    explicit Profile(const QString &id, bool isLocal = false);
 
     QString id() const;
 
@@ -53,28 +52,29 @@ public:
 
     bool isNull() const;
 
-    void setName( const QString& name );
+    void setName(const QString &name);
 
-    void setDescription( const QString& description );
+    void setDescription(const QString &description);
 
-    bool operator==( const Kontact::Profile& other ) const;
+    bool operator==(const Kontact::Profile &other) const;
 
     QString saveLocation() const;
 
 private: // ProfileManager only
 
-    enum SetLocalMode {
+    enum SetLocalMode
+    {
         DoNotCopyProfileFiles,
         CopyProfileFiles
     };
-    void setLocal( SetLocalMode mode );
+    void setLocal(SetLocalMode mode);
     bool isLocal() const;
-    void setOriginalLocation( const QString& path );
-    void setId( const QString& id );
+    void setOriginalLocation(const QString &path);
+    void setId(const QString &id);
 
 private:
 
-    static void copyConfigFiles( const QString& source, const QString& dest );
+    static void copyConfigFiles(const QString &source, const QString &dest);
 
     QString localSaveLocation() const;
 
@@ -86,72 +86,73 @@ private:
     QString m_originalLocation;
 };
 
-class ProfileManager : public QObject
-{
-Q_OBJECT
+class ProfileManager : public QObject {
+    Q_OBJECT
 public:
-    enum ImportError {
-        SuccessfulImport=0,
+    enum ImportError
+    {
+        SuccessfulImport = 0,
         NoValidProfile
     };
 
-    enum ExportError {
-        SuccessfulExport=0,
+    enum ExportError
+    {
+        SuccessfulExport = 0,
         DirectoryDoesNotExist,
         DirectoryNotWritable
     };
 
-    static ProfileManager* self();
+    static ProfileManager *self();
 
     ~ProfileManager();
 
-    Kontact::Profile profileById( const QString& id ) const;
+    Kontact::Profile profileById(const QString &id) const;
 
-    bool addProfile( const Kontact::Profile& profile, bool syncConfig = true );
+    bool addProfile(const Kontact::Profile &profile, bool syncConfig = true);
 
-    void removeProfile( const Kontact::Profile& profile );
+    void removeProfile(const Kontact::Profile &profile);
 
-    void removeProfile( const QString& id );
+    void removeProfile(const QString &id);
 
-    void updateProfile( const Kontact::Profile& profile );
+    void updateProfile(const Kontact::Profile &profile);
 
-    void loadProfile( const QString& id );
+    void loadProfile(const QString &id);
 
-    void saveToProfile( const QString& id );
+    void saveToProfile(const QString &id);
 
     QValueList<Kontact::Profile> profiles() const;
 
-    ExportError exportProfileToDirectory( const QString& id, const QString& path );
+    ExportError exportProfileToDirectory(const QString &id, const QString &path);
 
-    ImportError importProfileFromDirectory( const QString& path );
+    ImportError importProfileFromDirectory(const QString &path);
 
     QString generateNewId() const;
 
 signals:
-    void profileAdded( const QString& id );
+    void profileAdded(const QString &id);
 
-    void profileRemoved( const QString& id );
+    void profileRemoved(const QString &id);
 
-    void profileUpdated( const QString& id );
+    void profileUpdated(const QString &id);
 
-    void profileLoaded( const QString& id );
+    void profileLoaded(const QString &id);
 
-    void saveToProfileRequested( const QString& id );
+    void saveToProfileRequested(const QString &id);
 
-    void profileImportFinished( ImportError status );
+    void profileImportFinished(ImportError status);
 
 private:
-    static ProfileManager* m_self;
+    static ProfileManager *m_self;
 
-    static Kontact::Profile readFromConfiguration( const QString& configFile, bool isLocal );
+    static Kontact::Profile readFromConfiguration(const QString &configFile, bool isLocal);
 
-    explicit ProfileManager( QObject* parent = 0 );
+    explicit ProfileManager(QObject *parent = 0);
 
     void readConfig();
 
     void writeConfig() const;
 
-    void writeProfileConfig( const Kontact::Profile& profile ) const;
+    void writeProfileConfig(const Kontact::Profile &profile) const;
 
 private:
     QMap<QString, Kontact::Profile> m_profiles;

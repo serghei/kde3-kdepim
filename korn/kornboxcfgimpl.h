@@ -29,65 +29,65 @@ class QFont;
 class QString;
 class QWidget;
 
-class KornBoxCfgImpl : public KornBoxCfg
-{ Q_OBJECT
+class KornBoxCfgImpl : public KornBoxCfg {
+    Q_OBJECT
 public:
-	KornBoxCfgImpl( QWidget *parent, const char * name );
-	~KornBoxCfgImpl();
-	
-	/**
-	 * This method write the current configuration to a specified KConfig-object.
-	 *
-	 * @param config The config where in which the configuration should be added.
-	 * @param index The index of the selected config. This is the group-number.
-	 */
-	void writeConfig( KConfig * config, const int index );
-	
-	/**
-	 * This method write the current configuration to a specified KConfig-object.
-	 *
-	 * @param config The config where in which the configuration should be added. Note that this object is stored locally until the object is destroyed.
-	 * @param index The index of the selected config. This is the group-number.
-	 */
-	void readConfig( KConfig * config, const int index );
-	
+    KornBoxCfgImpl(QWidget *parent, const char *name);
+    ~KornBoxCfgImpl();
+
+    /**
+     * This method write the current configuration to a specified KConfig-object.
+     *
+     * @param config The config where in which the configuration should be added.
+     * @param index The index of the selected config. This is the group-number.
+     */
+    void writeConfig(KConfig *config, const int index);
+
+    /**
+     * This method write the current configuration to a specified KConfig-object.
+     *
+     * @param config The config where in which the configuration should be added. Note that this object is stored locally until the object is destroyed.
+     * @param index The index of the selected config. This is the group-number.
+     */
+    void readConfig(KConfig *config, const int index);
+
 private:
-	void readViewConfig();
-	void readEventConfig();
-	void readAccountsConfig();
-	void readDCOPConfig();
-	
-	void writeViewConfig( KConfig* config );
-	void writeEventConfig( KConfig *config );
-	void writeAccountsConfig( KConfig *config );
-	void writeDCOPConfig( KConfig *config );
-	
-	KConfig* _config;
-	KConfigGroup *_group;
-	KDialogBase *_base;
-	int _index;
-	QString *_anims[ 2 ];
-	QFont *_fonts[ 2 ];
-	
+    void readViewConfig();
+    void readEventConfig();
+    void readAccountsConfig();
+    void readDCOPConfig();
+
+    void writeViewConfig(KConfig *config);
+    void writeEventConfig(KConfig *config);
+    void writeAccountsConfig(KConfig *config);
+    void writeDCOPConfig(KConfig *config);
+
+    KConfig *_config;
+    KConfigGroup *_group;
+    KDialogBase *_base;
+    int _index;
+    QString *_anims[ 2 ];
+    QFont *_fonts[ 2 ];
+
 protected slots:
-	virtual void slotEditBox();
-	virtual void slotActivated( const QString& );
-	virtual void slotActivated( const int );
-	virtual void slotSetDefaults( const QString&, const int, KConfig* );
-	virtual void slotChangeNormalAnim();
-	virtual void slotChangeNewAnim();
-	virtual void slotChangeNormalFont();
-	virtual void slotChangeNewFont();
-	virtual void slotNormalAnimToggled( bool enabled );
-	virtual void slotNewAnimToggled( bool enabled );
-	
+    virtual void slotEditBox();
+    virtual void slotActivated(const QString &);
+    virtual void slotActivated(const int);
+    virtual void slotSetDefaults(const QString &, const int, KConfig *);
+    virtual void slotChangeNormalAnim();
+    virtual void slotChangeNewAnim();
+    virtual void slotChangeNormalFont();
+    virtual void slotChangeNewFont();
+    virtual void slotNormalAnimToggled(bool enabled);
+    virtual void slotNewAnimToggled(bool enabled);
+
 private slots:
-	void slotOK();
-	void slotCancel();
-	void slotDialogDestroyed();
-	
-	void slotAccountsSwapped( int account1, int account2 );
-	void slotAccountDeleted( int account );
+    void slotOK();
+    void slotCancel();
+    void slotDialogDestroyed();
+
+    void slotAccountsSwapped(int account1, int account2);
+    void slotAccountDeleted(int account);
 };
 
 #endif //MK_KORNBOXCFGIMPL_H

@@ -58,8 +58,8 @@ class DW_EXPORT DwParameter : public DwMessageComponent {
 public:
 
     DwParameter();
-    DwParameter(const DwParameter& aParam);
-    DwParameter(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwParameter(const DwParameter &aParam);
+    DwParameter(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwParameter} object's string representation to the empty string
     //. and sets its parent to NULL.
@@ -77,7 +77,7 @@ public:
 
     virtual ~DwParameter();
 
-    const DwParameter& operator = (const DwParameter& aParam);
+    const DwParameter &operator = (const DwParameter &aParam);
     //. This is the assignment operator.
 
     virtual void Parse();
@@ -96,34 +96,34 @@ public:
     //. automatically for this object by the parent object's
     //. {\tt Assemble()} member function if the is-modified flag is set.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwParameter} on the free store that has the same
     //. value as this {\tt DwParameter} object.  The basic idea is that of
     //. a ``virtual copy constructor.''
 
-    const DwString& Attribute() const;
+    const DwString &Attribute() const;
     //. Returns the attribute contained by this parameter.
 
-    void SetAttribute(const DwString& aAttribute);
+    void SetAttribute(const DwString &aAttribute);
     //. Sets the attribute contained by this parameter.
 
-    const DwString& Value() const;
+    const DwString &Value() const;
     //. Returns the value contained by this parameter.
 
-    void SetValue(const DwString& aValue, bool forceNoQuotes=false);
+    void SetValue(const DwString &aValue, bool forceNoQuotes = false);
     //. Sets the value contained by this parameter.
 
-    DwParameter* Next() const ;
+    DwParameter *Next() const ;
     //. Returns the next {\tt DwParameter} object in the list.
 
-    void SetNext(DwParameter* aParam);
+    void SetNext(DwParameter *aParam);
     //. Returns the next {\tt DwParameter} object in the list.  Since
     //. {\tt DwMediaType} has member functions for adding {\tt DwParameter}
     //. objects to its list, you should avoid using this function.
 
-    static DwParameter* NewParameter(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwParameter *NewParameter(const DwString &aStr,
+                                     DwMessageComponent *aParent);
     //. Creates a new {\tt DwParameter} object on the free store.
     //. If the static data member {\tt sNewParameter} is NULL,
     //. this member function will create a new {\tt DwParameter}
@@ -133,7 +133,7 @@ public:
     //. {\tt DwParameter}, and return that object.
 
     //+ Var sNewParameter
-    static DwParameter* (*sNewParameter)(const DwString&, DwMessageComponent*);
+    static DwParameter *(*sNewParameter)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewParameter} is not NULL, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived from
     //. {\tt DwParameter}.
@@ -143,12 +143,12 @@ private:
     DwString mAttribute;
     DwString mValue;
     bool     mForceNoQuotes;
-    DwParameter* mNext;
-    static const char* const sClassName;
+    DwParameter *mNext;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -166,7 +166,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

@@ -33,42 +33,39 @@ using namespace RSS;
 
 
 
-namespace Akregator
-{
+namespace Akregator {
 
-   class Feed;
+class Feed;
 
-   class AddFeedWidget : public AddFeedWidgetBase
-   {
-      Q_OBJECT
-      public:
-         AddFeedWidget(QWidget *parent = 0, const char *name = 0);
-         ~AddFeedWidget();
-   };
+class AddFeedWidget : public AddFeedWidgetBase {
+    Q_OBJECT
+public:
+    AddFeedWidget(QWidget *parent = 0, const char *name = 0);
+    ~AddFeedWidget();
+};
 
-   class AddFeedDialog : public KDialogBase
-   {
-      Q_OBJECT
-      public:
-         AddFeedDialog(QWidget *parent = 0, const char *name = 0);
-         ~AddFeedDialog();
+class AddFeedDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    AddFeedDialog(QWidget *parent = 0, const char *name = 0);
+    ~AddFeedDialog();
 
-         void setURL(const QString& t);
-         Feed *feed;
+    void setURL(const QString &t);
+    Feed *feed;
 
-      public slots:
-         void slotOk( );
-         void fetchCompleted(Feed *);
-         void fetchDiscovery(Feed *);
-         void fetchError(Feed *);
+public slots:
+    void slotOk();
+    void fetchCompleted(Feed *);
+    void fetchDiscovery(Feed *);
+    void fetchError(Feed *);
 
-      private slots:
-         void textChanged(const QString&);
+private slots:
+    void textChanged(const QString &);
 
-      private:
-         AddFeedWidget *widget;
-         QString feedURL;
-   };
+private:
+    AddFeedWidget *widget;
+    QString feedURL;
+};
 }
 
 #endif

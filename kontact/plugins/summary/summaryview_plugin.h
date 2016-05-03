@@ -32,31 +32,33 @@ class KSelectAction;
 
 class SummaryViewPart;
 
-class SummaryView : public Kontact::Plugin
-{
-  Q_OBJECT
+class SummaryView : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    SummaryView( Kontact::Core *core, const char *name, const QStringList& );
-	  ~SummaryView();
+public:
+    SummaryView(Kontact::Core *core, const char *name, const QStringList &);
+    ~SummaryView();
 
-    int weight() const { return 100; }
+    int weight() const
+    {
+        return 100;
+    }
 
     const KAboutData *aboutData();
 
-  protected:
-    virtual KParts::ReadOnlyPart* createPart();
+protected:
+    virtual KParts::ReadOnlyPart *createPart();
 
-  private slots:
+private slots:
 
     void doSync();
-    void syncAccount( const QString& account );
+    void syncAccount(const QString &account);
     void fillSyncActionSubEntries();
 
-  private:
+private:
     KAboutData *mAboutData;
     SummaryViewPart *mPart;
-    KSelectAction *mSyncAction; 
+    KSelectAction *mSyncAction;
 };
 
 #endif

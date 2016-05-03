@@ -40,139 +40,140 @@
 #include "kaddressbook_part.h"
 
 typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
-K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
+K_EXPORT_COMPONENT_FACTORY(libkaddressbookpart, KAddressbookFactory)
 
-KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetName,
-                                    QObject *parent, const char *name,
-                                    const QStringList & )
-  : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent, name )
+KAddressbookPart::KAddressbookPart(QWidget *parentWidget, const char *widgetName,
+                                   QObject *parent, const char *name,
+                                   const QStringList &)
+    : DCOPObject("KAddressBookIface"), KParts::ReadOnlyPart(parent, name)
 {
-  setInstance( KAddressbookFactory::instance() );
+    setInstance(KAddressbookFactory::instance());
 
-  // create a canvas to insert our widget
-  QWidget *canvas = new QWidget( parentWidget, widgetName );
-  canvas->setFocusPolicy( QWidget::ClickFocus );
-  setWidget( canvas );
+    // create a canvas to insert our widget
+    QWidget *canvas = new QWidget(parentWidget, widgetName);
+    canvas->setFocusPolicy(QWidget::ClickFocus);
+    setWidget(canvas);
 
-  QVBoxLayout *topLayout = new QVBoxLayout( canvas );
+    QVBoxLayout *topLayout = new QVBoxLayout(canvas);
 
-  KGlobal::iconLoader()->addAppDir( "kaddressbook" );
+    KGlobal::iconLoader()->addAppDir("kaddressbook");
 
-  mCore = new KABCore( this, true, canvas );
-  mCore->restoreSettings();
-  topLayout->addWidget( mCore->widget() );
+    mCore = new KABCore(this, true, canvas);
+    mCore->restoreSettings();
+    topLayout->addWidget(mCore->widget());
 
-  KParts::StatusBarExtension *statusBar = new KParts::StatusBarExtension( this );
-  mCore->setStatusBar( statusBar->statusBar() );
+    KParts::StatusBarExtension *statusBar = new KParts::StatusBarExtension(this);
+    mCore->setStatusBar(statusBar->statusBar());
 
-  setXMLFile( "kaddressbook_part.rc" );
+    setXMLFile("kaddressbook_part.rc");
 }
 
 KAddressbookPart::~KAddressbookPart()
 {
-  mCore->save();
-  mCore->saveSettings();
+    mCore->save();
+    mCore->saveSettings();
 
-  KABPrefs::instance()->writeConfig();
-  closeURL();
+    KABPrefs::instance()->writeConfig();
+    closeURL();
 }
 
 KAboutData *KAddressbookPart::createAboutData()
 {
-  return KABCore::createAboutData();
+    return KABCore::createAboutData();
 }
 
-void KAddressbookPart::addEmail( QString addr )
+void KAddressbookPart::addEmail(QString addr)
 {
-  mCore->addEmail( addr );
+    mCore->addEmail(addr);
 }
 
-void KAddressbookPart::importVCard( const KURL& url )
+void KAddressbookPart::importVCard(const KURL &url)
 {
-  mCore->importVCard( url );
+    mCore->importVCard(url);
 }
 
-void KAddressbookPart::importVCardFromData( const QString& vCard )
+void KAddressbookPart::importVCardFromData(const QString &vCard)
 {
-  mCore->importVCardFromData( vCard );
+    mCore->importVCardFromData(vCard);
 }
 
-ASYNC KAddressbookPart::showContactEditor( QString uid )
+ASYNC KAddressbookPart::showContactEditor(QString uid)
 {
-  mCore->editContact( uid );
+    mCore->editContact(uid);
 }
 
 void KAddressbookPart::newContact()
 {
-  mCore->newContact();
+    mCore->newContact();
 }
 
 
 void KAddressbookPart::newDistributionList()
 {
-  mCore->newDistributionList();
+    mCore->newDistributionList();
 }
 
-QString KAddressbookPart::getNameByPhone( QString phone )
+QString KAddressbookPart::getNameByPhone(QString phone)
 {
-  return mCore->getNameByPhone( phone );
+    return mCore->getNameByPhone(phone);
 }
 
 void KAddressbookPart::save()
 {
-  mCore->save();
+    mCore->save();
 }
 
 void KAddressbookPart::exit()
 {
-  mCore->queryClose();
+    mCore->queryClose();
 
-  delete this;
+    delete this;
 }
 
-bool KAddressbookPart::openURL( const KURL &url )
+bool KAddressbookPart::openURL(const KURL &url)
 {
-  kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
+    kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
 
-  mCore->widget()->show();
+    mCore->widget()->show();
 
-  if ( !url.isEmpty() )
-    mCore->importVCard( url );
+    if(!url.isEmpty())
+        mCore->importVCard(url);
 
-  emit setWindowCaption( url.prettyURL() );
+    emit setWindowCaption(url.prettyURL());
 
-  return true;
+    return true;
 }
 
 bool KAddressbookPart::openFile()
 {
-  return false;
+    return false;
 }
 
 bool KAddressbookPart::handleCommandLine()
 {
-  return mCore->handleCommandLine( this );
+    return mCore->handleCommandLine(this);
 }
 
-void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
+void KAddressbookPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-  kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
-  KParts::ReadOnlyPart::guiActivateEvent( e );
+    kdDebug(5720) << "KAddressbookPart::guiActivateEvent" << endl;
+    KParts::ReadOnlyPart::guiActivateEvent(e);
 
-  if ( e->activated() )
-    mCore->reinitXMLGUI();
+    if(e->activated())
+        mCore->reinitXMLGUI();
 
-  if ( !e->activated() ) {
-    mCore->statusBar()->removeItem( 1 );
-    mCore->statusBar()->removeItem( 2 );
-  }
+    if(!e->activated())
+    {
+        mCore->statusBar()->removeItem(1);
+        mCore->statusBar()->removeItem(2);
+    }
 }
 
-void KAddressbookPart::loadProfile( const QString& )
+void KAddressbookPart::loadProfile(const QString &)
 {
 }
 
-void KAddressbookPart::saveToProfile( const QString& ) const
+void KAddressbookPart::saveToProfile(const QString &) const
 {
 }
 

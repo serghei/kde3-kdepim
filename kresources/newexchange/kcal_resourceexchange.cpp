@@ -29,26 +29,26 @@
 using namespace KCal;
 
 ResourceExchange::ResourceExchange()
-  : ResourceGroupwareBase()
+    : ResourceGroupwareBase()
 {
-  init();
+    init();
 }
 
-ResourceExchange::ResourceExchange( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceExchange::ResourceExchange(const KConfig *config)
+    : ResourceGroupwareBase(config)
 {
-  init();
-  if ( config ) readConfig( config );
+    init();
+    if(config) readConfig(config);
 }
 
 void ResourceExchange::init()
 {
-  setType( "ResourceExchange" );
-  setPrefs( createPrefs() );
-  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::Calendar ) );
-  setAdaptor( new ExchangeCalendarAdaptor() );
-  
-  ResourceGroupwareBase::init();
+    setType("ResourceExchange");
+    setPrefs(createPrefs());
+    setFolderLister(new KPIM::FolderLister(KPIM::FolderLister::Calendar));
+    setAdaptor(new ExchangeCalendarAdaptor());
+
+    ResourceGroupwareBase::init();
 }
 
 #include "kcal_resourceexchange.moc"

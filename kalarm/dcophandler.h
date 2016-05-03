@@ -28,79 +28,79 @@
 #include "kalarmiface.h"
 
 
-class DcopHandler : public QWidget, virtual public KAlarmIface
-{
-    public:
-	DcopHandler();
-	virtual bool cancelEvent(const QString& url,const QString& eventId);
-	virtual bool triggerEvent(const QString& url,const QString& eventId);
+class DcopHandler : public QWidget, virtual public KAlarmIface {
+public:
+    DcopHandler();
+    virtual bool cancelEvent(const QString &url, const QString &eventId);
+    virtual bool triggerEvent(const QString &url, const QString &eventId);
 
-	virtual bool scheduleMessage(const QString& message, const QString& startDateTime, int lateCancel, unsigned flags,
-	                             const QString& bgColor, const QString& fgColor, const QString& font,
-	                             const KURL& audioFile, int reminderMins, const QString& recurrence,
-	                             int subRepeatInterval, int subRepeatCount);
-	virtual bool scheduleMessage(const QString& message, const QString& startDateTime, int lateCancel, unsigned flags,
-	                             const QString& bgColor, const QString& fgColor, const QString& font,
-	                             const KURL& audioFile, int reminderMins, int recurType, int recurInterval, int recurCount);
-	virtual bool scheduleMessage(const QString& message, const QString& startDateTime, int lateCancel, unsigned flags,
-	                             const QString& bgColor, const QString& fgColor, const QString& font,
-	                             const KURL& audioFile, int reminderMins, int recurType, int recurInterval, const QString& endDateTime);
-	virtual bool scheduleFile(const KURL& file, const QString& startDateTime, int lateCancel, unsigned flags, const QString& bgColor,
-	                          const KURL& audioFile, int reminderMins, const QString& recurrence,
-	                          int subRepeatInterval, int subRepeatCount);
-	virtual bool scheduleFile(const KURL& file, const QString& startDateTime, int lateCancel, unsigned flags, const QString& bgColor,
-	                          const KURL& audioFile, int reminderMins, int recurType, int recurInterval, int recurCount);
-	virtual bool scheduleFile(const KURL& file, const QString& startDateTime, int lateCancel, unsigned flags, const QString& bgColor,
-	                          const KURL& audioFile, int reminderMins, int recurType, int recurInterval, const QString& endDateTime);
-	virtual bool scheduleCommand(const QString& commandLine, const QString& startDateTime, int lateCancel, unsigned flags,
-	                             const QString& recurrence, int subRepeatInterval, int subRepeatCount);
-	virtual bool scheduleCommand(const QString& commandLine, const QString& startDateTime, int lateCancel, unsigned flags,
-	                             int recurType, int recurInterval, int recurCount);
-	virtual bool scheduleCommand(const QString& commandLine, const QString& startDateTime, int lateCancel, unsigned flags,
-	                             int recurType, int recurInterval, const QString& endDateTime);
-	virtual bool scheduleEmail(const QString& fromID, const QString& addresses, const QString& subject, const QString& message,
-	                           const QString& attachments, const QString& startDateTime, int lateCancel, unsigned flags,
-	                           const QString& recurrence, int recurInterval, int recurCount);
-	virtual bool scheduleEmail(const QString& fromID, const QString& addresses, const QString& subject, const QString& message,
-	                           const QString& attachments, const QString& startDateTime, int lateCancel, unsigned flags,
-	                           int recurType, int recurInterval, int recurCount);
-	virtual bool scheduleEmail(const QString& fromID, const QString& addresses, const QString& subject, const QString& message,
-	                           const QString& attachments, const QString& startDateTime, int lateCancel, unsigned flags,
-	                           int recurType, int recurInterval, const QString& endDateTime);
-	virtual bool edit(const QString& eventID);
-	virtual bool editNew(const QString& templateName);
+    virtual bool scheduleMessage(const QString &message, const QString &startDateTime, int lateCancel, unsigned flags,
+                                 const QString &bgColor, const QString &fgColor, const QString &font,
+                                 const KURL &audioFile, int reminderMins, const QString &recurrence,
+                                 int subRepeatInterval, int subRepeatCount);
+    virtual bool scheduleMessage(const QString &message, const QString &startDateTime, int lateCancel, unsigned flags,
+                                 const QString &bgColor, const QString &fgColor, const QString &font,
+                                 const KURL &audioFile, int reminderMins, int recurType, int recurInterval, int recurCount);
+    virtual bool scheduleMessage(const QString &message, const QString &startDateTime, int lateCancel, unsigned flags,
+                                 const QString &bgColor, const QString &fgColor, const QString &font,
+                                 const KURL &audioFile, int reminderMins, int recurType, int recurInterval, const QString &endDateTime);
+    virtual bool scheduleFile(const KURL &file, const QString &startDateTime, int lateCancel, unsigned flags, const QString &bgColor,
+                              const KURL &audioFile, int reminderMins, const QString &recurrence,
+                              int subRepeatInterval, int subRepeatCount);
+    virtual bool scheduleFile(const KURL &file, const QString &startDateTime, int lateCancel, unsigned flags, const QString &bgColor,
+                              const KURL &audioFile, int reminderMins, int recurType, int recurInterval, int recurCount);
+    virtual bool scheduleFile(const KURL &file, const QString &startDateTime, int lateCancel, unsigned flags, const QString &bgColor,
+                              const KURL &audioFile, int reminderMins, int recurType, int recurInterval, const QString &endDateTime);
+    virtual bool scheduleCommand(const QString &commandLine, const QString &startDateTime, int lateCancel, unsigned flags,
+                                 const QString &recurrence, int subRepeatInterval, int subRepeatCount);
+    virtual bool scheduleCommand(const QString &commandLine, const QString &startDateTime, int lateCancel, unsigned flags,
+                                 int recurType, int recurInterval, int recurCount);
+    virtual bool scheduleCommand(const QString &commandLine, const QString &startDateTime, int lateCancel, unsigned flags,
+                                 int recurType, int recurInterval, const QString &endDateTime);
+    virtual bool scheduleEmail(const QString &fromID, const QString &addresses, const QString &subject, const QString &message,
+                               const QString &attachments, const QString &startDateTime, int lateCancel, unsigned flags,
+                               const QString &recurrence, int recurInterval, int recurCount);
+    virtual bool scheduleEmail(const QString &fromID, const QString &addresses, const QString &subject, const QString &message,
+                               const QString &attachments, const QString &startDateTime, int lateCancel, unsigned flags,
+                               int recurType, int recurInterval, int recurCount);
+    virtual bool scheduleEmail(const QString &fromID, const QString &addresses, const QString &subject, const QString &message,
+                               const QString &attachments, const QString &startDateTime, int lateCancel, unsigned flags,
+                               int recurType, int recurInterval, const QString &endDateTime);
+    virtual bool edit(const QString &eventID);
+    virtual bool editNew(const QString &templateName);
 
-    private:
-	static bool scheduleMessage(const QString& message, const DateTime& start, int lateCancel, unsigned flags,
-                                const QString& bgColor, const QString& fgColor, const QString& fontStr,
-                                const KURL& audioFile, int reminderMins, const KARecurrence&,
-	                            int subRepeatInterval = 0, int subRepeatCount = 0);
-	static bool scheduleFile(const KURL& file, const DateTime& start, int lateCancel, unsigned flags, const QString& bgColor,
-                             const KURL& audioFile, int reminderMins, const KARecurrence&,
-	                         int subRepeatInterval = 0, int subRepeatCount = 0);
-	static bool scheduleCommand(const QString& commandLine, const DateTime& start, int lateCancel, unsigned flags,
-                                const KARecurrence&, int subRepeatInterval = 0, int subRepeatCount = 0);
-	static bool scheduleEmail(const QString& fromID, const QString& addresses, const QString& subject, const QString& message,
-                              const QString& attachments, const DateTime& start, int lateCancel, unsigned flags,
-                              const KARecurrence&, int subRepeatInterval = 0, int subRepeatCount = 0);
-	static DateTime  convertStartDateTime(const QString& startDateTime);
-	static unsigned  convertStartFlags(const DateTime& start, unsigned flags);
-	static QColor    convertBgColour(const QString& bgColor);
-	static bool      convertRecurrence(DateTime& start, KARecurrence&, const QString& startDateTime, const QString& icalRecurrence, int& subRepeatInterval);
-	static bool      convertRecurrence(DateTime& start, KARecurrence&, const QString& startDateTime, int recurType, int recurInterval, int recurCount);
-	static bool      convertRecurrence(DateTime& start, KARecurrence&, const QString& startDateTime, int recurType, int recurInterval, const QString& endDateTime);
-	static bool      convertRecurrence(KARecurrence&, const DateTime& start, int recurType, int recurInterval, int recurCount, const QDateTime& end);
+private:
+    static bool scheduleMessage(const QString &message, const DateTime &start, int lateCancel, unsigned flags,
+                                const QString &bgColor, const QString &fgColor, const QString &fontStr,
+                                const KURL &audioFile, int reminderMins, const KARecurrence &,
+                                int subRepeatInterval = 0, int subRepeatCount = 0);
+    static bool scheduleFile(const KURL &file, const DateTime &start, int lateCancel, unsigned flags, const QString &bgColor,
+                             const KURL &audioFile, int reminderMins, const KARecurrence &,
+                             int subRepeatInterval = 0, int subRepeatCount = 0);
+    static bool scheduleCommand(const QString &commandLine, const DateTime &start, int lateCancel, unsigned flags,
+                                const KARecurrence &, int subRepeatInterval = 0, int subRepeatCount = 0);
+    static bool scheduleEmail(const QString &fromID, const QString &addresses, const QString &subject, const QString &message,
+                              const QString &attachments, const DateTime &start, int lateCancel, unsigned flags,
+                              const KARecurrence &, int subRepeatInterval = 0, int subRepeatCount = 0);
+    static DateTime  convertStartDateTime(const QString &startDateTime);
+    static unsigned  convertStartFlags(const DateTime &start, unsigned flags);
+    static QColor    convertBgColour(const QString &bgColor);
+    static bool      convertRecurrence(DateTime &start, KARecurrence &, const QString &startDateTime, const QString &icalRecurrence,
+                                       int &subRepeatInterval);
+    static bool      convertRecurrence(DateTime &start, KARecurrence &, const QString &startDateTime, int recurType, int recurInterval, int recurCount);
+    static bool      convertRecurrence(DateTime &start, KARecurrence &, const QString &startDateTime, int recurType, int recurInterval,
+                                       const QString &endDateTime);
+    static bool      convertRecurrence(KARecurrence &, const DateTime &start, int recurType, int recurInterval, int recurCount, const QDateTime &end);
 };
 
 
 #ifdef OLD_DCOP
-class DcopHandlerOld : public QWidget, public DCOPObject
-{
-		Q_OBJECT
-	public:
-		DcopHandlerOld();
-		~DcopHandlerOld()  { }
-		virtual bool process(const QCString& func, const QByteArray& data, QCString& replyType, QByteArray& replyData);
+class DcopHandlerOld : public QWidget, public DCOPObject {
+    Q_OBJECT
+public:
+    DcopHandlerOld();
+    ~DcopHandlerOld()  { }
+    virtual bool process(const QCString &func, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 };
 #endif
 

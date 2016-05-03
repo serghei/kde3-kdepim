@@ -41,52 +41,50 @@ class KListView;
   This widget displays a list box of the email addresses as well as buttons
   to manipulate them (up, down, add, remove).
 */
-class EmailEditWidget : public QWidget
-{
-  Q_OBJECT
+class EmailEditWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    EmailEditWidget( QWidget *parent, const char *name = 0 );
+public:
+    EmailEditWidget(QWidget *parent, const char *name = 0);
     ~EmailEditWidget();
 
-    void setEmails( const QStringList &list );
+    void setEmails(const QStringList &list);
     QStringList emails();
 
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
-  signals:
+signals:
     void modified();
 
-  private slots:
+private slots:
     void edit();
-    void textChanged( const QString& );
+    void textChanged(const QString &);
 
-  private:
+private:
     KLineEdit *mEmailEdit;
     QPushButton *mEditButton;
     QStringList mEmailList;
 };
 
-class EmailEditDialog : public KDialogBase
-{
-  Q_OBJECT
+class EmailEditDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    EmailEditDialog( const QStringList &list, QWidget *parent,
-                     const char *name = 0 );
+public:
+    EmailEditDialog(const QStringList &list, QWidget *parent,
+                    const char *name = 0);
     ~EmailEditDialog();
 
     QStringList emails() const;
     bool changed() const;
 
-  protected slots:
+protected slots:
     void add();
     void edit();
     void remove();
     void standard();
-    void selectionChanged( int );
+    void selectionChanged(int);
 
-  private:
+private:
     QListBox *mEmailListBox;
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;

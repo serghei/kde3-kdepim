@@ -49,70 +49,83 @@
 #include <algorithm>
 
 namespace {
-  template <typename T>
-  struct Delete {
-    void operator()( T * item ) { delete item; }
-  };
+template <typename T>
+struct Delete
+{
+    void operator()(T *item)
+    {
+        delete item;
+    }
+};
 }
 
-struct Kleo::KeyFilterManager::Private {
-  void clear() {
-    std::for_each( filters.begin(), filters.end(), Delete<KeyFilter>() );
-    filters.clear();
-  }
+struct Kleo::KeyFilterManager::Private
+{
+    void clear()
+    {
+        std::for_each(filters.begin(), filters.end(), Delete<KeyFilter>());
+        filters.clear();
+    }
 
-  QValueVector<KeyFilter*> filters;
+    QValueVector<KeyFilter *> filters;
 };
 
-Kleo::KeyFilterManager * Kleo::KeyFilterManager::mSelf = 0;
+Kleo::KeyFilterManager *Kleo::KeyFilterManager::mSelf = 0;
 
-Kleo::KeyFilterManager::KeyFilterManager( QObject * parent, const char * name )
-  : QObject( parent, name ), d( 0 )
+Kleo::KeyFilterManager::KeyFilterManager(QObject *parent, const char *name)
+    : QObject(parent, name), d(0)
 {
-  mSelf = this;
-  d = new Private();
-  // ### DF: doesn't a KStaticDeleter work more reliably?
-  if ( qApp )
-    connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
-  reload();
+    mSelf = this;
+    d = new Private();
+    // ### DF: doesn't a KStaticDeleter work more reliably?
+    if(qApp)
+        connect(qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()));
+    reload();
 }
 
-Kleo::KeyFilterManager::~KeyFilterManager() {
-  mSelf = 0;
-  if ( d )
+Kleo::KeyFilterManager::~KeyFilterManager()
+{
+    mSelf = 0;
+    if(d)
+        d->clear();
+    delete d;
+    d = 0;
+}
+
+Kleo::KeyFilterManager *Kleo::KeyFilterManager::instance()
+{
+    if(!mSelf)
+        mSelf = new Kleo::KeyFilterManager();
+    return mSelf;
+}
+
+const Kleo::KeyFilter *Kleo::KeyFilterManager::filterMatching(const GpgME::Key &key) const
+{
+    for(QValueVector<KeyFilter *>::const_iterator it = d->filters.begin() ; it != d->filters.end() ; ++it)
+        if((*it)->matches(key))
+            return *it;
+    return 0;
+}
+
+static inline bool by_increasing_specificity(const Kleo::KeyFilter *left, const Kleo::KeyFilter *right)
+{
+    return left->specificity() > right->specificity();
+}
+
+void Kleo::KeyFilterManager::reload()
+{
     d->clear();
-  delete d; d = 0;
-}
 
-Kleo::KeyFilterManager * Kleo::KeyFilterManager::instance() {
-  if ( !mSelf )
-    mSelf = new Kleo::KeyFilterManager();
-  return mSelf;
-}
-
-const Kleo::KeyFilter * Kleo::KeyFilterManager::filterMatching( const GpgME::Key & key ) const {
-  for ( QValueVector<KeyFilter*>::const_iterator it = d->filters.begin() ; it != d->filters.end() ; ++it )
-    if ( (*it)->matches( key ) )
-      return *it;
-  return 0;
-}
-
-static inline bool by_increasing_specificity( const Kleo::KeyFilter * left, const Kleo::KeyFilter * right ) {
-  return left->specificity() > right->specificity();
-}
-
-void Kleo::KeyFilterManager::reload() {
-  d->clear();
-
-  KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
-  if ( !config )
-    return;
-  const QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
-  for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
-    const KConfigGroup cfg( config, *it );
-    d->filters.push_back( new KConfigBasedKeyFilter( cfg ) );
-  }
-  std::stable_sort( d->filters.begin(), d->filters.end(), by_increasing_specificity );
+    KConfig *config = Kleo::CryptoBackendFactory::instance()->configObject();
+    if(!config)
+        return;
+    const QStringList groups = config->groupList().grep(QRegExp("^Key Filter #\\d+$"));
+    for(QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it)
+    {
+        const KConfigGroup cfg(config, *it);
+        d->filters.push_back(new KConfigBasedKeyFilter(cfg));
+    }
+    std::stable_sort(d->filters.begin(), d->filters.end(), by_increasing_specificity);
 }
 
 #include "keyfiltermanager.moc"

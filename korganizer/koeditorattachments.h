@@ -40,47 +40,46 @@ class QPushButton;
 class QPopupMenu;
 class KAction;
 
-class KOEditorAttachments : public QWidget
-{
+class KOEditorAttachments : public QWidget {
     Q_OBJECT
-  public:
-    KOEditorAttachments( int spacing = 8, QWidget *parent = 0,
-                         const char *name = 0 );
+public:
+    KOEditorAttachments(int spacing = 8, QWidget *parent = 0,
+                        const char *name = 0);
     ~KOEditorAttachments();
 
-    void addAttachment( const KURL &uri,
-                        const QString &mimeType = QString::null, bool asUri = true );
-    void addAttachment( KCal::Attachment *attachment );
+    void addAttachment(const KURL &uri,
+                       const QString &mimeType = QString::null, bool asUri = true);
+    void addAttachment(KCal::Attachment *attachment);
 
     /** Set widgets to default values */
     void setDefaults();
     /** Read event object and setup widgets accordingly */
-    void readIncidence( KCal::Incidence * );
+    void readIncidence(KCal::Incidence *);
     /** Write event settings to event object */
-    void writeIncidence( KCal::Incidence * );
+    void writeIncidence(KCal::Incidence *);
 
     bool hasAttachments();
 
-  protected slots:
-    void showAttachment( QIconViewItem *item );
+protected slots:
+    void showAttachment(QIconViewItem *item);
     void slotAdd();
     void slotAddData();
     void slotEdit();
     void slotRemove();
     void slotShow();
-    void dragEnterEvent( QDragEnterEvent *event );
-    void dropEvent( QDropEvent *event );
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
     void slotCopy();
     void slotCut();
     void slotPaste();
     void selectionChanged();
-    void contextMenu( QIconViewItem* item, const QPoint &pos );
-  signals:
-    void openURL( const KURL &url );
+    void contextMenu(QIconViewItem *item, const QPoint &pos);
+signals:
+    void openURL(const KURL &url);
 
-  private:
+private:
     friend class AttachmentIconView;
-    void handlePasteOrDrop( QMimeSource* source );
+    void handlePasteOrDrop(QMimeSource *source);
 
     AttachmentIconView *mAttachments;
     QPushButton *mRemoveBtn;

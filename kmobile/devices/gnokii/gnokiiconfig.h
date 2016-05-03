@@ -23,11 +23,10 @@
 
 #include <gnokiiconfigui.h>
 
-class GnokiiConfig : public GnokiiConfigUI
-{
-Q_OBJECT
+class GnokiiConfig : public GnokiiConfigUI {
+    Q_OBJECT
 public:
-    GnokiiConfig( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+    GnokiiConfig(QWidget *parent = 0, const char *name = 0, bool modal = FALSE, WFlags fl = 0);
     ~GnokiiConfig();
 
     void setValues(const QString &model, const QString &connection, const QString &port, const QString &baud);

@@ -31,34 +31,32 @@ class QDomDocument;
 class QDomElement;
 class QString;
 
-namespace RSS
-{
-    class KDE_EXPORT Category
-    {
-        public:
+namespace RSS {
+class KDE_EXPORT Category {
+public:
 
-        static Category fromXML(const QDomElement& e);
+    static Category fromXML(const QDomElement &e);
 
-        Category();
-        Category(const Category& other);
-        Category(const QString& category, const QString& domain);
-        virtual ~Category();
+    Category();
+    Category(const Category &other);
+    Category(const QString &category, const QString &domain);
+    virtual ~Category();
 
-        Category& operator=(const Category& other);
-        bool operator==(const Category& other) const;
+    Category &operator=(const Category &other);
+    bool operator==(const Category &other) const;
 
-        QString category() const;
+    QString category() const;
 
-        QString domain() const;
+    QString domain() const;
 
-        bool isNull() const;
+    bool isNull() const;
 
-        private:
+private:
 
-        class CategoryPrivate;
-        CategoryPrivate* d;
+    class CategoryPrivate;
+    CategoryPrivate *d;
 
-    };
+};
 } // namespace RSS
 
 #endif // LIBRSS_RSS_CATEGORY_H

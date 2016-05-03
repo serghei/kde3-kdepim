@@ -58,145 +58,145 @@ using KRecentAddress::RecentAddresses;
 
 
 typedef KParts::GenericFactory< KMailPart > KMailFactory;
-K_EXPORT_COMPONENT_FACTORY( libkmailpart, KMailFactory )
+K_EXPORT_COMPONENT_FACTORY(libkmailpart, KMailFactory)
 
 KMailPart::KMailPart(QWidget *parentWidget, const char *widgetName,
-		     QObject *parent, const char *name, const QStringList &) :
-  DCOPObject("KMailIface"), KParts::ReadOnlyPart(parent, name),
-  mParentWidget( parentWidget )
+                     QObject *parent, const char *name, const QStringList &) :
+    DCOPObject("KMailIface"), KParts::ReadOnlyPart(parent, name),
+    mParentWidget(parentWidget)
 {
-  kdDebug(5006) << "KMailPart()" << endl;
-  kdDebug(5006) << "  InstanceName: " << kapp->instanceName() << endl;
+    kdDebug(5006) << "KMailPart()" << endl;
+    kdDebug(5006) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  setInstance(KMailFactory::instance());
+    setInstance(KMailFactory::instance());
 
-  kdDebug(5006) << "KMailPart()..." << endl;
-  kdDebug(5006) << "  InstanceName: " << kapp->instanceName() << endl;
+    kdDebug(5006) << "KMailPart()..." << endl;
+    kdDebug(5006) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  // import i18n data and icons from libraries:
-  KMail::insertLibraryCataloguesAndIcons();
+    // import i18n data and icons from libraries:
+    KMail::insertLibraryCataloguesAndIcons();
 
-  // Make sure that the KNotify Daemon is running (this is necessary for people
-  // using KMail without KDE)
-  KNotifyClient::startDaemon();
+    // Make sure that the KNotify Daemon is running (this is necessary for people
+    // using KMail without KDE)
+    KNotifyClient::startDaemon();
 
-  KMail::lockOrDie();
+    KMail::lockOrDie();
 
-  kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
+    kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
 
-  //local, do the init
-  KMKernel *mKMailKernel = new KMKernel();
-  mKMailKernel->init();
-  mKMailKernel->setXmlGuiInstance( KMailFactory::instance() );
+    //local, do the init
+    KMKernel *mKMailKernel = new KMKernel();
+    mKMailKernel->init();
+    mKMailKernel->setXmlGuiInstance(KMailFactory::instance());
 
-  // and session management
-  mKMailKernel->doSessionManagement();
+    // and session management
+    mKMailKernel->doSessionManagement();
 
-  // any dead letters?
-  mKMailKernel->recoverDeadLetters();
+    // any dead letters?
+    mKMailKernel->recoverDeadLetters();
 
-  kmsetSignalHandler(kmsignalHandler);
-  kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
+    kmsetSignalHandler(kmsignalHandler);
+    kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
 
-  // create a canvas to insert our widget
-  QWidget *canvas = new QWidget(parentWidget, widgetName);
-  canvas->setFocusPolicy(QWidget::ClickFocus);
-  setWidget(canvas);
-  KGlobal::iconLoader()->addAppDir("kmail");
+    // create a canvas to insert our widget
+    QWidget *canvas = new QWidget(parentWidget, widgetName);
+    canvas->setFocusPolicy(QWidget::ClickFocus);
+    setWidget(canvas);
+    KGlobal::iconLoader()->addAppDir("kmail");
 #if 0
-  //It's also possible to make a part out of a readerWin
-  KMReaderWin *mReaderWin = new KMReaderWin( canvas, canvas, actionCollection() );
-  connect(mReaderWin, SIGNAL(urlClicked(const KURL&,int)),
-	  mReaderWin, SLOT(slotUrlClicked()));
-  QVBoxLayout *topLayout = new QVBoxLayout(canvas);
-  topLayout->addWidget(mReaderWin);
-  mReaderWin->setAutoDelete( true );
-  kmkernel->inboxFolder()->open();
-  KMMessage *msg = kmkernel->inboxFolder()->getMsg(0);
-  mReaderWin->setMsg( msg, true );
-  mReaderWin->setFocusPolicy(QWidget::ClickFocus);
-  mStatusBar  = new KMailStatusBarExtension(this);
-  //new KParts::SideBarExtension( kmkernel->mainWin()-mainKMWidget()->leftFrame(), this );
-  KGlobal::iconLoader()->addAppDir("kmail");
-  setXMLFile( "kmail_part.rc" );
-  kmkernel->inboxFolder()->close();
+    //It's also possible to make a part out of a readerWin
+    KMReaderWin *mReaderWin = new KMReaderWin(canvas, canvas, actionCollection());
+    connect(mReaderWin, SIGNAL(urlClicked(const KURL &, int)),
+            mReaderWin, SLOT(slotUrlClicked()));
+    QVBoxLayout *topLayout = new QVBoxLayout(canvas);
+    topLayout->addWidget(mReaderWin);
+    mReaderWin->setAutoDelete(true);
+    kmkernel->inboxFolder()->open();
+    KMMessage *msg = kmkernel->inboxFolder()->getMsg(0);
+    mReaderWin->setMsg(msg, true);
+    mReaderWin->setFocusPolicy(QWidget::ClickFocus);
+    mStatusBar  = new KMailStatusBarExtension(this);
+    //new KParts::SideBarExtension( kmkernel->mainWin()-mainKMWidget()->leftFrame(), this );
+    KGlobal::iconLoader()->addAppDir("kmail");
+    setXMLFile("kmail_part.rc");
+    kmkernel->inboxFolder()->close();
 #else
-  mainWidget = new KMMainWidget( canvas, "mainWidget", this, actionCollection(),
-                                 kapp->config());
-  QVBoxLayout *topLayout = new QVBoxLayout(canvas);
-  topLayout->addWidget(mainWidget);
-  mainWidget->setFocusPolicy(QWidget::ClickFocus);
-  mStatusBar  = new KMailStatusBarExtension(this);
-  mStatusBar->addStatusBarItem( mainWidget->vacationScriptIndicator(), 2, false );
+    mainWidget = new KMMainWidget(canvas, "mainWidget", this, actionCollection(),
+                                  kapp->config());
+    QVBoxLayout *topLayout = new QVBoxLayout(canvas);
+    topLayout->addWidget(mainWidget);
+    mainWidget->setFocusPolicy(QWidget::ClickFocus);
+    mStatusBar  = new KMailStatusBarExtension(this);
+    mStatusBar->addStatusBarItem(mainWidget->vacationScriptIndicator(), 2, false);
 
-  new KParts::SideBarExtension( mainWidget->folderTree(),
-                                this,
-                                "KMailSidebar" );
+    new KParts::SideBarExtension(mainWidget->folderTree(),
+                                 this,
+                                 "KMailSidebar");
 
-  // Get to know when the user clicked on a folder in the KMail part and update the headerWidget of Kontact
-  KParts::InfoExtension *ie = new KParts::InfoExtension( this, "KMailInfo" );
-  connect( mainWidget->folderTree(), SIGNAL(folderSelected(KMFolder*)), this, SLOT(exportFolder(KMFolder*)) );
-  connect( mainWidget->folderTree(), SIGNAL(iconChanged(KMFolderTreeItem*)),
-           this, SLOT(slotIconChanged(KMFolderTreeItem*)) );
-  connect( mainWidget->folderTree(), SIGNAL(nameChanged(KMFolderTreeItem*)),
-           this, SLOT(slotNameChanged(KMFolderTreeItem*)) );
-  connect( this, SIGNAL(textChanged(const QString&)), ie, SIGNAL(textChanged(const QString&)) );
-  connect( this, SIGNAL(iconChanged(const QPixmap&)), ie, SIGNAL(iconChanged(const QPixmap&)) );
+    // Get to know when the user clicked on a folder in the KMail part and update the headerWidget of Kontact
+    KParts::InfoExtension *ie = new KParts::InfoExtension(this, "KMailInfo");
+    connect(mainWidget->folderTree(), SIGNAL(folderSelected(KMFolder *)), this, SLOT(exportFolder(KMFolder *)));
+    connect(mainWidget->folderTree(), SIGNAL(iconChanged(KMFolderTreeItem *)),
+            this, SLOT(slotIconChanged(KMFolderTreeItem *)));
+    connect(mainWidget->folderTree(), SIGNAL(nameChanged(KMFolderTreeItem *)),
+            this, SLOT(slotNameChanged(KMFolderTreeItem *)));
+    connect(this, SIGNAL(textChanged(const QString &)), ie, SIGNAL(textChanged(const QString &)));
+    connect(this, SIGNAL(iconChanged(const QPixmap &)), ie, SIGNAL(iconChanged(const QPixmap &)));
 
-  KGlobal::iconLoader()->addAppDir( "kmail" );
-  setXMLFile( "kmail_part.rc" );
+    KGlobal::iconLoader()->addAppDir("kmail");
+    setXMLFile("kmail_part.rc");
 #endif
 
-  KSettings::Dispatcher::self()->registerInstance( KMailFactory::instance(), mKMailKernel,
-                                                   SLOT( slotConfigChanged() ) );
+    KSettings::Dispatcher::self()->registerInstance(KMailFactory::instance(), mKMailKernel,
+            SLOT(slotConfigChanged()));
 }
 
 KMailPart::~KMailPart()
 {
-  kdDebug(5006) << "Closing last KMMainWin: stopping mail check" << endl;
-  // Running KIO jobs prevent kapp from exiting, so we need to kill them
-  // if they are only about checking mail (not important stuff like moving messages)
-  kmkernel->abortMailCheck();
-  kmkernel->acctMgr()->cancelMailCheck();
+    kdDebug(5006) << "Closing last KMMainWin: stopping mail check" << endl;
+    // Running KIO jobs prevent kapp from exiting, so we need to kill them
+    // if they are only about checking mail (not important stuff like moving messages)
+    kmkernel->abortMailCheck();
+    kmkernel->acctMgr()->cancelMailCheck();
 
-  mainWidget->destruct();
-  kmkernel->cleanup();
-  delete kmkernel;
-  KMail::cleanup(); // pid file (see kmstartup.cpp)
+    mainWidget->destruct();
+    kmkernel->cleanup();
+    delete kmkernel;
+    KMail::cleanup(); // pid file (see kmstartup.cpp)
 }
 
 KAboutData *KMailPart::createAboutData()
 {
-  return new KMail::AboutData();
+    return new KMail::AboutData();
 }
 
 bool KMailPart::openFile()
 {
-  kdDebug(5006) << "KMailPart:openFile()" << endl;
+    kdDebug(5006) << "KMailPart:openFile()" << endl;
 
-  mainWidget->show();
-  return true;
+    mainWidget->show();
+    return true;
 }
 
-void KMailPart::exportFolder( KMFolder *folder )
+void KMailPart::exportFolder(KMFolder *folder)
 {
-  KMFolderTreeItem* fti = static_cast< KMFolderTreeItem* >( mainWidget->folderTree()->currentItem() );
+    KMFolderTreeItem *fti = static_cast< KMFolderTreeItem * >(mainWidget->folderTree()->currentItem());
 
-  if ( folder != 0 )
-    emit textChanged( folder->label() );
+    if(folder != 0)
+        emit textChanged(folder->label());
 
-  if ( fti )
-    emit iconChanged( fti->normalIcon( 22 ) );
+    if(fti)
+        emit iconChanged(fti->normalIcon(22));
 }
 
-void KMailPart::slotIconChanged( KMFolderTreeItem *fti )
+void KMailPart::slotIconChanged(KMFolderTreeItem *fti)
 {
-  emit iconChanged( fti->normalIcon( 22 ) );
+    emit iconChanged(fti->normalIcon(22));
 }
 
-void KMailPart::slotNameChanged( KMFolderTreeItem *fti )
+void KMailPart::slotNameChanged(KMFolderTreeItem *fti)
 {
-  emit textChanged( fti->folder()->label() );
+    emit textChanged(fti->folder()->label());
 }
 
 //-----------------------------------------------------------------------------
@@ -206,45 +206,45 @@ void KMailPart::slotNameChanged( KMFolderTreeItem *fti )
 // the toolbar is redrawn when necessary.
 // It can be removed once createGUI() has been made public _and_ we don't
 // longer rely on kdelibs 3.2.
-class KPartsMainWindowWithPublicizedCreateGUI : public KParts::MainWindow
-{
+class KPartsMainWindowWithPublicizedCreateGUI : public KParts::MainWindow {
 public:
-  void createGUIPublic( KParts::Part *part ) {
-    createGUI( part );
-  }
+    void createGUIPublic(KParts::Part *part)
+    {
+        createGUI(part);
+    }
 };
 
 //-----------------------------------------------------------------------------
 
 void KMailPart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-  kdDebug(5006) << "KMailPart::guiActivateEvent" << endl;
-  KParts::ReadOnlyPart::guiActivateEvent(e);
-  mainWidget->initializeFilterActions();
-  mainWidget->initializeFolderShortcutActions();
-  mainWidget->setupForwardingActionsList();
-  mainWidget->updateVactionScriptStatus();
+    kdDebug(5006) << "KMailPart::guiActivateEvent" << endl;
+    KParts::ReadOnlyPart::guiActivateEvent(e);
+    mainWidget->initializeFilterActions();
+    mainWidget->initializeFolderShortcutActions();
+    mainWidget->setupForwardingActionsList();
+    mainWidget->updateVactionScriptStatus();
 }
 
 void KMailPart::exit()
 {
-  delete this;
+    delete this;
 }
 
-QWidget* KMailPart::parentWidget() const
+QWidget *KMailPart::parentWidget() const
 {
-  return mParentWidget;
+    return mParentWidget;
 }
 
 
-KMailStatusBarExtension::KMailStatusBarExtension( KMailPart *parent )
-  : KParts::StatusBarExtension( parent ), mParent( parent )
+KMailStatusBarExtension::KMailStatusBarExtension(KMailPart *parent)
+    : KParts::StatusBarExtension(parent), mParent(parent)
 {
 }
 
-KMainWindow * KMailStatusBarExtension::mainWindow() const
+KMainWindow *KMailStatusBarExtension::mainWindow() const
 {
-  return static_cast<KMainWindow*>( mParent->parentWidget() );
+    return static_cast<KMainWindow *>(mParent->parentWidget());
 }
 
 #include "kmail_part.moc"

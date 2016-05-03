@@ -36,7 +36,7 @@ class KMFolder;
 class KMCommand;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 namespace KMail {
@@ -48,45 +48,44 @@ class CopyFolderJob;
  * They can be moved everywhere (except search folders) as a new folder is
  * created, all messages are moved there and the original folder is deleted
  */
-class RenameJob : public FolderJob
-{
-  Q_OBJECT
+class RenameJob : public FolderJob {
+    Q_OBJECT
 public:
-  /**
-   * Create a new job
-   * @param storage the folder that should be renames
-   * @param newName the new name of the folder
-   * @param newParent the new parent if the folder should be moved, else 0
-   */
-  RenameJob( FolderStorage* storage, const QString& newName,
-      KMFolderDir* newParent = 0 );
+    /**
+     * Create a new job
+     * @param storage the folder that should be renames
+     * @param newName the new name of the folder
+     * @param newParent the new parent if the folder should be moved, else 0
+     */
+    RenameJob(FolderStorage *storage, const QString &newName,
+              KMFolderDir *newParent = 0);
 
-  virtual ~RenameJob();
+    virtual ~RenameJob();
 
-  virtual void execute();
+    virtual void execute();
 
 protected slots:
-  /** Rename the folder */
-  void slotRenameResult( KIO::Job* job );
+    /** Rename the folder */
+    void slotRenameResult(KIO::Job *job);
 
-  /** All messages are copied so remove the original folder */
-  void folderCopyComplete( bool success );
+    /** All messages are copied so remove the original folder */
+    void folderCopyComplete(bool success);
 
 signals:
-  /** Emitted when the job is done, check the success bool */
-  void renameDone( QString newName, bool success );
+    /** Emitted when the job is done, check the success bool */
+    void renameDone(QString newName, bool success);
 
 protected:
-  FolderStorage* mStorage;
-  FolderStorage* mStorageTempOpened;
-  KMFolderDir* mNewParent;
-  QString mNewName;
-  QString mNewImapPath;
-  QString mOldName;
-  QString mOldImapPath;
-  QStringList mOldImapPaths;
-  KMFolder* mNewFolder;
-  CopyFolderJob *mCopyFolderJob;
+    FolderStorage *mStorage;
+    FolderStorage *mStorageTempOpened;
+    KMFolderDir *mNewParent;
+    QString mNewName;
+    QString mNewImapPath;
+    QString mOldName;
+    QString mOldImapPath;
+    QStringList mOldImapPaths;
+    KMFolder *mNewFolder;
+    CopyFolderJob *mCopyFolderJob;
 };
 
 } // namespace KMail

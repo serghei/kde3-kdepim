@@ -11,15 +11,20 @@
 #ifndef AKREGATOR_SHARED_H
 #define AKREGATOR_SHARED_H
 
-namespace Akregator
+namespace Akregator {
+struct Shared
 {
-	struct Shared
-	{
-		Shared() : count(1) { }
-		void ref() { count++; }
-		bool deref() { return !--count; }
-		unsigned int count;
-	};
+    Shared() : count(1) { }
+    void ref()
+    {
+        count++;
+    }
+    bool deref()
+    {
+        return !--count;
+    }
+    unsigned int count;
+};
 
 }
 

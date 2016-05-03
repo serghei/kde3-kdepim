@@ -1,7 +1,7 @@
-/* 
+/*
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **
-** This is just a very simple programm to check the compress/uncompress 
+** This is just a very simple programm to check the compress/uncompress
 ** routines by taking one string, compress and then decompress it and
 ** see if it is the original string.
 */
@@ -32,28 +32,28 @@
 
 #include "../makedoc9.h"
 
-void main () 
+void main()
 {
-	tBuf fText;
-	char*text="asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
+    tBuf fText;
+    char *text = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
 
-	fText.setText((const byte*)text);
-	cout<<"Decompressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
-	
-	fText.Compress();
-	cout<<"  Compressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
-	fText.Decompress();
-	cout<<"Decompressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
+    fText.setText((const byte *)text);
+    cout << "Decompressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
 
-	fText.Compress();
-	cout<<"  Compressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
-	fText.Decompress();
-	cout<<"Decompressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
+    fText.Compress();
+    cout << "  Compressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
+    fText.Decompress();
+    cout << "Decompressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
 
-	fText.Compress();
-	cout<<"  Compressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
-	fText.Decompress();
-	cout<<"Decompressed text: "<<fText.text()<<"  ("<<fText.Len()<<")  --  Compressed: "<<fText.compressed()<<endl;
+    fText.Compress();
+    cout << "  Compressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
+    fText.Decompress();
+    cout << "Decompressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
+
+    fText.Compress();
+    cout << "  Compressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
+    fText.Decompress();
+    cout << "Decompressed text: " << fText.text() << "  (" << fText.Len() << ")  --  Compressed: " << fText.compressed() << endl;
 
 
 }

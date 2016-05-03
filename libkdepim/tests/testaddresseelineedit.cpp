@@ -27,18 +27,18 @@
 
 #include "../addresseelineedit.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  KAboutData aboutData("testaddresseelineedit","Test AddresseeLineEdit","0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("testaddresseelineedit", "Test AddresseeLineEdit", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  KPIM::AddresseeLineEdit *kale = new KPIM::AddresseeLineEdit(0);
-  kale->resize( 400, 20 );
-  kale->show();
+    KPIM::AddresseeLineEdit *kale = new KPIM::AddresseeLineEdit(0);
+    kale->resize(400, 20);
+    kale->show();
 
-  return app.exec();
+    return app.exec();
 
 }
-    
+

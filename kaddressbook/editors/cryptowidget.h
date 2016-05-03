@@ -29,39 +29,37 @@
 class QComboBox;
 
 namespace Kleo {
-  class KeyRequester;
+class KeyRequester;
 }
 class QCheckBox;
 
-class CryptoWidget : public KAB::ContactEditorWidget
-{
-  Q_OBJECT
+class CryptoWidget : public KAB::ContactEditorWidget {
+    Q_OBJECT
 
-  public:
-    CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    CryptoWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~CryptoWidget();
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
 
-  private:
+private:
     enum { NumberOfProtocols = 4 };
-    QCheckBox* mProtocolCB[NumberOfProtocols];
-    QComboBox* mSignPref;
-    QComboBox* mCryptPref;
-    Kleo::KeyRequester* mPgpKey;
-    Kleo::KeyRequester* mSmimeCert;
+    QCheckBox *mProtocolCB[NumberOfProtocols];
+    QComboBox *mSignPref;
+    QComboBox *mCryptPref;
+    Kleo::KeyRequester *mPgpKey;
+    Kleo::KeyRequester *mSmimeCert;
     bool mReadOnly;
 };
 
-class CryptoWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
+class CryptoWidgetFactory : public KAB::ContactEditorWidgetFactory {
+public:
     CryptoWidgetFactory();
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
     {
-      return new CryptoWidget( ab, parent, name );
+        return new CryptoWidget(ab, parent, name);
     }
 
     QString pageTitle() const;

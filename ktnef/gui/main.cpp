@@ -23,35 +23,35 @@
 #include "ktnefmain.h"
 
 static const char description[] =
-	I18N_NOOP("Viewer for mail attachments using TNEF format");
+    I18N_NOOP("Viewer for mail attachments using TNEF format");
 
 
 static KCmdLineOptions options[] =
 {
-  { "+[file]", I18N_NOOP("An optional argument 'file'"), 0 },
-  KCmdLineLastOption
-  // INSERT YOUR COMMANDLINE OPTIONS HERE
+    { "+[file]", I18N_NOOP("An optional argument 'file'"), 0 },
+    KCmdLineLastOption
+    // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
 
 int main(int argc, char *argv[])
 {
 
-  KAboutData aboutData( "ktnef", I18N_NOOP("KTnef"),
-    "1.0", description, KAboutData::License_GPL,
-    "(c) 2000, Michael Goffioul");
-  aboutData.addAuthor("Michael Goffioul",0, "kdeprint@swing.be");
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-  KApplication::addCmdLineOptions();
+    KAboutData aboutData("ktnef", I18N_NOOP("KTnef"),
+                         "1.0", description, KAboutData::License_GPL,
+                         "(c) 2000, Michael Goffioul");
+    aboutData.addAuthor("Michael Goffioul", 0, "kdeprint@swing.be");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);   // Add our own options.
+    KApplication::addCmdLineOptions();
 
-  KApplication a;
-  KTNEFMain *tnef = new KTNEFMain();
-  a.setMainWidget(tnef);
-  tnef->show();
+    KApplication a;
+    KTNEFMain *tnef = new KTNEFMain();
+    a.setMainWidget(tnef);
+    tnef->show();
 
-  KCmdLineArgs	*args = KCmdLineArgs::parsedArgs();
-  if (args->count() > 0)
-    tnef->loadFile(args->arg(0));
+    KCmdLineArgs	*args = KCmdLineArgs::parsedArgs();
+    if(args->count() > 0)
+        tnef->loadFile(args->arg(0));
 
-  return a.exec();
+    return a.exec();
 }

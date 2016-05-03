@@ -21,31 +21,33 @@
 
 #include "generalconversationmanager.h"
 
-GeneralConversationManager::GeneralConversationManager( const KWSDL::WSDL &wsdl )
-  : mWSDL( wsdl )
+GeneralConversationManager::GeneralConversationManager(const KWSDL::WSDL &wsdl)
+    : mWSDL(wsdl)
 {
-  const KWSDL::Service::Port::List servicePorts = mWSDL.service().ports();
-  KWSDL::Service::Port::List::ConstIterator it;
-  for ( it = servicePorts.begin(); it != servicePorts.end(); ++it ) {
-    KWSDL::Binding binding = mWSDL.findBinding( (*it).mBinding );
+    const KWSDL::Service::Port::List servicePorts = mWSDL.service().ports();
+    KWSDL::Service::Port::List::ConstIterator it;
+    for(it = servicePorts.begin(); it != servicePorts.end(); ++it)
+    {
+        KWSDL::Binding binding = mWSDL.findBinding((*it).mBinding);
 
-    KWSDL::Port port = mWSDL.findPort( binding.type() );
-    const KWSDL::Port::Operation::List operations = port.operations();
-    KWSDL::Port::Operation::List::ConstIterator opIt;
-    for ( opIt = operations.begin(); opIt != operations.end(); ++opIt ) {
-      mInputMessages.append( mWSDL.findMessage( (*opIt).input() ) );
-      mOutputMessages.append( mWSDL.findMessage( (*opIt).output() ) );
+        KWSDL::Port port = mWSDL.findPort(binding.type());
+        const KWSDL::Port::Operation::List operations = port.operations();
+        KWSDL::Port::Operation::List::ConstIterator opIt;
+        for(opIt = operations.begin(); opIt != operations.end(); ++opIt)
+        {
+            mInputMessages.append(mWSDL.findMessage((*opIt).input()));
+            mOutputMessages.append(mWSDL.findMessage((*opIt).output()));
+        }
     }
-  }
 }
 
-QStringList GeneralConversationManager::nextActions( const QString&, const QString& )
+QStringList GeneralConversationManager::nextActions(const QString &, const QString &)
 {
-  QStringList actions;
+    QStringList actions;
 
-  KWSDL::Message::List::ConstIterator it;
-  for ( it = mInputMessages.begin(); it != mInputMessages.end(); ++it )
-    actions.append( (*it).name() );
+    KWSDL::Message::List::ConstIterator it;
+    for(it = mInputMessages.begin(); it != mInputMessages.end(); ++it)
+        actions.append((*it).name());
 
-  return actions;
+    return actions;
 }

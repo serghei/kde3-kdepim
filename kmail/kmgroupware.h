@@ -41,6 +41,6 @@
 
 class KMMessage;
 
-bool vPartFoundAndDecoded( KMMessage* msg, QString& s );
+bool vPartFoundAndDecoded(KMMessage *msg, QString &s);
 
 #endif /* KMGROUPWARE_H */

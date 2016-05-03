@@ -63,10 +63,10 @@
   the base class.
 */
 
-KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
-                                          const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( Horizontal ), 
-    _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
+KDGanttSemiSizingControl::KDGanttSemiSizingControl(QWidget *parent,
+        const char *name) :
+    KDGanttSizingControl(parent, name), _orient(Horizontal),
+    _arrowPos(Before), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
 }
@@ -84,11 +84,11 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
   the base class.
 */
 
-KDGanttSemiSizingControl::KDGanttSemiSizingControl( Orientation orientation,
-                                          QWidget* parent,
-                                          const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( orientation ), 
-    _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
+KDGanttSemiSizingControl::KDGanttSemiSizingControl(Orientation orientation,
+        QWidget *parent,
+        const char *name) :
+    KDGanttSizingControl(parent, name), _orient(orientation),
+    _arrowPos(Before), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
 }
@@ -107,12 +107,12 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( Orientation orientation,
   the base class.
 */
 
-KDGanttSemiSizingControl::KDGanttSemiSizingControl( ArrowPosition arrowPosition,
-                                          Orientation orientation,
-                                          QWidget* parent,
-                                          const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( orientation ), 
-    _arrowPos( arrowPosition ), _minimizedWidget(0), _maximizedWidget(0)
+KDGanttSemiSizingControl::KDGanttSemiSizingControl(ArrowPosition arrowPosition,
+        Orientation orientation,
+        QWidget *parent,
+        const char *name) :
+    KDGanttSizingControl(parent, name), _orient(orientation),
+    _arrowPos(arrowPosition), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
 }
@@ -127,10 +127,10 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( ArrowPosition arrowPosition,
   \sa minimizedWidget()
 */
 
-void KDGanttSemiSizingControl::setMinimizedWidget( QWidget* widget )
+void KDGanttSemiSizingControl::setMinimizedWidget(QWidget *widget)
 {
     _minimizedWidget = widget;
-    if( _minimizedWidget ) _minimizedWidget->hide();
+    if(_minimizedWidget) _minimizedWidget->hide();
     setup();
 }
 
@@ -143,7 +143,7 @@ void KDGanttSemiSizingControl::setMinimizedWidget( QWidget* widget )
   \sa setMinimizedWidget()
 */
 
-QWidget* KDGanttSemiSizingControl::minimizedWidget() const
+QWidget *KDGanttSemiSizingControl::minimizedWidget() const
 {
     return _minimizedWidget;
 }
@@ -157,7 +157,7 @@ QWidget* KDGanttSemiSizingControl::minimizedWidget() const
   \sa maximizedWidget()
 */
 
-void KDGanttSemiSizingControl::setMaximizedWidget( QWidget* widget )
+void KDGanttSemiSizingControl::setMaximizedWidget(QWidget *widget)
 {
     _maximizedWidget = widget;
     //if( _maximizedWidget ) _maximizedWidget->show();
@@ -172,7 +172,7 @@ void KDGanttSemiSizingControl::setMaximizedWidget( QWidget* widget )
   \sa setMaximizedWidget()
 */
 
-QWidget* KDGanttSemiSizingControl::maximizedWidget() const
+QWidget *KDGanttSemiSizingControl::maximizedWidget() const
 {
     return _maximizedWidget;
 }
@@ -186,9 +186,10 @@ QWidget* KDGanttSemiSizingControl::maximizedWidget() const
   \sa orientation()
 */
 
-void KDGanttSemiSizingControl::setOrientation( Qt::Orientation orientation )
+void KDGanttSemiSizingControl::setOrientation(Qt::Orientation orientation)
 {
-    if ( _orient != orientation ) {
+    if(_orient != orientation)
+    {
         _orient = orientation;
         setup();
     }
@@ -214,9 +215,10 @@ Qt::Orientation KDGanttSemiSizingControl::orientation() const
   \sa arrowPosition()
 */
 
-void KDGanttSemiSizingControl::setArrowPosition( ArrowPosition arrowPosition )
+void KDGanttSemiSizingControl::setArrowPosition(ArrowPosition arrowPosition)
 {
-    if ( _arrowPos != arrowPosition ) {
+    if(_arrowPos != arrowPosition)
+    {
         _arrowPos = arrowPosition;
         setup();
     }
@@ -246,12 +248,12 @@ KDGanttSemiSizingControl::ArrowPosition KDGanttSemiSizingControl::arrowPosition(
 
 void KDGanttSemiSizingControl::init()
 {
-    _but = new QPushButton( this );
-    _but->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    connect( _but, SIGNAL( clicked() ), this, SLOT(changeState()) );
+    _but = new QPushButton(this);
+    _but->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    connect(_but, SIGNAL(clicked()), this, SLOT(changeState()));
     _layout = 0;
-    QWhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
-    QToolTip::add( _but, "Show / hide legend");
+    QWhatsThis::add(_but, "Click on this button to show the \nlegend at the bottom of the widget");
+    QToolTip::add(_but, "Show / hide legend");
 
 
 }
@@ -260,45 +262,51 @@ void KDGanttSemiSizingControl::setup()
 {
     //-------------------------------------------------- Setup layout
     delete _layout;
-    QBoxLayout* butLayout; // _layout will delete me
+    QBoxLayout *butLayout; // _layout will delete me
 
-    if ( _orient == Horizontal || isMinimized() )
-        _layout = new QHBoxLayout( this );
+    if(_orient == Horizontal || isMinimized())
+        _layout = new QHBoxLayout(this);
     else
-        _layout = new QVBoxLayout( this );
+        _layout = new QVBoxLayout(this);
 
-    if ( _orient == Vertical && !isMinimized() )
-        butLayout = new QHBoxLayout( _layout );
+    if(_orient == Vertical && !isMinimized())
+        butLayout = new QHBoxLayout(_layout);
     else
-        butLayout = new QVBoxLayout( _layout );
+        butLayout = new QVBoxLayout(_layout);
 
 
 
     //---------------------------------------- Set the arrow on the button
-    if ( !isMinimized() ) {
-        _but->setPixmap( pixmap( Down ) );
+    if(!isMinimized())
+    {
+        _but->setPixmap(pixmap(Down));
     }
-    else {
-        if ( _arrowPos == Before ) {
-            _but->setPixmap( pixmap( Right ) );
+    else
+    {
+        if(_arrowPos == Before)
+        {
+            _but->setPixmap(pixmap(Right));
         }
-        else {
-            _but->setPixmap( pixmap( Left ) );
+        else
+        {
+            _but->setPixmap(pixmap(Left));
         }
     }
 
     //------------------------------ Setup the button at the correct possition
-    if ( _arrowPos == After && _orient == Vertical && !isMinimized() ) {
-        butLayout->addStretch( 1 );
-        butLayout->addWidget( _but, 0, Qt::AlignLeft );
+    if(_arrowPos == After && _orient == Vertical && !isMinimized())
+    {
+        butLayout->addStretch(1);
+        butLayout->addWidget(_but, 0, Qt::AlignLeft);
     }
-    else {
-        butLayout->addWidget( _but, 0, Qt::AlignRight  );
-        butLayout->addStretch( 1 );
+    else
+    {
+        butLayout->addWidget(_but, 0, Qt::AlignRight);
+        butLayout->addStretch(1);
     }
 
     // Set widget in the correct possition
-    QWidget* widget;
+    QWidget *widget;
     /* ************************** old code ***************
        if ( isMinimized() )
        widget = _minimizedWidget;
@@ -309,30 +317,33 @@ void KDGanttSemiSizingControl::setup()
        _layout->addWidget( widget, 1 );
        else
        _layout->insertWidget( 0, widget, 1 );
-	}
+    }
      ************************************************** */
     // hack for the usage in KDGantt as pop-up legend widget
     // for this purpose,
     // the _maximizedWidget must be a child of the parent of this widget
 
-    if ( isMinimized() ) {
-       widget = _minimizedWidget;
-       if( widget ) {
-	 if ( _arrowPos == Before  || _orient == Vertical && !isMinimized() )
-	   _layout->addWidget( widget, 1 );
-	 else
-	   _layout->insertWidget( 0, widget, 1 );
-       }
+    if(isMinimized())
+    {
+        widget = _minimizedWidget;
+        if(widget)
+        {
+            if(_arrowPos == Before  || _orient == Vertical && !isMinimized())
+                _layout->addWidget(widget, 1);
+            else
+                _layout->insertWidget(0, widget, 1);
+        }
     }
-    else {
-      if ( _arrowPos == Before  || _orient == Vertical && !isMinimized() )
-	_layout->addStretch( 1 );
-      else
-	_layout->insertStretch( 0, 1 );
-      widget = _maximizedWidget;
-      // the following is only the special case
-      // arrowPos == Before  and  _orient == Vertical
-      //widget->move( 0+x(), _but->height()+y());
+    else
+    {
+        if(_arrowPos == Before  || _orient == Vertical && !isMinimized())
+            _layout->addStretch(1);
+        else
+            _layout->insertStretch(0, 1);
+        widget = _maximizedWidget;
+        // the following is only the special case
+        // arrowPos == Before  and  _orient == Vertical
+        //widget->move( 0+x(), _but->height()+y());
     }
 }
 
@@ -345,15 +356,17 @@ void KDGanttSemiSizingControl::setup()
   \sa minimize()
 */
 
-void KDGanttSemiSizingControl::restore( bool restore )
+void KDGanttSemiSizingControl::restore(bool restore)
 {
-    if ( ! restore ) {
-        minimize( true );
+    if(! restore)
+    {
+        minimize(true);
     }
-    else {
-        if( _maximizedWidget ) _maximizedWidget->show();
-        if( _minimizedWidget ) _minimizedWidget->hide();
-        KDGanttSizingControl::restore( restore );
+    else
+    {
+        if(_maximizedWidget) _maximizedWidget->show();
+        if(_minimizedWidget) _minimizedWidget->hide();
+        KDGanttSizingControl::restore(restore);
         setup();
     }
 }
@@ -367,44 +380,56 @@ void KDGanttSemiSizingControl::restore( bool restore )
 
 */
 
-void KDGanttSemiSizingControl::minimize( bool minimize )
+void KDGanttSemiSizingControl::minimize(bool minimize)
 {
-    if ( ! minimize ) {
-        restore( true );
+    if(! minimize)
+    {
+        restore(true);
     }
-    else {
-        if( _minimizedWidget ) _minimizedWidget->show();
-	if( _maximizedWidget ) _maximizedWidget->hide();
-        KDGanttSizingControl::minimize( minimize );
+    else
+    {
+        if(_minimizedWidget) _minimizedWidget->show();
+        if(_maximizedWidget) _maximizedWidget->hide();
+        KDGanttSizingControl::minimize(minimize);
         setup();
     }
 }
 
-QPixmap KDGanttSemiSizingControl::pixmap( Direction direction ) {
+QPixmap KDGanttSemiSizingControl::pixmap(Direction direction)
+{
     int s = 10;
-    QPixmap pix( s, s );
-    pix.fill( blue );
+    QPixmap pix(s, s);
+    pix.fill(blue);
 
     QPointArray arr;
-    switch ( direction ) {
-    case Up:    arr.setPoints( 3,   0, s-1,   s-1, s-1,   0, s/2   ); ;break;
-    case Down:  arr.setPoints( 3,   0, 0,     s-1, 0,     s/2, s-1 ); break;
-    case Left:  arr.setPoints( 3,   s-1, 0,   s-1, s-1,   0, s/2   ); break;
-    case Right: arr.setPoints( 3,   0,0,      s-1, s/2,   0, s-1   ); break;
+    switch(direction)
+    {
+        case Up:
+            arr.setPoints(3,   0, s - 1,   s - 1, s - 1,   0, s / 2); ;
+            break;
+        case Down:
+            arr.setPoints(3,   0, 0,     s - 1, 0,     s / 2, s - 1);
+            break;
+        case Left:
+            arr.setPoints(3,   s - 1, 0,   s - 1, s - 1,   0, s / 2);
+            break;
+        case Right:
+            arr.setPoints(3,   0, 0,      s - 1, s / 2,   0, s - 1);
+            break;
     }
 
-    QPainter p( &pix );
-    p.setPen( black );
-    p.setBrush( colorGroup().button() );
-    p.drawPolygon( arr );
-    QBitmap bit( s, s );
-    bit.fill( color0 );
+    QPainter p(&pix);
+    p.setPen(black);
+    p.setBrush(colorGroup().button());
+    p.drawPolygon(arr);
+    QBitmap bit(s, s);
+    bit.fill(color0);
 
-    QPainter p2( &bit );
-    p2.setPen( color1 );
-    p2.setBrush( color1 );
-    p2.drawPolygon( arr );
-    pix.setMask( bit );
+    QPainter p2(&bit);
+    p2.setPen(color1);
+    p2.setBrush(color1);
+    p2.drawPolygon(arr);
+    pix.setMask(bit);
     return pix;
 }
 

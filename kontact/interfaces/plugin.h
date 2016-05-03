@@ -36,7 +36,9 @@ class KAboutData;
 class KAction;
 class KConfig;
 class QWidget;
-namespace KParts { class ReadOnlyPart; }
+namespace KParts {
+class ReadOnlyPart;
+}
 
 /**
   Increase this version number whenever you make a change
@@ -44,8 +46,7 @@ namespace KParts { class ReadOnlyPart; }
  */
 #define KONTACT_PLUGIN_VERSION 6
 
-namespace Kontact
-{
+namespace Kontact {
 
 class Core;
 class Summary;
@@ -55,11 +56,10 @@ class Summary;
   to get a plugin. It can insert an icon into the sidepane,
   add widgets to the widgetstack and add menu items via XMLGUI.
  */
-class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
-{
-  Q_OBJECT
+class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient {
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates a new Plugin, note that name parameter name is required if
       you want your plugin to do dcop via it's own instance of
@@ -68,14 +68,14 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       provides the part! This is the name used for DCOP registration.
       It's ok to have several plugins using the same application name.
     */
-    Plugin( Core *core, QObject *parent, const char *name );
+    Plugin(Core *core, QObject *parent, const char *name);
 
     ~Plugin();
 
     /**
       Sets the identifier.
     */
-    void setIdentifier( const QString &identifier );
+    void setIdentifier(const QString &identifier);
 
     /**
       Returns the identifier. It is used as argument for several
@@ -86,7 +86,7 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     /**
       Sets the localized title.
      */
-    void setTitle( const QString &title );
+    void setTitle(const QString &title);
 
     /**
       Returns the localized title.
@@ -96,7 +96,7 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     /**
       Sets the icon name.
     */
-    void setIcon( const QString &icon );
+    void setIcon(const QString &icon);
 
     /**
       Returns the icon name.
@@ -106,7 +106,7 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     /**
       Sets the name of executable (if existant).
     */
-    void setExecutableName( const QString &bin );
+    void setExecutableName(const QString &bin);
 
     /**
       Returns the name of the binary (if existant).
@@ -116,19 +116,25 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     /**
       Set name of library which contains the KPart used by this plugin.
     */
-    void setPartLibraryName( const QCString & );
+    void setPartLibraryName(const QCString &);
 
     /**
       Create the DCOP interface for the given @p serviceType, if this
       plugin provides it. Return false otherwise.
     */
-    virtual bool createDCOPInterface( const QString& /*serviceType*/ ) { return false; }
+    virtual bool createDCOPInterface(const QString & /*serviceType*/)
+    {
+        return false;
+    }
 
     /**
       Reimplement this method and return wether a standalone application is still running
       This is only required if your part is also available as standalone application.
     */
-    virtual bool isRunningStandalone() { return false; }
+    virtual bool isRunningStandalone()
+    {
+        return false;
+    }
 
     /**
       Reimplement this method if your application needs a different approach to be brought
@@ -150,9 +156,9 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     */
     KParts::ReadOnlyPart *part();
 
-     /**
-       Reimplement this method and return the a path relative to "data" to the tips file.
-     */
+    /**
+      Reimplement this method and return the a path relative to "data" to the tips file.
+    */
     virtual QString tipFile() const;
 
     /**
@@ -171,7 +177,10 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       Reimplement this method if you want to add a widget for your application
       to Kontact's summary page.
     */
-    virtual Summary *createSummaryWidget( QWidget * /*parent*/ ) { return 0; }
+    virtual Summary *createSummaryWidget(QWidget * /*parent*/)
+    {
+        return 0;
+    }
 
     /**
       Returns wether the plugin provides a part that should be shown in the sidebar.
@@ -181,14 +190,17 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     /**
       Set if the plugin provides a part that should be shown in the sidebar.
     */
-    void setShowInSideBar( bool hasPart );
+    void setShowInSideBar(bool hasPart);
 
     /**
       Reimplement this method if you want to add checks before closing down the main kontact
       window.  Return true if it's OK to close the window.  If any loaded plugin returns false
       from this method, then the main kontact window will not close.
     */
-    virtual bool queryClose() const { return true; }
+    virtual bool queryClose() const
+    {
+        return true;
+    }
 
     /**
       Retrieve the current DCOP Client for the plugin.
@@ -205,69 +217,78 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       Return the weight of the plugin. The higher the weight the lower it will
       be displayed in the sidebar. The default implementation returns 0.
     */
-    virtual int weight() const { return 0; }
+    virtual int weight() const
+    {
+        return 0;
+    }
 
     /**
       Insert "New" action.
     */
-    void insertNewAction( KAction *action );
+    void insertNewAction(KAction *action);
 
     /**
       Insert "Sync" action.
     */
-    void insertSyncAction( KAction *action );
+    void insertSyncAction(KAction *action);
 
     /**
       FIXME: write API doc for Kontact::Plugin::newActions().
     */
-    QPtrList<KAction>* newActions() const;
+    QPtrList<KAction> *newActions() const;
 
     /**
       FIXME: write API doc for Kontact::Plugin::syncActions().
     */
-    QPtrList<KAction>* syncActions() const;
+    QPtrList<KAction> *syncActions() const;
 
     /**
       Returns a list of action name which shall be hidden in the main toolbar.
      */
-    virtual QStringList invisibleToolbarActions() const { return QStringList(); }
+    virtual QStringList invisibleToolbarActions() const
+    {
+        return QStringList();
+    }
 
     /**
       Return, if the plugin can handle the drag object of the given mime type.
     */
-    virtual bool canDecodeDrag( QMimeSource * ) { return false; }
+    virtual bool canDecodeDrag(QMimeSource *)
+    {
+        return false;
+    }
 
     /**
       Process drop event.
     */
-    virtual void processDropEvent( QDropEvent * ) {}
+    virtual void processDropEvent(QDropEvent *) {}
 
-    virtual void loadProfile( const QString& directoryPath );
+    virtual void loadProfile(const QString &directoryPath);
 
-    virtual void saveToProfile( const QString& directoryPath ) const;
+    virtual void saveToProfile(const QString &directoryPath) const;
 
     /**
      * Session management: read properties
      */
-    virtual void readProperties( KConfig * ) {}
+    virtual void readProperties(KConfig *) {}
 
     /**
      * Session management: save properties
      */
-    virtual void saveProperties( KConfig * ) {}
+    virtual void saveProperties(KConfig *) {}
 
     Core *core() const;
 
     bool disabled() const;
-    void setDisabled( bool v );
+    void setDisabled(bool v);
 
-  public slots:
+public slots:
     /**
       internal usage
      */
     void slotConfigUpdated();
 
-  protected:
+protected:
     /**
       Reimplement and return the part here. Reimplementing createPart() is
       mandatory!
@@ -276,12 +297,12 @@ class KDE_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
 
     KParts::ReadOnlyPart *loadPart();
 
-    virtual void virtual_hook(  int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 
-  private slots:
+private slots:
     void partDestroyed();
 
-  private:
+private:
     class Private;
     Private *d;
 };

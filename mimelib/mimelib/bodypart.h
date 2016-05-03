@@ -64,9 +64,9 @@ class DW_EXPORT DwBodyPart : public DwEntity {
 public:
 
     DwBodyPart();
-    DwBodyPart(const DwBodyPart& aPart);
-    DwBodyPart(const DwEntity& aPart);
-    DwBodyPart(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwBodyPart(const DwBodyPart &aPart);
+    DwBodyPart(const DwEntity &aPart);
+    DwBodyPart(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwBodyPart} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -84,19 +84,19 @@ public:
 
     virtual ~DwBodyPart();
 
-    const DwBodyPart& operator = (const DwBodyPart& aPart);
+    const DwBodyPart &operator = (const DwBodyPart &aPart);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aPart}.  The parent node of the {\tt DwBodyPart} object
     //. is not changed.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwBodyPart} on the free store that has the same
     //. value as this {\tt DwBodyPart} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    static DwBodyPart* NewBodyPart(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwBodyPart *NewBodyPart(const DwString &aStr,
+                                   DwMessageComponent *aParent);
     //. Creates a new {\tt DwBodyPart} on the free store.
     //. If the static data member {\tt sNewBodyPart} is {\tt NULL},
     //. this member function will create a new {\tt DwBodyPart}
@@ -105,12 +105,12 @@ public:
     //. which is assumed to return an object from a class derived from
     //. {\tt DwBodyPart}, and return that object.
 
-    DwBodyPart* Next() const;
+    DwBodyPart *Next() const;
     //. This member function returns the next {\tt DwBodyPart} object
     //. following this {\tt DwBodyPart} in the list of {\tt DwBodyPart}
     //. objects contained in a multipart {\tt DwBody}.
 
-    void SetNext(const DwBodyPart* aPart);
+    void SetNext(const DwBodyPart *aPart);
     //. This advanced function sets {\tt aPart} as the next {\tt DwBodyPart}
     //. object following this {\tt DwBodyPart} in the list of {\tt DwBodyPart}
     //. objects contained in a multipart {\tt DwBody}.  Since {\tt DwBody}
@@ -118,14 +118,14 @@ public:
     //. its list, this function should be avoided for most applications.
 
     //+ Var sNewBodyPart
-    static DwBodyPart* (*sNewBodyPart)(const DwString&, DwMessageComponent*);
+    static DwBodyPart *(*sNewBodyPart)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewBodyPart} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class
     //. derived from {\tt DwBodyPart}.
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -143,12 +143,12 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 private:
 
-    const DwBodyPart* mNext;
-    static const char* const sClassName;
+    const DwBodyPart *mNext;
+    static const char *const sClassName;
 
 };
 

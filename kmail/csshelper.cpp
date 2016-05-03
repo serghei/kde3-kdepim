@@ -41,45 +41,49 @@
 
 namespace KMail {
 
-  CSSHelper::CSSHelper( const QPaintDeviceMetrics &pdm ) :
-    KPIM::CSSHelper( pdm )
-  {
-    KConfig * config = KMKernel::config();
+CSSHelper::CSSHelper(const QPaintDeviceMetrics &pdm) :
+    KPIM::CSSHelper(pdm)
+{
+    KConfig *config = KMKernel::config();
 
-    KConfigGroup reader( config, "Reader" );
-    KConfigGroup fonts( config, "Fonts" );
-    KConfigGroup pixmaps( config, "Pixmaps" );
+    KConfigGroup reader(config, "Reader");
+    KConfigGroup fonts(config, "Fonts");
+    KConfigGroup pixmaps(config, "Pixmaps");
 
-    mRecycleQuoteColors = reader.readBoolEntry( "RecycleQuoteColors", false );
+    mRecycleQuoteColors = reader.readBoolEntry("RecycleQuoteColors", false);
 
-    if ( !reader.readBoolEntry( "defaultColors", true ) ) {
-      mForegroundColor = reader.readColorEntry("ForegroundColor",&mForegroundColor);
-      mLinkColor = reader.readColorEntry("LinkColor",&mLinkColor);
-      mVisitedLinkColor = reader.readColorEntry("FollowedColor",&mVisitedLinkColor);
-      mBackgroundColor = reader.readColorEntry("BackgroundColor",&mBackgroundColor);
-      cPgpEncrH = reader.readColorEntry( "PGPMessageEncr", &cPgpEncrH );
-      cPgpOk1H  = reader.readColorEntry( "PGPMessageOkKeyOk", &cPgpOk1H );
-      cPgpOk0H  = reader.readColorEntry( "PGPMessageOkKeyBad", &cPgpOk0H );
-      cPgpWarnH = reader.readColorEntry( "PGPMessageWarn", &cPgpWarnH );
-      cPgpErrH  = reader.readColorEntry( "PGPMessageErr", &cPgpErrH );
-      cHtmlWarning = reader.readColorEntry( "HTMLWarningColor", &cHtmlWarning );
-      for ( int i = 0 ; i < 3 ; ++i ) {
-        const QString key = "QuotedText" + QString::number( i+1 );
-        mQuoteColor[i] = reader.readColorEntry( key, &mQuoteColor[i] );
-      }
+    if(!reader.readBoolEntry("defaultColors", true))
+    {
+        mForegroundColor = reader.readColorEntry("ForegroundColor", &mForegroundColor);
+        mLinkColor = reader.readColorEntry("LinkColor", &mLinkColor);
+        mVisitedLinkColor = reader.readColorEntry("FollowedColor", &mVisitedLinkColor);
+        mBackgroundColor = reader.readColorEntry("BackgroundColor", &mBackgroundColor);
+        cPgpEncrH = reader.readColorEntry("PGPMessageEncr", &cPgpEncrH);
+        cPgpOk1H  = reader.readColorEntry("PGPMessageOkKeyOk", &cPgpOk1H);
+        cPgpOk0H  = reader.readColorEntry("PGPMessageOkKeyBad", &cPgpOk0H);
+        cPgpWarnH = reader.readColorEntry("PGPMessageWarn", &cPgpWarnH);
+        cPgpErrH  = reader.readColorEntry("PGPMessageErr", &cPgpErrH);
+        cHtmlWarning = reader.readColorEntry("HTMLWarningColor", &cHtmlWarning);
+        for(int i = 0 ; i < 3 ; ++i)
+        {
+            const QString key = "QuotedText" + QString::number(i + 1);
+            mQuoteColor[i] = reader.readColorEntry(key, &mQuoteColor[i]);
+        }
     }
 
-    if ( !fonts.readBoolEntry( "defaultFonts", true ) ) {
-      mBodyFont = fonts.readFontEntry(  "body-font",  &mBodyFont);
-      mPrintFont = fonts.readFontEntry( "print-font", &mPrintFont);
-      mFixedFont = fonts.readFontEntry( "fixed-font", &mFixedFont);
-      mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
-      QFont defaultFont = mBodyFont;
-      defaultFont.setItalic( true );
-      for ( int i = 0 ; i < 3 ; ++i ) {
-        const QString key = QString( "quote%1-font" ).arg( i+1 );
-        mQuoteFont[i] = fonts.readFontEntry( key, &defaultFont );
-      }
+    if(!fonts.readBoolEntry("defaultFonts", true))
+    {
+        mBodyFont = fonts.readFontEntry("body-font",  &mBodyFont);
+        mPrintFont = fonts.readFontEntry("print-font", &mPrintFont);
+        mFixedFont = fonts.readFontEntry("fixed-font", &mFixedFont);
+        mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
+        QFont defaultFont = mBodyFont;
+        defaultFont.setItalic(true);
+        for(int i = 0 ; i < 3 ; ++i)
+        {
+            const QString key = QString("quote%1-font").arg(i + 1);
+            mQuoteFont[i] = fonts.readFontEntry(key, &defaultFont);
+        }
     }
 
     mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
@@ -88,6 +92,6 @@ namespace KMail {
     mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
 
     recalculatePGPColors();
-  }
+}
 } // namespace KMail
 

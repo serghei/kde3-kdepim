@@ -36,11 +36,11 @@
 #include <qtimer.h>
 #include <qlabel.h>
 
-#include <kpopupmenu.h> 
-#include <ktoolbar.h> 
+#include <kpopupmenu.h>
+#include <ktoolbar.h>
 
 #include <qptrdict.h>
-#include <qaction.h> 
+#include <qaction.h>
 #include <qlineedit.h>
 
 class xQGanttBarView;
@@ -51,30 +51,30 @@ class xQGanttBarView;
 // This is an internal class.
 // helper for drawing items
 
-class xQTaskPosition 
+class xQTaskPosition
 ////////////////////
 {
 
 public :
 
-  xQTaskPosition(int nr, int x, int y, int w, int h, int hiSub, 
-		 int tPx, int tPy, int d) 
-    :  _nr(nr), _screenX(x), _screenY(y), _screenW(w), _screenH(h), 
-       _screenHS(hiSub), _textPosX(tPx), _textPosY(tPy), _depth(d)
+    xQTaskPosition(int nr, int x, int y, int w, int h, int hiSub,
+                   int tPx, int tPy, int d)
+        :  _nr(nr), _screenX(x), _screenY(y), _screenW(w), _screenH(h),
+           _screenHS(hiSub), _textPosX(tPx), _textPosY(tPy), _depth(d)
     {
-      _screenHandleX = _screenHandleY = _screenHandleW = _screenHandleH = 0;
+        _screenHandleX = _screenHandleY = _screenHandleW = _screenHandleH = 0;
     }
 
-  int _nr;
-  int _screenX, _screenY, _screenW;
-  int _screenH; // height without subitems
-  int _screenHS; // height including subitems
-  int _textPosX, _textPosY;
+    int _nr;
+    int _screenX, _screenY, _screenW;
+    int _screenH; // height without subitems
+    int _screenHS; // height including subitems
+    int _textPosX, _textPosY;
 
-  int _screenHandleX, _screenHandleY, _screenHandleW, _screenHandleH;
+    int _screenHandleX, _screenHandleY, _screenHandleW, _screenHandleH;
 
-  int _depth;
- 
+    int _depth;
+
 };
 
 
@@ -89,235 +89,242 @@ class KDE_EXPORT xQGanttBarViewPort : public QFrame
 ////////////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class xQGanttBarView;
-  friend class KGantt;
+    friend class xQGanttBarView;
+    friend class KGantt;
 
 public:
 
-  enum Mode {Init, Select, Zoom, Move};
+    enum Mode {Init, Select, Zoom, Move};
 
 
-  ///  Constructor.
-  /*!
-   *
-   */
-  xQGanttBarViewPort(KGanttItem* toplevelitem, xQGanttBarView* parent = 0,
-		     const char * name=0, WFlags f=0 );
+    ///  Constructor.
+    /*!
+     *
+     */
+    xQGanttBarViewPort(KGanttItem *toplevelitem, xQGanttBarView *parent = 0,
+                       const char *name = 0, WFlags f = 0);
 
 
-  ///  Destructor.
-  /*!
-   *
-   */
-  ~xQGanttBarViewPort();
-
-
-
-  ///  Update widget.
-  /*!
-   *
-   */
-  void update(int x1, int y1, int x2, int y2); 
-  
-
- 
-  QPtrDict<xQTaskPosition> _gItemList;
-
-
-  ///  Add holiday.
-  /*!
-   *   
-   */
-  void addHoliday(int y, int m, int d);
+    ///  Destructor.
+    /*!
+     *
+     */
+    ~xQGanttBarViewPort();
 
 
 
-  ///  Remove holiday.
-  /*!
-   *
-   */
-  void removeHoliday(int y, int m, int d) {
-    Q_UNUSED(y); Q_UNUSED(m); Q_UNUSED(d);
-  }
+    ///  Update widget.
+    /*!
+     *
+     */
+    void update(int x1, int y1, int x2, int y2);
 
 
 
-  KPopupMenu* menu() {
-    return _menu;
-  }
+    QPtrDict<xQTaskPosition> _gItemList;
+
+
+    ///  Add holiday.
+    /*!
+     *
+     */
+    void addHoliday(int y, int m, int d);
 
 
 
-  ///
-  /*!
-   *
-   */
-  KToolBar* toolbar(QMainWindow* mw = 0);
+    ///  Remove holiday.
+    /*!
+     *
+     */
+    void removeHoliday(int y, int m, int d)
+    {
+        Q_UNUSED(y);
+        Q_UNUSED(m);
+        Q_UNUSED(d);
+    }
 
 
-  //  zoom by factor sfactor and move wx,wy to the center
-  void zoom(double sfactor, int wx, int wy);
 
-  //  zoom by factor, and leave the center unmoved
-  void zoom(double sfactor);
+    KPopupMenu *menu()
+    {
+        return _menu;
+    }
 
 
-  void getSelectedItems(QPtrList<KGanttItem>& list) {
-    getSelectedItems(_toplevelitem, list);
-  }
+
+    ///
+    /*!
+     *
+     */
+    KToolBar *toolbar(QMainWindow *mw = 0);
+
+
+    //  zoom by factor sfactor and move wx,wy to the center
+    void zoom(double sfactor, int wx, int wy);
+
+    //  zoom by factor, and leave the center unmoved
+    void zoom(double sfactor);
+
+
+    void getSelectedItems(QPtrList<KGanttItem> &list)
+    {
+        getSelectedItems(_toplevelitem, list);
+    }
 
 
 signals:
 
-  void modeChanged(int);
-  void scroll(int x, int y);
-  void resized();
-  void recalculated();
-  void message(const QString& msg);
+    void modeChanged(int);
+    void scroll(int x, int y);
+    void resized();
+    void recalculated();
+    void message(const QString &msg);
 
 
 protected slots:
 
-  void setMode(int mode);
+    void setMode(int mode);
 
-  void setSelect();
-  void setZoom();
-  void setMove();
+    void setSelect();
+    void setZoom();
+    void setMove();
 
-  void zoomIn();
-  void zoomOut();
-  void zoomAll(); 
+    void zoomIn();
+    void zoomOut();
+    void zoomAll();
 
-  void popup(int index);
+    void popup(int index);
 
-  void selectAll();
-  void unselectAll();
+    void selectAll();
+    void unselectAll();
 
-  void deleteSelectedItems();
-  void insertIntoSelectedItem();
+    void deleteSelectedItems();
+    void insertIntoSelectedItem();
 
 
 
-private slots:  
+private slots:
 
-  void toplevelitemChanged(KGanttItem* item, KGanttItem::Change c);
-  void textEdited();
-  void itemDestroyed(KGanttItem*);
+    void toplevelitemChanged(KGanttItem *item, KGanttItem::Change c);
+    void textEdited();
+    void itemDestroyed(KGanttItem *);
 
 
 
 private:
 
-  enum Position { Outside = 0, Handle  = 1,
-		  North   = 2, South   = 4,
-		  West    = 8, East    = 16,
-		  Center  = 32 };
+    enum Position { Outside = 0, Handle  = 1,
+                    North   = 2, South   = 4,
+                    West    = 8, East    = 16,
+                    Center  = 32
+                  };
 
-  ///  Transform world coordinate to screen coordinate.
-  /*!
-   *
-   */
-  inline int screenX(int wx);
-
-
-  ///  Transform world coordinate to screen coordinate.
-  /*!
-   *
-   */
-  inline int screenY(int wy);
-
-  
-  ///  Transform screen coordinate to world coordinate.
-  /*!
-   *
-   */
-  inline int worldX(int sx);
+    ///  Transform world coordinate to screen coordinate.
+    /*!
+     *
+     */
+    inline int screenX(int wx);
 
 
-  ///  Transform screen coordinate to world coordinate.
-  /*!
-   *
-   */
-  inline int worldY(int sy);
+    ///  Transform world coordinate to screen coordinate.
+    /*!
+     *
+     */
+    inline int screenY(int wy);
 
 
-  //  this will be set by setParentScrollView()
-  xQGanttBarView* _parent;
-
-  int _grid, _snapgrid;
-  bool _drawGrid, _drawHeader;
-
-  Mode _mode;
-
-  int _marginX, _marginY; // margin in minutes
-  double _scaleX, _scaleY;
-
-  int _margin;
+    ///  Transform screen coordinate to world coordinate.
+    /*!
+     *
+     */
+    inline int worldX(int sx);
 
 
-  QCursor* _cursor_lupe;
-
-  QLabel* _itemInfo;
-  QLineEdit* _itemTextEdit;
-
-
-  // all item are stored here
-  KGanttItem* _toplevelitem;
-
-  static KGanttItem* _currentItem;
-
-  KPopupMenu* _menu;
-  KPopupMenu* _selectMenu;
-  
-  KIconLoader* _iconloader;
-
-  KToolBar* _toolbar;
-
-  QPoint* _startPoint, *_endPoint;
-
-  QPtrList<QDate> _holidays;
-
-  QPtrList<KGanttItem> *_observedList;
+    ///  Transform screen coordinate to world coordinate.
+    /*!
+     *
+     */
+    inline int worldY(int sy);
 
 
-  /// 
+    //  this will be set by setParentScrollView()
+    xQGanttBarView *_parent;
 
-  void initMenu(); 
+    int _grid, _snapgrid;
+    bool _drawGrid, _drawHeader;
 
-  void drawGrid(QPainter*, int x1, int y1, int x2, int y2);
-  void drawHeader(QPainter*, int x1, int y1, int x2, int y2);
-  void drawItem(KGanttItem* item, QPainter* p, const QRect& rect );
+    Mode _mode;
 
-  void drawRelation(QPainter*, KGanttRelation*);
+    int _marginX, _marginY; // margin in minutes
+    double _scaleX, _scaleY;
 
-  void recalc(KGanttItem* item, int xPos, int yPos, int depth, int nr );
-  void recalc();
+    int _margin;
 
-  void selectItem(KGanttItem*,bool);
 
-  void getSelectedItems(KGanttItem*, QPtrList<KGanttItem>&);
+    QCursor *_cursor_lupe;
 
-  void adjustSize();
+    QLabel *_itemInfo;
+    QLineEdit *_itemTextEdit;
 
-  void observeList(QPtrList<KGanttItem>*);
 
-  Position check(KGanttItem** founditem, int x, int y);
+    // all item are stored here
+    KGanttItem *_toplevelitem;
 
-  void mousePressEvent(QMouseEvent*);
-  void mouseReleaseEvent(QMouseEvent*);
+    static KGanttItem *_currentItem;
 
-  void wheelEvent ( QWheelEvent * /*e*/) {
-    printf("wheelEvent\n");
-  }
+    KPopupMenu *_menu;
+    KPopupMenu *_selectMenu;
 
-  void mouseMoveEvent(QMouseEvent*);  
-  void keyPressEvent(QKeyEvent* e);
-  void paintEvent(QPaintEvent * e);
-  
-  
-  QPixmap closedIcon, openedIcon;
+    KIconLoader *_iconloader;
+
+    KToolBar *_toolbar;
+
+    QPoint *_startPoint, *_endPoint;
+
+    QPtrList<QDate> _holidays;
+
+    QPtrList<KGanttItem> *_observedList;
+
+
+    ///
+
+    void initMenu();
+
+    void drawGrid(QPainter *, int x1, int y1, int x2, int y2);
+    void drawHeader(QPainter *, int x1, int y1, int x2, int y2);
+    void drawItem(KGanttItem *item, QPainter *p, const QRect &rect);
+
+    void drawRelation(QPainter *, KGanttRelation *);
+
+    void recalc(KGanttItem *item, int xPos, int yPos, int depth, int nr);
+    void recalc();
+
+    void selectItem(KGanttItem *, bool);
+
+    void getSelectedItems(KGanttItem *, QPtrList<KGanttItem> &);
+
+    void adjustSize();
+
+    void observeList(QPtrList<KGanttItem> *);
+
+    Position check(KGanttItem **founditem, int x, int y);
+
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+
+    void wheelEvent(QWheelEvent * /*e*/)
+    {
+        printf("wheelEvent\n");
+    }
+
+    void mouseMoveEvent(QMouseEvent *);
+    void keyPressEvent(QKeyEvent *e);
+    void paintEvent(QPaintEvent *e);
+
+
+    QPixmap closedIcon, openedIcon;
 
 };
 
@@ -329,24 +336,24 @@ private:
 
 int xQGanttBarViewPort::screenX(int wx)
 ///////////////////////////////////////
-{   
-  return (int) (0.5 + (wx + _marginX)  * _scaleX);
-}  
+{
+    return (int)(0.5 + (wx + _marginX)  * _scaleX);
+}
 int xQGanttBarViewPort::screenY(int wy)
 /////////////////////////////////////
-{   
-  return (int) (0.5 + (wy + _marginY) * _scaleY);
-}  
+{
+    return (int)(0.5 + (wy + _marginY) * _scaleY);
+}
 int xQGanttBarViewPort::worldX(int sx)
 /////////////////////////////////////
-{   
-  return (int) (0.5 + (sx/_scaleX - _marginX));
-}  
+{
+    return (int)(0.5 + (sx / _scaleX - _marginX));
+}
 int xQGanttBarViewPort::worldY(int sy)
 //////////////////////////////////////
-{   
-  return (int) (0.5 + (sy/_scaleY - _marginY));
-}  
+{
+    return (int)(0.5 + (sy / _scaleY - _marginY));
+}
 
 
 #endif

@@ -29,60 +29,69 @@
 
 int KNApplication::newInstance()
 {
-  kdDebug(5003) << "KNApplication::newInstance()" << endl;
+    kdDebug(5003) << "KNApplication::newInstance()" << endl;
 
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("GENERAL");
-  QString ver=conf->readEntry("Version");
+    KConfig *conf = knGlobals.config();
+    conf->setGroup("GENERAL");
+    QString ver = conf->readEntry("Version");
 
-  if(!ver.isEmpty() && ver!=KNODE_VERSION) { //new version installed
-    if(KNConvert::needToConvert(ver)) { //we need to convert
-      kdDebug(5003) << "KNApplication::newInstance() : conversion needed" << endl;
-      KNConvert *convDlg=new KNConvert(ver);
-      if(!convDlg->exec()) { //reject()
-        if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
-          conf->writeEntry("Version", KNODE_VERSION);
-        exit(0);
-        return(0);
-      } else //conversion done
-        conf->writeEntry("Version", KNODE_VERSION);
-      delete convDlg;
-    }
-    else //new version but no need to convert anything => just save the new version
-      conf->writeEntry("Version", KNODE_VERSION);
-  }
-
-  if (!mainWidget()) {
-    if (isRestored()) {
-      int n = 1;
-      while (KNMainWindow::canBeRestored(n)){
-        if (KNMainWindow::classNameOfToplevel(n)=="KNMainWindow") {
-          KNMainWindow* mainWin = new KNMainWindow;
-          mainWin->restore(n);
-          if ( n == 1 )
-            setMainWidget( mainWin );
-          break;
+    if(!ver.isEmpty() && ver != KNODE_VERSION) //new version installed
+    {
+        if(KNConvert::needToConvert(ver))   //we need to convert
+        {
+            kdDebug(5003) << "KNApplication::newInstance() : conversion needed" << endl;
+            KNConvert *convDlg = new KNConvert(ver);
+            if(!convDlg->exec())   //reject()
+            {
+                if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
+                    conf->writeEntry("Version", KNODE_VERSION);
+                exit(0);
+                return(0);
+            }
+            else   //conversion done
+                conf->writeEntry("Version", KNODE_VERSION);
+            delete convDlg;
         }
-        n++;
-      }
+        else //new version but no need to convert anything => just save the new version
+            conf->writeEntry("Version", KNODE_VERSION);
     }
 
-    if (!mainWidget()) {
-      KNMainWindow* mainWin = new KNMainWindow;
-      setMainWidget(mainWin);  // this makes the external viewer windows close on shutdown...
-      mainWin->show();
+    if(!mainWidget())
+    {
+        if(isRestored())
+        {
+            int n = 1;
+            while(KNMainWindow::canBeRestored(n))
+            {
+                if(KNMainWindow::classNameOfToplevel(n) == "KNMainWindow")
+                {
+                    KNMainWindow *mainWin = new KNMainWindow;
+                    mainWin->restore(n);
+                    if(n == 1)
+                        setMainWidget(mainWin);
+                    break;
+                }
+                n++;
+            }
+        }
+
+        if(!mainWidget())
+        {
+            KNMainWindow *mainWin = new KNMainWindow;
+            setMainWidget(mainWin);  // this makes the external viewer windows close on shutdown...
+            mainWin->show();
+        }
     }
-  }
 
-  // Handle window activation and startup notification
-  KUniqueApplication::newInstance();
+    // Handle window activation and startup notification
+    KUniqueApplication::newInstance();
 
-  // process URLs...
-  KNMainWidget *w = static_cast<KNMainWindow*>(mainWidget())->mainWidget();
-  w->handleCommandLine();
+    // process URLs...
+    KNMainWidget *w = static_cast<KNMainWindow *>(mainWidget())->mainWidget();
+    w->handleCommandLine();
 
-  kdDebug(5003) << "KNApplication::newInstance() done" << endl;
-  return 0;
+    kdDebug(5003) << "KNApplication::newInstance() done" << endl;
+    return 0;
 }
 
 

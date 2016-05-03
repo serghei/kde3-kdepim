@@ -7,12 +7,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-    
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-    
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -33,38 +33,39 @@ FreeBusyUrlStore *FreeBusyUrlStore::mSelf = 0;
 
 FreeBusyUrlStore *FreeBusyUrlStore::self()
 {
-  if ( !mSelf ) {
-    selfDeleter.setObject( mSelf, new FreeBusyUrlStore() );
-  }
-  return mSelf;
+    if(!mSelf)
+    {
+        selfDeleter.setObject(mSelf, new FreeBusyUrlStore());
+    }
+    return mSelf;
 }
 
 FreeBusyUrlStore::FreeBusyUrlStore()
 {
-  QString configFile = locateLocal( "data", "korganizer/freebusyurls" );
-  mConfig = new KConfig( configFile );
+    QString configFile = locateLocal("data", "korganizer/freebusyurls");
+    mConfig = new KConfig(configFile);
 }
 
 FreeBusyUrlStore::~FreeBusyUrlStore()
 {
-  delete mConfig;
+    delete mConfig;
 }
 
-void FreeBusyUrlStore::writeUrl( const QString &email, const QString &url )
+void FreeBusyUrlStore::writeUrl(const QString &email, const QString &url)
 {
-  mConfig->setGroup( email );
+    mConfig->setGroup(email);
 
-  mConfig->writeEntry( "url", url );
+    mConfig->writeEntry("url", url);
 }
 
-QString FreeBusyUrlStore::readUrl( const QString &email )
+QString FreeBusyUrlStore::readUrl(const QString &email)
 {
-  mConfig->setGroup( email );
-  
-  return mConfig->readEntry( "url" );
+    mConfig->setGroup(email);
+
+    return mConfig->readEntry("url");
 }
 
 void FreeBusyUrlStore::sync()
 {
-  mConfig->sync();
+    mConfig->sync();
 }

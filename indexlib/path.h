@@ -7,17 +7,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -39,39 +39,48 @@
  * Returns whether \param p is the name of a directory
  */
 inline
-bool isdir( const char* p ) {
-	struct stat st;
-	if ( stat( p, &st ) != 0 ) return false;
-	return st.st_mode & S_IFDIR;
+bool isdir(const char *p)
+{
+    struct stat st;
+    if(stat(p, &st) != 0) return false;
+    return st.st_mode & S_IFDIR;
 }
 
 inline
-bool isdir( std::string p ) { return isdir( p.c_str() ); }
+bool isdir(std::string p)
+{
+    return isdir(p.c_str());
+}
 
-namespace indexlib { namespace detail {
+namespace indexlib {
+namespace detail {
 /**
  * Wrapper around mkdir which handles trailing slashes.
  */
-inline 
-bool mkdir_trailing( std::string p ) {
-	while ( p.size() > 1 && p[ p.size() - 1 ] == '/' ) p.resize( p.size() - 1 );
-	if ( p.empty() ) return false;
-	return ::mkdir( p.c_str(), 0755 ) == 0;
+inline
+bool mkdir_trailing(std::string p)
+{
+    while(p.size() > 1 && p[ p.size() - 1 ] == '/') p.resize(p.size() - 1);
+    if(p.empty()) return false;
+    return ::mkdir(p.c_str(), 0755) == 0;
 
 }
 
-}}
+}
+}
 /**
  * If \param base is the basename of an index and \param ext the filename,
  * then this returns strcat( basename, ext ) but it's smart enough to
  * handle the case where basename is a directory differently.
  */
 inline
-std::string path_concat( std::string base, std::string ext ) {
-	if ( isdir( base ) ) {
-		base += "/index";
-	}
-	return base + '.' + ext;
+std::string path_concat(std::string base, std::string ext)
+{
+    if(isdir(base))
+    {
+        base += "/index";
+    }
+    return base + '.' + ext;
 }
 
 

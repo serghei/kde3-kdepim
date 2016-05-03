@@ -22,28 +22,42 @@
 
 #include <kabc/stdaddressbook.h>
 
-class KABC2Mutt : public QObject
-{
-  Q_OBJECT
+class KABC2Mutt : public QObject {
+    Q_OBJECT
 
-  public:
+public:
 
     enum Format { Aliases, Query };
 
-    KABC2Mutt( QObject *parent, const char *name = 0 );
+    KABC2Mutt(QObject *parent, const char *name = 0);
 
-    void setQuery( const QString &query ) { mQuery = query; }
-    void setFormat( Format format ) { mFormat = format; }
-    void setIgnoreCase( bool ignoreCase ) { mIgnoreCase = ignoreCase; }
-    void setAllAddresses( bool allAddresses ) { mAllAddresses = allAddresses; }
-    void setAlternateKeyFormat( bool alternateKeyFormat ) { mAlternateKeyFormat = alternateKeyFormat; }
+    void setQuery(const QString &query)
+    {
+        mQuery = query;
+    }
+    void setFormat(Format format)
+    {
+        mFormat = format;
+    }
+    void setIgnoreCase(bool ignoreCase)
+    {
+        mIgnoreCase = ignoreCase;
+    }
+    void setAllAddresses(bool allAddresses)
+    {
+        mAllAddresses = allAddresses;
+    }
+    void setAlternateKeyFormat(bool alternateKeyFormat)
+    {
+        mAlternateKeyFormat = alternateKeyFormat;
+    }
 
     void run();
 
-  private slots:
+private slots:
     void loadingFinished();
 
-  private:
+private:
     QString mQuery;
     Format mFormat;
     bool mIgnoreCase;

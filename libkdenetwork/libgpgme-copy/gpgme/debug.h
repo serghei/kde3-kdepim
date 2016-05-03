@@ -1,18 +1,18 @@
 /* debug.h - interface to debugging functions
    Copyright (C) 2002, 2004, 2005 g10 Code GmbH
- 
+
    This file is part of GPGME.
 
    GPGME is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as
    published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
-   
+
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
-   
+
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -25,28 +25,28 @@
 
 /* Remove path components from filenames (i.e. __FILE__) for cleaner
    logs. */
-static __inline__ const char *_gpgme_debug_srcname (const char *file);
+static __inline__ const char *_gpgme_debug_srcname(const char *file);
 
 static __inline__ const char *
-_gpgme_debug_srcname (const char *file)
+_gpgme_debug_srcname(const char *file)
 {
-  const char *s = strrchr (file, '/');
-  return s? s+1:file;
+    const char *s = strrchr(file, '/');
+    return s ? s + 1 : file;
 }
 
 /* Log the formatted string FORMAT at debug level LEVEL or higher.  */
-void _gpgme_debug (int level, const char *format, ...);
+void _gpgme_debug(int level, const char *format, ...);
 
 /* Start a new debug line in *LINE, logged at level LEVEL or higher,
    and starting with the formatted string FORMAT.  */
-void _gpgme_debug_begin (void **helper, int level, const char *format, ...);
+void _gpgme_debug_begin(void **helper, int level, const char *format, ...);
 
 /* Add the formatted string FORMAT to the debug line *LINE.  */
-void _gpgme_debug_add (void **helper, const char *format, ...);
+void _gpgme_debug_add(void **helper, const char *format, ...);
 
 /* Finish construction of *LINE and send it to the debug output
    stream.  */
-void _gpgme_debug_end (void **helper);
+void _gpgme_debug_end(void **helper);
 
 /* Indirect stringification, requires __STDC__ to work.  */
 #define STRINGIFY(v) #v

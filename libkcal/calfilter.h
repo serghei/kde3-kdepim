@@ -35,53 +35,58 @@ namespace KCal {
 /**
   Filter for calendar objects.
 */
-class LIBKCAL_EXPORT CalFilter
-{
-  public:
+class LIBKCAL_EXPORT CalFilter {
+public:
     /** Construct filter. */
     CalFilter();
     /** Construct filter with name */
-    CalFilter( const QString &name );
+    CalFilter(const QString &name);
     /** Destruct filter. */
     ~CalFilter();
 
     /**
       Set name of filter.
     */
-    void setName( const QString &name ) { mName = name; }
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
     /**
       Return name of filter.
     */
-    QString name() const { return mName; }
+    QString name() const
+    {
+        return mName;
+    }
 
     /**
       Apply filter to eventlist, all events not matching filter criterias are
       removed from the list.
     */
-    void apply( Event::List *eventlist ) const;
+    void apply(Event::List *eventlist) const;
 
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply( Todo::List *todolist ) const;
+    void apply(Todo::List *todolist) const;
 
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
-    void apply( Journal::List *journallist) const;
+    void apply(Journal::List *journallist) const;
 
     /**
       Apply filter criteria on the specified incidence. Return true, if event passes
       criteria, otherwise return false.
     */
-    bool filterIncidence( Incidence * ) const;
+    bool filterIncidence(Incidence *) const;
 
     /**
       Enable or disable filter.
     */
-    void setEnabled( bool );
+    void setEnabled(bool);
     /**
       Return wheter the filter is enabled or not.
     */
@@ -93,7 +98,7 @@ class LIBKCAL_EXPORT CalFilter
       events.
       See related functions.
     */
-    void setCategoryList( const QStringList & );
+    void setCategoryList(const QStringList &);
     /**
       Return category list, used for showing/hiding categories of events.
       See related functions.
@@ -101,13 +106,13 @@ class LIBKCAL_EXPORT CalFilter
     QStringList categoryList() const;
 
     /**
-      Set list of email addresses which are to be considered when finding 
+      Set list of email addresses which are to be considered when finding
       incidences which the current user is not a participant of. This is
       normally the list used by KOPrefs::thatIsMe() as well.
     */
-    void setEmailList( const QStringList & );
+    void setEmailList(const QStringList &);
     /**
-      Return list of email addresses which are to be considered when finding 
+      Return list of email addresses which are to be considered when finding
       incidences which the current user is not a participant of. This is
       normally the list used by KOPrefs::thatIsMe() as well.
       See related functions.
@@ -115,12 +120,13 @@ class LIBKCAL_EXPORT CalFilter
     QStringList emailList() const;
 
     enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4,
-           HideInactiveTodos = 8, HideTodosWithoutAttendeeInEmailList = 16 };
+           HideInactiveTodos = 8, HideTodosWithoutAttendeeInEmailList = 16
+         };
 
     /**
       Set criteria, which have to be fulfilled by events passing the filter.
     */
-    void setCriteria( int );
+    void setCriteria(int);
     /**
       Get inclusive filter criteria.
     */
@@ -131,14 +137,14 @@ class LIBKCAL_EXPORT CalFilter
       not shown any more. If nothing is set explicitly, all finished todos will
       be hidden if the "hide completed todos" option is selected.
      */
-    void setCompletedTimeSpan( int timespan );
+    void setCompletedTimeSpan(int timespan);
     /**
       Return the number of days for "Hide completed todos", after which todos are
       not shown any more.
      */
     int completedTimeSpan() const;
 
-  private:
+private:
     QString mName;
 
     int mCriteria;

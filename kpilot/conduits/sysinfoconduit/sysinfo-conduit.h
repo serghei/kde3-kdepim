@@ -30,50 +30,50 @@
 
 #include <plugin.h>
 
-class SysInfoConduit : public ConduitAction
-{
-	Q_OBJECT
+class SysInfoConduit : public ConduitAction {
+    Q_OBJECT
 public:
-	SysInfoConduit(
-		KPilotLink *o,
-		const char *n = 0L,
-		const QStringList &a = QStringList() );
-	virtual ~SysInfoConduit();
-	virtual bool exec();
+    SysInfoConduit(
+        KPilotLink *o,
+        const char *n = 0L,
+        const QStringList &a = QStringList());
+    virtual ~SysInfoConduit();
+    virtual bool exec();
 
 public slots:
-	void hardwareInfo();
-	void userInfo();
-	void memoryInfo();
-	void storageInfo();
-	void dbListInfo();
-	void recNumberInfo();
-	void syncInfo();
-	void pcVersionInfo();
-	void palmVersionInfo();
-	void debugInfo();
-	void writeFile();
-	void cleanup();
+    void hardwareInfo();
+    void userInfo();
+    void memoryInfo();
+    void storageInfo();
+    void dbListInfo();
+    void recNumberInfo();
+    void syncInfo();
+    void pcVersionInfo();
+    void palmVersionInfo();
+    void debugInfo();
+    void writeFile();
+    void cleanup();
 
 protected:
-	void readConfig();
+    void readConfig();
 private:
-	QMap<QString,QString> fValues;
+    QMap<QString, QString> fValues;
 
-	bool fHardwareInfo, fUserInfo, fMemoryInfo, fStorageInfo,
-		fDBList, fRecordNumber, fSyncInfo,
-		fKDEVersion, fPalmOSVersion, fDebugInfo;
-	QString fOutputFile, fTemplateFile;
-	enum eOutputTypeEnum {
-		eOutputHTML=0,
-		eOutputText,
-		eOutputTemplate
-	} fOutputType;
+    bool fHardwareInfo, fUserInfo, fMemoryInfo, fStorageInfo,
+         fDBList, fRecordNumber, fSyncInfo,
+         fKDEVersion, fPalmOSVersion, fDebugInfo;
+    QString fOutputFile, fTemplateFile;
+    enum eOutputTypeEnum
+    {
+        eOutputHTML = 0,
+        eOutputText,
+        eOutputTemplate
+    } fOutputType;
 
-	KPilotLink::DBInfoList dblist;
-	QStringList removeParts;
-	QStringList keepParts;
-	static const QString defaultpage;
+    KPilotLink::DBInfoList dblist;
+    QStringList removeParts;
+    QStringList keepParts;
+    static const QString defaultpage;
 } ;
 
 #endif

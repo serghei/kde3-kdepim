@@ -39,23 +39,22 @@ class KAboutData;
 class ActionManager;
 class KNMainWidget;
 
-class KNodePart: public KParts::ReadOnlyPart
-{
+class KNodePart: public KParts::ReadOnlyPart {
     Q_OBJECT
-  public:
+public:
     KNodePart(QWidget *parentWidget, const char *widgetName,
               QObject *parent, const char *name, const QStringList &);
     virtual ~KNodePart();
 
-    QWidget* parentWidget() const;
+    QWidget *parentWidget() const;
 
     static KAboutData *createAboutData();
 
-  protected:
+protected:
     virtual bool openFile();
     virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
 
-  private:
+private:
     ActionManager *mActionManager;
     QWidget *mParentWidget;
     KNMainWidget *mainWidget;

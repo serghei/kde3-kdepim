@@ -30,15 +30,16 @@ struct in_addr;
 
 class KNProtocolClient : public QThread  {
 
-  public:
-    enum threadSignal { TSworkDone=0, TSjobStarted=1, TSconnect=2, TSloadGrouplist=3,
-                        TSwriteGrouplist=4, TSdownloadGrouplist=5, TSdownloadNew=6,
-                        TSsortNew=7, TSdownloadArticle=8, TSsendArticle=9, TSsendMail=10,
-                        TSprogressUpdate=11, TSdownloadDesc=12, TSdownloadNewGroups=13 };
+public:
+    enum threadSignal { TSworkDone = 0, TSjobStarted = 1, TSconnect = 2, TSloadGrouplist = 3,
+                        TSwriteGrouplist = 4, TSdownloadGrouplist = 5, TSdownloadNew = 6,
+                        TSsortNew = 7, TSdownloadArticle = 8, TSsendArticle = 9, TSsendMail = 10,
+                        TSprogressUpdate = 11, TSdownloadDesc = 12, TSdownloadNewGroups = 13
+                      };
 
     KNProtocolClient(int NfdPipeIn, int NfdPipeOut);
     ~KNProtocolClient();
-  
+
     virtual void run();
 
     void insertJob(KNJobData *newJob);
@@ -46,13 +47,25 @@ class KNProtocolClient : public QThread  {
 
     void updatePercentage(int percent);
 
-    int getProgressValue() const { return progressValue; };
+    int getProgressValue() const
+    {
+        return progressValue;
+    };
     /** bytes in&out for the current connection */
-    int getByteCount() const { return byteCount; };
-    bool isInByteCountMode() const { return byteCountMode; };
+    int getByteCount() const
+    {
+        return byteCount;
+    };
+    bool isInByteCountMode() const
+    {
+        return byteCountMode;
+    };
 
-    void terminateClient() { mTerminate = true; }
-  protected:
+    void terminateClient()
+    {
+        mTerminate = true;
+    }
+protected:
 
     /** main loop, maintains connection and waits for next job */
     void waitForWork();
@@ -61,7 +74,10 @@ class KNProtocolClient : public QThread  {
 
     /** connect, handshake and authorization */
     virtual bool openConnection();
-    bool isConnected()   { return (tcpSocket!=-1); };
+    bool isConnected()
+    {
+        return (tcpSocket != -1);
+    };
     /** sends QUIT-command and closes the socket */
     virtual void closeConnection();
 
@@ -75,7 +91,10 @@ class KNProtocolClient : public QThread  {
     /** reads next complete line of input */
     bool getNextLine();
     /** returns pointer to current line of input */
-    char* getCurrentLine()  { return thisLine; };
+    char *getCurrentLine()
+    {
+        return thisLine;
+    };
     /** receives a message (multiple lines) */
     bool getMsg(QStrList &msg);
     /** reads next line and returns the response code */
@@ -95,7 +114,7 @@ class KNProtocolClient : public QThread  {
     int progressValue, predictedLines, doneLines;
     bool byteCountMode;
 
-  private:
+private:
     /** waits until socket is readable */
     bool waitForRead();
     /** waits until socket is writeable */
@@ -110,7 +129,7 @@ class KNProtocolClient : public QThread  {
     char *thisLine, *nextLine, *inputEnd;
     unsigned int inputSize;
     /** IPC-Pipes to/from async thread */
-    int fdPipeIn,fdPipeOut;
+    int fdPipeIn, fdPipeOut;
     int tcpSocket;
     /** bytes in&out for the current connection */
     int byteCount;

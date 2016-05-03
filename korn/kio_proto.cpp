@@ -24,58 +24,58 @@
 
 #include <qmap.h>
 
-QMap< QString, QString >* KIO_Protocol::createConfig( KConfigGroup * group, const QString& password ) const
+QMap< QString, QString > *KIO_Protocol::createConfig(KConfigGroup *group, const QString &password) const
 {
-	QMap< QString, QString > *result = new QMap< QString, QString >;
+    QMap< QString, QString > *result = new QMap< QString, QString >;
 
-	result->insert( "name", group->readEntry( "name", "" ) );
-	result->insert( "server", group->readEntry( "server", "" ) );
-	result->insert( "port", group->readEntry( "port", "" ) );
-	result->insert( "username", group->readEntry( "username", "" ) );
-	result->insert( "password", password );
-	result->insert( "mailbox", group->readEntry( "mailbox", "" ) );
-	result->insert( "savepassword", group->readEntry( "savepassword", "false" ) );
-	result->insert( "ssl", group->readEntry( "ssl", "false" ) );
-	result->insert( "metadata", group->readEntry( "metadata", "" ) );
+    result->insert("name", group->readEntry("name", ""));
+    result->insert("server", group->readEntry("server", ""));
+    result->insert("port", group->readEntry("port", ""));
+    result->insert("username", group->readEntry("username", ""));
+    result->insert("password", password);
+    result->insert("mailbox", group->readEntry("mailbox", ""));
+    result->insert("savepassword", group->readEntry("savepassword", "false"));
+    result->insert("ssl", group->readEntry("ssl", "false"));
+    result->insert("metadata", group->readEntry("metadata", ""));
 
-	return result;
+    return result;
 }
 
-void KIO_Protocol::clearFields( QMap<QString, QString> *map, const KIO_Protocol::Fields fields ) const
+void KIO_Protocol::clearFields(QMap<QString, QString> *map, const KIO_Protocol::Fields fields) const
 {
-	if( fields & server )
-		map->insert( "server", "" );
-	if( fields & port )
-		map->insert( "port", "" );
-	if( fields & username )
-		map->insert( "username", "" );
-	if( fields & password )
-		map->insert( "password", "" );
-	if( fields & mailbox )
-		map->insert( "mailbox", "" );	
-	if( fields & save_password  )
-		map->insert( "savepassword", "" );
-	if( fields & metadata )
-		map->insert( "metadata", "" );
+    if(fields & server)
+        map->insert("server", "");
+    if(fields & port)
+        map->insert("port", "");
+    if(fields & username)
+        map->insert("username", "");
+    if(fields & password)
+        map->insert("password", "");
+    if(fields & mailbox)
+        map->insert("mailbox", "");
+    if(fields & save_password)
+        map->insert("savepassword", "");
+    if(fields & metadata)
+        map->insert("metadata", "");
 }
 
-void KIO_Protocol::readEntries( QMap< QString, QString >* map ) const
+void KIO_Protocol::readEntries(QMap< QString, QString > *map) const
 {
-	QMap< QString, QString> *metadata = new QMap< QString, QString >;
+    QMap< QString, QString> *metadata = new QMap< QString, QString >;
 
-	if( map->contains( "metadata" ) )
-	{
-		QStringList list = QStringList::split( ",", *map->find( "metadata" ) );
-		QStringList::Iterator it;
-		for( it = list.begin(); it != list.end(); ++it )
-		{
-			int split = (*it).find( '=' );
+    if(map->contains("metadata"))
+    {
+        QStringList list = QStringList::split(",", *map->find("metadata"));
+        QStringList::Iterator it;
+        for(it = list.begin(); it != list.end(); ++it)
+        {
+            int split = (*it).find('=');
 
-			metadata->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
-		}
-	}
+            metadata->insert((*it).left(split), (*it).right((*it).length() - split - 1));
+        }
+    }
 
-	this->readEntries( map, metadata );
+    this->readEntries(map, metadata);
 
-	delete metadata;
+    delete metadata;
 }

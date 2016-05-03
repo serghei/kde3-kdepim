@@ -26,18 +26,17 @@
 #include <dcopobject.h>
 
 
-class AlarmDaemonIface : virtual public DCOPObject
-{
+class AlarmDaemonIface : virtual public DCOPObject {
     K_DCOP
-  k_dcop:
+k_dcop:
     virtual ASYNC enableAutoStart(bool enable) = 0;
-    virtual ASYNC enableCalendar(const QString& urlString, bool enable) = 0;
-    virtual ASYNC reloadCalendar(const QCString& appname, const QString& urlString) = 0;
-    virtual ASYNC resetCalendar(const QCString& appname, const QString& urlString) = 0;
-    virtual ASYNC registerApp(const QCString& appName, const QString& appTitle, const QCString& dcopObject,
-                              const QString& calendarUrl, bool startClient) = 0;
-    virtual ASYNC registerChange(const QCString& appName, bool startClient) = 0;
-    virtual ASYNC eventHandled(const QCString& appname, const QString& calendarURL, const QString& eventID, bool reload) = 0;
+    virtual ASYNC enableCalendar(const QString &urlString, bool enable) = 0;
+    virtual ASYNC reloadCalendar(const QCString &appname, const QString &urlString) = 0;
+    virtual ASYNC resetCalendar(const QCString &appname, const QString &urlString) = 0;
+    virtual ASYNC registerApp(const QCString &appName, const QString &appTitle, const QCString &dcopObject,
+                              const QString &calendarUrl, bool startClient) = 0;
+    virtual ASYNC registerChange(const QCString &appName, bool startClient) = 0;
+    virtual ASYNC eventHandled(const QCString &appname, const QString &calendarURL, const QString &eventID, bool reload) = 0;
     virtual ASYNC timeConfigChanged() = 0;
     virtual ASYNC quit() = 0;
 };

@@ -27,34 +27,33 @@ class TimeSelector;
 class CheckBox;
 
 
-class Reminder : public QFrame
-{
-		Q_OBJECT
-	public:
-		Reminder(const QString& caption, const QString& reminderWhatsThis, const QString& valueWhatsThis,
-		         bool allowHourMinute, bool showOnceOnly, QWidget* parent, const char* name = 0);
-		bool           isReminder() const;
-		bool           isOnceOnly() const;
-		int            minutes() const;
-		void           setMinutes(int minutes, bool dateOnly);
-		void           setReadOnly(bool);
-		void           setDateOnly(bool dateOnly);
-		void           setMaximum(int hourmin, int days);
-		void           setFocusOnCount();
-		void           setOnceOnly(bool);
-		void           enableOnceOnly(bool enable);
+class Reminder : public QFrame {
+    Q_OBJECT
+public:
+    Reminder(const QString &caption, const QString &reminderWhatsThis, const QString &valueWhatsThis,
+             bool allowHourMinute, bool showOnceOnly, QWidget *parent, const char *name = 0);
+    bool           isReminder() const;
+    bool           isOnceOnly() const;
+    int            minutes() const;
+    void           setMinutes(int minutes, bool dateOnly);
+    void           setReadOnly(bool);
+    void           setDateOnly(bool dateOnly);
+    void           setMaximum(int hourmin, int days);
+    void           setFocusOnCount();
+    void           setOnceOnly(bool);
+    void           enableOnceOnly(bool enable);
 
-		static QString i18n_first_recurrence_only();    // plain text of 'Reminder for first recurrence only' checkbox
-		static QString i18n_u_first_recurrence_only();  // text of 'Reminder for first recurrence only' checkbox, with 'u' shortcut
+    static QString i18n_first_recurrence_only();    // plain text of 'Reminder for first recurrence only' checkbox
+    static QString i18n_u_first_recurrence_only();  // text of 'Reminder for first recurrence only' checkbox, with 'u' shortcut
 
-	protected slots:
-		void           slotReminderToggled(bool);
+protected slots:
+    void           slotReminderToggled(bool);
 
-	private:
-		TimeSelector*  mTime;
-		CheckBox*      mOnceOnly;
-		bool           mReadOnly;           // the widget is read only
-		bool           mOnceOnlyEnabled;    // 'mOnceOnly' checkbox is allowed to be enabled
+private:
+    TimeSelector  *mTime;
+    CheckBox      *mOnceOnly;
+    bool           mReadOnly;           // the widget is read only
+    bool           mOnceOnlyEnabled;    // 'mOnceOnly' checkbox is allowed to be enabled
 };
 
 #endif // REMINDER_H

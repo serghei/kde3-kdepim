@@ -27,8 +27,8 @@
 #include <qstringlist.h>
 
 namespace KIO {
-  class Job;
-  class TransferJob;
+class Job;
+class TransferJob;
 }
 
 namespace KPIM {
@@ -39,52 +39,51 @@ class ProgressItem;
 /**
   This class provides a resource for accessing a Groupware calendar with local caching.
 */
-class GroupwareDownloadJob : public GroupwareJob
-{
+class GroupwareDownloadJob : public GroupwareJob {
     Q_OBJECT
-  public:
-    GroupwareDownloadJob( GroupwareDataAdaptor *adaptor );
+public:
+    GroupwareDownloadJob(GroupwareDataAdaptor *adaptor);
 
     void kill();
 
-  protected:
+protected:
     void listItems();
     void deleteIncidencesGoneFromServer();
     void downloadItem();
 
-  protected slots:
+protected slots:
     void run();
 
     void cancelLoad();
 
-    void slotListItemsResult( KIO::Job * );
-    void slotListItemsData( KIO::Job *, const QByteArray & );
-    void slotDownloadItemResult( KIO::Job * );
-    void slotDownloadItemData( KIO::Job *, const QByteArray & );
-    
-    void slotItemToDownload( const KURL &remoteURL,
-                             KPIM::FolderLister::ContentType type );
-    void slotItemOnServer( const KURL &remoteURL );
-    void slotItemDownloaded( const QString &localID, const KURL &remoteURL,
-                             const QString &fingerprint );
-    void slotItemDownloadError( const KURL &remoteURL, const QString &error );
+    void slotListItemsResult(KIO::Job *);
+    void slotListItemsData(KIO::Job *, const QByteArray &);
+    void slotDownloadItemResult(KIO::Job *);
+    void slotDownloadItemData(KIO::Job *, const QByteArray &);
 
-  private:
+    void slotItemToDownload(const KURL &remoteURL,
+                            KPIM::FolderLister::ContentType type);
+    void slotItemOnServer(const KURL &remoteURL);
+    void slotItemDownloaded(const QString &localID, const KURL &remoteURL,
+                            const QString &fingerprint);
+    void slotItemDownloadError(const KURL &remoteURL, const QString &error);
+
+private:
     KURL::List mFoldersForDownload;
     /** mCurrentlyOnServer is the list of pathes of all items on the server.
         These pathes don't contain the server name! */
     KURL::List mCurrentlyOnServer;
 
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsForDownload;
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloading;
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloaded;
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloadError;
+    QMap<KURL, KPIM::FolderLister::ContentType> mItemsForDownload;
+    QMap<KURL, KPIM::FolderLister::ContentType> mItemsDownloading;
+    QMap<KURL, KPIM::FolderLister::ContentType> mItemsDownloaded;
+    QMap<KURL, KPIM::FolderLister::ContentType> mItemsDownloadError;
 
     KPIM::ProgressItem *mProgress;
 
     KIO::TransferJob *mDownloadJob;
     KIO::TransferJob *mListEventsJob;
-    
+
     QString mListItemsData;
     QString mDownloadItemsData;
 };

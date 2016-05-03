@@ -31,16 +31,18 @@
 #include "plugin.h"
 #include "uniqueapphandler.h"
 
-class JournalPlugin : public Kontact::Plugin
-{
+class JournalPlugin : public Kontact::Plugin {
     Q_OBJECT
-  public:
-    JournalPlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    JournalPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~JournalPlugin();
 
-    virtual bool createDCOPInterface( const QString& serviceType );
+    virtual bool createDCOPInterface(const QString &serviceType);
     virtual bool isRunningStandalone();
-    int weight() const { return 500; }
+    int weight() const
+    {
+        return 500;
+    }
 
     virtual QStringList invisibleToolbarActions() const;
 
@@ -48,14 +50,14 @@ class JournalPlugin : public Kontact::Plugin
 
     KCalendarIface_stub *interface();
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
 
-  private slots:
+private slots:
     void slotNewJournal();
     void slotSyncJournal();
 
-  private:
+private:
     KCalendarIface_stub *mIface;
     Kontact::UniqueAppWatcher *mUniqueAppWatcher;
 };

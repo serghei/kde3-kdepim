@@ -28,69 +28,93 @@
 class KLineEdit;
 
 
-class SpecialActionsButton : public QPushButton
-{
-		Q_OBJECT
-	public:
-		SpecialActionsButton(const QString& caption, QWidget* parent = 0, const char* name = 0);
-		void           setActions(const QString& pre, const QString& post);
-		const QString& preAction() const      { return mPreAction; }
-		const QString& postAction() const     { return mPostAction; }
-		virtual void   setReadOnly(bool ro)   { mReadOnly = ro; }
-		virtual bool   isReadOnly() const     { return mReadOnly; }
+class SpecialActionsButton : public QPushButton {
+    Q_OBJECT
+public:
+    SpecialActionsButton(const QString &caption, QWidget *parent = 0, const char *name = 0);
+    void           setActions(const QString &pre, const QString &post);
+    const QString &preAction() const
+    {
+        return mPreAction;
+    }
+    const QString &postAction() const
+    {
+        return mPostAction;
+    }
+    virtual void   setReadOnly(bool ro)
+    {
+        mReadOnly = ro;
+    }
+    virtual bool   isReadOnly() const
+    {
+        return mReadOnly;
+    }
 
-	signals:
-		void           selected();
+signals:
+    void           selected();
 
-	protected slots:
-		void           slotButtonPressed();
+protected slots:
+    void           slotButtonPressed();
 
-	private:
-		QString  mPreAction;
-		QString  mPostAction;
-		bool     mReadOnly;
+private:
+    QString  mPreAction;
+    QString  mPostAction;
+    bool     mReadOnly;
 };
 
 
 // Pre- and post-alarm actions widget
-class SpecialActions : public QWidget
-{
-		Q_OBJECT
-	public:
-		SpecialActions(QWidget* parent = 0, const char* name = 0);
-		void         setActions(const QString& pre, const QString& post);
-		QString      preAction() const;
-		QString      postAction() const;
-		void         setReadOnly(bool);
-		bool         isReadOnly() const    { return mReadOnly; }
+class SpecialActions : public QWidget {
+    Q_OBJECT
+public:
+    SpecialActions(QWidget *parent = 0, const char *name = 0);
+    void         setActions(const QString &pre, const QString &post);
+    QString      preAction() const;
+    QString      postAction() const;
+    void         setReadOnly(bool);
+    bool         isReadOnly() const
+    {
+        return mReadOnly;
+    }
 
-	private:
-		KLineEdit*   mPreAction;
-		KLineEdit*   mPostAction;
-		bool         mReadOnly;
+private:
+    KLineEdit   *mPreAction;
+    KLineEdit   *mPostAction;
+    bool         mReadOnly;
 };
 
 
 // Pre- and post-alarm actions dialogue displayed by the push button
-class SpecialActionsDlg : public KDialogBase
-{
-		Q_OBJECT
-	public:
-		SpecialActionsDlg(const QString& preAction, const QString& postAction,
-		                  const QString& caption, QWidget* parent = 0, const char* name = 0);
-		QString      preAction() const     { return mActions->preAction(); }
-		QString      postAction() const    { return mActions->postAction(); }
-		void         setReadOnly(bool ro)  { mActions->setReadOnly(ro); }
-		bool         isReadOnly() const    { return mActions->isReadOnly(); }
+class SpecialActionsDlg : public KDialogBase {
+    Q_OBJECT
+public:
+    SpecialActionsDlg(const QString &preAction, const QString &postAction,
+                      const QString &caption, QWidget *parent = 0, const char *name = 0);
+    QString      preAction() const
+    {
+        return mActions->preAction();
+    }
+    QString      postAction() const
+    {
+        return mActions->postAction();
+    }
+    void         setReadOnly(bool ro)
+    {
+        mActions->setReadOnly(ro);
+    }
+    bool         isReadOnly() const
+    {
+        return mActions->isReadOnly();
+    }
 
-	protected:
-		virtual void resizeEvent(QResizeEvent*);
+protected:
+    virtual void resizeEvent(QResizeEvent *);
 
-	protected slots:
-		virtual void slotOk();
+protected slots:
+    virtual void slotOk();
 
-	private:
-		SpecialActions* mActions;
+private:
+    SpecialActions *mActions;
 };
 
 #endif // SPECIALACTIONS_H

@@ -39,172 +39,176 @@
 
 #include <qpushbutton.h>
 
-KOAlarmClient::KOAlarmClient( QObject *parent, const char *name )
-  : DCOPObject( "ac" ), QObject( parent, name ), mDialog( 0 )
+KOAlarmClient::KOAlarmClient(QObject *parent, const char *name)
+    : DCOPObject("ac"), QObject(parent, name), mDialog(0)
 {
-  kdDebug(5890) << "KOAlarmClient::KOAlarmClient()" << endl;
+    kdDebug(5890) << "KOAlarmClient::KOAlarmClient()" << endl;
 
-  mDocker = new AlarmDockWindow;
-  mDocker->show();
-  connect( this, SIGNAL( reminderCount( int ) ), mDocker, SLOT( slotUpdate( int ) ) );
-  connect( mDocker, SIGNAL( quitSignal() ), SLOT( slotQuit() ) );
+    mDocker = new AlarmDockWindow;
+    mDocker->show();
+    connect(this, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)));
+    connect(mDocker, SIGNAL(quitSignal()), SLOT(slotQuit()));
 
-  KConfig c( locate( "config", "korganizerrc" ) );
-  c.setGroup( "Time & Date" );
-  QString tz = c.readEntry( "TimeZoneId" );
-  kdDebug(5890) << "TimeZone: " << tz << endl;
+    KConfig c(locate("config", "korganizerrc"));
+    c.setGroup("Time & Date");
+    QString tz = c.readEntry("TimeZoneId");
+    kdDebug(5890) << "TimeZone: " << tz << endl;
 
-  mCalendar = new CalendarResources( tz );
-  mCalendar->readConfig();
-  mCalendar->load();
+    mCalendar = new CalendarResources(tz);
+    mCalendar->readConfig();
+    mCalendar->load();
 
-  connect( &mCheckTimer, SIGNAL( timeout() ), SLOT( checkAlarms() ) );
+    connect(&mCheckTimer, SIGNAL(timeout()), SLOT(checkAlarms()));
 
-  KConfig *config = kapp->config();
-  config->setGroup( "Alarms" );
-  int interval = config->readNumEntry( "Interval", 60 );
-  kdDebug(5890) << "KOAlarmClient check interval: " << interval << " seconds."
-                << endl;
-  mLastChecked = config->readDateTimeEntry( "CalendarsLastChecked" );
+    KConfig *config = kapp->config();
+    config->setGroup("Alarms");
+    int interval = config->readNumEntry("Interval", 60);
+    kdDebug(5890) << "KOAlarmClient check interval: " << interval << " seconds."
+                  << endl;
+    mLastChecked = config->readDateTimeEntry("CalendarsLastChecked");
 
-  // load reminders that were active when quitting
-  config->setGroup( "General" );
-  int numReminders = config->readNumEntry( "Reminders", 0 );
-  for ( int i=1; i<=numReminders; ++i )
-  {
-    QString group( QString( "Incidence-%1" ).arg( i ) );
-    config->setGroup( group );
-    QString uid = config->readEntry( "UID" );
-    QDateTime dt = config->readDateTimeEntry( "RemindAt" );
-    if ( !uid.isEmpty() )
-      createReminder( mCalendar->incidence( uid ), dt );
-    config->deleteGroup( group );
-  }
-  config->setGroup( "General" );
-  if (numReminders) {
-     config->writeEntry( "Reminders", 0 );
-     config->sync();
-  }
+    // load reminders that were active when quitting
+    config->setGroup("General");
+    int numReminders = config->readNumEntry("Reminders", 0);
+    for(int i = 1; i <= numReminders; ++i)
+    {
+        QString group(QString("Incidence-%1").arg(i));
+        config->setGroup(group);
+        QString uid = config->readEntry("UID");
+        QDateTime dt = config->readDateTimeEntry("RemindAt");
+        if(!uid.isEmpty())
+            createReminder(mCalendar->incidence(uid), dt);
+        config->deleteGroup(group);
+    }
+    config->setGroup("General");
+    if(numReminders)
+    {
+        config->writeEntry("Reminders", 0);
+        config->sync();
+    }
 
-  checkAlarms();
-  mCheckTimer.start( 1000 * interval );  // interval in seconds
+    checkAlarms();
+    mCheckTimer.start(1000 * interval);    // interval in seconds
 }
 
 KOAlarmClient::~KOAlarmClient()
 {
-  delete mCalendar;
-  delete mDocker;
-  delete mDialog;
+    delete mCalendar;
+    delete mDocker;
+    delete mDialog;
 }
 
 void KOAlarmClient::checkAlarms()
 {
-  KConfig *cfg = kapp->config();
+    KConfig *cfg = kapp->config();
 
-  cfg->setGroup( "General" );
-  if ( !cfg->readBoolEntry( "Enabled", true ) ) return;
+    cfg->setGroup("General");
+    if(!cfg->readBoolEntry("Enabled", true)) return;
 
-  QDateTime from = mLastChecked.addSecs( 1 );
-  mLastChecked = QDateTime::currentDateTime();
+    QDateTime from = mLastChecked.addSecs(1);
+    mLastChecked = QDateTime::currentDateTime();
 
-  kdDebug(5891) << "Check: " << from.toString() << " - " << mLastChecked.toString() << endl;
+    kdDebug(5891) << "Check: " << from.toString() << " - " << mLastChecked.toString() << endl;
 
-  QValueList<Alarm *> alarms = mCalendar->alarms( from, mLastChecked );
+    QValueList<Alarm *> alarms = mCalendar->alarms(from, mLastChecked);
 
-  QValueList<Alarm *>::ConstIterator it;
-  for( it = alarms.begin(); it != alarms.end(); ++it ) {
-    kdDebug(5891) << "REMINDER: " << (*it)->parent()->summary() << endl;
-    Incidence *incidence = mCalendar->incidence( (*it)->parent()->uid() );
-    createReminder( incidence, QDateTime::currentDateTime() );
-  }
+    QValueList<Alarm *>::ConstIterator it;
+    for(it = alarms.begin(); it != alarms.end(); ++it)
+    {
+        kdDebug(5891) << "REMINDER: " << (*it)->parent()->summary() << endl;
+        Incidence *incidence = mCalendar->incidence((*it)->parent()->uid());
+        createReminder(incidence, QDateTime::currentDateTime());
+    }
 }
 
-void KOAlarmClient::createReminder( KCal::Incidence *incidence, QDateTime dt )
+void KOAlarmClient::createReminder(KCal::Incidence *incidence, QDateTime dt)
 {
-  if ( !incidence )
-    return;
+    if(!incidence)
+        return;
 
-  if ( !mDialog ) {
-    mDialog = new AlarmDialog();
-    connect( mDialog, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)) );
-    connect( mDocker, SIGNAL(suspendAllSignal()), mDialog, SLOT(suspendAll()) );
-    connect( mDocker, SIGNAL(dismissAllSignal()), mDialog, SLOT(dismissAll()) );
-    connect( this, SIGNAL( saveAllSignal() ), mDialog, SLOT( slotSave() ) );
-  }
+    if(!mDialog)
+    {
+        mDialog = new AlarmDialog();
+        connect(mDialog, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)));
+        connect(mDocker, SIGNAL(suspendAllSignal()), mDialog, SLOT(suspendAll()));
+        connect(mDocker, SIGNAL(dismissAllSignal()), mDialog, SLOT(dismissAll()));
+        connect(this, SIGNAL(saveAllSignal()), mDialog, SLOT(slotSave()));
+    }
 
-  mDialog->addIncidence( incidence, dt );
-  mDialog->wakeUp();
-  saveLastCheckTime();
+    mDialog->addIncidence(incidence, dt);
+    mDialog->wakeUp();
+    saveLastCheckTime();
 }
 
 void KOAlarmClient::slotQuit()
 {
-  emit saveAllSignal();
-  saveLastCheckTime();
-  quit();
+    emit saveAllSignal();
+    saveLastCheckTime();
+    quit();
 }
 
 void KOAlarmClient::saveLastCheckTime()
 {
-  KConfigGroup cg( KGlobal::config(), "Alarms");
-  cg.writeEntry( "CalendarsLastChecked", mLastChecked );
-  KGlobal::config()->sync();
+    KConfigGroup cg(KGlobal::config(), "Alarms");
+    cg.writeEntry("CalendarsLastChecked", mLastChecked);
+    KGlobal::config()->sync();
 }
 
 void KOAlarmClient::quit()
 {
-  kdDebug(5890) << "KOAlarmClient::quit()" << endl;
-  kapp->quit();
+    kdDebug(5890) << "KOAlarmClient::quit()" << endl;
+    kapp->quit();
 }
 
-bool KOAlarmClient::commitData( QSessionManager& )
+bool KOAlarmClient::commitData(QSessionManager &)
 {
-  emit saveAllSignal();
-  saveLastCheckTime();
-  return true;
+    emit saveAllSignal();
+    saveLastCheckTime();
+    return true;
 }
 
 void KOAlarmClient::forceAlarmCheck()
 {
-  checkAlarms();
-  saveLastCheckTime();
+    checkAlarms();
+    saveLastCheckTime();
 }
 
 void KOAlarmClient::dumpDebug()
 {
-  KConfig *cfg = kapp->config();
+    KConfig *cfg = kapp->config();
 
-  cfg->setGroup( "Alarms" );
-  QDateTime lastChecked = cfg->readDateTimeEntry( "CalendarsLastChecked" );
+    cfg->setGroup("Alarms");
+    QDateTime lastChecked = cfg->readDateTimeEntry("CalendarsLastChecked");
 
-  kdDebug(5890) << "Last Check: " << lastChecked << endl;
+    kdDebug(5890) << "Last Check: " << lastChecked << endl;
 }
 
 QStringList KOAlarmClient::dumpAlarms()
 {
-  QDateTime start = QDateTime( QDateTime::currentDateTime().date(),
-                               QTime( 0, 0 ) );
-  QDateTime end = start.addDays( 1 ).addSecs( -1 );
+    QDateTime start = QDateTime(QDateTime::currentDateTime().date(),
+                                QTime(0, 0));
+    QDateTime end = start.addDays(1).addSecs(-1);
 
-  QStringList lst;
-  // Don't translate, this is for debugging purposes.
-  lst << QString("AlarmDeamon::dumpAlarms() from ") + start.toString()+ " to " +
-         end.toString();
+    QStringList lst;
+    // Don't translate, this is for debugging purposes.
+    lst << QString("AlarmDeamon::dumpAlarms() from ") + start.toString() + " to " +
+        end.toString();
 
-  QValueList<Alarm*> alarms = mCalendar->alarms( start, end );
-  QValueList<Alarm*>::ConstIterator it;
-  for( it = alarms.begin(); it != alarms.end(); ++it ) {
-    Alarm *a = *it;
-    lst << QString("  ") + a->parent()->summary() + " ("
-              + a->time().toString() + ")";
-  }
+    QValueList<Alarm *> alarms = mCalendar->alarms(start, end);
+    QValueList<Alarm *>::ConstIterator it;
+    for(it = alarms.begin(); it != alarms.end(); ++it)
+    {
+        Alarm *a = *it;
+        lst << QString("  ") + a->parent()->summary() + " ("
+            + a->time().toString() + ")";
+    }
 
-  return lst;
+    return lst;
 }
 
 void KOAlarmClient::debugShowDialog()
 {
-//   showAlarmDialog();
+    //   showAlarmDialog();
 }
 
 #include "koalarmclient.moc"

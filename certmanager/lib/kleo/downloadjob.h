@@ -38,31 +38,31 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
+class Error;
 }
 
 class QStringList;
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous downloaders
+/**
+   @short An abstract base class for asynchronous downloaders
 
-     To use a DownloadJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the download with a call
-     to start(). This call might fail, in which case the DownloadJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
+   To use a DownloadJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the download with a call
+   to start(). This call might fail, in which case the DownloadJob
+   instance will have scheduled it's own destruction with a call to
+   QObject::deleteLater().
 
-     After result() is emitted, the DownloadJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class DownloadJob : public Job {
+   After result() is emitted, the DownloadJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class DownloadJob : public Job {
     Q_OBJECT
-  protected:
-    DownloadJob( QObject * parent, const char * name );
-  public:
+protected:
+    DownloadJob(QObject *parent, const char *name);
+public:
     ~DownloadJob();
 
     /**
@@ -72,11 +72,11 @@ namespace Kleo {
        only empty strings or anything other than fingerprints, the
        result is undefined.
     */
-    virtual GpgME::Error start( const QStringList & fingerprints ) = 0;
+    virtual GpgME::Error start(const QStringList &fingerprints) = 0;
 
-  signals:
-    void result( const GpgME::Error & result, const QByteArray & keyData );
-  };
+signals:
+    void result(const GpgME::Error &result, const QByteArray &keyData);
+};
 
 }
 

@@ -25,26 +25,28 @@ WSCLConversationManager::WSCLConversationManager()
 {
 }
 
-WSCLConversationManager::WSCLConversationManager( const WSCL::Conversation &conversation )
-  : mConversation( conversation )
+WSCLConversationManager::WSCLConversationManager(const WSCL::Conversation &conversation)
+    : mConversation(conversation)
 {
 }
 
-void WSCLConversationManager::setConversation( const WSCL::Conversation &conversation )
+void WSCLConversationManager::setConversation(const WSCL::Conversation &conversation)
 {
-  mConversation = conversation;
+    mConversation = conversation;
 }
 
-QStringList WSCLConversationManager::nextActions( const QString &currentAction, const QString &condition )
+QStringList WSCLConversationManager::nextActions(const QString &currentAction, const QString &condition)
 {
-  WSCL::Transition::List transitions = mConversation.transitions();
-  WSCL::Transition::List::ConstIterator it;
-  for ( it = transitions.begin(); it != transitions.end(); ++it ) {
-    if ( (*it).sourceInteraction() == currentAction ) {
-      if ( (*it).sourceInteractionCondition() == condition )
-        return (*it).destinationInteraction();
+    WSCL::Transition::List transitions = mConversation.transitions();
+    WSCL::Transition::List::ConstIterator it;
+    for(it = transitions.begin(); it != transitions.end(); ++it)
+    {
+        if((*it).sourceInteraction() == currentAction)
+        {
+            if((*it).sourceInteractionCondition() == condition)
+                return (*it).destinationInteraction();
+        }
     }
-  }
 
-  return QStringList();
+    return QStringList();
 }

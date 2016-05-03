@@ -53,36 +53,42 @@ class ScheduledJob;
  */
 class ScheduledTask {
 public:
-  /// Create a scheduled task for a given folder
-  /// If @p immediate is true, the scheduler will run this task as soon
-  /// as possible (but won't interrupt a currently running job for it)
-  ScheduledTask( KMFolder* folder, bool immediate )
-    : mCurrentFolder( folder ), mImmediate( immediate ) {}
-  virtual ~ScheduledTask() {}
+    /// Create a scheduled task for a given folder
+    /// If @p immediate is true, the scheduler will run this task as soon
+    /// as possible (but won't interrupt a currently running job for it)
+    ScheduledTask(KMFolder *folder, bool immediate)
+        : mCurrentFolder(folder), mImmediate(immediate) {}
+    virtual ~ScheduledTask() {}
 
-  /// Run this task, i.e. create a job for it.
-  /// Important: the job's execute() method must either call open() on the
-  /// folder or storage immediately, or abort (deleting itself).
-  /// Usually, that job should also be cancellable.
-  /// Otherwise (if the open() is delayed) an unrelated open() could happen first
-  /// and mess things up.
-  /// If for some reason (e.g. folder deleted) nothing should be done, return 0.
-  virtual ScheduledJob* run() = 0;
+    /// Run this task, i.e. create a job for it.
+    /// Important: the job's execute() method must either call open() on the
+    /// folder or storage immediately, or abort (deleting itself).
+    /// Usually, that job should also be cancellable.
+    /// Otherwise (if the open() is delayed) an unrelated open() could happen first
+    /// and mess things up.
+    /// If for some reason (e.g. folder deleted) nothing should be done, return 0.
+    virtual ScheduledJob *run() = 0;
 
-  /// An identifier for the type of task (a bit like QListViewItem::rtti)
-  /// This allows to automatically prevent two identical tasks from being scheduled
-  /// for the same folder. To circumvent this feature and make every task
-  /// unique, return 0 here.
-  virtual int taskTypeId() const = 0;
+    /// An identifier for the type of task (a bit like QListViewItem::rtti)
+    /// This allows to automatically prevent two identical tasks from being scheduled
+    /// for the same folder. To circumvent this feature and make every task
+    /// unique, return 0 here.
+    virtual int taskTypeId() const = 0;
 
-  /// The folder which this task is about, 0 if it was deleted meanwhile.
-  KMFolder* folder() const { return mCurrentFolder; }
+    /// The folder which this task is about, 0 if it was deleted meanwhile.
+    KMFolder *folder() const
+    {
+        return mCurrentFolder;
+    }
 
-  bool isImmediate() const { return mImmediate; }
+    bool isImmediate() const
+    {
+        return mImmediate;
+    }
 
 private:
-  QGuardedPtr<KMFolder> mCurrentFolder;
-  bool mImmediate;
+    QGuardedPtr<KMFolder> mCurrentFolder;
+    bool mImmediate;
 };
 
 /**
@@ -93,62 +99,63 @@ private:
  * using too much CPU for too long. Tasks for opened folders are not executed until
  * the folder is closed.
  */
-class JobScheduler : public QObject
-{
-  Q_OBJECT
+class JobScheduler : public QObject {
+    Q_OBJECT
 public:
-  JobScheduler( QObject* parent, const char* name = 0 );
-  ~JobScheduler();
+    JobScheduler(QObject *parent, const char *name = 0);
+    ~JobScheduler();
 
-  /// Register a task to be done for a given folder
-  /// The ownership of the task is transferred to the JobScheduler
-  void registerTask( ScheduledTask* task );
+    /// Register a task to be done for a given folder
+    /// The ownership of the task is transferred to the JobScheduler
+    void registerTask(ScheduledTask *task);
 
-  /// Called by [implementations of] FolderStorage::open()
-  /// Interrupt any running job for this folder and re-schedule it for later
-  void notifyOpeningFolder( KMFolder* folder );
+    /// Called by [implementations of] FolderStorage::open()
+    /// Interrupt any running job for this folder and re-schedule it for later
+    void notifyOpeningFolder(KMFolder *folder);
 
-  // DCOP calls
-  void pause();
-  void resume();
+    // DCOP calls
+    void pause();
+    void resume();
 
 private slots:
-  /// Called by a timer to run the next job
-  void slotRunNextJob();
+    /// Called by a timer to run the next job
+    void slotRunNextJob();
 
-  /// Called when the current job terminates
-  void slotJobFinished();
+    /// Called when the current job terminates
+    void slotJobFinished();
 
 private:
-  void restartTimer();
-  void interruptCurrentTask();
-  void runTaskNow( ScheduledTask* task );
-  typedef QValueList<ScheduledTask *> TaskList;
-  void removeTask( TaskList::Iterator& it );
+    void restartTimer();
+    void interruptCurrentTask();
+    void runTaskNow(ScheduledTask *task);
+    typedef QValueList<ScheduledTask *> TaskList;
+    void removeTask(TaskList::Iterator &it);
 private:
-  TaskList mTaskList; // FIFO of tasks to be run
+    TaskList mTaskList; // FIFO of tasks to be run
 
-  QTimer mTimer;
-  int mPendingImmediateTasks;
+    QTimer mTimer;
+    int mPendingImmediateTasks;
 
-  /// Information about the currently running job, if any
-  ScheduledTask* mCurrentTask;
-  ScheduledJob* mCurrentJob;
+    /// Information about the currently running job, if any
+    ScheduledTask *mCurrentTask;
+    ScheduledJob *mCurrentJob;
 };
 
 /**
  * Base class for scheduled jobs
  */
-class ScheduledJob : public FolderJob
-{
+class ScheduledJob : public FolderJob {
 public:
-  ScheduledJob( KMFolder* folder, bool immediate );
+    ScheduledJob(KMFolder *folder, bool immediate);
 
-  bool isOpeningFolder() const { return mOpeningFolder; }
+    bool isOpeningFolder() const
+    {
+        return mOpeningFolder;
+    }
 
 protected:
-  bool mImmediate;
-  bool mOpeningFolder;
+    bool mImmediate;
+    bool mOpeningFolder;
 };
 
 } // namespace

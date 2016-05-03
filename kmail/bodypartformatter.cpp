@@ -48,45 +48,50 @@
 #include <kasciistricmp.h>
 
 namespace {
-  class AnyTypeBodyPartFormatter
+class AnyTypeBodyPartFormatter
     : public KMail::BodyPartFormatter,
       public KMail::Interface::BodyPartFormatter {
-    static const AnyTypeBodyPartFormatter * self;
-  public:
-    Result format( KMail::Interface::BodyPart *, KMail::HtmlWriter * ) const {
-      kdDebug(5006) << "AnyTypeBodyPartFormatter::format() acting as a KMail::Interface::BodyPartFormatter!" << endl;
-      return AsIcon;
+    static const AnyTypeBodyPartFormatter *self;
+public:
+    Result format(KMail::Interface::BodyPart *, KMail::HtmlWriter *) const
+    {
+        kdDebug(5006) << "AnyTypeBodyPartFormatter::format() acting as a KMail::Interface::BodyPartFormatter!" << endl;
+        return AsIcon;
     }
 
-    bool process( KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult & result ) const {
-      result.setNeverDisplayInline( true );
-      return false;
+    bool process(KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult &result) const
+    {
+        result.setNeverDisplayInline(true);
+        return false;
     }
-    static const KMail::BodyPartFormatter * create() {
-      if ( !self )
-	self = new AnyTypeBodyPartFormatter();
-      return self;
+    static const KMail::BodyPartFormatter *create()
+    {
+        if(!self)
+            self = new AnyTypeBodyPartFormatter();
+        return self;
     }
-  };
+};
 
-  const AnyTypeBodyPartFormatter * AnyTypeBodyPartFormatter::self = 0;
+const AnyTypeBodyPartFormatter *AnyTypeBodyPartFormatter::self = 0;
 
 
-  class ImageTypeBodyPartFormatter : public KMail::BodyPartFormatter {
-    static const ImageTypeBodyPartFormatter * self;
-  public:
-    bool process( KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult & result ) const {
-      result.setIsImage( true );
-      return false;
+class ImageTypeBodyPartFormatter : public KMail::BodyPartFormatter {
+    static const ImageTypeBodyPartFormatter *self;
+public:
+    bool process(KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult &result) const
+    {
+        result.setIsImage(true);
+        return false;
     }
-    static const KMail::BodyPartFormatter * create() {
-      if ( !self )
-	self = new ImageTypeBodyPartFormatter();
-      return self;
+    static const KMail::BodyPartFormatter *create()
+    {
+        if(!self)
+            self = new ImageTypeBodyPartFormatter();
+        return self;
     }
-  };
+};
 
-  const ImageTypeBodyPartFormatter * ImageTypeBodyPartFormatter::self = 0;
+const ImageTypeBodyPartFormatter *ImageTypeBodyPartFormatter::self = 0;
 
 #define CREATE_BODY_PART_FORMATTER(subtype) \
   class subtype##BodyPartFormatter : public KMail::BodyPartFormatter { \
@@ -106,81 +111,89 @@ namespace {
     return otp->process##subtype##Subtype( node, result ); \
   }
 
-  CREATE_BODY_PART_FORMATTER(TextPlain)
-  CREATE_BODY_PART_FORMATTER(TextHtml)
-  //CREATE_BODY_PART_FORMATTER(TextEnriched)
+CREATE_BODY_PART_FORMATTER(TextPlain)
+CREATE_BODY_PART_FORMATTER(TextHtml)
+//CREATE_BODY_PART_FORMATTER(TextEnriched)
 
-  CREATE_BODY_PART_FORMATTER(ApplicationOctetStream)
-  CREATE_BODY_PART_FORMATTER(ApplicationPkcs7Mime)
-  CREATE_BODY_PART_FORMATTER(ApplicationChiasmusText)
-  //CREATE_BODY_PART_FORMATTER(ApplicationPgp)
-  CREATE_BODY_PART_FORMATTER(ApplicationMsTnef)
+CREATE_BODY_PART_FORMATTER(ApplicationOctetStream)
+CREATE_BODY_PART_FORMATTER(ApplicationPkcs7Mime)
+CREATE_BODY_PART_FORMATTER(ApplicationChiasmusText)
+//CREATE_BODY_PART_FORMATTER(ApplicationPgp)
+CREATE_BODY_PART_FORMATTER(ApplicationMsTnef)
 
-  CREATE_BODY_PART_FORMATTER(MessageRfc822)
+CREATE_BODY_PART_FORMATTER(MessageRfc822)
 
-  CREATE_BODY_PART_FORMATTER(MultiPartMixed)
-  CREATE_BODY_PART_FORMATTER(MultiPartAlternative)
-  CREATE_BODY_PART_FORMATTER(MultiPartSigned)
-  CREATE_BODY_PART_FORMATTER(MultiPartEncrypted)
+CREATE_BODY_PART_FORMATTER(MultiPartMixed)
+CREATE_BODY_PART_FORMATTER(MultiPartAlternative)
+CREATE_BODY_PART_FORMATTER(MultiPartSigned)
+CREATE_BODY_PART_FORMATTER(MultiPartEncrypted)
 
-  typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;
+typedef TextPlainBodyPartFormatter ApplicationPgpBodyPartFormatter;
 
 
 #undef CREATE_BODY_PART_FORMATTER
 } // anon namespace
 
 // FIXME: port some more KMail::BodyPartFormatters to KMail::Interface::BodyPartFormatters
-void KMail::BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters( KMail::BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
-  if ( !reg ) return;
-  (*reg)["application"]["octet-stream"] = new AnyTypeBodyPartFormatter();
+void KMail::BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters(KMail::BodyPartFormatterFactoryPrivate::TypeRegistry *reg)
+{
+    if(!reg) return;
+    (*reg)["application"]["octet-stream"] = new AnyTypeBodyPartFormatter();
 }
 
-typedef const KMail::BodyPartFormatter * (*BodyPartFormatterCreator)();
+typedef const KMail::BodyPartFormatter *(*BodyPartFormatterCreator)();
 
-struct SubtypeBuiltin {
-  const char * subtype;
-  BodyPartFormatterCreator create;
+struct SubtypeBuiltin
+{
+    const char *subtype;
+    BodyPartFormatterCreator create;
 };
 
-static const SubtypeBuiltin applicationSubtypeBuiltins[] = {
-  { "octet-stream", &ApplicationOctetStreamBodyPartFormatter::create },
-  { "pkcs7-mime", &ApplicationPkcs7MimeBodyPartFormatter::create },
-  { "x-pkcs7-mime", &ApplicationPkcs7MimeBodyPartFormatter::create },
-  { "vnd.de.bund.bsi.chiasmus-text", &ApplicationChiasmusTextBodyPartFormatter::create },
-  { "pgp", &ApplicationPgpBodyPartFormatter::create },
-  { "ms-tnef", &ApplicationMsTnefBodyPartFormatter::create }
+static const SubtypeBuiltin applicationSubtypeBuiltins[] =
+{
+    { "octet-stream", &ApplicationOctetStreamBodyPartFormatter::create },
+    { "pkcs7-mime", &ApplicationPkcs7MimeBodyPartFormatter::create },
+    { "x-pkcs7-mime", &ApplicationPkcs7MimeBodyPartFormatter::create },
+    { "vnd.de.bund.bsi.chiasmus-text", &ApplicationChiasmusTextBodyPartFormatter::create },
+    { "pgp", &ApplicationPgpBodyPartFormatter::create },
+    { "ms-tnef", &ApplicationMsTnefBodyPartFormatter::create }
 };
 
-static const SubtypeBuiltin textSubtypeBuiltins[] = {
-  { "html", &TextHtmlBodyPartFormatter::create },
-  //{ "enriched", &TextEnrichedBodyPartFormatter::create },
-  { "x-vcard", &AnyTypeBodyPartFormatter::create },
-  { "vcard", &AnyTypeBodyPartFormatter::create },
-  { "rtf", &AnyTypeBodyPartFormatter::create },
-  { "*", &TextPlainBodyPartFormatter::create },
+static const SubtypeBuiltin textSubtypeBuiltins[] =
+{
+    { "html", &TextHtmlBodyPartFormatter::create },
+    //{ "enriched", &TextEnrichedBodyPartFormatter::create },
+    { "x-vcard", &AnyTypeBodyPartFormatter::create },
+    { "vcard", &AnyTypeBodyPartFormatter::create },
+    { "rtf", &AnyTypeBodyPartFormatter::create },
+    { "*", &TextPlainBodyPartFormatter::create },
 };
 
-static const SubtypeBuiltin multipartSubtypeBuiltins[] = {
-  { "mixed", &MultiPartMixedBodyPartFormatter::create },
-  { "alternative", &MultiPartAlternativeBodyPartFormatter::create },
-  //{ "digest", &MultiPartDigestFormatter::create },
-  //{ "parallel", &MultiPartParallelFormatter::create },
-  //{ "related", &MultiPartRelatedFormatter::create },
-  { "signed", &MultiPartSignedBodyPartFormatter::create },
-  { "encrypted", &MultiPartEncryptedBodyPartFormatter::create },
-  //{ "report", &MultiPartReportFormatter::create },
+static const SubtypeBuiltin multipartSubtypeBuiltins[] =
+{
+    { "mixed", &MultiPartMixedBodyPartFormatter::create },
+    { "alternative", &MultiPartAlternativeBodyPartFormatter::create },
+    //{ "digest", &MultiPartDigestFormatter::create },
+    //{ "parallel", &MultiPartParallelFormatter::create },
+    //{ "related", &MultiPartRelatedFormatter::create },
+    { "signed", &MultiPartSignedBodyPartFormatter::create },
+    { "encrypted", &MultiPartEncryptedBodyPartFormatter::create },
+    //{ "report", &MultiPartReportFormatter::create },
 };
 
-static const SubtypeBuiltin messageSubtypeBuiltins[] = {
-  { "rfc822", &MessageRfc822BodyPartFormatter::create },
+static const SubtypeBuiltin messageSubtypeBuiltins[] =
+{
+    { "rfc822", &MessageRfc822BodyPartFormatter::create },
 };
 
-static const SubtypeBuiltin imageSubtypeBuiltins[] = {
-  { "*", &ImageTypeBodyPartFormatter::create },
+static const SubtypeBuiltin imageSubtypeBuiltins[] =
+{
+    { "*", &ImageTypeBodyPartFormatter::create },
 };
 
-static const SubtypeBuiltin anySubtypeBuiltins[] = {
-  { "*", &AnyTypeBodyPartFormatter::create },
+static const SubtypeBuiltin anySubtypeBuiltins[] =
+{
+    { "*", &AnyTypeBodyPartFormatter::create },
 };
 
 #ifdef DIM
@@ -188,147 +201,160 @@ static const SubtypeBuiltin anySubtypeBuiltins[] = {
 #endif
 #define DIM(x) sizeof(x) / sizeof(*x)
 
-static const struct {
-  const char * type;
-  const SubtypeBuiltin * subtypes;
-  unsigned int num_subtypes;
-} builtins[] = {
-  { "application", applicationSubtypeBuiltins, DIM(applicationSubtypeBuiltins) },
-  { "text", textSubtypeBuiltins, DIM(textSubtypeBuiltins) },
-  { "multipart", multipartSubtypeBuiltins, DIM(multipartSubtypeBuiltins) },
-  { "message", messageSubtypeBuiltins, DIM(messageSubtypeBuiltins) },
-  { "image", imageSubtypeBuiltins, DIM(imageSubtypeBuiltins) },
-  //{ "audio", audioSubtypeBuiltins, DIM(audioSubtypeBuiltins) },
-  //{ "model", modelSubtypeBuiltins, DIM(modelSubtypeBuiltins) },
-  //{ "video", videoSubtypeBuiltins, DIM(videoSubtypeBuiltins) },
-  { "*", anySubtypeBuiltins, DIM(anySubtypeBuiltins) },
+static const struct
+{
+    const char *type;
+    const SubtypeBuiltin *subtypes;
+    unsigned int num_subtypes;
+} builtins[] =
+{
+    { "application", applicationSubtypeBuiltins, DIM(applicationSubtypeBuiltins) },
+    { "text", textSubtypeBuiltins, DIM(textSubtypeBuiltins) },
+    { "multipart", multipartSubtypeBuiltins, DIM(multipartSubtypeBuiltins) },
+    { "message", messageSubtypeBuiltins, DIM(messageSubtypeBuiltins) },
+    { "image", imageSubtypeBuiltins, DIM(imageSubtypeBuiltins) },
+    //{ "audio", audioSubtypeBuiltins, DIM(audioSubtypeBuiltins) },
+    //{ "model", modelSubtypeBuiltins, DIM(modelSubtypeBuiltins) },
+    //{ "video", videoSubtypeBuiltins, DIM(videoSubtypeBuiltins) },
+    { "*", anySubtypeBuiltins, DIM(anySubtypeBuiltins) },
 };
 
 #undef DIM
 
-const KMail::BodyPartFormatter * KMail::BodyPartFormatter::createFor( int type, int subtype ) {
-  DwString t, st;
-  DwTypeEnumToStr( type, t );
-  DwSubtypeEnumToStr( subtype, st );
-  return createFor( t.c_str(), st.c_str() );
+const KMail::BodyPartFormatter *KMail::BodyPartFormatter::createFor(int type, int subtype)
+{
+    DwString t, st;
+    DwTypeEnumToStr(type, t);
+    DwSubtypeEnumToStr(subtype, st);
+    return createFor(t.c_str(), st.c_str());
 }
 
-static const KMail::BodyPartFormatter * createForText( const char * subtype ) {
-  if ( subtype && *subtype )
-    switch ( subtype[0] ) {
-    case 'h':
-    case 'H':
-      if ( kasciistricmp( subtype, "html" ) == 0 )
-	return TextHtmlBodyPartFormatter::create();
-      break;
-    case 'r':
-    case 'R':
-      if ( kasciistricmp( subtype, "rtf" ) == 0 )
-	return AnyTypeBodyPartFormatter::create();
-      break;
-    case 'x':
-    case 'X':
-    case 'v':
-    case 'V':
-      if ( kasciistricmp( subtype, "x-vcard" ) == 0 ||
-	   kasciistricmp( subtype, "vcard" ) == 0 )
-	return AnyTypeBodyPartFormatter::create();
-      break;
-    }
+static const KMail::BodyPartFormatter *createForText(const char *subtype)
+{
+    if(subtype && *subtype)
+        switch(subtype[0])
+        {
+            case 'h':
+            case 'H':
+                if(kasciistricmp(subtype, "html") == 0)
+                    return TextHtmlBodyPartFormatter::create();
+                break;
+            case 'r':
+            case 'R':
+                if(kasciistricmp(subtype, "rtf") == 0)
+                    return AnyTypeBodyPartFormatter::create();
+                break;
+            case 'x':
+            case 'X':
+            case 'v':
+            case 'V':
+                if(kasciistricmp(subtype, "x-vcard") == 0 ||
+                        kasciistricmp(subtype, "vcard") == 0)
+                    return AnyTypeBodyPartFormatter::create();
+                break;
+        }
 
-  return TextPlainBodyPartFormatter::create();
+    return TextPlainBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForImage( const char * ) {
-  return ImageTypeBodyPartFormatter::create();
+static const KMail::BodyPartFormatter *createForImage(const char *)
+{
+    return ImageTypeBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForMessage( const char * subtype ) {
-  if ( kasciistricmp( subtype, "rfc822" ) == 0 )
-    return MessageRfc822BodyPartFormatter::create();
-  return AnyTypeBodyPartFormatter::create();
+static const KMail::BodyPartFormatter *createForMessage(const char *subtype)
+{
+    if(kasciistricmp(subtype, "rfc822") == 0)
+        return MessageRfc822BodyPartFormatter::create();
+    return AnyTypeBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForMultiPart( const char * subtype ) {
-  if ( subtype && *subtype )
-    switch ( subtype[0] ) {
-    case 'a':
-    case 'A':
-      if ( kasciistricmp( subtype, "alternative" ) == 0 )
-	return MultiPartAlternativeBodyPartFormatter::create();
-      break;
-    case 'e':
-    case 'E':
-      if ( kasciistricmp( subtype, "encrypted" ) == 0 )
-	return MultiPartEncryptedBodyPartFormatter::create();
-      break;
-    case 's':
-    case 'S':
-      if ( kasciistricmp( subtype, "signed" ) == 0 )
-	return MultiPartSignedBodyPartFormatter::create();
-      break;
-    }
+static const KMail::BodyPartFormatter *createForMultiPart(const char *subtype)
+{
+    if(subtype && *subtype)
+        switch(subtype[0])
+        {
+            case 'a':
+            case 'A':
+                if(kasciistricmp(subtype, "alternative") == 0)
+                    return MultiPartAlternativeBodyPartFormatter::create();
+                break;
+            case 'e':
+            case 'E':
+                if(kasciistricmp(subtype, "encrypted") == 0)
+                    return MultiPartEncryptedBodyPartFormatter::create();
+                break;
+            case 's':
+            case 'S':
+                if(kasciistricmp(subtype, "signed") == 0)
+                    return MultiPartSignedBodyPartFormatter::create();
+                break;
+        }
 
-  return MultiPartMixedBodyPartFormatter::create();
+    return MultiPartMixedBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForApplication( const char * subtype ) {
-  if ( subtype && *subtype )
-    switch ( subtype[0] ) {
-    case 'p':
-    case 'P':
-      if ( kasciistricmp( subtype, "pgp" ) == 0 )
-	return ApplicationPgpBodyPartFormatter::create();
-      // fall through
-    case 'x':
-    case 'X':
-      if ( kasciistricmp( subtype, "pkcs7-mime" ) == 0 ||
-	   kasciistricmp( subtype, "x-pkcs7-mime" ) == 0 )
-	return ApplicationPkcs7MimeBodyPartFormatter::create();
-      break;
-    case 'm':
-    case 'M':
-      if ( kasciistricmp( subtype, "ms-tnef" ) == 0 )
-        return ApplicationMsTnefBodyPartFormatter::create();
-      break;
-    case 'v':
-    case 'V':
-      if ( kasciistricmp( subtype, "vnd.de.bund.bsi.chiasmus-text") == 0)
-        return ApplicationChiasmusTextBodyPartFormatter::create();
-      break;
-    }
+static const KMail::BodyPartFormatter *createForApplication(const char *subtype)
+{
+    if(subtype && *subtype)
+        switch(subtype[0])
+        {
+            case 'p':
+            case 'P':
+                if(kasciistricmp(subtype, "pgp") == 0)
+                    return ApplicationPgpBodyPartFormatter::create();
+            // fall through
+            case 'x':
+            case 'X':
+                if(kasciistricmp(subtype, "pkcs7-mime") == 0 ||
+                        kasciistricmp(subtype, "x-pkcs7-mime") == 0)
+                    return ApplicationPkcs7MimeBodyPartFormatter::create();
+                break;
+            case 'm':
+            case 'M':
+                if(kasciistricmp(subtype, "ms-tnef") == 0)
+                    return ApplicationMsTnefBodyPartFormatter::create();
+                break;
+            case 'v':
+            case 'V':
+                if(kasciistricmp(subtype, "vnd.de.bund.bsi.chiasmus-text") == 0)
+                    return ApplicationChiasmusTextBodyPartFormatter::create();
+                break;
+        }
 
-  return AnyTypeBodyPartFormatter::create();
+    return AnyTypeBodyPartFormatter::create();
 }
 
 // OK, replace this with a factory with plugin support later on...
-const KMail::BodyPartFormatter * KMail::BodyPartFormatter::createFor( const char * type, const char * subtype ) {
-  if ( type && *type )
-    switch ( type[0] ) {
-    case 'a': // application
-    case 'A':
-      if ( kasciistricmp( type, "application" ) == 0 )
-	return createForApplication( subtype );
-      break;
-    case 'i': // image
-    case 'I':
-      if ( kasciistricmp( type, "image" ) == 0 )
-	return createForImage( subtype );
-      break;
-    case 'm': // multipart / message
-    case 'M':
-      if ( kasciistricmp( type, "multipart" ) == 0 )
-	return createForMultiPart( subtype );
-      else if ( kasciistricmp( type, "message" ) == 0 )
-	return createForMessage( subtype );
-      break;
-    case 't': // text
-    case 'T':
-      if ( kasciistricmp( type, "text" ) == 0 )
-	return createForText( subtype );
-      break;
-    }
+const KMail::BodyPartFormatter *KMail::BodyPartFormatter::createFor(const char *type, const char *subtype)
+{
+    if(type && *type)
+        switch(type[0])
+        {
+            case 'a': // application
+            case 'A':
+                if(kasciistricmp(type, "application") == 0)
+                    return createForApplication(subtype);
+                break;
+            case 'i': // image
+            case 'I':
+                if(kasciistricmp(type, "image") == 0)
+                    return createForImage(subtype);
+                break;
+            case 'm': // multipart / message
+            case 'M':
+                if(kasciistricmp(type, "multipart") == 0)
+                    return createForMultiPart(subtype);
+                else if(kasciistricmp(type, "message") == 0)
+                    return createForMessage(subtype);
+                break;
+            case 't': // text
+            case 'T':
+                if(kasciistricmp(type, "text") == 0)
+                    return createForText(subtype);
+                break;
+        }
 
-  return AnyTypeBodyPartFormatter::create();
+    return AnyTypeBodyPartFormatter::create();
 }
 

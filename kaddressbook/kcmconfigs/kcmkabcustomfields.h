@@ -25,15 +25,14 @@
 
 #include <libkdepim/kcmdesignerfields.h>
 
-class KCMKabCustomFields : public KPIM::KCMDesignerFields
-{
-  public:
-    KCMKabCustomFields( QWidget *parent = 0, const char *name = 0 );
+class KCMKabCustomFields : public KPIM::KCMDesignerFields {
+public:
+    KCMKabCustomFields(QWidget *parent = 0, const char *name = 0);
 
-  protected:
+protected:
     QString localUiDir();
     QString uiPath();
-    void writeActivePages( const QStringList & );
+    void writeActivePages(const QStringList &);
     QStringList readActivePages();
     QString applicationName();
 

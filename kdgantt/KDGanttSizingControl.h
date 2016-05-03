@@ -35,24 +35,23 @@
 
 #include <qwidget.h>
 
-class KDGanttSizingControl : public QWidget
-{
+class KDGanttSizingControl : public QWidget {
     Q_OBJECT
 
 public:
     bool isMinimized() const;
-    
+
 protected:
-    KDGanttSizingControl( QWidget* parent = 0, const char* name = 0, WFlags f = 0 );
+    KDGanttSizingControl(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
 public slots:
-    virtual void minimize( bool minimize );
-    virtual void restore( bool restore );
+    virtual void minimize(bool minimize);
+    virtual void restore(bool restore);
     void changeState();
 
 signals:
-    void minimized( KDGanttSizingControl* );
-    void restored( KDGanttSizingControl* );
+    void minimized(KDGanttSizingControl *);
+    void restored(KDGanttSizingControl *);
 
 private:
     bool _isMinimized;

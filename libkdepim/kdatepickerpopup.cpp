@@ -26,98 +26,100 @@
 
 #include "kdatepickerpopup.h"
 
-KDatePickerPopup::KDatePickerPopup( int items, const QDate &date, QWidget *parent,
-                                    const char *name )
-  : QPopupMenu( parent, name )
+KDatePickerPopup::KDatePickerPopup(int items, const QDate &date, QWidget *parent,
+                                   const char *name)
+    : QPopupMenu(parent, name)
 {
-  mItems = items;
+    mItems = items;
 
-  mDatePicker = new KDatePicker( this );
-  mDatePicker->setCloseButton( false );
+    mDatePicker = new KDatePicker(this);
+    mDatePicker->setCloseButton(false);
 
-  connect( mDatePicker, SIGNAL( dateEntered( QDate ) ),
-           SLOT( slotDateChanged( QDate ) ) );
-  connect( mDatePicker, SIGNAL( dateSelected( QDate ) ),
-           SLOT( slotDateChanged( QDate ) ) );
+    connect(mDatePicker, SIGNAL(dateEntered(QDate)),
+            SLOT(slotDateChanged(QDate)));
+    connect(mDatePicker, SIGNAL(dateSelected(QDate)),
+            SLOT(slotDateChanged(QDate)));
 
-  mDatePicker->setDate( date );
+    mDatePicker->setDate(date);
 
-  buildMenu();
+    buildMenu();
 }
 
 void KDatePickerPopup::buildMenu()
 {
-  if ( isVisible() ) return;
-  clear();
+    if(isVisible()) return;
+    clear();
 
-  if ( mItems & DatePicker ) {
-    insertItem( mDatePicker );
+    if(mItems & DatePicker)
+    {
+        insertItem(mDatePicker);
 
-    if ( ( mItems & NoDate ) || ( mItems & Words ) )
-      insertSeparator();
-  }
+        if((mItems & NoDate) || (mItems & Words))
+            insertSeparator();
+    }
 
-  if ( mItems & Words ) {
-    insertItem( i18n("&Today"), this, SLOT( slotToday() ) );
-    insertItem( i18n("To&morrow"), this, SLOT( slotTomorrow() ) );
-    insertItem( i18n("Next &Week"), this, SLOT( slotNextWeek() ) );
-    insertItem( i18n("Next M&onth"), this, SLOT( slotNextMonth() ) );
+    if(mItems & Words)
+    {
+        insertItem(i18n("&Today"), this, SLOT(slotToday()));
+        insertItem(i18n("To&morrow"), this, SLOT(slotTomorrow()));
+        insertItem(i18n("Next &Week"), this, SLOT(slotNextWeek()));
+        insertItem(i18n("Next M&onth"), this, SLOT(slotNextMonth()));
 
-    if ( mItems & NoDate )
-      insertSeparator();
-  }
+        if(mItems & NoDate)
+            insertSeparator();
+    }
 
-  if ( mItems & NoDate )
-    insertItem( i18n("No Date"), this, SLOT( slotNoDate() ) );
+    if(mItems & NoDate)
+        insertItem(i18n("No Date"), this, SLOT(slotNoDate()));
 }
 
 KDatePicker *KDatePickerPopup::datePicker() const
 {
-  return mDatePicker;
+    return mDatePicker;
 }
 
-void KDatePickerPopup::setDate( const QDate &date )
+void KDatePickerPopup::setDate(const QDate &date)
 {
-  mDatePicker->setDate( date );
+    mDatePicker->setDate(date);
 }
 
 #if 0
-void KDatePickerPopup::setItems( int items )
+void KDatePickerPopup::setItems(int items)
 {
-  mItems = items;
-  buildMenu();
+    mItems = items;
+    buildMenu();
 }
 #endif
 
-void KDatePickerPopup::slotDateChanged( QDate date )
+void KDatePickerPopup::slotDateChanged(QDate date)
 {
-  emit dateChanged( date );
-  hide();
+    emit dateChanged(date);
+    hide();
 }
 
 void KDatePickerPopup::slotToday()
 {
-  emit dateChanged( QDate::currentDate() );
+    emit dateChanged(QDate::currentDate());
 }
 
 void KDatePickerPopup::slotTomorrow()
 {
-  emit dateChanged( QDate::currentDate().addDays( 1 ) );
+    emit dateChanged(QDate::currentDate().addDays(1));
 }
 
 void KDatePickerPopup::slotNoDate()
 {
-  emit dateChanged( QDate() );
+    emit dateChanged(QDate());
 }
 
 void KDatePickerPopup::slotNextWeek()
 {
-  emit dateChanged( QDate::currentDate().addDays( 7 ) );
+    emit dateChanged(QDate::currentDate().addDays(7));
 }
 
 void KDatePickerPopup::slotNextMonth()
 {
-  emit dateChanged( QDate::currentDate().addMonths( 1 ) );
+    emit dateChanged(QDate::currentDate().addMonths(1));
 }
 
 #include "kdatepickerpopup.moc"

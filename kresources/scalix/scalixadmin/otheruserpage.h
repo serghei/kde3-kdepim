@@ -28,26 +28,25 @@
 class QPushButton;
 class OtherUserView;
 
-class OtherUserPage : public QWidget
-{
-  Q_OBJECT
+class OtherUserPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    OtherUserPage( QWidget *parent = 0 );
+public:
+    OtherUserPage(QWidget *parent = 0);
     ~OtherUserPage();
 
-  private slots:
+private slots:
     void loadAllUsers();
     void addUser();
     void removeUser();
 
-    void userAdded( KIO::Job* );
-    void userRemoved( KIO::Job* );
-    void allUsers( KIO::Job* );
+    void userAdded(KIO::Job *);
+    void userRemoved(KIO::Job *);
+    void allUsers(KIO::Job *);
 
     void selectionChanged();
 
-  private:
+private:
     void updateKmail();
 
     QPushButton *mAddButton;

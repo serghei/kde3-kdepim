@@ -41,14 +41,13 @@ class CalendarResources;
 class Incidence;
 }
 
-class KOAlarmClient : public QObject, virtual public AlarmClientIface, public KSessionManaged
-{
+class KOAlarmClient : public QObject, virtual public AlarmClientIface, public KSessionManaged {
     Q_OBJECT
-  public:
-    KOAlarmClient( QObject *parent = 0, const char *name = 0 );
+public:
+    KOAlarmClient(QObject *parent = 0, const char *name = 0);
     ~KOAlarmClient();
 
-    bool commitData( QSessionManager & );
+    bool commitData(QSessionManager &);
 
     // DCOP interface
     void quit();
@@ -58,18 +57,18 @@ class KOAlarmClient : public QObject, virtual public AlarmClientIface, public KS
 
     void debugShowDialog();
 
-  public slots:
+public slots:
     void slotQuit();
 
-  protected slots:
+protected slots:
     void checkAlarms();
 
-  signals:
-    void reminderCount( int );
+signals:
+    void reminderCount(int);
     void saveAllSignal();
 
-  private:
-    void createReminder( KCal::Incidence *incidence, QDateTime dt );
+private:
+    void createReminder(KCal::Incidence *incidence, QDateTime dt);
     void saveLastCheckTime();
 
     AlarmDockWindow *mDocker;  // the panel icon

@@ -32,97 +32,96 @@
 
 using namespace KAB;
 
-class XXPort::XXPortPrivate
-{
-  public:
+class XXPort::XXPortPrivate {
+public:
     QSignalMapper *mExportMapper;
     QSignalMapper *mImportMapper;
     KApplication *mKApp;
 };
 
-XXPort::XXPort( KABC::AddressBook *ab, QWidget *parent,
-                            const char *name )
-  : QObject( parent, name ), mAddressBook( ab ), mParentWidget( parent ),
-    d( new XXPortPrivate )
+XXPort::XXPort(KABC::AddressBook *ab, QWidget *parent,
+               const char *name)
+    : QObject(parent, name), mAddressBook(ab), mParentWidget(parent),
+      d(new XXPortPrivate)
 {
-  setInstance( new KInstance( "kaddressbook" ) );
+    setInstance(new KInstance("kaddressbook"));
 
-  d->mExportMapper = new QSignalMapper( this );
-  d->mImportMapper = new QSignalMapper( this );
+    d->mExportMapper = new QSignalMapper(this);
+    d->mImportMapper = new QSignalMapper(this);
 
-  connect( d->mExportMapper, SIGNAL( mapped( const QString& ) ),
-           SLOT( slotExportActivated( const QString& ) ) );
-  connect( d->mImportMapper, SIGNAL( mapped( const QString& ) ),
-           SLOT( slotImportActivated( const QString& ) ) );
+    connect(d->mExportMapper, SIGNAL(mapped(const QString &)),
+            SLOT(slotExportActivated(const QString &)));
+    connect(d->mImportMapper, SIGNAL(mapped(const QString &)),
+            SLOT(slotImportActivated(const QString &)));
 }
 
 XXPort::~XXPort()
 {
-  delete d;
-  d = 0;
+    delete d;
+    d = 0;
 }
 
-bool XXPort::exportContacts( const KABC::AddresseeList&, const QString& )
+bool XXPort::exportContacts(const KABC::AddresseeList &, const QString &)
 {
-  // do nothing
-  return false;
+    // do nothing
+    return false;
 }
 
-KABC::AddresseeList XXPort::importContacts( const QString& ) const
+KABC::AddresseeList XXPort::importContacts(const QString &) const
 {
-  // do nothing
-  return KABC::AddresseeList();
+    // do nothing
+    return KABC::AddresseeList();
 }
 
-void XXPort::createImportAction( const QString &label, const QString &data )
+void XXPort::createImportAction(const QString &label, const QString &data)
 {
-  QString id = "file_import_" + identifier() + ( data.isEmpty() ? QString( "" ) : "_" + data );
-  KAction *action = new KAction( label, 0, d->mImportMapper, SLOT( map() ), actionCollection(), id.latin1() );
+    QString id = "file_import_" + identifier() + (data.isEmpty() ? QString("") : "_" + data);
+    KAction *action = new KAction(label, 0, d->mImportMapper, SLOT(map()), actionCollection(), id.latin1());
 
-  d->mImportMapper->setMapping( action, ( data.isEmpty() ? QString( "<empty>" ) : data ) );
+    d->mImportMapper->setMapping(action, (data.isEmpty() ? QString("<empty>") : data));
 
-  setXMLFile( identifier() + "_xxportui.rc" );
+    setXMLFile(identifier() + "_xxportui.rc");
 }
 
-void XXPort::createExportAction( const QString &label, const QString &data )
+void XXPort::createExportAction(const QString &label, const QString &data)
 {
-  QString id = "file_export_" + identifier() + ( data.isEmpty() ? QString( "" ) : "_" + data );
-  KAction *action = new KAction( label, 0, d->mExportMapper, SLOT( map() ), actionCollection(), id.latin1() );
+    QString id = "file_export_" + identifier() + (data.isEmpty() ? QString("") : "_" + data);
+    KAction *action = new KAction(label, 0, d->mExportMapper, SLOT(map()), actionCollection(), id.latin1());
 
-  d->mExportMapper->setMapping( action, ( data.isEmpty() ? QString( "<empty>" ) : data ) );
+    d->mExportMapper->setMapping(action, (data.isEmpty() ? QString("<empty>") : data));
 
-  setXMLFile( identifier() + "_xxportui.rc" );
+    setXMLFile(identifier() + "_xxportui.rc");
 }
 
 KABC::AddressBook *XXPort::addressBook() const
 {
-  return mAddressBook;
+    return mAddressBook;
 }
 
 QWidget *XXPort::parentWidget() const
 {
-  return mParentWidget;
+    return mParentWidget;
 }
 
-void XXPort::setKApplication( KApplication *app )
+void XXPort::setKApplication(KApplication *app)
 {
-  d->mKApp = app;
+    d->mKApp = app;
 }
 
 void XXPort::processEvents() const
 {
-  if ( d->mKApp )
-    d->mKApp->processEvents();
+    if(d->mKApp)
+        d->mKApp->processEvents();
 }
 
-void XXPort::slotExportActivated( const QString &data )
+void XXPort::slotExportActivated(const QString &data)
 {
-  emit exportActivated( identifier(), ( data == "<empty>" ? QString::null : data ) );
+    emit exportActivated(identifier(), (data == "<empty>" ? QString::null : data));
 }
 
-void XXPort::slotImportActivated( const QString &data )
+void XXPort::slotImportActivated(const QString &data)
 {
-  emit importActivated( identifier(), ( data == "<empty>" ? QString::null : data ) );
+    emit importActivated(identifier(), (data == "<empty>" ? QString::null : data));
 }
 
 #include "xxport.moc"

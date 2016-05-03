@@ -38,82 +38,93 @@ using namespace KCal;
 
 static const KCmdLineOptions options[] =
 {
-  {"q", 0, 0 },
-  {"qtopia2icalendar", I18N_NOOP("Convert Qtopia calendar file to iCalendar"), 0 },
-  {"i", 0, 0 },
-  {"icalendar2qtopia", I18N_NOOP("Convert iCalendar to iCalendar"), 0 },
-  {"o", 0, 0},
-  {"output <file>", I18N_NOOP("Output file"), 0 },
-  {"+input", I18N_NOOP("Input file"), 0 },
-  KCmdLineLastOption
+    {"q", 0, 0 },
+    {"qtopia2icalendar", I18N_NOOP("Convert Qtopia calendar file to iCalendar"), 0 },
+    {"i", 0, 0 },
+    {"icalendar2qtopia", I18N_NOOP("Convert iCalendar to iCalendar"), 0 },
+    {"o", 0, 0},
+    {"output <file>", I18N_NOOP("Output file"), 0 },
+    {"+input", I18N_NOOP("Input file"), 0 },
+    KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("convertqtopia",I18N_NOOP("Qtopia calendar file converter"),"0.1");
-  aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
+    KAboutData aboutData("convertqtopia", I18N_NOOP("Qtopia calendar file converter"), "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KCmdLineArgs::init(argc,argv,&aboutData);
-  KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool sourceQtopia = false;
-  bool sourceIcalendar = false;
+    bool sourceQtopia = false;
+    bool sourceIcalendar = false;
 
-  if ( args->isSet( "qtopia2icalendar" ) ) {
-    sourceQtopia = true;
-  }
-
-  if ( args->isSet( "icalendar2qtopia" ) ) {
-    sourceIcalendar = true;
-  }
-
-  if ( sourceQtopia && sourceIcalendar ) {
-    KCmdLineArgs::usage(
-        i18n("Please specify only one of the conversion options.") );
-  }
-  if ( !sourceQtopia && !sourceIcalendar ) {
-    KCmdLineArgs::usage(
-        i18n("You have to specify one conversion option.") );
-  }
-
-  if ( args->count() != 1 ) {
-    KCmdLineArgs::usage( i18n("Error: No input file.") );
-  }
-
-  QString inputFile = args->arg( 0 );
-
-  QString outputFile;
-  if ( args->isSet("output") ) outputFile = args->getOption( "output" );
-
-  kdDebug(5800) << "Input File: '" << inputFile << "'" << endl;
-  kdDebug(5800) << "Output File: '" << outputFile << "'" << endl;
-
-  if ( sourceQtopia ) {
-    CalendarLocal cal;
-    
-    QtopiaFormat qtopiaFormat;
-    qtopiaFormat.load( &cal, inputFile );
-
-    ICalFormat icalendarFormat;
-    if ( outputFile.isEmpty() ) {
-      QString out = icalendarFormat.toString( &cal );
-      std::cout << out.local8Bit() << std::endl;
-    } else {
-      bool success = icalendarFormat.save( &cal, outputFile );
-      if ( !success ) {
-        std::cerr << i18n( "Error saving to '%1'." ).arg( outputFile ).local8Bit()
-                  << std::endl;
-        return 1;
-      }
+    if(args->isSet("qtopia2icalendar"))
+    {
+        sourceQtopia = true;
     }
-  }
-  
-  if ( sourceIcalendar ) {
-    std::cerr << "Not implemented yet." << std::endl;
-    return 1;
-  }
+
+    if(args->isSet("icalendar2qtopia"))
+    {
+        sourceIcalendar = true;
+    }
+
+    if(sourceQtopia && sourceIcalendar)
+    {
+        KCmdLineArgs::usage(
+            i18n("Please specify only one of the conversion options."));
+    }
+    if(!sourceQtopia && !sourceIcalendar)
+    {
+        KCmdLineArgs::usage(
+            i18n("You have to specify one conversion option."));
+    }
+
+    if(args->count() != 1)
+    {
+        KCmdLineArgs::usage(i18n("Error: No input file."));
+    }
+
+    QString inputFile = args->arg(0);
+
+    QString outputFile;
+    if(args->isSet("output")) outputFile = args->getOption("output");
+
+    kdDebug(5800) << "Input File: '" << inputFile << "'" << endl;
+    kdDebug(5800) << "Output File: '" << outputFile << "'" << endl;
+
+    if(sourceQtopia)
+    {
+        CalendarLocal cal;
+
+        QtopiaFormat qtopiaFormat;
+        qtopiaFormat.load(&cal, inputFile);
+
+        ICalFormat icalendarFormat;
+        if(outputFile.isEmpty())
+        {
+            QString out = icalendarFormat.toString(&cal);
+            std::cout << out.local8Bit() << std::endl;
+        }
+        else
+        {
+            bool success = icalendarFormat.save(&cal, outputFile);
+            if(!success)
+            {
+                std::cerr << i18n("Error saving to '%1'.").arg(outputFile).local8Bit()
+                          << std::endl;
+                return 1;
+            }
+        }
+    }
+
+    if(sourceIcalendar)
+    {
+        std::cerr << "Not implemented yet." << std::endl;
+        return 1;
+    }
 }

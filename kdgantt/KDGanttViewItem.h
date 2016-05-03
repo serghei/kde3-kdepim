@@ -55,41 +55,40 @@ class KDCanvasText;
 class KDCanvasPolygonItem;
 class KDGanttViewTaskLinkGroup;
 
-class KDGanttViewItem : public QListViewItem
-{
+class KDGanttViewItem : public QListViewItem {
 public:
     enum Type { Event, Task, Summary };
     enum Shape { TriangleDown, TriangleUp, Diamond, Square, Circle };
 
 protected:
-    KDGanttViewItem( Type type, KDGanttView* view,
-                     const QString& lvtext = QString::null,
-                     const QString& name = QString::null );
-    KDGanttViewItem( Type type, KDGanttViewItem* parent,
-                     const QString& lvtext = QString::null,
-                     const QString& name = QString::null );
-    KDGanttViewItem( Type type, KDGanttView* view, KDGanttViewItem* after,
-                     const QString& lvtext = QString::null,
-                     const QString& name = QString::null );
-    KDGanttViewItem( Type type, KDGanttViewItem* parent,
-                     KDGanttViewItem* after,
-                     const QString& lvtext = QString::null,
-                     const QString& name = QString::null );
+    KDGanttViewItem(Type type, KDGanttView *view,
+                    const QString &lvtext = QString::null,
+                    const QString &name = QString::null);
+    KDGanttViewItem(Type type, KDGanttViewItem *parent,
+                    const QString &lvtext = QString::null,
+                    const QString &name = QString::null);
+    KDGanttViewItem(Type type, KDGanttView *view, KDGanttViewItem *after,
+                    const QString &lvtext = QString::null,
+                    const QString &name = QString::null);
+    KDGanttViewItem(Type type, KDGanttViewItem *parent,
+                    KDGanttViewItem *after,
+                    const QString &lvtext = QString::null,
+                    const QString &name = QString::null);
 
-  //bool _isCalendar;
+    //bool _isCalendar;
     bool isVisibleInGanttView;
     void updateCanvasItems();
     int getCoordY();
     QDateTime myChildStartTime();
     QDateTime myChildEndTime();
-    void generateAndInsertName( const QString& name );
-    KDCanvasLine * startLine, *endLine,
-      * startLineBack, *endLineBack, *actualEnd ;
-    KDCanvasPolygonItem* startShape,* midShape, *endShape, *progressShape,
-      * startShapeBack,* midShapeBack, *endShapeBack,
-      * floatStartShape, * floatEndShape;
-    KDGanttView* myGanttView;
-    KDCanvasText* textCanvas;
+    void generateAndInsertName(const QString &name);
+    KDCanvasLine *startLine, *endLine,
+                 * startLineBack, *endLineBack, *actualEnd ;
+    KDCanvasPolygonItem *startShape, * midShape, *endShape, *progressShape,
+                        * startShapeBack, * midShapeBack, *endShapeBack,
+                        * floatStartShape, * floatEndShape;
+    KDGanttView *myGanttView;
+    KDCanvasText *textCanvas;
     QString textCanvasText;
     QDateTime myStartTime, myEndTime;
     bool isHighlighted, isEditable;
@@ -105,90 +104,90 @@ public:
     virtual ~KDGanttViewItem();
 
     Type type() const;
-    void setEnabled( bool on );
-    bool enabled () const;
-    virtual void setOpen( bool o );
-    void setItemVisible( bool on );
-    bool itemVisible () const;
-    void setEditable( bool editable );
+    void setEnabled(bool on);
+    bool enabled() const;
+    virtual void setOpen(bool o);
+    void setItemVisible(bool on);
+    bool itemVisible() const;
+    void setEditable(bool editable);
     bool editable() const;
-    void setShowNoInformation( bool show );
+    void setShowNoInformation(bool show);
     bool showNoInformation();
-    void setDisplaySubitemsAsGroup( bool show );
+    void setDisplaySubitemsAsGroup(bool show);
     bool displaySubitemsAsGroup() const;
-    void setPriority( int prio );
+    void setPriority(int prio);
     int priority();
-    virtual void setStartTime( const QDateTime& start );
+    virtual void setStartTime(const QDateTime &start);
     QDateTime startTime() const;
-    virtual void setEndTime( const QDateTime& end );
+    virtual void setEndTime(const QDateTime &end);
     QDateTime endTime() const;
 
-    void setText( const QString& text );
+    void setText(const QString &text);
     QString text() const;
-    void setListViewText( const QString& text, int column = 0 );
-    void setListViewText( int column, const QString& text );
-    QString listViewText( int column = 0 ) const;
-    void setFont( const QFont& font );
+    void setListViewText(const QString &text, int column = 0);
+    void setListViewText(int column, const QString &text);
+    QString listViewText(int column = 0) const;
+    void setFont(const QFont &font);
     QFont font() const;
-    void setTooltipText( const QString& text );
+    void setTooltipText(const QString &text);
     QString tooltipText() const;
-    void setWhatsThisText( const QString& text );
+    void setWhatsThisText(const QString &text);
     QString whatsThisText() const;
-    void setPixmap( int column, const QPixmap& pixmap );
-    void setPixmap( const QPixmap& pixmap );
-    const QPixmap* pixmap( int column = 0 ) const;
+    void setPixmap(int column, const QPixmap &pixmap);
+    void setPixmap(const QPixmap &pixmap);
+    const QPixmap *pixmap(int column = 0) const;
 
-    void setHighlight( bool );
+    void setHighlight(bool);
     bool highlight() const;
 
     bool subitemIsCalendar() const;
-  //void setIsCalendar( bool );
-  //bool isCalendar( ) const;
+    //void setIsCalendar( bool );
+    //bool isCalendar( ) const;
 
-    void setShapes( Shape start, Shape middle, Shape end );
-    void shapes( Shape& start, Shape& middle, Shape& end ) const;
-    void setDefaultColor( const QColor& );
+    void setShapes(Shape start, Shape middle, Shape end);
+    void shapes(Shape &start, Shape &middle, Shape &end) const;
+    void setDefaultColor(const QColor &);
     QColor defaultColor() const;
-    void setColors( const QColor& start, const QColor& middle,
-                    const QColor& end );
-    void colors( QColor& start, QColor& middle, QColor& end ) const;
-    void setDefaultHighlightColor( const QColor& );
+    void setColors(const QColor &start, const QColor &middle,
+                   const QColor &end);
+    void colors(QColor &start, QColor &middle, QColor &end) const;
+    void setDefaultHighlightColor(const QColor &);
     QColor defaultHighlightColor() const;
-    void setHighlightColors( const QColor& start, const QColor& middle,
-                             const QColor& end );
-    void highlightColors( QColor& start, QColor& middle, QColor& end ) const;
-    void setTextColor( const QColor& color );
+    void setHighlightColors(const QColor &start, const QColor &middle,
+                            const QColor &end);
+    void highlightColors(QColor &start, QColor &middle, QColor &end) const;
+    void setTextColor(const QColor &color);
     QColor textColor() const;
 
     void setProgress(int percent);
     void setFloatStartTime(const QDateTime &start);
     void setFloatEndTime(const QDateTime &end);
 
-    KDGanttViewItem* firstChild() const;
-    KDGanttViewItem* nextSibling() const;
-    KDGanttViewItem* parent() const;
-    KDGanttViewItem* itemAbove();
-    KDGanttViewItem* itemBelow( bool includeDisabled = true );
-    KDGanttViewItem* getChildByName( const QString& name );
+    KDGanttViewItem *firstChild() const;
+    KDGanttViewItem *nextSibling() const;
+    KDGanttViewItem *parent() const;
+    KDGanttViewItem *itemAbove();
+    KDGanttViewItem *itemBelow(bool includeDisabled = true);
+    KDGanttViewItem *getChildByName(const QString &name);
     QString name() const;
-    static KDGanttViewItem* find( const QString& name );
+    static KDGanttViewItem *find(const QString &name);
 
-    void createNode( QDomDocument& doc,
-                     QDomElement& parentElement );
-    static KDGanttViewItem* createFromDomElement( KDGanttView* view,
-                                                  QDomElement& element );
-    static KDGanttViewItem* createFromDomElement( KDGanttView* view,
-                                                  KDGanttViewItem* previous,
-                                                  QDomElement& element );
-    static KDGanttViewItem* createFromDomElement( KDGanttViewItem* parent,
-                                                  QDomElement& element );
-    static KDGanttViewItem* createFromDomElement( KDGanttViewItem* parent,
-                                                  KDGanttViewItem* previous,
-                                                  QDomElement& element );
+    void createNode(QDomDocument &doc,
+                    QDomElement &parentElement);
+    static KDGanttViewItem *createFromDomElement(KDGanttView *view,
+            QDomElement &element);
+    static KDGanttViewItem *createFromDomElement(KDGanttView *view,
+            KDGanttViewItem *previous,
+            QDomElement &element);
+    static KDGanttViewItem *createFromDomElement(KDGanttViewItem *parent,
+            QDomElement &element);
+    static KDGanttViewItem *createFromDomElement(KDGanttViewItem *parent,
+            KDGanttViewItem *previous,
+            QDomElement &element);
 
-    void setMoveable( bool m );
+    void setMoveable(bool m);
     bool isMoveable() const;
-    void setResizeable( bool r );
+    void setResizeable(bool r);
     bool isResizeable() const;
 
 private:
@@ -202,37 +201,37 @@ private:
     friend class KDGanttViewItemDrag;
     friend class itemAttributeDialog;
 
-    static QString shapeToString( Shape shape );
-    static Shape stringToShape( const QString& string );
-    static QString typeToString( Type type );
+    static QString shapeToString(Shape shape);
+    static Shape stringToShape(const QString &string);
+    static QString typeToString(Type type);
 
     Type myType;
     void initColorAndShapes(Type t);
     void resetSubitemVisibility();
-    virtual void showItem( bool show = true, int coordY = 0 );
+    virtual void showItem(bool show = true, int coordY = 0);
     virtual void initItem();
     int computeHeight();
     void showSubItems();
-    void showSubitemTree( int );
+    void showSubitemTree(int);
     void hideSubtree();
-    void setCallListViewOnSetOpen( bool call );
+    void setCallListViewOnSetOpen(bool call);
     bool showNoCross();
-    void createShape(KDCanvasPolygonItem* &,KDCanvasPolygonItem* &, Shape);
-    void loadFromDomElement( QDomElement& element );
+    void createShape(KDCanvasPolygonItem *&, KDCanvasPolygonItem *&, Shape);
+    void loadFromDomElement(QDomElement &element);
 
     //QFont myFont;
-    QString myToolTipText,myWhatsThisText;
-    void paintBranches ( QPainter * p, const QColorGroup & cg, int w, int y, int h );
+    QString myToolTipText, myWhatsThisText;
+    void paintBranches(QPainter *p, const QColorGroup &cg, int w, int y, int h);
     bool _displaySubitemsAsGroup;
     bool _showNoInformation;
     bool _enabled;
     bool _callListViewOnSetOpen;
-    Shape myStartShape,myMiddleShape,myEndShape;
-    QColor myStartColor,myMiddleColor,myEndColor;
-    QColor myStartColorHL,myMiddleColorHL,myEndColorHL;
-    QColor myDefaultColor,myDefaultColorHL;
+    Shape myStartShape, myMiddleShape, myEndShape;
+    QColor myStartColor, myMiddleColor, myEndColor;
+    QColor myStartColorHL, myMiddleColorHL, myEndColorHL;
+    QColor myDefaultColor, myDefaultColorHL;
     QColor myTextColor;
-    bool colorDefined,colorHLDefined;
+    bool colorDefined, colorHLDefined;
     QPoint getTaskLinkStartCoord(QPoint);
     QPoint getTaskLinkEndCoord();
     QPoint middleLeft();

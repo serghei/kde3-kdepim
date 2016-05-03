@@ -31,16 +31,15 @@
 
 namespace Akregator {
 
-class Tag::TagPrivate : public Shared
-{
-    public:
+class Tag::TagPrivate : public Shared {
+public:
     QString id;
     QString name;
     QString scheme;
     QString icon;
 
-    QValueList<TagSet*> tagSets;
-    bool operator==(const TagPrivate& other) const
+    QValueList<TagSet *> tagSets;
+    bool operator==(const TagPrivate &other) const
     {
         return id == other.id; // name is ignored!
     }
@@ -49,7 +48,7 @@ class Tag::TagPrivate : public Shared
 Tag::Tag() : d(new TagPrivate)
 {}
 
-Tag::Tag(const QString& id, const QString& name, const QString& scheme) : d(new TagPrivate)
+Tag::Tag(const QString &id, const QString &name, const QString &scheme) : d(new TagPrivate)
 {
     d->id = id;
     d->name = name.isNull() ? id : name;
@@ -57,33 +56,33 @@ Tag::Tag(const QString& id, const QString& name, const QString& scheme) : d(new 
     d->icon = "rss_tag";
 }
 
-Tag Tag::fromCategory(const QString& term, const QString& scheme, const QString& name)
+Tag Tag::fromCategory(const QString &term, const QString &scheme, const QString &name)
 {
     Tag tag(scheme + "/" + term, name, scheme);
     return tag;
 }
 
 
-Tag::Tag(const Tag& other) : d(0)
+Tag::Tag(const Tag &other) : d(0)
 {
     *this = other;
 }
 
 Tag::~Tag()
 {
-    if (d->deref())
+    if(d->deref())
     {
         delete d;
         d = 0;
     }
 }
 
-Tag& Tag::operator=(const Tag& other)
+Tag &Tag::operator=(const Tag &other)
 {
-    if (this != &other)
+    if(this != &other)
     {
         other.d->ref();
-        if (d && d->deref())
+        if(d && d->deref())
             delete d;
         d = other.d;
     }
@@ -91,12 +90,12 @@ Tag& Tag::operator=(const Tag& other)
 }
 
 
-bool Tag::operator==(const Tag& other) const
+bool Tag::operator==(const Tag &other) const
 {
     return *(other.d) == *d;
 }
 
-bool Tag::operator<(const Tag& other) const
+bool Tag::operator<(const Tag &other) const
 {
     return (name() < other.name()) || (name() == other.name() && id() < other.id());
 }
@@ -121,33 +120,33 @@ QString Tag::icon() const
     return d->icon;
 }
 
-void Tag::setIcon(const QString& icon)
+void Tag::setIcon(const QString &icon)
 {
-    if (icon != d->icon)
+    if(icon != d->icon)
     {
         d->icon = icon;
-        for (QValueList<TagSet*>::ConstIterator it = d->tagSets.begin(); it != d->tagSets.end(); ++it)
+        for(QValueList<TagSet *>::ConstIterator it = d->tagSets.begin(); it != d->tagSets.end(); ++it)
             (*it)->tagUpdated(*this);
     }
 }
 
 
-void Tag::setName(const QString& name)
+void Tag::setName(const QString &name)
 {
-    if (name != d->name)
+    if(name != d->name)
     {
         d->name = name;
-        for (QValueList<TagSet*>::ConstIterator it = d->tagSets.begin(); it != d->tagSets.end(); ++it)
+        for(QValueList<TagSet *>::ConstIterator it = d->tagSets.begin(); it != d->tagSets.end(); ++it)
             (*it)->tagUpdated(*this);
     }
 }
 
-void Tag::addedToTagSet(TagSet* tagSet) const
+void Tag::addedToTagSet(TagSet *tagSet) const
 {
     d->tagSets.append(tagSet);
 }
 
-void Tag::removedFromTagSet(TagSet* tagSet) const
+void Tag::removedFromTagSet(TagSet *tagSet) const
 {
     d->tagSets.remove(tagSet);
 }

@@ -28,19 +28,21 @@
 #include <mimelib/text.h>
 
 
-const char* const DwText::sClassName = "DwText";
+const char *const DwText::sClassName = "DwText";
 
 
-DwText* (*DwText::sNewText)(const DwString&, DwMessageComponent*) = 0;
+DwText *(*DwText::sNewText)(const DwString &, DwMessageComponent *) = 0;
 
 
-DwText* DwText::NewText(const DwString& aStr, DwMessageComponent* aParent)
+DwText *DwText::NewText(const DwString &aStr, DwMessageComponent *aParent)
 {
-    DwText* text;
-    if (sNewText) {
+    DwText *text;
+    if(sNewText)
+    {
         text = sNewText(aStr, aParent);
     }
-    else {
+    else
+    {
         text = new DwText(aStr, aParent);
     }
     return text;
@@ -54,16 +56,16 @@ DwText::DwText()
 }
 
 
-DwText::DwText(const DwText& aText)
-  : DwFieldBody(aText)
+DwText::DwText(const DwText &aText)
+    : DwFieldBody(aText)
 {
     mClassId = kCidText;
     mClassName = sClassName;
 }
 
 
-DwText::DwText(const DwString& aStr, DwMessageComponent* aParent)
-  : DwFieldBody(aStr, aParent)
+DwText::DwText(const DwString &aStr, DwMessageComponent *aParent)
+    : DwFieldBody(aStr, aParent)
 {
     mClassId = kCidText;
     mClassName = sClassName;
@@ -75,9 +77,9 @@ DwText::~DwText()
 }
 
 
-const DwText& DwText::operator = (const DwText& aText)
+const DwText &DwText::operator = (const DwText &aText)
 {
-    if (this == &aText) return *this;
+    if(this == &aText) return *this;
     DwFieldBody::operator = (aText);
     return *this;
 }
@@ -95,31 +97,31 @@ void DwText::Assemble()
 }
 
 
-DwMessageComponent* DwText::Clone() const
+DwMessageComponent *DwText::Clone() const
 {
     return new DwText(*this);
 }
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwText::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwText::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "------------------ Debug info for DwText class -----------------\n";
+          "------------------ Debug info for DwText class -----------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwText::PrintDebugInfo(std::ostream& , int ) const {}
+void DwText::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwText::_PrintDebugInfo(std::ostream& aStrm) const
+void DwText::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwFieldBody::_PrintDebugInfo(aStrm);
 }
 #else
-void DwText::_PrintDebugInfo(std::ostream& ) const {}
+void DwText::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 

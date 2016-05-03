@@ -26,90 +26,90 @@
 
 #include <sys/stat.h>
 
-KIO::UDSEntry Stat::stat( const UrlInfo& info )
+KIO::UDSEntry Stat::stat(const UrlInfo &info)
 {
-	if( info.type() == UrlInfo::message )
-		return Stat::statMessage( info );
-	else if( info.type() == UrlInfo::directory )
-		return Stat::statDirectory( info );
-	else
-		return KIO::UDSEntry();
+    if(info.type() == UrlInfo::message)
+        return Stat::statMessage(info);
+    else if(info.type() == UrlInfo::directory)
+        return Stat::statDirectory(info);
+    else
+        return KIO::UDSEntry();
 }
 
-KIO::UDSEntry Stat::stat( ReadMBox& mbox, const UrlInfo& info )
+KIO::UDSEntry Stat::stat(ReadMBox &mbox, const UrlInfo &info)
 {
-	kdDebug() << "Stat::stat()" << endl;
-	KIO::UDSEntry entry;
-	QString url;
-	
-	if( info.type() == UrlInfo::invalid )
-		return entry;
-	else if( info.type() == UrlInfo::message )
-		mbox.searchMessage( info.id() );
+    kdDebug() << "Stat::stat()" << endl;
+    KIO::UDSEntry entry;
+    QString url;
 
-	Stat::addAtom( entry, KIO::UDS_FILE_TYPE, S_IFREG );
-        Stat::addAtom( entry, KIO::UDS_MIME_TYPE, "message/rfc822" );
-		        
-	url = QString( "mbox:%1/%2" ).arg( info.filename(), mbox.currentID() );
-	Stat::addAtom( entry, KIO::UDS_URL, url );
-	if( mbox.currentID().isEmpty() )
-		Stat::addAtom( entry, KIO::UDS_NAME, "foobar" );
-	else
-	        Stat::addAtom( entry, KIO::UDS_NAME, mbox.currentID() );
-	
+    if(info.type() == UrlInfo::invalid)
+        return entry;
+    else if(info.type() == UrlInfo::message)
+        mbox.searchMessage(info.id());
 
-	Stat::addAtom( entry, KIO::UDS_SIZE, mbox.skipMessage() );
+    Stat::addAtom(entry, KIO::UDS_FILE_TYPE, S_IFREG);
+    Stat::addAtom(entry, KIO::UDS_MIME_TYPE, "message/rfc822");
 
-	return entry;
+    url = QString("mbox:%1/%2").arg(info.filename(), mbox.currentID());
+    Stat::addAtom(entry, KIO::UDS_URL, url);
+    if(mbox.currentID().isEmpty())
+        Stat::addAtom(entry, KIO::UDS_NAME, "foobar");
+    else
+        Stat::addAtom(entry, KIO::UDS_NAME, mbox.currentID());
+
+
+    Stat::addAtom(entry, KIO::UDS_SIZE, mbox.skipMessage());
+
+    return entry;
 }
 
-KIO::UDSEntry Stat::statDirectory( const UrlInfo& info )
+KIO::UDSEntry Stat::statDirectory(const UrlInfo &info)
 {
-	kdDebug() << "statDirectory()" << endl;
-	KIO::UDSEntry entry;
+    kdDebug() << "statDirectory()" << endl;
+    KIO::UDSEntry entry;
 
-	//Specific things for a directory
-	Stat::addAtom( entry, KIO::UDS_FILE_TYPE, S_IFDIR );
-	Stat::addAtom( entry, KIO::UDS_NAME, info.filename() );
+    //Specific things for a directory
+    Stat::addAtom(entry, KIO::UDS_FILE_TYPE, S_IFDIR);
+    Stat::addAtom(entry, KIO::UDS_NAME, info.filename());
 
-	return entry;
+    return entry;
 }
 
-KIO::UDSEntry Stat::statMessage( const UrlInfo& info )
+KIO::UDSEntry Stat::statMessage(const UrlInfo &info)
 {
-	kdDebug() << "statMessage( " << info.url()  << " )" << endl;
-	KIO::UDSEntry entry;
-	QString url = QString( "mbox:%1" ).arg( info.url() );
+    kdDebug() << "statMessage( " << info.url()  << " )" << endl;
+    KIO::UDSEntry entry;
+    QString url = QString("mbox:%1").arg(info.url());
 
-	//Specific things for a message
-	Stat::addAtom( entry, KIO::UDS_FILE_TYPE, S_IFREG );
-	Stat::addAtom( entry, KIO::UDS_MIME_TYPE, "message/rfc822" );
-	
-	Stat::addAtom( entry, KIO::UDS_URL, url );
-	url = url.right( url.length() - url.findRev( "/" ) - 1 );
-	Stat::addAtom( entry, KIO::UDS_NAME, url );
+    //Specific things for a message
+    Stat::addAtom(entry, KIO::UDS_FILE_TYPE, S_IFREG);
+    Stat::addAtom(entry, KIO::UDS_MIME_TYPE, "message/rfc822");
 
-	return entry;
+    Stat::addAtom(entry, KIO::UDS_URL, url);
+    url = url.right(url.length() - url.findRev("/") - 1);
+    Stat::addAtom(entry, KIO::UDS_NAME, url);
+
+    return entry;
 }
 
-void Stat::addAtom( KIO::UDSEntry& entry, unsigned int uds, const QString& str )
+void Stat::addAtom(KIO::UDSEntry &entry, unsigned int uds, const QString &str)
 {
-	KIO::UDSAtom atom;
-	atom.m_uds = uds;
-	atom.m_str = str;
-	atom.m_long = 0;
+    KIO::UDSAtom atom;
+    atom.m_uds = uds;
+    atom.m_str = str;
+    atom.m_long = 0;
 
-	entry.append( atom );
+    entry.append(atom);
 }
 
 
-void Stat::addAtom( KIO::UDSEntry& entry, unsigned int uds, long lng )
+void Stat::addAtom(KIO::UDSEntry &entry, unsigned int uds, long lng)
 {
-	KIO::UDSAtom atom;
-	atom.m_uds = uds;
-	atom.m_str = QString::null;
-	atom.m_long = lng;
+    KIO::UDSAtom atom;
+    atom.m_uds = uds;
+    atom.m_str = QString::null;
+    atom.m_long = lng;
 
-	entry.append( atom );
+    entry.append(atom);
 }
 

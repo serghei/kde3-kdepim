@@ -22,15 +22,16 @@
 
 using namespace KOrg;
 
-AgendaView::AgendaView(Calendar * cal, QWidget * parent, const char * name) :
-    KOEventView( cal, parent, name )
+AgendaView::AgendaView(Calendar *cal, QWidget *parent, const char *name) :
+    KOEventView(cal, parent, name)
 {
-  KCal::CalendarResources *calres = dynamic_cast<KCal::CalendarResources*>( cal );
-  if ( calres ) {
-    connect( calres, SIGNAL(signalResourceAdded(ResourceCalendar *)), SLOT(resourcesChanged()) );
-    connect( calres, SIGNAL(signalResourceModified( ResourceCalendar *)), SLOT(resourcesChanged()) );
-    connect( calres, SIGNAL(signalResourceDeleted(ResourceCalendar *)), SLOT(resourcesChanged()) );
-  }
+    KCal::CalendarResources *calres = dynamic_cast<KCal::CalendarResources *>(cal);
+    if(calres)
+    {
+        connect(calres, SIGNAL(signalResourceAdded(ResourceCalendar *)), SLOT(resourcesChanged()));
+        connect(calres, SIGNAL(signalResourceModified(ResourceCalendar *)), SLOT(resourcesChanged()));
+        connect(calres, SIGNAL(signalResourceDeleted(ResourceCalendar *)), SLOT(resourcesChanged()));
+    }
 }
 
 #include "agendaview.moc"

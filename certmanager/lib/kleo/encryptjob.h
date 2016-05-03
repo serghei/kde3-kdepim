@@ -40,32 +40,32 @@
 #include <vector>
 
 namespace GpgME {
-  class Error;
-  class Key;
-  class EncryptionResult;
+class Error;
+class Key;
+class EncryptionResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous encrypters
+/**
+   @short An abstract base class for asynchronous encrypters
 
-     To use a EncryptJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the encryption with a
-     call to start(). This call might fail, in which case the
-     EncryptJob instance will have scheduled it's own destruction with
-     a call to QObject::deleteLater().
+   To use a EncryptJob, first obtain an instance from the
+   CryptoBackend implementation, connect the progress() and result()
+   signals to suitable slots and then start the encryption with a
+   call to start(). This call might fail, in which case the
+   EncryptJob instance will have scheduled it's own destruction with
+   a call to QObject::deleteLater().
 
-     After result() is emitted, the EncryptJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class EncryptJob : public Job {
+   After result() is emitted, the EncryptJob will schedule it's own
+   destruction by calling QObject::deleteLater().
+*/
+class EncryptJob : public Job {
     Q_OBJECT
-  protected:
-    EncryptJob( QObject * parent, const char * name );
-  public:
+protected:
+    EncryptJob(QObject *parent, const char *name);
+public:
     ~EncryptJob();
 
     /**
@@ -76,16 +76,16 @@ namespace Kleo {
        not be performed, but full validity assumed for all keys
        without further checks.
     */
-    virtual GpgME::Error start( const std::vector<GpgME::Key> & recipients,
-				const QByteArray & plainText, bool alwaysTrust=false ) = 0;
+    virtual GpgME::Error start(const std::vector<GpgME::Key> &recipients,
+                               const QByteArray &plainText, bool alwaysTrust = false) = 0;
 
-    virtual GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
-					  const QByteArray & plainText,
-					  bool alwaysTrust, QByteArray & cipherText ) = 0;
+    virtual GpgME::EncryptionResult exec(const std::vector<GpgME::Key> &recipients,
+                                         const QByteArray &plainText,
+                                         bool alwaysTrust, QByteArray &cipherText) = 0;
 
-  signals:
-    void result( const GpgME::EncryptionResult & result, const QByteArray & cipherText );
-  };
+signals:
+    void result(const GpgME::EncryptionResult &result, const QByteArray &cipherText);
+};
 
 }
 

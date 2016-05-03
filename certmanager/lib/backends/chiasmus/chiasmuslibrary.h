@@ -41,26 +41,26 @@ class KLibrary;
 
 namespace Kleo {
 
-  /**
-     @short small helper class to load xia.o through xia.so and make
-     the functionality available.
-  */
-  class ChiasmusLibrary {
+/**
+   @short small helper class to load xia.o through xia.so and make
+   the functionality available.
+*/
+class ChiasmusLibrary {
     ChiasmusLibrary();
     ~ChiasmusLibrary();
-  public:
-    static const ChiasmusLibrary * instance();
+public:
+    static const ChiasmusLibrary *instance();
     static void deleteInstance();
 
-    int perform( const QValueVector<QCString> & args ) const;
-  private:
-    typedef int ( *main_func )( int, char** );
-    main_func chiasmus( QString * reason=0 ) const;
+    int perform(const QValueVector<QCString> &args) const;
+private:
+    typedef int (*main_func)(int, char **);
+    main_func chiasmus(QString *reason = 0) const;
 
-  private:
-    static ChiasmusLibrary * self;
-    mutable KLibrary * mXiaLibrary;
-  };
+private:
+    static ChiasmusLibrary *self;
+    mutable KLibrary *mXiaLibrary;
+};
 
 }
 

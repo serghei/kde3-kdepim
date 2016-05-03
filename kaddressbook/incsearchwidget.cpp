@@ -37,60 +37,61 @@
 
 #include "incsearchwidget.h"
 
-IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
-    : QWidget( parent, name )
+IncSearchWidget::IncSearchWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() );
+    QHBoxLayout *layout = new QHBoxLayout(this, 2, KDialog::spacingHint());
 
-  QToolButton *button = new QToolButton( this );
-  button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );
-  button->setPixmap( SmallIcon( QApplication::reverseLayout() ? "clear_left" : "locationbar_erase" ) );
-  button->setAccel( QKeySequence( CTRL+ALT+Key_S ) );
-  button->setAutoRaise( true );
-  QToolTip::add( button, i18n( "Reset" ) );
-  layout->addWidget( button );
+    QToolButton *button = new QToolButton(this);
+    button->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    button->setPixmap(SmallIcon(QApplication::reverseLayout() ? "clear_left" : "locationbar_erase"));
+    button->setAccel(QKeySequence(CTRL + ALT + Key_S));
+    button->setAutoRaise(true);
+    QToolTip::add(button, i18n("Reset"));
+    layout->addWidget(button);
 
-  QLabel *label = new QLabel( i18n( "Search:" ), this, "kde toolbar widget" );
-  label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
-  layout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Search:"), this, "kde toolbar widget");
+    label->setAlignment(QLabel::AlignVCenter | QLabel::AlignRight);
+    layout->addWidget(label);
 
-  mSearchText = new KLineEdit( this );
-  mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-  QWhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
-  label->setBuddy( mSearchText );
-  layout->addWidget( mSearchText );
+    mSearchText = new KLineEdit(this);
+    mSearchText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    QWhatsThis::add(mSearchText,
+                    i18n("The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection."));
+    label->setBuddy(mSearchText);
+    layout->addWidget(mSearchText);
 
-  label = new QLabel( i18n( "as in 'Search in:'", "&in:" ), this, "kde toolbar widget" );
-  label->setAlignment( QLabel::AlignVCenter | QLabel::AlignRight );
-  layout->addWidget( label );
+    label = new QLabel(i18n("as in 'Search in:'", "&in:"), this, "kde toolbar widget");
+    label->setAlignment(QLabel::AlignVCenter | QLabel::AlignRight);
+    layout->addWidget(label);
 
-  mFieldCombo = new QComboBox( false, this );
-  layout->addWidget( mFieldCombo );
-  label->setBuddy(mFieldCombo);
+    mFieldCombo = new QComboBox(false, this);
+    layout->addWidget(mFieldCombo);
+    label->setBuddy(mFieldCombo);
 
-  QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
-  QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
+    QToolTip::add(mFieldCombo, i18n("Select incremental search field"));
+    QWhatsThis::add(mFieldCombo, i18n("Here you can choose the field, which shall be used for incremental search."));
 
-  mInputTimer = new QTimer( this );
+    mInputTimer = new QTimer(this);
 
-  connect( mInputTimer, SIGNAL( timeout() ),
-           SLOT( timeout() ) );
-  connect( mSearchText, SIGNAL( textChanged( const QString& ) ),
-           SLOT( announceDoSearch() ) );
-  connect( mSearchText, SIGNAL( returnPressed() ),
-           SLOT( announceDoSearch() ) );
-  connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
-           SLOT( announceDoSearch() ) );
-  connect( button, SIGNAL( clicked() ),
-           mSearchText, SLOT( clear() ) );
-  connect( button, SIGNAL( clicked() ),
-           SLOT( announceDoSearch() ) );
+    connect(mInputTimer, SIGNAL(timeout()),
+            SLOT(timeout()));
+    connect(mSearchText, SIGNAL(textChanged(const QString &)),
+            SLOT(announceDoSearch()));
+    connect(mSearchText, SIGNAL(returnPressed()),
+            SLOT(announceDoSearch()));
+    connect(mFieldCombo, SIGNAL(activated(const QString &)),
+            SLOT(announceDoSearch()));
+    connect(button, SIGNAL(clicked()),
+            mSearchText, SLOT(clear()));
+    connect(button, SIGNAL(clicked()),
+            SLOT(announceDoSearch()));
 
-  initFields();
+    initFields();
 
-  mSearchText->installEventFilter( this );
+    mSearchText->installEventFilter(this);
 
-  setFocusProxy( mSearchText );
+    setFocusProxy(mSearchText);
 }
 
 IncSearchWidget::~IncSearchWidget()
@@ -99,73 +100,76 @@ IncSearchWidget::~IncSearchWidget()
 
 void IncSearchWidget::announceDoSearch()
 {
-  if ( mInputTimer->isActive() )
-    mInputTimer->stop();
+    if(mInputTimer->isActive())
+        mInputTimer->stop();
 
-  mInputTimer->start( 0, true );
+    mInputTimer->start(0, true);
 }
 
 void IncSearchWidget::timeout()
 {
-  emit doSearch( mSearchText->text() );
+    emit doSearch(mSearchText->text());
 }
 
 void IncSearchWidget::initFields()
 {
-  mFieldList = KABC::Field::allFields();
+    mFieldList = KABC::Field::allFields();
 
-  mFieldCombo->clear();
-  mFieldCombo->insertItem( i18n( "Visible Fields" ) );
-  mFieldCombo->insertItem( i18n( "All Fields" ) );
+    mFieldCombo->clear();
+    mFieldCombo->insertItem(i18n("Visible Fields"));
+    mFieldCombo->insertItem(i18n("All Fields"));
 
-  KABC::Field::List::ConstIterator it;
-  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
-    mFieldCombo->insertItem( (*it)->label() );
+    KABC::Field::List::ConstIterator it;
+    for(it = mFieldList.begin(); it != mFieldList.end(); ++it)
+        mFieldCombo->insertItem((*it)->label());
 
-  announceDoSearch();
+    announceDoSearch();
 }
 
 KABC::Field::List IncSearchWidget::currentFields() const
 {
-  KABC::Field::List fieldList;
+    KABC::Field::List fieldList;
 
-  if ( mFieldCombo->currentItem() == 0 )
-    fieldList = mViewFields;
-  else if ( mFieldCombo->currentItem() > 1 )
-    fieldList.append( mFieldList[ mFieldCombo->currentItem() - 2 ] );
+    if(mFieldCombo->currentItem() == 0)
+        fieldList = mViewFields;
+    else if(mFieldCombo->currentItem() > 1)
+        fieldList.append(mFieldList[ mFieldCombo->currentItem() - 2 ]);
 
-  return fieldList;
+    return fieldList;
 }
 
-void IncSearchWidget::setCurrentItem( int pos )
+void IncSearchWidget::setCurrentItem(int pos)
 {
-  mFieldCombo->setCurrentItem( pos );
+    mFieldCombo->setCurrentItem(pos);
 }
 
 int IncSearchWidget::currentItem() const
 {
-  return mFieldCombo->currentItem();
+    return mFieldCombo->currentItem();
 }
 
-void IncSearchWidget::setViewFields( const KABC::Field::List &fields )
+void IncSearchWidget::setViewFields(const KABC::Field::List &fields)
 {
-  mViewFields = fields;
+    mViewFields = fields;
 }
 
 void IncSearchWidget::clear()
 {
-  mSearchText->clear();
+    mSearchText->clear();
 }
 
-void IncSearchWidget::keyPressEvent( QKeyEvent *event )
+void IncSearchWidget::keyPressEvent(QKeyEvent *event)
 {
-  if ( event->key() == Qt::Key_Up ) {
-    event->accept();
-    emit scrollUp();
-  } else if ( event->key() == Qt::Key_Down ) {
-    event->accept();
-    emit scrollDown();
-  }
+    if(event->key() == Qt::Key_Up)
+    {
+        event->accept();
+        emit scrollUp();
+    }
+    else if(event->key() == Qt::Key_Down)
+    {
+        event->accept();
+        emit scrollDown();
+    }
 }
 
 #include "incsearchwidget.moc"

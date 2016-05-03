@@ -36,11 +36,10 @@ namespace KMail {
   Helper class to copy/move a set of messages defined by their serial
   numbers from arbitrary folders into a common destination folder.
 */
-class MessageCopyHelper : public QObject
-{
-  Q_OBJECT
+class MessageCopyHelper : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     /**
       Creates new MessageCopyHelper object to copy the given messages
       to the specified destination folder.
@@ -49,28 +48,28 @@ class MessageCopyHelper : public QObject
       @param move If set to true, messages will be moved instead of copied
       @param parent The parent object.
     */
-    MessageCopyHelper( const QValueList<Q_UINT32> &msgs, KMFolder *dest,
-                       bool move, QObject *parent = 0 );
+    MessageCopyHelper(const QValueList<Q_UINT32> &msgs, KMFolder *dest,
+                      bool move, QObject *parent = 0);
 
     /**
       Converts a MailList into a serial number list.
     */
-    static QValueList<Q_UINT32> serNumListFromMailList( const KPIM::MailList &list );
+    static QValueList<Q_UINT32> serNumListFromMailList(const KPIM::MailList &list);
 
     /**
       Converts a KMMsgsBase* list into a serial number list.
     */
-    static QValueList<Q_UINT32> serNumListFromMsgList( QPtrList<KMMsgBase> list );
+    static QValueList<Q_UINT32> serNumListFromMsgList(QPtrList<KMMsgBase> list);
 
     /**
       Checks of any of the given messages comes from a read-only source.
     */
-    static bool inReadOnlyFolder( const QValueList<Q_UINT32> &sernums );
+    static bool inReadOnlyFolder(const QValueList<Q_UINT32> &sernums);
 
-  private slots:
-    void copyCompleted( KMCommand *cmd );
+private slots:
+    void copyCompleted(KMCommand *cmd);
 
-  private:
+private:
     QMap<QGuardedPtr<KMFolder>, int> mOpenFolders;
 };
 

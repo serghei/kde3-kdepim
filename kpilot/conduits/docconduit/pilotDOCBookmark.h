@@ -32,19 +32,19 @@
 class PilotRecord;
 
 
-class PilotDOCBookmark:public PilotRecordBase {
+class PilotDOCBookmark: public PilotRecordBase {
 public:
-	PilotDOCBookmark();
-	PilotDOCBookmark(PilotRecord * rec);
-	PilotDOCBookmark(const PilotDOCBookmark & e);
-	~PilotDOCBookmark() {};
-	PilotDOCBookmark & operator=(const PilotDOCBookmark & e);
+    PilotDOCBookmark();
+    PilotDOCBookmark(PilotRecord *rec);
+    PilotDOCBookmark(const PilotDOCBookmark &e);
+    ~PilotDOCBookmark() {};
+    PilotDOCBookmark &operator=(const PilotDOCBookmark &e);
 
-	PilotRecord *pack() const;
+    PilotRecord *pack() const;
 
 public:
-	char bookmarkName[17];
-	long int pos;
+    char bookmarkName[17];
+    long int pos;
 };
 
 

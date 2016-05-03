@@ -21,62 +21,61 @@
 #include "lzfu.h"
 #include <qbuffer.h>
 
-class KTNEFMessage::MessagePrivate
-{
+class KTNEFMessage::MessagePrivate {
 public:
-	MessagePrivate()
-	{
-		attachments_.setAutoDelete( true );
-	}
+    MessagePrivate()
+    {
+        attachments_.setAutoDelete(true);
+    }
 
-	QPtrList<KTNEFAttach> attachments_;
+    QPtrList<KTNEFAttach> attachments_;
 };
 
 KTNEFMessage::KTNEFMessage()
 {
-	d = new MessagePrivate;
+    d = new MessagePrivate;
 }
 
 KTNEFMessage::~KTNEFMessage()
 {
-	delete d;
+    delete d;
 }
 
-const QPtrList<KTNEFAttach>& KTNEFMessage::attachmentList() const
+const QPtrList<KTNEFAttach> &KTNEFMessage::attachmentList() const
 {
-	return d->attachments_;
+    return d->attachments_;
 }
 
-KTNEFAttach* KTNEFMessage::attachment( const QString& filename ) const
+KTNEFAttach *KTNEFMessage::attachment(const QString &filename) const
 {
-	QPtrListIterator<KTNEFAttach> it( d->attachments_ );
-	for ( ; it.current(); ++it )
-		if ( it.current()->name() == filename )
-			return it.current();
-	return 0;
+    QPtrListIterator<KTNEFAttach> it(d->attachments_);
+    for(; it.current(); ++it)
+        if(it.current()->name() == filename)
+            return it.current();
+    return 0;
 }
 
-void KTNEFMessage::addAttachment( KTNEFAttach *attach )
+void KTNEFMessage::addAttachment(KTNEFAttach *attach)
 {
-	d->attachments_.append( attach );
+    d->attachments_.append(attach);
 }
 
 void KTNEFMessage::clearAttachments()
 {
-	d->attachments_.clear();
+    d->attachments_.clear();
 }
 
 QString KTNEFMessage::rtfString()
 {
-	QVariant prop = property( 0x1009 );
-	if ( prop.isNull() || prop.type() != QVariant::ByteArray)
-		return QString::null;
-	else
-	{
-		QByteArray rtf;
-		QBuffer input( prop.asByteArray() ), output( rtf );
-		if ( input.open( IO_ReadOnly ) && output.open( IO_WriteOnly ) )
-			lzfu_decompress( &input, &output );
-		return QString( rtf );
-	}
+    QVariant prop = property(0x1009);
+    if(prop.isNull() || prop.type() != QVariant::ByteArray)
+        return QString::null;
+    else
+    {
+        QByteArray rtf;
+        QBuffer input(prop.asByteArray()), output(rtf);
+        if(input.open(IO_ReadOnly) && output.open(IO_WriteOnly))
+            lzfu_decompress(&input, &output);
+        return QString(rtf);
+    }
 }

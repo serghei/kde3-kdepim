@@ -45,217 +45,243 @@
 #include "searchdialog.h"
 #include "searchdialog.moc"
 
-SearchDialog::SearchDialog(Calendar *calendar,QWidget *parent)
-  : KDialogBase(Plain,i18n("Find Events"),User1|Close,User1,parent,0,false,false,
-                KGuiItem( i18n("&Find"), "find") )
+SearchDialog::SearchDialog(Calendar *calendar, QWidget *parent)
+    : KDialogBase(Plain, i18n("Find Events"), User1 | Close, User1, parent, 0, false, false,
+                  KGuiItem(i18n("&Find"), "find"))
 {
-  mCalendar = calendar;
+    mCalendar = calendar;
 
-  QFrame *topFrame = plainPage();
-  QVBoxLayout *layout = new QVBoxLayout(topFrame,0,spacingHint());
+    QFrame *topFrame = plainPage();
+    QVBoxLayout *layout = new QVBoxLayout(topFrame, 0, spacingHint());
 
-  // Search expression
-  QHBoxLayout *subLayout = new QHBoxLayout();
-  layout->addLayout(subLayout);
+    // Search expression
+    QHBoxLayout *subLayout = new QHBoxLayout();
+    layout->addLayout(subLayout);
 
-  searchEdit = new QLineEdit( "*", topFrame ); // Find all events by default
-  searchLabel = new QLabel( searchEdit, i18n("&Search for:"), topFrame );
-  subLayout->addWidget( searchLabel );
-  subLayout->addWidget( searchEdit );
-  searchEdit->setFocus();
-  connect( searchEdit, SIGNAL( textChanged( const QString & ) ),
-           this, SLOT( searchTextChanged( const QString & ) ) );
-
-
-  QHButtonGroup *itemsGroup = new QHButtonGroup( i18n("Search For"), topFrame );
-  layout->addWidget( itemsGroup );
-  mEventsCheck = new QCheckBox( i18n("&Events"), itemsGroup );
-  mTodosCheck = new QCheckBox( i18n("To-&dos"), itemsGroup );
-  mJournalsCheck = new QCheckBox( i18n("&Journal entries"), itemsGroup );
-  mEventsCheck->setChecked( true );
-  mTodosCheck->setChecked( true );
-
-  // Date range
-  QGroupBox *rangeGroup = new QGroupBox( 1, Horizontal, i18n( "Date Range" ),
-                                        topFrame );
-  layout->addWidget( rangeGroup );
-
-  QWidget *rangeWidget = new QWidget( rangeGroup );
-  QHBoxLayout *rangeLayout = new QHBoxLayout( rangeWidget, 0, spacingHint() );
-
-  mStartDate = new KDateEdit( rangeWidget );
-  rangeLayout->addWidget( new QLabel( mStartDate, i18n("Fr&om:"), rangeWidget ) );
-  rangeLayout->addWidget( mStartDate );
-
-  mEndDate = new KDateEdit( rangeWidget );
-  rangeLayout->addWidget( new QLabel( mEndDate, i18n("&To:"), rangeWidget ) );
-  mEndDate->setDate( QDate::currentDate().addDays( 365 ) );
-  rangeLayout->addWidget( mEndDate );
-
-  mInclusiveCheck = new QCheckBox( i18n("E&vents have to be completely included"),
-                                  rangeGroup );
-  mInclusiveCheck->setChecked( false );
-  mIncludeUndatedTodos = new QCheckBox( i18n("Include to-dos &without due date"), rangeGroup );
-  mIncludeUndatedTodos->setChecked( true );
-
-  // Subjects to search
-  QHButtonGroup *subjectGroup = new QHButtonGroup( i18n("Search In"), topFrame );
-  layout->addWidget(subjectGroup);
-
-  mSummaryCheck = new QCheckBox( i18n("Su&mmaries"), subjectGroup );
-  mSummaryCheck->setChecked( true );
-  mDescriptionCheck = new QCheckBox( i18n("Desc&riptions"), subjectGroup );
-  mCategoryCheck = new QCheckBox( i18n("Cate&gories"), subjectGroup );
+    searchEdit = new QLineEdit("*", topFrame);   // Find all events by default
+    searchLabel = new QLabel(searchEdit, i18n("&Search for:"), topFrame);
+    subLayout->addWidget(searchLabel);
+    subLayout->addWidget(searchEdit);
+    searchEdit->setFocus();
+    connect(searchEdit, SIGNAL(textChanged(const QString &)),
+            this, SLOT(searchTextChanged(const QString &)));
 
 
-  // Results list view
-  listView = new KOListView( mCalendar, topFrame );
-  listView->showDates();
-  layout->addWidget( listView );
+    QHButtonGroup *itemsGroup = new QHButtonGroup(i18n("Search For"), topFrame);
+    layout->addWidget(itemsGroup);
+    mEventsCheck = new QCheckBox(i18n("&Events"), itemsGroup);
+    mTodosCheck = new QCheckBox(i18n("To-&dos"), itemsGroup);
+    mJournalsCheck = new QCheckBox(i18n("&Journal entries"), itemsGroup);
+    mEventsCheck->setChecked(true);
+    mTodosCheck->setChecked(true);
 
-  if ( KOPrefs::instance()->mCompactDialogs ) {
-    KOGlobals::fitDialogToScreen( this, true );
-  }
+    // Date range
+    QGroupBox *rangeGroup = new QGroupBox(1, Horizontal, i18n("Date Range"),
+                                          topFrame);
+    layout->addWidget(rangeGroup);
 
-  connect( this,SIGNAL(user1Clicked()),SLOT(doSearch()));
+    QWidget *rangeWidget = new QWidget(rangeGroup);
+    QHBoxLayout *rangeLayout = new QHBoxLayout(rangeWidget, 0, spacingHint());
 
-  // Propagate edit and delete event signals from event list view
-  connect( listView, SIGNAL( showIncidenceSignal( Incidence * ) ),
-          SIGNAL( showIncidenceSignal( Incidence *) ) );
-  connect( listView, SIGNAL( editIncidenceSignal( Incidence * ) ),
-          SIGNAL( editIncidenceSignal( Incidence * ) ) );
-  connect( listView, SIGNAL( deleteIncidenceSignal( Incidence * ) ),
-          SIGNAL( deleteIncidenceSignal( Incidence * ) ) );
+    mStartDate = new KDateEdit(rangeWidget);
+    rangeLayout->addWidget(new QLabel(mStartDate, i18n("Fr&om:"), rangeWidget));
+    rangeLayout->addWidget(mStartDate);
+
+    mEndDate = new KDateEdit(rangeWidget);
+    rangeLayout->addWidget(new QLabel(mEndDate, i18n("&To:"), rangeWidget));
+    mEndDate->setDate(QDate::currentDate().addDays(365));
+    rangeLayout->addWidget(mEndDate);
+
+    mInclusiveCheck = new QCheckBox(i18n("E&vents have to be completely included"),
+                                    rangeGroup);
+    mInclusiveCheck->setChecked(false);
+    mIncludeUndatedTodos = new QCheckBox(i18n("Include to-dos &without due date"), rangeGroup);
+    mIncludeUndatedTodos->setChecked(true);
+
+    // Subjects to search
+    QHButtonGroup *subjectGroup = new QHButtonGroup(i18n("Search In"), topFrame);
+    layout->addWidget(subjectGroup);
+
+    mSummaryCheck = new QCheckBox(i18n("Su&mmaries"), subjectGroup);
+    mSummaryCheck->setChecked(true);
+    mDescriptionCheck = new QCheckBox(i18n("Desc&riptions"), subjectGroup);
+    mCategoryCheck = new QCheckBox(i18n("Cate&gories"), subjectGroup);
+
+
+    // Results list view
+    listView = new KOListView(mCalendar, topFrame);
+    listView->showDates();
+    layout->addWidget(listView);
+
+    if(KOPrefs::instance()->mCompactDialogs)
+    {
+        KOGlobals::fitDialogToScreen(this, true);
+    }
+
+    connect(this, SIGNAL(user1Clicked()), SLOT(doSearch()));
+
+    // Propagate edit and delete event signals from event list view
+    connect(listView, SIGNAL(showIncidenceSignal(Incidence *)),
+            SIGNAL(showIncidenceSignal(Incidence *)));
+    connect(listView, SIGNAL(editIncidenceSignal(Incidence *)),
+            SIGNAL(editIncidenceSignal(Incidence *)));
+    connect(listView, SIGNAL(deleteIncidenceSignal(Incidence *)),
+            SIGNAL(deleteIncidenceSignal(Incidence *)));
 }
 
 SearchDialog::~SearchDialog()
 {
 }
 
-void SearchDialog::searchTextChanged( const QString &_text )
+void SearchDialog::searchTextChanged(const QString &_text)
 {
-  enableButton( KDialogBase::User1, !_text.isEmpty() );
+    enableButton(KDialogBase::User1, !_text.isEmpty());
 }
 
 void SearchDialog::doSearch()
 {
-  QRegExp re;
+    QRegExp re;
 
-  re.setWildcard( true ); // most people understand these better.
-  re.setCaseSensitive( false );
-  re.setPattern( searchEdit->text() );
-  if ( !re.isValid() ) {
-    KMessageBox::sorry( this,
-                        i18n("Invalid search expression, cannot perform "
-                            "the search. Please enter a search expression "
-                            "using the wildcard characters '*' and '?' "
-                            "where needed." ) );
-    return;
-  }
+    re.setWildcard(true);   // most people understand these better.
+    re.setCaseSensitive(false);
+    re.setPattern(searchEdit->text());
+    if(!re.isValid())
+    {
+        KMessageBox::sorry(this,
+                           i18n("Invalid search expression, cannot perform "
+                                "the search. Please enter a search expression "
+                                "using the wildcard characters '*' and '?' "
+                                "where needed."));
+        return;
+    }
 
-  search( re );
+    search(re);
 
-  listView->showIncidences( mMatchedEvents );
+    listView->showIncidences(mMatchedEvents);
 
-  if ( mMatchedEvents.count() == 0 ) {
-    KMessageBox::information( this,
-        i18n("No events were found matching your search expression."),
-        "NoSearchResults" );
-  }
+    if(mMatchedEvents.count() == 0)
+    {
+        KMessageBox::information(this,
+                                 i18n("No events were found matching your search expression."),
+                                 "NoSearchResults");
+    }
 }
 
 void SearchDialog::updateView()
 {
-  QRegExp re;
-  re.setWildcard( true ); // most people understand these better.
-  re.setCaseSensitive( false );
-  re.setPattern( searchEdit->text() );
-  if ( re.isValid() ) {
-    search( re );
-  } else {
-    mMatchedEvents.clear();
-  }
+    QRegExp re;
+    re.setWildcard(true);   // most people understand these better.
+    re.setCaseSensitive(false);
+    re.setPattern(searchEdit->text());
+    if(re.isValid())
+    {
+        search(re);
+    }
+    else
+    {
+        mMatchedEvents.clear();
+    }
 
-  listView->showIncidences( mMatchedEvents );
+    listView->showIncidences(mMatchedEvents);
 }
 
-void SearchDialog::search( const QRegExp &re )
+void SearchDialog::search(const QRegExp &re)
 {
-  QDate startDt = mStartDate->date();
-  QDate endDt = mEndDate->date();
+    QDate startDt = mStartDate->date();
+    QDate endDt = mEndDate->date();
 
-  Event::List events;
-  if (mEventsCheck->isChecked()) {
-    events = mCalendar->events( startDt, endDt, mInclusiveCheck->isChecked() );
-  }
-  Todo::List todos;
-  if (mTodosCheck->isChecked()) {
-    if ( mIncludeUndatedTodos->isChecked() ) {
-      Todo::List alltodos = mCalendar->todos();
-      Todo::List::iterator it;
-      Todo *todo;
-      for (it=alltodos.begin(); it!=alltodos.end(); ++it) {
-        todo = *it;
-        if ( (!todo->hasStartDate() && !todo->hasDueDate() ) || // undated
-             ( todo->hasStartDate() && (todo->dtStart()>=startDt) && (todo->dtStart()<=endDt) ) || // start dt in range
-             ( todo->hasDueDate() && (todo->dtDue().date()>=startDt) && (todo->dtDue()<=endDt) ) || // due dt in range
-             ( todo->hasCompletedDate() && (todo->completed().date()>=startDt) && (todo->completed()<=endDt) ) ) { // completed dt in range
-          todos.append( todo );
+    Event::List events;
+    if(mEventsCheck->isChecked())
+    {
+        events = mCalendar->events(startDt, endDt, mInclusiveCheck->isChecked());
+    }
+    Todo::List todos;
+    if(mTodosCheck->isChecked())
+    {
+        if(mIncludeUndatedTodos->isChecked())
+        {
+            Todo::List alltodos = mCalendar->todos();
+            Todo::List::iterator it;
+            Todo *todo;
+            for(it = alltodos.begin(); it != alltodos.end(); ++it)
+            {
+                todo = *it;
+                if((!todo->hasStartDate() && !todo->hasDueDate()) ||    // undated
+                        (todo->hasStartDate() && (todo->dtStart() >= startDt) && (todo->dtStart() <= endDt)) ||   // start dt in range
+                        (todo->hasDueDate() && (todo->dtDue().date() >= startDt) && (todo->dtDue() <= endDt)) ||   // due dt in range
+                        (todo->hasCompletedDate() && (todo->completed().date() >= startDt) && (todo->completed() <= endDt)))    // completed dt in range
+                {
+                    todos.append(todo);
+                }
+            }
         }
-      }
-    } else {
-      QDate dt = startDt;
-      while ( dt <= endDt ) {
-        todos += mCalendar->todos( dt );
-        dt = dt.addDays( 1 );
-      }
+        else
+        {
+            QDate dt = startDt;
+            while(dt <= endDt)
+            {
+                todos += mCalendar->todos(dt);
+                dt = dt.addDays(1);
+            }
+        }
     }
-  }
 
-  Journal::List journals;
-  if (mJournalsCheck->isChecked()) {
-    QDate dt = startDt;
-    while ( dt <= endDt ) {
-      journals += mCalendar->journals( dt );
-      dt = dt.addDays( 1 );
+    Journal::List journals;
+    if(mJournalsCheck->isChecked())
+    {
+        QDate dt = startDt;
+        while(dt <= endDt)
+        {
+            journals += mCalendar->journals(dt);
+            dt = dt.addDays(1);
+        }
     }
-  }
 
-  Incidence::List allIncidences = Calendar::mergeIncidenceList( events, todos, journals );
+    Incidence::List allIncidences = Calendar::mergeIncidenceList(events, todos, journals);
 
-  mMatchedEvents.clear();
-  Incidence::List::ConstIterator it;
-  for( it = allIncidences.begin(); it != allIncidences.end(); ++it ) {
-    Incidence *ev = *it;
-    if ( mSummaryCheck->isChecked() ) {
+    mMatchedEvents.clear();
+    Incidence::List::ConstIterator it;
+    for(it = allIncidences.begin(); it != allIncidences.end(); ++it)
+    {
+        Incidence *ev = *it;
+        if(mSummaryCheck->isChecked())
+        {
 #if QT_VERSION >= 300
-      if ( re.search( ev->summary() ) != -1 ) {
+            if(re.search(ev->summary()) != -1)
+            {
 #else
-      if ( re.match( ev->summary() ) != -1 ) {
+            if(re.match(ev->summary()) != -1)
+            {
 #endif
-        mMatchedEvents.append( ev );
-        continue;
-      }
-    }
-    if ( mDescriptionCheck->isChecked() ) {
+                mMatchedEvents.append(ev);
+                continue;
+            }
+        }
+        if(mDescriptionCheck->isChecked())
+        {
 #if QT_VERSION >= 300
-      if ( re.search( ev->description() ) != -1 ) {
+            if(re.search(ev->description()) != -1)
+            {
 #else
-      if ( re.match( ev->description() ) != -1 ) {
+            if(re.match(ev->description()) != -1)
+            {
 #endif
-        mMatchedEvents.append( ev );
-        continue;
-      }
-    }
-    if ( mCategoryCheck->isChecked() ) {
+                mMatchedEvents.append(ev);
+                continue;
+            }
+        }
+        if(mCategoryCheck->isChecked())
+        {
 #if QT_VERSION >= 300
-      if ( re.search( ev->categoriesStr() ) != -1 ) {
+            if(re.search(ev->categoriesStr()) != -1)
+            {
 #else
-      if ( re.match( ev->categoriesStr() ) != -1 ) {
+            if(re.match(ev->categoriesStr()) != -1)
+            {
 #endif
-        mMatchedEvents.append( ev );
-        continue;
-      }
+                mMatchedEvents.append(ev);
+                continue;
+            }
+        }
     }
-  }
 }

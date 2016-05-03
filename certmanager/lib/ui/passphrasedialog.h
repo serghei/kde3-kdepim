@@ -53,38 +53,38 @@
 
 namespace Kleo {
 
-  class PassphraseDialog : public KDialogBase {
+class PassphraseDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    PassphraseDialog( const QString & description,
-		      const QString & caption=QString::null,
-		      QWidget * parent=0, const char * name=0,
-                      bool modal=true );
+public:
+    PassphraseDialog(const QString &description,
+                     const QString &caption = QString::null,
+                     QWidget *parent = 0, const char *name = 0,
+                     bool modal = true);
     ~PassphraseDialog();
 
-    const char * passphrase() const;
+    const char *passphrase() const;
 
-  signals:
+signals:
     /** emitted when the user clicks Ok. \a pass is never NULL.
-	\c pass only valid inside slots connected to this signal.
+    \c pass only valid inside slots connected to this signal.
      */
-    void finished( const char * pass );
+    void finished(const char *pass);
     /** emitted when the user clicks Cancel. */
     void canceled();
 
-  protected slots:
+protected slots:
     /*! \reimp */
     void slotOk();
     /*! \reimp */
     void slotCancel();
 
-  private:
+private:
     class Private;
-    Private * d;
-  protected:
+    Private *d;
+protected:
     /*! \reimp */
-    void virtual_hook( int, void* );
-  };
+    void virtual_hook(int, void *);
+};
 
 } // namespace Kleo
 

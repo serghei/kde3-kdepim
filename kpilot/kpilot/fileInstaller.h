@@ -39,44 +39,46 @@
 class QStringList;
 class QString;
 
-class FileInstaller : public QObject
-{
-	Q_OBJECT
+class FileInstaller : public QObject {
+    Q_OBJECT
 public:
-	FileInstaller();
-	virtual ~FileInstaller();
+    FileInstaller();
+    virtual ~FileInstaller();
 
-	void clearPending();
+    void clearPending();
 
-	void addFiles( const QStringList&, QWidget* w );
-	void addFile( const QString&, QWidget* w );
+    void addFiles(const QStringList &, QWidget *w);
+    void addFile(const QString &, QWidget *w);
 
     void deleteFile(const QString &);
     void deleteFiles(const QStringList &);
 
-	/**
-	* Returns information about this installer. Note particularly
-	* that fileNames() returns only filenames, not paths. In particular,
-	* you'll need to prepend dir()+"/" to get pathnames.
-	*/
-	const QString &dir() const { return fDirName; } ;
-	const QStringList fileNames() const ;
+    /**
+    * Returns information about this installer. Note particularly
+    * that fileNames() returns only filenames, not paths. In particular,
+    * you'll need to prepend dir()+"/" to get pathnames.
+    */
+    const QString &dir() const
+    {
+        return fDirName;
+    } ;
+    const QStringList fileNames() const ;
 
 
 
 protected:
-	virtual bool runCopy( const QString &src, QWidget*w );
+    virtual bool runCopy(const QString &src, QWidget *w);
 
 public slots:
-	void copyCompleted();
-	void setEnabled(bool);
+    void copyCompleted();
+    void setEnabled(bool);
 
 signals:
-	void filesChanged();
+    void filesChanged();
 private:
-	QString fDirName;
-	int fPendingCopies;
-	bool enabled;
+    QString fDirName;
+    int fPendingCopies;
+    bool enabled;
 } ;
 
 #endif

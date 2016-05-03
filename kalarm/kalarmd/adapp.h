@@ -28,15 +28,14 @@
 class AlarmDaemon;
 
 
-class AlarmDaemonApp : public KUniqueApplication
-{
-		Q_OBJECT
-	public:
-		AlarmDaemonApp();
-		virtual int  newInstance();
+class AlarmDaemonApp : public KUniqueApplication {
+    Q_OBJECT
+public:
+    AlarmDaemonApp();
+    virtual int  newInstance();
 
-	private:
-		AlarmDaemon* mAd;
+private:
+    AlarmDaemon *mAd;
 };
 
 #endif // ADAPP_H

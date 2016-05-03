@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -37,9 +37,11 @@ int main()
     DwString buffer = "";
     DwString line;
     std::ifstream istrm("exampl01.txt");
-    while (DwTrue) {
+    while(DwTrue)
+    {
         getline(istrm, line);
-        if (istrm.eof()) {
+        if(istrm.eof())
+        {
             break;
         }
         buffer += line + DW_EOL;
@@ -71,7 +73,7 @@ int main()
     msg.SetBody(buffer);
 
     // Write it to a file
-	
+
     std::ofstream ostrm("exampl01.out");
     ostrm << msg.AsString();
 

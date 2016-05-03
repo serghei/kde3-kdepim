@@ -56,8 +56,8 @@
 
 */
 
-KDGanttSizingControl::KDGanttSizingControl( QWidget* parent, const char* name, WFlags f )
-    :QWidget( parent, name, f ), _isMinimized( false )
+KDGanttSizingControl::KDGanttSizingControl(QWidget *parent, const char *name, WFlags f)
+    : QWidget(parent, name, f), _isMinimized(false)
 {
 }
 
@@ -70,13 +70,13 @@ KDGanttSizingControl::KDGanttSizingControl( QWidget* parent, const char* name, W
   \sa minimize()
 */
 
-void KDGanttSizingControl::restore( bool restore )
+void KDGanttSizingControl::restore(bool restore)
 {
     _isMinimized = !restore;
-    if ( restore )
-        emit restored( this );
+    if(restore)
+        emit restored(this);
     else
-        emit minimized( this );
+        emit minimized(this);
 }
 
 
@@ -91,13 +91,13 @@ void KDGanttSizingControl::restore( bool restore )
 
 */
 
-void KDGanttSizingControl::minimize( bool minimize )
+void KDGanttSizingControl::minimize(bool minimize)
 {
     _isMinimized = minimize;
-    if ( minimize )
-        emit minimized( this );
+    if(minimize)
+        emit minimized(this);
     else
-        emit restored( this );
+        emit restored(this);
 }
 
 

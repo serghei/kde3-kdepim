@@ -23,30 +23,30 @@
 
 #include <qvbox.h>
 
-namespace KParts { class Part; }
+namespace KParts {
+class Part;
+}
 
-namespace Kontact
-{
+namespace Kontact {
 
 class Core;
 class Plugin;
 
-class SidePaneBase : public QVBox
-{
+class SidePaneBase : public QVBox {
     Q_OBJECT
-  public:
-    SidePaneBase( Core *core, QWidget *parent, const char *name = 0 );
+public:
+    SidePaneBase(Core *core, QWidget *parent, const char *name = 0);
     virtual ~SidePaneBase();
 
-    void setActionCollection( KActionCollection *actionCollection );
+    void setActionCollection(KActionCollection *actionCollection);
     KActionCollection *actionCollection() const;
 
-    virtual const QPtrList<KAction> & actions() = 0;
+    virtual const QPtrList<KAction> &actions() = 0;
 
-  signals:
-    void pluginSelected( Kontact::Plugin* );
+signals:
+    void pluginSelected(Kontact::Plugin *);
 
-  public slots:
+public slots:
     /**
       This method is called by the core whenever the count
       of plugins has changed.
@@ -57,20 +57,20 @@ class SidePaneBase : public QVBox
       Select the current plugin without emmiting a signal.
       This is used to sync with the core.
      */
-    virtual void selectPlugin( Kontact::Plugin* ) = 0;
+    virtual void selectPlugin(Kontact::Plugin *) = 0;
 
     /**
       This is an overloaded member function. It behaves essentially like the
       above function.
      */
-    virtual void selectPlugin( const QString &name ) = 0;
+    virtual void selectPlugin(const QString &name) = 0;
 
-    virtual void indicateForegrunding( Kontact::Plugin* ) = 0;
-  protected:
-    Core* core() const;
+    virtual void indicateForegrunding(Kontact::Plugin *) = 0;
+protected:
+    Core *core() const;
 
-  private:
-    Core* mCore;
+private:
+    Core *mCore;
     KActionCollection *mActionCollection;
 };
 

@@ -40,20 +40,19 @@
 
 namespace Akregator {
 
-class ProgressManager::ProgressManagerPrivate
-{
-    public:
-        FeedList* feedList;
-        QMap<Feed*, ProgressItemHandler*> handlers;
-    
+class ProgressManager::ProgressManagerPrivate {
+public:
+    FeedList *feedList;
+    QMap<Feed *, ProgressItemHandler *> handlers;
+
 };
 
 static KStaticDeleter<ProgressManager> progressmanagersd;
-ProgressManager* ProgressManager::m_self = 0;
+ProgressManager *ProgressManager::m_self = 0;
 
-ProgressManager* ProgressManager::self()
+ProgressManager *ProgressManager::self()
 {
-    if (!m_self)
+    if(!m_self)
         m_self = progressmanagersd.setObject(m_self, new ProgressManager);
     return m_self;
 }
@@ -65,118 +64,118 @@ ProgressManager::ProgressManager() : d(new ProgressManagerPrivate)
 
 ProgressManager::~ProgressManager()
 {
-    delete d; 
+    delete d;
     d = 0;
 }
 
-void ProgressManager::setFeedList(FeedList* feedList)
+void ProgressManager::setFeedList(FeedList *feedList)
 {
-    if (feedList == d->feedList)
+    if(feedList == d->feedList)
         return;
 
-    if (d->feedList != 0)
+    if(d->feedList != 0)
     {
-        for (QMap<Feed*, ProgressItemHandler*>::ConstIterator it = d->handlers.begin(); it != d->handlers.end(); ++it)
+        for(QMap<Feed *, ProgressItemHandler *>::ConstIterator it = d->handlers.begin(); it != d->handlers.end(); ++it)
             delete *it;
         d->handlers.clear();
-        
-        disconnect(d->feedList, SIGNAL(signalNodeAdded(TreeNode*)), this, SLOT(slotNodeAdded(TreeNode*)));
-        disconnect(d->feedList, SIGNAL(signalNodeRemoved(TreeNode*)), this, SLOT(slotNodeRemoved(TreeNode*)));
+
+        disconnect(d->feedList, SIGNAL(signalNodeAdded(TreeNode *)), this, SLOT(slotNodeAdded(TreeNode *)));
+        disconnect(d->feedList, SIGNAL(signalNodeRemoved(TreeNode *)), this, SLOT(slotNodeRemoved(TreeNode *)));
     }
 
     d->feedList = feedList;
-    
-    if (feedList != 0)
+
+    if(feedList != 0)
     {
-        QValueList<TreeNode*> list = feedList->asFlatList();
-    
-        for (QValueList<TreeNode*>::ConstIterator it = list.begin(); it != list.end(); ++it)
+        QValueList<TreeNode *> list = feedList->asFlatList();
+
+        for(QValueList<TreeNode *>::ConstIterator it = list.begin(); it != list.end(); ++it)
             slotNodeAdded(*it);
-        connect(feedList, SIGNAL(signalNodeAdded(TreeNode*)), this, SLOT(slotNodeAdded(TreeNode*)));
-        connect(feedList, SIGNAL(signalNodeRemoved(TreeNode*)), this, SLOT(slotNodeRemoved(TreeNode*)));
-    }
-}
-     
-void ProgressManager::slotNodeAdded(TreeNode* node)
-{
-    Feed* feed = dynamic_cast<Feed*>(node);
-    if (feed)
-    {
-        if (!d->handlers.contains(feed))
-        d->handlers[feed] = new ProgressItemHandler(feed);
-        connect(feed, SIGNAL(signalDestroyed(TreeNode*)), this, SLOT(slotNodeDestroyed(TreeNode*)));
+        connect(feedList, SIGNAL(signalNodeAdded(TreeNode *)), this, SLOT(slotNodeAdded(TreeNode *)));
+        connect(feedList, SIGNAL(signalNodeRemoved(TreeNode *)), this, SLOT(slotNodeRemoved(TreeNode *)));
     }
 }
 
-void ProgressManager::slotNodeRemoved(TreeNode* node)
+void ProgressManager::slotNodeAdded(TreeNode *node)
 {
-    Feed* feed = dynamic_cast<Feed*>(node);
-    if (feed)
+    Feed *feed = dynamic_cast<Feed *>(node);
+    if(feed)
     {
-        disconnect(feed, SIGNAL(signalDestroyed(TreeNode*)), this, SLOT(slotNodeDestroyed(TreeNode*)));
+        if(!d->handlers.contains(feed))
+            d->handlers[feed] = new ProgressItemHandler(feed);
+        connect(feed, SIGNAL(signalDestroyed(TreeNode *)), this, SLOT(slotNodeDestroyed(TreeNode *)));
+    }
+}
+
+void ProgressManager::slotNodeRemoved(TreeNode *node)
+{
+    Feed *feed = dynamic_cast<Feed *>(node);
+    if(feed)
+    {
+        disconnect(feed, SIGNAL(signalDestroyed(TreeNode *)), this, SLOT(slotNodeDestroyed(TreeNode *)));
         delete d->handlers[feed];
         d->handlers.remove(feed);
     }
 }
 
-void ProgressManager::slotNodeDestroyed(TreeNode* node)
+void ProgressManager::slotNodeDestroyed(TreeNode *node)
 {
-    Feed* feed = dynamic_cast<Feed*>(node);
-    if (feed)
+    Feed *feed = dynamic_cast<Feed *>(node);
+    if(feed)
     {
         delete d->handlers[feed];
         d->handlers.remove(feed);
     }
 }
 
-class ProgressItemHandler::ProgressItemHandlerPrivate
-{
-    public:
+class ProgressItemHandler::ProgressItemHandlerPrivate {
+public:
 
-        Feed* feed;
-        KPIM::ProgressItem* progressItem;
+    Feed *feed;
+    KPIM::ProgressItem *progressItem;
 };
 
-ProgressItemHandler::ProgressItemHandler(Feed* feed) : d(new ProgressItemHandlerPrivate)
+ProgressItemHandler::ProgressItemHandler(Feed *feed) : d(new ProgressItemHandlerPrivate)
 {
     d->feed = feed;
     d->progressItem = 0;
-    
-    connect(feed, SIGNAL(fetchStarted(Feed*)), this, SLOT(slotFetchStarted()));
-    connect(feed, SIGNAL(fetched(Feed*)), this, SLOT(slotFetchCompleted()));
-    connect(feed, SIGNAL(fetchError(Feed*)), this, SLOT(slotFetchError()));
-    connect(feed, SIGNAL(fetchAborted(Feed*)), this, SLOT(slotFetchAborted()));
+
+    connect(feed, SIGNAL(fetchStarted(Feed *)), this, SLOT(slotFetchStarted()));
+    connect(feed, SIGNAL(fetched(Feed *)), this, SLOT(slotFetchCompleted()));
+    connect(feed, SIGNAL(fetchError(Feed *)), this, SLOT(slotFetchError()));
+    connect(feed, SIGNAL(fetchAborted(Feed *)), this, SLOT(slotFetchAborted()));
 }
 
 ProgressItemHandler::~ProgressItemHandler()
 {
-    if (d->progressItem)
+    if(d->progressItem)
     {
         d->progressItem->setComplete();
         d->progressItem = 0;
     }
 
-    delete d; 
+    delete d;
     d = 0;
 }
 
 void ProgressItemHandler::slotFetchStarted()
 {
-    if (d->progressItem)
+    if(d->progressItem)
     {
         d->progressItem->setComplete();
         d->progressItem = 0;
     }
-    
-    d->progressItem = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), QStyleSheet::escape( d->feed->title() ), QString::null, true);
 
-    connect(d->progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), d->feed, SLOT(slotAbortFetch()));
+    d->progressItem = KPIM::ProgressManager::createProgressItem(KPIM::ProgressManager::getUniqueID(), QStyleSheet::escape(d->feed->title()),
+                      QString::null, true);
+
+    connect(d->progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem *)), d->feed, SLOT(slotAbortFetch()));
 }
 
 
 void ProgressItemHandler::slotFetchCompleted()
 {
-    if (d->progressItem)
+    if(d->progressItem)
     {
         d->progressItem->setStatus(i18n("Fetch completed"));
         d->progressItem->setComplete();
@@ -186,7 +185,7 @@ void ProgressItemHandler::slotFetchCompleted()
 
 void ProgressItemHandler::slotFetchError()
 {
-    if (d->progressItem)
+    if(d->progressItem)
     {
         d->progressItem->setStatus(i18n("Fetch error"));
         d->progressItem->setComplete();
@@ -196,7 +195,7 @@ void ProgressItemHandler::slotFetchError()
 
 void ProgressItemHandler::slotFetchAborted()
 {
-    if (d->progressItem)
+    if(d->progressItem)
     {
         d->progressItem->setStatus(i18n("Fetch aborted"));
         d->progressItem->setComplete();

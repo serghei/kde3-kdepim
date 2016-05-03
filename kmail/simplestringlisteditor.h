@@ -46,58 +46,59 @@ class QPushButton;
 //
 
 class SimpleStringListEditor : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum ButtonCode {
-    None = 0x00, Add = 0x01,
-    Remove = 0x02, Modify = 0x04,
-    Up = 0x08, Down = 0x10,
-    All = Add|Remove|Modify|Up|Down,
-    Unsorted = Add|Remove|Modify
-  };
+    enum ButtonCode
+    {
+        None = 0x00, Add = 0x01,
+        Remove = 0x02, Modify = 0x04,
+        Up = 0x08, Down = 0x10,
+        All = Add | Remove | Modify | Up | Down,
+        Unsorted = Add | Remove | Modify
+    };
 
-  /** Constructor. Populates the list with @p strings. */
-  SimpleStringListEditor( QWidget * parent=0, const char * name=0,
-			  ButtonCode buttons=Unsorted,
-			  const QString & addLabel=QString::null,
-			  const QString & removeLabel=QString::null,
-			  const QString & modifyLabel=QString::null,
-			  const QString & addDialogLabel=QString::null );
+    /** Constructor. Populates the list with @p strings. */
+    SimpleStringListEditor(QWidget *parent = 0, const char *name = 0,
+                           ButtonCode buttons = Unsorted,
+                           const QString &addLabel = QString::null,
+                           const QString &removeLabel = QString::null,
+                           const QString &modifyLabel = QString::null,
+                           const QString &addDialogLabel = QString::null);
 
-  /** Sets the list of strings displayed to @p strings */
-  void setStringList( const QStringList & strings );
-  /** Adds @p strings to the list of displayed strings */
-  void appendStringList( const QStringList & strings );
-  /** Retrieves the current list of strings */
-  QStringList stringList() const;
+    /** Sets the list of strings displayed to @p strings */
+    void setStringList(const QStringList &strings);
+    /** Adds @p strings to the list of displayed strings */
+    void appendStringList(const QStringList &strings);
+    /** Retrieves the current list of strings */
+    QStringList stringList() const;
 
-  /** Sets the text of button @p button to @p text */
-  void setButtonText( ButtonCode button, const QString & text );
+    /** Sets the text of button @p button to @p text */
+    void setButtonText(ButtonCode button, const QString &text);
 
 signals:
-  /** Connected slots can alter the argument to be added or set the
-      argument to QString::null to suppress adding.
-  */
-  void aboutToAdd(QString&);
-  void changed(void);
+    /** Connected slots can alter the argument to be added or set the
+        argument to QString::null to suppress adding.
+    */
+    void aboutToAdd(QString &);
+    void changed(void);
 
 protected slots:
-  void slotAdd();
-  void slotRemove();
-  void slotModify();
-  void slotUp();
-  void slotDown();
+    void slotAdd();
+    void slotRemove();
+    void slotModify();
+    void slotUp();
+    void slotDown();
 
-  void slotSelectionChanged();
+    void slotSelectionChanged();
 
 protected:
-  QListBox      *mListBox;
-  QPushButton   *mAddButton;
-  QPushButton   *mRemoveButton;
-  QPushButton   *mModifyButton;
-  QPushButton   *mUpButton;
-  QPushButton   *mDownButton;
-  const QString mAddDialogLabel;
+    QListBox      *mListBox;
+    QPushButton   *mAddButton;
+    QPushButton   *mRemoveButton;
+    QPushButton   *mModifyButton;
+    QPushButton   *mUpButton;
+    QPushButton   *mDownButton;
+    const QString mAddDialogLabel;
 };
 
 

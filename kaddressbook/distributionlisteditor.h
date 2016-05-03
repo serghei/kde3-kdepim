@@ -26,7 +26,7 @@
 #include <kdialogbase.h>
 
 namespace KABC {
-    class AddressBook;
+class AddressBook;
 }
 
 namespace KPIM {
@@ -36,24 +36,23 @@ class DistributionList;
 namespace DistributionListEditor {
 
 class EditorWidgetPrivate;
-class EditorWidget : public KDialogBase
-{
+class EditorWidget : public KDialogBase {
     Q_OBJECT
 public:
-    explicit EditorWidget( KABC::AddressBook* book, QWidget* parent = 0 );
+    explicit EditorWidget(KABC::AddressBook *book, QWidget *parent = 0);
     ~EditorWidget();
 
-    void setDistributionList( const KPIM::DistributionList& list );
+    void setDistributionList(const KPIM::DistributionList &list);
     KPIM::DistributionList distributionList() const;
 
 private slots:
 
     //override
     void slotOk();
-    void lineTextChanged( int id );
+    void lineTextChanged(int id);
 
 private:
-    EditorWidgetPrivate* const d;
+    EditorWidgetPrivate *const d;
 };
 
 } // namespace DisributionListEditor

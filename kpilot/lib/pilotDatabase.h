@@ -47,130 +47,139 @@
  * PilotDatabase methods when finished with them!
  */
 
-class KDE_EXPORT PilotDatabase
-{
+class KDE_EXPORT PilotDatabase {
 public:
-	PilotDatabase(const QString &name = QString::null);
-	virtual ~PilotDatabase();
+    PilotDatabase(const QString &name = QString::null);
+    virtual ~PilotDatabase();
 
 
-	QString name() const { return fName; } ;
+    QString name() const
+    {
+        return fName;
+    } ;
 
-	/**
-	* Debugging information: tally how many databases are created
-	* or destroyed. Returns the count of currently existing databases.
-	*/
-	static int instanceCount();
+    /**
+    * Debugging information: tally how many databases are created
+    * or destroyed. Returns the count of currently existing databases.
+    */
+    static int instanceCount();
 
-	/* -------------------- Abstract interface for subclasses ----------------- */
+    /* -------------------- Abstract interface for subclasses ----------------- */
 
-	/**
-	* Creates the database with the given creator, type and flags
-	* on the given card (default is RAM). If the database already
-	* exists, this function does nothing.
-	*/
-	virtual bool createDatabase(long creator=0, long type=0,
-		int cardno=0, int flags=0, int version=0) = 0;
+    /**
+    * Creates the database with the given creator, type and flags
+    * on the given card (default is RAM). If the database already
+    * exists, this function does nothing.
+    */
+    virtual bool createDatabase(long creator = 0, long type = 0,
+                                int cardno = 0, int flags = 0, int version = 0) = 0;
 
-	/**
-	* Deletes the database (by name, as given in the constructor,
-	* the database name is stored depending on the implementation
-	* of PilotLocalDatabase and PilotSerialDatabas)
-	*/
-	virtual int deleteDatabase()=0;
+    /**
+    * Deletes the database (by name, as given in the constructor,
+    * the database name is stored depending on the implementation
+    * of PilotLocalDatabase and PilotSerialDatabas)
+    */
+    virtual int deleteDatabase() = 0;
 
-	/** Reads the application block info, returns size. */
-	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
+    /** Reads the application block info, returns size. */
+    virtual int readAppBlock(unsigned char *buffer, int maxLen) = 0;
 
-	/** Writes the application block info. */
-	virtual int writeAppBlock(unsigned char* buffer, int len) = 0;
+    /** Writes the application block info. */
+    virtual int writeAppBlock(unsigned char *buffer, int len) = 0;
 
-	/** Returns the number of records in the database.
-	 *  If the database is not open, return -1.
-	 */
-	virtual unsigned int recordCount() const=0;
+    /** Returns the number of records in the database.
+     *  If the database is not open, return -1.
+     */
+    virtual unsigned int recordCount() const = 0;
 
-	/** Returns a QValueList of all record ids in the database.
-	    This implementation is really bad. */
-	virtual Pilot::RecordIDList idList();
+    /** Returns a QValueList of all record ids in the database.
+        This implementation is really bad. */
+    virtual Pilot::RecordIDList idList();
 
-	/** Returns a list of all record ids that have been modified in the
-	    database. This implementation is really bad. */
-	virtual Pilot::RecordIDList modifiedIDList();
+    /** Returns a list of all record ids that have been modified in the
+        database. This implementation is really bad. */
+    virtual Pilot::RecordIDList modifiedIDList();
 
 
-	/** Reads a record from database by id, returns record length */
-	virtual PilotRecord* readRecordById(recordid_t id) = 0;
+    /** Reads a record from database by id, returns record length */
+    virtual PilotRecord *readRecordById(recordid_t id) = 0;
 
-	/** Reads a record from database, returns the record length */
-	virtual PilotRecord* readRecordByIndex(int index) = 0;
+    /** Reads a record from database, returns the record length */
+    virtual PilotRecord *readRecordByIndex(int index) = 0;
 
-	/** Reads the next record from database in category 'category' */
-	virtual PilotRecord* readNextRecInCategory(int category) = 0;
+    /** Reads the next record from database in category 'category' */
+    virtual PilotRecord *readNextRecInCategory(int category) = 0;
 
-	/**
-	* Reads the next record from database that has the dirty flag set.
-	* If @p ind is non-NULL, *ind is set to the index of the current
-	* record (i.e. before the record pointer moves to the next
-	* modified record).
-	*/
-	virtual PilotRecord* readNextModifiedRec(int *ind=NULL) = 0;
+    /**
+    * Reads the next record from database that has the dirty flag set.
+    * If @p ind is non-NULL, *ind is set to the index of the current
+    * record (i.e. before the record pointer moves to the next
+    * modified record).
+    */
+    virtual PilotRecord *readNextModifiedRec(int *ind = NULL) = 0;
 
-	/**
-	* Writes a new record to database (if 'id' == 0, one will be
-	* assigned to newRecord)
-	*/
-	virtual recordid_t writeRecord(PilotRecord* newRecord) = 0;
+    /**
+    * Writes a new record to database (if 'id' == 0, one will be
+    * assigned to newRecord)
+    */
+    virtual recordid_t writeRecord(PilotRecord *newRecord) = 0;
 
-	/**
-	* Deletes a record with the given recordid_t from the database,
-	* or all records, if @p all is set to true. The recordid_t will
-	* be ignored in this case.
-	*
-	* Return value is negative on error, 0 otherwise.
-	*/
-	virtual int deleteRecord(recordid_t id, bool all=false) = 0;
+    /**
+    * Deletes a record with the given recordid_t from the database,
+    * or all records, if @p all is set to true. The recordid_t will
+    * be ignored in this case.
+    *
+    * Return value is negative on error, 0 otherwise.
+    */
+    virtual int deleteRecord(recordid_t id, bool all = false) = 0;
 
-	/** Resets all records in the database to not dirty. */
-	virtual int resetSyncFlags() = 0;
+    /** Resets all records in the database to not dirty. */
+    virtual int resetSyncFlags() = 0;
 
-	/** Resets next record index to beginning */
-	virtual int resetDBIndex() = 0;
+    /** Resets next record index to beginning */
+    virtual int resetDBIndex() = 0;
 
-	/** Purges all Archived/Deleted records from Palm Pilot database */
-	virtual int cleanup() = 0;
+    /** Purges all Archived/Deleted records from Palm Pilot database */
+    virtual int cleanup() = 0;
 
-	bool isOpen() const { return fDBOpen; }
+    bool isOpen() const
+    {
+        return fDBOpen;
+    }
 
-	/** Returns some sensible human-readable identifier for
-	*   the database. Serial databases get Pilot:, local
-	*   databases return the full path.
-	*/
-	virtual QString dbPathName() const = 0;
+    /** Returns some sensible human-readable identifier for
+    *   the database. Serial databases get Pilot:, local
+    *   databases return the full path.
+    */
+    virtual QString dbPathName() const = 0;
 
-	/**
-	* Use this instead of RTTI to determine the type of a
-	* PilotDatabase, for those cases where it's important.
-	*/
-	typedef enum { eNone=0,
-		eLocalDB=1,
-		eSerialDB=2 } DBType;
-	virtual DBType dbType() const = 0;
+    /**
+    * Use this instead of RTTI to determine the type of a
+    * PilotDatabase, for those cases where it's important.
+    */
+    typedef enum { eNone = 0,
+                   eLocalDB = 1,
+                   eSerialDB = 2
+                 } DBType;
+    virtual DBType dbType() const = 0;
 
-	static inline bool isResource(struct DBInfo *info)
-	{
-		return (info->flags & dlpDBFlagResource);
-	}
+    static inline bool isResource(struct DBInfo *info)
+    {
+        return (info->flags & dlpDBFlagResource);
+    }
 
 protected:
-	virtual void openDatabase() = 0;
-	virtual void closeDatabase() = 0;
+    virtual void openDatabase() = 0;
+    virtual void closeDatabase() = 0;
 
-	void setDBOpen(bool yesno) { fDBOpen = yesno; }
+    void setDBOpen(bool yesno)
+    {
+        fDBOpen = yesno;
+    }
 
 private:
-	bool fDBOpen;
-	QString fName;
+    bool fDBOpen;
+    QString fName;
 };
 
 /** A template class for reading and interpreting a database. This removes
@@ -189,72 +198,77 @@ private:
 * that of a PilotDatabase, but it isn't one.
 */
 template <class kdetype, class pilottype, class mapper>
-class DatabaseInterpreter
-{
+class DatabaseInterpreter {
 private:
-	/** Interpret a PilotRecord as an object of type kdetype. */
-	kdetype *interpret(PilotRecord *r)
-	{
-		// NULL records return NULL kde objects.
-		if (!r) return 0;
-		// Interpret the binary blob as a pilot-link object.
-		pilottype *a = new pilottype(r);
-		// The record is now obsolete.
-		delete r;
-		// Interpretation failed.
-		if (!a) { return 0; }
-		// Now convert to KDE type.
-		kdetype *t = mapper::convert(a);
-		// The NULL mapper just returns the pointer a, so we
-		// need to check if anything has changed before deleting.
-		if ( (void *)t != (void *)a )
-		{
-			delete a;
-		}
-		return t;
-	}
+    /** Interpret a PilotRecord as an object of type kdetype. */
+    kdetype *interpret(PilotRecord *r)
+    {
+        // NULL records return NULL kde objects.
+        if(!r) return 0;
+        // Interpret the binary blob as a pilot-link object.
+        pilottype *a = new pilottype(r);
+        // The record is now obsolete.
+        delete r;
+        // Interpretation failed.
+        if(!a)
+        {
+            return 0;
+        }
+        // Now convert to KDE type.
+        kdetype *t = mapper::convert(a);
+        // The NULL mapper just returns the pointer a, so we
+        // need to check if anything has changed before deleting.
+        if((void *)t != (void *)a)
+        {
+            delete a;
+        }
+        return t;
+    }
 public:
-	/** Constructor. Interpret the database @p d. */
-	DatabaseInterpreter(PilotDatabase *d) : fDB(d) { } ;
+    /** Constructor. Interpret the database @p d. */
+    DatabaseInterpreter(PilotDatabase *d) : fDB(d) { } ;
 
-	/** Reads a record from database by @p id */
-	kdetype *readRecordById(recordid_t id)
-	{
-		return interpret(fDB->readRecordById(id));
-	}
+    /** Reads a record from database by @p id */
+    kdetype *readRecordById(recordid_t id)
+    {
+        return interpret(fDB->readRecordById(id));
+    }
 
-	/** Reads a record from database with index @p index */
-	kdetype *readRecordByIndex(int index)
-	{
-		return interpret(fDB->readRecordByIndex(index));
-	}
+    /** Reads a record from database with index @p index */
+    kdetype *readRecordByIndex(int index)
+    {
+        return interpret(fDB->readRecordByIndex(index));
+    }
 
-	/** Reads the next record from database in category @p category */
-	kdetype *readNextRecInCategory(int category)
-	{
-		return interpret(fDB->readNextRecInCategory(category));
-	}
+    /** Reads the next record from database in category @p category */
+    kdetype *readNextRecInCategory(int category)
+    {
+        return interpret(fDB->readNextRecInCategory(category));
+    }
 
-	/**
-	* Reads the next record from database that has the dirty flag set.
-	* If @p ind is non-NULL, *ind is set to the index of the current
-	* record (i.e. before the record pointer moves to the next
-	* modified record).
-	*/
-	kdetype *readNextModifiedRec(int *ind=NULL)
-	{
-		return interpret(fDB->readNextModifiedRec(ind));
-	}
+    /**
+    * Reads the next record from database that has the dirty flag set.
+    * If @p ind is non-NULL, *ind is set to the index of the current
+    * record (i.e. before the record pointer moves to the next
+    * modified record).
+    */
+    kdetype *readNextModifiedRec(int *ind = NULL)
+    {
+        return interpret(fDB->readNextModifiedRec(ind));
+    }
 
 
-	/** Retrieve the database pointer; this is useful to just pass
-	* around DatabaseInterpreter objects as if they are databases,
-	* and then perform DB operations on the database it wraps.
-	*/
-	PilotDatabase *db() const { return fDB; }
+    /** Retrieve the database pointer; this is useful to just pass
+    * around DatabaseInterpreter objects as if they are databases,
+    * and then perform DB operations on the database it wraps.
+    */
+    PilotDatabase *db() const
+    {
+        return fDB;
+    }
 
 protected:
-	PilotDatabase *fDB;
+    PilotDatabase *fDB;
 } ;
 
 /** NULL mapper class; the conversions here don't @em do anything,
@@ -262,11 +276,13 @@ protected:
 * PilotRecord to PilotDatebookEntry, for instance) instead of 2.
 */
 template <class T>
-class NullMapper
-{
+class NullMapper {
 public:
-	/** NULL Conversion function. */
-	static T *convert(T *t) { return t; }
+    /** NULL Conversion function. */
+    static T *convert(T *t)
+    {
+        return t;
+    }
 } ;
 
 #endif

@@ -35,20 +35,19 @@ class ResourceCachedSaveConfig;
 
 /**
   Configuration widget for groupware kioslave resource.
-  
+
   @see KCalResourceGroupware
 */
-class ResourceGroupwareConfig : public KRES::ConfigWidget
-{ 
+class ResourceGroupwareConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    ResourceGroupwareConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceGroupwareConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource );
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  private:
+private:
     KLineEdit *mUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;

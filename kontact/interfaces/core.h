@@ -30,65 +30,63 @@
 
 class KAction;
 
-namespace Kontact
-{
+namespace Kontact {
 
 class Plugin;
 
 /**
   This class provides the interface to the Kontact core for the plugins.
 */
-class KDE_EXPORT Core : public KParts::MainWindow
-{
-  Q_OBJECT
-  public:
+class KDE_EXPORT Core : public KParts::MainWindow {
+    Q_OBJECT
+public:
     virtual ~Core();
 
     /**
       Selects the given plugin @param plugin and raises the associated
       part.
      */
-    virtual void selectPlugin( Kontact::Plugin *plugin ) = 0;
+    virtual void selectPlugin(Kontact::Plugin *plugin) = 0;
 
     /**
       This is an overloaded member function. It behaves essentially like the
       above function.
      */
-    virtual void selectPlugin( const QString &plugin ) = 0;
+    virtual void selectPlugin(const QString &plugin) = 0;
 
     /**
       Returns the pointer list of available plugins.
      */
-    virtual QValueList<Kontact::Plugin*> pluginList() const = 0;
+    virtual QValueList<Kontact::Plugin *> pluginList() const = 0;
 
     /**
      @internal (for Plugin)
      */
-    KParts::ReadOnlyPart *createPart( const char *libname );
+    KParts::ReadOnlyPart *createPart(const char *libname);
 
     /**
      @internal (for Plugin)
      Tell kontact that a part was loaded
      */
-    virtual void partLoaded( Plugin* plugin, KParts::ReadOnlyPart * part ) = 0;
+    virtual void partLoaded(Plugin *plugin, KParts::ReadOnlyPart *part) = 0;
 
-  signals:
+signals:
     /**
       Emitted when a new day starts
       */
-    void dayChanged( const QDate& );
+    void dayChanged(const QDate &);
 
-  protected:
-    Core( QWidget *parentWidget = 0, const char *name = 0 );
+protected:
+    Core(QWidget *parentWidget = 0, const char *name = 0);
 
     QString lastErrorMessage() const;
 
-  private slots:
-    void slotPartDestroyed( QObject * );
+private slots:
+    void slotPartDestroyed(QObject *);
     void checkNewDay();
 
-  private:
-    QMap<QCString,KParts::ReadOnlyPart *> mParts;
+private:
+    QMap<QCString, KParts::ReadOnlyPart *> mParts;
     QDate mLastDate;
 
     class Private;

@@ -36,37 +36,43 @@
 
 // Collect these widget labels together to ensure consistent wording and
 // translations across different modules.
-QString Reminder::i18n_first_recurrence_only()   { return i18n("Reminder for first recurrence only"); }
-QString Reminder::i18n_u_first_recurrence_only() { return i18n("Reminder for first rec&urrence only"); }
-
-
-Reminder::Reminder(const QString& caption, const QString& reminderWhatsThis, const QString& valueWhatsThis,
-                   bool allowHourMinute, bool showOnceOnly, QWidget* parent, const char* name)
-	: QFrame(parent, name),
-	  mReadOnly(false),
-	  mOnceOnlyEnabled(showOnceOnly)
+QString Reminder::i18n_first_recurrence_only()
 {
-	setFrameStyle(QFrame::NoFrame);
-	QVBoxLayout* topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    return i18n("Reminder for first recurrence only");
+}
+QString Reminder::i18n_u_first_recurrence_only()
+{
+    return i18n("Reminder for first rec&urrence only");
+}
 
-	mTime = new TimeSelector(caption, i18n("in advance"), reminderWhatsThis,
-	                       valueWhatsThis, allowHourMinute, this, "timeOption");
-	mTime->setFixedSize(mTime->sizeHint());
-	connect(mTime, SIGNAL(toggled(bool)), SLOT(slotReminderToggled(bool)));
-	topLayout->addWidget(mTime);
 
-	if (showOnceOnly)
-	{
-		QBoxLayout* layout = new QHBoxLayout(topLayout, KDialog::spacingHint());
-		layout->addSpacing(3*KDialog::spacingHint());
-		mOnceOnly = new CheckBox(i18n_u_first_recurrence_only(), this);
-		mOnceOnly->setFixedSize(mOnceOnly->sizeHint());
-		QWhatsThis::add(mOnceOnly, i18n("Display the reminder only before the first time the alarm is scheduled"));
-		layout->addWidget(mOnceOnly);
-		layout->addStretch();
-	}
-	else
-		mOnceOnly = 0;
+Reminder::Reminder(const QString &caption, const QString &reminderWhatsThis, const QString &valueWhatsThis,
+                   bool allowHourMinute, bool showOnceOnly, QWidget *parent, const char *name)
+    : QFrame(parent, name),
+      mReadOnly(false),
+      mOnceOnlyEnabled(showOnceOnly)
+{
+    setFrameStyle(QFrame::NoFrame);
+    QVBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+
+    mTime = new TimeSelector(caption, i18n("in advance"), reminderWhatsThis,
+                             valueWhatsThis, allowHourMinute, this, "timeOption");
+    mTime->setFixedSize(mTime->sizeHint());
+    connect(mTime, SIGNAL(toggled(bool)), SLOT(slotReminderToggled(bool)));
+    topLayout->addWidget(mTime);
+
+    if(showOnceOnly)
+    {
+        QBoxLayout *layout = new QHBoxLayout(topLayout, KDialog::spacingHint());
+        layout->addSpacing(3 * KDialog::spacingHint());
+        mOnceOnly = new CheckBox(i18n_u_first_recurrence_only(), this);
+        mOnceOnly->setFixedSize(mOnceOnly->sizeHint());
+        QWhatsThis::add(mOnceOnly, i18n("Display the reminder only before the first time the alarm is scheduled"));
+        layout->addWidget(mOnceOnly);
+        layout->addStretch();
+    }
+    else
+        mOnceOnly = 0;
 }
 
 /******************************************************************************
@@ -74,29 +80,29 @@ Reminder::Reminder(const QString& caption, const QString& reminderWhatsThis, con
 */
 void Reminder::setReadOnly(bool ro)
 {
-	if ((int)ro != (int)mReadOnly)
-	{
-		mReadOnly = ro;
-		mTime->setReadOnly(mReadOnly);
-		if (mOnceOnly)
-			mOnceOnly->setReadOnly(mReadOnly);
-	}
+    if((int)ro != (int)mReadOnly)
+    {
+        mReadOnly = ro;
+        mTime->setReadOnly(mReadOnly);
+        if(mOnceOnly)
+            mOnceOnly->setReadOnly(mReadOnly);
+    }
 }
 
 bool Reminder::isReminder() const
 {
-	return mTime->isChecked();
+    return mTime->isChecked();
 }
 
 bool Reminder::isOnceOnly() const
 {
-	return mOnceOnly  &&  mOnceOnly->isEnabled()  &&  mOnceOnly->isChecked();
+    return mOnceOnly  &&  mOnceOnly->isEnabled()  &&  mOnceOnly->isChecked();
 }
 
 void Reminder::setOnceOnly(bool onceOnly)
 {
-	if (mOnceOnly)
-		mOnceOnly->setChecked(onceOnly);
+    if(mOnceOnly)
+        mOnceOnly->setChecked(onceOnly);
 }
 
 /******************************************************************************
@@ -104,16 +110,16 @@ void Reminder::setOnceOnly(bool onceOnly)
 */
 void Reminder::enableOnceOnly(bool enable)
 {
-	if (mOnceOnly)
-	{
-		mOnceOnlyEnabled = enable;
-		mOnceOnly->setEnabled(enable && mTime->isChecked());
-	}
+    if(mOnceOnly)
+    {
+        mOnceOnlyEnabled = enable;
+        mOnceOnly->setEnabled(enable && mTime->isChecked());
+    }
 }
 
 void Reminder::setMaximum(int hourmin, int days)
 {
-	mTime->setMaximum(hourmin, days);
+    mTime->setMaximum(hourmin, days);
 }
 
 /******************************************************************************
@@ -122,7 +128,7 @@ void Reminder::setMaximum(int hourmin, int days)
  */
 int Reminder::minutes() const
 {
-	return mTime->minutes();
+    return mTime->minutes();
 }
 
 /******************************************************************************
@@ -130,7 +136,7 @@ int Reminder::minutes() const
 */
 void Reminder::setMinutes(int minutes, bool dateOnly)
 {
-	mTime->setMinutes(minutes, dateOnly, Preferences::defaultReminderUnits());
+    mTime->setMinutes(minutes, dateOnly, Preferences::defaultReminderUnits());
 }
 
 /******************************************************************************
@@ -138,7 +144,7 @@ void Reminder::setMinutes(int minutes, bool dateOnly)
 */
 void Reminder::setDateOnly(bool dateOnly)
 {
-	mTime->setDateOnly(dateOnly);
+    mTime->setDateOnly(dateOnly);
 }
 
 /******************************************************************************
@@ -146,7 +152,7 @@ void Reminder::setDateOnly(bool dateOnly)
 */
 void Reminder::setFocusOnCount()
 {
-	mTime->setFocusOnCount();
+    mTime->setFocusOnCount();
 }
 
 /******************************************************************************
@@ -154,6 +160,6 @@ void Reminder::setFocusOnCount()
 */
 void Reminder::slotReminderToggled(bool on)
 {
-	if (mOnceOnly)
-		mOnceOnly->setEnabled(on && mOnceOnlyEnabled);
+    if(mOnceOnly)
+        mOnceOnly->setEnabled(on && mOnceOnlyEnabled);
 }

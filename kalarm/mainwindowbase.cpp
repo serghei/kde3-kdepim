@@ -28,12 +28,12 @@
 *  Called when a close event is received.
 *  Only quits the application if there is no system tray icon displayed.
 */
-void MainWindowBase::closeEvent(QCloseEvent* ce)
+void MainWindowBase::closeEvent(QCloseEvent *ce)
 {
-	disableQuit = theApp()->trayIconDisplayed();
-	KMainWindow::closeEvent(ce);
-	disableQuit = false;
-	ce->accept();           // allow window to close even if it's the last main window
+    disableQuit = theApp()->trayIconDisplayed();
+    KMainWindow::closeEvent(ce);
+    disableQuit = false;
+    ce->accept();           // allow window to close even if it's the last main window
 }
 
 /******************************************************************************
@@ -43,8 +43,8 @@ void MainWindowBase::closeEvent(QCloseEvent* ce)
 bool MainWindowBase::queryExit()
 {
 #if KDE_IS_VERSION(3,1,90)
-	if (kapp->sessionSaving())
-		return true;
+    if(kapp->sessionSaving())
+        return true;
 #endif
-	return disableQuit ? false : KMainWindow::queryExit();
+    return disableQuit ? false : KMainWindow::queryExit();
 }

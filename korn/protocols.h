@@ -25,22 +25,21 @@ template< class T > class QDict;
 class QString;
 class QStringList;
 
-class Protocols
-{
+class Protocols {
 public:
-	Protocols() {}
-	~Protocols() {}
-	
-	static const Protocol* getProto( const QString& );
-	static const Protocol* firstProtocol();
-	
-	static QStringList getProtocols();
-	
-	static void fillProtocols();
-private:
-	static void addProtocol( Protocol* );
+    Protocols() {}
+    ~Protocols() {}
 
-	static QDict<Protocol> *protocols;
+    static const Protocol *getProto(const QString &);
+    static const Protocol *firstProtocol();
+
+    static QStringList getProtocols();
+
+    static void fillProtocols();
+private:
+    static void addProtocol(Protocol *);
+
+    static QDict<Protocol> *protocols;
 };
 
 #endif //MK_PROTOCOLS_H

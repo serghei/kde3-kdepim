@@ -31,26 +31,26 @@ class QTextEdit;
 
 namespace KMail {
 
-  class SignatureConfigurator : public QWidget {
+class SignatureConfigurator : public QWidget {
     Q_OBJECT
-  public:
-    SignatureConfigurator( QWidget * parent=0, const char * name=0 );
+public:
+    SignatureConfigurator(QWidget *parent = 0, const char *name = 0);
     virtual ~SignatureConfigurator();
 
     bool isSignatureEnabled() const;
-    void setSignatureEnabled( bool enable );
+    void setSignatureEnabled(bool enable);
 
     Signature::Type signatureType() const;
-    void setSignatureType( Signature::Type type );
+    void setSignatureType(Signature::Type type);
 
     QString inlineText() const;
-    void setInlineText( const QString & text );
+    void setInlineText(const QString &text);
 
     QString fileURL() const;
-    void setFileURL( const QString & url );
+    void setFileURL(const QString &url);
 
     QString commandURL() const;
-    void setCommandURL( const QString & url );
+    void setCommandURL(const QString &url);
 
     /**
        Conveniece method.
@@ -60,20 +60,20 @@ namespace KMail {
     /**
        Convenience method. Sets the widgets according to @p sig
     **/
-    void setSignature( const Signature & sig );
+    void setSignature(const Signature &sig);
 
-  protected slots:
-    void slotEnableEditButton( const QString & );
+protected slots:
+    void slotEnableEditButton(const QString &);
     void slotEdit();
 
-  protected:
-    QCheckBox     * mEnableCheck;
-    QComboBox     * mSourceCombo;
-    KURLRequester * mFileRequester;
-    QPushButton   * mEditButton;
-    KLineEdit     * mCommandEdit;
-    QTextEdit     * mTextEdit;
-  };
+protected:
+    QCheckBox      *mEnableCheck;
+    QComboBox      *mSourceCombo;
+    KURLRequester *mFileRequester;
+    QPushButton    *mEditButton;
+    KLineEdit      *mCommandEdit;
+    QTextEdit      *mTextEdit;
+};
 
 } // namespace KMail
 

@@ -31,17 +31,16 @@ class QLabel;
 class QLineEdit;
 class QComboBox;
 
-class ConfigGuiGnokii : public ConfigGui
-{
-  Q_OBJECT
+class ConfigGuiGnokii : public ConfigGui {
+    Q_OBJECT
 
-  public:
-    ConfigGuiGnokii( const QSync::Member &, QWidget *parent );
+public:
+    ConfigGuiGnokii(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     QComboBox *mConnection;
     KComboBox *mPort;
     QLabel    *mPortLabel;
@@ -53,10 +52,10 @@ class ConfigGuiGnokii : public ConfigGui
     typedef QValueList<ConnectionType> ConnectionTypeList;
     ConnectionTypeList mConnectionTypes;
 
-   protected slots:
-     void slotConnectionChanged( int nth );
-     void slotModelChanged();
-    
+protected slots:
+    void slotConnectionChanged(int nth);
+    void slotModelChanged();
+
 };
 
 #endif

@@ -48,14 +48,14 @@
 
 /* virtual */ QString PilotRecordBase::textRepresentation() const
 {
-	return CSL1("[ %1,%2,%3 ]") . arg(attributes(),category(),id());
+    return CSL1("[ %1,%2,%3 ]") . arg(attributes(), category(), id());
 }
 
 /* virtual */ QString PilotRecord::textRepresentation() const
 {
-	return CSL1("[ %1,%2 ]")
-		.arg(PilotRecordBase::textRepresentation())
-		.arg(size());
+    return CSL1("[ %1,%2 ]")
+           .arg(PilotRecordBase::textRepresentation())
+           .arg(size());
 }
 
 
@@ -65,68 +65,68 @@
 
 /* static */ void PilotRecord::allocationInfo()
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": Allocated " << fAllocated
-		<< "  Deleted " << fDeleted << endl;
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname
+                << ": Allocated " << fAllocated
+                << "  Deleted " << fDeleted << endl;
 }
 
 PilotRecord::PilotRecord(void *data, int len, int attrib, int cat, recordid_t uid) :
-	PilotRecordBase(attrib,cat,uid),
-	fData(0L),
-	fLen(len),
-	fBuffer(0L)
+    PilotRecordBase(attrib, cat, uid),
+    fData(0L),
+    fLen(len),
+    fBuffer(0L)
 {
-	FUNCTIONSETUPL(4);
-	fData = new char[len];
+    FUNCTIONSETUPL(4);
+    fData = new char[len];
 
-	memcpy(fData, data, len);
+    memcpy(fData, data, len);
 
-	fAllocated++;
+    fAllocated++;
 }
 
-PilotRecord::PilotRecord(PilotRecord * orig) :
-	PilotRecordBase( orig->attributes(), orig->category(), orig->id() ) ,
-	fBuffer(0L)
+PilotRecord::PilotRecord(PilotRecord *orig) :
+    PilotRecordBase(orig->attributes(), orig->category(), orig->id()) ,
+    fBuffer(0L)
 {
-	FUNCTIONSETUPL(4);
-	fData = new char[orig->size()];
+    FUNCTIONSETUPL(4);
+    fData = new char[orig->size()];
 
-	memcpy(fData, orig->data(), orig->size());
-	fLen = orig->size();
-	fAllocated++;
+    memcpy(fData, orig->data(), orig->size());
+    fLen = orig->size();
+    fAllocated++;
 }
 
-PilotRecord & PilotRecord::operator = (PilotRecord & orig)
+PilotRecord &PilotRecord::operator = (PilotRecord &orig)
 {
-	FUNCTIONSETUP;
-	if (fBuffer)
-	{
-		pi_buffer_free(fBuffer);
-		fBuffer=0L;
-		fData=0L;
-	}
+    FUNCTIONSETUP;
+    if(fBuffer)
+    {
+        pi_buffer_free(fBuffer);
+        fBuffer = 0L;
+        fData = 0L;
+    }
 
-	if (fData)
-		delete[]fData;
-	fData = new char[orig.size()];
+    if(fData)
+        delete[]fData;
+    fData = new char[orig.size()];
 
-	memcpy(fData, orig.data(), orig.size());
-	fLen = orig.size();
-	setAttributes( orig.attributes() );
-	setCategory( orig.category() );
-	setID( orig.id() );
-	return *this;
+    memcpy(fData, orig.data(), orig.size());
+    fLen = orig.size();
+    setAttributes(orig.attributes());
+    setCategory(orig.category());
+    setID(orig.id());
+    return *this;
 }
 
 void PilotRecord::setData(const char *data, int len)
 {
-	FUNCTIONSETUP;
-	if (fData)
-		delete[]fData;
-	fData = new char[len];
+    FUNCTIONSETUP;
+    if(fData)
+        delete[]fData;
+    fData = new char[len];
 
-	memcpy(fData, data, len);
-	fLen = len;
+    memcpy(fData, data, len);
+    fLen = len;
 }
 

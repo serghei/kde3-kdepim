@@ -45,21 +45,26 @@
 #include "sysinfoSettings.h"
 
 
-typedef struct { const char *name; bool (*accessor)(); void (*mutator)(bool); } sysinfoEntry_t;
+typedef struct
+{
+    const char *name;
+    bool (*accessor)();
+    void (*mutator)(bool);
+} sysinfoEntry_t;
 
 const sysinfoEntry_t sysinfoEntries[] =
 {
-	{ I18N_NOOP("HardwareInfo"), SysinfoSettings::hardwareInfo, SysinfoSettings::setHardwareInfo },
-	{ I18N_NOOP("UserInfo"), SysinfoSettings::userInfo, SysinfoSettings::setUserInfo },
-	{ I18N_NOOP("MemoryInfo"), SysinfoSettings::memoryInfo, SysinfoSettings::setMemoryInfo },
-	{ I18N_NOOP("StorageInfo"), SysinfoSettings::storageInfo, SysinfoSettings::setStorageInfo },
-	{ I18N_NOOP("DatabaseList"), SysinfoSettings::databaseList, SysinfoSettings::setDatabaseList },
-	{ I18N_NOOP("RecordNumbers"), SysinfoSettings::recordNumbers, SysinfoSettings::setRecordNumbers},
-	{ I18N_NOOP("SyncInfo"), SysinfoSettings::syncInfo, SysinfoSettings::setSyncInfo },
-	{ I18N_NOOP("KDEVersion"), SysinfoSettings::kDEVersion, SysinfoSettings::setKDEVersion },
-	{ I18N_NOOP("PalmOSVersion"), SysinfoSettings::palmOSVersion, SysinfoSettings::setPalmOSVersion },
-	{ I18N_NOOP("DebugInformation"), SysinfoSettings::debugInformation, SysinfoSettings::setDebugInformation },
-	{ 0L, 0L, 0L }
+    { I18N_NOOP("HardwareInfo"), SysinfoSettings::hardwareInfo, SysinfoSettings::setHardwareInfo },
+    { I18N_NOOP("UserInfo"), SysinfoSettings::userInfo, SysinfoSettings::setUserInfo },
+    { I18N_NOOP("MemoryInfo"), SysinfoSettings::memoryInfo, SysinfoSettings::setMemoryInfo },
+    { I18N_NOOP("StorageInfo"), SysinfoSettings::storageInfo, SysinfoSettings::setStorageInfo },
+    { I18N_NOOP("DatabaseList"), SysinfoSettings::databaseList, SysinfoSettings::setDatabaseList },
+    { I18N_NOOP("RecordNumbers"), SysinfoSettings::recordNumbers, SysinfoSettings::setRecordNumbers},
+    { I18N_NOOP("SyncInfo"), SysinfoSettings::syncInfo, SysinfoSettings::setSyncInfo },
+    { I18N_NOOP("KDEVersion"), SysinfoSettings::kDEVersion, SysinfoSettings::setKDEVersion },
+    { I18N_NOOP("PalmOSVersion"), SysinfoSettings::palmOSVersion, SysinfoSettings::setPalmOSVersion },
+    { I18N_NOOP("DebugInformation"), SysinfoSettings::debugInformation, SysinfoSettings::setDebugInformation },
+    { 0L, 0L, 0L }
 } ;
 
 
@@ -86,113 +91,113 @@ const sysinfoEntry_t sysinfoEntries[] =
 
 
 SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
-	fConfigWidget(new SysInfoWidget(w))
+    ConduitConfigBase(w, n),
+    fConfigWidget(new SysInfoWidget(w))
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	KAboutData *fAbout = new KAboutData("SysInfoConduit",
-		I18N_NOOP("KPilot System Information conduit"),
-		KPILOT_VERSION,
-		I18N_NOOP("Retrieves System, Hardware, and User Info from the Handheld and stores them to a file."),
-		KAboutData::License_GPL,
-		"(C) 2003, Reinhold Kainhofer");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+    KAboutData *fAbout = new KAboutData("SysInfoConduit",
+                                        I18N_NOOP("KPilot System Information conduit"),
+                                        KPILOT_VERSION,
+                                        I18N_NOOP("Retrieves System, Hardware, and User Info from the Handheld and stores them to a file."),
+                                        KAboutData::License_GPL,
+                                        "(C) 2003, Reinhold Kainhofer");
+    fAbout->addAuthor("Reinhold Kainhofer",
+                      I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
-	fWidget=fConfigWidget;
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
+    fWidget = fConfigWidget;
 
-	QObject::connect(fConfigWidget->fOutputFile,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fTemplateFile,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fOutputType,SIGNAL(clicked(int)),
-		this,SLOT(modified()));
-	fConduitName=i18n("System Information");
+    QObject::connect(fConfigWidget->fOutputFile, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fTemplateFile, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
+    QObject::connect(fConfigWidget->fOutputType, SIGNAL(clicked(int)),
+                     this, SLOT(modified()));
+    fConduitName = i18n("System Information");
 }
 
 void SysInfoWidgetConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	SysinfoSettings::setOutputFile(
-		fConfigWidget->fOutputFile->url() );
-	SysinfoSettings::setTemplateFile(
-		fConfigWidget->fTemplateFile->url() );
-	SysinfoSettings::setOutputFormat(
-		fConfigWidget->fOutputType->id(fConfigWidget->fOutputType->selected()));
+    SysinfoSettings::setOutputFile(
+        fConfigWidget->fOutputFile->url());
+    SysinfoSettings::setTemplateFile(
+        fConfigWidget->fTemplateFile->url());
+    SysinfoSettings::setOutputFormat(
+        fConfigWidget->fOutputType->id(fConfigWidget->fOutputType->selected()));
 
-	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
-	QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
-	while(ci)
-	{
+    QListViewItem *i = fConfigWidget->fPartsList->firstChild();
+    QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
+    while(ci)
+    {
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Saving " << ci->text(PART_NAME)
-			<< (ci->isOn() ? " on" : " off") << endl;
+        DEBUGKPILOT << fname << ": Saving " << ci->text(PART_NAME)
+                    << (ci->isOn() ? " on" : " off") << endl;
 #endif
-		int index=ci->text(PART_KEY).toInt();
-		if (0<=index && index<=10)
-		{
-			const sysinfoEntry_t *p = sysinfoEntries+index;
-			p->mutator(ci->isOn());
-		}
-		updateSetting(ci);
-		i=i->nextSibling();
-		ci = dynamic_cast<QCheckListItem *>(i);
-	}
-	SysinfoSettings::self()->writeConfig();
-	unmodified();
+        int index = ci->text(PART_KEY).toInt();
+        if(0 <= index && index <= 10)
+        {
+            const sysinfoEntry_t *p = sysinfoEntries + index;
+            p->mutator(ci->isOn());
+        }
+        updateSetting(ci);
+        i = i->nextSibling();
+        ci = dynamic_cast<QCheckListItem *>(i);
+    }
+    SysinfoSettings::self()->writeConfig();
+    unmodified();
 }
 
 void SysInfoWidgetConfig::load()
 {
-	FUNCTIONSETUP;
-	SysinfoSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    SysinfoSettings::self()->readConfig();
 
-	const sysinfoEntry_t *p = sysinfoEntries;
-	QCheckListItem *i = 0L;
-	while (p && p->name)
-	{
-		i = new QCheckListItem(fConfigWidget->fPartsList,i18n(p->name),QCheckListItem::CheckBox);
-		// by default let the sysinfo conduit write out all available information
-		i->setOn( p->accessor() );
-		i->setText(PART_KEY, QString::number(p-sysinfoEntries)); // store index there
-		updateSetting(i);
+    const sysinfoEntry_t *p = sysinfoEntries;
+    QCheckListItem *i = 0L;
+    while(p && p->name)
+    {
+        i = new QCheckListItem(fConfigWidget->fPartsList, i18n(p->name), QCheckListItem::CheckBox);
+        // by default let the sysinfo conduit write out all available information
+        i->setOn(p->accessor());
+        i->setText(PART_KEY, QString::number(p - sysinfoEntries)); // store index there
+        updateSetting(i);
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Loaded " << p->name
-			<< (i->isOn() ? " on" : " off") << endl;
+        DEBUGKPILOT << fname << ": Loaded " << p->name
+                    << (i->isOn() ? " on" : " off") << endl;
 #endif
 
-		p++;
-	}
-  fConfigWidget->fOutputFile->setURL( SysinfoSettings::outputFile() );
-	fConfigWidget->fTemplateFile->setURL( SysinfoSettings::templateFile() );
-	fConfigWidget->fOutputType->setButton( SysinfoSettings::outputFormat() );
-	unmodified();
+        p++;
+    }
+    fConfigWidget->fOutputFile->setURL(SysinfoSettings::outputFile());
+    fConfigWidget->fTemplateFile->setURL(SysinfoSettings::templateFile());
+    fConfigWidget->fOutputType->setButton(SysinfoSettings::outputFormat());
+    unmodified();
 }
 
 /* virtual */ bool SysInfoWidgetConfig::isModified() const
 {
-	FUNCTIONSETUP;
-	if (fModified) return true;
+    FUNCTIONSETUP;
+    if(fModified) return true;
 
-	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
-	QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
+    QListViewItem *i = fConfigWidget->fPartsList->firstChild();
+    QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
 
-	while(ci)
-	{
-		bool current = ci->isOn();
-		bool original = !ci->text(PART_SETTING).isEmpty();
+    while(ci)
+    {
+        bool current = ci->isOn();
+        bool original = !ci->text(PART_SETTING).isEmpty();
 #ifdef DEBUG
-		DEBUGKPILOT << fname << ": Checking " << ci->text(PART_KEY)
-			<<  " was " << (original ? " on" : " off")
-			<< " now " << (current ? " on" : " off") << endl;
+        DEBUGKPILOT << fname << ": Checking " << ci->text(PART_KEY)
+                    <<  " was " << (original ? " on" : " off")
+                    << " now " << (current ? " on" : " off") << endl;
 #endif
 
-		if (current!=original) return true;
-		i=i->nextSibling();
-		ci = dynamic_cast<QCheckListItem *>(i);
-	}
-	return false;
+        if(current != original) return true;
+        i = i->nextSibling();
+        ci = dynamic_cast<QCheckListItem *>(i);
+    }
+    return false;
 }

@@ -38,10 +38,10 @@
 #include <qslider.h>
 #include <qlabel.h>
 
-namespace Akregator
-{
+namespace Akregator {
 
-ConfigDialog::ConfigDialog(QWidget* parent, const char* name, KConfigSkeleton* config, DialogType dialogType, int dialogButtons, ButtonCode defaultButton, bool modal) : KConfigDialog(parent, name, config, dialogType, dialogButtons, defaultButton, modal)
+ConfigDialog::ConfigDialog(QWidget *parent, const char *name, KConfigSkeleton *config, DialogType dialogType, int dialogButtons,
+                           ButtonCode defaultButton, bool modal) : KConfigDialog(parent, name, config, dialogType, dialogButtons, defaultButton, modal)
 {
     addPage(new SettingsGeneral(this, "General"), i18n("General"), "package_settings");
     addPage(new SettingsArchive(this, "Archive"), i18n("Archive"), "package_settings");
@@ -59,7 +59,7 @@ void ConfigDialog::updateSettings()
     Settings::setArchiveBackend(m_settingsAdvanced->selectedFactory());
     KConfigDialog::updateSettings();
 }
-        
+
 void ConfigDialog::updateWidgets()
 {
     m_settingsAdvanced->selectFactory(Settings::archiveBackend());
@@ -69,7 +69,7 @@ void ConfigDialog::updateWidgets()
     m_settingsAppearance->lbl_MediumFontSize->setDisabled(m_config->isImmutable("MediumFontSize"));
     KConfigDialog::updateWidgets();
 }
-        
+
 ConfigDialog::~ConfigDialog() {}
 
 } // namespace Akregator

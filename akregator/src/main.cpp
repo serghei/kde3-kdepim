@@ -37,50 +37,51 @@
 namespace Akregator {
 
 class Application : public KUniqueApplication {
-  public:
-    Application() : mMainWindow( ) {}
+public:
+    Application() : mMainWindow() {}
     ~Application() {}
 
     int newInstance();
 
-  private:
+private:
     Akregator::MainWindow *mMainWindow;
 };
 
 int Application::newInstance()
 {
-  if (!isRestored())
-  {
-    DCOPRef akr("akregator", "AkregatorIface");
+    if(!isRestored())
+    {
+        DCOPRef akr("akregator", "AkregatorIface");
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    if ( !mMainWindow ) {
-      mMainWindow = new Akregator::MainWindow();
-      setMainWidget( mMainWindow );
-      mMainWindow->loadPart();
-      mMainWindow->setupProgressWidgets();
-      if (!args->isSet("hide-mainwindow"))
-        mMainWindow->show();
-      akr.send("openStandardFeedList");
+        if(!mMainWindow)
+        {
+            mMainWindow = new Akregator::MainWindow();
+            setMainWidget(mMainWindow);
+            mMainWindow->loadPart();
+            mMainWindow->setupProgressWidgets();
+            if(!args->isSet("hide-mainwindow"))
+                mMainWindow->show();
+            akr.send("openStandardFeedList");
+        }
+
+        QString addFeedGroup = !args->getOption("group").isEmpty()
+                               ? QString::fromLocal8Bit(args->getOption("group"))
+                               : i18n("Imported Folder");
+
+        QCStringList feeds = args->getOptionList("addfeed");
+        QStringList feedsToAdd;
+        QCStringList::ConstIterator end(feeds.end());
+        for(QCStringList::ConstIterator it = feeds.begin(); it != end; ++it)
+            feedsToAdd.append(*it);
+
+        if(!feedsToAdd.isEmpty())
+            akr.send("addFeedsToGroup", feedsToAdd, addFeedGroup);
+
+        args->clear();
     }
-
-    QString addFeedGroup = !args->getOption("group").isEmpty() 
-         ? QString::fromLocal8Bit(args->getOption("group")) 
-         : i18n("Imported Folder");
-
-    QCStringList feeds = args->getOptionList("addfeed");
-    QStringList feedsToAdd;
-    QCStringList::ConstIterator end( feeds.end() );
-    for (QCStringList::ConstIterator it = feeds.begin(); it != end; ++it)
-        feedsToAdd.append(*it);
-
-    if (!feedsToAdd.isEmpty())
-        akr.send("addFeedsToGroup", feedsToAdd, addFeedGroup );
-  
-    args->clear();
-  }
-  return KUniqueApplication::newInstance();
+    return KUniqueApplication::newInstance();
 }
 
 } // namespace Akregator
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
 {
     Akregator::AboutData about;
     KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( Akregator::akregator_options );
+    KCmdLineArgs::addCmdLineOptions(Akregator::akregator_options);
     KUniqueApplication::addCmdLineOptions();
 
     Akregator::Application app;
@@ -98,7 +99,7 @@ int main(int argc, char **argv)
     KNotifyClient::startDaemon();
 
     // see if we are starting with session management
-    if (app.isRestored())
+    if(app.isRestored())
     {
 #undef RESTORE
 #define RESTORE(type) { int n = 1;\

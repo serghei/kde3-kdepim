@@ -40,53 +40,60 @@ namespace KMail {
 
 class MessageSender {
 protected:
-  virtual ~MessageSender() = 0;
+    virtual ~MessageSender() = 0;
 
 public:
-  enum SendMethod {
-    SendDefault = -1,
-    SendImmediate = true,
-    SendLater = false
-  };
-  /**
-     Send given message.
+    enum SendMethod
+    {
+        SendDefault = -1,
+        SendImmediate = true,
+        SendLater = false
+    };
+    /**
+       Send given message.
 
-     The message is either queued (@p method == SendLater) or sent
-     immediately (@p method = SendImmediate). The default behaviour,
-     as selected with setSendImmediate(), can be overwritten with the
-     parameter @p method.  The sender takes ownership of the given
-     message on success, so DO NOT DELETE OR MODIFY the message
-     further.
+       The message is either queued (@p method == SendLater) or sent
+       immediately (@p method = SendImmediate). The default behaviour,
+       as selected with setSendImmediate(), can be overwritten with the
+       parameter @p method.  The sender takes ownership of the given
+       message on success, so DO NOT DELETE OR MODIFY the message
+       further.
 
-     FIXME: what about send() == false?
+       FIXME: what about send() == false?
 
-     @return true on success.
-  */
-  bool send( KMMessage * msg, SendMethod method=SendDefault ) { return doSend( msg, method ); }
+       @return true on success.
+    */
+    bool send(KMMessage *msg, SendMethod method = SendDefault)
+    {
+        return doSend(msg, method);
+    }
 
-  /**
-     Start sending all queued messages.
+    /**
+       Start sending all queued messages.
 
-     FIXME: what does success mean here, if it's only _start_ sending?
+       FIXME: what does success mean here, if it's only _start_ sending?
 
-     Optionally a transport can be specified that will be used as the
-     default transport.
+       Optionally a transport can be specified that will be used as the
+       default transport.
 
-     @return true on success.
-  */
-  bool sendQueued( const QString & transport=QString::null ) { return doSendQueued( transport ); }
+       @return true on success.
+    */
+    bool sendQueued(const QString &transport = QString::null)
+    {
+        return doSendQueued(transport);
+    }
 
-  virtual void readConfig() = 0;
-  virtual void writeConfig( bool withSync = true ) = 0;
+    virtual void readConfig() = 0;
+    virtual void writeConfig(bool withSync = true) = 0;
 
-  virtual bool sendImmediate() const = 0;
-  virtual void setSendImmediate( bool immediate ) = 0;
+    virtual bool sendImmediate() const = 0;
+    virtual void setSendImmediate(bool immediate) = 0;
 
-  virtual bool sendQuotedPrintable() const = 0;
-  virtual void setSendQuotedPrintable( bool qp ) = 0;
+    virtual bool sendQuotedPrintable() const = 0;
+    virtual void setSendQuotedPrintable(bool qp) = 0;
 protected:
-  virtual bool doSend( KMMessage * msg, short sendNow ) = 0;
-  virtual bool doSendQueued( const QString& transport ) = 0;
+    virtual bool doSend(KMMessage *msg, short sendNow) = 0;
+    virtual bool doSendQueued(const QString &transport) = 0;
 };
 
 inline MessageSender::~MessageSender() {}

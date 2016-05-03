@@ -40,16 +40,15 @@ typedef CustomListViewItem<Incidence *> KOListViewItem;
 
 class KOListView;
 
-class KOListViewToolTip : public QToolTip
-{
-  public:
-    KOListViewToolTip (QWidget* parent, KListView* lv );
+class KOListViewToolTip : public QToolTip {
+public:
+    KOListViewToolTip(QWidget *parent, KListView *lv);
 
-  protected:
-    void maybeTip( const QPoint & pos);
+protected:
+    void maybeTip(const QPoint &pos);
 
-  private:
-    KListView* eventlist;
+private:
+    KListView *eventlist;
 };
 
 
@@ -63,10 +62,9 @@ class KOListViewToolTip : public QToolTip
   @author Preston Brown <pbrown@kde.org>
   @see KOBaseView, KODayListView
 */
-class KOListView : public KOEventView
-{
+class KOListView : public KOEventView {
     Q_OBJECT
-  public:
+public:
     KOListView(Calendar *calendar, QWidget *parent = 0,
                const char *name = 0);
     ~KOListView();
@@ -83,10 +81,10 @@ class KOListView : public KOEventView
 
     void clear();
 
-  public slots:
+public slots:
     virtual void updateView();
-    virtual void showDates( const QDate &start, const QDate &end );
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showDates(const QDate &start, const QDate &end);
+    virtual void showIncidences(const Incidence::List &incidenceList);
 
     void clearSelection();
 
@@ -96,17 +94,17 @@ class KOListView : public KOEventView
     void changeIncidenceDisplay(Incidence *, int);
 
     void defaultItemAction(QListViewItem *item);
-    void popupMenu(QListViewItem *item,const QPoint &,int);
+    void popupMenu(QListViewItem *item, const QPoint &, int);
 
-  protected slots:
+protected slots:
     void processSelectionChange();
 
-  protected:
-    void addIncidences( const Incidence::List & );
+protected:
+    void addIncidences(const Incidence::List &);
     void addIncidence(Incidence *);
     KOListViewItem *getItemForIncidence(Incidence *incidence);
 
-  private:
+private:
     class ListItemVisitor;
     KListView *mListView;
     KOEventPopupMenu *mPopupMenu;

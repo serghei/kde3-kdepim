@@ -32,15 +32,14 @@ namespace KCal {
   This class represents a period of time. The period can be defined by either a
   start time and an end time or by a start time and a duration.
 */
-class KDE_EXPORT Period
-{
-  public:
+class KDE_EXPORT Period {
+public:
     Period();
-    Period( const QDateTime &start, const QDateTime &end );
-    Period( const QDateTime &start, const Duration &duration );
+    Period(const QDateTime &start, const QDateTime &end);
+    Period(const QDateTime &start, const Duration &duration);
 
     /** Returns true if this element is smaller than the @param other one */
-    bool operator<( const Period& other );
+    bool operator<(const Period &other);
 
     QDateTime start() const;
     QDateTime end() const;
@@ -49,11 +48,11 @@ class KDE_EXPORT Period
     bool hasDuration()const;
 
     QString summary() const;
-    void setSummary( const QString &summary );
+    void setSummary(const QString &summary);
     QString location() const;
-    void setLocation( const QString &location );
+    void setLocation(const QString &location);
 
-  private:
+private:
     QDateTime mStart;
     QDateTime mEnd;
 

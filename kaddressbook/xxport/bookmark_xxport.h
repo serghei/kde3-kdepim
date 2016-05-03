@@ -27,25 +27,27 @@
 
 #include <xxport.h>
 
-class BookmarkXXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class BookmarkXXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    BookmarkXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "bookmark"; }
+    QString identifier() const
+    {
+        return "bookmark";
+    }
 
-  public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
+public slots:
+    bool exportContacts(const KABC::AddresseeList &list, const QString &data);
 
-  signals:
+signals:
     /**
       The following signals are used for building a bookmarks file
       using KBookmarkDomBuilder.
      */
-    void newBookmark( const QString &text, const QCString &url, const QString &additionnalInfo );
-    void newFolder( const QString &text, bool open, const QString &additionnalInfo );
+    void newBookmark(const QString &text, const QCString &url, const QString &additionnalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionnalInfo);
     void newSeparator();
     void endFolder();
 };

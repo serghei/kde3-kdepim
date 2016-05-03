@@ -34,17 +34,16 @@ namespace KCal {
   This class implements the iTIP interface using the email interface specified
   as iMIP.
 */
-class KDE_EXPORT IMIPScheduler : public Scheduler
-{
-  public:
-    IMIPScheduler( Calendar * );
+class KDE_EXPORT IMIPScheduler : public Scheduler {
+public:
+    IMIPScheduler(Calendar *);
     virtual ~IMIPScheduler();
-    
-    bool publish (IncidenceBase *incidence,const QString &recipients);
-    bool performTransaction(IncidenceBase *incidence,Method method);
+
+    bool publish(IncidenceBase *incidence, const QString &recipients);
+    bool performTransaction(IncidenceBase *incidence, Method method);
     QPtrList<ScheduleMessage> retrieveTransactions();
 
-  private:
+private:
     class Private;
     Private *d;
 };

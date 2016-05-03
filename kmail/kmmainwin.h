@@ -26,55 +26,63 @@
 
 class KMMainWidget;
 namespace KPIM {
-   class StatusbarProgressWidget;
-   class ProgressDialog;
+class StatusbarProgressWidget;
+class ProgressDialog;
 }
 using KPIM::StatusbarProgressWidget;
 using KPIM::ProgressDialog;
 
-class KMMainWin : public KMainWindow
-{
-  Q_OBJECT
+class KMMainWin : public KMainWindow {
+    Q_OBJECT
 
 public:
-  // the main window needs to have a name since else restoring the window
-  // settings by kwin doesn't work
-  KMMainWin(QWidget *parent = 0);
-  virtual ~KMMainWin();
-  KMMainWidget *mainKMWidget() const { return mKMMainWidget; };
-  StatusbarProgressWidget* progressWidget() const { return mLittleProgress; }
-  ProgressDialog* progressDialog() const { return mProgressDialog; }
+    // the main window needs to have a name since else restoring the window
+    // settings by kwin doesn't work
+    KMMainWin(QWidget *parent = 0);
+    virtual ~KMMainWin();
+    KMMainWidget *mainKMWidget() const
+    {
+        return mKMMainWidget;
+    };
+    StatusbarProgressWidget *progressWidget() const
+    {
+        return mLittleProgress;
+    }
+    ProgressDialog *progressDialog() const
+    {
+        return mProgressDialog;
+    }
 
 
-  /** Read configuration options after widgets are created. */
-  virtual void readConfig(void);
+    /** Read configuration options after widgets are created. */
+    virtual void readConfig(void);
 
-  /** Write configuration options. */
-  virtual void writeConfig(void);
+    /** Write configuration options. */
+    virtual void writeConfig(void);
 
 public slots:
-  void displayStatusMsg(const QString&);
-  void slotEditToolbars();
-  void slotUpdateToolbars();
-  void setupStatusBar();
+    void displayStatusMsg(const QString &);
+    void slotEditToolbars();
+    void slotUpdateToolbars();
+    void setupStatusBar();
 
 protected:
-  virtual bool queryClose ();
+    virtual bool queryClose();
 
 protected slots:
-  void slotQuit();
-  void slotConfigChanged();
-  void slotShowTipOnStart();
+    void slotQuit();
+    void slotConfigChanged();
+    void slotShowTipOnStart();
 
 private slots:
-  void slotNewMailReader();
+    void slotNewMailReader();
 
 private:
-  KMMainWidget *mKMMainWidget;
-  StatusbarProgressWidget *mLittleProgress;
-  ProgressDialog *mProgressDialog;
-  int mMessageStatusId;
-  bool mReallyClose;
+    KMMainWidget *mKMMainWidget;
+    StatusbarProgressWidget *mLittleProgress;
+    ProgressDialog *mProgressDialog;
+    int mMessageStatusId;
+    bool mReallyClose;
 };
 
 #endif

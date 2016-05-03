@@ -32,11 +32,12 @@
 #include <kdepimmacros.h>
 #include <ktrader.h>
 
-namespace KPIM { class IdentityManager; }
+namespace KPIM {
+class IdentityManager;
+}
 
-class KDE_EXPORT KOCore
-{
-  public:
+class KDE_EXPORT KOCore {
+public:
     ~KOCore();
 
     static KOCore *self();
@@ -46,31 +47,31 @@ class KDE_EXPORT KOCore
     KTrader::OfferList availableParts();
     KTrader::OfferList availablePrintPlugins();
 
-    KOrg::Plugin *loadPlugin( KService::Ptr service );
-    KOrg::Plugin *loadPlugin( const QString & );
+    KOrg::Plugin *loadPlugin(KService::Ptr service);
+    KOrg::Plugin *loadPlugin(const QString &);
 
-    KOrg::CalendarDecoration *loadCalendarDecoration( KService::Ptr service );
-    KOrg::CalendarDecoration *loadCalendarDecoration( const QString & );
+    KOrg::CalendarDecoration *loadCalendarDecoration(KService::Ptr service);
+    KOrg::CalendarDecoration *loadCalendarDecoration(const QString &);
 
-    KOrg::Part *loadPart( KService::Ptr, KOrg::MainWindow *parent );
-    KOrg::Part *loadPart( const QString &, KOrg::MainWindow *parent );
-    
-    KOrg::PrintPlugin *loadPrintPlugin( KService::Ptr service );
-    KOrg::PrintPlugin *loadPrintPlugin( const QString & );
+    KOrg::Part *loadPart(KService::Ptr, KOrg::MainWindow *parent);
+    KOrg::Part *loadPart(const QString &, KOrg::MainWindow *parent);
+
+    KOrg::PrintPlugin *loadPrintPlugin(KService::Ptr service);
+    KOrg::PrintPlugin *loadPrintPlugin(const QString &);
 
     KOrg::CalendarDecoration::List calendarDecorations();
     KOrg::PrintPlugin::List loadPrintPlugins();
-    KOrg::Part::List loadParts( KOrg::MainWindow *parent );
+    KOrg::Part::List loadParts(KOrg::MainWindow *parent);
 
-    void addXMLGUIClient( QWidget*, KXMLGUIClient *guiclient );
-    void removeXMLGUIClient( QWidget* );
-    KXMLGUIClient *xmlguiClient( QWidget* ) const;
+    void addXMLGUIClient(QWidget *, KXMLGUIClient *guiclient);
+    void removeXMLGUIClient(QWidget *);
+    KXMLGUIClient *xmlguiClient(QWidget *) const;
 
     /**
       Unload the parts in &p parts for this main window. Clears
       parts.
     */
-    void unloadParts( KOrg::MainWindow *parent, KOrg::Part::List &parts );
+    void unloadParts(KOrg::MainWindow *parent, KOrg::Part::List &parts);
     void unloadPlugins();
 
     void reloadPlugins();
@@ -79,24 +80,24 @@ class KDE_EXPORT KOCore
       Unloads the parts from the main window. Loads the parts that
       are listed in KOPrefs and returns a list of these parts.
     */
-    KOrg::Part::List reloadParts( KOrg::MainWindow *parent,
-                                  KOrg::Part::List &parts );
+    KOrg::Part::List reloadParts(KOrg::MainWindow *parent,
+                                 KOrg::Part::List &parts);
 
-    KPIM::IdentityManager* identityManager();
+    KPIM::IdentityManager *identityManager();
 
-  protected:
+protected:
     KOCore();
 
-    KTrader::OfferList availablePlugins( const QString &type,
-                                         int pluginInterfaceVersion = -1 );
+    KTrader::OfferList availablePlugins(const QString &type,
+                                        int pluginInterfaceVersion = -1);
 
-  private:
+private:
     static KOCore *mSelf;
 
     KOrg::CalendarDecoration::List mCalendarDecorations;
     bool mCalendarDecorationsLoaded;
 
-    QMap<QWidget*, KXMLGUIClient*> mXMLGUIClients;
+    QMap<QWidget *, KXMLGUIClient *> mXMLGUIClients;
 
     KPIM::IdentityManager *mIdentityManager;
 };

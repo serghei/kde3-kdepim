@@ -11,14 +11,14 @@
 
 namespace Akregator {
 
-SettingsAdvanced::SettingsAdvanced(QWidget* parent, const char* name) : SettingsAdvancedBase(parent, name)
+SettingsAdvanced::SettingsAdvanced(QWidget *parent, const char *name) : SettingsAdvancedBase(parent, name)
 {
 
     QStringList backends = Backend::StorageFactoryRegistry::self()->list();
     QString tname;
     int i = 0;
-    QStringList::Iterator end( backends.end() );
-    for (QStringList::Iterator it = backends.begin(); it != end; ++it)
+    QStringList::Iterator end(backends.end());
+    for(QStringList::Iterator it = backends.begin(); it != end; ++it)
     {
         m_factories[i] = Backend::StorageFactoryRegistry::self()->getFactory(*it);
         m_keyPos[m_factories[i]->key()] = i;
@@ -34,7 +34,7 @@ QString SettingsAdvanced::selectedFactory() const
     return m_factories[cbBackend->currentItem()]->key();
 }
 
-void SettingsAdvanced::selectFactory(const QString& key)
+void SettingsAdvanced::selectFactory(const QString &key)
 {
     cbBackend->setCurrentItem(m_keyPos[key]);
     pbBackendConfigure->setEnabled((m_factories[m_keyPos[key]]->isConfigurable()));

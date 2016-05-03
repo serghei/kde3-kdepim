@@ -22,10 +22,10 @@
 
 //====================================================================================
 
-KNListBoxItem::KNListBoxItem(const QString& text, QPixmap *pm)
+KNListBoxItem::KNListBoxItem(const QString &text, QPixmap *pm)
 {
-  p_m=pm;
-  setText(text);
+    p_m = pm;
+    setText(text);
 }
 
 
@@ -37,46 +37,50 @@ KNListBoxItem::~KNListBoxItem()
 void KNListBoxItem::paint(QPainter *p)
 {
 
-  QFontMetrics fm = p->fontMetrics();
+    QFontMetrics fm = p->fontMetrics();
 
-  int tYPos=0, tXPos=3, pYPos=0;
+    int tYPos = 0, tXPos = 3, pYPos = 0;
 
-  tYPos = fm.ascent() + fm.leading()/2; // vertical text position
+    tYPos = fm.ascent() + fm.leading() / 2; // vertical text position
 
-  if(p_m) {
+    if(p_m)
+    {
 
-    tXPos=p_m->width() + 6;
+        tXPos = p_m->width() + 6;
 
-    if ( p_m->height() < fm.height() )  {
-      //tYPos = fm.ascent() + fm.leading()/2;
-      pYPos = (fm.height() - p_m->height())/2;}
-    else {
-      tYPos = p_m->height()/2 - fm.height()/2 + fm.ascent();
-      pYPos = 0;
+        if(p_m->height() < fm.height())
+        {
+            //tYPos = fm.ascent() + fm.leading()/2;
+            pYPos = (fm.height() - p_m->height()) / 2;
+        }
+        else
+        {
+            tYPos = p_m->height() / 2 - fm.height() / 2 + fm.ascent();
+            pYPos = 0;
+        }
+        p->drawPixmap(3, pYPos ,  *p_m);
     }
-    p->drawPixmap( 3, pYPos ,  *p_m );
-  }
 
 
-  p->drawText( tXPos, tYPos, text() );
+    p->drawText(tXPos, tYPos, text());
 }
 
 
 int KNListBoxItem::height(const QListBox *lb) const
 {
-  if(p_m)
-    return QMAX( p_m->height(), lb->fontMetrics().lineSpacing() + 1 );
-  else
-    return (lb->fontMetrics().lineSpacing() + 1);
+    if(p_m)
+        return QMAX(p_m->height(), lb->fontMetrics().lineSpacing() + 1);
+    else
+        return (lb->fontMetrics().lineSpacing() + 1);
 }
 
 
 int KNListBoxItem::width(const QListBox *lb) const
 {
-  if(p_m)
-    return (p_m->width() + lb->fontMetrics().width( text() ) + 6);
-  else
-    return (lb->fontMetrics().width( text() ) + 6);
+    if(p_m)
+        return (p_m->width() + lb->fontMetrics().width(text()) + 6);
+    else
+        return (lb->fontMetrics().width(text()) + 6);
 }
 
 
@@ -84,8 +88,8 @@ int KNListBoxItem::width(const QListBox *lb) const
 
 // **** listbox for dialogs **************************************************
 
-KNDialogListBox::KNDialogListBox(bool alwaysIgnore, QWidget * parent, const char * name)
- : QListBox(parent, name), a_lwaysIgnore(alwaysIgnore)
+KNDialogListBox::KNDialogListBox(bool alwaysIgnore, QWidget *parent, const char *name)
+    : QListBox(parent, name), a_lwaysIgnore(alwaysIgnore)
 {
 }
 
@@ -97,20 +101,20 @@ KNDialogListBox::~KNDialogListBox()
 
 void KNDialogListBox::keyPressEvent(QKeyEvent *e)
 {
-  if ((a_lwaysIgnore || !(hasFocus()&&isVisible()))&&((e->key()==Key_Enter)||(e->key()==Key_Return)))
-    e->ignore();
-  else
-    QListBox::keyPressEvent(e);
+    if((a_lwaysIgnore || !(hasFocus() && isVisible())) && ((e->key() == Key_Enter) || (e->key() == Key_Return)))
+        e->ignore();
+    else
+        QListBox::keyPressEvent(e);
 }
 
 
 //====================================================================================
 
 
-KNDockWidgetHeaderDrag::KNDockWidgetHeaderDrag(QWidget *focusWidget, KDockWidgetAbstractHeader* parent, KDockWidget* dock, const char* name )
-  : KDockWidgetHeaderDrag(parent, dock, name), f_ocus(false)
+KNDockWidgetHeaderDrag::KNDockWidgetHeaderDrag(QWidget *focusWidget, KDockWidgetAbstractHeader *parent, KDockWidget *dock, const char *name)
+    : KDockWidgetHeaderDrag(parent, dock, name), f_ocus(false)
 {
-  connect(focusWidget, SIGNAL(focusChanged(QFocusEvent*)), SLOT(slotFocusChanged(QFocusEvent*)));
+    connect(focusWidget, SIGNAL(focusChanged(QFocusEvent *)), SLOT(slotFocusChanged(QFocusEvent *)));
 }
 
 
@@ -121,36 +125,40 @@ KNDockWidgetHeaderDrag::~KNDockWidgetHeaderDrag()
 
 void KNDockWidgetHeaderDrag::slotFocusChanged(QFocusEvent *e)
 {
-  if(e->gotFocus()) {
-    f_ocus = true;
-  } else if(e->lostFocus()) {
-    f_ocus = false;
-  }
-  update();
+    if(e->gotFocus())
+    {
+        f_ocus = true;
+    }
+    else if(e->lostFocus())
+    {
+        f_ocus = false;
+    }
+    update();
 }
 
 
-void KNDockWidgetHeaderDrag::paintEvent(QPaintEvent* ev)
+void KNDockWidgetHeaderDrag::paintEvent(QPaintEvent *ev)
 {
-  if (!f_ocus) {
-    KDockWidgetHeaderDrag::paintEvent(ev);
-    return;
-  }
+    if(!f_ocus)
+    {
+        KDockWidgetHeaderDrag::paintEvent(ev);
+        return;
+    }
 
-  QPixmap drawBuffer(width(), height());
-  QPainter paint;
+    QPixmap drawBuffer(width(), height());
+    QPainter paint;
 
-  paint.begin(&drawBuffer);
-  paint.fillRect(drawBuffer.rect(), QBrush(colorGroup().brush(QColorGroup::Background)));
+    paint.begin(&drawBuffer);
+    paint.fillRect(drawBuffer.rect(), QBrush(colorGroup().brush(QColorGroup::Background)));
 
-  paint.setPen(palette().active().highlight());
-  paint.drawLine(1, 2, width(), 2);
-  paint.drawLine(1, 3, width(), 3);
-  paint.drawLine(1, 5, width(), 5);
-  paint.drawLine(1, 6, width(), 6);
+    paint.setPen(palette().active().highlight());
+    paint.drawLine(1, 2, width(), 2);
+    paint.drawLine(1, 3, width(), 3);
+    paint.drawLine(1, 5, width(), 5);
+    paint.drawLine(1, 6, width(), 6);
 
-  bitBlt( this,0,0,&drawBuffer,0,0,width(),height());
-  paint.end();
+    bitBlt(this, 0, 0, &drawBuffer, 0, 0, width(), height());
+    paint.end();
 }
 
 

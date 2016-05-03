@@ -46,210 +46,219 @@
 #include "filtereditdialog.h"
 #include "filtereditdialog.moc"
 
-FilterEditDialog::FilterEditDialog( QPtrList<CalFilter> *filters,
-                                    QWidget *parent, const char *name)
-  : KDialogBase( parent, name, false, i18n("Edit Calendar Filters"),
-                 Ok | Apply | Cancel )
+FilterEditDialog::FilterEditDialog(QPtrList<CalFilter> *filters,
+                                   QWidget *parent, const char *name)
+    : KDialogBase(parent, name, false, i18n("Edit Calendar Filters"),
+                  Ok | Apply | Cancel)
 {
-  setMainWidget( mFilterEdit = new FilterEdit(filters, this));
+    setMainWidget(mFilterEdit = new FilterEdit(filters, this));
 
-  connect(mFilterEdit, SIGNAL(dataConsistent(bool)),
-        SLOT(setDialogConsistent(bool)));
+    connect(mFilterEdit, SIGNAL(dataConsistent(bool)),
+            SLOT(setDialogConsistent(bool)));
     updateFilterList();
-    connect( mFilterEdit, SIGNAL( editCategories() ), SIGNAL( editCategories() ) );
-    connect( mFilterEdit, SIGNAL( filterChanged() ), SIGNAL( filterChanged() ) );
+    connect(mFilterEdit, SIGNAL(editCategories()), SIGNAL(editCategories()));
+    connect(mFilterEdit, SIGNAL(filterChanged()), SIGNAL(filterChanged()));
 }
 
 FilterEditDialog::~FilterEditDialog()
 {
-  delete mFilterEdit;
-  mFilterEdit = 0L;
+    delete mFilterEdit;
+    mFilterEdit = 0L;
 }
 
 void FilterEditDialog::updateFilterList()
 {
-  mFilterEdit->updateFilterList();
+    mFilterEdit->updateFilterList();
 }
 
 void FilterEditDialog::updateCategoryConfig()
 {
-  mFilterEdit->updateCategoryConfig();
+    mFilterEdit->updateCategoryConfig();
 }
 
 void FilterEditDialog::slotApply()
 {
-  mFilterEdit->saveChanges();
+    mFilterEdit->saveChanges();
 }
 
 void FilterEditDialog::slotOk()
 {
-  slotApply();
-  accept();
+    slotApply();
+    accept();
 }
 
-void FilterEditDialog::setDialogConsistent(bool consistent) {
-    enableButtonOK( consistent );
-    enableButtonApply( consistent );
+void FilterEditDialog::setDialogConsistent(bool consistent)
+{
+    enableButtonOK(consistent);
+    enableButtonApply(consistent);
 }
 
 FilterEdit::FilterEdit(QPtrList<CalFilter> *filters, QWidget *parent)
-  : FilterEdit_base( parent), current(0), mCategorySelectDialog( 0 )
+    : FilterEdit_base(parent), current(0), mCategorySelectDialog(0)
 {
-  mFilters = filters;
-  QWhatsThis::add( mNewButton, i18n( "Press this button to define a new filter." ) );
-  QWhatsThis::add( mDeleteButton, i18n( "Press this button to remove the currently active filter." ) );
+    mFilters = filters;
+    QWhatsThis::add(mNewButton, i18n("Press this button to define a new filter."));
+    QWhatsThis::add(mDeleteButton, i18n("Press this button to remove the currently active filter."));
 
-  connect( mRulesList, SIGNAL(selectionChanged()), this, SLOT(filterSelected()) );
-  connect( mNewButton, SIGNAL( clicked() ), SLOT( bNewPressed() ) );
-  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( bDeletePressed() ) );
-  connect( mNameLineEdit, SIGNAL( textChanged(const QString &) ), SLOT( updateSelectedName(const QString &) ) );
-  connect( mCatEditButton, SIGNAL( clicked() ), SLOT( editCategorySelection() ) );
+    connect(mRulesList, SIGNAL(selectionChanged()), this, SLOT(filterSelected()));
+    connect(mNewButton, SIGNAL(clicked()), SLOT(bNewPressed()));
+    connect(mDeleteButton, SIGNAL(clicked()), SLOT(bDeletePressed()));
+    connect(mNameLineEdit, SIGNAL(textChanged(const QString &)), SLOT(updateSelectedName(const QString &)));
+    connect(mCatEditButton, SIGNAL(clicked()), SLOT(editCategorySelection()));
 }
 
-FilterEdit::~FilterEdit() {
+FilterEdit::~FilterEdit()
+{
 }
 
 
 void FilterEdit::updateFilterList()
 {
-  mRulesList->clear();
+    mRulesList->clear();
 
-  CalFilter *filter = mFilters->first();
+    CalFilter *filter = mFilters->first();
 
-  if ( !filter )
-    emit(dataConsistent(false));
-  else {
-    while( filter ) {
-      mRulesList->insertItem( filter->name() );
-      filter = mFilters->next();
+    if(!filter)
+        emit(dataConsistent(false));
+    else
+    {
+        while(filter)
+        {
+            mRulesList->insertItem(filter->name());
+            filter = mFilters->next();
+        }
+
+        CalFilter *f = mFilters->at(mRulesList->currentItem());
+        if(f) filterSelected(f);
+
+        emit(dataConsistent(true));
     }
 
-    CalFilter *f = mFilters->at( mRulesList->currentItem() );
-    if ( f ) filterSelected( f );
-
-    emit(dataConsistent(true));
-  }
-
-  if(current == 0L && mFilters->count() > 0)
-    filterSelected(mFilters->at(0));
-  mDeleteButton->setEnabled( mFilters->count() > 1 );
+    if(current == 0L && mFilters->count() > 0)
+        filterSelected(mFilters->at(0));
+    mDeleteButton->setEnabled(mFilters->count() > 1);
 }
 
 void FilterEdit::saveChanges()
 {
-  if(current == 0L)
-    return;
-  
-  current->setName(mNameLineEdit->text());
-  int criteria = 0;
-  if ( mCompletedCheck->isChecked() ) criteria |= CalFilter::HideCompleted;
-  if ( mRecurringCheck->isChecked() ) criteria |= CalFilter::HideRecurring;
-  if ( mCatShowCheck->isChecked() ) criteria |= CalFilter::ShowCategories;
-  if ( mHideInactiveTodosCheck->isChecked() ) criteria |= CalFilter::HideInactiveTodos;
-  if ( mHideTodosNotAssignedToMeCheck->isChecked() ) 
-    criteria |= CalFilter::HideTodosWithoutAttendeeInEmailList;
-  current->setCriteria( criteria );
-  current->setCompletedTimeSpan( mCompletedTimeSpan->value() );
+    if(current == 0L)
+        return;
 
-  QStringList categoryList;
-  for( uint i = 0; i < mCatList->count(); ++i )
-      categoryList.append( mCatList->text( i ) );
-  current->setCategoryList( categoryList );
-  emit filterChanged();
+    current->setName(mNameLineEdit->text());
+    int criteria = 0;
+    if(mCompletedCheck->isChecked()) criteria |= CalFilter::HideCompleted;
+    if(mRecurringCheck->isChecked()) criteria |= CalFilter::HideRecurring;
+    if(mCatShowCheck->isChecked()) criteria |= CalFilter::ShowCategories;
+    if(mHideInactiveTodosCheck->isChecked()) criteria |= CalFilter::HideInactiveTodos;
+    if(mHideTodosNotAssignedToMeCheck->isChecked())
+        criteria |= CalFilter::HideTodosWithoutAttendeeInEmailList;
+    current->setCriteria(criteria);
+    current->setCompletedTimeSpan(mCompletedTimeSpan->value());
+
+    QStringList categoryList;
+    for(uint i = 0; i < mCatList->count(); ++i)
+        categoryList.append(mCatList->text(i));
+    current->setCategoryList(categoryList);
+    emit filterChanged();
 }
 
 void FilterEdit::filterSelected()
 {
-  filterSelected(mFilters->at(mRulesList->currentItem()));
+    filterSelected(mFilters->at(mRulesList->currentItem()));
 }
 
 void FilterEdit::filterSelected(CalFilter *filter)
 {
-  if(filter == current) return;
-  kdDebug(5850) << "Selected filter " << (filter!=0?filter->name():"") << endl;
-  saveChanges();
+    if(filter == current) return;
+    kdDebug(5850) << "Selected filter " << (filter != 0 ? filter->name() : "") << endl;
+    saveChanges();
 
-  current = filter;
-  mNameLineEdit->blockSignals(true);
-  mNameLineEdit->setText(current->name());
-  mNameLineEdit->blockSignals(false);
-  mDetailsFrame->setEnabled(current != 0L);
-  mCompletedCheck->setChecked( current->criteria() & CalFilter::HideCompleted );
-  mCompletedTimeSpan->setValue( current->completedTimeSpan() );
-  mRecurringCheck->setChecked( current->criteria() & CalFilter::HideRecurring );
-  mHideInactiveTodosCheck->setChecked( current->criteria() & CalFilter::HideInactiveTodos );
-  mHideTodosNotAssignedToMeCheck->setChecked( 
-      current->criteria() & CalFilter::HideTodosWithoutAttendeeInEmailList );
-  mCategoriesButtonGroup->setButton( (current->criteria() & CalFilter::ShowCategories)?0:1 );
-  mCatList->clear();
-  mCatList->insertStringList( current->categoryList() );
+    current = filter;
+    mNameLineEdit->blockSignals(true);
+    mNameLineEdit->setText(current->name());
+    mNameLineEdit->blockSignals(false);
+    mDetailsFrame->setEnabled(current != 0L);
+    mCompletedCheck->setChecked(current->criteria() & CalFilter::HideCompleted);
+    mCompletedTimeSpan->setValue(current->completedTimeSpan());
+    mRecurringCheck->setChecked(current->criteria() & CalFilter::HideRecurring);
+    mHideInactiveTodosCheck->setChecked(current->criteria() & CalFilter::HideInactiveTodos);
+    mHideTodosNotAssignedToMeCheck->setChecked(
+        current->criteria() & CalFilter::HideTodosWithoutAttendeeInEmailList);
+    mCategoriesButtonGroup->setButton((current->criteria() & CalFilter::ShowCategories) ? 0 : 1);
+    mCatList->clear();
+    mCatList->insertStringList(current->categoryList());
 }
 
-void FilterEdit::bNewPressed() {
-  CalFilter *newFilter = new CalFilter( i18n("New Filter %1").arg(mFilters->count()) );
-  mFilters->append( newFilter );
-  updateFilterList();
-  mRulesList->setSelected(mRulesList->count()-1, true);
-  emit filterChanged();
+void FilterEdit::bNewPressed()
+{
+    CalFilter *newFilter = new CalFilter(i18n("New Filter %1").arg(mFilters->count()));
+    mFilters->append(newFilter);
+    updateFilterList();
+    mRulesList->setSelected(mRulesList->count() - 1, true);
+    emit filterChanged();
 }
 
-void FilterEdit::bDeletePressed() {
-  if ( mRulesList->currentItem() < 0 ) return; // nothing selected
-  if ( mFilters->count() <= 1 ) return; // We need at least a default filter object.
+void FilterEdit::bDeletePressed()
+{
+    if(mRulesList->currentItem() < 0) return;    // nothing selected
+    if(mFilters->count() <= 1) return;    // We need at least a default filter object.
 
-  int result = KMessageBox::warningContinueCancel( this,
-     i18n("This item will be permanently deleted."), i18n("Delete Confirmation"), KGuiItem(i18n("Delete"),"editdelete") );
+    int result = KMessageBox::warningContinueCancel(this,
+                 i18n("This item will be permanently deleted."), i18n("Delete Confirmation"), KGuiItem(i18n("Delete"), "editdelete"));
 
-  if ( result != KMessageBox::Continue )
-    return;
+    if(result != KMessageBox::Continue)
+        return;
 
-  unsigned int selected = mRulesList->currentItem();
-  mFilters->remove( selected );
-  current = 0L;
-  updateFilterList();
-  mRulesList->setSelected(QMIN(mRulesList->count()-1, selected), true);
-  emit filterChanged();
+    unsigned int selected = mRulesList->currentItem();
+    mFilters->remove(selected);
+    current = 0L;
+    updateFilterList();
+    mRulesList->setSelected(QMIN(mRulesList->count() - 1, selected), true);
+    emit filterChanged();
 }
 
-void FilterEdit::updateSelectedName(const QString &newText) {
-  mRulesList->blockSignals( true );
-  mRulesList->changeItem(newText, mRulesList->currentItem());
-  mRulesList->blockSignals( false );
-  bool allOk = true;
-  CalFilter *filter = mFilters->first();
-  while( allOk && filter ) {
-    if(filter->name().isEmpty())
-     allOk = false;
-    filter = mFilters->next();
-  }
-  emit dataConsistent(allOk);
+void FilterEdit::updateSelectedName(const QString &newText)
+{
+    mRulesList->blockSignals(true);
+    mRulesList->changeItem(newText, mRulesList->currentItem());
+    mRulesList->blockSignals(false);
+    bool allOk = true;
+    CalFilter *filter = mFilters->first();
+    while(allOk && filter)
+    {
+        if(filter->name().isEmpty())
+            allOk = false;
+        filter = mFilters->next();
+    }
+    emit dataConsistent(allOk);
 }
 
 void FilterEdit::editCategorySelection()
 {
-  if( !current ) return;
-  if ( !mCategorySelectDialog ) {
-    mCategorySelectDialog = new KPIM::CategorySelectDialog( KOPrefs::instance(), this, "filterCatSelect" );
-    connect( mCategorySelectDialog,
-             SIGNAL( categoriesSelected( const QStringList & ) ),
-             SLOT( updateCategorySelection( const QStringList & ) ) );
-    connect( mCategorySelectDialog, SIGNAL( editCategories() ),
-             SIGNAL( editCategories() ) );
+    if(!current) return;
+    if(!mCategorySelectDialog)
+    {
+        mCategorySelectDialog = new KPIM::CategorySelectDialog(KOPrefs::instance(), this, "filterCatSelect");
+        connect(mCategorySelectDialog,
+                SIGNAL(categoriesSelected(const QStringList &)),
+                SLOT(updateCategorySelection(const QStringList &)));
+        connect(mCategorySelectDialog, SIGNAL(editCategories()),
+                SIGNAL(editCategories()));
 
-  }
-  mCategorySelectDialog->setSelected( current->categoryList() );
+    }
+    mCategorySelectDialog->setSelected(current->categoryList());
 
-  mCategorySelectDialog->show();
+    mCategorySelectDialog->show();
 }
 
-void FilterEdit::updateCategorySelection( const QStringList &categories )
+void FilterEdit::updateCategorySelection(const QStringList &categories)
 {
-  mCatList->clear();
-  mCatList->insertStringList(categories);
-  current->setCategoryList(categories);
+    mCatList->clear();
+    mCatList->insertStringList(categories);
+    current->setCategoryList(categories);
 }
 
 void FilterEdit::updateCategoryConfig()
 {
-  if ( mCategorySelectDialog ) mCategorySelectDialog->updateCategoryConfig();
+    if(mCategorySelectDialog) mCategorySelectDialog->updateCategoryConfig();
 }

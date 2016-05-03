@@ -41,101 +41,109 @@
 #include "todoRecord.h"
 
 bool KCalSync::setTodoEntry(PilotTodoEntry *de,
-	const KCal::Todo *todo,
-	const CategoryAppInfo &info)
+                            const KCal::Todo *todo,
+                            const CategoryAppInfo &info)
 {
-	FUNCTIONSETUP;
-	if (!de || !todo) {
-		DEBUGKPILOT << fname << ": NULL todo given... Skipping it" << endl;
-		return false;
-	}
+    FUNCTIONSETUP;
+    if(!de || !todo)
+    {
+        DEBUGKPILOT << fname << ": NULL todo given... Skipping it" << endl;
+        return false;
+    }
 
-	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if (todo->secrecy()!=KCal::Todo::SecrecyPublic)
-	{
-		de->setSecret( true );
-	}
+    // set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
+    if(todo->secrecy() != KCal::Todo::SecrecyPublic)
+    {
+        de->setSecret(true);
+    }
 
-	// update it from the iCalendar Todo.
+    // update it from the iCalendar Todo.
 
-	if (todo->hasDueDate()) {
-		struct tm t = writeTm(todo->dtDue());
-		de->setDueDate(t);
-		de->setIndefinite(0);
-	} else {
-		de->setIndefinite(1);
-	}
+    if(todo->hasDueDate())
+    {
+        struct tm t = writeTm(todo->dtDue());
+        de->setDueDate(t);
+        de->setIndefinite(0);
+    }
+    else
+    {
+        de->setIndefinite(1);
+    }
 
-	// TODO: take recurrence (code in VCAlConduit) from ActionNames
+    // TODO: take recurrence (code in VCAlConduit) from ActionNames
 
-	setCategory(de, todo, info);
+    setCategory(de, todo, info);
 
-	// TODO: sync the alarm from ActionNames. Need to extend PilotTodoEntry
-	de->setPriority(todo->priority());
+    // TODO: sync the alarm from ActionNames. Need to extend PilotTodoEntry
+    de->setPriority(todo->priority());
 
-	de->setComplete(todo->isCompleted());
+    de->setComplete(todo->isCompleted());
 
-	// what we call summary pilot calls description.
-	de->setDescription(todo->summary());
+    // what we call summary pilot calls description.
+    de->setDescription(todo->summary());
 
-	// what we call description pilot puts as a separate note
-	de->setNote(todo->description());
+    // what we call description pilot puts as a separate note
+    de->setNote(todo->description());
 
-	DEBUGKPILOT << "-------- " << todo->summary() << endl;
-	return de->pack();
+    DEBUGKPILOT << "-------- " << todo->summary() << endl;
+    return de->pack();
 }
 
 bool KCalSync::setTodo(KCal::Todo *e,
-	const PilotTodoEntry *de,
-	const CategoryAppInfo &info)
+                       const PilotTodoEntry *de,
+                       const CategoryAppInfo &info)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (!e)
-	{
-		DEBUGKPILOT << fname
-			<< ": null todo entry given. skipping..." << endl;
-		return false;
-	}
-	if (!de)
-	{
-		DEBUGKPILOT << fname
-			<< "! NULL todo entry given... Skipping it" << endl;
-		return false;
-	}
+    if(!e)
+    {
+        DEBUGKPILOT << fname
+                    << ": null todo entry given. skipping..." << endl;
+        return false;
+    }
+    if(!de)
+    {
+        DEBUGKPILOT << fname
+                    << "! NULL todo entry given... Skipping it" << endl;
+        return false;
+    }
 
 
-	e->setPilotId(de->id());
-	DEBUGKPILOT<<fname<<": set KCal item to pilotId: [" << e->pilotId() << "] ..."<<endl;
+    e->setPilotId(de->id());
+    DEBUGKPILOT << fname << ": set KCal item to pilotId: [" << e->pilotId() << "] ..." << endl;
 
-	e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
+    e->setSecrecy(de->isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic);
 
-	if (de->getIndefinite()) {
-		e->setHasDueDate(false);
-	} else {
-		e->setDtDue(readTm(de->getDueDate()));
-		e->setHasDueDate(true);
-	}
+    if(de->getIndefinite())
+    {
+        e->setHasDueDate(false);
+    }
+    else
+    {
+        e->setDtDue(readTm(de->getDueDate()));
+        e->setHasDueDate(true);
+    }
 
-	// Categories
-	setCategory(e, de, info);
+    // Categories
+    setCategory(e, de, info);
 
-	// PRIORITY //
-	e->setPriority(de->getPriority());
+    // PRIORITY //
+    e->setPriority(de->getPriority());
 
-	// COMPLETED? //
-	e->setCompleted(de->getComplete());
-	if ( de->getComplete() && !e->hasCompletedDate() ) {
-		e->setCompleted( QDateTime::currentDateTime() );
-	}
+    // COMPLETED? //
+    e->setCompleted(de->getComplete());
+    if(de->getComplete() && !e->hasCompletedDate())
+    {
+        e->setCompleted(QDateTime::currentDateTime());
+    }
 
-	e->setSummary(de->getDescription());
-	e->setDescription(de->getNote());
+    e->setSummary(de->getDescription());
+    e->setDescription(de->getNote());
 
-	// NOTE: This MUST be done last, since every other set* call
-	// calls updated(), which will trigger an
-	// setSyncStatus(SYNCMOD)!!!
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
+    // NOTE: This MUST be done last, since every other set* call
+    // calls updated(), which will trigger an
+    // setSyncStatus(SYNCMOD)!!!
+    e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
-	return true;
+    return true;
 }

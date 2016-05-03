@@ -37,18 +37,18 @@ using namespace KCal;
 
 class KOEventPopupMenu : public QPopupMenu {
     Q_OBJECT
-  public:
+public:
     KOEventPopupMenu();
 
-    void addAdditionalItem(const QIconSet &icon,const QString &text,
+    void addAdditionalItem(const QIconSet &icon, const QString &text,
                            const QObject *receiver, const char *member,
-                           bool editOnly=false);
+                           bool editOnly = false);
 
 
-  public slots:
-    void showIncidencePopup( Incidence *, const QDate & );
+public slots:
+    void showIncidencePopup(Incidence *, const QDate &);
 
-  protected slots:
+protected slots:
     void popupShow();
     void popupEdit();
     void popupPaste();
@@ -61,7 +61,7 @@ class KOEventPopupMenu : public QPopupMenu {
     void dissociateFutureOccurrence();
     void forward();
 
-  signals:
+signals:
     void editIncidenceSignal(Incidence *);
     void showIncidenceSignal(Incidence *);
     void deleteIncidenceSignal(Incidence *);
@@ -69,10 +69,10 @@ class KOEventPopupMenu : public QPopupMenu {
     void copyIncidenceSignal(Incidence *);
     void pasteIncidenceSignal();
     void toggleAlarmSignal(Incidence *);
-    void dissociateOccurrenceSignal( Incidence *, const QDate & );
-    void dissociateFutureOccurrenceSignal( Incidence *, const QDate & );
+    void dissociateOccurrenceSignal(Incidence *, const QDate &);
+    void dissociateFutureOccurrenceSignal(Incidence *, const QDate &);
 
-  private:
+private:
     Incidence *mCurrentIncidence;
     QDate mCurrentDate;
 

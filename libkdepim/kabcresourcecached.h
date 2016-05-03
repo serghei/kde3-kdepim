@@ -28,62 +28,61 @@
 
 namespace KABC {
 
-class KDE_EXPORT ResourceCached : public Resource
-{
-  Q_OBJECT
+class KDE_EXPORT ResourceCached : public Resource {
+    Q_OBJECT
 
-  public:
-    ResourceCached( const KConfig* );
+public:
+    ResourceCached(const KConfig *);
     ~ResourceCached();
 
     /**
       Writes the resource specific config to file.
      */
-    virtual void writeConfig( KConfig *config );
+    virtual void writeConfig(KConfig *config);
 
     /**
       Insert an addressee into the resource.
      */
-    virtual void insertAddressee( const Addressee& );
+    virtual void insertAddressee(const Addressee &);
 
     /**
       Removes an addressee from resource.
      */
-    virtual void removeAddressee( const Addressee& addr );
+    virtual void removeAddressee(const Addressee &addr);
 
     void loadCache();
     void saveCache();
-    void cleanUpCache( const KABC::Addressee::List &list );
+    void cleanUpCache(const KABC::Addressee::List &list);
 
     /**
       Returns a reference to the id mapper.
      */
-    KPIM::IdMapper& idMapper();
+    KPIM::IdMapper &idMapper();
 
     bool hasChanges() const;
     void clearChanges();
-    void clearChange( const KABC::Addressee& );
-    void clearChange( const QString& );
+    void clearChange(const KABC::Addressee &);
+    void clearChange(const QString &);
 
     KABC::Addressee::List addedAddressees() const;
     KABC::Addressee::List changedAddressees() const;
     KABC::Addressee::List deletedAddressees() const;
 
-  protected:
+protected:
     virtual QString cacheFile() const;
 
     /**
       Functions for keeping the changes persistent.
      */
-    virtual QString changesCacheFile( const QString& ) const;
-    void loadChangesCache( QMap<QString, KABC::Addressee>&, const QString& );
+    virtual QString changesCacheFile(const QString &) const;
+    void loadChangesCache(QMap<QString, KABC::Addressee> &, const QString &);
     void loadChangesCache();
-    void saveChangesCache( const QMap<QString, KABC::Addressee>&, const QString& );
+    void saveChangesCache(const QMap<QString, KABC::Addressee> &, const QString &);
     void saveChangesCache();
 
     void setIdMapperIdentifier();
 
-  private:
+private:
     KPIM::IdMapper mIdMapper;
 
     QMap<QString, KABC::Addressee> mAddedAddressees;

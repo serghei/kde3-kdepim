@@ -27,13 +27,12 @@
 #include <qstring.h>
 #include <kdepimmacros.h>
 
-class KDE_EXPORT UriHandler
-{
-  public:
+class KDE_EXPORT UriHandler {
+public:
     /**
       Process URI. Return true if handler handled the URI, otherwise false.
     */
-    static bool process( const QString &uri );
+    static bool process(const QString &uri);
 };
 
 #endif

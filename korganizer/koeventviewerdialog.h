@@ -38,20 +38,25 @@ class KOEventViewer;
 /**
   Viewer dialog for events.
 */
-class KDE_EXPORT KOEventViewerDialog : public KDialogBase
-{
+class KDE_EXPORT KOEventViewerDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    KOEventViewerDialog( QWidget *parent = 0, const char *name = 0,
-                         bool compact = false );
+public:
+    KOEventViewerDialog(QWidget *parent = 0, const char *name = 0,
+                        bool compact = false);
     virtual ~KOEventViewerDialog();
 
-    void setIncidence( Incidence *incidence ) { mEventViewer->setIncidence( incidence ); }
-    void appendIncidence( Incidence *incidence ) { mEventViewer->appendIncidence( incidence ); }
+    void setIncidence(Incidence *incidence)
+    {
+        mEventViewer->setIncidence(incidence);
+    }
+    void appendIncidence(Incidence *incidence)
+    {
+        mEventViewer->appendIncidence(incidence);
+    }
 
-    void addText( const QString &text );
+    void addText(const QString &text);
 
-  private:
+private:
     KOEventViewer *mEventViewer;
 };
 

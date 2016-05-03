@@ -29,30 +29,30 @@ class QWidget;
  *
  * @author Mart Kelder <mart.kde@hccnet.nl>
  */
-class SystemTray : public KSystemTray
-{ Q_OBJECT
+class SystemTray : public KSystemTray {
+    Q_OBJECT
 public:
-	/**
-	 * This contructor gives all it parameters to its parents.
-	 * @param parant The parent window
-	 * @param name The name of the QObject's parents.
-	 */
-	SystemTray( QWidget * parent = 0, const char * name = 0 );
-	/**
-	 * Empty destructor; does nothing at the moment
-	 */
-	~SystemTray();
-	
+    /**
+     * This contructor gives all it parameters to its parents.
+     * @param parant The parent window
+     * @param name The name of the QObject's parents.
+     */
+    SystemTray(QWidget *parent = 0, const char *name = 0);
+    /**
+     * Empty destructor; does nothing at the moment
+     */
+    ~SystemTray();
+
 protected:
-	/**
-	 * Reimplementation because in the reimplementation of KSystray it popup's of restores.
-	 * In this implemention, the action depends on the settings.
-	 * @param me An object which contains the mousebutton which is pressed.
-	 */
-	virtual void mousePressEvent( QMouseEvent* me );
-	
+    /**
+     * Reimplementation because in the reimplementation of KSystray it popup's of restores.
+     * In this implemention, the action depends on the settings.
+     * @param me An object which contains the mousebutton which is pressed.
+     */
+    virtual void mousePressEvent(QMouseEvent *me);
+
 signals:
-	void mouseButtonPressed( Qt::ButtonState );
+    void mouseButtonPressed(Qt::ButtonState);
 };
 
 #endif //MK_SYSTEMTRAY_H

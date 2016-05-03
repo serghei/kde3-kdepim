@@ -28,25 +28,24 @@
 
 class QLineEdit;
 
-class StringInputField : public SimpleInputField
-{
-  Q_OBJECT
+class StringInputField : public SimpleInputField {
+    Q_OBJECT
 
-  public:
-    StringInputField( const QString &name, const QString &typeName, const Schema::SimpleType *type );
+public:
+    StringInputField(const QString &name, const QString &typeName, const Schema::SimpleType *type);
 
-    virtual void setXMLData( const QDomElement &element );
-    virtual void xmlData( QDomDocument &document, QDomElement &parent );
+    virtual void setXMLData(const QDomElement &element);
+    virtual void xmlData(QDomDocument &document, QDomElement &parent);
 
-    virtual void setData( const QString &data );
+    virtual void setData(const QString &data);
     virtual QString data() const;
 
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual QWidget *createWidget(QWidget *parent);
 
-  private slots:
-    void inputChanged( const QString& );
+private slots:
+    void inputChanged(const QString &);
 
-  private:
+private:
     QLineEdit *mInputWidget;
     QString mValue;
     QString mTypeName;

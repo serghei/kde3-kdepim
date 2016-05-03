@@ -39,154 +39,163 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kmailsummary( QWidget *parent, const char * )
-  {
-    return new KCMKMailSummary( parent, "kcmkmailsummary" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_kmailsummary(QWidget *parent, const char *)
+    {
+        return new KCMKMailSummary(parent, "kcmkmailsummary");
+    }
 }
 
-KCMKMailSummary::KCMKMailSummary( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+KCMKMailSummary::KCMKMailSummary(QWidget *parent, const char *name)
+    : KCModule(parent, name)
 {
-  initGUI();
+    initGUI();
 
-  connect( mFolderView, SIGNAL( clicked( QListViewItem* ) ), SLOT( modified() ) );
-  connect( mFullPath, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+    connect(mFolderView, SIGNAL(clicked(QListViewItem *)), SLOT(modified()));
+    connect(mFullPath, SIGNAL(toggled(bool)), SLOT(modified()));
 
-  KAcceleratorManager::manage( this );
+    KAcceleratorManager::manage(this);
 
-  load();
+    load();
 
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkmailsummary" ),
-                                      I18N_NOOP( "Mail Summary Configuration Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c) 2004 Tobias Koenig" ) );
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkmailsummary"),
+                                       I18N_NOOP("Mail Summary Configuration Dialog"),
+                                       0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2004 Tobias Koenig"));
 
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-  setAboutData( about );
+    about->addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
+    setAboutData(about);
 }
 
 void KCMKMailSummary::modified()
 {
-  emit changed( true );
+    emit changed(true);
 }
 
 void KCMKMailSummary::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+    QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-  mFolderView = new KListView( this );
-  mFolderView->setRootIsDecorated( true );
-  mFolderView->setFullWidth( true );
+    mFolderView = new KListView(this);
+    mFolderView->setRootIsDecorated(true);
+    mFolderView->setFullWidth(true);
 
-  mFolderView->addColumn( i18n( "Summary" ) );
+    mFolderView->addColumn(i18n("Summary"));
 
-  mFullPath = new QCheckBox( i18n( "Show full path for folders" ), this );
+    mFullPath = new QCheckBox(i18n("Show full path for folders"), this);
 
-  layout->addWidget( mFolderView );
-  layout->addWidget( mFullPath );
+    layout->addWidget(mFolderView);
+    layout->addWidget(mFullPath);
 }
 
 void KCMKMailSummary::initFolders()
 {
-  DCOPRef kmail( "kmail", "KMailIface" );
+    DCOPRef kmail("kmail", "KMailIface");
 
-  QStringList folderList;
-  kmail.call( "folderList" ).get( folderList );
+    QStringList folderList;
+    kmail.call("folderList").get(folderList);
 
-  mFolderView->clear();
-  mFolderMap.clear();
+    mFolderView->clear();
+    mFolderMap.clear();
 
-  QStringList::Iterator it;
-  for ( it = folderList.begin(); it != folderList.end(); ++it ) {
-    QString displayName;
-    if ( (*it) == "/Local" )
-      displayName = i18n( "prefix for local folders", "Local" );
-    else {
-      DCOPRef folderRef = kmail.call( "getFolder(QString)", *it );
-      folderRef.call( "displayName()" ).get( displayName );
+    QStringList::Iterator it;
+    for(it = folderList.begin(); it != folderList.end(); ++it)
+    {
+        QString displayName;
+        if((*it) == "/Local")
+            displayName = i18n("prefix for local folders", "Local");
+        else
+        {
+            DCOPRef folderRef = kmail.call("getFolder(QString)", *it);
+            folderRef.call("displayName()").get(displayName);
+        }
+        if((*it).contains('/') == 1)
+        {
+            if(mFolderMap.find(*it) == mFolderMap.end())
+                mFolderMap.insert(*it, new QListViewItem(mFolderView,
+                                  displayName));
+        }
+        else
+        {
+            const int pos = (*it).findRev('/');
+            const QString parentFolder = (*it).left(pos);
+            mFolderMap.insert(*it,
+                              new QCheckListItem(mFolderMap[ parentFolder ],
+                                                 displayName,
+                                                 QCheckListItem::CheckBox));
+        }
     }
-    if ( (*it).contains( '/' ) == 1 ) {
-      if ( mFolderMap.find( *it ) == mFolderMap.end() )
-        mFolderMap.insert( *it, new QListViewItem( mFolderView,
-                                                   displayName ) );
-    } else {
-      const int pos = (*it).findRev( '/' );
-      const QString parentFolder = (*it).left( pos );
-      mFolderMap.insert( *it,
-                         new QCheckListItem( mFolderMap[ parentFolder ],
-                                             displayName,
-                                             QCheckListItem::CheckBox ) );
-    }
-  }
 }
 
 void KCMKMailSummary::loadFolders()
 {
-  KConfig config( "kcmkmailsummaryrc" );
-  config.setGroup( "General" );
+    KConfig config("kcmkmailsummaryrc");
+    config.setGroup("General");
 
-  QStringList folders;
-  if ( !config.hasKey( "ActiveFolders" ) )
-    folders << "/Local/inbox";
-  else
-    folders = config.readListEntry( "ActiveFolders" );
+    QStringList folders;
+    if(!config.hasKey("ActiveFolders"))
+        folders << "/Local/inbox";
+    else
+        folders = config.readListEntry("ActiveFolders");
 
-  QMap<QString, QListViewItem*>::Iterator it;
-  for ( it = mFolderMap.begin(); it != mFolderMap.end(); ++it ) {
-    if ( QCheckListItem *qli = dynamic_cast<QCheckListItem*>( it.data() ) ) {
-      if ( folders.contains( it.key() ) ) {
-        qli->setOn( true );
-        mFolderView->ensureItemVisible( it.data() );
-      } else {
-        qli->setOn( false );
-      }
+    QMap<QString, QListViewItem *>::Iterator it;
+    for(it = mFolderMap.begin(); it != mFolderMap.end(); ++it)
+    {
+        if(QCheckListItem *qli = dynamic_cast<QCheckListItem *>(it.data()))
+        {
+            if(folders.contains(it.key()))
+            {
+                qli->setOn(true);
+                mFolderView->ensureItemVisible(it.data());
+            }
+            else
+            {
+                qli->setOn(false);
+            }
+        }
     }
-  }
-  mFullPath->setChecked( config.readBoolEntry( "ShowFullPath", true ) );
+    mFullPath->setChecked(config.readBoolEntry("ShowFullPath", true));
 }
 
 void KCMKMailSummary::storeFolders()
 {
-  KConfig config( "kcmkmailsummaryrc" );
-  config.setGroup( "General" );
+    KConfig config("kcmkmailsummaryrc");
+    config.setGroup("General");
 
-  QStringList folders;
+    QStringList folders;
 
-  QMap<QString, QListViewItem*>::Iterator it;
-  for ( it = mFolderMap.begin(); it != mFolderMap.end(); ++it )
-    if ( QCheckListItem *qli = dynamic_cast<QCheckListItem*>( it.data() ) )
-      if ( qli->isOn() )
-        folders.append( it.key() );
+    QMap<QString, QListViewItem *>::Iterator it;
+    for(it = mFolderMap.begin(); it != mFolderMap.end(); ++it)
+        if(QCheckListItem *qli = dynamic_cast<QCheckListItem *>(it.data()))
+            if(qli->isOn())
+                folders.append(it.key());
 
-  config.writeEntry( "ActiveFolders", folders );
-  config.writeEntry( "ShowFullPath", mFullPath->isChecked() );
+    config.writeEntry("ActiveFolders", folders);
+    config.writeEntry("ShowFullPath", mFullPath->isChecked());
 
-  config.sync();
+    config.sync();
 }
 
 void KCMKMailSummary::load()
 {
-  initFolders();
-  loadFolders();
+    initFolders();
+    loadFolders();
 
-  emit changed( false );
+    emit changed(false);
 }
 
 void KCMKMailSummary::save()
 {
-  storeFolders();
+    storeFolders();
 
-  emit changed( false );
+    emit changed(false);
 }
 
 void KCMKMailSummary::defaults()
 {
-  mFullPath->setChecked( true );
+    mFullPath->setChecked(true);
 
-  emit changed( true );
+    emit changed(true);
 }
 
 #include "kcmkmailsummary.moc"

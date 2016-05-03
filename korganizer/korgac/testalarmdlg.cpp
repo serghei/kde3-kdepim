@@ -32,40 +32,40 @@
 
 #include "alarmdialog.h"
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("testkabc",I18N_NOOP("TestKabc"),"0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("testkabc", I18N_NOOP("TestKabc"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  Event *e1 = new Event;
-  e1->setSummary( "This is a summary." );
-  QDateTime now = QDateTime::currentDateTime();
-  e1->setDtStart( now );
-  e1->setDtEnd( now.addDays( 1 ) );
-  Alarm *a = e1->newAlarm();
-//  a->setProcedureAlarm( "/usr/X11R6/bin/xeyes" );
-  a->setAudioAlarm( "/opt/kde/share/apps/korganizer/sounds/spinout.wav" );
+    Event *e1 = new Event;
+    e1->setSummary("This is a summary.");
+    QDateTime now = QDateTime::currentDateTime();
+    e1->setDtStart(now);
+    e1->setDtEnd(now.addDays(1));
+    Alarm *a = e1->newAlarm();
+    //  a->setProcedureAlarm( "/usr/X11R6/bin/xeyes" );
+    a->setAudioAlarm("/opt/kde/share/apps/korganizer/sounds/spinout.wav");
 
-  Todo *t1 = new Todo;
-  t1->setSummary( "To-do A" );
-  t1->setDtDue( now );
-  t1->newAlarm();
+    Todo *t1 = new Todo;
+    t1->setSummary("To-do A");
+    t1->setDtDue(now);
+    t1->newAlarm();
 
-  Event *e2 = new Event;
-  e2->setSummary( "This is another summary." );
-  e2->setDtStart( now );
-  e2->setDtEnd( now.addDays( 1 ) );
-  e2->newAlarm();
+    Event *e2 = new Event;
+    e2->setSummary("This is another summary.");
+    e2->setDtStart(now);
+    e2->setDtEnd(now.addDays(1));
+    e2->newAlarm();
 
-  AlarmDialog dlg;
-  app.setMainWidget( &dlg );
-  dlg.addIncidence( e1, QDateTime::currentDateTime() );
-  dlg.addIncidence( t1, QDateTime::currentDateTime() );
-  dlg.addIncidence( e2, QDateTime::currentDateTime() );
-  dlg.show();
-  dlg.eventNotification();
+    AlarmDialog dlg;
+    app.setMainWidget(&dlg);
+    dlg.addIncidence(e1, QDateTime::currentDateTime());
+    dlg.addIncidence(t1, QDateTime::currentDateTime());
+    dlg.addIncidence(e2, QDateTime::currentDateTime());
+    dlg.show();
+    dlg.eventNotification();
 
-  app.exec();
+    app.exec();
 }

@@ -31,23 +31,22 @@ class GroupConfigCommon;
 class MemberConfig;
 class SyncProcess;
 
-class GroupConfig : public QWidget
-{
-  Q_OBJECT
+class GroupConfig : public QWidget {
+    Q_OBJECT
 
-  public:
-    GroupConfig( QWidget *parent );
+public:
+    GroupConfig(QWidget *parent);
 
-    void setSyncProcess( SyncProcess *process );
+    void setSyncProcess(SyncProcess *process);
 
     void updateMembers();
 
     void saveConfig();
 
-  protected slots:
+protected slots:
     void addMember();
 
-  private:
+private:
     QLabel *mNameLabel;
 
     KJanusWidget *mMemberView;

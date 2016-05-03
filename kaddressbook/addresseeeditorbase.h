@@ -28,19 +28,18 @@
 
 #include <qwidget.h>
 
-class AddresseeEditorBase : public QWidget
-{
-  Q_OBJECT
+class AddresseeEditorBase : public QWidget {
+    Q_OBJECT
 
-  public:
-    AddresseeEditorBase( QWidget *parent, const char *name = 0 )
-      : QWidget( parent, name )
+public:
+    AddresseeEditorBase(QWidget *parent, const char *name = 0)
+        : QWidget(parent, name)
     {
     }
 
     ~AddresseeEditorBase() {}
 
-    virtual void setAddressee( const KABC::Addressee& ) = 0;
+    virtual void setAddressee(const KABC::Addressee &) = 0;
     virtual const KABC::Addressee &addressee() = 0;
 
     virtual void setInitialFocus() = 0;
@@ -50,9 +49,12 @@ class AddresseeEditorBase : public QWidget
 
     virtual bool dirty() = 0;
 
-    virtual bool readyToClose() { return true; }
+    virtual bool readyToClose()
+    {
+        return true;
+    }
 
-  signals:
+signals:
     void modified();
 };
 

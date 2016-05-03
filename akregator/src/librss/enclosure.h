@@ -31,39 +31,37 @@ class QDomDocument;
 class QDomElement;
 class QString;
 
-namespace RSS
-{
-    class KDE_EXPORT Enclosure
-    {
-        public:
+namespace RSS {
+class KDE_EXPORT Enclosure {
+public:
 
-        static Enclosure fromXML(const QDomElement& e);
-        QDomElement toXML(QDomDocument document) const;
+    static Enclosure fromXML(const QDomElement &e);
+    QDomElement toXML(QDomDocument document) const;
 
-        Enclosure();
-        Enclosure(const Enclosure& other);
-        Enclosure(const QString& url, int length, const QString& type);
-        virtual ~Enclosure();
-        
-        bool isNull() const;
+    Enclosure();
+    Enclosure(const Enclosure &other);
+    Enclosure(const QString &url, int length, const QString &type);
+    virtual ~Enclosure();
 
-        Enclosure& operator=(const Enclosure& other);
-        bool operator==(const Enclosure& other) const;
+    bool isNull() const;
 
-        /** returns the URL of the enclosure */
-        QString url() const;
+    Enclosure &operator=(const Enclosure &other);
+    bool operator==(const Enclosure &other) const;
 
-       /** returns the size of the enclosure in bytes */
-        int length() const;
+    /** returns the URL of the enclosure */
+    QString url() const;
 
-        /** returns the mime type of the enclosure */
-        QString type() const;
+    /** returns the size of the enclosure in bytes */
+    int length() const;
 
-        private:
+    /** returns the mime type of the enclosure */
+    QString type() const;
 
-        class EnclosurePrivate;
-        EnclosurePrivate* d;
-    };
+private:
+
+    class EnclosurePrivate;
+    EnclosurePrivate *d;
+};
 
 } // namespace RSS
 #endif // LIBRSS_RSS_ENCLOSURE_H

@@ -39,171 +39,168 @@ class QTimer;
 class QSocketNotifier;
 
 // singleton helper class
-class DeviceMap
-{
+class DeviceMap {
 public:
-	static DeviceMap *self()
-	{
-		if (!mThis)
-			mThis = new DeviceMap();
-		return mThis;
-	}
+    static DeviceMap *self()
+    {
+        if(!mThis)
+            mThis = new DeviceMap();
+        return mThis;
+    }
 
-	bool canBind(const QString &device)
-	{
-		FUNCTIONSETUPL(5);
-		DEBUGKPILOT << fname << ": device: ["
-			<< device << "]" << endl;
+    bool canBind(const QString &device)
+    {
+        FUNCTIONSETUPL(5);
+        DEBUGKPILOT << fname << ": device: ["
+                    << device << "]" << endl;
 
-		showList();
-		return !mBoundDevices.contains(device);
-	}
+        showList();
+        return !mBoundDevices.contains(device);
+    }
 
-	void bindDevice(const QString &device)
-	{
-		FUNCTIONSETUPL(5);
-		DEBUGKPILOT << fname << ": device: ["
-			<< device << "]" << endl;
+    void bindDevice(const QString &device)
+    {
+        FUNCTIONSETUPL(5);
+        DEBUGKPILOT << fname << ": device: ["
+                    << device << "]" << endl;
 
-		mBoundDevices.append(device);
-		showList();
-	}
+        mBoundDevices.append(device);
+        showList();
+    }
 
-	void unbindDevice(const QString &device)
-	{
-		FUNCTIONSETUPL(5);
-		DEBUGKPILOT << fname << ": device: ["
-			<< device << "]" << endl;
+    void unbindDevice(const QString &device)
+    {
+        FUNCTIONSETUPL(5);
+        DEBUGKPILOT << fname << ": device: ["
+                    << device << "]" << endl;
 
-		mBoundDevices.remove(device);
-		showList();
-	}
+        mBoundDevices.remove(device);
+        showList();
+    }
 
 protected:
-	DeviceMap()
-	{
-		mBoundDevices.clear();
-	}
-	~DeviceMap()
-	{
-	}
+    DeviceMap()
+    {
+        mBoundDevices.clear();
+    }
+    ~DeviceMap()
+    {
+    }
 
-	QStringList mBoundDevices;
-	static DeviceMap *mThis;
+    QStringList mBoundDevices;
+    static DeviceMap *mThis;
 
 private:
-	void showList() const
-	{
-		FUNCTIONSETUPL(5);
+    void showList() const
+    {
+        FUNCTIONSETUPL(5);
 
-		if ( !(mBoundDevices.count() > 0))
-			return;
+        if(!(mBoundDevices.count() > 0))
+            return;
 
-		DEBUGKPILOT << fname << ": Bound devices: ["
-			<< ((mBoundDevices.count() > 0) ?
-					mBoundDevices.join(CSL1(", ")) : CSL1("<none>"))
-			<< "]" << endl;
-	}
+        DEBUGKPILOT << fname << ": Bound devices: ["
+                    << ((mBoundDevices.count() > 0) ?
+                        mBoundDevices.join(CSL1(", ")) : CSL1("<none>"))
+                    << "]" << endl;
+    }
 };
 
-class Messages
-{
+class Messages {
 public:
-	Messages(KPilotDeviceLink *parent) :
-		fDeviceLink(parent)
-	{
-		reset();
-	}
+    Messages(KPilotDeviceLink *parent) :
+        fDeviceLink(parent)
+    {
+        reset();
+    }
 
-	void reset()
-	{
-		messages = 0;
-		messagesMask = ~messageIsError; // Never block errors
-	}
+    void reset()
+    {
+        messages = 0;
+        messagesMask = ~messageIsError; // Never block errors
+    }
 
-	void block(unsigned int m, bool force=false)
-	{
-		if (force)
-		{
-			// Force blocking this message, even if it's an error msg.
-			messages |= m;
-		}
-		else
-		{
-			messages |= (m & messagesMask);
-		}
-	}
+    void block(unsigned int m, bool force = false)
+    {
+        if(force)
+        {
+            // Force blocking this message, even if it's an error msg.
+            messages |= m;
+        }
+        else
+        {
+            messages |= (m & messagesMask);
+        }
+    }
 
-	/**
-	 * Some messages are only printed once and are suppressed
-	 * after that. These are indicated by flag bits in
-	 * messages. The following enum is a bitfield.
-	 */
-	enum
-	{
-		OpenMessage=1, ///< Trying to open device ..
-		OpenFailMessage=2 ///< Failed to open device ...
-	};
-	int messages;
-	int messagesMask;
-	static const int messageIsError = 0;
+    /**
+     * Some messages are only printed once and are suppressed
+     * after that. These are indicated by flag bits in
+     * messages. The following enum is a bitfield.
+     */
+    enum
+    {
+        OpenMessage = 1, ///< Trying to open device ..
+        OpenFailMessage = 2 ///< Failed to open device ...
+    };
+    int messages;
+    int messagesMask;
+    static const int messageIsError = 0;
 
-	/** Determines whether message @p s which has an id of @p msgid (one of
-	 *  the enum values mentioned above) should be printed, which is only if that
-	 *  message has not been suppressed through messagesMask.
-	 *  If return is true, this method also adds it to the messagesMask.
-	 */
-	bool shouldPrint(int msgid)
-	{
-		if (!(messages & msgid))
-		{
-			block(msgid);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    /** Determines whether message @p s which has an id of @p msgid (one of
+     *  the enum values mentioned above) should be printed, which is only if that
+     *  message has not been suppressed through messagesMask.
+     *  If return is true, this method also adds it to the messagesMask.
+     */
+    bool shouldPrint(int msgid)
+    {
+        if(!(messages & msgid))
+        {
+            block(msgid);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 protected:
-	KPilotDeviceLink *fDeviceLink;
+    KPilotDeviceLink *fDeviceLink;
 };
 
-class DeviceCommEvent : public QEvent
-{
+class DeviceCommEvent : public QEvent {
 public:
-	DeviceCommEvent(DeviceCustomEvents type, QString msg = QString::null,
-			int progress = 0) :
-		QEvent( (QEvent::Type)type ), fMessage(msg), fProgress(progress),
-				fPilotSocket(-1)
-	{
-	}
-	QString message() const
-	{
-		return fMessage;
-	}
-	int progress()
-	{
-		return fProgress;
-	}
+    DeviceCommEvent(DeviceCustomEvents type, QString msg = QString::null,
+                    int progress = 0) :
+        QEvent((QEvent::Type)type), fMessage(msg), fProgress(progress),
+        fPilotSocket(-1)
+    {
+    }
+    QString message() const
+    {
+        return fMessage;
+    }
+    int progress()
+    {
+        return fProgress;
+    }
 
-	inline void setCurrentSocket(int i)
-	{
-		fPilotSocket = i;
-	}
+    inline void setCurrentSocket(int i)
+    {
+        fPilotSocket = i;
+    }
 
-	inline int currentSocket()
-	{
-		return fPilotSocket;
-	}
+    inline int currentSocket()
+    {
+        return fPilotSocket;
+    }
 private:
-	QString fMessage;
-	int fProgress;
-	/**
-	 * Pilot-link library handles for the device once it's opened.
-	 */
-	int fPilotSocket;
+    QString fMessage;
+    int fProgress;
+    /**
+     * Pilot-link library handles for the device once it's opened.
+     */
+    int fPilotSocket;
 };
 
 /** Class that handles all device communications.  We do this
@@ -211,117 +208,116 @@ private:
  Event thread (similar to Swing's AWT event dispatch thread).
  */
 
-class DeviceCommThread : public QObject, public QThread
-{
-friend class KPilotDeviceLink;
+class DeviceCommThread : public QObject, public QThread {
+    friend class KPilotDeviceLink;
 
-Q_OBJECT
+    Q_OBJECT
 
 public:
-	DeviceCommThread(KPilotDeviceLink *d);
-	virtual ~DeviceCommThread();
+    DeviceCommThread(KPilotDeviceLink *d);
+    virtual ~DeviceCommThread();
 
-	virtual void run();
+    virtual void run();
 
-	void setDone(bool b)
-	{
-		FUNCTIONSETUP;
-		fDone = b;
-	}
+    void setDone(bool b)
+    {
+        FUNCTIONSETUP;
+        fDone = b;
+    }
 
 protected:
 
-	void close();
-	
-	void reset();
+    void close();
 
-	/**
-	 * Does the low-level opening of the device and handles the
-	 * pilot-link library initialisation.
-	 */
-	bool open(const QString &device = QString::null);
+    void reset();
+
+    /**
+     * Does the low-level opening of the device and handles the
+     * pilot-link library initialisation.
+     */
+    bool open(const QString &device = QString::null);
 
 protected slots:
-	/**
-	* Attempt to open the device. Called regularly to check
-	* if the device exists (to handle USB-style devices).
-	*/
-	void openDevice();
+    /**
+    * Attempt to open the device. Called regularly to check
+    * if the device exists (to handle USB-style devices).
+    */
+    void openDevice();
 
-	/**
-	* Called when the device is opened *and* activity occurs on the
-	* device. This indicates the beginning of a hotsync.
-	*/
-	void acceptDevice();
-	
-	/**
-	* This slot fires whenever we've been trying to establish a hotsync with
-	* the device for longer than a given amount of time.  When this slot is
-	* fired, we will tear down the communications process and start over again.
-	*/
-	void workaroundUSB();
+    /**
+    * Called when the device is opened *and* activity occurs on the
+    * device. This indicates the beginning of a hotsync.
+    */
+    void acceptDevice();
+
+    /**
+    * This slot fires whenever we've been trying to establish a hotsync with
+    * the device for longer than a given amount of time.  When this slot is
+    * fired, we will tear down the communications process and start over again.
+    */
+    void workaroundUSB();
 
 private:
-	volatile bool fDone;
+    volatile bool fDone;
 
-	KPilotDeviceLink *fHandle;
-	inline KPilotDeviceLink *link()
-	{
-		if (fHandle)
-		{
-			return fHandle;
-		}
-		else
-		{
-			FUNCTIONSETUP;
-			WARNINGKPILOT << "Link asked for, but either I'm "
-				<< "done or I don't have a valid handle.  "
-				<< "Shutting down comm thread." << endl;
-			QThread::exit();
-			return 0;
-		}
-	}
+    KPilotDeviceLink *fHandle;
+    inline KPilotDeviceLink *link()
+    {
+        if(fHandle)
+        {
+            return fHandle;
+        }
+        else
+        {
+            FUNCTIONSETUP;
+            WARNINGKPILOT << "Link asked for, but either I'm "
+                          << "done or I don't have a valid handle.  "
+                          << "Shutting down comm thread." << endl;
+            QThread::exit();
+            return 0;
+        }
+    }
 
-	/**
-	 * Timers and Notifiers for detecting activity on the device.
-	 */
-	QTimer *fOpenTimer;
-	QSocketNotifier *fSocketNotifier;
-	bool fSocketNotifierActive;
+    /**
+     * Timers and Notifiers for detecting activity on the device.
+     */
+    QTimer *fOpenTimer;
+    QSocketNotifier *fSocketNotifier;
+    bool fSocketNotifierActive;
 
-	/** Timer used to check for a badly-connected Z31/72 */
-	QTimer *fWorkaroundUSBTimer;
-	
-	/**
-	 * Pilot-link library handles for the device once it's opened.
-	 */
-	int fPilotSocket;
-	int fTempSocket;
+    /** Timer used to check for a badly-connected Z31/72 */
+    QTimer *fWorkaroundUSBTimer;
 
-	inline QString errorMessage(int e)
-	{
-		switch (e)
-		{
-		case ENOENT:
-			return i18n(" The port does not exist.");
-			break;
-		case ENODEV:
-			return i18n(" There is no such device.");
-			break;
-		case EPERM:
-			return i18n(" You do not have permission to open the "
-				"Pilot device.");
-			break;
-		default:
-			return i18n(" Check Pilot path and permissions.");
-		}
-	}
-	
-	/**
-	* Handle cases where we can't accept or open the device,
-	* and data remains available on the pilot socket.
-	*/
-	int fAcceptedCount;
+    /**
+     * Pilot-link library handles for the device once it's opened.
+     */
+    int fPilotSocket;
+    int fTempSocket;
+
+    inline QString errorMessage(int e)
+    {
+        switch(e)
+        {
+            case ENOENT:
+                return i18n(" The port does not exist.");
+                break;
+            case ENODEV:
+                return i18n(" There is no such device.");
+                break;
+            case EPERM:
+                return i18n(" You do not have permission to open the "
+                            "Pilot device.");
+                break;
+            default:
+                return i18n(" Check Pilot path and permissions.");
+        }
+    }
+
+    /**
+    * Handle cases where we can't accept or open the device,
+    * and data remains available on the pilot socket.
+    */
+    int fAcceptedCount;
 
 };
 

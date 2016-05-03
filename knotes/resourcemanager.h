@@ -43,12 +43,11 @@ class KNotesApp;
 class KNote;
 
 namespace KCal {
-    class Journal;
+class Journal;
 }
 
 
-class KDE_EXPORT KNotesResourceManager : public QObject, public KRES::ManagerObserver<ResourceNotes>
-{
+class KDE_EXPORT KNotesResourceManager : public QObject, public KRES::ManagerObserver<ResourceNotes> {
     Q_OBJECT
 public:
     KNotesResourceManager();
@@ -57,21 +56,21 @@ public:
     void load();
     void save();
 
-    void addNewNote( KCal::Journal *journal );
-    void registerNote( ResourceNotes *resource, KCal::Journal *journal );
+    void addNewNote(KCal::Journal *journal);
+    void registerNote(ResourceNotes *resource, KCal::Journal *journal);
 
-    void deleteNote( KCal::Journal *journal );
+    void deleteNote(KCal::Journal *journal);
 
-    KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
+    KCal::Alarm::List alarms(const QDateTime &from, const QDateTime &to);
 
     // from the ManagerObserver interface
-    virtual void resourceAdded( ResourceNotes *resource );
-    virtual void resourceModified( ResourceNotes *resource );
-    virtual void resourceDeleted( ResourceNotes *resource );
+    virtual void resourceAdded(ResourceNotes *resource);
+    virtual void resourceModified(ResourceNotes *resource);
+    virtual void resourceDeleted(ResourceNotes *resource);
 
 signals:
-    void sigRegisteredNote( KCal::Journal *journal );
-    void sigDeregisteredNote( KCal::Journal *journal );
+    void sigRegisteredNote(KCal::Journal *journal);
+    void sigDeregisteredNote(KCal::Journal *journal);
 
 private:
     KRES::Manager<ResourceNotes> *m_manager;

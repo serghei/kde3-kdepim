@@ -30,23 +30,25 @@ class Calendar;
 /**
   This class provides the interface to the storage of a calendar.
 */
-class LIBKCAL_EXPORT CalStorage
-{
-  public:
-    CalStorage( Calendar *calendar )
+class LIBKCAL_EXPORT CalStorage {
+public:
+    CalStorage(Calendar *calendar)
     {
-      mCalendar = calendar;
+        mCalendar = calendar;
     }
     virtual ~CalStorage() {}
 
-    Calendar *calendar() const { return mCalendar; }
-  
+    Calendar *calendar() const
+    {
+        return mCalendar;
+    }
+
     virtual bool open() = 0;
     virtual bool load() = 0;
     virtual bool save() = 0;
     virtual bool close() = 0;
 
-  private:
+private:
     Calendar *mCalendar;
 
     class Private;

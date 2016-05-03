@@ -31,94 +31,103 @@
 #include <kdebug.h>
 #include <koglobals.h>
 
-KOEventViewer::KOEventViewer( QWidget *parent, const char *name )
-  : QTextBrowser( parent, name ), mDefaultText("")
+KOEventViewer::KOEventViewer(QWidget *parent, const char *name)
+    : QTextBrowser(parent, name), mDefaultText("")
 {
-  mIncidence = 0;
+    mIncidence = 0;
 }
 
 KOEventViewer::~KOEventViewer()
 {
 }
 
-void KOEventViewer::readSettings( KConfig * config )
+void KOEventViewer::readSettings(KConfig *config)
 {
-  if ( config ) {
-// With each restart of KOrganizer the font site gets halfed. What should this
-// be good for?
+    if(config)
+    {
+        // With each restart of KOrganizer the font site gets halfed. What should this
+        // be good for?
 #if 0
-    config->setGroup( QString("EventViewer-%1").arg( name() )  );
-    int zoomFactor = config->readNumEntry("ZoomFactor", pointSize() );
-    zoomTo( zoomFactor/2 );
-    kdDebug(5850) << " KOEventViewer: restoring the pointSize:  "<< pointSize() 
-      << ", zoomFactor: " << zoomFactor << endl;
+        config->setGroup(QString("EventViewer-%1").arg(name()));
+        int zoomFactor = config->readNumEntry("ZoomFactor", pointSize());
+        zoomTo(zoomFactor / 2);
+        kdDebug(5850) << " KOEventViewer: restoring the pointSize:  " << pointSize()
+                      << ", zoomFactor: " << zoomFactor << endl;
 #endif
-  }
-}
-
-void KOEventViewer::writeSettings( KConfig * config )
-{
-  if ( config ) {
-    kdDebug(5850) << " KOEventViewer: saving the zoomFactor: "<< pointSize() << endl;
-    config->setGroup( QString("EventViewer-%1").arg( name() ) );
-    config->writeEntry("ZoomFactor", pointSize() );
-  }
-}
-
-void KOEventViewer::setSource( const QString &n )
-{
-  UriHandler::process( n );
-}
-
-bool KOEventViewer::appendIncidence( Incidence *incidence )
-{
-  addText( IncidenceFormatter::extensiveDisplayString( incidence ) );
-  return true;
-}
-
-void KOEventViewer::setIncidence( Incidence *incidence )
-{
-  clearEvents();
-  if( incidence ) {
-    appendIncidence( incidence );
-    mIncidence = incidence;
-  } else {
-    clearEvents( true );
-    mIncidence = 0;
-  }
-}
-
-void KOEventViewer::clearEvents( bool now )
-{
-  mText = "";
-  if ( now ) setText( mDefaultText );
-}
-
-void KOEventViewer::addText( const QString &text )
-{
-  mText.append( text );
-  setText( mText );
-}
-
-void KOEventViewer::setDefaultText( const QString &text )
-{
-  mDefaultText = text;
-}
-
-void KOEventViewer::changeIncidenceDisplay( Incidence *incidence, int action )
-{
-  if ( mIncidence && ( incidence->uid() == mIncidence->uid() ) ) {
-    switch (action ) {
-      case KOGlobals::INCIDENCEEDITED:{
-        setIncidence( incidence );
-        break;
-      }
-      case KOGlobals::INCIDENCEDELETED: {
-        setIncidence( 0 );
-        break;
-      } 
     }
-  }
+}
+
+void KOEventViewer::writeSettings(KConfig *config)
+{
+    if(config)
+    {
+        kdDebug(5850) << " KOEventViewer: saving the zoomFactor: " << pointSize() << endl;
+        config->setGroup(QString("EventViewer-%1").arg(name()));
+        config->writeEntry("ZoomFactor", pointSize());
+    }
+}
+
+void KOEventViewer::setSource(const QString &n)
+{
+    UriHandler::process(n);
+}
+
+bool KOEventViewer::appendIncidence(Incidence *incidence)
+{
+    addText(IncidenceFormatter::extensiveDisplayString(incidence));
+    return true;
+}
+
+void KOEventViewer::setIncidence(Incidence *incidence)
+{
+    clearEvents();
+    if(incidence)
+    {
+        appendIncidence(incidence);
+        mIncidence = incidence;
+    }
+    else
+    {
+        clearEvents(true);
+        mIncidence = 0;
+    }
+}
+
+void KOEventViewer::clearEvents(bool now)
+{
+    mText = "";
+    if(now) setText(mDefaultText);
+}
+
+void KOEventViewer::addText(const QString &text)
+{
+    mText.append(text);
+    setText(mText);
+}
+
+void KOEventViewer::setDefaultText(const QString &text)
+{
+    mDefaultText = text;
+}
+
+void KOEventViewer::changeIncidenceDisplay(Incidence *incidence, int action)
+{
+    if(mIncidence && (incidence->uid() == mIncidence->uid()))
+    {
+        switch(action)
+        {
+            case KOGlobals::INCIDENCEEDITED:
+            {
+                setIncidence(incidence);
+                break;
+            }
+            case KOGlobals::INCIDENCEDELETED:
+            {
+                setIncidence(0);
+                break;
+            }
+        }
+    }
 }
 
 #include "koeventviewer.moc"

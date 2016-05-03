@@ -40,54 +40,53 @@
 * Implementation of the device link for file-system backed (ie. local, fake)
 * devices. Uses a directory specified in the reset() call to serve databases.
 */
-class KDE_EXPORT KPilotLocalLink : public KPilotLink
-{
-Q_OBJECT
+class KDE_EXPORT KPilotLocalLink : public KPilotLink {
+    Q_OBJECT
 public:
-	KPilotLocalLink( QObject *parent=0L, const char *name=0L );
-	virtual ~KPilotLocalLink();
+    KPilotLocalLink(QObject *parent = 0L, const char *name = 0L);
+    virtual ~KPilotLocalLink();
 
-	virtual QString statusString() const;
-	virtual bool isConnected() const;
-	virtual void reset( const QString & );
-	virtual void close();
-	virtual void reset();
-	virtual bool tickle();
-	virtual const KPilotCard *getCardInfo(int card);
-	virtual void endSync( EndOfSyncFlags f );
-	virtual int openConduit();
-	virtual int getNextDatabase(int index,struct DBInfo *);
-	virtual int findDatabase(const char *name, struct DBInfo*,
-		int index=0, unsigned long type=0, unsigned long creator=0);
-	virtual bool retrieveDatabase(const QString &path, struct DBInfo *db);
-	virtual DBInfoList getDBList(int cardno=0, int flags=dlpDBListRAM);
-	virtual PilotDatabase *database( const QString &name );
+    virtual QString statusString() const;
+    virtual bool isConnected() const;
+    virtual void reset(const QString &);
+    virtual void close();
+    virtual void reset();
+    virtual bool tickle();
+    virtual const KPilotCard *getCardInfo(int card);
+    virtual void endSync(EndOfSyncFlags f);
+    virtual int openConduit();
+    virtual int getNextDatabase(int index, struct DBInfo *);
+    virtual int findDatabase(const char *name, struct DBInfo *,
+                             int index = 0, unsigned long type = 0, unsigned long creator = 0);
+    virtual bool retrieveDatabase(const QString &path, struct DBInfo *db);
+    virtual DBInfoList getDBList(int cardno = 0, int flags = dlpDBListRAM);
+    virtual PilotDatabase *database(const QString &name);
 
 public slots:
-	void ready();
+    void ready();
 
 protected:
-	virtual bool installFile(const QString &, const bool deleteFile);
-	virtual void addSyncLogEntryImpl( const QString &s );
-	virtual int pilotSocket() const
-	{
-		return -1;
-	}
+    virtual bool installFile(const QString &, const bool deleteFile);
+    virtual void addSyncLogEntryImpl(const QString &s);
+    virtual int pilotSocket() const
+    {
+        return -1;
+    }
 
 protected:
-	bool fReady;
-	QString fPath;
+    bool fReady;
+    QString fPath;
 
-	class Private;
-	Private *d;
+    class Private;
+    Private *d;
 
-	/**
-	* Pre-process the directory @p path to find out which databases
-	* live there.
-	*
-	* @return Number of database in @p path.
-	*/
-	unsigned int findAvailableDatabases( Private &, const QString &path );
+    /**
+    * Pre-process the directory @p path to find out which databases
+    * live there.
+    *
+    * @return Number of database in @p path.
+    */
+    unsigned int findAvailableDatabases(Private &, const QString &path);
 } ;
 
 

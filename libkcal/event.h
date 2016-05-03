@@ -29,9 +29,8 @@ namespace KCal {
 /**
   This class provides an Event in the sense of RFC2445.
 */
-class LIBKCAL_EXPORT Event : public Incidence
-{
-  public:
+class LIBKCAL_EXPORT Event : public Incidence {
+public:
     /**
       Transparency of event.
 
@@ -43,12 +42,15 @@ class LIBKCAL_EXPORT Event : public Incidence
     typedef ListBase<Event> List;
 
     Event();
-    Event( const Event & );
+    Event(const Event &);
     ~Event();
-    Event& operator=( const Event &e );
-    bool operator==( const Event & ) const;
+    Event &operator=(const Event &e);
+    bool operator==(const Event &) const;
 
-    QCString type() const { return "Event"; }
+    QCString type() const
+    {
+        return "Event";
+    }
 
     /**
       Return copy of this Event. The caller owns the returned objet.
@@ -81,7 +83,7 @@ class LIBKCAL_EXPORT Event : public Incidence
       @param shortfmt if true return string in short format, if false return
                       long format
     */
-    QString dtEndDateStr( bool shortfmt = true ) const;
+    QString dtEndDateStr(bool shortfmt = true) const;
     /**
       Return end date and time as string formatted according to the users locale
       settings.
@@ -105,7 +107,7 @@ class LIBKCAL_EXPORT Event : public Incidence
     /**
       Set the event's time transparency level.
     */
-    void setTransparency( Transparency transparency );
+    void setTransparency(Transparency transparency);
     /**
       Return the event's time transparency level.
     */
@@ -114,13 +116,19 @@ class LIBKCAL_EXPORT Event : public Incidence
     /**
       Set duration of this event.
     */
-    void setDuration( int seconds );
+    void setDuration(int seconds);
 
-  protected:
+protected:
     /** Return the end date/time of the base incidence. */
-    virtual QDateTime endDateRecurrenceBase() const { return dtEnd(); }
-  private:
-    bool accept( Visitor &v ) { return v.visit( this ); }
+    virtual QDateTime endDateRecurrenceBase() const
+    {
+        return dtEnd();
+    }
+private:
+    bool accept(Visitor &v)
+    {
+        return v.visit(this);
+    }
 
     QDateTime mDtEnd;
     bool mHasEndDate;

@@ -45,84 +45,84 @@
 #include "knotealarmdlg.h"
 
 
-KNoteAlarmDlg::KNoteAlarmDlg( const QString& caption, QWidget *parent, const char *name )
-    : KDialogBase( parent, name, true, caption, Ok|Cancel, Ok )
+KNoteAlarmDlg::KNoteAlarmDlg(const QString &caption, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, caption, Ok | Cancel, Ok)
 {
     QVBox *page = makeVBoxMainWidget();
-    QGroupBox *group = new QGroupBox( 3, Vertical, i18n("Scheduled Alarm"), page );
-    m_buttons = new QButtonGroup( page );
+    QGroupBox *group = new QGroupBox(3, Vertical, i18n("Scheduled Alarm"), page);
+    m_buttons = new QButtonGroup(page);
     m_buttons->hide();
 
-    QRadioButton *none = new QRadioButton( i18n("&No alarm"), group );
-    m_buttons->insert( none );
+    QRadioButton *none = new QRadioButton(i18n("&No alarm"), group);
+    m_buttons->insert(none);
 
-    QHBox *at = new QHBox( group );
-    QRadioButton *label_at = new QRadioButton( i18n("Alarm &at:"), at );
-    m_buttons->insert( label_at );
-    m_atDate = new KDateEdit( at );
-    m_atTime = new KTimeEdit( at );
-    at->setStretchFactor( m_atDate, 1 );
+    QHBox *at = new QHBox(group);
+    QRadioButton *label_at = new QRadioButton(i18n("Alarm &at:"), at);
+    m_buttons->insert(label_at);
+    m_atDate = new KDateEdit(at);
+    m_atTime = new KTimeEdit(at);
+    at->setStretchFactor(m_atDate, 1);
 
-    QHBox *in = new QHBox( group );
-    QRadioButton *label_in = new QRadioButton( i18n("Alarm &in:"), in );
-    m_buttons->insert( label_in );
-    m_inTime = new KTimeEdit( in );
-    QLabel *in_min = new QLabel( i18n("hours/minutes"), in );
+    QHBox *in = new QHBox(group);
+    QRadioButton *label_in = new QRadioButton(i18n("Alarm &in:"), in);
+    m_buttons->insert(label_in);
+    m_inTime = new KTimeEdit(in);
+    QLabel *in_min = new QLabel(i18n("hours/minutes"), in);
 
-    label_in->setEnabled( false ); // TODO
+    label_in->setEnabled(false);   // TODO
 
-    connect( m_buttons, SIGNAL(clicked( int )), SLOT(slotButtonChanged( int )) );
+    connect(m_buttons, SIGNAL(clicked(int)), SLOT(slotButtonChanged(int)));
 }
 
 
-void KNoteAlarmDlg::setIncidence( KCal::Journal *journal )
+void KNoteAlarmDlg::setIncidence(KCal::Journal *journal)
 {
     m_journal = journal;
 
-    if ( !m_journal->alarms().isEmpty() )
+    if(!m_journal->alarms().isEmpty())
     {
         KCal::Alarm *alarm = m_journal->alarms().first();
-        if ( alarm->hasTime() )
+        if(alarm->hasTime())
         {
-            m_buttons->setButton( 1 );
-            m_atDate->setDate( alarm->time().date() );
-            m_atTime->setTime( alarm->time().time() );
+            m_buttons->setButton(1);
+            m_atDate->setDate(alarm->time().date());
+            m_atTime->setTime(alarm->time().time());
         }
-        else if ( alarm->hasStartOffset() )
-            m_buttons->setButton( 2 );
+        else if(alarm->hasStartOffset())
+            m_buttons->setButton(2);
         else
-            m_buttons->setButton( 0 );
+            m_buttons->setButton(0);
     }
     else
-        m_buttons->setButton( 0 );
+        m_buttons->setButton(0);
 
-    slotButtonChanged( m_buttons->selectedId() );
+    slotButtonChanged(m_buttons->selectedId());
 }
 
-void KNoteAlarmDlg::slotButtonChanged( int id )
+void KNoteAlarmDlg::slotButtonChanged(int id)
 {
-    switch ( id )
+    switch(id)
     {
-    case 0:
-        m_atDate->setEnabled( false );
-        m_atTime->setEnabled( false );
-        m_inTime->setEnabled( false );
-        break;
-    case 1:
-        m_atDate->setEnabled( true );
-        m_atTime->setEnabled( true );
-        m_inTime->setEnabled( false );
-        break;
-    case 2:
-        m_atDate->setEnabled( false );
-        m_atTime->setEnabled( false );
-        m_inTime->setEnabled( true );
+        case 0:
+            m_atDate->setEnabled(false);
+            m_atTime->setEnabled(false);
+            m_inTime->setEnabled(false);
+            break;
+        case 1:
+            m_atDate->setEnabled(true);
+            m_atTime->setEnabled(true);
+            m_inTime->setEnabled(false);
+            break;
+        case 2:
+            m_atDate->setEnabled(false);
+            m_atTime->setEnabled(false);
+            m_inTime->setEnabled(true);
     }
 }
 
 void KNoteAlarmDlg::slotOk()
 {
-    if ( m_buttons->selectedId() == 0 )
+    if(m_buttons->selectedId() == 0)
     {
         m_journal->clearAlarms();
         KDialogBase::slotOk();
@@ -130,17 +130,17 @@ void KNoteAlarmDlg::slotOk()
     }
 
     KCal::Alarm *alarm;
-    if ( m_journal->alarms().isEmpty() )
+    if(m_journal->alarms().isEmpty())
     {
         alarm = m_journal->newAlarm();
-        alarm->setEnabled( true );
-        alarm->setType( KCal::Alarm::Display );
+        alarm->setEnabled(true);
+        alarm->setType(KCal::Alarm::Display);
     }
     else
         alarm = m_journal->alarms().first();
 
-    if ( m_buttons->selectedId() == 1 )
-        alarm->setTime( QDateTime( m_atDate->date(), m_atTime->getTime() ) );
+    if(m_buttons->selectedId() == 1)
+        alarm->setTime(QDateTime(m_atDate->date(), m_atTime->getTime()));
     else
     {
         // TODO

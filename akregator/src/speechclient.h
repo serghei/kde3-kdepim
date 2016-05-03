@@ -33,52 +33,50 @@
 class QString;
 template <class T> class QValueList;
 
-namespace Akregator
-{
+namespace Akregator {
 
 class Article;
 
-class SpeechClient : public QObject, public KSpeech_stub, virtual public KSpeechSink
-{
+class SpeechClient : public QObject, public KSpeech_stub, virtual public KSpeechSink {
 
     Q_OBJECT
 
-    public:
+public:
 
-        static SpeechClient* self();
-        bool isTextToSpeechInstalled() const;
-        virtual ~SpeechClient();
+    static SpeechClient *self();
+    bool isTextToSpeechInstalled() const;
+    virtual ~SpeechClient();
 
-    public slots:
+public slots:
 
-        void slotSpeak(const QString& text, const QString& language);
-        void slotSpeak(const Article& article);
-        void slotSpeak(const QValueList<Article>& articles);
-        void slotAbortJobs();
+    void slotSpeak(const QString &text, const QString &language);
+    void slotSpeak(const Article &article);
+    void slotSpeak(const QValueList<Article> &articles);
+    void slotAbortJobs();
 
-    signals:
-      
-        /** emitted when the job queue was empty before and the first job was just queued */
-        void signalJobsStarted();
+signals:
 
-        /** emitted when all jobs were finished or aborted and no further jobs are queued */
-        void signalJobsDone();
+    /** emitted when the job queue was empty before and the first job was just queued */
+    void signalJobsStarted();
 
-        void signalActivated(bool);
+    /** emitted when all jobs were finished or aborted and no further jobs are queued */
+    void signalJobsDone();
 
-    protected:
+    void signalActivated(bool);
 
-        SpeechClient();
-        void setupSpeechSystem();
+protected:
 
-        ASYNC textRemoved(const QCString& appId, uint jobNum);
+    SpeechClient();
+    void setupSpeechSystem();
 
-    private:
-     
-        class SpeechClientPrivate;
-        SpeechClientPrivate* d;
-        
-        static SpeechClient* m_self;
+    ASYNC textRemoved(const QCString &appId, uint jobNum);
+
+private:
+
+    class SpeechClientPrivate;
+    SpeechClientPrivate *d;
+
+    static SpeechClient *m_self;
 };
 
 } // namespace Akregator

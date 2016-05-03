@@ -29,75 +29,81 @@
 #include <qdom.h>
 #include <qlineedit.h>
 
-ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar( const QSync::Member &member, QWidget *parent )
-  : ConfigGui( member, parent )
+ConfigGuiGoogleCalendar::ConfigGuiGoogleCalendar(const QSync::Member &member, QWidget *parent)
+    : ConfigGui(member, parent)
 {
-  QBoxLayout *userLayout = new QHBoxLayout( topLayout() );
+    QBoxLayout *userLayout = new QHBoxLayout(topLayout());
 
-  QLabel *userLbl= new QLabel( i18n("Username:"), this );
-  userLayout->addWidget(userLbl);
+    QLabel *userLbl = new QLabel(i18n("Username:"), this);
+    userLayout->addWidget(userLbl);
 
-  mUsername = new QLineEdit(this);
-  userLayout->addWidget(mUsername);
+    mUsername = new QLineEdit(this);
+    userLayout->addWidget(mUsername);
 
 
-  QBoxLayout *passLayout = new QHBoxLayout( topLayout() );
+    QBoxLayout *passLayout = new QHBoxLayout(topLayout());
 
-  QLabel *passLbl = new QLabel( i18n("Password:"), this );
-  passLayout->addWidget(passLbl);
+    QLabel *passLbl = new QLabel(i18n("Password:"), this);
+    passLayout->addWidget(passLbl);
 
-  mPassword = new QLineEdit(this);
-  mPassword->setEchoMode(QLineEdit::Password);
-  passLayout->addWidget(mPassword);
+    mPassword = new QLineEdit(this);
+    mPassword->setEchoMode(QLineEdit::Password);
+    passLayout->addWidget(mPassword);
 
-  topLayout()->addWidget(new QLabel( i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this ));
+    topLayout()->addWidget(new QLabel(i18n("Please notice that currently the password is stored as plain text in the plugin configuration file"), this));
 
-  QBoxLayout *urlLayout = new QHBoxLayout( topLayout() );
-  QLabel *urlLbl = new QLabel( i18n("Calendar URL:"), this );
-  urlLayout->addWidget(urlLbl);
+    QBoxLayout *urlLayout = new QHBoxLayout(topLayout());
+    QLabel *urlLbl = new QLabel(i18n("Calendar URL:"), this);
+    urlLayout->addWidget(urlLbl);
 
-  mUrl = new QLineEdit(this);
-  urlLayout->addWidget(mUrl);
+    mUrl = new QLineEdit(this);
+    urlLayout->addWidget(mUrl);
 
-  topLayout()->addStretch( 1 );
+    topLayout()->addStretch(1);
 }
 
-void ConfigGuiGoogleCalendar::load( const QString &xml )
+void ConfigGuiGoogleCalendar::load(const QString &xml)
 {
-  QDomDocument doc;
-  doc.setContent( xml );
-  QDomElement docElement = doc.documentElement();
-  QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    QDomElement e = n.toElement();
-    if ( e.tagName() == "username" ) {
-      mUsername->setText(e.text());
-    } else if ( e.tagName() == "password" ) {
-      mPassword->setText(e.text());
-    } else if ( e.tagName() == "url" ) {
-      mUrl->setText(e.text());
+    QDomDocument doc;
+    doc.setContent(xml);
+    QDomElement docElement = doc.documentElement();
+    QDomNode n;
+    for(n = docElement.firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        QDomElement e = n.toElement();
+        if(e.tagName() == "username")
+        {
+            mUsername->setText(e.text());
+        }
+        else if(e.tagName() == "password")
+        {
+            mPassword->setText(e.text());
+        }
+        else if(e.tagName() == "url")
+        {
+            mUrl->setText(e.text());
+        }
     }
-  }
 }
 
 QString ConfigGuiGoogleCalendar::save() const
 {
-  QDomDocument doc;
-  QDomElement root = doc.createElement("config");
-  doc.appendChild(root);
+    QDomDocument doc;
+    QDomElement root = doc.createElement("config");
+    doc.appendChild(root);
 
-  QDomElement un = doc.createElement("username");
-  root.appendChild(un);
-  un.appendChild(doc.createTextNode(mUsername->text()));
+    QDomElement un = doc.createElement("username");
+    root.appendChild(un);
+    un.appendChild(doc.createTextNode(mUsername->text()));
 
-  QDomElement pass = doc.createElement("password");
-  root.appendChild(pass);
-  pass.appendChild(doc.createTextNode(mPassword->text()));
+    QDomElement pass = doc.createElement("password");
+    root.appendChild(pass);
+    pass.appendChild(doc.createTextNode(mPassword->text()));
 
-  QDomElement url = doc.createElement("url");
-  root.appendChild(url);
-  url.appendChild(doc.createTextNode(mUrl->text()));
+    QDomElement url = doc.createElement("url");
+    root.appendChild(url);
+    url.appendChild(doc.createTextNode(mUrl->text()));
 
-  //TODO: Implement me!
-  return doc.toString();
+    //TODO: Implement me!
+    return doc.toString();
 }

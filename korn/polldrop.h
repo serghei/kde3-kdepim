@@ -11,59 +11,70 @@ class QTimerEvent;
 
 /**
 * Superclass for all pollable maildrop monitors.
-* 
+*
 * To implement a polling maildrop, reimplement recheck and emit
 * changed(int) in recheck if new messages have been received.
 *
 * @author Sirtaj Singh Kang (taj@kde.org)
 * @version $Id: polldrop.h 371522 2004-12-17 23:16:06Z mkelder $
 */
-class KPollableDrop : public KMailDrop
-{
-	Q_OBJECT
+class KPollableDrop : public KMailDrop {
+    Q_OBJECT
 public:
-	static const char *PollConfigKey;
-	static const int DefaultPoll;
+    static const char *PollConfigKey;
+    static const int DefaultPoll;
 
 private:
-	int _freq;
-	int _timerId;
-	bool _timerRunning;
+    int _freq;
+    int _timerId;
+    bool _timerRunning;
 
 public:
-	/**
-	* KPollableDrop Constructor
-	*/
-	KPollableDrop();
+    /**
+    * KPollableDrop Constructor
+    */
+    KPollableDrop();
 
-	virtual bool startMonitor();
-	virtual bool stopMonitor();
-	virtual bool startProcess() { return true; } //Start en stop-functions for progress; it is not pollable, but a member of kio
-	virtual bool stopProcess() { return true; }
-	
-	virtual bool running() { return _timerRunning; };
+    virtual bool startMonitor();
+    virtual bool stopMonitor();
+    virtual bool startProcess()
+    {
+        return true;    //Start en stop-functions for progress; it is not pollable, but a member of kio
+    }
+    virtual bool stopProcess()
+    {
+        return true;
+    }
 
-	int freq() const { return _freq; }
-	void setFreq( int freq );
+    virtual bool running()
+    {
+        return _timerRunning;
+    };
 
-	virtual bool readConfigGroup ( const KConfigBase& cfg );
-	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
+    int freq() const
+    {
+        return _freq;
+    }
+    void setFreq(int freq);
 
-	//virtual void addConfigPage( KDropCfgDialog * );
+    virtual bool readConfigGroup(const KConfigBase &cfg);
+    virtual bool writeConfigGroup(KConfigBase &cfg) const;
+
+    //virtual void addConfigPage( KDropCfgDialog * );
 
 protected:
-	void timerEvent( QTimerEvent * );
+    void timerEvent(QTimerEvent *);
 };
 
-inline void KPollableDrop::setFreq( int freq ) 
-{  
-	bool r = running();
+inline void KPollableDrop::setFreq(int freq)
+{
+    bool r = running();
 
-	if( r ) stopMonitor();
+    if(r) stopMonitor();
 
-	_freq = freq; 
- 
-	if( r ) startMonitor(); 
+    _freq = freq;
+
+    if(r) startMonitor();
 }
 
 #endif // SSK_POLLDROP_H

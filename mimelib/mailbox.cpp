@@ -32,21 +32,23 @@
 #include <mimelib/mailbox.h>
 #include <mimelib/token.h>
 
-void RemoveCrAndLf(DwString& aStr);
+void RemoveCrAndLf(DwString &aStr);
 
-const char* const DwMailbox::sClassName = "DwMailbox";
-
-
-DwMailbox* (*DwMailbox::sNewMailbox)(const DwString&, DwMessageComponent*) = 0;
+const char *const DwMailbox::sClassName = "DwMailbox";
 
 
-DwMailbox* DwMailbox::NewMailbox(const DwString& aStr,
-    DwMessageComponent* aParent)
+DwMailbox *(*DwMailbox::sNewMailbox)(const DwString &, DwMessageComponent *) = 0;
+
+
+DwMailbox *DwMailbox::NewMailbox(const DwString &aStr,
+                                 DwMessageComponent *aParent)
 {
-    if (sNewMailbox) {
+    if(sNewMailbox)
+    {
         return sNewMailbox(aStr, aParent);
     }
-    else {
+    else
+    {
         return new DwMailbox(aStr, aParent);
     }
 }
@@ -59,20 +61,20 @@ DwMailbox::DwMailbox()
 }
 
 
-DwMailbox::DwMailbox(const DwMailbox& aMailbox)
-  : DwAddress(aMailbox),
-    mFullName(aMailbox.mFullName),
-    mRoute(aMailbox.mRoute),
-    mLocalPart(aMailbox.mLocalPart),
-    mDomain(aMailbox.mDomain)
+DwMailbox::DwMailbox(const DwMailbox &aMailbox)
+    : DwAddress(aMailbox),
+      mFullName(aMailbox.mFullName),
+      mRoute(aMailbox.mRoute),
+      mLocalPart(aMailbox.mLocalPart),
+      mDomain(aMailbox.mDomain)
 {
     mClassId = kCidMailbox;
     mClassName = sClassName;
 }
 
 
-DwMailbox::DwMailbox(const DwString& aStr, DwMessageComponent* aParent)
-  : DwAddress(aStr, aParent)
+DwMailbox::DwMailbox(const DwString &aStr, DwMessageComponent *aParent)
+    : DwAddress(aStr, aParent)
 {
     mClassId = kCidMailbox;
     mClassName = sClassName;
@@ -84,9 +86,9 @@ DwMailbox::~DwMailbox()
 }
 
 
-const DwMailbox& DwMailbox::operator = (const DwMailbox& aMailbox)
+const DwMailbox &DwMailbox::operator = (const DwMailbox &aMailbox)
 {
-    if (this == &aMailbox) return *this;
+    if(this == &aMailbox) return *this;
     DwAddress::operator = (aMailbox);
     mFullName  = aMailbox.mFullName;
     mRoute     = aMailbox.mRoute;
@@ -96,52 +98,52 @@ const DwMailbox& DwMailbox::operator = (const DwMailbox& aMailbox)
 }
 
 
-const DwString& DwMailbox::FullName() const
+const DwString &DwMailbox::FullName() const
 {
     return mFullName;
 }
 
 
-void DwMailbox::SetFullName(const DwString& aFullName)
+void DwMailbox::SetFullName(const DwString &aFullName)
 {
     mFullName = aFullName;
     SetModified();
 }
 
 
-const DwString& DwMailbox::Route() const
+const DwString &DwMailbox::Route() const
 {
     return mRoute;
 }
 
 
-void DwMailbox::SetRoute(const DwString& aRoute)
+void DwMailbox::SetRoute(const DwString &aRoute)
 {
     mRoute = aRoute;
     SetModified();
 }
 
 
-const DwString& DwMailbox::LocalPart() const
+const DwString &DwMailbox::LocalPart() const
 {
     return mLocalPart;
 }
 
 
-void DwMailbox::SetLocalPart(const DwString& aLocalPart)
+void DwMailbox::SetLocalPart(const DwString &aLocalPart)
 {
     mLocalPart = aLocalPart;
     SetModified();
 }
 
 
-const DwString& DwMailbox::Domain() const
+const DwString &DwMailbox::Domain() const
 {
     return mDomain;
 }
 
 
-void DwMailbox::SetDomain(const DwString& aDomain)
+void DwMailbox::SetDomain(const DwString &aDomain)
 {
     mDomain = aDomain;
     SetModified();
@@ -175,7 +177,8 @@ void DwMailbox::Parse()
     DwRfc822Tokenizer tokenizer(mString);
     int ch;
 
-    enum {
+    enum
+    {
         eStart,       // start
         eLtSeen,      // less-than-seen
         eInRoute,     // in-route
@@ -188,40 +191,45 @@ void DwMailbox::Parse()
 
     int type = tokenizer.Type();
     int state = eStart;
-    while (state == eStart && type != eTkNull) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case '@':
-                state = eAtSeen;
+    while(state == eStart && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case '@':
+                        state = eAtSeen;
+                        break;
+                    case '<':
+                        isSimpleAddress = 0;
+                        mLocalPart = emptyString;
+                        state = eLtSeen;
+                        break;
+                    case '.':
+                        mLocalPart += tokenizer.Token();
+                        break;
+                }
                 break;
-            case '<':
-                isSimpleAddress = 0;
-                mLocalPart = emptyString;
-                state = eLtSeen;
-                break;
-            case '.':
+            case eTkAtom:
+            case eTkQuotedString:
+                if(isFirstPhraseNull)
+                {
+                    firstPhrase = tokenizer.Token();
+                    isFirstPhraseNull = 0;
+                }
+                else
+                {
+                    firstPhrase += space;
+                    firstPhrase += tokenizer.Token();
+                }
                 mLocalPart += tokenizer.Token();
                 break;
-            }
-            break;
-        case eTkAtom:
-        case eTkQuotedString:
-            if (isFirstPhraseNull) {
-                firstPhrase = tokenizer.Token();
-                isFirstPhraseNull = 0;
-            }
-            else {
-                firstPhrase += space;
-                firstPhrase += tokenizer.Token();
-            }
-            mLocalPart += tokenizer.Token();
-            break;
-        case eTkComment:
-            tokenizer.StripDelimiters();
-            lastComment = tokenizer.Token();
-            break;
+            case eTkComment:
+                tokenizer.StripDelimiters();
+                lastComment = tokenizer.Token();
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -230,23 +238,26 @@ void DwMailbox::Parse()
     // Less-than-seen state -- process only one valid token and transit to
     // in-route state or in-addr-spec state
 
-    while (state == eLtSeen && type != eTkNull) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case '@':
-                // '@' immediately following '<' indicates a route
-                mRoute = tokenizer.Token();
-                state = eInRoute;
+    while(state == eLtSeen && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case '@':
+                        // '@' immediately following '<' indicates a route
+                        mRoute = tokenizer.Token();
+                        state = eInRoute;
+                        break;
+                }
                 break;
-            }
-            break;
-        case eTkAtom:
-        case eTkQuotedString:
-            mLocalPart = tokenizer.Token();
-            state = eInAddrSpec;
-            break;
+            case eTkAtom:
+            case eTkQuotedString:
+                mLocalPart = tokenizer.Token();
+                state = eInAddrSpec;
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -254,27 +265,30 @@ void DwMailbox::Parse()
 
     // In-route state -- terminated by ':'
 
-    while (state == eInRoute && type != eTkNull) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case ':':
-                state = eInAddrSpec;
+    while(state == eInRoute && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case ':':
+                        state = eInAddrSpec;
+                        break;
+                    case '@':
+                    case ',':
+                    case '.':
+                        mRoute += tokenizer.Token();
+                        break;
+                }
                 break;
-            case '@':
-            case ',':
-            case '.':
+            case eTkAtom:
                 mRoute += tokenizer.Token();
                 break;
-            }
-            break;
-        case eTkAtom:
-            mRoute += tokenizer.Token();
-            break;
-        case eTkDomainLiteral:
-            mRoute += tokenizer.Token();
-            break;
+            case eTkDomainLiteral:
+                mRoute += tokenizer.Token();
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -282,23 +296,26 @@ void DwMailbox::Parse()
 
     // in-addr-spec state -- terminated by '@'
 
-    while (state == eInAddrSpec && type != eTkNull) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case '@':
-                state = eAtSeen;
+    while(state == eInAddrSpec && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case '@':
+                        state = eAtSeen;
+                        break;
+                    case '.':
+                        mLocalPart += tokenizer.Token();
+                        break;
+                }
                 break;
-            case '.':
+            case eTkAtom:
+            case eTkQuotedString:
                 mLocalPart += tokenizer.Token();
                 break;
-            }
-            break;
-        case eTkAtom:
-        case eTkQuotedString:
-            mLocalPart += tokenizer.Token();
-            break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -306,29 +323,32 @@ void DwMailbox::Parse()
 
     // at-seen state -- terminated by '>' or end of string
 
-    while (state == eAtSeen && type != eTkNull) {
-        switch (type) {
-        case eTkSpecial:
-            ch = tokenizer.Token()[0];
-            switch (ch) {
-            case '>':
-                state = eGtSeen;
+    while(state == eAtSeen && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkSpecial:
+                ch = tokenizer.Token()[0];
+                switch(ch)
+                {
+                    case '>':
+                        state = eGtSeen;
+                        break;
+                    case '.':
+                        mDomain += tokenizer.Token();
+                        break;
+                }
                 break;
-            case '.':
+            case eTkAtom:
                 mDomain += tokenizer.Token();
                 break;
-            }
-            break;
-        case eTkAtom:
-            mDomain += tokenizer.Token();
-            break;
-        case eTkDomainLiteral:
-            mDomain += tokenizer.Token();
-            break;
-        case eTkComment:
-            tokenizer.StripDelimiters();
-            lastComment = tokenizer.Token();
-            break;
+            case eTkDomainLiteral:
+                mDomain += tokenizer.Token();
+                break;
+            case eTkComment:
+                tokenizer.StripDelimiters();
+                lastComment = tokenizer.Token();
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -336,12 +356,14 @@ void DwMailbox::Parse()
 
     // greater-than-seen state -- terminated by end of string
 
-    while (state == eGtSeen && type != eTkNull) {
-        switch (type) {
-        case eTkComment:
-            tokenizer.StripDelimiters();
-            lastComment = tokenizer.Token();
-            break;
+    while(state == eGtSeen && type != eTkNull)
+    {
+        switch(type)
+        {
+            case eTkComment:
+                tokenizer.StripDelimiters();
+                lastComment = tokenizer.Token();
+                break;
         }
         ++tokenizer;
         type = tokenizer.Type();
@@ -349,22 +371,27 @@ void DwMailbox::Parse()
 
     // Get full name, if possible
 
-    if (isSimpleAddress) {
+    if(isSimpleAddress)
+    {
         mFullName = lastComment;
     }
-    else if (firstPhrase != emptyString) {
+    else if(firstPhrase != emptyString)
+    {
         mFullName = firstPhrase;
     }
-    else if (lastComment != emptyString) {
+    else if(lastComment != emptyString)
+    {
         mFullName = lastComment;
     }
 
     // Check validity
 
-    if (mLocalPart.length() > 0) {
+    if(mLocalPart.length() > 0)
+    {
         mIsValid = 1;
     }
-    else {
+    else
+    {
         mIsValid = 0;
     }
 
@@ -377,20 +404,23 @@ void DwMailbox::Parse()
 
 void DwMailbox::Assemble()
 {
-    if (!mIsModified) return;
+    if(!mIsModified) return;
     mIsValid = 1;
-    if (mLocalPart.length() == 0 || mDomain.length() == 0) {
+    if(mLocalPart.length() == 0 || mDomain.length() == 0)
+    {
         mIsValid = 0;
         mString = "";
         return;
     }
     mString = "";
-    if (mFullName.length() > 0) {
+    if(mFullName.length() > 0)
+    {
         mString += mFullName;
         mString += " ";
     }
     mString += "<";
-    if (mRoute.length() > 0) {
+    if(mRoute.length() > 0)
+    {
         mString += mRoute;
         mString += ":";
     }
@@ -401,26 +431,26 @@ void DwMailbox::Assemble()
     mIsModified = 0;
 }
 
-DwMessageComponent* DwMailbox::Clone() const
+DwMessageComponent *DwMailbox::Clone() const
 {
     return new DwMailbox(*this);
 }
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwMailbox::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwMailbox::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "---------------- Debug info for DwMailbox class ----------------\n";
+          "---------------- Debug info for DwMailbox class ----------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwMailbox::PrintDebugInfo(std::ostream& , int) const {}
+void DwMailbox::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwMailbox::_PrintDebugInfo(std::ostream& aStrm) const
+void DwMailbox::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwAddress::_PrintDebugInfo(aStrm);
     aStrm << "Full Name:        " << mFullName << '\n';
@@ -429,7 +459,7 @@ void DwMailbox::_PrintDebugInfo(std::ostream& aStrm) const
     aStrm << "Domain:           " << mDomain << '\n';
 }
 #else
-void DwMailbox::_PrintDebugInfo(std::ostream& ) const {}
+void DwMailbox::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
@@ -445,33 +475,38 @@ void DwMailbox::CheckInvariants() const
 }
 
 
-void RemoveCrAndLf(DwString& aStr)
+void RemoveCrAndLf(DwString &aStr)
 {
     // Do a quick check to see if at least one CR or LF is present
 
     size_t n = aStr.find_first_of("\r\n");
-    if (n == DwString::npos)
+    if(n == DwString::npos)
         return;
 
     // At least one CR or LF is present, so copy the string
 
-    const DwString& in = aStr;
+    const DwString &in = aStr;
     size_t inLen = in.length();
     DwString out;
     out.reserve(inLen);
     int lastChar = 0;
     size_t i = 0;
-    while (i < inLen) {
+    while(i < inLen)
+    {
         int ch = in[i];
-        if (ch == (int) '\r') {
+        if(ch == (int) '\r')
+        {
             out += ' ';
         }
-        else if (ch == (int) '\n') {
-            if (lastChar != (int) '\r') {
+        else if(ch == (int) '\n')
+        {
+            if(lastChar != (int) '\r')
+            {
                 out += ' ';
             }
         }
-        else {
+        else
+        {
             out += (char) ch;
         }
         lastChar = ch;

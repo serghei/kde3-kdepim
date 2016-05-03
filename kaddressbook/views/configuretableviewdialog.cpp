@@ -40,117 +40,117 @@
 
 #include "configuretableviewdialog.h"
 
-ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
-                                                    QWidget *parent,
-                                                    const char *name )
-  : ViewConfigureWidget( ab, parent, name )
+ConfigureTableViewWidget::ConfigureTableViewWidget(KABC::AddressBook *ab,
+        QWidget *parent,
+        const char *name)
+    : ViewConfigureWidget(ab, parent, name)
 {
-  QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
-                           KGlobal::iconLoader()->loadIcon( "looknfeel",
-                           KIcon::Panel ) );
+    QWidget *page = addPage(i18n("Look & Feel"), QString::null,
+                            KGlobal::iconLoader()->loadIcon("looknfeel",
+                                    KIcon::Panel));
 
-  mPage = new LookAndFeelPage( page );
+    mPage = new LookAndFeelPage(page);
 }
 
 ConfigureTableViewWidget::~ConfigureTableViewWidget()
 {
 }
 
-void ConfigureTableViewWidget::restoreSettings( KConfig *config )
+void ConfigureTableViewWidget::restoreSettings(KConfig *config)
 {
-  ViewConfigureWidget::restoreSettings( config );
+    ViewConfigureWidget::restoreSettings(config);
 
-  mPage->restoreSettings( config );
+    mPage->restoreSettings(config);
 }
 
-void ConfigureTableViewWidget::saveSettings( KConfig *config )
+void ConfigureTableViewWidget::saveSettings(KConfig *config)
 {
-  ViewConfigureWidget::saveSettings( config );
+    ViewConfigureWidget::saveSettings(config);
 
-  mPage->saveSettings( config );
+    mPage->saveSettings(config);
 }
 
 
 
 LookAndFeelPage::LookAndFeelPage(QWidget *parent, const char *name)
-  : QWidget(parent, name)
+    : QWidget(parent, name)
 {
-  initGUI();
+    initGUI();
 
-  // Set initial state
-  enableBackgroundToggled(mBackgroundBox->isChecked());
+    // Set initial state
+    enableBackgroundToggled(mBackgroundBox->isChecked());
 }
 
-void LookAndFeelPage::restoreSettings( KConfig *config )
+void LookAndFeelPage::restoreSettings(KConfig *config)
 {
-  mAlternateButton->setChecked(config->readBoolEntry("ABackground", true));
-  mLineButton->setChecked(config->readBoolEntry("SingleLine", false));
-  mToolTipBox->setChecked(config->readBoolEntry("ToolTips", true));
+    mAlternateButton->setChecked(config->readBoolEntry("ABackground", true));
+    mLineButton->setChecked(config->readBoolEntry("SingleLine", false));
+    mToolTipBox->setChecked(config->readBoolEntry("ToolTips", true));
 
-  if (!mAlternateButton->isChecked() && !mLineButton->isChecked())
-    mNoneButton->setChecked(true);
+    if(!mAlternateButton->isChecked() && !mLineButton->isChecked())
+        mNoneButton->setChecked(true);
 
-  mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
-  mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
+    mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
+    mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
 #if KDE_IS_VERSION(3,2,90)
-  mIMPresenceBox->setChecked( config->readBoolEntry( "InstantMessagingPresence", false ) );
+    mIMPresenceBox->setChecked(config->readBoolEntry("InstantMessagingPresence", false));
 #endif
 }
 
-void LookAndFeelPage::saveSettings( KConfig *config )
+void LookAndFeelPage::saveSettings(KConfig *config)
 {
-  config->writeEntry("ABackground", mAlternateButton->isChecked());
-  config->writeEntry("SingleLine", mLineButton->isChecked());
-  config->writeEntry("ToolTips", mToolTipBox->isChecked());
-  config->writeEntry("Background", mBackgroundBox->isChecked());
-  config->writePathEntry("BackgroundName", mBackgroundName->lineEdit()->text());
+    config->writeEntry("ABackground", mAlternateButton->isChecked());
+    config->writeEntry("SingleLine", mLineButton->isChecked());
+    config->writeEntry("ToolTips", mToolTipBox->isChecked());
+    config->writeEntry("Background", mBackgroundBox->isChecked());
+    config->writePathEntry("BackgroundName", mBackgroundName->lineEdit()->text());
 #if KDE_IS_VERSION(3,2,90)
-  config->writeEntry( "InstantMessagingPresence", mIMPresenceBox->isChecked() );
+    config->writeEntry("InstantMessagingPresence", mIMPresenceBox->isChecked());
 #endif
 }
 
 void LookAndFeelPage::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialogBase::spacingHint());
+    QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialogBase::spacingHint());
 
-  QButtonGroup *group = new QButtonGroup(1, Qt::Horizontal,
-                                         i18n("Row Separator"), this);
-  layout->addWidget(group);
+    QButtonGroup *group = new QButtonGroup(1, Qt::Horizontal,
+                                           i18n("Row Separator"), this);
+    layout->addWidget(group);
 
-  mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"),
-                                      group, "mAlternateButton");
-  mLineButton = new QRadioButton(i18n("Single line"), group, "mLineButton");
-  mNoneButton = new QRadioButton(i18n("None"), group, "mNoneButton");
+    mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"),
+                                        group, "mAlternateButton");
+    mLineButton = new QRadioButton(i18n("Single line"), group, "mLineButton");
+    mNoneButton = new QRadioButton(i18n("None"), group, "mNoneButton");
 
-  // Background Checkbox/Selector
-  QHBoxLayout *backgroundLayout = new QHBoxLayout();
-  layout->addLayout(backgroundLayout);
+    // Background Checkbox/Selector
+    QHBoxLayout *backgroundLayout = new QHBoxLayout();
+    layout->addLayout(backgroundLayout);
 
-  mBackgroundBox = new QCheckBox(i18n("Enable background image:"), this,
-                                 "mBackgroundBox");
-  connect(mBackgroundBox, SIGNAL(toggled(bool)),
-          SLOT(enableBackgroundToggled(bool)));
-  backgroundLayout->addWidget(mBackgroundBox);
+    mBackgroundBox = new QCheckBox(i18n("Enable background image:"), this,
+                                   "mBackgroundBox");
+    connect(mBackgroundBox, SIGNAL(toggled(bool)),
+            SLOT(enableBackgroundToggled(bool)));
+    backgroundLayout->addWidget(mBackgroundBox);
 
-  mBackgroundName = new KURLRequester(this, "mBackgroundName");
-  mBackgroundName->setMode(KFile::File | KFile::ExistingOnly |
-                           KFile::LocalOnly);
-  mBackgroundName->setFilter(KImageIO::pattern(KImageIO::Reading));
-  backgroundLayout->addWidget(mBackgroundName);
+    mBackgroundName = new KURLRequester(this, "mBackgroundName");
+    mBackgroundName->setMode(KFile::File | KFile::ExistingOnly |
+                             KFile::LocalOnly);
+    mBackgroundName->setFilter(KImageIO::pattern(KImageIO::Reading));
+    backgroundLayout->addWidget(mBackgroundName);
 
-  // ToolTip Checkbox
-  mToolTipBox = new QCheckBox(i18n("Enable contact tooltips"), this,
-                              "mToolTipBox");
-  layout->addWidget(mToolTipBox);
+    // ToolTip Checkbox
+    mToolTipBox = new QCheckBox(i18n("Enable contact tooltips"), this,
+                                "mToolTipBox");
+    layout->addWidget(mToolTipBox);
 #if KDE_IS_VERSION(3,2,90)
-  mIMPresenceBox = new QCheckBox( i18n( "Show instant messaging presence" ), this, "mIMPresenceBox" );
-  layout->addWidget( mIMPresenceBox );
+    mIMPresenceBox = new QCheckBox(i18n("Show instant messaging presence"), this, "mIMPresenceBox");
+    layout->addWidget(mIMPresenceBox);
 #endif
 }
 
 void LookAndFeelPage::enableBackgroundToggled(bool enabled)
 {
-  mBackgroundName->setEnabled(enabled);
+    mBackgroundName->setEnabled(enabled);
 }
 
 #include "configuretableviewdialog.moc"

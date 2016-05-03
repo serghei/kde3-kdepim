@@ -27,35 +27,33 @@
 
 class QWidget;
 
-namespace KParts
-{
+namespace KParts {
 
-	class ReadOnlyPart;
+class ReadOnlyPart;
 
-  /**
-   * Provides a way to get information out of a PIM-Part
-   **/
-	class KDE_EXPORT InfoExtension : public QObject
-	{
-		Q_OBJECT
+/**
+ * Provides a way to get information out of a PIM-Part
+ **/
+class KDE_EXPORT InfoExtension : public QObject {
+    Q_OBJECT
 
-	public:
-      /**
-       * Constucts an InfoExtension.
-       *
-       * @param parent   The parent widget.
-       * @param name     The name of the class.
-       **/
-		InfoExtension( KParts::ReadOnlyPart *parent, const char* name);
-		~InfoExtension();
+public:
+    /**
+     * Constucts an InfoExtension.
+     *
+     * @param parent   The parent widget.
+     * @param name     The name of the class.
+     **/
+    InfoExtension(KParts::ReadOnlyPart *parent, const char *name);
+    ~InfoExtension();
 
-	private:
-		class InfoExtensionPrivate;
-		InfoExtensionPrivate *d;
+private:
+    class InfoExtensionPrivate;
+    InfoExtensionPrivate *d;
 
-	signals:
-		void textChanged( const QString& );
-		void iconChanged( const QPixmap& );
-  	};
+signals:
+    void textChanged(const QString &);
+    void iconChanged(const QPixmap &);
+};
 }
 #endif // INFOEXTENSION_H

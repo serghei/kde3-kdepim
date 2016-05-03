@@ -7,51 +7,62 @@
 #include "kmaccount.h"
 #include "kmglobal.h"
 
-class KMAcctLocal: public KMAccount
-{
+class KMAcctLocal: public KMAccount {
 protected:
-  friend class ::AccountManager;
+    friend class ::AccountManager;
 
-  KMAcctLocal(AccountManager* owner, const QString& accountName, uint id);
+    KMAcctLocal(AccountManager *owner, const QString &accountName, uint id);
 
 public:
-  virtual ~KMAcctLocal();
-  virtual void init(void);
+    virtual ~KMAcctLocal();
+    virtual void init(void);
 
-  virtual void pseudoAssign( const KMAccount * a );
+    virtual void pseudoAssign(const KMAccount *a);
 
-  /** Access to location of local mail file (usually something like
-   "/var/spool/mail/joe"). */
-  QString location(void) const { return mLocation; }
-  virtual void setLocation(const QString&);
+    /** Access to location of local mail file (usually something like
+     "/var/spool/mail/joe"). */
+    QString location(void) const
+    {
+        return mLocation;
+    }
+    virtual void setLocation(const QString &);
 
-  /** Acceso to Locking method */
-  LockType lockType(void) const { return mLock; }
-  void setLockType(LockType lt) { mLock = lt; }
+    /** Acceso to Locking method */
+    LockType lockType(void) const
+    {
+        return mLock;
+    }
+    void setLockType(LockType lt)
+    {
+        mLock = lt;
+    }
 
-  QString procmailLockFileName(void) const { return mProcmailLockFileName; }
-  void setProcmailLockFileName(const QString& s);
+    QString procmailLockFileName(void) const
+    {
+        return mProcmailLockFileName;
+    }
+    void setProcmailLockFileName(const QString &s);
 
-  virtual QString type(void) const;
-  virtual void processNewMail(bool);
-  virtual void readConfig(KConfig&);
-  virtual void writeConfig(KConfig&);
+    virtual QString type(void) const;
+    virtual void processNewMail(bool);
+    virtual void readConfig(KConfig &);
+    virtual void writeConfig(KConfig &);
 
 private:
-  bool preProcess();
-  bool fetchMsg();
-  void postProcess();
+    bool preProcess();
+    bool fetchMsg();
+    void postProcess();
 
 private:
-  QString mLocation;
-  QString mProcmailLockFileName;
-  bool mHasNewMail;
-  bool mAddedOk;
-  LockType mLock;
-  int mNumMsgs;
-  int mMsgsFetched;
-  KMFolder *mMailFolder;
-  QString mStatusMsgStub;
+    QString mLocation;
+    QString mProcmailLockFileName;
+    bool mHasNewMail;
+    bool mAddedOk;
+    LockType mLock;
+    int mNumMsgs;
+    int mMsgsFetched;
+    KMFolder *mMailFolder;
+    QString mStatusMsgStub;
 };
 
 #endif /*kmacctlocal_h*/

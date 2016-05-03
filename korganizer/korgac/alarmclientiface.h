@@ -24,16 +24,15 @@
 #include <dcopobject.h>
 #include <qstringlist.h>
 
-class AlarmClientIface : virtual public DCOPObject
-{
+class AlarmClientIface : virtual public DCOPObject {
     K_DCOP
-  k_dcop:
+k_dcop:
     virtual ASYNC quit() = 0;
 
     virtual ASYNC forceAlarmCheck() = 0;
     virtual ASYNC dumpDebug() = 0;
     virtual QStringList dumpAlarms() = 0;
-    
+
     virtual void debugShowDialog() = 0;
 };
 

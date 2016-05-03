@@ -27,29 +27,28 @@ namespace KMail {
 
 class Composer;
 
-class AttachmentListView : public KListView
-{
-  Q_OBJECT
+class AttachmentListView : public KListView {
+    Q_OBJECT
 public:
-  AttachmentListView( KMail::Composer * composer = 0, QWidget* parent = 0,
-                      const char* name = 0 );
-  virtual ~AttachmentListView();
+    AttachmentListView(KMail::Composer *composer = 0, QWidget *parent = 0,
+                       const char *name = 0);
+    virtual ~AttachmentListView();
 
-  /** Drag and drop methods */
-  void contentsDragEnterEvent( QDragEnterEvent* );
-  void contentsDragMoveEvent( QDragMoveEvent* );
-  void contentsDropEvent( QDropEvent* );
+    /** Drag and drop methods */
+    void contentsDragEnterEvent(QDragEnterEvent *);
+    void contentsDragMoveEvent(QDragMoveEvent *);
+    void contentsDropEvent(QDropEvent *);
 
 protected:
-  virtual void keyPressEvent( QKeyEvent * e );
-  virtual void startDrag();
+    virtual void keyPressEvent(QKeyEvent *e);
+    virtual void startDrag();
 
 private:
-  KMail::Composer * mComposer;
+    KMail::Composer *mComposer;
 
 signals:
-  void attachmentDeleted();
-  void dragStarted();
+    void attachmentDeleted();
+    void dragStarted();
 
 };
 

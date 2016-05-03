@@ -42,45 +42,44 @@
 class KDTimeTableWidget;
 class KDGanttView;
 
-class KDGanttViewTaskLinkGroup : public QObject
-{
+class KDGanttViewTaskLinkGroup : public QObject {
 public:
-    KDGanttViewTaskLinkGroup( const QString& name );
+    KDGanttViewTaskLinkGroup(const QString &name);
     KDGanttViewTaskLinkGroup();
     ~KDGanttViewTaskLinkGroup();
-    void insert (KDGanttViewTaskLink*) ;
-    bool remove (KDGanttViewTaskLink*);
+    void insert(KDGanttViewTaskLink *) ;
+    bool remove(KDGanttViewTaskLink *);
 
-    void setVisible( bool show );
+    void setVisible(bool show);
     bool visible() const;
 
-    void setHighlight( bool highlight );
+    void setHighlight(bool highlight);
     bool highlight() const;
 
-    void setColor( const QColor& color );
+    void setColor(const QColor &color);
     QColor color() const;
-    void setHighlightColor( const QColor& color );
+    void setHighlightColor(const QColor &color);
     QColor highlightColor() const;
 
-    static KDGanttViewTaskLinkGroup* find( const QString& name );
+    static KDGanttViewTaskLinkGroup *find(const QString &name);
 
-    void createNode( QDomDocument& doc,
-                     QDomElement& parentElement );
-    static KDGanttViewTaskLinkGroup* createFromDomElement( QDomElement& );
+    void createNode(QDomDocument &doc,
+                    QDomElement &parentElement);
+    static KDGanttViewTaskLinkGroup *createFromDomElement(QDomElement &);
 
-    void generateAndInsertName( const QString& name );
+    void generateAndInsertName(const QString &name);
 
 private:
     friend class KDTimeTableWidget;
     friend class KDGanttViewTaskLink;
 
-    bool isvisible,ishighlighted;
+    bool isvisible, ishighlighted;
     QColor myColor, myColorHL;
     QPtrList<KDGanttViewTaskLink> myTaskLinkList;
     QString _name;
 
-    void insertItem(KDGanttViewTaskLink*);
-    void removeItem (KDGanttViewTaskLink*);
+    void insertItem(KDGanttViewTaskLink *);
+    void removeItem(KDGanttViewTaskLink *);
 
     static QDict<KDGanttViewTaskLinkGroup> sGroupDict;
 };

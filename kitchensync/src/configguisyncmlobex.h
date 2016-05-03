@@ -35,20 +35,19 @@ class KComboBox;
 class KLineEdit;
 class KURLRequester;
 
-class ConfigGuiSyncmlObex : public ConfigGui
-{
-  Q_OBJECT
+class ConfigGuiSyncmlObex : public ConfigGui {
+    Q_OBJECT
 
-  public:
-    ConfigGuiSyncmlObex( const QSync::Member &, QWidget *parent = 0 );
+public:
+    ConfigGuiSyncmlObex(const QSync::Member &, QWidget *parent = 0);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  public slots:
-     void slotConnectionChanged( int pos );
+public slots:
+    void slotConnectionChanged(int pos);
 
-  private:
+private:
     // Connection
     typedef QPair<int, QString> ConnectionType;
     typedef QValueList<ConnectionType> ConnectionTypeList;
@@ -80,8 +79,8 @@ class ConfigGuiSyncmlObex : public ConfigGui
     KComboBox *mCalendarDb;
     KComboBox *mNoteDb;
 
-  protected slots:
-    void addLineEdit( QWidget *parent, const QString &text, KComboBox **edit, int row );
+protected slots:
+    void addLineEdit(QWidget *parent, const QString &text, KComboBox **edit, int row);
 };
 
 #endif

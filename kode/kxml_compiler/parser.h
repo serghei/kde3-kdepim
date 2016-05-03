@@ -43,54 +43,50 @@
 
 #include <iostream>
 
-class Pattern
-{
-  public:
+class Pattern {
+public:
     Pattern();
 
     bool isEmpty();
 
     QString asString();
 
-    void merge( Pattern p );
-  
+    void merge(Pattern p);
+
     bool optional;
     bool zeroOrMore;
     bool oneOrMore;
     bool choice;
 };
 
-class Reference
-{
-  public:
+class Reference {
+public:
     typedef QValueList<Reference *> List;
-  
-    Reference() : substituted( false ) {}
-  
+
+    Reference() : substituted(false) {}
+
     QString name;
     Pattern pattern;
 
     bool substituted;
 };
 
-class Attribute
-{
-  public:
+class Attribute {
+public:
     typedef QValueList<Attribute *> List;
-  
+
     QString name;
     QValueList<QString> choices;
     QString defaultValue;
     Pattern pattern;
 };
 
-class Element
-{
-  public:
+class Element {
+public:
     typedef QValueList<Element *> List;
-  
+
     Element();
-  
+
     QString name;
     Element::List elements;
     Attribute::List attributes;
@@ -100,35 +96,34 @@ class Element
     bool isEmpty;
 };
 
-class Parser
-{
-  public:
+class Parser {
+public:
     Parser();
 
-    Element *parse( const QDomElement &docElement );
+    Element *parse(const QDomElement &docElement);
 
-    Reference *parseReference( const QDomElement &referenceElement );
-    bool parseAttribute( const QDomElement &attributeElement,
-                               Attribute *a );
-    bool parseElement( const QDomElement &elementElement, Element *e,
-                       Pattern pattern );
+    Reference *parseReference(const QDomElement &referenceElement);
+    bool parseAttribute(const QDomElement &attributeElement,
+                        Attribute *a);
+    bool parseElement(const QDomElement &elementElement, Element *e,
+                      Pattern pattern);
 
-    void substituteReferences( Element *s );
+    void substituteReferences(Element *s);
 
-    void doIndent( int cols );
+    void doIndent(int cols);
 
-    void dumpPattern( Pattern pattern );
-    void dumpReferences( const Reference::List &references,
-                         int indent );
-    void dumpAttributes( const Attribute::List &attributes,
-                         int indent );
-    void dumpElements( const Element::List &elements, int indent );
-    void dumpElement( Element *element, int indent );
-    void dumpTree( Element *s );
+    void dumpPattern(Pattern pattern);
+    void dumpReferences(const Reference::List &references,
+                        int indent);
+    void dumpAttributes(const Attribute::List &attributes,
+                        int indent);
+    void dumpElements(const Element::List &elements, int indent);
+    void dumpElement(Element *element, int indent);
+    void dumpTree(Element *s);
     void dumpDefinitionMap();
 
-  private:
-    QMap<QString,Element::List> mDefinitionMap;
+private:
+    QMap<QString, Element::List> mDefinitionMap;
 };
 
 #endif

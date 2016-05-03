@@ -8,17 +8,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -40,29 +40,33 @@
  * \see class slow which should be merged into this one.
  */
 class index_slow : public indexlib::index , public boost::noncopyable {
-	public:
-		index_slow( std::string name ):
-			impl_( name )
-			{
-			}
+public:
+    index_slow(std::string name):
+        impl_(name)
+    {
+    }
 
 
-		virtual void add( const char* str, const char* doc ) {
-			impl_.add( str, doc );
-		}
+    virtual void add(const char *str, const char *doc)
+    {
+        impl_.add(str, doc);
+    }
 
-		virtual std::vector<unsigned> search( const char* str ) {
-			return impl_.search( str );
-		}
+    virtual std::vector<unsigned> search(const char *str)
+    {
+        return impl_.search(str);
+    }
 
-		virtual unsigned ndocs() const {
-			return impl_.ndocs();
-		}
-		virtual std::string lookup_docname( unsigned idx ) const {
-			return impl_.lookup_docname( idx );
-		}
-	private:
-		slow impl_;
+    virtual unsigned ndocs() const
+    {
+        return impl_.ndocs();
+    }
+    virtual std::string lookup_docname(unsigned idx) const
+    {
+        return impl_.lookup_docname(idx);
+    }
+private:
+    slow impl_;
 };
 
 

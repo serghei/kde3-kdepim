@@ -24,15 +24,14 @@
 namespace KOrg {
 
 /** Base class for single/multi agenda views. */
-class AgendaView : public KOEventView
-{
-  Q_OBJECT
-  public:
-    AgendaView( Calendar *cal,QWidget *parent=0,const char *name=0 );
+class AgendaView : public KOEventView {
+    Q_OBJECT
+public:
+    AgendaView(Calendar *cal, QWidget *parent = 0, const char *name = 0);
 
-    virtual void setTypeAheadReceiver( QObject * ) = 0;
+    virtual void setTypeAheadReceiver(QObject *) = 0;
 
-  public slots:
+public slots:
     virtual void finishTypeAhead() = 0;
 
     virtual void resourcesChanged() = 0;

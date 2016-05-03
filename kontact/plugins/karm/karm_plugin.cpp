@@ -33,39 +33,39 @@
 #include "karmdcopiface_stub.h"
 
 typedef KGenericFactory<KarmPlugin, Kontact::Core> KarmPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_karm,
-                            KarmPluginFactory( "kontact_karm" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_karm,
+                           KarmPluginFactory("kontact_karm"))
 
-KarmPlugin::KarmPlugin( Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "KArm" )
+KarmPlugin::KarmPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "KArm")
 {
-  setInstance( KarmPluginFactory::instance() );
-  (void)dcopClient();
-  insertNewAction( new KAction( i18n( "New Task" ), "karm",
-                   CTRL+SHIFT+Key_W, this, SLOT( newTask() ), actionCollection(),
-                   "new_task" ) );
+    setInstance(KarmPluginFactory::instance());
+    (void)dcopClient();
+    insertNewAction(new KAction(i18n("New Task"), "karm",
+                                CTRL + SHIFT + Key_W, this, SLOT(newTask()), actionCollection(),
+                                "new_task"));
 }
 
 KarmPlugin::~KarmPlugin()
 {
 }
 
-KParts::ReadOnlyPart* KarmPlugin::createPart()
+KParts::ReadOnlyPart *KarmPlugin::createPart()
 {
-  KParts::ReadOnlyPart * part = loadPart();
-  if ( !part ) return 0;
+    KParts::ReadOnlyPart *part = loadPart();
+    if(!part) return 0;
 
-  // this calls a DCOP interface from karm via the lib KarmDCOPIface_stub that is generated automatically
-  mStub = new KarmDCOPIface_stub( dcopClient(), "KArm",
-                                      "KarmDCOPIface" );
+    // this calls a DCOP interface from karm via the lib KarmDCOPIface_stub that is generated automatically
+    mStub = new KarmDCOPIface_stub(dcopClient(), "KArm",
+                                   "KarmDCOPIface");
 
-  return part;
+    return part;
 }
 
 void KarmPlugin::newTask()
 {
-  kdDebug() << "Entering newTask" << endl;
-  mStub->addTask("New Task");
+    kdDebug() << "Entering newTask" << endl;
+    mStub->addTask("New Task");
 }
 
 #include "karm_plugin.moc"

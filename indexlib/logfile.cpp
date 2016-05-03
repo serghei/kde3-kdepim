@@ -6,17 +6,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -32,23 +32,27 @@
 #include "logfile.h"
 #include <fstream>
 
-static std::ostream* logfile_ = 0;
+static std::ostream *logfile_ = 0;
 
-std::ostream& logfile() {
-	if ( !logfile_ ) {
-		nolog();
-		if ( !logfile_ ) return std::cout;
-	}
-	return *logfile_;
+std::ostream &logfile()
+{
+    if(!logfile_)
+    {
+        nolog();
+        if(!logfile_) return std::cout;
+    }
+    return *logfile_;
 }
 
-void nolog() {
-	redirectlog( "/dev/null" );
+void nolog()
+{
+    redirectlog("/dev/null");
 }
 
-void redirectlog( std::string fname ) {
-	if ( logfile_ ) delete logfile_;
-	logfile_ = new std::ofstream( fname.c_str() );
+void redirectlog(std::string fname)
+{
+    if(logfile_) delete logfile_;
+    logfile_ = new std::ofstream(fname.c_str());
 }
 
 

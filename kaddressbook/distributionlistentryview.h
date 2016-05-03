@@ -21,36 +21,35 @@ namespace KAB {
 
 class Core;
 
-class DistributionListEntryView : public QWidget
-{
+class DistributionListEntryView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit DistributionListEntryView( KAB::Core* core, QWidget* parent = 0 );
-    void setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry );
+    explicit DistributionListEntryView(KAB::Core *core, QWidget *parent = 0);
+    void setEntry(const KPIM::DistributionList &list, const KPIM::DistributionList::Entry &entry);
 
 public slots:
     void clear();
 
 signals:
-    void distributionListClicked( const QString& );
+    void distributionListClicked(const QString &);
 
 private slots:
-    void emailButtonClicked( int id );
+    void emailButtonClicked(int id);
 
 private:
     QMap<int, QString> m_idToEmail;
-    KAB::Core* m_core;
+    KAB::Core *m_core;
     KPIM::DistributionList m_list;
     KPIM::DistributionList::Entry m_entry;
-    QGridLayout* m_radioLayout;
-    QBoxLayout* m_mainLayout;
-    QButtonGroup* m_emailGroup;
-    QLabel* m_addresseeLabel;
-    KURLLabel* m_distListLabel;
-    QLabel* m_imageLabel;
-    QLabel* m_resourceLabel;
-    QMap<int, QString> m_indexToIdentifier; 
+    QGridLayout *m_radioLayout;
+    QBoxLayout *m_mainLayout;
+    QButtonGroup *m_emailGroup;
+    QLabel *m_addresseeLabel;
+    KURLLabel *m_distListLabel;
+    QLabel *m_imageLabel;
+    QLabel *m_resourceLabel;
+    QMap<int, QString> m_indexToIdentifier;
 };
 
 }

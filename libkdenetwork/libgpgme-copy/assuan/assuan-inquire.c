@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
- * USA. 
+ * USA.
  */
 
 #include <config.h>
@@ -34,12 +34,12 @@
 
 struct membuf
 {
-  size_t len;
-  size_t size;
-  char *buf;
-  int out_of_core;
-  int too_large;
-  size_t maxlen;
+    size_t len;
+    size_t size;
+    char *buf;
+    int out_of_core;
+    int too_large;
+    size_t maxlen;
 };
 
 
@@ -51,74 +51,74 @@ struct membuf
    the code with out of core checks.  */
 
 static void
-init_membuf (struct membuf *mb, int initiallen, size_t maxlen)
+init_membuf(struct membuf *mb, int initiallen, size_t maxlen)
 {
-  mb->len = 0;
-  mb->size = initiallen;
-  mb->out_of_core = 0;
-  mb->too_large = 0;
-  mb->maxlen = maxlen;
-  /* we need to allocate one byte more for get_membuf */
-  mb->buf = xtrymalloc (initiallen+1);
-  if (!mb->buf)
-      mb->out_of_core = 1;
+    mb->len = 0;
+    mb->size = initiallen;
+    mb->out_of_core = 0;
+    mb->too_large = 0;
+    mb->maxlen = maxlen;
+    /* we need to allocate one byte more for get_membuf */
+    mb->buf = xtrymalloc(initiallen + 1);
+    if(!mb->buf)
+        mb->out_of_core = 1;
 }
 
 static void
-put_membuf (struct membuf *mb, const void *buf, size_t len)
+put_membuf(struct membuf *mb, const void *buf, size_t len)
 {
-  if (mb->out_of_core || mb->too_large)
-    return;
+    if(mb->out_of_core || mb->too_large)
+        return;
 
-  if (mb->maxlen && mb->len + len > mb->maxlen)
+    if(mb->maxlen && mb->len + len > mb->maxlen)
     {
-      mb->too_large = 1;
-      return;
+        mb->too_large = 1;
+        return;
     }
 
-  if (mb->len + len >= mb->size)
+    if(mb->len + len >= mb->size)
     {
-      char *p;
-      
-      mb->size += len + 1024;
-      /* we need to allocate one byte more for get_membuf */
-      p = xtryrealloc (mb->buf, mb->size+1);
-      if (!p)
+        char *p;
+
+        mb->size += len + 1024;
+        /* we need to allocate one byte more for get_membuf */
+        p = xtryrealloc(mb->buf, mb->size + 1);
+        if(!p)
         {
-          mb->out_of_core = 1;
-          return;
+            mb->out_of_core = 1;
+            return;
         }
-      mb->buf = p;
+        mb->buf = p;
     }
-  memcpy (mb->buf + mb->len, buf, len);
-  mb->len += len;
+    memcpy(mb->buf + mb->len, buf, len);
+    mb->len += len;
 }
 
 static void *
-get_membuf (struct membuf *mb, size_t *len)
+get_membuf(struct membuf *mb, size_t *len)
 {
-  char *p;
+    char *p;
 
-  if (mb->out_of_core || mb->too_large)
+    if(mb->out_of_core || mb->too_large)
     {
-      xfree (mb->buf);
-      mb->buf = NULL;
-      return NULL;
+        xfree(mb->buf);
+        mb->buf = NULL;
+        return NULL;
     }
 
-  mb->buf[mb->len] = 0; /* there is enough space for the hidden eos */
-  p = mb->buf;
-  *len = mb->len;
-  mb->buf = NULL;
-  mb->out_of_core = 1; /* don't allow a reuse */
-  return p;
+    mb->buf[mb->len] = 0; /* there is enough space for the hidden eos */
+    p = mb->buf;
+    *len = mb->len;
+    mb->buf = NULL;
+    mb->out_of_core = 1; /* don't allow a reuse */
+    return p;
 }
 
 static void
-free_membuf (struct membuf *mb)
+free_membuf(struct membuf *mb)
 {
-  xfree (mb->buf);
-  mb->buf = NULL;
+    xfree(mb->buf);
+    mb->buf = NULL;
 }
 
 
@@ -129,109 +129,110 @@ free_membuf (struct membuf *mb)
  * @r_buffer: Returns an allocated buffer
  * @r_length: Returns the length of this buffer
  * @maxlen: If not 0, the size limit of the inquired data.
- * 
+ *
  * A Server may use this to Send an inquire.  r_buffer, r_length and
  * maxlen may all be NULL/0 to indicate that no real data is expected.
- * 
+ *
  * Return value: 0 on success or an ASSUAN error code
  **/
 assuan_error_t
-assuan_inquire (assuan_context_t ctx, const char *keyword,
-                unsigned char **r_buffer, size_t *r_length, size_t maxlen)
+assuan_inquire(assuan_context_t ctx, const char *keyword,
+               unsigned char **r_buffer, size_t *r_length, size_t maxlen)
 {
-  assuan_error_t rc;
-  struct membuf mb;
-  char cmdbuf[LINELENGTH-10]; /* (10 = strlen ("INQUIRE ")+CR,LF) */
-  unsigned char *line, *p;
-  int linelen;
-  int nodataexpected;
+    assuan_error_t rc;
+    struct membuf mb;
+    char cmdbuf[LINELENGTH - 10]; /* (10 = strlen ("INQUIRE ")+CR,LF) */
+    unsigned char *line, *p;
+    int linelen;
+    int nodataexpected;
 
-  if (!ctx || !keyword || (10 + strlen (keyword) >= sizeof (cmdbuf)))
-    return _assuan_error (ASSUAN_Invalid_Value);
-  nodataexpected = !r_buffer && !r_length && !maxlen;
-  if (!nodataexpected && (!r_buffer || !r_length))
-    return _assuan_error (ASSUAN_Invalid_Value);
-  if (!ctx->is_server)
-    return _assuan_error (ASSUAN_Not_A_Server);
-  if (ctx->in_inquire)
-    return _assuan_error (ASSUAN_Nested_Commands);
-  
-  ctx->in_inquire = 1;
-  if (nodataexpected)
-    memset (&mb, 0, sizeof mb); /* avoid compiler warnings */
-  else
-    init_membuf (&mb, maxlen? maxlen:1024, maxlen);
+    if(!ctx || !keyword || (10 + strlen(keyword) >= sizeof(cmdbuf)))
+        return _assuan_error(ASSUAN_Invalid_Value);
+    nodataexpected = !r_buffer && !r_length && !maxlen;
+    if(!nodataexpected && (!r_buffer || !r_length))
+        return _assuan_error(ASSUAN_Invalid_Value);
+    if(!ctx->is_server)
+        return _assuan_error(ASSUAN_Not_A_Server);
+    if(ctx->in_inquire)
+        return _assuan_error(ASSUAN_Nested_Commands);
 
-  strcpy (stpcpy (cmdbuf, "INQUIRE "), keyword);
-  rc = assuan_write_line (ctx, cmdbuf);
-  if (rc)
-    goto leave;
+    ctx->in_inquire = 1;
+    if(nodataexpected)
+        memset(&mb, 0, sizeof mb);  /* avoid compiler warnings */
+    else
+        init_membuf(&mb, maxlen ? maxlen : 1024, maxlen);
 
-  for (;;)
+    strcpy(stpcpy(cmdbuf, "INQUIRE "), keyword);
+    rc = assuan_write_line(ctx, cmdbuf);
+    if(rc)
+        goto leave;
+
+    for(;;)
     {
-      do 
+        do
         {
-          rc = _assuan_read_line (ctx);
-          if (rc)
+            rc = _assuan_read_line(ctx);
+            if(rc)
+                goto leave;
+            line = (unsigned char *) ctx->inbound.line;
+            linelen = ctx->inbound.linelen;
+        }
+        while(*line == '#' || !linelen);
+        if(line[0] == 'E' && line[1] == 'N' && line[2] == 'D'
+                && (!line[3] || line[3] == ' '))
+            break; /* END command received*/
+        if(line[0] == 'C' && line[1] == 'A' && line[2] == 'N')
+        {
+            rc = _assuan_error(ASSUAN_Canceled);
             goto leave;
-          line = (unsigned char *) ctx->inbound.line;
-          linelen = ctx->inbound.linelen;
-        }    
-      while (*line == '#' || !linelen);
-      if (line[0] == 'E' && line[1] == 'N' && line[2] == 'D'
-          && (!line[3] || line[3] == ' '))
-        break; /* END command received*/
-      if (line[0] == 'C' && line[1] == 'A' && line[2] == 'N')
-        {
-          rc = _assuan_error (ASSUAN_Canceled);
-          goto leave;
         }
-      if (line[0] != 'D' || line[1] != ' ' || nodataexpected)
+        if(line[0] != 'D' || line[1] != ' ' || nodataexpected)
         {
-          rc = _assuan_error (ASSUAN_Unexpected_Command);
-          goto leave;
+            rc = _assuan_error(ASSUAN_Unexpected_Command);
+            goto leave;
         }
-      if (linelen < 3)
-        continue;
-      line += 2;
-      linelen -= 2;
+        if(linelen < 3)
+            continue;
+        line += 2;
+        linelen -= 2;
 
-      p = line;
-      while (linelen)
+        p = line;
+        while(linelen)
         {
-          for (;linelen && *p != '%'; linelen--, p++)
-            ;
-          put_membuf (&mb, line, p-line);
-          if (linelen > 2)
-            { /* handle escaping */
-              unsigned char tmp[1];
-              p++;
-              *tmp = xtoi_2 (p);
-              p += 2;
-              linelen -= 3;
-              put_membuf (&mb, tmp, 1);
+            for(; linelen && *p != '%'; linelen--, p++)
+                ;
+            put_membuf(&mb, line, p - line);
+            if(linelen > 2)
+            {
+                /* handle escaping */
+                unsigned char tmp[1];
+                p++;
+                *tmp = xtoi_2(p);
+                p += 2;
+                linelen -= 3;
+                put_membuf(&mb, tmp, 1);
             }
-          line = p;
+            line = p;
         }
-      if (mb.too_large)
+        if(mb.too_large)
         {
-          rc = _assuan_error (ASSUAN_Too_Much_Data);
-          goto leave;
+            rc = _assuan_error(ASSUAN_Too_Much_Data);
+            goto leave;
         }
     }
 
-  if (!nodataexpected)
+    if(!nodataexpected)
     {
-      *r_buffer = get_membuf (&mb, r_length);
-      if (!*r_buffer)
-        rc = _assuan_error (ASSUAN_Out_Of_Core);
+        *r_buffer = get_membuf(&mb, r_length);
+        if(!*r_buffer)
+            rc = _assuan_error(ASSUAN_Out_Of_Core);
     }
 
- leave:
-  if (!nodataexpected)
-    free_membuf (&mb);
-  ctx->in_inquire = 0;
-  return rc;
+leave:
+    if(!nodataexpected)
+        free_membuf(&mb);
+    ctx->in_inquire = 0;
+    return rc;
 }
 
 

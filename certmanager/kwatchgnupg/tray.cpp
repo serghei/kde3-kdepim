@@ -39,28 +39,28 @@
 #include <kiconloader.h>
 #include <qtooltip.h>
 
-KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
-  : KSystemTray( mainwin, "KWatchGnuPG Tray Window" )
+KWatchGnuPGTray::KWatchGnuPGTray(KWatchGnuPGMainWindow *mainwin)
+    : KSystemTray(mainwin, "KWatchGnuPG Tray Window")
 {
-  kdDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
+    kdDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
 
-  KGlobal::iconLoader()->addAppDir( "kwatchgnupg" );
-  
-  mNormalPix = loadIcon("kwatchgnupg");
-  mAttentionPix = loadIcon("kwatchgnupg2");
+    KGlobal::iconLoader()->addAppDir("kwatchgnupg");
 
-  setPixmap( mNormalPix );
-  QToolTip::add( this, i18n("KWatchGnuPG Log Viewer") );
+    mNormalPix = loadIcon("kwatchgnupg");
+    mAttentionPix = loadIcon("kwatchgnupg2");
+
+    setPixmap(mNormalPix);
+    QToolTip::add(this, i18n("KWatchGnuPG Log Viewer"));
 }
 
 KWatchGnuPGTray::~KWatchGnuPGTray()
 {
 }
 
-void KWatchGnuPGTray::setAttention( bool att )
+void KWatchGnuPGTray::setAttention(bool att)
 {
-  if( att ) setPixmap( mAttentionPix );
-  else setPixmap( mNormalPix );
+    if(att) setPixmap(mAttentionPix);
+    else setPixmap(mNormalPix);
 }
 
 #include "tray.moc"

@@ -30,65 +30,71 @@ namespace KCal {
   It extends QValueList<T *> by auto delete funtionality known from QPtrList.
 */
 template<class T>
-class ListBase : public QValueList<T *>
-{
-  public:
+class ListBase : public QValueList<T *> {
+public:
     ListBase()
-      : QValueList<T *>(), mAutoDelete( false )
+        : QValueList<T * >(), mAutoDelete(false)
     {
     }
 
-    ListBase( const ListBase &l )
-      : QValueList<T *>( l ), mAutoDelete( false )
+    ListBase(const ListBase &l)
+        : QValueList<T * >(l), mAutoDelete(false)
     {
     }
 
     ~ListBase()
     {
-      if ( mAutoDelete ) {
-        QValueListIterator<T *> it;
-        for( it = QValueList<T*>::begin(); it != QValueList<T*>::end(); ++it ) {
-          delete *it;
+        if(mAutoDelete)
+        {
+            QValueListIterator<T *> it;
+            for(it = QValueList<T *>::begin(); it != QValueList<T *>::end(); ++it)
+            {
+                delete *it;
+            }
         }
-      }
     }
 
-    ListBase &operator=( const ListBase &l )
+    ListBase &operator=(const ListBase &l)
     {
-      if ( this == &l ) return *this;
-      QValueList<T *>::operator=( l );
-      return *this;
+        if(this == &l) return *this;
+        QValueList<T *>::operator=(l);
+        return *this;
     }
 
-    void setAutoDelete( bool autoDelete )
+    void setAutoDelete(bool autoDelete)
     {
-      mAutoDelete = autoDelete;
+        mAutoDelete = autoDelete;
     }
 
-    bool removeRef( T *t )
+    bool removeRef(T *t)
     {
-      QValueListIterator<T *> it = this->find( t );
-      if ( it == QValueList<T*>::end() ) {
-        return false;
-      } else {
-        if ( mAutoDelete ) delete t;
-        this->remove( it );
-        return true;
-      }
+        QValueListIterator<T *> it = this->find(t);
+        if(it == QValueList<T *>::end())
+        {
+            return false;
+        }
+        else
+        {
+            if(mAutoDelete) delete t;
+            this->remove(it);
+            return true;
+        }
     }
 
     void clearAll()
     {
-      if ( mAutoDelete ) {
-        for ( QValueListIterator<T*> it = QValueList<T*>::begin();
-              it != QValueList<T*>::end(); ++it ) {
-          delete *it;
+        if(mAutoDelete)
+        {
+            for(QValueListIterator<T *> it = QValueList<T *>::begin();
+                    it != QValueList<T *>::end(); ++it)
+            {
+                delete *it;
+            }
         }
-      }
-      QValueList<T*>::clear();
+        QValueList<T *>::clear();
     }
 
-  private:
+private:
     bool mAutoDelete;
 };
 

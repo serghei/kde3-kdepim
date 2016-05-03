@@ -33,72 +33,105 @@
 
 class KNoScrollListBox;
 
-class KOMonthCellToolTip : public QToolTip
-{
-  public:
-    KOMonthCellToolTip (QWidget* parent, KNoScrollListBox* lv );
+class KOMonthCellToolTip : public QToolTip {
+public:
+    KOMonthCellToolTip(QWidget *parent, KNoScrollListBox *lv);
 
-  protected:
-    void maybeTip( const QPoint & pos);
+protected:
+    void maybeTip(const QPoint &pos);
 
-  private:
-    KNoScrollListBox* eventlist;
+private:
+    KNoScrollListBox *eventlist;
 };
 
 
-class KNoScrollListBox: public QListBox
-{
+class KNoScrollListBox: public QListBox {
     Q_OBJECT
-  public:
-    KNoScrollListBox(QWidget *parent=0, const char *name=0);
+public:
+    KNoScrollListBox(QWidget *parent = 0, const char *name = 0);
     ~KNoScrollListBox() {}
 
-    void setBackground( bool primary, bool workday );
+    void setBackground(bool primary, bool workday);
 
-  signals:
+signals:
     void shiftDown();
     void shiftUp();
     void rightClick();
 
-  protected slots:
+protected slots:
     void keyPressEvent(QKeyEvent *);
     void keyReleaseEvent(QKeyEvent *);
     void mousePressEvent(QMouseEvent *);
     void resizeEvent(QResizeEvent *);
-    void contentsMouseDoubleClickEvent( QMouseEvent * e );
+    void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
-  private:
+private:
     bool mSqueezing;
 };
 
 
-class MonthViewItem: public QListBoxItem
-{
-  public:
-    MonthViewItem( Incidence *, const QDateTime &qd, const QString & title );
+class MonthViewItem: public QListBoxItem {
+public:
+    MonthViewItem(Incidence *, const QDateTime &qd, const QString &title);
 
-    void setEvent(bool on) { mEvent = on; }
-    void setTodo(bool on)  { mTodo  = on; }
-    void setTodoDone(bool on) { mTodoDone = on; }
-    void setRecur(bool on) { mRecur = on; }
-    void setAlarm(bool on) { mAlarm = on; }
-    void setReply(bool on) { mReply = on; }
+    void setEvent(bool on)
+    {
+        mEvent = on;
+    }
+    void setTodo(bool on)
+    {
+        mTodo  = on;
+    }
+    void setTodoDone(bool on)
+    {
+        mTodoDone = on;
+    }
+    void setRecur(bool on)
+    {
+        mRecur = on;
+    }
+    void setAlarm(bool on)
+    {
+        mAlarm = on;
+    }
+    void setReply(bool on)
+    {
+        mReply = on;
+    }
 
-    void setPalette(const QPalette &p) { mPalette = p; }
-    QPalette palette() const { return mPalette; }
+    void setPalette(const QPalette &p)
+    {
+        mPalette = p;
+    }
+    QPalette palette() const
+    {
+        return mPalette;
+    }
 
-    Incidence *incidence() const { return mIncidence; }
-    QDateTime incidenceDateTime() { return mDateTime; }
+    Incidence *incidence() const
+    {
+        return mIncidence;
+    }
+    QDateTime incidenceDateTime()
+    {
+        return mDateTime;
+    }
 
-    void setResourceColor( QColor& color ) { mResourceColor = color; }
-    QColor &resourceColor() { return mResourceColor; }
-  protected:
+    void setResourceColor(QColor &color)
+    {
+        mResourceColor = color;
+    }
+    QColor &resourceColor()
+    {
+        return mResourceColor;
+    }
+protected:
     virtual void paint(QPainter *);
     virtual int height(const QListBox *) const;
     virtual int width(const QListBox *) const;
     //Color of the resource
     QColor mResourceColor;
-  private:
+private:
     bool mEvent;
     bool mTodo;
     bool mTodoDone;
@@ -126,15 +159,14 @@ class KOMonthView;
 
 @see KOMonthView
 */
-class MonthViewCell : public QWidget
-{
+class MonthViewCell : public QWidget {
     Q_OBJECT
-  public:
+public:
     class CreateItemVisitor;
-    MonthViewCell( KOMonthView * );
+    MonthViewCell(KOMonthView *);
 
     /** Sets the date of the cell */
-    void setDate( const QDate & );
+    void setDate(const QDate &);
     /** @return Date of cell */
     QDate date() const;
 
@@ -145,20 +177,20 @@ class MonthViewCell : public QWidget
       @param primary If true, the cell will be set as primary. Else it will be
       set as non-primary.
     */
-    void setPrimary( bool primary );
+    void setPrimary(bool primary);
     /**
       @return True if this cell is primary, else false.
     */
     bool isPrimary() const;
 
     /** Make this cell show as a holiday */
-    void setHoliday( bool );
+    void setHoliday(bool);
     /**
       Sets the holiday name to this cell. This will not call
       setHoliday( true ).
       @param name The name of the holiday.
     */
-    void setHolidayString( const QString &name );
+    void setHolidayString(const QString &name);
 
     void updateCell();
     /** Adds an incidence to the cell.
@@ -168,46 +200,49 @@ class MonthViewCell : public QWidget
         @param multiDay Specifies which day of a multi-day event is added to the
         cell. The first day is 0 (default).
     */
-    void addIncidence( Incidence *incidence, MonthViewCell::CreateItemVisitor&v, int multiDay = 0 );
+    void addIncidence(Incidence *incidence, MonthViewCell::CreateItemVisitor &v, int multiDay = 0);
     /** Removes an incidence from the cell.
         @return True if successful, false if deletion failed
        (e.g. when given incidence doesn't exist in the cell.
     */
-    void removeIncidence( Incidence * );
+    void removeIncidence(Incidence *);
 
     void updateConfig();
 
-    void enableScrollBars( bool );
+    void enableScrollBars(bool);
 
     Incidence *selectedIncidence();
     QDate selectedIncidenceDate();
 
     void deselect();
 
-    void setCalendar( Calendar*cal ) { mCalendar = cal; }
-  signals:
-    void defaultAction( Incidence * );
+    void setCalendar(Calendar *cal)
+    {
+        mCalendar = cal;
+    }
+signals:
+    void defaultAction(Incidence *);
     /**
       Notify the view manager that we want to create a new event, so an editor
       will pop up.
       @param date The date of the event we want create.
     */
-    void newEventSignal( const QDate &date );
+    void newEventSignal(const QDate &date);
 
-  public slots:
+public slots:
     void select();
 
-  protected:
+protected:
     void setFrameWidth();
-    void resizeEvent( QResizeEvent * );
+    void resizeEvent(QResizeEvent *);
 
-  protected slots:
-    void defaultAction( QListBoxItem * );
-    void contextMenu( QListBoxItem * );
+protected slots:
+    void defaultAction(QListBoxItem *);
+    void contextMenu(QListBoxItem *);
 
-  private:
+private:
     KOMonthView *mMonthView;
-  // We need the calendar for paint the ResourceColor
+    // We need the calendar for paint the ResourceColor
     Calendar *mCalendar;
 
     QDate mDate;
@@ -219,7 +254,7 @@ class MonthViewCell : public QWidget
     KNoScrollListBox *mItemList;
 
     QSize mLabelSize;
-//    QPalette mOriginalPalette;
+    //    QPalette mOriginalPalette;
     QPalette mHolidayPalette;
     QPalette mStandardPalette;
     QPalette mTodayPalette;
@@ -232,11 +267,10 @@ class MonthViewCell : public QWidget
   @short KOMonthview represents the montly view in KOrganizer.
   @see KOBaseView, KODayListView, MonthViewCell
 */
-class KOMonthView: public KOEventView
-{
+class KOMonthView: public KOEventView {
     Q_OBJECT
-  public:
-    KOMonthView(Calendar *cal, QWidget *parent = 0, const char *name = 0 );
+public:
+    KOMonthView(Calendar *cal, QWidget *parent = 0, const char *name = 0);
     ~KOMonthView();
 
     /** Returns maximum number of days supported by the komonthview */
@@ -253,32 +287,32 @@ class KOMonthView: public KOEventView
 
     virtual bool eventDurationHint(QDateTime &startDt, QDateTime &endDt, bool &allDay);
 
-  public slots:
+public slots:
     virtual void updateView();
     virtual void updateConfig();
     virtual void showDates(const QDate &start, const QDate &end);
-    virtual void showIncidences( const Incidence::List &incidenceList );
+    virtual void showIncidences(const Incidence::List &incidenceList);
 
     void changeIncidenceDisplay(Incidence *, int);
-    void changeIncidenceDisplayAdded(Incidence *, MonthViewCell::CreateItemVisitor&);
+    void changeIncidenceDisplayAdded(Incidence *, MonthViewCell::CreateItemVisitor &);
 
     void clearSelection();
 
-    void showEventContextMenu( Incidence *, const QDate & );
+    void showEventContextMenu(Incidence *, const QDate &);
     void showGeneralContextMenu();
 
-    void setSelectedCell( MonthViewCell * );
+    void setSelectedCell(MonthViewCell *);
 
-  protected slots:
+protected slots:
     void processSelectionChange();
 
-  protected:
+protected:
     void resizeEvent(QResizeEvent *);
 
     void viewChanged();
     void updateDayLabels();
 
-  private:
+private:
     class GetDateVisitor;
     int mDaysPerWeek;
     int mNumWeeks;
@@ -286,7 +320,7 @@ class KOMonthView: public KOEventView
     int mWeekStartDay;
 
     QPtrVector<MonthViewCell> mCells;
-    QMap<QDate,MonthViewCell *> mDateToCell;
+    QMap<QDate, MonthViewCell *> mDateToCell;
     QPtrVector<QLabel> mDayLabels;
 
     bool mShortDayLabels;

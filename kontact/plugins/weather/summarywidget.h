@@ -41,39 +41,86 @@ class QGridLayout;
 class QLabel;
 class QVBoxLayout;
 
-class WeatherData
-{
-  public:
-    void setIcon( const QPixmap &icon ) { mIcon = icon; }
-    QPixmap icon() const { return mIcon; }
-
-    void setName( const QString &name ) { mName = name; }
-    QString name() const { return mName; }
-
-    void setCover( const QStringList& cover ) { mCover = cover; }
-    QStringList cover() const { return mCover; }
-
-    void setDate( const QString &date ) { mDate = date; }
-    QString date() const { return mDate; }
-
-    void setTemperature( const QString &temperature ) { mTemperature = temperature; }
-    QString temperature() const { return mTemperature; }
-
-    void setWindSpeed( const QString &windSpeed ) { mWindSpeed = windSpeed; }
-    QString windSpeed() const { return mWindSpeed; }
-
-    void setRelativeHumidity( const QString &relativeHumidity ) { mRelativeHumidity = relativeHumidity; }
-    QString relativeHumidity() const { return mRelativeHumidity; }
-
-    void setStationID( const QString &station ) { mStationID = station;}
-    QString stationID() { return mStationID; }
-
-    bool operator< ( const WeatherData &data )
+class WeatherData {
+public:
+    void setIcon(const QPixmap &icon)
     {
-      return ( QString::localeAwareCompare( mName, data.mName ) < 0 );
+        mIcon = icon;
+    }
+    QPixmap icon() const
+    {
+        return mIcon;
     }
 
-  private:
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
+    QString name() const
+    {
+        return mName;
+    }
+
+    void setCover(const QStringList &cover)
+    {
+        mCover = cover;
+    }
+    QStringList cover() const
+    {
+        return mCover;
+    }
+
+    void setDate(const QString &date)
+    {
+        mDate = date;
+    }
+    QString date() const
+    {
+        return mDate;
+    }
+
+    void setTemperature(const QString &temperature)
+    {
+        mTemperature = temperature;
+    }
+    QString temperature() const
+    {
+        return mTemperature;
+    }
+
+    void setWindSpeed(const QString &windSpeed)
+    {
+        mWindSpeed = windSpeed;
+    }
+    QString windSpeed() const
+    {
+        return mWindSpeed;
+    }
+
+    void setRelativeHumidity(const QString &relativeHumidity)
+    {
+        mRelativeHumidity = relativeHumidity;
+    }
+    QString relativeHumidity() const
+    {
+        return mRelativeHumidity;
+    }
+
+    void setStationID(const QString &station)
+    {
+        mStationID = station;
+    }
+    QString stationID()
+    {
+        return mStationID;
+    }
+
+    bool operator< (const WeatherData &data)
+    {
+        return (QString::localeAwareCompare(mName, data.mName) < 0);
+    }
+
+private:
     QPixmap mIcon;
     QString mName;
     QStringList mCover;
@@ -84,31 +131,30 @@ class WeatherData
     QString mStationID;
 };
 
-class SummaryWidget : public Kontact::Summary, public DCOPObject
-{
+class SummaryWidget : public Kontact::Summary, public DCOPObject {
     Q_OBJECT
     K_DCOP
-  public:
-    SummaryWidget( QWidget *parent, const char *name = 0 );
+public:
+    SummaryWidget(QWidget *parent, const char *name = 0);
 
     QStringList configModules() const;
 
-    void updateSummary( bool force = false );
+    void updateSummary(bool force = false);
 
-  k_dcop:
-    virtual void refresh( QString );
-    virtual void stationRemoved( QString );
+k_dcop:
+    virtual void refresh(QString);
+    virtual void stationRemoved(QString);
 
-  protected:
-    virtual bool eventFilter( QObject *obj, QEvent *e );
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *e);
 
-  private slots:
+private slots:
     void updateView();
     void timeout();
-    void showReport( const QString& );
-    void reportFinished( KProcess* );
+    void showReport(const QString &);
+    void reportFinished(KProcess *);
 
-  private:
+private:
     QStringList mStations;
     QMap<QString, WeatherData> mWeatherMap;
     QTimer mTimer;
@@ -117,7 +163,7 @@ class SummaryWidget : public Kontact::Summary, public DCOPObject
     QPtrList<QGridLayout> mLayouts;
     QVBoxLayout *mLayout;
 
-    KProcess* mProc;
+    KProcess *mProc;
 };
 
 #endif

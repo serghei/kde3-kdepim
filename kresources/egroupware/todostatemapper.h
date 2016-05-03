@@ -25,9 +25,8 @@
 #include <qdatastream.h>
 #include <qmap.h>
 
-class TodoStateMapper
-{
-  public:
+class TodoStateMapper {
+public:
     /**
       Create Id mapper. You have to set path and identifier before you can call
       load() or save().
@@ -35,41 +34,42 @@ class TodoStateMapper
     TodoStateMapper();
     ~TodoStateMapper();
 
-    void setPath( const QString &path );
-    void setIdentifier( const QString &identifier );
+    void setPath(const QString &path);
+    void setIdentifier(const QString &identifier);
 
     bool load();
     bool save();
 
     void clear();
 
-    void addTodoState( const QString &uid, int localState, const QString &remoteState );
+    void addTodoState(const QString &uid, int localState, const QString &remoteState);
 
-    QString remoteState( const QString &uid, int localState );
+    QString remoteState(const QString &uid, int localState);
 
-    void remove( const QString &uid );
+    void remove(const QString &uid);
 
-    static int toLocal( const QString &remoteState );
-    static QString toRemote( int localState );
+    static int toLocal(const QString &remoteState);
+    static QString toRemote(int localState);
 
-  protected:
+protected:
     QString filename();
 
-  private:
+private:
     QString mPath;
     QString mIdentifier;
 
-    typedef struct {
-      QString uid;
-      int localState;
-      QString remoteState;
+    typedef struct
+    {
+        QString uid;
+        int localState;
+        QString remoteState;
     } TodoStateMapEntry;
 
     typedef QMap<QString, TodoStateMapEntry> TodoStateMap;
     TodoStateMap mTodoStateMap;
 
-    friend QDataStream &operator<<( QDataStream&, const TodoStateMapEntry& );
-    friend QDataStream &operator>>( QDataStream&, TodoStateMapEntry& );
+    friend QDataStream &operator<<(QDataStream &, const TodoStateMapEntry &);
+    friend QDataStream &operator>>(QDataStream &, TodoStateMapEntry &);
 };
 
 #endif

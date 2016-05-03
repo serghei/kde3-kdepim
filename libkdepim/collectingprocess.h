@@ -47,30 +47,30 @@ namespace KPIM {
  * @author Ingo Kloecker <kloecker@kde.org>
  */
 class KDE_EXPORT CollectingProcess : public KProcess {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  CollectingProcess( QObject * parent = 0, const char * name = 0 );
-  ~CollectingProcess();
+    CollectingProcess(QObject *parent = 0, const char *name = 0);
+    ~CollectingProcess();
 
-  /** Starts the process in NotifyOnExit mode and writes in to stdin of
-      the process.
-  */
-  bool start( RunMode runmode, Communication comm );
+    /** Starts the process in NotifyOnExit mode and writes in to stdin of
+        the process.
+    */
+    bool start(RunMode runmode, Communication comm);
 
-  /** Returns the contents of the stdout buffer and clears it afterwards. */
-  QByteArray collectedStdout();
-  /** Returns the contents of the stderr buffer and clears it afterwards. */
-  QByteArray collectedStderr();
+    /** Returns the contents of the stdout buffer and clears it afterwards. */
+    QByteArray collectedStdout();
+    /** Returns the contents of the stderr buffer and clears it afterwards. */
+    QByteArray collectedStderr();
 
 private slots:
-  void slotReceivedStdout( KProcess *, char *, int );
-  void slotReceivedStderr( KProcess *, char *, int );
+    void slotReceivedStdout(KProcess *, char *, int);
+    void slotReceivedStderr(KProcess *, char *, int);
 
 private:
-  class Private;
-  Private * d;
+    class Private;
+    Private *d;
 protected:
-  void virtual_hook( int id, void * data );
+    void virtual_hook(int id, void *data);
 };
 
 } // namespace KPIM

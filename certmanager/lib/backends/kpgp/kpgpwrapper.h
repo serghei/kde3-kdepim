@@ -38,60 +38,60 @@
 #include <qstring.h>
 
 namespace Kleo {
-  class KeyListJob;
-  class EncryptJob;
-  class DecryptJob;
-  class SignJob;
-  class VerifyDetachedJob;
-  class VerifyOpaqueJob;
-  class KeyGenerationJob;
-  class ImportJob;
-  class ExportJob;
-  class DownloadJob;
-  class DeleteJob;
-  class SignEncryptJob;
-  class DecryptVerifyJob;
-  class CryptoConfig;
-  class RefreshKeysJob;
+class KeyListJob;
+class EncryptJob;
+class DecryptJob;
+class SignJob;
+class VerifyDetachedJob;
+class VerifyOpaqueJob;
+class KeyGenerationJob;
+class ImportJob;
+class ExportJob;
+class DownloadJob;
+class DeleteJob;
+class SignEncryptJob;
+class DecryptVerifyJob;
+class CryptoConfig;
+class RefreshKeysJob;
 }
 
 namespace Kpgp {
-  class Base;
+class Base;
 }
 
 class KpgpWrapper : public Kleo::CryptoBackend::Protocol {
 public:
-  KpgpWrapper( const QString & name );
-  ~KpgpWrapper();
+    KpgpWrapper(const QString &name);
+    ~KpgpWrapper();
 
-  QString name() const;
+    QString name() const;
 
-  QString displayName() const;
+    QString displayName() const;
 
-  Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false,
-                                 bool validate=false ) const;
-  Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
-  Kleo::DecryptJob * decryptJob() const;
-  Kleo::SignJob * signJob( bool armor=false, bool textMode=false ) const;
-  Kleo::VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const;
-  Kleo::VerifyOpaqueJob * verifyOpaqueJob( bool textmode=false ) const;
-  Kleo::KeyGenerationJob * keyGenerationJob() const;
-  Kleo::ImportJob * importJob() const;
-  Kleo::ExportJob * publicKeyExportJob( bool armor=false ) const;
-  Kleo::ExportJob * secretKeyExportJob( bool armor=false ) const;
-  Kleo::DownloadJob * downloadJob( bool armor=false ) const;
-  Kleo::DeleteJob * deleteJob() const;
-  Kleo::SignEncryptJob * signEncryptJob( bool armor=false,
-                                         bool textMode=false ) const;
-  Kleo::DecryptVerifyJob * decryptVerifyJob( bool textmode=false ) const;
-  Kleo::RefreshKeysJob * refreshKeysJob() const;
-
-private:
-  Kpgp::Base * pgpBase() const;
+    Kleo::KeyListJob *keyListJob(bool remote = false, bool includeSigs = false,
+                                 bool validate = false) const;
+    Kleo::EncryptJob *encryptJob(bool armor = false, bool textmode = false) const;
+    Kleo::DecryptJob *decryptJob() const;
+    Kleo::SignJob *signJob(bool armor = false, bool textMode = false) const;
+    Kleo::VerifyDetachedJob *verifyDetachedJob(bool textmode = false) const;
+    Kleo::VerifyOpaqueJob *verifyOpaqueJob(bool textmode = false) const;
+    Kleo::KeyGenerationJob *keyGenerationJob() const;
+    Kleo::ImportJob *importJob() const;
+    Kleo::ExportJob *publicKeyExportJob(bool armor = false) const;
+    Kleo::ExportJob *secretKeyExportJob(bool armor = false) const;
+    Kleo::DownloadJob *downloadJob(bool armor = false) const;
+    Kleo::DeleteJob *deleteJob() const;
+    Kleo::SignEncryptJob *signEncryptJob(bool armor = false,
+                                         bool textMode = false) const;
+    Kleo::DecryptVerifyJob *decryptVerifyJob(bool textmode = false) const;
+    Kleo::RefreshKeysJob *refreshKeysJob() const;
 
 private:
-  QString mName;
-  mutable Kpgp::Base * mPgpBase;
+    Kpgp::Base *pgpBase() const;
+
+private:
+    QString mName;
+    mutable Kpgp::Base *mPgpBase;
 };
 
 #endif // __KLEO_KPGPWRAPPER_H__

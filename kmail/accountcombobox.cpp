@@ -34,73 +34,78 @@
 
 using namespace KMail;
 
-AccountComboBox::AccountComboBox( QWidget* parent, const char* name )
-  : QComboBox( parent, name )
+AccountComboBox::AccountComboBox(QWidget *parent, const char *name)
+    : QComboBox(parent, name)
 {
-  connect( kmkernel->acctMgr(), SIGNAL( accountAdded( KMAccount* ) ),
-           this, SLOT( slotRefreshAccounts() ) );
-  connect( kmkernel->acctMgr(), SIGNAL( accountRemoved( KMAccount* ) ),
-           this, SLOT( slotRefreshAccounts() ) );
-  slotRefreshAccounts();
+    connect(kmkernel->acctMgr(), SIGNAL(accountAdded(KMAccount *)),
+            this, SLOT(slotRefreshAccounts()));
+    connect(kmkernel->acctMgr(), SIGNAL(accountRemoved(KMAccount *)),
+            this, SLOT(slotRefreshAccounts()));
+    slotRefreshAccounts();
 }
 
 void AccountComboBox::slotRefreshAccounts()
 {
-  KMAccount* curr = currentAccount();
-  clear();
-  // Note that this won't take into account newly-created-in-configuredialog accounts
-  // until clicking OK or Apply. This would make this class much more complex
-  // (this would have to be different depending on whether this combo is in the
-  // configuration dialog or not...)
-  QStringList accountNames;
-  QValueList<KMAccount *> lst = applicableAccounts();
-  QValueList<KMAccount *>::ConstIterator it = lst.begin();
-  for ( ; it != lst.end() ; ++it )
-    accountNames.append( (*it)->name() );
-  kdDebug() << k_funcinfo << accountNames << endl;
-  insertStringList( accountNames );
-  if ( curr )
-    setCurrentAccount( curr );
+    KMAccount *curr = currentAccount();
+    clear();
+    // Note that this won't take into account newly-created-in-configuredialog accounts
+    // until clicking OK or Apply. This would make this class much more complex
+    // (this would have to be different depending on whether this combo is in the
+    // configuration dialog or not...)
+    QStringList accountNames;
+    QValueList<KMAccount *> lst = applicableAccounts();
+    QValueList<KMAccount *>::ConstIterator it = lst.begin();
+    for(; it != lst.end() ; ++it)
+        accountNames.append((*it)->name());
+    kdDebug() << k_funcinfo << accountNames << endl;
+    insertStringList(accountNames);
+    if(curr)
+        setCurrentAccount(curr);
 }
 
 
-void AccountComboBox::setCurrentAccount( KMAccount* account )
+void AccountComboBox::setCurrentAccount(KMAccount *account)
 {
-  int i = 0;
-  QValueList<KMAccount *> lst = applicableAccounts();
-  QValueList<KMAccount *>::ConstIterator it = lst.begin();
-  for ( ; it != lst.end() ; ++it, ++i ) {
-    if ( (*it) == account ) {
-      setCurrentItem( i );
-      return;
+    int i = 0;
+    QValueList<KMAccount *> lst = applicableAccounts();
+    QValueList<KMAccount *>::ConstIterator it = lst.begin();
+    for(; it != lst.end() ; ++it, ++i)
+    {
+        if((*it) == account)
+        {
+            setCurrentItem(i);
+            return;
+        }
     }
-  }
 }
 
-KMAccount* AccountComboBox::currentAccount() const
+KMAccount *AccountComboBox::currentAccount() const
 {
-  int i = 0;
-  QValueList<KMAccount *> lst = applicableAccounts();
-  QValueList<KMAccount *>::ConstIterator it = lst.begin();
-  while ( it != lst.end() && i < currentItem() ) {
-    ++it;
-    ++i;
-  }
-  if ( it != lst.end() )
-    return *it;
-  return 0;
+    int i = 0;
+    QValueList<KMAccount *> lst = applicableAccounts();
+    QValueList<KMAccount *>::ConstIterator it = lst.begin();
+    while(it != lst.end() && i < currentItem())
+    {
+        ++it;
+        ++i;
+    }
+    if(it != lst.end())
+        return *it;
+    return 0;
 }
 
 QValueList<KMAccount *> KMail::AccountComboBox::applicableAccounts() const
 {
-  QValueList<KMAccount *> lst;
-  for( KMAccount *a = kmkernel->acctMgr()->first(); a;
-       a = kmkernel->acctMgr()->next() ) {
-    if ( a && a->type() == "cachedimap" ) { //// ## proko2 hack. Need a list of allowed account types as ctor param
-      lst.append( a );
+    QValueList<KMAccount *> lst;
+    for(KMAccount *a = kmkernel->acctMgr()->first(); a;
+            a = kmkernel->acctMgr()->next())
+    {
+        if(a && a->type() == "cachedimap")      //// ## proko2 hack. Need a list of allowed account types as ctor param
+        {
+            lst.append(a);
+        }
     }
-  }
-  return lst;
+    return lst;
 }
 
 #include "accountcombobox.moc"

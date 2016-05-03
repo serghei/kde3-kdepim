@@ -28,22 +28,21 @@
 
 #include "inputfield.h"
 
-class PageInputField : public InputField
-{
-  Q_OBJECT
+class PageInputField : public InputField {
+    Q_OBJECT
 
-  public:
-    PageInputField( const QString &name, const KWSDL::Message &message );
+public:
+    PageInputField(const QString &name, const KWSDL::Message &message);
 
-    virtual void setXMLData( const QDomElement &element );
-    virtual void xmlData( QDomDocument &document, QDomElement &parent );
+    virtual void setXMLData(const QDomElement &element);
+    virtual void xmlData(QDomDocument &document, QDomElement &parent);
 
-    virtual void setData( const QString &data );
+    virtual void setData(const QString &data);
     virtual QString data() const;
 
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual QWidget *createWidget(QWidget *parent);
 
-  private:
+private:
     QWidget *mInputWidget;
     const KWSDL::Message mMessage;
 };

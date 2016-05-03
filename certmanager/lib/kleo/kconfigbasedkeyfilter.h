@@ -45,21 +45,36 @@ class KConfigBase;
 
 namespace Kleo {
 
-  class KConfigBasedKeyFilter : public KeyFilter {
-  public:
-    explicit KConfigBasedKeyFilter( const KConfigBase & config );
+class KConfigBasedKeyFilter : public KeyFilter {
+public:
+    explicit KConfigBasedKeyFilter(const KConfigBase &config);
     ~KConfigBasedKeyFilter();
-    bool matches( const GpgME::Key & key ) const;
+    bool matches(const GpgME::Key &key) const;
 
-    unsigned int specificity() const { return mSpecificity; }
+    unsigned int specificity() const
+    {
+        return mSpecificity;
+    }
 
-    QColor fgColor() const { return mFgColor; }
-    QColor bgColor() const { return mBgColor; }
-    QFont  font( const QFont & ) const;
-    QString name() const { return mName; }
-    QString icon() const { return mIcon; }
+    QColor fgColor() const
+    {
+        return mFgColor;
+    }
+    QColor bgColor() const
+    {
+        return mBgColor;
+    }
+    QFont  font(const QFont &) const;
+    QString name() const
+    {
+        return mName;
+    }
+    QString icon() const
+    {
+        return mIcon;
+    }
 
-  private:
+private:
     QColor mFgColor, mBgColor;
     QString mName;
     QString mIcon;
@@ -70,10 +85,11 @@ namespace Kleo {
     bool mUseFullFont;
     QFont mFont;
 
-    enum TriState {
-      DoesNotMatter = 0,
-      Set = 1,
-      NotSet = 2
+    enum TriState
+    {
+        DoesNotMatter = 0,
+        Set = 1,
+        NotSet = 2
     };
     TriState mRevoked;
     TriState mExpired;
@@ -86,18 +102,19 @@ namespace Kleo {
     TriState mHasSecret;
     TriState mIsOpenPGP;
     TriState mWasValidated;
-    enum LevelState {
-      LevelDoesNotMatter = 0,
-      Is = 1,
-      IsNot = 2,
-      IsAtLeast = 3,
-      IsAtMost = 4
+    enum LevelState
+    {
+        LevelDoesNotMatter = 0,
+        Is = 1,
+        IsNot = 2,
+        IsAtLeast = 3,
+        IsAtMost = 4
     };
     LevelState mOwnerTrust;
     GpgME::Key::OwnerTrust mOwnerTrustReferenceLevel;
     LevelState mValidity;
     GpgME::UserID::Validity mValidityReferenceLevel;
-  };
+};
 
 }
 

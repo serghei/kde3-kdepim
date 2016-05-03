@@ -42,71 +42,72 @@ class KProcess;
 class ConduitConfigBase;
 class ConduitConfig;
 
-class ConduitConfigWidgetBase : public KCModule
-{
-Q_OBJECT
+class ConduitConfigWidgetBase : public KCModule {
+    Q_OBJECT
 public:
-	ConduitConfigWidgetBase(QWidget *p=0L,const char *n=0L);
+    ConduitConfigWidgetBase(QWidget *p = 0L, const char *n = 0L);
 
-	QListView *fConduitList;
-	QWidgetStack *fStack;
-	QPushButton *fConfigureButton;
-	QPushButton *fConfigureWizard,*fConfigureKontact;
-	QLabel *fActionDescription;
-	QLabel *fTitleText;  // Dialog title above fStack
+    QListView *fConduitList;
+    QWidgetStack *fStack;
+    QPushButton *fConfigureButton;
+    QPushButton *fConfigureWizard, *fConfigureKontact;
+    QLabel *fActionDescription;
+    QLabel *fTitleText;  // Dialog title above fStack
 } ;
 
-class ConduitConfigWidget : public ConduitConfigWidgetBase
-{
-Q_OBJECT
+class ConduitConfigWidget : public ConduitConfigWidgetBase {
+    Q_OBJECT
 public:
-	ConduitConfigWidget(QWidget *,
-		const char *name=0L, bool ownButtons=false);
-	virtual ~ConduitConfigWidget();
+    ConduitConfigWidget(QWidget *,
+                        const char *name = 0L, bool ownButtons = false);
+    virtual ~ConduitConfigWidget();
 
 protected:
-	void fillLists();
+    void fillLists();
 
-	void warnNoExec(const QListViewItem *);
-	void warnNoLibrary(const QListViewItem *);
+    void warnNoExec(const QListViewItem *);
+    void warnNoLibrary(const QListViewItem *);
 
-	void loadAndConfigure(QListViewItem *); // ,bool);
+    void loadAndConfigure(QListViewItem *); // ,bool);
 
 public:
-	/**
-	* Get rid of the current conduit configuration widget,
-	* saving changes if necessary. Returns false if the user
-	* selects cancel for the action that is supposed to
-	* release the conduit (ie. selecting a different one,
-	* or closing the dialog.)
-	*/
-	bool release();
-	bool validate() {return release(); }
+    /**
+    * Get rid of the current conduit configuration widget,
+    * saving changes if necessary. Returns false if the user
+    * selects cancel for the action that is supposed to
+    * release the conduit (ie. selecting a different one,
+    * or closing the dialog.)
+    */
+    bool release();
+    bool validate()
+    {
+        return release();
+    }
 
 public slots:
-	virtual void save();
-	virtual void load();
-//	void slotOk();
-//	void slotApply();
+    virtual void save();
+    virtual void load();
+    //	void slotOk();
+    //	void slotApply();
 
 signals:
-	void selectionChanged(QListViewItem *);
-	void sizeChanged();
+    void selectionChanged(QListViewItem *);
+    void sizeChanged();
 
 protected slots:
-	void configure();
-	void configureWizard();
+    void configure();
+    void configureWizard();
 
-	void unselect(); // Helper slot when cancelling a change in selection
-	void selected(QListViewItem *);
-	void conduitsChanged(QListViewItem*);
-	void reopenItem(QListViewItem *);
+    void unselect(); // Helper slot when cancelling a change in selection
+    void selected(QListViewItem *);
+    void conduitsChanged(QListViewItem *);
+    void reopenItem(QListViewItem *);
 
 private:
-	QPushButton *fConfigure;
-	QListViewItem *fCurrentConduit;
-	QListViewItem *fGeneralPage;
-	ConduitConfigBase *fCurrentConfig;
+    QPushButton *fConfigure;
+    QListViewItem *fCurrentConduit;
+    QListViewItem *fGeneralPage;
+    ConduitConfigBase *fCurrentConfig;
 };
 
 #endif

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
- * USA. 
+ * USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -48,16 +48,16 @@ _assuan_funopen(void *cookie,
                 cookie_seek_function_t *seekfn,
                 cookie_close_function_t *closefn)
 {
-  cookie_io_functions_t io = { NULL };
+    cookie_io_functions_t io = { NULL };
 
-  io.read = readfn;
-  io.write = writefn;
-  io.seek = seekfn;
-  io.close = closefn;
+    io.read = readfn;
+    io.write = writefn;
+    io.seek = seekfn;
+    io.close = closefn;
 
-  return fopencookie (cookie,
-		      readfn ? ( writefn ? "rw" : "r" )
-		      : ( writefn ? "w" : ""), io);
+    return fopencookie(cookie,
+                       readfn ? (writefn ? "rw" : "r")
+                       : (writefn ? "w" : ""), io);
 }
 #else
 #error No known way to implement funopen.

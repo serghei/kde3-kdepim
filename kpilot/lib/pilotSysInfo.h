@@ -37,108 +37,107 @@
 
 
 
-class KPilotSysInfo
-{
+class KPilotSysInfo {
 public:
-	/** Constructor. Create an empty SysInfo structure. */
-	KPilotSysInfo() 
-	{
-		::memset(&fSysInfo,0,sizeof(struct SysInfo)); 
-	}
+    /** Constructor. Create an empty SysInfo structure. */
+    KPilotSysInfo()
+    {
+        ::memset(&fSysInfo, 0, sizeof(struct SysInfo));
+    }
 
-	/** Constructor. Copy an existing pilot-link SysInfo structure. 
-	 *  Ownership is not changed. @p sys_info may be NULL.
-	 */ 
-	KPilotSysInfo(const SysInfo *sys_info) 
-	{
-		::memset(&fSysInfo,0,sizeof(struct SysInfo)); 
-		if (sys_info)
-		{
-			fSysInfo = *sys_info;
-		}
-	}
+    /** Constructor. Copy an existing pilot-link SysInfo structure.
+     *  Ownership is not changed. @p sys_info may be NULL.
+     */
+    KPilotSysInfo(const SysInfo *sys_info)
+    {
+        ::memset(&fSysInfo, 0, sizeof(struct SysInfo));
+        if(sys_info)
+        {
+            fSysInfo = *sys_info;
+        }
+    }
 
-	/** Access to the raw SysInfo structure. */
-	SysInfo *sysInfo()
-	{
-		return &fSysInfo;
-	}
+    /** Access to the raw SysInfo structure. */
+    SysInfo *sysInfo()
+    {
+        return &fSysInfo;
+    }
 
-	/** Get the ROM version of the handheld. This is a pilot-link
-	 *  long value (4 bytes) with major, minor, bugfix version
-	 *  numbers encoded in the value.
-	 */
-	const unsigned long getRomVersion() const 
-	{
-		return fSysInfo.romVersion;
-	}
+    /** Get the ROM version of the handheld. This is a pilot-link
+     *  long value (4 bytes) with major, minor, bugfix version
+     *  numbers encoded in the value.
+     */
+    const unsigned long getRomVersion() const
+    {
+        return fSysInfo.romVersion;
+    }
 
-	/** Get the locale number of the handheld. 
-	 *  @note I do not know what this means.
-	 */
-	const unsigned long getLocale() const 
-	{
-		return fSysInfo.locale;
-	}
-	/** Set the locale number of the handheld.
-	 *  @note I do not know what this means.
-	 */
-	void setLocale(unsigned long newval)
-	{
-		fSysInfo.locale=newval;
-	}
+    /** Get the locale number of the handheld.
+     *  @note I do not know what this means.
+     */
+    const unsigned long getLocale() const
+    {
+        return fSysInfo.locale;
+    }
+    /** Set the locale number of the handheld.
+     *  @note I do not know what this means.
+     */
+    void setLocale(unsigned long newval)
+    {
+        fSysInfo.locale = newval;
+    }
 
-	/** Get the length (in bytes) of the ProductID string. */
-	const int getProductIDLength() const
-	{
-		return fSysInfo.prodIDLength;
-	}
-	/** Get the ProductID string from the handheld. This is
-	 *  guaranteed to be NUL terminated.
-	 */
-	const char* getProductID() const
-	{
-		return fSysInfo.prodID;
-	}
+    /** Get the length (in bytes) of the ProductID string. */
+    const int getProductIDLength() const
+    {
+        return fSysInfo.prodIDLength;
+    }
+    /** Get the ProductID string from the handheld. This is
+     *  guaranteed to be NUL terminated.
+     */
+    const char *getProductID() const
+    {
+        return fSysInfo.prodID;
+    }
 
-	/** Accessor for the major version of the DLP protocol in use. */
-	const unsigned short getMajorVersion() const 
-	{
-		return fSysInfo.dlpMajorVersion;
-	}
-	/** Accessor for the minor version of the DLP protocol in use. */
-	const unsigned short getMinorVersion() const 
-	{
-		return fSysInfo.dlpMinorVersion;
-	}
+    /** Accessor for the major version of the DLP protocol in use. */
+    const unsigned short getMajorVersion() const
+    {
+        return fSysInfo.dlpMajorVersion;
+    }
+    /** Accessor for the minor version of the DLP protocol in use. */
+    const unsigned short getMinorVersion() const
+    {
+        return fSysInfo.dlpMinorVersion;
+    }
 
-	/** Accessor for the major compatibility version of the handheld.
-	 *  @note I do not know what this means.
-	 */
-	const unsigned short getCompatMajorVersion() const 
-	{
-		return fSysInfo.compatMajorVersion;
-	}
-	/** Accessor for the minor compatibility version of the handheld.
-	 *  @note I do not know what this means.
-	 */
-	const unsigned short getCompatMinorVersion() const 
-	{
-		return fSysInfo.compatMinorVersion;
-	}
+    /** Accessor for the major compatibility version of the handheld.
+     *  @note I do not know what this means.
+     */
+    const unsigned short getCompatMajorVersion() const
+    {
+        return fSysInfo.compatMajorVersion;
+    }
+    /** Accessor for the minor compatibility version of the handheld.
+     *  @note I do not know what this means.
+     */
+    const unsigned short getCompatMinorVersion() const
+    {
+        return fSysInfo.compatMinorVersion;
+    }
 
 
-	/** Returns the maximum record size that the handheld supports.
-	 *  Normally this is 65524 or so (which means that larger values
-	 *  don't necessarily @em fit in a short).
-	 */
-	const unsigned short getMaxRecSize() const 
-	{
-		return fSysInfo.maxRecSize;
-	}
+    /** Returns the maximum record size that the handheld supports.
+     *  Normally this is 65524 or so (which means that larger values
+     *  don't necessarily @em fit in a short).
+     */
+    const unsigned short getMaxRecSize() const
+    {
+        return fSysInfo.maxRecSize;
+    }
 
 private:
-	struct SysInfo fSysInfo;
+    struct SysInfo fSysInfo;
 };
 
 #endif

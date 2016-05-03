@@ -39,35 +39,34 @@ class KPluginInfo;
 /**
  * A widget for editing an instant messaging address
  */
-class IMAddressWidget : public IMAddressBase
-{
-  Q_OBJECT
+class IMAddressWidget : public IMAddressBase {
+    Q_OBJECT
 
-  public:
-    IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
-    IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
-                     KPluginInfo *protocol, const QString& address,
-                     const IMContext& context = Any );
+public:
+    IMAddressWidget(QWidget *parent, QValueList<KPluginInfo *> protocols);
+    IMAddressWidget(QWidget *parent, QValueList<KPluginInfo *> protocols,
+                    KPluginInfo *protocol, const QString &address,
+                    const IMContext &context = Any);
 
-    KPluginInfo * protocol() const;
+    KPluginInfo *protocol() const;
     IMContext context() const;
     QString address() const ;
     QValueList<KPluginInfo *> mProtocols;
 
-  signals:
-    void inValidState( bool );
+signals:
+    void inValidState(bool);
 
-  protected:
+protected:
     /**
      * Populate combobox with protocols
      */
     void populateProtocols();
 
-  protected slots:
+protected slots:
     void slotProtocolChanged();
-    void slotAddressChanged( const QString &text );
+    void slotAddressChanged(const QString &text);
 
-  private:
+private:
     void init();
 };
 

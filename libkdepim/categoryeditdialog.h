@@ -29,19 +29,18 @@ class KPimPrefs;
 
 namespace KPIM {
 
-class KDE_EXPORT CategoryEditDialog : public KDialogBase
-{
+class KDE_EXPORT CategoryEditDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    CategoryEditDialog( KPimPrefs *prefs, QWidget* parent = 0,
-                        const char* name = 0,
-                        bool modal = false );
+public:
+    CategoryEditDialog(KPimPrefs *prefs, QWidget *parent = 0,
+                       const char *name = 0,
+                       bool modal = false);
     ~CategoryEditDialog();
 
-  public slots:
+public slots:
     void reload();
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotApply();
     void slotCancel();
@@ -49,16 +48,16 @@ class KDE_EXPORT CategoryEditDialog : public KDialogBase
     void edit();
     void remove();
 
-  signals:
+signals:
     void categoryConfigChanged();
 
-  protected:
+protected:
     void fillList();
 
-  private:
+private:
     KPimPrefs *mPrefs;
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 }

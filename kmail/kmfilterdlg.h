@@ -57,115 +57,114 @@ class KListView;
     @see KMFilter KMFilterDlg KMFilterActionEdit KMSearchPatternEdit
 
  */
-class KMFilterListBox : public QGroupBox
-{
-  Q_OBJECT
+class KMFilterListBox : public QGroupBox {
+    Q_OBJECT
 public:
-  /** Constuctor. */
-  KMFilterListBox( const QString & title, QWidget* parent=0, const char* name=0, bool popFilter = false);
+    /** Constuctor. */
+    KMFilterListBox(const QString &title, QWidget *parent = 0, const char *name = 0, bool popFilter = false);
 
-  /** Called from KMFilterDlg. Creates a new filter and presets
-      the first rule with "field equals value". It's there mainly to
-      support "rapid filter creation" from a context menu. You should
-      instead call KMFilterMgr::createFilter.
-      @see KMFilterMgr::createFilter KMFilterDlg::createFilter
-  */
-  void createFilter( const QCString & field, const QString & value );
+    /** Called from KMFilterDlg. Creates a new filter and presets
+        the first rule with "field equals value". It's there mainly to
+        support "rapid filter creation" from a context menu. You should
+        instead call KMFilterMgr::createFilter.
+        @see KMFilterMgr::createFilter KMFilterDlg::createFilter
+    */
+    void createFilter(const QCString &field, const QString &value);
 
-  /** Loads the filter list and selects the first filter. Should be
-      called when all signals are connected properly. If createDummyFilter
-      is true, an empty filter is created to improve the usability of the
-      dialog in case no filter has been defined so far.*/
-  void loadFilterList( bool createDummyFilter );
+    /** Loads the filter list and selects the first filter. Should be
+        called when all signals are connected properly. If createDummyFilter
+        is true, an empty filter is created to improve the usability of the
+        dialog in case no filter has been defined so far.*/
+    void loadFilterList(bool createDummyFilter);
 
-  /** Returns wheather the global option 'Show Later Msgs' is set or not */
-  bool showLaterMsgs();
-  
-  void insertFilter( KMFilter* aFilter );
-  
-  void appendFilter( KMFilter* aFilter );
-  
-  /** Returns a list of _copies_ of the current list of filters.
-   * The list owns the contents and thus the caller needs to clean them
-   * up. */
-  QValueList<KMFilter*> filtersForSaving() const;
+    /** Returns wheather the global option 'Show Later Msgs' is set or not */
+    bool showLaterMsgs();
+
+    void insertFilter(KMFilter *aFilter);
+
+    void appendFilter(KMFilter *aFilter);
+
+    /** Returns a list of _copies_ of the current list of filters.
+     * The list owns the contents and thus the caller needs to clean them
+     * up. */
+    QValueList<KMFilter *> filtersForSaving() const;
 
 signals:
-  /** Emitted when a new filter has been selected by the user or if
-      the current filter has changed after a 'new' or 'delete'
-      operation. */
-  void filterSelected( KMFilter* filter );
+    /** Emitted when a new filter has been selected by the user or if
+        the current filter has changed after a 'new' or 'delete'
+        operation. */
+    void filterSelected(KMFilter *filter);
 
-  /** Emitted when this widget wants the edit widgets to let go of
-      their filter reference. Everyone holding a reference to a filter
-      should update it from the contents of the widgets used to edit
-      it and set their internal reference to 0. */
-  void resetWidgets();
+    /** Emitted when this widget wants the edit widgets to let go of
+        their filter reference. Everyone holding a reference to a filter
+        should update it from the contents of the widgets used to edit
+        it and set their internal reference to 0. */
+    void resetWidgets();
 
-  /** Emitted when this widget wants the edit widgets to apply the changes
-      to the current filter. */
-  void applyWidgets();
+    /** Emitted when this widget wants the edit widgets to apply the changes
+        to the current filter. */
+    void applyWidgets();
 
 public slots:
-  /** Called when the name of a filter might have changed (e.g.
-      through changing the first rule in KMSearchPatternEdit).
-      Updates the corresponding entry in the
-      listbox and (if necessary) auto-names the filter. */
-  void slotUpdateFilterName();
-  /** Called when the user clicks either 'Apply' or 'OK' in
-      KMFilterDlg. Updates the filter list in the KMFilterMgr. */
-  void slotApplyFilterChanges();
-  /** Called when the user toggles the 'Show Download Later Msgs'
-      Checkbox in the Global Options section */
-  void slotShowLaterToggled(bool aOn);
+    /** Called when the name of a filter might have changed (e.g.
+        through changing the first rule in KMSearchPatternEdit).
+        Updates the corresponding entry in the
+        listbox and (if necessary) auto-names the filter. */
+    void slotUpdateFilterName();
+    /** Called when the user clicks either 'Apply' or 'OK' in
+        KMFilterDlg. Updates the filter list in the KMFilterMgr. */
+    void slotApplyFilterChanges();
+    /** Called when the user toggles the 'Show Download Later Msgs'
+        Checkbox in the Global Options section */
+    void slotShowLaterToggled(bool aOn);
 
 protected slots:
-  /** Called when the user clicks on a filter in the filter
-      list. Calculates the corresponding filter and emits the
-      filterSelected signal. */
-  void slotSelected( int aIdx );
-  /** Called when the user clicks the 'New' button. Creates a new
-      empty filter just before the current one. */
-  void slotNew();
-  /** Called when the user clicks the 'Copy' button. Creates a copy
-      of the current filter and inserts it just before the current one. */
-  void slotCopy();
-  /** Called when the user clicks the 'Delete' button. Deletes the
-      current filter. */
-  void slotDelete();
-  /** Called when the user clicks the 'Top' button. Moves the current
-      filter to the top line. */
-  void slotTop();
-  /** Called when the user clicks the 'Up' button. Moves the current
-      filter up one line. */
-  void slotUp();
-  /** Called when the user clicks the 'Down' button. Moves the current
-      filter down one line. */
-  void slotDown();
-  /** Called when the user clicks the 'Bottom' button. Moves the current
-      filter to the bottom line. */
-  void slotBottom();
-  /** Called when the user clicks the 'Rename' button. Pops up a
-      dialog prompting to enter the new name. */
-  void slotRename();
+    /** Called when the user clicks on a filter in the filter
+        list. Calculates the corresponding filter and emits the
+        filterSelected signal. */
+    void slotSelected(int aIdx);
+    /** Called when the user clicks the 'New' button. Creates a new
+        empty filter just before the current one. */
+    void slotNew();
+    /** Called when the user clicks the 'Copy' button. Creates a copy
+        of the current filter and inserts it just before the current one. */
+    void slotCopy();
+    /** Called when the user clicks the 'Delete' button. Deletes the
+        current filter. */
+    void slotDelete();
+    /** Called when the user clicks the 'Top' button. Moves the current
+        filter to the top line. */
+    void slotTop();
+    /** Called when the user clicks the 'Up' button. Moves the current
+        filter up one line. */
+    void slotUp();
+    /** Called when the user clicks the 'Down' button. Moves the current
+        filter down one line. */
+    void slotDown();
+    /** Called when the user clicks the 'Bottom' button. Moves the current
+        filter to the bottom line. */
+    void slotBottom();
+    /** Called when the user clicks the 'Rename' button. Pops up a
+        dialog prompting to enter the new name. */
+    void slotRename();
 
 protected:
-  /** The deep copy of the filter list. */
-  QPtrList<KMFilter> mFilterList;
-  /** The listbox displaying the filter list. */
-  QListBox *mListBox;
-  /** The various action buttons. */
-  QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnRename;
-  QPushButton *mBtnTop, *mBtnUp, *mBtnDown, *mBtnBot;
-  /** The index of the currently selected item. */
-  int mIdxSelItem;
-  bool mShowLater;
+    /** The deep copy of the filter list. */
+    QPtrList<KMFilter> mFilterList;
+    /** The listbox displaying the filter list. */
+    QListBox *mListBox;
+    /** The various action buttons. */
+    QPushButton *mBtnNew, *mBtnCopy, *mBtnDelete, *mBtnRename;
+    QPushButton *mBtnTop, *mBtnUp, *mBtnDown, *mBtnBot;
+    /** The index of the currently selected item. */
+    int mIdxSelItem;
+    bool mShowLater;
 private:
-  void enableControls();
- 
-  void swapFilters( int from, int to );
-  void swapNeighbouringFilters( int untouchedOne, int movedOne );
-  bool bPopFilter;
+    void enableControls();
+
+    void swapFilters(int from, int to);
+    void swapNeighbouringFilters(int untouchedOne, int movedOne);
+    bool bPopFilter;
 };
 
 
@@ -190,86 +189,86 @@ private:
     @see KMFilterAction KMFilter KMFilterActionWidgetLister
 
  */
-class KMFilterActionWidget : public QHBox
-{
-  Q_OBJECT
+class KMFilterActionWidget : public QHBox {
+    Q_OBJECT
 public:
-  /** Constructor. Creates a filter action widget with no type
-      selected. */
-  KMFilterActionWidget( QWidget* parent=0, const char* name=0 );
+    /** Constructor. Creates a filter action widget with no type
+        selected. */
+    KMFilterActionWidget(QWidget *parent = 0, const char *name = 0);
 
-  /** Set an action. The action's type is determined and the
-      corresponding widget it loaded with @p aAction's parameters and
-      then raised. If @ aAction is 0, the widget is cleared. */
-  void setAction( const KMFilterAction * aAction );
-  /** Retrieve the action. This method is necessary because the type
-      of actions can change during editing. Therefore the widget
-      always creates a new action object from the data in the combo
-      box and the widget stack and returns that. */
-  KMFilterAction *action();
+    /** Set an action. The action's type is determined and the
+        corresponding widget it loaded with @p aAction's parameters and
+        then raised. If @ aAction is 0, the widget is cleared. */
+    void setAction(const KMFilterAction *aAction);
+    /** Retrieve the action. This method is necessary because the type
+        of actions can change during editing. Therefore the widget
+        always creates a new action object from the data in the combo
+        box and the widget stack and returns that. */
+    KMFilterAction *action();
 
 private:
-  /** This list holds an instance of every KMFilterAction
-      subclass. The only reason that these 'slave' actions exist is
-      that they are 'forced' to create parameter widgets for the
-      widget stack and to clear them on setAction. */
-  QPtrList<KMFilterAction> mActionList;
-  /** The combo box that contains the labels of all KMFilterActions.
-      It's @p activated(int) signal is internally
-      connected to the @p raiseWidget(int) slot of @p mWidgetStack. */
-  QComboBox      *mComboBox;
-  /** The widget stack that holds all the parameter widgets for the
-      filter actions. */
-  QWidgetStack   *mWidgetStack;
+    /** This list holds an instance of every KMFilterAction
+        subclass. The only reason that these 'slave' actions exist is
+        that they are 'forced' to create parameter widgets for the
+        widget stack and to clear them on setAction. */
+    QPtrList<KMFilterAction> mActionList;
+    /** The combo box that contains the labels of all KMFilterActions.
+        It's @p activated(int) signal is internally
+        connected to the @p raiseWidget(int) slot of @p mWidgetStack. */
+    QComboBox      *mComboBox;
+    /** The widget stack that holds all the parameter widgets for the
+        filter actions. */
+    QWidgetStack   *mWidgetStack;
 };
 
-class KMPopFilterActionWidget : public QVButtonGroup
-{
-  Q_OBJECT
+class KMPopFilterActionWidget : public QVButtonGroup {
+    Q_OBJECT
 public:
-  KMPopFilterActionWidget( const QString &title, QWidget* parent=0, const char* name=0 );
-  void setAction( KMPopFilterAction aAction );
-  KMPopFilterAction action();
+    KMPopFilterActionWidget(const QString &title, QWidget *parent = 0, const char *name = 0);
+    void setAction(KMPopFilterAction aAction);
+    KMPopFilterAction action();
 
 public slots:
-  void reset();
+    void reset();
 
 private slots:
-  void slotActionClicked(int aId);
+    void slotActionClicked(int aId);
 
 private:
-  KMPopFilterAction mAction;
-  KMFilter mFilter;
-  QMap<KMPopFilterAction, QRadioButton*> mActionMap;
-  QMap<int, KMPopFilterAction> mIdMap;
+    KMPopFilterAction mAction;
+    KMFilter mFilter;
+    QMap<KMPopFilterAction, QRadioButton *> mActionMap;
+    QMap<int, KMPopFilterAction> mIdMap;
 
 signals: // Signals
-  void actionChanged(const KMPopFilterAction aAction);
+    void actionChanged(const KMPopFilterAction aAction);
 };
 
-class KMFilterActionWidgetLister : public KWidgetLister
-{
-  Q_OBJECT
+class KMFilterActionWidgetLister : public KWidgetLister {
+    Q_OBJECT
 public:
-  KMFilterActionWidgetLister( QWidget *parent=0, const char* name=0 );
+    KMFilterActionWidgetLister(QWidget *parent = 0, const char *name = 0);
 
-  virtual ~KMFilterActionWidgetLister();
+    virtual ~KMFilterActionWidgetLister();
 
-  void setActionList( QPtrList<KMFilterAction> * aList );
+    void setActionList(QPtrList<KMFilterAction> *aList);
 
-  /** Updates the action list according to the current widget values */
-  void updateActionList() { regenerateActionListFromWidgets(); }
+    /** Updates the action list according to the current widget values */
+    void updateActionList()
+    {
+        regenerateActionListFromWidgets();
+    }
 
 public slots:
-  void reset();
+    void reset();
 
 protected:
-  virtual void clearWidget( QWidget *aWidget );
-  virtual QWidget* createWidget( QWidget *parent );
+    virtual void clearWidget(QWidget *aWidget);
+    virtual QWidget *createWidget(QWidget *parent);
 
 private:
-  void regenerateActionListFromWidgets();
-  QPtrList<KMFilterAction> *mActionList;
+    void regenerateActionListFromWidgets();
+    QPtrList<KMFilterAction> *mActionList;
 
 };
 
@@ -330,91 +329,92 @@ private:
 
  */
 
-class KMFilterDlg: public KDialogBase
-{
-  Q_OBJECT
+class KMFilterDlg: public KDialogBase {
+    Q_OBJECT
 public:
-  /** Create the filter dialog. The only class which should be able to
-      do this is KMFilterMgr. This ensures that there is only a
-      single filter dialog */
-  KMFilterDlg( QWidget* parent=0, const char* name=0, bool popFilter=false,
-               bool createDummyFilter=true );
+    /** Create the filter dialog. The only class which should be able to
+        do this is KMFilterMgr. This ensures that there is only a
+        single filter dialog */
+    KMFilterDlg(QWidget *parent = 0, const char *name = 0, bool popFilter = false,
+                bool createDummyFilter = true);
 
-  /** Called from KMFilterMgr. Creates a new filter and presets
-      the first rule with "field equals value". Internally forwarded
-      to KMFilterListBox::createFilter. You should instead call
-      KMFilterMgr::createFilter. */
-  void createFilter( const QCString & field, const QString & value )
-    { mFilterList->createFilter( field, value ); }
+    /** Called from KMFilterMgr. Creates a new filter and presets
+        the first rule with "field equals value". Internally forwarded
+        to KMFilterListBox::createFilter. You should instead call
+        KMFilterMgr::createFilter. */
+    void createFilter(const QCString &field, const QString &value)
+    {
+        mFilterList->createFilter(field, value);
+    }
 
 public slots:
     /** Internally connected to KMFilterListBox::filterSelected.
-	Just does a simple check and then calls
-	KMSearchPatternEdit::setSearchPattern and
-	KMFilterActionEdit::setActionList. */
-  void slotFilterSelected(KMFilter * aFilter);
-  /** Action for popFilter */
-  void slotActionChanged(const KMPopFilterAction aAction);
+    Just does a simple check and then calls
+    KMSearchPatternEdit::setSearchPattern and
+    KMFilterActionEdit::setActionList. */
+    void slotFilterSelected(KMFilter *aFilter);
+    /** Action for popFilter */
+    void slotActionChanged(const KMPopFilterAction aAction);
 
 protected slots:
-  void slotApplicabilityChanged();
-  void slotApplicableAccountsChanged();
-  void slotStopProcessingButtonToggled( bool aChecked );
-  void slotConfigureShortcutButtonToggled( bool aChecked );
-  void slotCapturedShortcutChanged( const KShortcut& );
-  void slotConfigureToolbarButtonToggled( bool aChecked );
-  void slotFilterActionIconChanged( QString icon );
-  void slotReset();
-  void slotUpdateFilter();
-  void slotSaveSize();
-  // called when the dialog is closed (finished)
-  void slotFinished();
-  // update the list of accounts shown in the advanced tab
-  void slotUpdateAccountList();
-  
-  
-  /** Called when a user clicks the import filters button. Pops up
-   * a dialog asking the user which file to import from and which
-   * of the filters in that file to import. */
-  void slotImportFilters();
-  
-  /** Called when a user clicks the export filters button. Pops up
-   * a dialog asking the user which filters to export and which 
-   * file to export to. */
-  void slotExportFilters();
+    void slotApplicabilityChanged();
+    void slotApplicableAccountsChanged();
+    void slotStopProcessingButtonToggled(bool aChecked);
+    void slotConfigureShortcutButtonToggled(bool aChecked);
+    void slotCapturedShortcutChanged(const KShortcut &);
+    void slotConfigureToolbarButtonToggled(bool aChecked);
+    void slotFilterActionIconChanged(QString icon);
+    void slotReset();
+    void slotUpdateFilter();
+    void slotSaveSize();
+    // called when the dialog is closed (finished)
+    void slotFinished();
+    // update the list of accounts shown in the advanced tab
+    void slotUpdateAccountList();
+
+
+    /** Called when a user clicks the import filters button. Pops up
+     * a dialog asking the user which file to import from and which
+     * of the filters in that file to import. */
+    void slotImportFilters();
+
+    /** Called when a user clicks the export filters button. Pops up
+     * a dialog asking the user which filters to export and which
+     * file to export to. */
+    void slotExportFilters();
 
 protected:
-  /** The widget that contains the ListBox showing the filters, and
-      the controls to remove filters, add new ones and to change their
-      order. */
-  KMFilterListBox *mFilterList;
-  /** The widget that allows editing of the filter pattern. */
-  KMSearchPatternEdit *mPatternEdit;
-  /** The widget that allows editing of the filter actions. */
-  KMFilterActionWidgetLister *mActionLister;
-  /** The widget that allows editing the popFilter actions. */
-  KMPopFilterActionWidget *mActionGroup;
-  /** Lets the user select whether to apply this filter on
-      inbound/outbound messages, both, or only on explicit CTRL-J. */
-  QCheckBox *mApplyOnIn, *mApplyOnOut, *mApplyOnCtrlJ;
-  /** For a filter applied to inbound messages selects whether to apply
-      this filter to all accounts or to selected accounts only. */
-  QRadioButton *mApplyOnForAll, *mApplyOnForTraditional, *mApplyOnForChecked;
-  /** ListView that shows the accounts in the advanced tab */
-  KListView *mAccountList;
+    /** The widget that contains the ListBox showing the filters, and
+        the controls to remove filters, add new ones and to change their
+        order. */
+    KMFilterListBox *mFilterList;
+    /** The widget that allows editing of the filter pattern. */
+    KMSearchPatternEdit *mPatternEdit;
+    /** The widget that allows editing of the filter actions. */
+    KMFilterActionWidgetLister *mActionLister;
+    /** The widget that allows editing the popFilter actions. */
+    KMPopFilterActionWidget *mActionGroup;
+    /** Lets the user select whether to apply this filter on
+        inbound/outbound messages, both, or only on explicit CTRL-J. */
+    QCheckBox *mApplyOnIn, *mApplyOnOut, *mApplyOnCtrlJ;
+    /** For a filter applied to inbound messages selects whether to apply
+        this filter to all accounts or to selected accounts only. */
+    QRadioButton *mApplyOnForAll, *mApplyOnForTraditional, *mApplyOnForChecked;
+    /** ListView that shows the accounts in the advanced tab */
+    KListView *mAccountList;
 
-  QCheckBox *mStopProcessingHere;
-  QCheckBox *mConfigureShortcut;
-  QCheckBox *mConfigureToolbar;
-  QLabel *mFilterActionLabel;
-  KIconButton *mFilterActionIconButton;
-  KKeyButton *mKeyButton;
-  QGroupBox *mAdvOptsGroup;
-  QVGroupBox *mGlobalsBox;
-  QCheckBox *mShowLaterBtn;
+    QCheckBox *mStopProcessingHere;
+    QCheckBox *mConfigureShortcut;
+    QCheckBox *mConfigureToolbar;
+    QLabel *mFilterActionLabel;
+    KIconButton *mFilterActionIconButton;
+    KKeyButton *mKeyButton;
+    QGroupBox *mAdvOptsGroup;
+    QVGroupBox *mGlobalsBox;
+    QCheckBox *mShowLaterBtn;
 
-  KMFilter *mFilter;
-  bool bPopFilter;
+    KMFilter *mFilter;
+    bool bPopFilter;
 };
 
 

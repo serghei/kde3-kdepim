@@ -20,13 +20,13 @@ class QStringList;
 
 namespace KMail {
 
-  /**
-   * @short Currently only used to provide a function for reading the transport list.
-   * @author Ingo Kloecker <kloecker@kde.org>
-   **/
-  class TransportManager {
+/**
+ * @short Currently only used to provide a function for reading the transport list.
+ * @author Ingo Kloecker <kloecker@kde.org>
+ **/
+class TransportManager {
 
-  public:
+public:
     TransportManager() {};
     virtual ~TransportManager() {};
 
@@ -35,7 +35,7 @@ namespace KMail {
 
     /** Create a unique id for a transport info item */
     static unsigned int createId();
-  };
+};
 
 } // namespace KMail
 

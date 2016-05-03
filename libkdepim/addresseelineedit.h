@@ -45,35 +45,34 @@ namespace KPIM {
 class LdapSearch;
 class LdapResult;
 typedef QValueList<LdapResult> LdapResultList;
-typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
+typedef QMap< QString, QPair<int, int> > CompletionItemsMap;
 }
 
 namespace KPIM {
 
-class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
-{
-  K_DCOP
-  Q_OBJECT
+class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject {
+    K_DCOP
+    Q_OBJECT
 
-  public:
-    AddresseeLineEdit( QWidget* parent, bool useCompletion = true,
-                     const char *name = 0L);
+public:
+    AddresseeLineEdit(QWidget *parent, bool useCompletion = true,
+                      const char *name = 0L);
     virtual ~AddresseeLineEdit();
 
-    virtual void setFont( const QFont& );
-    void allowSemiColonAsSeparator( bool );
+    virtual void setFont(const QFont &);
+    void allowSemiColonAsSeparator(bool);
 
-  public slots:
+public slots:
     void cursorAtEnd();
-    void enableCompletion( bool enable );
+    void enableCompletion(bool enable);
     /** Reimplemented for stripping whitespace after completion */
-    virtual void setText( const QString& txt );
+    virtual void setText(const QString &txt);
 
-  protected slots:
+protected slots:
     virtual void loadContacts();
-  protected:
-    void addContact( const KABC::Addressee&, int weight, int source = -1 );
-    virtual void keyPressEvent( QKeyEvent* );
+protected:
+    void addContact(const KABC::Addressee &, int weight, int source = -1);
+    virtual void keyPressEvent(QKeyEvent *);
     /**
      * Reimplemented for smart insertion of email addresses.
      * Features:
@@ -82,14 +81,14 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
      * - Recognizes email addresses which are protected against address
      *   harvesters, i.e. "name at kde dot org" and "name(at)kde.org"
      */
-    virtual void insert( const QString &text );
+    virtual void insert(const QString &text);
     /** Reimplemented for smart insertion of pasted email addresses. */
     virtual void paste();
     /** Reimplemented for smart insertion with middle mouse button. */
-    virtual void mouseReleaseEvent( QMouseEvent *e );
+    virtual void mouseReleaseEvent(QMouseEvent *e);
     /** Reimplemented for smart insertion of dragged email addresses. */
-    virtual void dropEvent( QDropEvent *e );
-    void doCompletion( bool ctrlT );
+    virtual void dropEvent(QDropEvent *e);
+    void doCompletion(bool ctrlT);
     virtual QPopupMenu *createPopupMenu();
 
     /**
@@ -97,34 +96,34 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
      * such sources and returns its index, such that that can be used
      * for insertion of items associated with that source.
      */
-    int addCompletionSource( const QString& );
+    int addCompletionSource(const QString &);
 
     /** return whether we are using sorted or weighted display */
     static KCompletion::CompOrder completionOrder();
 
-  k_dcop:
+k_dcop:
     // Connected to the DCOP signal
     void slotIMAPCompletionOrderChanged();
 
-  private slots:
+private slots:
     void slotCompletion();
-    void slotPopupCompletion( const QString& );
-    void slotReturnPressed( const QString& );
+    void slotPopupCompletion(const QString &);
+    void slotReturnPressed(const QString &);
     void slotStartLDAPLookup();
-    void slotLDAPSearchData( const KPIM::LdapResultList& );
+    void slotLDAPSearchData(const KPIM::LdapResultList &);
     void slotEditCompletionOrder();
-    void slotUserCancelled( const QString& );
+    void slotUserCancelled(const QString &);
 
-  private:
+private:
     virtual bool eventFilter(QObject *o, QEvent *e);
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
 
-    void setCompletedItems( const QStringList& items, bool autoSuggest );
-    void addCompletionItem( const QString& string, int weight, int source, const QStringList * keyWords=0 );
-    QString completionSearchText( QString& );
-    const QStringList getAdjustedCompletionItems( bool fullSearch );
+    void setCompletedItems(const QStringList &items, bool autoSuggest);
+    void addCompletionItem(const QString &string, int weight, int source, const QStringList *keyWords = 0);
+    QString completionSearchText(QString &);
+    const QStringList getAdjustedCompletionItems(bool fullSearch);
     void updateSearchString();
 
     QString m_previousAddresses;
@@ -141,7 +140,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
     static bool s_addressesDirty;
     static KMailCompletion *s_completion;
-    static CompletionItemsMap* s_completionItemMap;
+    static CompletionItemsMap *s_completionItemMap;
     static QTimer *s_LDAPTimer;
     static KPIM::LdapSearch *s_LDAPSearch;
     static QString *s_LDAPText;
@@ -153,8 +152,8 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
     //until MenuID moves into protected in KLineEdit, we keep a copy here
     //Constants that represent the ID's of the popup menu.
-      enum MenuID
-      {
+    enum MenuID
+    {
         Default = 42,
         NoCompletion,
         AutoCompletion,
@@ -162,7 +161,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
         PopupCompletion,
         ShortAutoCompletion,
         PopupAutoCompletion
-      };
+    };
 
 };
 

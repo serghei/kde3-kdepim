@@ -26,16 +26,15 @@
 
 class KURLRequester;
 
-class ConfigGuiEvo2 : public ConfigGui
-{
-  public:
-    ConfigGuiEvo2( const QSync::Member &, QWidget *parent );
+class ConfigGuiEvo2 : public ConfigGui {
+public:
+    ConfigGuiEvo2(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
 
     QString save() const;
 
-  private:
+private:
     void initGUI();
 
     KURLRequester *mAddressPath;

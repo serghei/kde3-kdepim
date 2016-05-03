@@ -27,19 +27,18 @@
 
 namespace KPIM {
 
-class KDE_EXPORT AddresseeDiffAlgo : public DiffAlgo
-{
-  public:
-    AddresseeDiffAlgo( const KABC::Addressee &leftAddressee, const KABC::Addressee &rightAddressee );
+class KDE_EXPORT AddresseeDiffAlgo : public DiffAlgo {
+public:
+    AddresseeDiffAlgo(const KABC::Addressee &leftAddressee, const KABC::Addressee &rightAddressee);
 
     void run();
 
-  private:
+private:
     template <class L>
-    void diffList( const QString &id, const QValueList<L> &left, const QValueList<L> &right );
+    void diffList(const QString &id, const QValueList<L> &left, const QValueList<L> &right);
 
-    QString toString( const KABC::PhoneNumber &number );
-    QString toString( const KABC::Address &address );
+    QString toString(const KABC::PhoneNumber &number);
+    QString toString(const KABC::Address &address);
 
     KABC::Addressee mLeftAddressee;
     KABC::Addressee mRightAddressee;

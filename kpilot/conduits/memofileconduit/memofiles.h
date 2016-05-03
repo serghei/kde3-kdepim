@@ -39,57 +39,69 @@ class Memofiles {
 
 public:
 
-	Memofiles (MemoCategoryMap & categories, PilotMemoInfo &appInfo, 
-		QString & baseDirectory, CUDCounter &fCtrHH);
-	~Memofiles();
+    Memofiles(MemoCategoryMap &categories, PilotMemoInfo &appInfo,
+              QString &baseDirectory, CUDCounter &fCtrHH);
+    ~Memofiles();
 
-	void load(bool loadAll);
-	void save();
-	void eraseLocalMemos();
-	void setPilotMemos (QPtrList<PilotMemo> & memos);
-	void addModifiedMemo (PilotMemo * memo);
-	void deleteMemo (PilotMemo * memo);
+    void load(bool loadAll);
+    void save();
+    void eraseLocalMemos();
+    void setPilotMemos(QPtrList<PilotMemo> &memos);
+    void addModifiedMemo(PilotMemo *memo);
+    void deleteMemo(PilotMemo *memo);
 
-	bool isFirstSync();
-	bool isReady() { return _ready; };
+    bool isFirstSync();
+    bool isReady()
+    {
+        return _ready;
+    };
 
-	QPtrList<Memofile> getModified();
-	QPtrList<Memofile> getAll() { return _memofiles; } ;
-	Memofile * find (const QString & category, const QString & filename);
-	Memofile * find (recordid_t id);
+    QPtrList<Memofile> getModified();
+    QPtrList<Memofile> getAll()
+    {
+        return _memofiles;
+    } ;
+    Memofile *find(const QString &category, const QString &filename);
+    Memofile *find(recordid_t id);
 
-	MemoCategoryMap readCategoryMetadata();
-	void setCategories(MemoCategoryMap map) { _categories = map; } ;
+    MemoCategoryMap readCategoryMetadata();
+    void setCategories(MemoCategoryMap map)
+    {
+        _categories = map;
+    } ;
 
-	static QString FIELD_SEP;
-	static QString sanitizeName(QString name);
+    static QString FIELD_SEP;
+    static QString sanitizeName(QString name);
 
-	int count() { return _memofiles.count(); }
+    int count()
+    {
+        return _memofiles.count();
+    }
 
 private:
 
-	MemoCategoryMap _categories;
-	PilotMemoInfo &_memoAppInfo;
-	QString & _baseDirectory;
-	CUDCounter &_cudCounter;
-	QPtrList<Memofile> _memofiles;
+    MemoCategoryMap _categories;
+    PilotMemoInfo &_memoAppInfo;
+    QString &_baseDirectory;
+    CUDCounter &_cudCounter;
+    QPtrList<Memofile> _memofiles;
 
-	bool  loadFromMetadata();
-	bool  ensureDirectoryReady();
-	bool  checkDirectory(QString & dir);
-	bool  saveMemoMetadata();
-	bool  saveCategoryMetadata();
-	bool  saveMemos();
-	bool  folderRemove(const QDir & dir);
+    bool  loadFromMetadata();
+    bool  ensureDirectoryReady();
+    bool  checkDirectory(QString &dir);
+    bool  saveMemoMetadata();
+    bool  saveCategoryMetadata();
+    bool  saveMemos();
+    bool  folderRemove(const QDir &dir);
 
-	QString filename(PilotMemo * memo);
+    QString filename(PilotMemo *memo);
 
 
-	QString _categoryMetadataFile;
-	QString _memoMetadataFile;
+    QString _categoryMetadataFile;
+    QString _memoMetadataFile;
 
-	bool _metadataLoaded;
-	bool _ready;
+    bool _metadataLoaded;
+    bool _ready;
 
 };
 #endif //MEMOFILES_H

@@ -34,46 +34,46 @@
 
 #include <kdepimmacros.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kabldapconfig( QWidget *parent, const char * ) {
-    return new KCMKabLdapConfig( parent, "kcmkabldapconfig" );
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_kabldapconfig(QWidget *parent, const char *)
+    {
+        return new KCMKabLdapConfig(parent, "kcmkabldapconfig");
+    }
 }
 
-KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const char *name )
-  : KCModule( parent, name )
+KCMKabLdapConfig::KCMKabLdapConfig(QWidget *parent, const char *name)
+    : KCModule(parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigWidget = new LDAPOptionsWidget( this );
-  layout->addWidget( mConfigWidget );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    mConfigWidget = new LDAPOptionsWidget(this);
+    layout->addWidget(mConfigWidget);
 
-  connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
+    connect(mConfigWidget, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
 
-  load();
+    load();
 
-  KAboutData *about = new KAboutData( I18N_NOOP( "kcmkabldapconfig" ),
-                                      I18N_NOOP( "KAB LDAP Configure Dialog" ),
-                                      0, 0, KAboutData::License_GPL,
-                                      I18N_NOOP( "(c), 2003 - 2004 Tobias Koenig" ) );
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkabldapconfig"),
+                                       I18N_NOOP("KAB LDAP Configure Dialog"),
+                                       0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c), 2003 - 2004 Tobias Koenig"));
 
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-  setAboutData( about );
+    about->addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
+    setAboutData(about);
 }
 
 void KCMKabLdapConfig::load()
 {
-  mConfigWidget->restoreSettings();
+    mConfigWidget->restoreSettings();
 }
 
 void KCMKabLdapConfig::save()
 {
-  mConfigWidget->saveSettings();
+    mConfigWidget->saveSettings();
 }
 
 void KCMKabLdapConfig::defaults()
 {
-  mConfigWidget->defaults();
+    mConfigWidget->defaults();
 }
 
 #include "kcmkabldapconfig.moc"

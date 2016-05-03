@@ -33,25 +33,24 @@ class KURLRequester;
 class QCheckBox;
 class QPushButton;
 
-class SoundWidget : public KAB::ContactEditorWidget
-{
-  Q_OBJECT
+class SoundWidget : public KAB::ContactEditorWidget {
+    Q_OBJECT
 
-  public:
-    SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    SoundWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     ~SoundWidget();
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
 
-  private slots:
+private slots:
     void playSound();
     void loadSound();
     void updateGUI();
-    void urlChanged( const QString& );
+    void urlChanged(const QString &);
 
-  private:
+private:
     KURLRequester *mSoundUrl;
 
     QCheckBox *mUseSoundUrl;
@@ -61,15 +60,17 @@ class SoundWidget : public KAB::ContactEditorWidget
     bool mReadOnly;
 };
 
-class SoundWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+class SoundWidgetFactory : public KAB::ContactEditorWidgetFactory {
+public:
+    KAB::ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
     {
-      return new SoundWidget( ab, parent, name );
+        return new SoundWidget(ab, parent, name);
     }
 
-    QString pageIdentifier() const { return "misc"; }
+    QString pageIdentifier() const
+    {
+        return "misc";
+    }
 };
 
 #endif

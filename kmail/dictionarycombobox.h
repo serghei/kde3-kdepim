@@ -40,43 +40,43 @@ class QString;
 
 namespace KMail {
 
-  /**
-   * @short A combo box for selecting the dictionary used for spell checking.
-   * @author Ingo Kloecker <kloecker@kde.org>
-   **/
+/**
+ * @short A combo box for selecting the dictionary used for spell checking.
+ * @author Ingo Kloecker <kloecker@kde.org>
+ **/
 
-  class DictionaryComboBox : public QComboBox {
+class DictionaryComboBox : public QComboBox {
     Q_OBJECT
-  public:
-    DictionaryComboBox( QWidget * parent=0, const char * name=0 );
+public:
+    DictionaryComboBox(QWidget *parent = 0, const char *name = 0);
     ~DictionaryComboBox();
 
     QString currentDictionaryName() const;
     QString currentDictionary() const;
-    void setCurrentByDictionaryName( const QString & dictionaryName );
-    void setCurrentByDictionary( const QString & dictionary );
+    void setCurrentByDictionaryName(const QString &dictionaryName);
+    void setCurrentByDictionary(const QString &dictionary);
 
-    KSpellConfig* spellConfig() const;
+    KSpellConfig *spellConfig() const;
 
-  signals:
+signals:
     /** @em Emitted whenever the current dictionary changes. Either
      *  by user intervention or on setCurrentByDictionaryName() or on
      *  setCurrentByDictionary().
      **/
-    void dictionaryChanged( const QString & dictionary );
-    void dictionaryChanged( int );
+    void dictionaryChanged(const QString &dictionary);
+    void dictionaryChanged(int);
 
-  protected slots:
-    void slotDictionaryChanged( int );
+protected slots:
+    void slotDictionaryChanged(int);
 
-  protected:
+protected:
     void reloadCombo();
 
-  protected:
+protected:
     QStringList mDictionaries;
-    KSpellConfig* mSpellConfig;
+    KSpellConfig *mSpellConfig;
     int mDefaultDictionary;
-  };
+};
 
 } // namespace KMail
 

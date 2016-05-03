@@ -80,12 +80,12 @@ public:
     //. Returns false if the last parse failed (bad address) or
     //. the {\tt Parse()} member function was never called.
 
-    DwAddress* Next() const;
+    DwAddress *Next() const;
     //. Returns the next {\tt DwAddress} object in the list when the object
     //. is included in a list of addresses.  The function is used when
     //. iterating a list.
 
-    void SetNext(DwAddress* aAddress);
+    void SetNext(DwAddress *aAddress);
     //. Sets the next {\tt DwAddress} object in the list.  This member function
     //. generally should not be used, since {\tt DwAddressList} has member
     //. functions to manage its list of {\tt DwAddress} objects.
@@ -93,8 +93,8 @@ public:
 protected:
 
     DwAddress();
-    DwAddress(const DwAddress& aAddr);
-    DwAddress(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwAddress(const DwAddress &aAddr);
+    DwAddress(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwAddress} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -110,7 +110,7 @@ protected:
     //. Unless it is {\tt NULL}, {\tt aParent} should point to an object of
     //. a class derived from {\tt DwField}.
 
-    const DwAddress& operator = (const DwAddress& aAddr);
+    const DwAddress &operator = (const DwAddress &aAddr);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aAddr}.  The parent node of the {\tt DwAddress} object
     //. is not changed.
@@ -120,12 +120,12 @@ protected:
 
 private:
 
-    DwAddress* mNext;
-    static const char* const sClassName;
+    DwAddress *mNext;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -143,7 +143,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

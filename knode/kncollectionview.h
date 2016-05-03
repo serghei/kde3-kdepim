@@ -26,9 +26,9 @@ class KNCollectionViewItem;
 
 class KNCollectionView : public KFolderTree {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNCollectionView(QWidget *parent, const char *name = 0);
     ~KNCollectionView();
 
@@ -37,20 +37,20 @@ class KNCollectionView : public KFolderTree {
     void readConfig();
     void writeConfig();
 
-  public slots:
-    void addAccount(KNNntpAccount* a);
-    void removeAccount(KNNntpAccount* a);
-    void updateAccount(KNNntpAccount* a);
+public slots:
+    void addAccount(KNNntpAccount *a);
+    void removeAccount(KNNntpAccount *a);
+    void updateAccount(KNNntpAccount *a);
     void reloadAccounts();
 
-    void addGroup(KNGroup* g);
-    void removeGroup(KNGroup* g);
-    void updateGroup(KNGroup* g);
+    void addGroup(KNGroup *g);
+    void removeGroup(KNGroup *g);
+    void updateGroup(KNGroup *g);
 
-    void addFolder(KNFolder* f);
-    void removeFolder(KNFolder* f);
-    void activateFolder(KNFolder* f);
-    void updateFolder(KNFolder* f);
+    void addFolder(KNFolder *f);
+    void removeFolder(KNFolder *f);
+    void activateFolder(KNFolder *f);
+    void updateFolder(KNFolder *f);
     void addPendingFolders();
     void reloadFolders();
 
@@ -68,22 +68,22 @@ class KNCollectionView : public KFolderTree {
     void toggleTotalColumn();
     void updatePopup() const;
 
-  signals:
-    void folderDrop( QDropEvent *e, KNCollectionViewItem *item );
+signals:
+    void folderDrop(QDropEvent *e, KNCollectionViewItem *item);
 
-    void focusChanged( QFocusEvent* );
-    void focusChangeRequest( QWidget* );
+    void focusChanged(QFocusEvent *);
+    void focusChangeRequest(QWidget *);
 
-  protected:
+protected:
     // dnd
-    virtual QDragObject* dragObject();
-    virtual void contentsDropEvent( QDropEvent *e );
+    virtual QDragObject *dragObject();
+    virtual void contentsDropEvent(QDropEvent *e);
 
-    bool eventFilter( QObject *, QEvent * );
-    void focusInEvent( QFocusEvent *e );
-    void focusOutEvent( QFocusEvent *e );
+    bool eventFilter(QObject *, QEvent *);
+    void focusInEvent(QFocusEvent *e);
+    void focusOutEvent(QFocusEvent *e);
 
-  private:
+private:
     QListViewItem *mActiveItem;
     KPopupMenu *mPopup;
     int mUnreadPop, mTotalPop;

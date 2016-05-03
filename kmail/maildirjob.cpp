@@ -46,15 +46,15 @@ namespace KMail {
 
 
 //-----------------------------------------------------------------------------
-MaildirJob::MaildirJob( KMMessage *msg, JobType jt , KMFolder *folder )
-  : FolderJob( msg, jt, folder ), mParentFolder( 0 )
+MaildirJob::MaildirJob(KMMessage *msg, JobType jt , KMFolder *folder)
+    : FolderJob(msg, jt, folder), mParentFolder(0)
 {
 }
 
 //-----------------------------------------------------------------------------
-MaildirJob::MaildirJob( QPtrList<KMMessage>& msgList, const QString& sets,
-                        JobType jt , KMFolder *folder )
-  : FolderJob( msgList, sets, jt, folder ), mParentFolder( 0 )
+MaildirJob::MaildirJob(QPtrList<KMMessage> &msgList, const QString &sets,
+                       JobType jt , KMFolder *folder)
+    : FolderJob(msgList, sets, jt, folder), mParentFolder(0)
 {
 }
 
@@ -64,9 +64,9 @@ MaildirJob::~MaildirJob()
 }
 
 //-----------------------------------------------------------------------------
-void MaildirJob::setParentFolder( const KMFolderMaildir* parent )
+void MaildirJob::setParentFolder(const KMFolderMaildir *parent)
 {
-  mParentFolder = const_cast<KMFolderMaildir*>( parent );
+    mParentFolder = const_cast<KMFolderMaildir *>(parent);
 }
 
 
@@ -74,45 +74,47 @@ void MaildirJob::setParentFolder( const KMFolderMaildir* parent )
 //-----------------------------------------------------------------------------
 void MaildirJob::execute()
 {
-  QTimer::singleShot( 0, this, SLOT(startJob()) );
+    QTimer::singleShot(0, this, SLOT(startJob()));
 }
 
 //-----------------------------------------------------------------------------
 void MaildirJob::startJob()
 {
-  switch( mType ) {
-  case tGetMessage:
+    switch(mType)
     {
-      KMMessage* msg = mMsgList.first();
-      if ( msg ) {
-        msg->setComplete( true );
-        emit messageRetrieved( msg );
-      }
+        case tGetMessage:
+        {
+            KMMessage *msg = mMsgList.first();
+            if(msg)
+            {
+                msg->setComplete(true);
+                emit messageRetrieved(msg);
+            }
+        }
+        break;
+        case tDeleteMessage:
+        {
+            static_cast<KMFolder *>(mParentFolder->folder())->removeMsg(mMsgList);
+        }
+        break;
+        case tPutMessage:
+        {
+            mParentFolder->addMsg(mMsgList.first());
+            emit messageStored(mMsgList.first());
+        }
+        break;
+        case tCopyMessage:
+        case tCreateFolder:
+        case tGetFolder:
+        case tListMessages:
+            kdDebug(5006) << k_funcinfo << "### Serious problem! " << endl;
+            break;
+        default:
+            break;
     }
-    break;
-  case tDeleteMessage:
-    {
-      static_cast<KMFolder*>(mParentFolder->folder())->removeMsg( mMsgList );
-    }
-    break;
-  case tPutMessage:
-    {
-      mParentFolder->addMsg(  mMsgList.first() );
-      emit messageStored( mMsgList.first() );
-    }
-    break;
-  case tCopyMessage:
-  case tCreateFolder:
-  case tGetFolder:
-  case tListMessages:
-    kdDebug(5006)<<k_funcinfo<<"### Serious problem! "<<endl;
-    break;
-  default:
-    break;
-  }
-  //OK, we're done
-  //delete this;
-  deleteLater();
+    //OK, we're done
+    //delete this;
+    deleteLater();
 }
 
 }

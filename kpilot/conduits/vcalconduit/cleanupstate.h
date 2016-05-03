@@ -35,15 +35,14 @@ class ConduitAction;
 /**
  * State to Cleanup after all sync actions are finished. @see vcal-conduitstate.h
  */
-class CleanUpState : public ConduitState
-{
+class CleanUpState : public ConduitState {
 public:
-	CleanUpState();
-	virtual ~CleanUpState();
+    CleanUpState();
+    virtual ~CleanUpState();
 
-	virtual void startSync( ConduitAction* );
-	virtual void handleRecord( ConduitAction* );
-	virtual void finishSync( ConduitAction* );
+    virtual void startSync(ConduitAction *);
+    virtual void handleRecord(ConduitAction *);
+    virtual void finishSync(ConduitAction *);
 };
 
 #endif

@@ -35,60 +35,69 @@
 #include <kprocess.h>
 #include <kdebug.h>
 
-bool UriHandler::process( const QString &uri )
+bool UriHandler::process(const QString &uri)
 {
-  kdDebug(5850) << "UriHandler::process(): " << uri << endl;
+    kdDebug(5850) << "UriHandler::process(): " << uri << endl;
 
 #ifndef KORG_NODCOP
-  if ( uri.startsWith( "kmail:" ) ) {
-    // make sure kmail is running or the part is shown
-    kapp->startServiceByDesktopPath("kmail");
+    if(uri.startsWith("kmail:"))
+    {
+        // make sure kmail is running or the part is shown
+        kapp->startServiceByDesktopPath("kmail");
 
-    // parse string, show
-    int colon = uri.find( ':' );
-    // extract 'number' from 'kmail:<number>/<id>'
-    QString serialNumberStr = uri.mid( colon + 1 );
-    serialNumberStr = serialNumberStr.left( serialNumberStr.find( '/' ) );
+        // parse string, show
+        int colon = uri.find(':');
+        // extract 'number' from 'kmail:<number>/<id>'
+        QString serialNumberStr = uri.mid(colon + 1);
+        serialNumberStr = serialNumberStr.left(serialNumberStr.find('/'));
 
-    KMailIface_stub kmailIface( "kmail", "KMailIface" );
-    kmailIface.showMail( serialNumberStr.toUInt(), QString() );
-    return true;
-  } else if ( uri.startsWith( "mailto:" ) ) {
-    KApplication::kApplication()->invokeMailer( uri.mid(7), QString::null );
-    return true;
-  } else if ( uri.startsWith( "uid:" ) ) {
-    DCOPClient *client = KApplication::kApplication()->dcopClient();
-    const QByteArray noParamData;
-    const QByteArray paramData;
-    QByteArray replyData;
-    QCString replyTypeStr;
-    bool foundAbbrowser = client->call( "kaddressbook", "KAddressBookIface",
-                                        "interfaces()",  noParamData,
-                                        replyTypeStr, replyData );
-    if ( foundAbbrowser ) {
-      //KAddressbook is already running, so just DCOP to it to bring up the contact editor
-#if KDE_IS_VERSION( 3, 2, 90 )
-      kapp->updateRemoteUserTimestamp("kaddressbook");
-#endif
-      DCOPRef kaddressbook( "kaddressbook", "KAddressBookIface" );
-      kaddressbook.send( "showContactEditor", uri.mid( 6 ) );
-      return true;
-    } else {
-      /*
-        KaddressBook is not already running.  Pass it the UID of the contact via the command line while starting it - its neater.
-        We start it without its main interface
-      */
-      QString iconPath = KGlobal::iconLoader()->iconPath( "go", KIcon::Small );
-      QString tmpStr = "kaddressbook --editor-only --uid ";
-      tmpStr += KProcess::quote( uri.mid( 6 ) );
-      KRun::runCommand( tmpStr, "KAddressBook", iconPath );
-      return true;
+        KMailIface_stub kmailIface("kmail", "KMailIface");
+        kmailIface.showMail(serialNumberStr.toUInt(), QString());
+        return true;
     }
-  }
-  else {  // no special URI, let KDE handle it
-    new KRun(KURL( uri ));
-  }
+    else if(uri.startsWith("mailto:"))
+    {
+        KApplication::kApplication()->invokeMailer(uri.mid(7), QString::null);
+        return true;
+    }
+    else if(uri.startsWith("uid:"))
+    {
+        DCOPClient *client = KApplication::kApplication()->dcopClient();
+        const QByteArray noParamData;
+        const QByteArray paramData;
+        QByteArray replyData;
+        QCString replyTypeStr;
+        bool foundAbbrowser = client->call("kaddressbook", "KAddressBookIface",
+                                           "interfaces()",  noParamData,
+                                           replyTypeStr, replyData);
+        if(foundAbbrowser)
+        {
+            //KAddressbook is already running, so just DCOP to it to bring up the contact editor
+#if KDE_IS_VERSION( 3, 2, 90 )
+            kapp->updateRemoteUserTimestamp("kaddressbook");
+#endif
+            DCOPRef kaddressbook("kaddressbook", "KAddressBookIface");
+            kaddressbook.send("showContactEditor", uri.mid(6));
+            return true;
+        }
+        else
+        {
+            /*
+              KaddressBook is not already running.  Pass it the UID of the contact via the command line while starting it - its neater.
+              We start it without its main interface
+            */
+            QString iconPath = KGlobal::iconLoader()->iconPath("go", KIcon::Small);
+            QString tmpStr = "kaddressbook --editor-only --uid ";
+            tmpStr += KProcess::quote(uri.mid(6));
+            KRun::runCommand(tmpStr, "KAddressBook", iconPath);
+            return true;
+        }
+    }
+    else    // no special URI, let KDE handle it
+    {
+        new KRun(KURL(uri));
+    }
 #endif
 
-  return false;
+    return false;
 }

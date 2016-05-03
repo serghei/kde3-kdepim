@@ -30,11 +30,10 @@ typedef KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
 
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( knotes_xmlrpc, XMLRPCFactory ); here
 // Problem: How to insert the catalogue!
-extern "C"
-{
-  void *init_knotes_xmlrpc()
-  {
-    KGlobal::locale()->insertCatalogue( "kres_xmlrpc" );
-    return new XMLRPCFactory;
-  }
+extern "C" {
+    void *init_knotes_xmlrpc()
+    {
+        KGlobal::locale()->insertCatalogue("kres_xmlrpc");
+        return new XMLRPCFactory;
+    }
 }

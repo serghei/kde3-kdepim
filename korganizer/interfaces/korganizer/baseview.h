@@ -38,7 +38,9 @@
 
 using namespace KCal;
 
-namespace KCal { class Calendar; }
+namespace KCal {
+class Calendar;
+}
 
 namespace KOrg {
 
@@ -54,10 +56,9 @@ namespace KOrg {
   @author Preston Brown, Cornelius Schumacher
   @see KOTodoView, KOEventView, KOListView, KOAgendaView, KOMonthView
 */
-class KDE_EXPORT BaseView : public QWidget
-{
+class KDE_EXPORT BaseView : public QWidget {
     Q_OBJECT
-  public:
+public:
     /**
       Constructs a view.
 
@@ -66,20 +67,26 @@ class KDE_EXPORT BaseView : public QWidget
       @param parent parent widget.
       @param name   name of this widget.
     */
-    BaseView( Calendar *cal, QWidget *parent = 0,
-              const char *name = 0 )
-      : QWidget( parent, name ), mCalendar( cal ), mChanger( 0 ) {}
+    BaseView(Calendar *cal, QWidget *parent = 0,
+             const char *name = 0)
+        : QWidget(parent, name), mCalendar(cal), mChanger(0) {}
 
     /**
       Destructor.  Views will do view-specific cleanups here.
     */
     virtual ~BaseView() {}
 
-    virtual void setCalendar( Calendar *cal ) { mCalendar = cal; }
+    virtual void setCalendar(Calendar *cal)
+    {
+        mCalendar = cal;
+    }
     /**
       Return calendar object of this view.
     */
-    virtual Calendar *calendar() { return mCalendar; }
+    virtual Calendar *calendar()
+    {
+        return mCalendar;
+    }
 
     /**
       @return a list of selected events.  Most views can probably only
@@ -97,7 +104,7 @@ class KDE_EXPORT BaseView : public QWidget
 
     virtual CalPrinterBase::PrintType printType()
     {
-      return CalPrinterBase::Month;
+        return CalPrinterBase::Month;
     }
 
     /**
@@ -106,9 +113,12 @@ class KDE_EXPORT BaseView : public QWidget
     virtual int currentDateCount() = 0;
 
     /** Return if this view is a view for displaying events. */
-    virtual bool isEventView() { return false; }
+    virtual bool isEventView()
+    {
+        return false;
+    }
 
-  public slots:
+public slots:
     /**
       Show incidences for the given date range. The date range actually shown may be
       different from the requested range, depending on the particular requirements
@@ -117,7 +127,7 @@ class KDE_EXPORT BaseView : public QWidget
       @param start Start of date range.
       @param end   End of date range.
     */
-    virtual void showDates( const QDate &start, const QDate &end ) = 0;
+    virtual void showDates(const QDate &start, const QDate &end) = 0;
 
     /**
       Show given incidences. Depending on the actual view it might not be possible to
@@ -125,19 +135,25 @@ class KDE_EXPORT BaseView : public QWidget
 
       @param incidenceList a list of incidences to show.
     */
-    virtual void showIncidences( const Incidence::List &incidenceList ) = 0;
+    virtual void showIncidences(const Incidence::List &incidenceList) = 0;
 
     /**
       Updates the current display to reflect changes that may have happened
       in the calendar since the last display refresh.
     */
     virtual void updateView() = 0;
-    virtual void dayPassed( const QDate & ) { updateView(); }
+    virtual void dayPassed(const QDate &)
+    {
+        updateView();
+    }
 
     /**
       Assign a new incidence change helper object.
      */
-    virtual void setIncidenceChanger( IncidenceChangerBase *changer ) { mChanger = changer; }
+    virtual void setIncidenceChanger(IncidenceChangerBase *changer)
+    {
+        mChanger = changer;
+    }
 
     /**
       Write all unsaved data back to calendar store.
@@ -147,7 +163,7 @@ class KDE_EXPORT BaseView : public QWidget
     /**
       Updates the current display to reflect the changes to one particular incidence.
     */
-    virtual void changeIncidenceDisplay( Incidence *, int ) = 0;
+    virtual void changeIncidenceDisplay(Incidence *, int) = 0;
 
     /**
       Re-reads the KOrganizer configuration and picks up relevant
@@ -163,10 +179,13 @@ class KDE_EXPORT BaseView : public QWidget
     /**
       Set the default start/end date/time for new events. Return true if anything was changed
     */
-    virtual bool eventDurationHint(QDateTime &/*startDt*/, QDateTime &/*endDt*/, bool &/*allDay*/) { return false; }
+    virtual bool eventDurationHint(QDateTime &/*startDt*/, QDateTime &/*endDt*/, bool &/*allDay*/)
+    {
+        return false;
+    }
 
-  signals:
-    void incidenceSelected( Incidence * );
+signals:
+    void incidenceSelected(Incidence *);
 
     /**
      * instructs the receiver to show the incidence in read-only mode.
@@ -208,12 +227,12 @@ class KDE_EXPORT BaseView : public QWidget
     void toggleAlarmSignal(Incidence *);
     /** Dissociate from a recurring incidence the occurrence on the given
         date to a new incidence */
-    void dissociateOccurrenceSignal( Incidence *, const QDate & );
+    void dissociateOccurrenceSignal(Incidence *, const QDate &);
     /** Dissociate from a recurring incidence all occurrences after the given
         date to a new incidence */
-    void dissociateFutureOccurrenceSignal( Incidence *, const QDate & );
+    void dissociateFutureOccurrenceSignal(Incidence *, const QDate &);
 
-    void startMultiModify( const QString & );
+    void startMultiModify(const QString &);
     void endMultiModify();
 
     /**
@@ -225,27 +244,27 @@ class KDE_EXPORT BaseView : public QWidget
      * instructs the receiver to create a new event with the specified beginning
      * time. Doesn't make sense to connect to more than one receiver.
      */
-    void newEventSignal( const QDate & );
+    void newEventSignal(const QDate &);
     /**
      * instructs the receiver to create a new event with the specified beginning
      * time. Doesn't make sense to connect to more than one receiver.
      */
-    void newEventSignal( const QDateTime & );
+    void newEventSignal(const QDateTime &);
     /**
      * instructs the receiver to create a new event, with the specified
      * beginning end ending times.  Doesn't make sense to connect to more
      * than one receiver.
      */
-    void newEventSignal( const QDateTime &, const QDateTime & );
+    void newEventSignal(const QDateTime &, const QDateTime &);
 
-    void newTodoSignal( const QDate & );
-    void newSubTodoSignal( Todo * );
+    void newTodoSignal(const QDate &);
+    void newSubTodoSignal(Todo *);
 
-    void newJournalSignal( const QDate & );
+    void newJournalSignal(const QDate &);
 
-  private:
+private:
     Calendar *mCalendar;
-  protected:
+protected:
     IncidenceChangerBase *mChanger;
 };
 

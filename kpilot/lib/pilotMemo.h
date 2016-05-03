@@ -36,70 +36,75 @@
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 
-class KDE_EXPORT PilotMemo : public PilotRecordBase
-{
+class KDE_EXPORT PilotMemo : public PilotRecordBase {
 public:
-	/**
-	* Constructor. Create an empty memo.
-	*/
-	PilotMemo(void) : PilotRecordBase() { } ;
+    /**
+    * Constructor. Create an empty memo.
+    */
+    PilotMemo(void) : PilotRecordBase() { } ;
 
-	/**
-	* Constructor. Create a memo in the Unfiled category with
-	* text @p s .
-	*/
-	PilotMemo(const QString &s) : PilotRecordBase()
-	{
-		setText(s);
-	} ;
+    /**
+    * Constructor. Create a memo in the Unfiled category with
+    * text @p s .
+    */
+    PilotMemo(const QString &s) : PilotRecordBase()
+    {
+        setText(s);
+    } ;
 
-	/**
-	* Constructor. Create a memo with the category and
-	* attributes of the given record @p rec, and extract
-	* the text from that record as if it comes from the MemoDB.
-	*/
-	PilotMemo(const PilotRecord* rec);
+    /**
+    * Constructor. Create a memo with the category and
+    * attributes of the given record @p rec, and extract
+    * the text from that record as if it comes from the MemoDB.
+    */
+    PilotMemo(const PilotRecord *rec);
 
-	/**
-	* Constructor. Create a memo with category and
-	* attributes from the argument @p r, and set the
-	* text of the memo from string @p s.
-	*/
-	PilotMemo(const PilotRecordBase *r, const QString &s) :
-		PilotRecordBase(r)
-	{
-		setText(s);
-	}
+    /**
+    * Constructor. Create a memo with category and
+    * attributes from the argument @p r, and set the
+    * text of the memo from string @p s.
+    */
+    PilotMemo(const PilotRecordBase *r, const QString &s) :
+        PilotRecordBase(r)
+    {
+        setText(s);
+    }
 
-	~PilotMemo() { } ;
+    ~PilotMemo() { } ;
 
-	virtual QString getTextRepresentation(Qt::TextFormat richText);
-	QString text(void) const { return fText; } ;
-	void setText(const QString &text) { fText = text.left(MAX_MEMO_LEN); } ;
-	QString getTitle(void) const ;
-	PilotRecord* pack();
+    virtual QString getTextRepresentation(Qt::TextFormat richText);
+    QString text(void) const
+    {
+        return fText;
+    } ;
+    void setText(const QString &text)
+    {
+        fText = text.left(MAX_MEMO_LEN);
+    } ;
+    QString getTitle(void) const ;
+    PilotRecord *pack();
 
-	static const int MAX_MEMO_LEN=8192;
+    static const int MAX_MEMO_LEN = 8192;
 
-	/**
-	* Return a "short but sensible" title. getTitle() returns the
-	* first line of the memo, which may be very long
-	* and inconvenient. shortTitle() returns about 30
-	* characters.
-	*/
-	QString shortTitle() const;
+    /**
+    * Return a "short but sensible" title. getTitle() returns the
+    * first line of the memo, which may be very long
+    * and inconvenient. shortTitle() returns about 30
+    * characters.
+    */
+    QString shortTitle() const;
 
-	/**
-	* Returns a (complete) title if there is one and [unknown]
-	* otherwise.
-	*/
-	QString sensibleTitle() const;
+    /**
+    * Returns a (complete) title if there is one and [unknown]
+    * otherwise.
+    */
+    QString sensibleTitle() const;
 
 private:
-	QString fText;
+    QString fText;
 
 };
 
-typedef PilotAppInfo<struct MemoAppInfo,unpack_MemoAppInfo, pack_MemoAppInfo> PilotMemoInfo;
+typedef PilotAppInfo<struct MemoAppInfo, unpack_MemoAppInfo, pack_MemoAppInfo> PilotMemoInfo;
 
 #endif

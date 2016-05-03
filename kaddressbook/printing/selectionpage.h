@@ -32,37 +32,36 @@ class QListView;
 class QListViewItem;
 class QRadioButton;
 
-class SelectionPage : public QWidget
-{
-  Q_OBJECT
+class SelectionPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    SelectionPage( QWidget* parent = 0, const char* name = 0 );
+public:
+    SelectionPage(QWidget *parent = 0, const char *name = 0);
     ~SelectionPage();
 
-    void setFilters( const QStringList& );
+    void setFilters(const QStringList &);
     QString filter() const;
     bool useFilters() const;
 
-    void setCategories( const QStringList& );
+    void setCategories(const QStringList &);
     QStringList categories() const;
     bool useCategories();
 
-    void setUseSelection( bool value );
+    void setUseSelection(bool value);
     bool useSelection() const;
 
-  private slots:
-    void filterChanged( int );
-    void categoryClicked( QListViewItem * i );
+private slots:
+    void filterChanged(int);
+    void categoryClicked(QListViewItem *i);
 
-  private:
-    QButtonGroup* mButtonGroup;
-    QRadioButton* mUseCategories;
-    QRadioButton* mUseFilters;
-    QRadioButton* mUseWholeBook;
-    QRadioButton* mUseSelection;
-    QComboBox* mFiltersCombo;
-    QListView* mCategoriesView;
+private:
+    QButtonGroup *mButtonGroup;
+    QRadioButton *mUseCategories;
+    QRadioButton *mUseFilters;
+    QRadioButton *mUseWholeBook;
+    QRadioButton *mUseSelection;
+    QComboBox *mFiltersCombo;
+    QListView *mCategoriesView;
 };
 
 #endif // SELECTIONPAGE_H

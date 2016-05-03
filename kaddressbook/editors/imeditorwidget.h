@@ -46,45 +46,44 @@ enum IMContext { Any, Home, Work };
 /**
  * The widget we add to KAddressbook's contact editor dialog
  */
-class IMEditorWidget : public KDialogBase
-{
-  Q_OBJECT
+class IMEditorWidget : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    IMEditorWidget( QWidget *parent, const QString &preferredIM, const char *name = 0 );
+public:
+    IMEditorWidget(QWidget *parent, const QString &preferredIM, const char *name = 0);
     ~IMEditorWidget() {};
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
     QValueList<KPluginInfo *> availableProtocols() const;
     bool isModified() const;
     QString preferred() const;
 
-  protected slots:
+protected slots:
     void slotUpdateButtons();
     void slotAdd();
     void slotEdit();
     void slotDelete();
     void slotSetStandard();
 
-  protected:
+protected:
     /**
      * Helper method to split the contents of an addressbook field up
      */
-    static void splitField( const QString &str, QString &app, QString &name, QString &value );
+    static void splitField(const QString &str, QString &app, QString &name, QString &value);
 
     /**
      * Find a protocol that matches the KABC key, or 0 if none found
      */
-    KPluginInfo * protocolFromString( const QString &fieldValue ) const;
+    KPluginInfo *protocolFromString(const QString &fieldValue) const;
 
-  private:
+private:
     bool mReadOnly;
     bool mModified;
     QString mPreferred;
     IMEditorBase *mWidget;
-    void setModified( bool modified );
+    void setModified(bool modified);
 
     // Used to track changed protocols to reduce KABC writes
     QValueList<KPluginInfo *> mChangedProtocols;
@@ -96,29 +95,28 @@ class IMEditorWidget : public KDialogBase
  */
 
 // VCard has been disabled as there is no standard VCard location to store IM addresses yet.
-class IMAddressLVI : public KListViewItem
-{
-  public:
-    IMAddressLVI( KListView *parent, KPluginInfo * protocol,
-                  const QString &address, const IMContext &context = Any );
+class IMAddressLVI : public KListViewItem {
+public:
+    IMAddressLVI(KListView *parent, KPluginInfo *protocol,
+                 const QString &address, const IMContext &context = Any);
 
-    void setAddress( const QString &address );
-    void setProtocol( KPluginInfo * protocol );
-    void setContext( const IMContext &context );
+    void setAddress(const QString &address);
+    void setProtocol(KPluginInfo *protocol);
+    void setContext(const IMContext &context);
     void activate();
 
-    KPluginInfo * protocol() const;
+    KPluginInfo *protocol() const;
     QString address() const;
     IMContext context() const;
 
-    void setPreferred( bool preferred );
+    void setPreferred(bool preferred);
     bool preferred() const;
 
-  protected:
-    virtual void paintCell( QPainter *p, const QColorGroup &cg, int column, int width, int alignment );
+protected:
+    virtual void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
 
-  private:
-    KPluginInfo * mProtocol;
+private:
+    KPluginInfo *mProtocol;
     bool mPreferred;
     IMContext mContext;
     QString mAddress;

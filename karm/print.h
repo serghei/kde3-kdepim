@@ -15,18 +15,17 @@ class TaskView;
  * Provide printing capabilities.
  */
 
-class MyPrinter : public KPrinter
-{
-  public:
-    MyPrinter( const TaskView *taskView );
+class MyPrinter : public KPrinter {
+public:
+    MyPrinter(const TaskView *taskView);
     void print();
-    void printLine( QString total, QString session, QString name, QPainter &,
-                    int );
-    void printTask( Task *task, QPainter &, int level );  
-    int calculateReqNameWidth( Task *task, QFontMetrics &metrics,
-                               int level);
-  
-  private:
+    void printLine(QString total, QString session, QString name, QPainter &,
+                   int);
+    void printTask(Task *task, QPainter &, int level);
+    int calculateReqNameWidth(Task *task, QFontMetrics &metrics,
+                              int level);
+
+private:
     const TaskView *_taskView;
 
     int xMargin, yMargin;
@@ -35,7 +34,7 @@ class MyPrinter : public KPrinter
     int sessionTimeWidth;
     int nameFieldWidth;
     int lineHeight;
-    int pageHeight;  
+    int pageHeight;
 };
 
 #endif // KARM_PRINT_H

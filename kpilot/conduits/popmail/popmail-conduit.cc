@@ -34,10 +34,9 @@
 #include "options.h"
 #include "popmail-conduit.h"
 
-extern "C"
-{
+extern "C" {
 
-unsigned long version_conduit_popmail = Pilot::PLUGIN_API;
+    unsigned long version_conduit_popmail = Pilot::PLUGIN_API;
 
 }
 
@@ -81,99 +80,99 @@ unsigned long version_conduit_popmail = Pilot::PLUGIN_API;
 static QString DATE_FORMAT("ddd, d MMM yyyy hh:mm:ss");
 
 PopMailConduit::PopMailConduit(KPilotLink *d,
-	const char *n,
-	const QStringList &l) :
-	ConduitAction(d,n,l)
+                               const char *n,
+                               const QStringList &l) :
+    ConduitAction(d, n, l)
 {
-	FUNCTIONSETUP;
-	fConduitName=i18n("KMail");
+    FUNCTIONSETUP;
+    fConduitName = i18n("KMail");
 }
 
 PopMailConduit::~PopMailConduit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
 void PopMailConduit::doSync()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	int sent_count=0;
-	int mode=MailConduitSettings::syncOutgoing();
+    int sent_count = 0;
+    int mode = MailConduitSettings::syncOutgoing();
 
-	DEBUGKPILOT << fname
-		<< ": Outgoing mail disposition "
-		<< mode << endl;
+    DEBUGKPILOT << fname
+                << ": Outgoing mail disposition "
+                << mode << endl;
 
-	if(mode)
-	{
-		sent_count=sendPendingMail(mode);
-	}
+    if(mode)
+    {
+        sent_count = sendPendingMail(mode);
+    }
 
-	if (sent_count>0)
-	{
-		if (sent_count>0)
-		{
-			addSyncLogEntry(i18n("Sent one message",
-				"Sent %n messages",sent_count));
-		}
-	}
+    if(sent_count > 0)
+    {
+        if(sent_count > 0)
+        {
+            addSyncLogEntry(i18n("Sent one message",
+                                 "Sent %n messages", sent_count));
+        }
+    }
 }
 
 
 // additional changes by Michael Kropfberger
 int PopMailConduit::sendPendingMail(int mode)
 {
-	FUNCTIONSETUP;
-	int count=0;
+    FUNCTIONSETUP;
+    int count = 0;
 
-	if (mode==PopMailWidgetConfig::SendKMail)
-	{
-		count=sendViaKMail();
-	}
+    if(mode == PopMailWidgetConfig::SendKMail)
+    {
+        count = sendViaKMail();
+    }
 
-	if (count == 0)
-	{
-		WARNINGKPILOT << "Mail was not sent at all!" << endl;
-		emit logError(i18n("No mail was sent."));
-	}
-	else if (count < 0)
-	{
-		WARNINGKPILOT
-			<< "Mail sending returned error " << count
-			<< endl;
-		emit logError(i18n("No mail could be sent."));
-	}
-	else
-	{
-		DEBUGKPILOT << fname
-			<< ": Sent "
-			<< count
-			<< " messages"
-			<< endl;
-	}
+    if(count == 0)
+    {
+        WARNINGKPILOT << "Mail was not sent at all!" << endl;
+        emit logError(i18n("No mail was sent."));
+    }
+    else if(count < 0)
+    {
+        WARNINGKPILOT
+                << "Mail sending returned error " << count
+                << endl;
+        emit logError(i18n("No mail could be sent."));
+    }
+    else
+    {
+        DEBUGKPILOT << fname
+                    << ": Sent "
+                    << count
+                    << " messages"
+                    << endl;
+    }
 
-	return count;
+    return count;
 }
 
 
 QString PopMailConduit::getKMailOutbox() const
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	// Default to "outbox" with newer KMails.
-	KSimpleConfig c(CSL1("kmailrc"),true);
-	c.setGroup("General");
+    // Default to "outbox" with newer KMails.
+    KSimpleConfig c(CSL1("kmailrc"), true);
+    c.setGroup("General");
 
-	QString outbox = c.readEntry("outboxFolder");
-	if (outbox.isEmpty())
-	{
-		outbox = MailConduitSettings::outboxFolder();
-	}
+    QString outbox = c.readEntry("outboxFolder");
+    if(outbox.isEmpty())
+    {
+        outbox = MailConduitSettings::outboxFolder();
+    }
 
-	if (outbox.isEmpty()) outbox=CSL1("outbox");
+    if(outbox.isEmpty()) outbox = CSL1("outbox");
 
-	return outbox;
+    return outbox;
 }
 
 /*
@@ -182,235 +181,237 @@ QString PopMailConduit::getKMailOutbox() const
  */
 int PopMailConduit::sendViaKMail()
 {
-	FUNCTIONSETUP;
-	int count=0;
-	QString kmailOutboxName = getKMailOutbox();
+    FUNCTIONSETUP;
+    int count = 0;
+    QString kmailOutboxName = getKMailOutbox();
 
-	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
-	if (!dcopptr)
-	{
-		WARNINGKPILOT << "Cannot get DCOP client."
-			<< endl;
-		KMessageBox::error(0L,
-			i18n("Could not connect to DCOP server for "
-				"the KMail connection."),
-			i18n("Error Sending Mail"));
-		return -1;
-	}
+    DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+    if(!dcopptr)
+    {
+        WARNINGKPILOT << "Cannot get DCOP client."
+                      << endl;
+        KMessageBox::error(0L,
+                           i18n("Could not connect to DCOP server for "
+                                "the KMail connection."),
+                           i18n("Error Sending Mail"));
+        return -1;
+    }
 
-	if (!dcopptr->isAttached())
-	{
-		dcopptr->attach();
-	}
+    if(!dcopptr->isAttached())
+    {
+        dcopptr->attach();
+    }
 
-	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
-	{
-		DEBUGKPILOT << fname
-			<< ": Reading "
-			<< count + 1
-			<< "th message"
-			<< endl;
+    while(PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
+    {
+        DEBUGKPILOT << fname
+                    << ": Reading "
+                    << count + 1
+                    << "th message"
+                    << endl;
 
-		if (pilotRec->isDeleted() || pilotRec->isArchived())
-		{
-			DEBUGKPILOT << fname
-				<< ": Skipping record."
-				<< endl;
-			continue;
-		}
+        if(pilotRec->isDeleted() || pilotRec->isArchived())
+        {
+            DEBUGKPILOT << fname
+                        << ": Skipping record."
+                        << endl;
+            continue;
+        }
 
-		struct Mail theMail;
-		KTempFile t;
-		t.setAutoDelete(true);
+        struct Mail theMail;
+        KTempFile t;
+        t.setAutoDelete(true);
 
-		if (t.status())
-		{
-			WARNINGKPILOT << "Cannot open temp file." << endl;
-			KMessageBox::error(0L,
-				i18n("Cannot open temporary file to store "
-					"mail from Pilot in."),
-				i18n("Error Sending Mail"));
-			continue;
-		}
+        if(t.status())
+        {
+            WARNINGKPILOT << "Cannot open temp file." << endl;
+            KMessageBox::error(0L,
+                               i18n("Cannot open temporary file to store "
+                                    "mail from Pilot in."),
+                               i18n("Error Sending Mail"));
+            continue;
+        }
 
-		FILE *sendf = t.fstream();
+        FILE *sendf = t.fstream();
 
-		if (!sendf)
-		{
-			WARNINGKPILOT
-				<< "Cannot open temporary file for writing!" << endl;
-			KMessageBox::error(0L,
-				i18n("Cannot open temporary file to store "
-					"mail from Pilot in."),
-				i18n("Error Sending Mail"));
-			continue;
-		}
+        if(!sendf)
+        {
+            WARNINGKPILOT
+                    << "Cannot open temporary file for writing!" << endl;
+            KMessageBox::error(0L,
+                               i18n("Cannot open temporary file to store "
+                                    "mail from Pilot in."),
+                               i18n("Error Sending Mail"));
+            continue;
+        }
 
-		unpack_Mail(&theMail,
-			(unsigned char*)pilotRec->data(),
-			pilotRec->size());
-		writeMessageToFile(sendf, theMail);
+        unpack_Mail(&theMail,
+                    (unsigned char *)pilotRec->data(),
+                    pilotRec->size());
+        writeMessageToFile(sendf, theMail);
 
 
-		QByteArray data,returnValue;
-		QCString returnType;
-		QDataStream arg(data,IO_WriteOnly);
+        QByteArray data, returnValue;
+        QCString returnType;
+        QDataStream arg(data, IO_WriteOnly);
 
-		arg << kmailOutboxName << t.name() << CSL1("N") ;
+        arg << kmailOutboxName << t.name() << CSL1("N") ;
 
-		if (!dcopptr->call("kmail",
-			"KMailIface",
-			"dcopAddMessage(QString,QString,QString)",
-			data,
-			returnType,
-			returnValue,
-			true))
-		{
-			WARNINGKPILOT << "DCOP call failed." << endl;
+        if(!dcopptr->call("kmail",
+                          "KMailIface",
+                          "dcopAddMessage(QString,QString,QString)",
+                          data,
+                          returnType,
+                          returnValue,
+                          true))
+        {
+            WARNINGKPILOT << "DCOP call failed." << endl;
 
-			KMessageBox::error(0L,
-				i18n("DCOP connection with KMail failed."),
-				i18n("Error Sending Mail"));
-			continue;
-		}
+            KMessageBox::error(0L,
+                               i18n("DCOP connection with KMail failed."),
+                               i18n("Error Sending Mail"));
+            continue;
+        }
 
-		DEBUGKPILOT << fname
-			<< ": DCOP call returned "
-			<< returnType
-			<< " of "
-			<< (const char *)returnValue
-			<< endl;
+        DEBUGKPILOT << fname
+                    << ": DCOP call returned "
+                    << returnType
+                    << " of "
+                    << (const char *)returnValue
+                    << endl;
 
-		// Mark it as filed...
-		pilotRec->setCategory(3);
-		pilotRec->setModified( false );
-		fDatabase->writeRecord(pilotRec);
-		delete pilotRec;
-		// This is ok since we got the mail with unpack mail..
-		free_Mail(&theMail);
+        // Mark it as filed...
+        pilotRec->setCategory(3);
+        pilotRec->setModified(false);
+        fDatabase->writeRecord(pilotRec);
+        delete pilotRec;
+        // This is ok since we got the mail with unpack mail..
+        free_Mail(&theMail);
 
-		count++;
-	}
+        count++;
+    }
 
-	return count;
+    return count;
 }
 
 // From pilot-link-0.8.7 by Kenneth Albanowski
 // additional changes by Michael Kropfberger
 
-void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
+void PopMailConduit::writeMessageToFile(FILE *sendf, struct Mail &theMail)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QTextStream mailPipe(sendf, IO_WriteOnly);
+    QTextStream mailPipe(sendf, IO_WriteOnly);
 
-	QString fromAddress = MailConduitSettings::emailAddress();
-	mailPipe << "From: " << fromAddress << "\r\n";
-	mailPipe << "To: " << theMail.to << "\r\n";
-	if(theMail.cc)
-		mailPipe << "Cc: " << theMail.cc << "\r\n";
-	if(theMail.bcc)
-		mailPipe << "Bcc: " << theMail.bcc << "\r\n";
-	if(theMail.replyTo)
-		mailPipe << "Reply-To: " << theMail.replyTo << "\r\n";
-	if(theMail.subject)
-		mailPipe << "Subject: " << theMail.subject << "\r\n";
-	
-	// if our struct indicates that it's dated, then use the date it
-	// holds.  otherwise, provide current date.  either way, we need to
-	// have a date...
-	QDateTime date = QDateTime::currentDateTime();
-	if (theMail.dated)
-	{
-		date = readTm(theMail.date);
-	}
+    QString fromAddress = MailConduitSettings::emailAddress();
+    mailPipe << "From: " << fromAddress << "\r\n";
+    mailPipe << "To: " << theMail.to << "\r\n";
+    if(theMail.cc)
+        mailPipe << "Cc: " << theMail.cc << "\r\n";
+    if(theMail.bcc)
+        mailPipe << "Bcc: " << theMail.bcc << "\r\n";
+    if(theMail.replyTo)
+        mailPipe << "Reply-To: " << theMail.replyTo << "\r\n";
+    if(theMail.subject)
+        mailPipe << "Subject: " << theMail.subject << "\r\n";
 
-	QString dateString = date.toString(DATE_FORMAT);
+    // if our struct indicates that it's dated, then use the date it
+    // holds.  otherwise, provide current date.  either way, we need to
+    // have a date...
+    QDateTime date = QDateTime::currentDateTime();
+    if(theMail.dated)
+    {
+        date = readTm(theMail.date);
+    }
 
-	mailPipe << "Date: " << dateString << "\r\n";
+    QString dateString = date.toString(DATE_FORMAT);
 
-	mailPipe << "X-mailer: " << "Popmail-Conduit " << KPILOT_VERSION << "\r\n";
-	mailPipe << "\r\n";
+    mailPipe << "Date: " << dateString << "\r\n";
 
-
-	DEBUGKPILOT << fname << ": To: " << theMail.to << endl;
+    mailPipe << "X-mailer: " << "Popmail-Conduit " << KPILOT_VERSION << "\r\n";
+    mailPipe << "\r\n";
 
 
-	if(theMail.body)
-	{
-		DEBUGKPILOT << fname << ": Sent body." << endl;
-		mailPipe << theMail.body << "\r\n";
-	}
+    DEBUGKPILOT << fname << ": To: " << theMail.to << endl;
 
-	//insert the real signature file from disk
-	QString signature = MailConduitSettings::signature();
-	if(!signature.isEmpty())
-	{
-		DEBUGKPILOT << fname << ": Reading signature" << endl;
 
-		QFile f(signature);
-		if ( f.open(IO_ReadOnly) )
-		{    // file opened successfully
-			mailPipe << "-- \r\n";
-			QTextStream t( &f );        // use a text stream
-			while ( !t.eof() )
-			{        // until end of file...
-				mailPipe << t.readLine() << "\r\n";
-			}
-			f.close();
-		}
-	}
-	mailPipe << "\r\n";
+    if(theMail.body)
+    {
+        DEBUGKPILOT << fname << ": Sent body." << endl;
+        mailPipe << theMail.body << "\r\n";
+    }
 
-	DEBUGKPILOT << fname << ": Done" << endl;
+    //insert the real signature file from disk
+    QString signature = MailConduitSettings::signature();
+    if(!signature.isEmpty())
+    {
+        DEBUGKPILOT << fname << ": Reading signature" << endl;
+
+        QFile f(signature);
+        if(f.open(IO_ReadOnly))
+        {
+            // file opened successfully
+            mailPipe << "-- \r\n";
+            QTextStream t(&f);          // use a text stream
+            while(!t.eof())
+            {
+                // until end of file...
+                mailPipe << t.readLine() << "\r\n";
+            }
+            f.close();
+        }
+    }
+    mailPipe << "\r\n";
+
+    DEBUGKPILOT << fname << ": Done" << endl;
 }
 
 
 /* virtual */ void PopMailConduit::doTest()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	QString outbox = getKMailOutbox();
+    QString outbox = getKMailOutbox();
 
-	DEBUGKPILOT << fname
-		<< ": KMail's outbox is "
-		<< outbox
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": KMail's outbox is "
+                << outbox
+                << endl;
 
-	QDateTime date = QDateTime::currentDateTime();
-	QString dateString = date.toString(DATE_FORMAT);
+    QDateTime date = QDateTime::currentDateTime();
+    QString dateString = date.toString(DATE_FORMAT);
 
-	DEBUGKPILOT << fname << ": Date format example: [" << dateString
-		<< "]" << endl;
+    DEBUGKPILOT << fname << ": Date format example: [" << dateString
+                << "]" << endl;
 }
 
 /* virtual */ bool PopMailConduit::exec()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	if (syncMode().isTest())
-	{
-		doTest();
-	}
-	else if (syncMode() == SyncMode::eBackup)
-	{
-		emit logError(i18n("Cannot perform backup of mail database"));
-	}
-	else
-	{
-		fDatabase = deviceLink()->database( CSL1("MailDB") );
+    if(syncMode().isTest())
+    {
+        doTest();
+    }
+    else if(syncMode() == SyncMode::eBackup)
+    {
+        emit logError(i18n("Cannot perform backup of mail database"));
+    }
+    else
+    {
+        fDatabase = deviceLink()->database(CSL1("MailDB"));
 
-		if (!fDatabase || !fDatabase->isOpen())
-		{
-			emit logError(i18n("Unable to open mail database on handheld"));
-			KPILOT_DELETE(fDatabase);
-			return false;
-		}
+        if(!fDatabase || !fDatabase->isOpen())
+        {
+            emit logError(i18n("Unable to open mail database on handheld"));
+            KPILOT_DELETE(fDatabase);
+            return false;
+        }
 
-		doSync();
-		fDatabase->resetSyncFlags();
-		KPILOT_DELETE(fDatabase);
-	}
-	delayDone();
-	return true;
+        doSync();
+        fDatabase->resetSyncFlags();
+        KPILOT_DELETE(fDatabase);
+    }
+    delayDone();
+    return true;
 }

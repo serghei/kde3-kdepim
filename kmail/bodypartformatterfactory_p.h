@@ -40,23 +40,25 @@
 
 namespace KMail {
 
-  namespace Interface {
-    class BodyPartFormatter;
-  }
+namespace Interface {
+class BodyPartFormatter;
+}
 
-  namespace BodyPartFormatterFactoryPrivate {
-    struct ltstr {
-      bool operator()( const char * s1, const char * s2 ) const {
-	return qstricmp( s1, s2 ) < 0;
-      }
-    };
+namespace BodyPartFormatterFactoryPrivate {
+struct ltstr
+{
+    bool operator()(const char *s1, const char *s2) const
+    {
+        return qstricmp(s1, s2) < 0;
+    }
+};
 
-    typedef std::map<const char*, const KMail::Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
-    typedef std::map<const char*, SubtypeRegistry, ltstr> TypeRegistry;
+typedef std::map<const char *, const KMail::Interface::BodyPartFormatter *, ltstr> SubtypeRegistry;
+typedef std::map<const char *, SubtypeRegistry, ltstr> TypeRegistry;
 
-    // defined in bodypartformatters.cpp
-    extern void kmail_create_builtin_bodypart_formatters( TypeRegistry * );
-  }
+// defined in bodypartformatters.cpp
+extern void kmail_create_builtin_bodypart_formatters(TypeRegistry *);
+}
 } // namespace KMail
 
 #endif // __KMAIL_BODYPARTFORMATTERFACTORY_P_H__

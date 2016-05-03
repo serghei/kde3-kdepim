@@ -32,82 +32,85 @@
 using namespace KWSDL;
 
 Compiler::Compiler()
-  : QObject( 0, "KWSDL::Compiler" )
+    : QObject(0, "KWSDL::Compiler")
 {
 }
 
-void Compiler::setWSDLUrl( const QString &wsdlUrl )
+void Compiler::setWSDLUrl(const QString &wsdlUrl)
 {
-  mWSDLUrl = wsdlUrl;
-  mWSDLBaseUrl = mWSDLUrl.left( mWSDLUrl.findRev( '/' ) );
+    mWSDLUrl = wsdlUrl;
+    mWSDLBaseUrl = mWSDLUrl.left(mWSDLUrl.findRev('/'));
 
-  mParser.setSchemaBaseUrl( mWSDLBaseUrl );
+    mParser.setSchemaBaseUrl(mWSDLBaseUrl);
 }
 
-void Compiler::setOutputDirectory( const QString &outputDirectory )
+void Compiler::setOutputDirectory(const QString &outputDirectory)
 {
-  mOutputDirectory = outputDirectory;
+    mOutputDirectory = outputDirectory;
 
-  if ( !mOutputDirectory.endsWith( "/" ) )
-    mOutputDirectory.append( "/" );
+    if(!mOutputDirectory.endsWith("/"))
+        mOutputDirectory.append("/");
 }
 
-void Compiler::setNameSpace( const QString &nameSpace )
+void Compiler::setNameSpace(const QString &nameSpace)
 {
-  mNameSpace = nameSpace;
+    mNameSpace = nameSpace;
 }
 
 void Compiler::run()
 {
-  download();
+    download();
 }
 
 void Compiler::download()
 {
-  Schema::FileProvider provider;
+    Schema::FileProvider provider;
 
-  QString fileName;
-  if ( provider.get( mWSDLUrl, fileName ) ) {
-    QFile file( fileName );
-    if ( !file.open( IO_ReadOnly ) ) {
-      qDebug( "Unable to download schema file %s", mWSDLUrl.latin1() );
-      provider.cleanUp();
-      return;
+    QString fileName;
+    if(provider.get(mWSDLUrl, fileName))
+    {
+        QFile file(fileName);
+        if(!file.open(IO_ReadOnly))
+        {
+            qDebug("Unable to download schema file %s", mWSDLUrl.latin1());
+            provider.cleanUp();
+            return;
+        }
+
+        QString errorMsg;
+        int errorLine, errorCol;
+        QDomDocument doc;
+        if(!doc.setContent(&file, true, &errorMsg, &errorLine, &errorCol))
+        {
+            qDebug("%s at (%d,%d)", errorMsg.latin1(), errorLine, errorCol);
+            return;
+        }
+
+        parse(doc.documentElement());
+
+        provider.cleanUp();
     }
-
-    QString errorMsg;
-    int errorLine, errorCol;
-    QDomDocument doc;
-    if ( !doc.setContent( &file, true, &errorMsg, &errorLine, &errorCol ) ) {
-      qDebug( "%s at (%d,%d)", errorMsg.latin1(), errorLine, errorCol );
-      return;
-    }
-
-    parse( doc.documentElement() );
-
-    provider.cleanUp();
-  }
 }
 
-void Compiler::parse( const QDomElement &element )
+void Compiler::parse(const QDomElement &element)
 {
-  mParser.parse( element );
-  create();
+    mParser.parse(element);
+    create();
 }
 
 void Compiler::create()
 {
-  KWSDL::Converter converter;
-  converter.setWSDL( mParser.wsdl() );
+    KWSDL::Converter converter;
+    converter.setWSDL(mParser.wsdl());
 
-  converter.convert();
+    converter.convert();
 
-  KWSDL::Creator creator;
-  creator.setOutputDirectory( mOutputDirectory );
-  creator.setNameSpace( mNameSpace );
-  creator.create( converter.classes() );
+    KWSDL::Creator creator;
+    creator.setOutputDirectory(mOutputDirectory);
+    creator.setNameSpace(mNameSpace);
+    creator.create(converter.classes());
 
-  qApp->quit();
+    qApp->quit();
 }
 
 #include "compiler.moc"

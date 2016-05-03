@@ -34,28 +34,29 @@
 
 class KAboutData;
 
-class KABUniqueAppHandler : public Kontact::UniqueAppHandler
-{
+class KABUniqueAppHandler : public Kontact::UniqueAppHandler {
 public:
-    KABUniqueAppHandler( Kontact::Plugin* plugin ) : Kontact::UniqueAppHandler( plugin ) {}
+    KABUniqueAppHandler(Kontact::Plugin *plugin) : Kontact::UniqueAppHandler(plugin) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
 };
 
-class KAddressbookPlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KAddressbookPlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KAddressbookPlugin( Kontact::Core *core, const char *name, const QStringList& );
+public:
+    KAddressbookPlugin(Kontact::Core *core, const char *name, const QStringList &);
     ~KAddressbookPlugin();
 
-    virtual bool createDCOPInterface( const QString &serviceType );
+    virtual bool createDCOPInterface(const QString &serviceType);
     virtual bool isRunningStandalone();
-    int weight() const { return 300; }
+    int weight() const
+    {
+        return 300;
+    }
 
-    bool canDecodeDrag( QMimeSource * );
-    void processDropEvent( QDropEvent * );
+    bool canDecodeDrag(QMimeSource *);
+    void processDropEvent(QDropEvent *);
 
     virtual QStringList configModules() const;
 
@@ -66,19 +67,19 @@ class KAddressbookPlugin : public Kontact::Plugin
     KAddressBookIface_stub *interface();
 
     //override
-    void loadProfile( const QString& directory );
+    void loadProfile(const QString &directory);
 
     //override
-    void saveToProfile( const QString& directory ) const;
+    void saveToProfile(const QString &directory) const;
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
-  private slots:
+private slots:
     void slotNewContact();
     void slotNewDistributionList();
     void slotSyncContacts();
 
-  private:
+private:
     KAddressBookIface_stub *mStub;
     Kontact::UniqueAppWatcher *mUniqueAppWatcher;
 };

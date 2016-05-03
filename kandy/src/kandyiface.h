@@ -26,12 +26,11 @@
 
 #include <dcopobject.h>
 
-class KandyIface : virtual public DCOPObject
-{
+class KandyIface : virtual public DCOPObject {
     K_DCOP
-  public:
+public:
 
-  k_dcop:
+k_dcop:
     virtual void syncPhonebooks() = 0;
     virtual void exit() = 0;
 };

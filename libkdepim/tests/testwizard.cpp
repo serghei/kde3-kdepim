@@ -32,30 +32,29 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 
-class TestConfigWizard : public KConfigWizard
-{
-  public:
+class TestConfigWizard : public KConfigWizard {
+public:
     TestConfigWizard() :
-      KConfigWizard( new KConfigPropagator( MyConfig::self(),
-                                            "propagator_test.kcfg" ) )
+        KConfigWizard(new KConfigPropagator(MyConfig::self(),
+                                            "propagator_test.kcfg"))
     {
-      QFrame *page = createWizardPage( "My Wizard Page" );
-      QBoxLayout *topLayout = new QVBoxLayout( page );
-      
-      mFixKMailCheckBox = new QCheckBox( i18n("Fix KMail"), page );      
-      topLayout->addWidget( mFixKMailCheckBox );
+        QFrame *page = createWizardPage("My Wizard Page");
+        QBoxLayout *topLayout = new QVBoxLayout(page);
 
-      mFixKMailCheckBox->setChecked( MyConfig::fixKMail() );
-    
-      mBreakKMailCheckBox = new QCheckBox( i18n("Break KMail"), page );      
-      topLayout->addWidget( mBreakKMailCheckBox );
+        mFixKMailCheckBox = new QCheckBox(i18n("Fix KMail"), page);
+        topLayout->addWidget(mFixKMailCheckBox);
 
-      mBreakKMailCheckBox->setChecked( MyConfig::breakKMail() );
-    
-      setupRulesPage();
-      setupChangesPage();
+        mFixKMailCheckBox->setChecked(MyConfig::fixKMail());
+
+        mBreakKMailCheckBox = new QCheckBox(i18n("Break KMail"), page);
+        topLayout->addWidget(mBreakKMailCheckBox);
+
+        mBreakKMailCheckBox->setChecked(MyConfig::breakKMail());
+
+        setupRulesPage();
+        setupChangesPage();
     }
-    
+
     ~TestConfigWizard()
     {
     }
@@ -66,35 +65,35 @@ class TestConfigWizard : public KConfigWizard
 
     void usrWriteConfig()
     {
-      MyConfig::self()->setFixKMail( mFixKMailCheckBox->isChecked() );
-      MyConfig::self()->setBreakKMail( mBreakKMailCheckBox->isChecked() );
+        MyConfig::self()->setFixKMail(mFixKMailCheckBox->isChecked());
+        MyConfig::self()->setBreakKMail(mBreakKMailCheckBox->isChecked());
     }
 
-  private:
+private:
     QCheckBox *mFixKMailCheckBox;
     QCheckBox *mBreakKMailCheckBox;
 };
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("testwizard","Test KConfigWizard","0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
-  KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("testwizard", "Test KConfigWizard", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
+    bool verbose = false;
+    if(args->isSet("verbose")) verbose = true;
 
-  TestConfigWizard wizard;
-  
-  wizard.exec();
+    TestConfigWizard wizard;
+
+    wizard.exec();
 }

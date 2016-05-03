@@ -26,9 +26,9 @@ class KNHeaderView;
 
 class KNHdrViewItem : public KListViewItem  {
 
-  public:
-    KNHdrViewItem( KNHeaderView *ref, KNArticle *a = 0 );
-    KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a = 0 );
+public:
+    KNHdrViewItem(KNHeaderView *ref, KNArticle *a = 0);
+    KNHdrViewItem(KNHdrViewItem *ref, KNArticle *a = 0);
     ~KNHdrViewItem();
 
     virtual int compare(QListViewItem *i, int col, bool ascending) const;
@@ -36,23 +36,32 @@ class KNHdrViewItem : public KListViewItem  {
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
     int width(const QFontMetrics &fm, const QListView *lv, int column);
 
-    virtual QString text( int col ) const;
+    virtual QString text(int col) const;
 
     void expandChildren();
 
-    void setActive( bool b )  { mActive = b; }
-    bool isActive() const     { return mActive; }
+    void setActive(bool b)
+    {
+        mActive = b;
+    }
+    bool isActive() const
+    {
+        return mActive;
+    }
 
     // DND
-    QDragObject* dragObject();
+    QDragObject *dragObject();
 
     KNArticle *art;
     int countUnreadInThread();
 
-    bool showToolTip( int column ) const { return mShowToolTip[column]; }
+    bool showToolTip(int column) const
+    {
+        return mShowToolTip[column];
+    }
 
-  private:
-    void init( KNArticle *a );
+private:
+    void init(KNArticle *a);
 
     bool greyOut();
     bool firstColBold();

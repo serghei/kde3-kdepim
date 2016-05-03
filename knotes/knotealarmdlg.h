@@ -39,23 +39,22 @@ class KDateEdit;
 class KTimeEdit;
 
 namespace KCal {
-    class Journal;
+class Journal;
 }
 
 
-class KNoteAlarmDlg : public KDialogBase
-{
+class KNoteAlarmDlg : public KDialogBase {
     Q_OBJECT
 public:
-    KNoteAlarmDlg( const QString& caption, QWidget *parent=0, const char *name=0 );
+    KNoteAlarmDlg(const QString &caption, QWidget *parent = 0, const char *name = 0);
 
-    void setIncidence( KCal::Journal *journal );
+    void setIncidence(KCal::Journal *journal);
 
 protected:
     virtual void slotOk();
 
 private slots:
-    void slotButtonChanged( int id );
+    void slotButtonChanged(int id);
 
 private:
     QButtonGroup  *m_buttons;

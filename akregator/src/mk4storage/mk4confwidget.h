@@ -30,16 +30,15 @@
 namespace Akregator {
 namespace Backend {
 
-class MK4ConfWidget : public MK4ConfWidgetBase
-{
+class MK4ConfWidget : public MK4ConfWidgetBase {
     Q_OBJECT
-    public:
-        
-        MK4ConfWidget();
+public:
 
-    public slots:
-        virtual void accept();
-        void slotChkBoxUseDefault(bool checked);
+    MK4ConfWidget();
+
+public slots:
+    virtual void accept();
+    void slotChkBoxUseDefault(bool checked);
 };
 
 }

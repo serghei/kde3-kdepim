@@ -50,64 +50,71 @@
 
 #include <assert.h>
 
-Kleo::QGpgMESignJob::QGpgMESignJob( GpgME::Context * context )
-  : SignJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESignJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMESignJob::QGpgMESignJob(GpgME::Context *context)
+    : SignJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMESignJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMESignJob::~QGpgMESignJob() {
+Kleo::QGpgMESignJob::~QGpgMESignJob()
+{
 }
 
-GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
-					 const QByteArray & plainText ) {
-  assert( !mInData );
-  assert( !mOutData );
+GpgME::Error Kleo::QGpgMESignJob::setup(const std::vector<GpgME::Key> &signers,
+                                        const QByteArray &plainText)
+{
+    assert(!mInData);
+    assert(!mOutData);
 
-  createInData( plainText );
-  createOutData();
+    createInData(plainText);
+    createOutData();
 
-  return setSigningKeys( signers );
+    return setSigningKeys(signers);
 }
 
-GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
-					 const QByteArray & plainText,
-					 GpgME::Context::SignatureMode mode ) {
-  if ( const GpgME::Error error = setup( signers, plainText ) ) {
-    deleteLater();
-    return error;
-  }
+GpgME::Error Kleo::QGpgMESignJob::start(const std::vector<GpgME::Key> &signers,
+                                        const QByteArray &plainText,
+                                        GpgME::Context::SignatureMode mode)
+{
+    if(const GpgME::Error error = setup(signers, plainText))
+    {
+        deleteLater();
+        return error;
+    }
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode );
-						  
-  if ( err )
-    deleteLater();
-  mResult = GpgME::SigningResult( err );
-  return err;
+    const GpgME::Error err = mCtx->startSigning(*mInData, *mOutData, mode);
+
+    if(err)
+        deleteLater();
+    mResult = GpgME::SigningResult(err);
+    return err;
 }
 
-GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & signers,
-						const QByteArray & plainText,
-						GpgME::Context::SignatureMode mode,
-						QByteArray & signature ) {
-  if ( const GpgME::Error err = setup( signers, plainText ) )
-    return mResult = GpgME::SigningResult( 0, err );
-  mResult = mCtx->sign( *mInData, *mOutData, mode );
-  signature = mOutDataDataProvider->data();
-  getAuditLog();
-  return mResult;
+GpgME::SigningResult Kleo::QGpgMESignJob::exec(const std::vector<GpgME::Key> &signers,
+        const QByteArray &plainText,
+        GpgME::Context::SignatureMode mode,
+        QByteArray &signature)
+{
+    if(const GpgME::Error err = setup(signers, plainText))
+        return mResult = GpgME::SigningResult(0, err);
+    mResult = mCtx->sign(*mInData, *mOutData, mode);
+    signature = mOutDataDataProvider->data();
+    getAuditLog();
+    return mResult;
 }
 
-void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->signingResult(), mOutDataDataProvider->data() );
+void Kleo::QGpgMESignJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mResult = mCtx->signingResult(), mOutDataDataProvider->data());
 }
 
-void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( mResult.error() && !mResult.error().isCanceled() )
-      Kleo::MessageBox::error( parent, mResult, this, caption );
+void Kleo::QGpgMESignJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if(mResult.error() && !mResult.error().isCanceled())
+        Kleo::MessageBox::error(parent, mResult, this, caption);
 }
 
 #include "qgpgmesignjob.moc"

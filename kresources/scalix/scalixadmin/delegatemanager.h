@@ -26,23 +26,22 @@
 
 #include "jobs.h"
 
-class DelegateManager : public QObject
-{
-  Q_OBJECT
+class DelegateManager : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     DelegateManager();
     ~DelegateManager();
 
-    void addDelegate( const Scalix::Delegate &delegate );
+    void addDelegate(const Scalix::Delegate &delegate);
     void clear();
 
     Scalix::Delegate::List delegates() const;
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     Scalix::Delegate::List mDelegates;
 };
 

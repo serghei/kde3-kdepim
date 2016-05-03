@@ -26,8 +26,7 @@
 class KNotesApp;
 
 
-class Application : public KUniqueApplication
-{
+class Application : public KUniqueApplication {
 public:
     Application();
     ~Application();

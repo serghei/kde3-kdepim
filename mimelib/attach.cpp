@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -34,11 +34,11 @@ MessageWithAttachments::MessageWithAttachments()
 
 
 MessageWithAttachments::~MessageWithAttachments()
-{   
+{
 }
 
 
-void MessageWithAttachments::SetText(const DwString& aStr)
+void MessageWithAttachments::SetText(const DwString &aStr)
 {
     // Create a body part and set the necessary fields
 
@@ -64,14 +64,14 @@ int MessageWithAttachments::NumberOfAttachments() const
 }
 
 
-void MessageWithAttachments::Attach7bitFile(const char* aFilename,
-    int aType, int aSubtype)
+void MessageWithAttachments::Attach7bitFile(const char *aFilename,
+        int aType, int aSubtype)
 {
     // Get the file contents
 
     DwString str;
     PutFileInString(aFilename, str);
-    
+
     // Create a body part and set the necessary fields
 
     MultipartBodyPart part;
@@ -81,42 +81,44 @@ void MessageWithAttachments::Attach7bitFile(const char* aFilename,
 
     // Set content-disposition to attachment, with filename parameter
     // (see RFC-1806 for information on this *experimental* header field)
-    
+
     DwString contDisp = "attachment; filename=";
     contDisp += '\"';
     contDisp += aFilename;
     contDisp += '\"';
     part.SetContentDisposition(contDisp);
-    
+
     // Set the file contents as the body of the body part
 
     part.SetBody(str);
 
     // Make sure this is not the first part, since that is reserved for
     // the text
-    
-    if (NumberOfParts() == 0) {
+
+    if(NumberOfParts() == 0)
+    {
         SetBodyPart(1, part);
     }
-    else {
+    else
+    {
         AddBodyPart(part);
     }
 }
 
 
-void MessageWithAttachments::Attach8bitFile(const char* aFilename,
-    int aType, int aSubtype)
+void MessageWithAttachments::Attach8bitFile(const char *aFilename,
+        int aType, int aSubtype)
 {
     // Get the file contents
 
     DwString str;
     PutFileInString(aFilename, str);
-    
+
     // Encode using quoted-printable encoding
 
     DwString encStr;
     DwEncodeQuotedPrintable(str, encStr);
-    
+
     // Create a body part and set the necessary fields
 
     MultipartBodyPart part;
@@ -126,7 +128,7 @@ void MessageWithAttachments::Attach8bitFile(const char* aFilename,
 
     // Set content-disposition to attachment, with filename parameter
     // (see RFC-1806 for information on this *experimental* header field)
-    
+
     DwString contDisp = "attachment; filename=";
     contDisp += '\"';
     contDisp += aFilename;
@@ -139,29 +141,31 @@ void MessageWithAttachments::Attach8bitFile(const char* aFilename,
 
     // Make sure this is not the first part, since that is reserved for
     // the text
-    
-    if (NumberOfParts() == 0) {
+
+    if(NumberOfParts() == 0)
+    {
         SetBodyPart(1, part);
     }
-    else {
+    else
+    {
         AddBodyPart(part);
     }
 }
 
 
-void MessageWithAttachments::AttachBinaryFile(const char* aFilename,
-    int aType, int aSubtype)
+void MessageWithAttachments::AttachBinaryFile(const char *aFilename,
+        int aType, int aSubtype)
 {
     // Get the file contents
 
     DwString str;
     PutFileInString(aFilename, str);
-    
+
     // Encode using base64 encoding
 
     DwString encStr;
     DwEncodeBase64(str, encStr);
-    
+
     // Create a body part and set the necessary fields
 
     MultipartBodyPart part;
@@ -171,7 +175,7 @@ void MessageWithAttachments::AttachBinaryFile(const char* aFilename,
 
     // Set content-disposition to attachment, with filename parameter
     // (see RFC-1806 for information on this *experimental* header field)
-    
+
     DwString contDisp = "attachment; filename=";
     contDisp += '\"';
     contDisp += aFilename;
@@ -184,23 +188,26 @@ void MessageWithAttachments::AttachBinaryFile(const char* aFilename,
 
     // Make sure this is not the first part, since that is reserved for
     // the text
-    
-    if (NumberOfParts() == 0) {
+
+    if(NumberOfParts() == 0)
+    {
         SetBodyPart(1, part);
     }
-    else {
+    else
+    {
         AddBodyPart(part);
     }
 }
 
 
-int MessageWithAttachments::PutFileInString(const char* aFilename, 
-    DwString& str)
+int MessageWithAttachments::PutFileInString(const char *aFilename,
+        DwString &str)
 {
     // Get the file size
     struct stat statBuf;
     int k = stat(aFilename, &statBuf);
-    if (k < 0) {
+    if(k < 0)
+    {
         str = "";
         return -1;
     }
@@ -209,20 +216,23 @@ int MessageWithAttachments::PutFileInString(const char* aFilename,
     // Allocate a buffer
 
     int bufSize = fileSize + 8; // a little elbow room added
-    char* buf = new char[bufSize];
+    char *buf = new char[bufSize];
 
     // Read the file into the buffer
 
-    FILE* fp = fopen(aFilename, "rb");
-    if (fp == 0) {
+    FILE *fp = fopen(aFilename, "rb");
+    if(fp == 0)
+    {
         delete[] buf;
         str = "";
         return -1;
     }
     int len = 0;
-    while (1) {
+    while(1)
+    {
         int ch = getc(fp);
-        if (feof(fp) || len == fileSize) {
+        if(feof(fp) || len == fileSize)
+        {
             break;
         }
         buf[len++] = ch;

@@ -27,12 +27,10 @@
 
 namespace KWSDL {
 
-class Service
-{
-  public:
-    class Port
-    {
-      public:
+class Service {
+public:
+    class Port {
+    public:
         typedef QValueList<Port> List;
 
         QString mName;
@@ -41,16 +39,22 @@ class Service
     };
 
     Service();
-    Service( const QString &name );
+    Service(const QString &name);
 
-    void setName( const QString &name ) { mName = name; }
-    QString name() const { return mName; }
+    void setName(const QString &name)
+    {
+        mName = name;
+    }
+    QString name() const
+    {
+        return mName;
+    }
 
-    void addPort( const Port &port );
-    Port port( const QString &name ) const;
+    void addPort(const Port &port);
+    Port port(const QString &name) const;
     Port::List ports() const;
 
-  private:
+private:
     QString mName;
     QMap<QString, Port> mPorts;
 };

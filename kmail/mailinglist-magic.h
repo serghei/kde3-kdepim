@@ -8,8 +8,7 @@
 class KMMessage;
 class KConfig;
 
-namespace KMail
-{
+namespace KMail {
 
 /**
  * Class is used for all Mailing List handling inside
@@ -20,64 +19,65 @@ namespace KMail
  *
  * @author Zack Rusin <zack@kde.org>
  */
-class MailingList
-{
+class MailingList {
 public:
-  enum Handler {
-    KMail,
-    Browser
-  };
+    enum Handler
+    {
+        KMail,
+        Browser
+    };
 
-  enum Supports {
-    None         = 0 << 0,
-    Post         = 1 << 0,
-    Subscribe    = 1 << 1,
-    Unsubscribe  = 1 << 2,
-    Help         = 1 << 3,
-    Archive      = 1 << 4,
-    Id           = 1 << 5
-  };
+    enum Supports
+    {
+        None         = 0 << 0,
+        Post         = 1 << 0,
+        Subscribe    = 1 << 1,
+        Unsubscribe  = 1 << 2,
+        Help         = 1 << 3,
+        Archive      = 1 << 4,
+        Id           = 1 << 5
+    };
 public:
-  static MailingList detect( const KMMessage* msg );
-  static QString name( const KMMessage  *message, QCString &header_name,
-		       QString &header_value );
+    static MailingList detect(const KMMessage *msg);
+    static QString name(const KMMessage  *message, QCString &header_name,
+                        QString &header_value);
 public:
-  MailingList();
+    MailingList();
 
-  int features() const;
+    int features() const;
 
-  void setHandler( Handler han );
-  Handler handler() const;
+    void setHandler(Handler han);
+    Handler handler() const;
 
-  void setPostURLS ( const KURL::List& );
-  KURL::List postURLS() const;
+    void setPostURLS(const KURL::List &);
+    KURL::List postURLS() const;
 
-  void setSubscribeURLS( const KURL::List& );
-  KURL::List subscribeURLS() const;
+    void setSubscribeURLS(const KURL::List &);
+    KURL::List subscribeURLS() const;
 
-  void setUnsubscribeURLS ( const KURL::List& );
-  KURL::List unsubscribeURLS() const;
+    void setUnsubscribeURLS(const KURL::List &);
+    KURL::List unsubscribeURLS() const;
 
-  void setHelpURLS( const KURL::List& );
-  KURL::List helpURLS() const;
+    void setHelpURLS(const KURL::List &);
+    KURL::List helpURLS() const;
 
-  void setArchiveURLS( const KURL::List& );
-  KURL::List archiveURLS() const;
+    void setArchiveURLS(const KURL::List &);
+    KURL::List archiveURLS() const;
 
-  void setId( const QString& );
-  QString id() const;
+    void setId(const QString &);
+    QString id() const;
 
-  void writeConfig( KConfig* config ) const;
-  void readConfig( KConfig* config );
+    void writeConfig(KConfig *config) const;
+    void readConfig(KConfig *config);
 private:
-  int        mFeatures;
-  Handler    mHandler;
-  KURL::List mPostURLS;
-  KURL::List mSubscribeURLS;
-  KURL::List mUnsubscribeURLS;
-  KURL::List mHelpURLS;
-  KURL::List mArchiveURLS;
-  QString    mId;
+    int        mFeatures;
+    Handler    mHandler;
+    KURL::List mPostURLS;
+    KURL::List mSubscribeURLS;
+    KURL::List mUnsubscribeURLS;
+    KURL::List mHelpURLS;
+    KURL::List mArchiveURLS;
+    QString    mId;
 };
 
 }

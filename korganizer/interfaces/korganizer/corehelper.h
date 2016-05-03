@@ -32,20 +32,19 @@ class KCalendarSytstem;
 
 namespace KOrg {
 
-class CoreHelper
-{
-  public:
+class CoreHelper {
+public:
     CoreHelper() {}
     virtual ~CoreHelper() {}
-    
+
     virtual QColor defaultEventColor() = 0;
-    virtual QColor textColor( const QColor &bgColor ) = 0;
-    virtual QColor categoryColor( const QStringList &cats ) = 0;
-    virtual QString holidayString( const QDate &dt ) = 0;
+    virtual QColor textColor(const QColor &bgColor) = 0;
+    virtual QColor categoryColor(const QStringList &cats) = 0;
+    virtual QString holidayString(const QDate &dt) = 0;
     virtual QTime dayStart() = 0;
     virtual const KCalendarSystem *calendarSystem() = 0;
     virtual KOrg::PrintPlugin::List loadPrintPlugins() = 0;
-    virtual bool isWorkingDay( const QDate &dt ) = 0;
+    virtual bool isWorkingDay(const QDate &dt) = 0;
 };
 
 }

@@ -34,26 +34,26 @@ using namespace KOrg;
 #include "projectview.moc"
 
 class ProjectViewFactory : public KOrg::PartFactory {
-  public:
+public:
     KOrg::Part *create(KOrg::MainWindow *parent, const char *name)
     {
-      KGlobal::locale()->insertCatalogue( "kgantt" );
-      return new ProjectView(parent,name);
+        KGlobal::locale()->insertCatalogue("kgantt");
+        return new ProjectView(parent, name);
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY( libkorg_projectview, ProjectViewFactory )
+K_EXPORT_COMPONENT_FACTORY(libkorg_projectview, ProjectViewFactory)
 
 
 ProjectView::ProjectView(KOrg::MainWindow *parent, const char *name) :
-  KOrg::Part(parent,name), mView(0)
+    KOrg::Part(parent, name), mView(0)
 {
-  setInstance( new KInstance( "korganizer" ) );
+    setInstance(new KInstance("korganizer"));
 
-  setXMLFile("plugins/projectviewui.rc");
+    setXMLFile("plugins/projectviewui.rc");
 
-  new KAction(i18n("&Project"), "project", 0, this, SLOT(showView()),
-              actionCollection(), "view_project");
+    new KAction(i18n("&Project"), "project", 0, this, SLOT(showView()),
+                actionCollection(), "view_project");
 }
 
 ProjectView::~ProjectView()
@@ -62,20 +62,21 @@ ProjectView::~ProjectView()
 
 QString ProjectView::info()
 {
-  return i18n("This plugin provides a Gantt diagram as project view.");
+    return i18n("This plugin provides a Gantt diagram as project view.");
 }
 
 QString ProjectView::shortInfo()
 {
-  return i18n("Project View Plugin");
+    return i18n("Project View Plugin");
 }
 
 void ProjectView::showView()
 {
-  if (!mView) {
-    mView = new KOProjectView(mainWindow()->view()->calendar(),
-                              mainWindow()->view());
-    mainWindow()->view()->addView(mView);
-  }
-  mainWindow()->view()->showView(mView);
+    if(!mView)
+    {
+        mView = new KOProjectView(mainWindow()->view()->calendar(),
+                                  mainWindow()->view());
+        mainWindow()->view()->addView(mView);
+    }
+    mainWindow()->view()->showView(mView);
 }

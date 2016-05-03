@@ -31,26 +31,25 @@ class KComboBox;
 
 class QPushButton;
 
-class KeyWidget : public QWidget
-{
-  Q_OBJECT
+class KeyWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    KeyWidget( QWidget *parent, const char *name = 0 );
+public:
+    KeyWidget(QWidget *parent, const char *name = 0);
     ~KeyWidget();
 
-    void setKeys( const KABC::Key::List &list );
+    void setKeys(const KABC::Key::List &list);
     KABC::Key::List keys() const;
 
-  signals:
+signals:
     void changed();
 
-  private slots:
+private slots:
     void addKey();
     void removeKey();
     void exportKey();
 
-  private:
+private:
     void updateKeyCombo();
 
     KComboBox *mKeyCombo;

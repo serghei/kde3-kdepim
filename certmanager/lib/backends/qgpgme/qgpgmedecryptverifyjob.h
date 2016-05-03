@@ -41,34 +41,35 @@
 #include <kdepimmacros.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
+class Error;
+class Context;
 }
 
 namespace Kleo {
 
-  class KDE_EXPORT QGpgMEDecryptVerifyJob : public DecryptVerifyJob, private QGpgMEJob {
+class KDE_EXPORT QGpgMEDecryptVerifyJob : public DecryptVerifyJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEDecryptVerifyJob( GpgME::Context * context );
+public:
+    QGpgMEDecryptVerifyJob(GpgME::Context *context);
     ~QGpgMEDecryptVerifyJob();
 
     /*! \reimp from DecryptVerifyJob */
-    GpgME::Error start( const QByteArray & cipherText );
+    GpgME::Error start(const QByteArray &cipherText);
 
     /*! \reimp from DecryptVerifyJob */
-    std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
-      exec( const QByteArray & cipherText, QByteArray & plainText );
+    std::pair<GpgME::DecryptionResult, GpgME::VerificationResult>
+    exec(const QByteArray &cipherText, QByteArray &plainText);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & );
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    void setup(const QByteArray &);
+};
 
 }
 

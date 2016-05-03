@@ -44,25 +44,25 @@
 
 namespace Akregator {
 
-TrayIcon* TrayIcon::m_instance = 0;
+TrayIcon *TrayIcon::m_instance = 0;
 
-TrayIcon* TrayIcon::getInstance()
+TrayIcon *TrayIcon::getInstance()
 {
     return m_instance;
 }
 
-void TrayIcon::setInstance(TrayIcon* trayIcon)
+void TrayIcon::setInstance(TrayIcon *trayIcon)
 {
     m_instance = trayIcon;
 }
 
 
 TrayIcon::TrayIcon(QWidget *parent, const char *name)
-        : KSystemTray(parent, name), m_unread(0)
+    : KSystemTray(parent, name), m_unread(0)
 {
-    m_defaultIcon=KSystemTray::loadIcon("akregator");
-    QPixmap m_unreadIcon=KSystemTray::loadIcon("akregator_empty");
-    m_lightIconImage=m_unreadIcon.convertToImage();
+    m_defaultIcon = KSystemTray::loadIcon("akregator");
+    QPixmap m_unreadIcon = KSystemTray::loadIcon("akregator_empty");
+    m_lightIconImage = m_unreadIcon.convertToImage();
     KIconEffect::deSaturate(m_lightIconImage, 0.60);
     setPixmap(m_defaultIcon);
     QToolTip::add(this, i18n("Akregator - RSS Feed Reader"));
@@ -73,8 +73,10 @@ TrayIcon::~TrayIcon()
 {}
 
 
-void TrayIcon::mousePressEvent(QMouseEvent *e) {
-    if (e->button() == LeftButton) {
+void TrayIcon::mousePressEvent(QMouseEvent *e)
+{
+    if(e->button() == LeftButton)
+    {
         emit showPart();
     }
 
@@ -91,31 +93,31 @@ QPixmap TrayIcon::takeScreenshot() const
     int th = height();
     int w = desktopWidth / 4;
     int h = desktopHeight / 9;
-    int x = g.x() + tw/2 - w/2; // Center the rectange in the systray icon
-    int y = g.y() + th/2 - h/2;
-    if (x < 0)
+    int x = g.x() + tw / 2 - w / 2; // Center the rectange in the systray icon
+    int y = g.y() + th / 2 - h / 2;
+    if(x < 0)
         x = 0; // Move the rectangle to stay in the desktop limits
-    if (y < 0)
+    if(y < 0)
         y = 0;
-    if (x + w > desktopWidth)
+    if(x + w > desktopWidth)
         x = desktopWidth - w;
-    if (y + h > desktopHeight)
+    if(y + h > desktopHeight)
         y = desktopHeight - h;
 
-        // Grab the desktop and draw a circle arround the icon:
+    // Grab the desktop and draw a circle arround the icon:
     QPixmap shot = QPixmap::grabWindow(qt_xrootwin(), x, y, w, h);
     QPainter painter(&shot);
     const int MARGINS = 6;
     const int WIDTH   = 3;
-    int ax = g.x() - x - MARGINS -1;
-    int ay = g.y() - y - MARGINS -1;
-    painter.setPen( QPen(Qt::red/*KApplication::palette().active().highlight()*/, WIDTH) );
-    painter.drawArc(ax, ay, tw + 2*MARGINS, th + 2*MARGINS, 0, 16*360);
+    int ax = g.x() - x - MARGINS - 1;
+    int ay = g.y() - y - MARGINS - 1;
+    painter.setPen(QPen(Qt::red/*KApplication::palette().active().highlight()*/, WIDTH));
+    painter.drawArc(ax, ay, tw + 2 * MARGINS, th + 2 * MARGINS, 0, 16 * 360);
     painter.end();
 
     // Paint the border
     const int BORDER = 1;
-    QPixmap finalShot(w + 2*BORDER, h + 2*BORDER);
+    QPixmap finalShot(w + 2 * BORDER, h + 2 * BORDER);
     finalShot.fill(KApplication::palette().active().foreground());
     painter.begin(&finalShot);
     painter.drawPixmap(BORDER, BORDER, shot);
@@ -125,31 +127,31 @@ QPixmap TrayIcon::takeScreenshot() const
 
 void TrayIcon::slotSetUnread(int unread)
 {
-    if (unread==m_unread)
+    if(unread == m_unread)
         return;
-    
-    m_unread=unread;
-    
+
+    m_unread = unread;
+
     QToolTip::remove(this);
     QToolTip::add(this, i18n("Akregator - 1 unread article", "Akregator - %n unread articles", unread > 0 ? unread : 0));
-    
-    if (unread <= 0)
-    {    
+
+    if(unread <= 0)
+    {
         setPixmap(m_defaultIcon);
     }
     else
-    {               
+    {
         // from KMSystemTray
         int oldW = pixmap()->size().width();
         int oldH = pixmap()->size().height();
 
-        QString uStr=QString::number( unread );
-        QFont f=KGlobalSettings::generalFont();
+        QString uStr = QString::number(unread);
+        QFont f = KGlobalSettings::generalFont();
         f.setBold(true);
-        float pointSize=f.pointSizeFloat();
+        float pointSize = f.pointSizeFloat();
         QFontMetrics fm(f);
-        int w=fm.width(uStr);
-        if( w > (oldW) )
+        int w = fm.width(uStr);
+        if(w > (oldW))
         {
             pointSize *= float(oldW) / float(w);
             f.setPointSizeFloat(pointSize);
@@ -163,10 +165,10 @@ void TrayIcon::slotSetUnread(int unread)
         p.drawText(pix.rect(), Qt::AlignCenter, uStr);
 
         pix.setMask(pix.createHeuristicMask());
-        QImage img=pix.convertToImage();
+        QImage img = pix.convertToImage();
 
         // overlay
-        QImage overlayImg=m_lightIconImage.copy();
+        QImage overlayImg = m_lightIconImage.copy();
         KIconEffect::overlay(overlayImg, img);
 
         QPixmap icon;
@@ -177,13 +179,13 @@ void TrayIcon::slotSetUnread(int unread)
 
 void TrayIcon::viewButtonClicked()
 {
-	QWidget *p=static_cast<QWidget*>(parent());
-	KWin::forceActiveWindow(p->winId());
+    QWidget *p = static_cast<QWidget *>(parent());
+    KWin::forceActiveWindow(p->winId());
 }
 
 void TrayIcon::settingsChanged()
 {
-    if ( Settings::showTrayIcon() )
+    if(Settings::showTrayIcon())
         show();
     else
         hide();

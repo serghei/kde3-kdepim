@@ -52,216 +52,215 @@ namespace KMail {
 class SieveConfigEditor;
 class FolderRequester;
 
-class AccountDialog : public KDialogBase
-{
-  Q_OBJECT
+class AccountDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    AccountDialog( const QString & caption, KMAccount *account,
-		   QWidget *parent=0, const char *name=0, bool modal=true );
+public:
+    AccountDialog(const QString &caption, KMAccount *account,
+                  QWidget *parent = 0, const char *name = 0, bool modal = true);
     virtual ~AccountDialog();
-  private:
+private:
     struct LocalWidgets
     {
-      QLabel       *titleLabel;
-      QLineEdit    *nameEdit;
-      QComboBox    *locationEdit;
-      QRadioButton *lockMutt;
-      QRadioButton *lockMuttPriv;
-      QRadioButton *lockProcmail;
-      QComboBox    *procmailLockFileName;
-      QRadioButton *lockFcntl;
-      QRadioButton *lockNone;
-      QLineEdit    *precommand;
+        QLabel       *titleLabel;
+        QLineEdit    *nameEdit;
+        QComboBox    *locationEdit;
+        QRadioButton *lockMutt;
+        QRadioButton *lockMuttPriv;
+        QRadioButton *lockProcmail;
+        QComboBox    *procmailLockFileName;
+        QRadioButton *lockFcntl;
+        QRadioButton *lockNone;
+        QLineEdit    *precommand;
 #if 0
-      QCheckBox    *resourceCheck;
-      QPushButton  *resourceClearButton;
-      QPushButton  *resourceClearPastButton;
+        QCheckBox    *resourceCheck;
+        QPushButton  *resourceClearButton;
+        QPushButton  *resourceClearPastButton;
 #endif
-      QCheckBox    *includeInCheck;
-      QCheckBox    *intervalCheck;
-      QLabel       *intervalLabel;
-      KIntNumInput *intervalSpin;
-      QComboBox    *folderCombo;
-      //QComboBox    *identityCombo;
-      KPIM::IdentityCombo    *identityCombo;
-      QLabel       *identityLabel;
+        QCheckBox    *includeInCheck;
+        QCheckBox    *intervalCheck;
+        QLabel       *intervalLabel;
+        KIntNumInput *intervalSpin;
+        QComboBox    *folderCombo;
+        //QComboBox    *identityCombo;
+        KPIM::IdentityCombo    *identityCombo;
+        QLabel       *identityLabel;
     };
 
     struct MaildirWidgets
     {
-      QLabel       *titleLabel;
-      QLineEdit    *nameEdit;
-      QComboBox    *locationEdit;
-      QLineEdit    *precommand;
+        QLabel       *titleLabel;
+        QLineEdit    *nameEdit;
+        QComboBox    *locationEdit;
+        QLineEdit    *precommand;
 #if 0
-      QCheckBox    *resourceCheck;
-      QPushButton  *resourceClearButton;
-      QPushButton  *resourceClearPastButton;
+        QCheckBox    *resourceCheck;
+        QPushButton  *resourceClearButton;
+        QPushButton  *resourceClearPastButton;
 #endif
-      QCheckBox    *includeInCheck;
-      QCheckBox    *intervalCheck;
-      QLabel       *intervalLabel;
-      KIntNumInput *intervalSpin;
-      QComboBox    *folderCombo;
-      //QComboBox    *identityCombo;
-      KPIM::IdentityCombo    *identityCombo;
-      QLabel       *identityLabel;
+        QCheckBox    *includeInCheck;
+        QCheckBox    *intervalCheck;
+        QLabel       *intervalLabel;
+        KIntNumInput *intervalSpin;
+        QComboBox    *folderCombo;
+        //QComboBox    *identityCombo;
+        KPIM::IdentityCombo    *identityCombo;
+        QLabel       *identityLabel;
     };
 
     struct PopWidgets
     {
-      QLabel       *titleLabel;
-      QLineEdit    *nameEdit;
-      QLineEdit    *loginEdit;
-      QLineEdit    *passwordEdit;
-      QLineEdit    *hostEdit;
-      QLineEdit    *portEdit;
-      QLineEdit    *precommand;
-      QButtonGroup *encryptionGroup;
-      QRadioButton *encryptionNone;
-      QRadioButton *encryptionSSL;
-      QRadioButton *encryptionTLS;
-      QButtonGroup *authGroup;
-      QRadioButton *authUser;
-      QRadioButton *authPlain;
-      QRadioButton *authLogin;
-      QRadioButton *authCRAM_MD5;
-      QRadioButton *authDigestMd5;
-      QRadioButton *authNTLM;
-      QRadioButton *authGSSAPI;
-      QRadioButton *authAPOP;
+        QLabel       *titleLabel;
+        QLineEdit    *nameEdit;
+        QLineEdit    *loginEdit;
+        QLineEdit    *passwordEdit;
+        QLineEdit    *hostEdit;
+        QLineEdit    *portEdit;
+        QLineEdit    *precommand;
+        QButtonGroup *encryptionGroup;
+        QRadioButton *encryptionNone;
+        QRadioButton *encryptionSSL;
+        QRadioButton *encryptionTLS;
+        QButtonGroup *authGroup;
+        QRadioButton *authUser;
+        QRadioButton *authPlain;
+        QRadioButton *authLogin;
+        QRadioButton *authCRAM_MD5;
+        QRadioButton *authDigestMd5;
+        QRadioButton *authNTLM;
+        QRadioButton *authGSSAPI;
+        QRadioButton *authAPOP;
 
-      QPushButton  *checkCapabilities;
-      QCheckBox    *usePipeliningCheck;
-      QCheckBox    *storePasswordCheck;
-      QCheckBox    *leaveOnServerCheck;
-      QCheckBox    *leaveOnServerDaysCheck;
-      KIntNumInput *leaveOnServerDaysSpin;
-      QCheckBox    *leaveOnServerCountCheck;
-      KIntNumInput *leaveOnServerCountSpin;
-      QCheckBox    *leaveOnServerSizeCheck;
-      KIntNumInput *leaveOnServerSizeSpin;
+        QPushButton  *checkCapabilities;
+        QCheckBox    *usePipeliningCheck;
+        QCheckBox    *storePasswordCheck;
+        QCheckBox    *leaveOnServerCheck;
+        QCheckBox    *leaveOnServerDaysCheck;
+        KIntNumInput *leaveOnServerDaysSpin;
+        QCheckBox    *leaveOnServerCountCheck;
+        KIntNumInput *leaveOnServerCountSpin;
+        QCheckBox    *leaveOnServerSizeCheck;
+        KIntNumInput *leaveOnServerSizeSpin;
 #if 0
-      QCheckBox    *resourceCheck;
-      QPushButton  *resourceClearButton;
-      QPushButton  *resourceClearPastButton;
+        QCheckBox    *resourceCheck;
+        QPushButton  *resourceClearButton;
+        QPushButton  *resourceClearPastButton;
 #endif
-      QCheckBox    *includeInCheck;
-      QCheckBox    *intervalCheck;
-      QCheckBox    *filterOnServerCheck;
-      QLabel       *intervalLabel;
-      KIntNumInput *intervalSpin;
-      KIntNumInput *filterOnServerSizeSpin;
-      QComboBox    *folderCombo;
-      //QComboBox    *identityCombo;
-      KPIM::IdentityCombo    *identityCombo;
-      QLabel       *identityLabel;
+        QCheckBox    *includeInCheck;
+        QCheckBox    *intervalCheck;
+        QCheckBox    *filterOnServerCheck;
+        QLabel       *intervalLabel;
+        KIntNumInput *intervalSpin;
+        KIntNumInput *filterOnServerSizeSpin;
+        QComboBox    *folderCombo;
+        //QComboBox    *identityCombo;
+        KPIM::IdentityCombo    *identityCombo;
+        QLabel       *identityLabel;
     };
 
     struct ImapWidgets
     {
-      QLabel       *titleLabel;
-      QLineEdit    *nameEdit;
-      QLineEdit    *loginEdit;
-      QLineEdit    *passwordEdit;
-      QLineEdit    *hostEdit;
-      QLineEdit    *portEdit;
+        QLabel       *titleLabel;
+        QLineEdit    *nameEdit;
+        QLineEdit    *loginEdit;
+        QLineEdit    *passwordEdit;
+        QLineEdit    *hostEdit;
+        QLineEdit    *portEdit;
 #if 0
-      QCheckBox    *resourceCheck;
-      QPushButton  *resourceClearButton;
-      QPushButton  *resourceClearPastButton;
+        QCheckBox    *resourceCheck;
+        QPushButton  *resourceClearButton;
+        QPushButton  *resourceClearPastButton;
 #endif
-      QCheckBox    *autoExpungeCheck;     // only used by normal (online) IMAP
-      QCheckBox    *hiddenFoldersCheck;
-      QCheckBox    *subscribedFoldersCheck;
-      QCheckBox    *locallySubscribedFoldersCheck;
-      QCheckBox    *loadOnDemandCheck;
-      QCheckBox    *storePasswordCheck;
-      QCheckBox    *progressDialogCheck;  // only used by Disconnected IMAP
-      QCheckBox    *includeInCheck;
-      QCheckBox    *intervalCheck;
-      QCheckBox    *listOnlyOpenCheck;
-      QLabel       *intervalLabel;
-      KIntNumInput *intervalSpin;
-      QButtonGroup *encryptionGroup;
-      QRadioButton *encryptionNone;
-      QRadioButton *encryptionSSL;
-      QRadioButton *encryptionTLS;
-      QButtonGroup *authGroup;
-      QRadioButton *authUser;
-      QRadioButton *authPlain;
-      QRadioButton *authLogin;
-      QRadioButton *authCramMd5;
-      QRadioButton *authDigestMd5;
-      QRadioButton *authGSSAPI;
-      QRadioButton *authNTLM;
-      QRadioButton *authAnonymous;
-      QPushButton  *checkCapabilities;
-      FolderRequester *trashCombo;
-      KLineEdit    *personalNS;
-      KLineEdit    *otherUsersNS;
-      KLineEdit    *sharedNS;
-      QToolButton  *editPNS;
-      QToolButton  *editONS;
-      QToolButton  *editSNS;
-      ImapAccountBase::nsDelimMap nsMap;
-      KPIM::IdentityCombo    *identityCombo;
-      QLabel       *identityLabel;
+        QCheckBox    *autoExpungeCheck;     // only used by normal (online) IMAP
+        QCheckBox    *hiddenFoldersCheck;
+        QCheckBox    *subscribedFoldersCheck;
+        QCheckBox    *locallySubscribedFoldersCheck;
+        QCheckBox    *loadOnDemandCheck;
+        QCheckBox    *storePasswordCheck;
+        QCheckBox    *progressDialogCheck;  // only used by Disconnected IMAP
+        QCheckBox    *includeInCheck;
+        QCheckBox    *intervalCheck;
+        QCheckBox    *listOnlyOpenCheck;
+        QLabel       *intervalLabel;
+        KIntNumInput *intervalSpin;
+        QButtonGroup *encryptionGroup;
+        QRadioButton *encryptionNone;
+        QRadioButton *encryptionSSL;
+        QRadioButton *encryptionTLS;
+        QButtonGroup *authGroup;
+        QRadioButton *authUser;
+        QRadioButton *authPlain;
+        QRadioButton *authLogin;
+        QRadioButton *authCramMd5;
+        QRadioButton *authDigestMd5;
+        QRadioButton *authGSSAPI;
+        QRadioButton *authNTLM;
+        QRadioButton *authAnonymous;
+        QPushButton  *checkCapabilities;
+        FolderRequester *trashCombo;
+        KLineEdit    *personalNS;
+        KLineEdit    *otherUsersNS;
+        KLineEdit    *sharedNS;
+        QToolButton  *editPNS;
+        QToolButton  *editONS;
+        QToolButton  *editSNS;
+        ImapAccountBase::nsDelimMap nsMap;
+        KPIM::IdentityCombo    *identityCombo;
+        QLabel       *identityLabel;
     };
 
-  private slots:
+private slots:
     virtual void slotOk();
     void slotLocationChooser();
     void slotMaildirChooser();
-    void slotEnablePopInterval( bool state );
-    void slotEnableImapInterval( bool state );
-    void slotEnableLocalInterval( bool state );
-    void slotEnableMaildirInterval( bool state );
+    void slotEnablePopInterval(bool state);
+    void slotEnableImapInterval(bool state);
+    void slotEnableLocalInterval(bool state);
+    void slotEnableMaildirInterval(bool state);
     void slotFontChanged();
     void slotLeaveOnServerClicked();
-    void slotEnableLeaveOnServerDays( bool state );
-    void slotEnableLeaveOnServerCount( bool state );
-    void slotEnableLeaveOnServerSize( bool state );
+    void slotEnableLeaveOnServerDays(bool state);
+    void slotEnableLeaveOnServerCount(bool state);
+    void slotEnableLeaveOnServerSize(bool state);
     void slotFilterOnServerClicked();
     void slotPipeliningClicked();
     void slotPopEncryptionChanged(int);
     void slotImapEncryptionChanged(int);
     void slotCheckPopCapabilities();
     void slotCheckImapCapabilities();
-    void slotPopCapabilities( const QStringList &, const QStringList & );
-    void slotImapCapabilities( const QStringList &, const QStringList & );
+    void slotPopCapabilities(const QStringList &, const QStringList &);
+    void slotImapCapabilities(const QStringList &, const QStringList &);
     void slotReloadNamespaces();
-    void slotSetupNamespaces( const ImapAccountBase::nsDelimMap& map );
+    void slotSetupNamespaces(const ImapAccountBase::nsDelimMap &map);
     void slotEditPersonalNamespace();
     void slotEditOtherUsersNamespace();
     void slotEditSharedNamespace();
-    void slotConnectionResult( int errorCode, const QString& );
-    void slotLeaveOnServerDaysChanged( int value );
-    void slotLeaveOnServerCountChanged( int value );
-    void slotFilterOnServerSizeChanged( int value );
+    void slotConnectionResult(int errorCode, const QString &);
+    void slotLeaveOnServerDaysChanged(int value);
+    void slotLeaveOnServerCountChanged(int value);
+    void slotFilterOnServerSizeChanged(int value);
 #if 0
     // Moc doesn't understand #if 0, so they are also commented out
     // void slotClearResourceAllocations();
     // void slotClearPastResourceAllocations();
 #endif
 
-  private:
+private:
     void makeLocalAccountPage();
     void makeMaildirAccountPage();
     void makePopAccountPage();
-    void makeImapAccountPage( bool disconnected = false );
+    void makeImapAccountPage(bool disconnected = false);
     void setupSettings();
     void saveSettings();
-    void checkHighest( QButtonGroup * );
-    static unsigned int popCapabilitiesFromStringList( const QStringList & );
-    static unsigned int imapCapabilitiesFromStringList( const QStringList & );
-    void enablePopFeatures( unsigned int );
-    void enableImapAuthMethods( unsigned int );
+    void checkHighest(QButtonGroup *);
+    static unsigned int popCapabilitiesFromStringList(const QStringList &);
+    static unsigned int imapCapabilitiesFromStringList(const QStringList &);
+    void enablePopFeatures(unsigned int);
+    void enableImapAuthMethods(unsigned int);
     void initAccountForConnect();
-    const QString namespaceListToString( const QStringList& list );
+    const QString namespaceListToString(const QStringList &list);
 
-  private:
+private:
     LocalWidgets mLocal;
     MaildirWidgets mMaildir;
     PopWidgets   mPop;
@@ -270,26 +269,28 @@ class AccountDialog : public KDialogBase
     QValueList<QGuardedPtr<KMFolder> > mFolderList;
     QStringList  mFolderNames;
     KMServerTest *mServerTest;
-    enum EncryptionMethods {
-      NoEncryption = 0,
-      SSL = 1,
-      TLS = 2
+    enum EncryptionMethods
+    {
+        NoEncryption = 0,
+        SSL = 1,
+        TLS = 2
     };
-    enum Capabilities {
-      Plain      =   1,
-      Login      =   2,
-      CRAM_MD5   =   4,
-      Digest_MD5 =   8,
-      Anonymous  =  16,
-      APOP       =  32,
-      Pipelining =  64,
-      TOP        = 128,
-      UIDL       = 256,
-      STLS       = 512, // TLS for POP
-      STARTTLS   = 512, // TLS for IMAP
-      GSSAPI     = 1024,
-      NTLM       = 2048,
-      AllCapa    = 0xffffffff
+    enum Capabilities
+    {
+        Plain      =   1,
+        Login      =   2,
+        CRAM_MD5   =   4,
+        Digest_MD5 =   8,
+        Anonymous  =  16,
+        APOP       =  32,
+        Pipelining =  64,
+        TOP        = 128,
+        UIDL       = 256,
+        STLS       = 512, // TLS for POP
+        STARTTLS   = 512, // TLS for IMAP
+        GSSAPI     = 1024,
+        NTLM       = 2048,
+        AllCapa    = 0xffffffff
     };
     unsigned int mCurCapa;
     unsigned int mCapaNormal;
@@ -299,40 +300,41 @@ class AccountDialog : public KDialogBase
     QRegExpValidator *mValidator;
 };
 
-class NamespaceLineEdit: public KLineEdit
-{
-  Q_OBJECT
+class NamespaceLineEdit: public KLineEdit {
+    Q_OBJECT
 
-  public:
-    NamespaceLineEdit( QWidget* parent );
+public:
+    NamespaceLineEdit(QWidget *parent);
 
-    const QString& lastText() { return mLastText; }
+    const QString &lastText()
+    {
+        return mLastText;
+    }
 
-  public slots:
-    virtual void setText ( const QString & );
+public slots:
+    virtual void setText(const QString &);
 
-  private:
+private:
     QString mLastText;
 };
 
-class NamespaceEditDialog: public KDialogBase
-{
-  Q_OBJECT
+class NamespaceEditDialog: public KDialogBase {
+    Q_OBJECT
 
-  public:
-    NamespaceEditDialog( QWidget* parent, ImapAccountBase::imapNamespace type,
-        ImapAccountBase::nsDelimMap* map );
+public:
+    NamespaceEditDialog(QWidget *parent, ImapAccountBase::imapNamespace type,
+                        ImapAccountBase::nsDelimMap *map);
 
-  protected slots:
+protected slots:
     void slotOk();
-    void slotRemoveEntry( int );
+    void slotRemoveEntry(int);
 
-  private:
+private:
     ImapAccountBase::imapNamespace mType;
-    ImapAccountBase::nsDelimMap* mNamespaceMap;
+    ImapAccountBase::nsDelimMap *mNamespaceMap;
     ImapAccountBase::namespaceDelim mDelimMap;
-    QMap<int, NamespaceLineEdit*> mLineEditMap;
-    QButtonGroup* mBg;
+    QMap<int, NamespaceLineEdit *> mLineEditMap;
+    QButtonGroup *mBg;
 };
 
 } // namespace KMail

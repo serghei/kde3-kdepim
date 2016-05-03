@@ -39,124 +39,124 @@ typedef QMemArray<char> QByteArray;
 class QString;
 
 namespace KMail {
-  namespace Interface {
+namespace Interface {
 
-    class Observer;
-    class Observable;
+class Observer;
+class Observable;
+
+/**
+   @short interface of classes that implement status for BodyPartFormatters.
+*/
+class BodyPartMemento {
+public:
+    virtual ~BodyPartMemento() {}
+
+    /** If your BodyPartMemento implementation also implements the
+    KMail::Observer interface, simply implement these as
+    <code>return this;</code>, else as <code>return
+    0;</code>. This is needed to avoid forcing a dependency of
+    plugins on internal KMail classes.
+    */
+    virtual Observer *asObserver() = 0;
+
+    /** If your BodyPartMemento implementation also implements the
+    KMail::Observable interface, simply implement these as
+    <code>return this;</code>, else as <code>return
+    0;</code>. This is needed to avoid forcing a dependency of
+    plugins on internal KMail classes.
+    */
+    virtual Observable *asObservable() = 0;
+};
+
+/**
+   @short interface of message body parts.
+*/
+class BodyPart {
+public:
+    virtual ~BodyPart() {}
 
     /**
-       @short interface of classes that implement status for BodyPartFormatters.
-    */
-    class BodyPartMemento {
-    public:
-      virtual ~BodyPartMemento() {}
-
-      /** If your BodyPartMemento implementation also implements the
-	  KMail::Observer interface, simply implement these as
-	  <code>return this;</code>, else as <code>return
-	  0;</code>. This is needed to avoid forcing a dependency of
-	  plugins on internal KMail classes.
-      */
-      virtual Observer * asObserver() = 0;
-
-      /** If your BodyPartMemento implementation also implements the
-	  KMail::Observable interface, simply implement these as
-	  <code>return this;</code>, else as <code>return
-	  0;</code>. This is needed to avoid forcing a dependency of
-	  plugins on internal KMail classes.
-      */
-      virtual Observable * asObservable() = 0;
-    };
+    @return a string respresentation of an URL that can be used
+     to invoke a BodyPartURLHandler for this body part.
+        */
+    virtual QString makeLink(const QString &path) const = 0;
 
     /**
-       @short interface of message body parts.
-    */
-    class BodyPart {
-    public:
-      virtual ~BodyPart() {}
+    @return the decoded (CTE, canonicalisation, and charset
+     encoding undone) text contained in the body part, or
+     QString::null, it the body part is not of type "text".
+        */
+    virtual QString asText() const = 0;
 
-      /**
-	 @return a string respresentation of an URL that can be used
-	 to invoke a BodyPartURLHandler for this body part.
-      */
-      virtual QString makeLink( const QString & path ) const = 0;
+    /**
+    @return the decoded (CTE undone) content of the body part, or
+     a null array if this body part instance is of type text.
+        */
+    virtual QByteArray asBinary() const = 0;
 
-      /**
-	 @return the decoded (CTE, canonicalisation, and charset
-	 encoding undone) text contained in the body part, or
-	 QString::null, it the body part is not of type "text".
-      */
-      virtual QString asText() const = 0;
+    /**
+    @return the value of the content-type header field parameter
+     with name \a parameter, or QString::null, if that that
+     parameter is not present in the body's content-type header
+     field. RFC 2231 encoding is removed first.
 
-      /**
-	 @return the decoded (CTE undone) content of the body part, or
-	 a null array if this body part instance is of type text.
-      */
-      virtual QByteArray asBinary() const = 0;
+     Note that this method will suppress queries to certain
+     standard parameters (most notably "charset") to keep plugins
+     decent.
 
-      /**
-	 @return the value of the content-type header field parameter
-	 with name \a parameter, or QString::null, if that that
-	 parameter is not present in the body's content-type header
-	 field. RFC 2231 encoding is removed first.
+     Note2 that this method preserves the case of the parameter
+     value returned. So, if the parameter you want to use defines
+     the value to be case-insensitive (such as the smime-type
+     parameter), you need to make sure you do the casemap yourself
+     before comparing to a reference value.
+        */
+    virtual QString contentTypeParameter(const char *parameter) const = 0;
 
-	 Note that this method will suppress queries to certain
-	 standard parameters (most notably "charset") to keep plugins
-	 decent.
+    /**
+    @return the content of the content-description header field,
+     or QString::null if that header is not present in this body
+     part. RFC 2047 encoding is decoded first.
+        */
+    virtual QString contentDescription() const = 0;
 
-	 Note2 that this method preserves the case of the parameter
-	 value returned. So, if the parameter you want to use defines
-	 the value to be case-insensitive (such as the smime-type
-	 parameter), you need to make sure you do the casemap yourself
-	 before comparing to a reference value.
-      */
-      virtual QString contentTypeParameter( const char * parameter ) const = 0;
+    //virtual int contentDisposition() const = 0;
+    /**
+    @return the value of the content-disposition header field
+     parameter with name \a parameter, or QString::null if that
+     parameter is not present in the body's content-disposition
+     header field. RFC 2231 encoding is removed first.
 
-      /**
-	 @return the content of the content-description header field,
-	 or QString::null if that header is not present in this body
-	 part. RFC 2047 encoding is decoded first.
-      */
-      virtual QString contentDescription() const = 0;
+     The notes made for contentTypeParameter() above apply here as
+     well.
+        */
+    virtual QString contentDispositionParameter(const char *parameter) const = 0;
 
-      //virtual int contentDisposition() const = 0;
-      /**
-	 @return the value of the content-disposition header field
-	 parameter with name \a parameter, or QString::null if that
-	 parameter is not present in the body's content-disposition
-	 header field. RFC 2231 encoding is removed first.
+    /**
+    @return whether this part already has it's complete body
+     fetched e.g. from an IMAP server.
+        */
+    virtual bool hasCompleteBody() const = 0;
 
-	 The notes made for contentTypeParameter() above apply here as
-	 well.
-      */
-      virtual QString contentDispositionParameter( const char * parameter ) const = 0;
+    /**
+    @return the BodyPartMemento set for this part, or null, if
+     none is set.
+        */
+    virtual BodyPartMemento *memento() const = 0;
 
-      /**
-	 @return whether this part already has it's complete body
-	 fetched e.g. from an IMAP server.
-      */
-      virtual bool hasCompleteBody() const = 0;
+    /**
+    @return register an implementation of the BodyPartMemento
+     interface as a status object with this part.
+        */
+    virtual void setBodyPartMemento(BodyPartMemento *) = 0;
 
-      /**
-	 @return the BodyPartMemento set for this part, or null, if
-	 none is set.
-      */
-      virtual BodyPartMemento * memento() const = 0;
+    enum Display { None, AsIcon, Inline };
+    /**
+      @return whether this body part should be displayed iconic or inline
+     */
+    virtual Display defaultDisplay() const = 0;
+};
 
-      /**
-	 @return register an implementation of the BodyPartMemento
-	 interface as a status object with this part.
-      */
-      virtual void setBodyPartMemento( BodyPartMemento * ) = 0;
-
-      enum Display { None, AsIcon, Inline };
-      /**
-        @return whether this body part should be displayed iconic or inline
-       */
-      virtual Display defaultDisplay() const = 0;
-    };
-
-  } // namespace Interface
+} // namespace Interface
 
 } // namespace KMail
 

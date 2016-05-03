@@ -34,12 +34,12 @@
 using namespace KPIM;
 
 ExchangeProgress::ExchangeProgress(QWidget *parent)
-  : KProgressDialog(parent, "", i18n("Exchange Download Progress"), i18n("Exchange Plugin"), "text" )
+    : KProgressDialog(parent, "", i18n("Exchange Download Progress"), i18n("Exchange Plugin"), "text")
 {
-  m_finished = 0;
-  m_total = 0;  
-  setAutoClose( false );
-  setLabel( i18n( "Listing appointments" ) );
+    m_finished = 0;
+    m_total = 0;
+    setAutoClose(false);
+    setLabel(i18n("Listing appointments"));
 }
 
 ExchangeProgress::~ExchangeProgress()
@@ -48,25 +48,26 @@ ExchangeProgress::~ExchangeProgress()
 
 void ExchangeProgress::slotTransferStarted()
 {
-  m_total++;
-  progressBar()->setTotalSteps( m_total );
-  updateLabel();
+    m_total++;
+    progressBar()->setTotalSteps(m_total);
+    updateLabel();
 }
 
 void ExchangeProgress::slotTransferFinished()
 {
-  m_finished++;
-  updateLabel();
-  if ( m_finished == m_total ) {
-    emit complete( this );
-  }
+    m_finished++;
+    updateLabel();
+    if(m_finished == m_total)
+    {
+        emit complete(this);
+    }
 }
 
 void ExchangeProgress::updateLabel()
 {
-  progressBar()->setValue( m_finished );
-  QString str = i18n( "Downloading, %1 of %2" ).arg( m_finished ).arg( m_total );
-  setLabel( str );
+    progressBar()->setValue(m_finished);
+    QString str = i18n("Downloading, %1 of %2").arg(m_finished).arg(m_total);
+    setLabel(str);
 }
 
 #include "exchangeprogress.moc"

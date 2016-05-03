@@ -50,45 +50,44 @@ class PilotRecord;
 /**
 @author Reinhold Kainhofer
 */
-class DBRecordEditor : public KDialogBase
-{
-Q_OBJECT
+class DBRecordEditor : public KDialogBase {
+    Q_OBJECT
 public:
-	DBRecordEditor(PilotRecord*r=0L, int n=-1, QWidget *parent = 0);
-	~DBRecordEditor();
-	
-protected:
-	QLabel* fRecordIndexLabel;
-	QLabel* fRecordIDLabel;
-	QLineEdit* fRecordIndex;
-	QLineEdit* fRecordID;
-	QButtonGroup* fFlagsGroup;
-	QCheckBox* fDirty;
-	QCheckBox* fDeleted;
-	QCheckBox* fBusy;
-	QCheckBox* fSecret;
-	QCheckBox* fArchived;
-	QWidget* fRecordData;
-	KHE::BytesEditInterface*fRecordDataIf;
-	
-protected:
-	QGridLayout* DBRecordEditorBaseLayout;
-	QGridLayout* fFlagsGroupLayout;
+    DBRecordEditor(PilotRecord *r = 0L, int n = -1, QWidget *parent = 0);
+    ~DBRecordEditor();
 
 protected:
-//	DBRecordEditorBase*fWidget;
-	QWidget*fWidget;
-	char*fBuffer;
+    QLabel *fRecordIndexLabel;
+    QLabel *fRecordIDLabel;
+    QLineEdit *fRecordIndex;
+    QLineEdit *fRecordID;
+    QButtonGroup *fFlagsGroup;
+    QCheckBox *fDirty;
+    QCheckBox *fDeleted;
+    QCheckBox *fBusy;
+    QCheckBox *fSecret;
+    QCheckBox *fArchived;
+    QWidget *fRecordData;
+    KHE::BytesEditInterface *fRecordDataIf;
+
+protected:
+    QGridLayout *DBRecordEditorBaseLayout;
+    QGridLayout *fFlagsGroupLayout;
+
+protected:
+    //	DBRecordEditorBase*fWidget;
+    QWidget *fWidget;
+    char *fBuffer;
 protected slots:
     virtual void languageChange();
 protected:
-	void initWidgets();
-	void fillWidgets();
-	PilotRecord*rec;
-	int nr;
+    void initWidgets();
+    void fillWidgets();
+    PilotRecord *rec;
+    int nr;
 protected slots:
-	virtual void slotOk();
-	virtual void slotCancel();
+    virtual void slotOk();
+    virtual void slotCancel();
 };
 
 #endif

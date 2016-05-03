@@ -62,30 +62,36 @@ class CalFormat;
 
 */
 class LIBKCAL_EXPORT CalendarResources :
-      public Calendar,
-      public KRES::ManagerObserver<ResourceCalendar>
-{
-  Q_OBJECT
-  public:
+    public Calendar,
+    public KRES::ManagerObserver<ResourceCalendar> {
+    Q_OBJECT
+public:
     /**
        @class DestinationPolicy
     */
-    class DestinationPolicy
-    {
-      public:
-        DestinationPolicy( CalendarResourceManager *manager,
-                              QWidget *parent = 0  ) :
-          mManager( manager ), mParent( parent ) {}
+    class DestinationPolicy {
+    public:
+        DestinationPolicy(CalendarResourceManager *manager,
+                          QWidget *parent = 0) :
+            mManager(manager), mParent(parent) {}
 
-        virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
-        virtual QWidget *parent() { return mParent; }
-        virtual void setParent( QWidget *newparent ) { mParent = newparent; }
+        virtual ResourceCalendar *destination(Incidence *incidence) = 0;
+        virtual QWidget *parent()
+        {
+            return mParent;
+        }
+        virtual void setParent(QWidget *newparent)
+        {
+            mParent = newparent;
+        }
 
-      protected:
+    protected:
         CalendarResourceManager *resourceManager()
-         { return mManager; }
+        {
+            return mManager;
+        }
 
-      private:
+    private:
         CalendarResourceManager *mManager;
         QWidget *mParent;
     };
@@ -93,16 +99,15 @@ class LIBKCAL_EXPORT CalendarResources :
     /**
        @class StandardDestinationPolicy
     */
-    class StandardDestinationPolicy : public DestinationPolicy
-    {
-      public:
-        StandardDestinationPolicy( CalendarResourceManager *manager,
-                              QWidget *parent = 0  ) :
-          DestinationPolicy( manager, parent ) {}
+    class StandardDestinationPolicy : public DestinationPolicy {
+    public:
+        StandardDestinationPolicy(CalendarResourceManager *manager,
+                                  QWidget *parent = 0) :
+            DestinationPolicy(manager, parent) {}
 
-        ResourceCalendar *destination( Incidence *incidence );
+        ResourceCalendar *destination(Incidence *incidence);
 
-      private:
+    private:
         class Private;
         Private *d;
     };
@@ -110,16 +115,15 @@ class LIBKCAL_EXPORT CalendarResources :
     /**
        @class AskDestinationPolicy
     */
-    class AskDestinationPolicy : public DestinationPolicy
-    {
-      public:
-        AskDestinationPolicy( CalendarResourceManager *manager,
-                              QWidget *parent = 0 ) :
-          DestinationPolicy( manager, parent ) {}
+    class AskDestinationPolicy : public DestinationPolicy {
+    public:
+        AskDestinationPolicy(CalendarResourceManager *manager,
+                             QWidget *parent = 0) :
+            DestinationPolicy(manager, parent) {}
 
-        ResourceCalendar *destination( Incidence *incidence );
+        ResourceCalendar *destination(Incidence *incidence);
 
-      private:
+    private:
         class Private;
         Private *d;
     };
@@ -127,15 +131,16 @@ class LIBKCAL_EXPORT CalendarResources :
     /**
        @class Ticket
     */
-    class Ticket
-    {
+    class Ticket {
         friend class CalendarResources;
-      public:
+    public:
         ResourceCalendar *resource() const
-          { return mResource; }
+        {
+            return mResource;
+        }
 
-      private:
-        Ticket( ResourceCalendar *r ) : mResource( r ) {}
+    private:
+        Ticket(ResourceCalendar *r) : mResource(r) {}
 
         ResourceCalendar *mResource;
 
@@ -160,8 +165,8 @@ class LIBKCAL_EXPORT CalendarResources :
        @param family is any QString representing a unique name.
     */
     CalendarResources(
-      const QString &timeZoneId,
-      const QString &family = QString::fromLatin1( "calendar" ) );
+        const QString &timeZoneId,
+        const QString &family = QString::fromLatin1("calendar"));
 
     /**
        Destructor
@@ -180,7 +185,7 @@ class LIBKCAL_EXPORT CalendarResources :
      * @par tz The timezone to set.
      * @return success or failure
      */
-    bool reload( const QString &tz );
+    bool reload(const QString &tz);
 
     /**
        Clear out the current Calendar, freeing all used memory etc.
@@ -200,7 +205,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the save was successful; false otherwise.
     */
-    virtual bool save( Ticket *ticket, Incidence *incidence = 0 );
+    virtual bool save(Ticket *ticket, Incidence *incidence = 0);
 
     /**
        Sync changes in memory to persistant storage.
@@ -220,7 +225,9 @@ class LIBKCAL_EXPORT CalendarResources :
        @return a pointer to the CalendarResourceManage.
     */
     CalendarResourceManager *resourceManager() const
-      { return mManager; }
+    {
+        return mManager;
+    }
 
     /**
        Get the Resource associated with a specified Incidence.
@@ -230,7 +237,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return a pointer to the Resource containing the Incidence.
     */
-    ResourceCalendar *resource( Incidence *incidence );
+    ResourceCalendar *resource(Incidence *incidence);
 
     /**
        Read the Resources settings from a config file.
@@ -240,7 +247,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @note Call this method <em>before</em> load().
     */
-    void readConfig( KConfig *config = 0 );
+    void readConfig(KConfig *config = 0);
 
     /**
        Set the destination policy such that Incidences are always added
@@ -253,23 +260,23 @@ class LIBKCAL_EXPORT CalendarResources :
        Resource which is queried.
     */
     void setAskDestinationPolicy();
-    
-    /** 
+
+    /**
        Returns the current parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
-       Afterwards we need to reset it (to avoid pointers to widgets that are 
+       Afterwards we need to reset it (to avoid pointers to widgets that are
        already deleted) so we also need the accessor
     */
     QWidget *dialogParentWidget();
-    /** 
+    /**
        Set the widget parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
     */
-    void setDialogParentWidget( QWidget *parent );
+    void setDialogParentWidget(QWidget *parent);
 
     /**
        Request ticket for saving the Calendar.  If a ticket is returned the
@@ -281,14 +288,14 @@ class LIBKCAL_EXPORT CalendarResources :
        @return a pointer to a Ticket object indicating that the Calendar
        is locked for write access; otherwise a null pointer.
     */
-    Ticket *requestSaveTicket( ResourceCalendar *resource );
+    Ticket *requestSaveTicket(ResourceCalendar *resource);
 
     /**
        Release the save Ticket. The Calendar is unlocked without saving.
 
        @param ticket is a pointer to a Ticket object.
     */
-    virtual void releaseSaveTicket( Ticket *ticket );
+    virtual void releaseSaveTicket(Ticket *ticket);
 
     /**
        Add a Resource to the Calendar.
@@ -298,9 +305,9 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @param resource is a pointer to the ResourceCalendar to add.
     */
-    void resourceAdded( ResourceCalendar *resource );
+    void resourceAdded(ResourceCalendar *resource);
 
-// Incidence Specific Methods //
+    // Incidence Specific Methods //
 
     /**
        Insert an Incidence into the Calendar.
@@ -309,7 +316,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the Incidence was successfully inserted; false otherwise.
     */
-    bool addIncidence( Incidence *incidence );
+    bool addIncidence(Incidence *incidence);
 
     /**
        Insert an Incidence into a Calendar Resource.
@@ -319,23 +326,23 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the Incidence was successfully inserted; false otherwise.
     */
-    bool addIncidence( Incidence *incidence, ResourceCalendar *resource );
+    bool addIncidence(Incidence *incidence, ResourceCalendar *resource);
 
     /**
        Flag that a change to a Calendar Incidence is starting.
 
        @param incidence is a pointer to the Incidence that will be changing.
     */
-    bool beginChange( Incidence *incidence );
+    bool beginChange(Incidence *incidence);
 
     /**
        Flag that a change to a Calendar Incidence has completed.
 
        @param incidence is a pointer to the Incidence that was changed.
     */
-    bool endChange( Incidence *incidence );
+    bool endChange(Incidence *incidence);
 
-// Event Specific Methods //
+    // Event Specific Methods //
 
     /**
        Insert an Event into the Calendar.
@@ -347,7 +354,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        addIncidence( Incidence *incidence ) instead.
     */
-    bool addEvent( Event *event );
+    bool addEvent(Event *event);
 
     /**
        Insert an Event into a Calendar Resource.
@@ -360,7 +367,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
     */
-    bool addEvent( Event *event, ResourceCalendar *resource );
+    bool addEvent(Event *event, ResourceCalendar *resource);
 
     /**
        Remove an Event from the Calendar.
@@ -372,7 +379,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        deleteIncidence( Incidence *incidence) instead.
     */
-    bool deleteEvent( Event *event );
+    bool deleteEvent(Event *event);
 
     /**
        Return a sorted, unfiltered list of all Events.
@@ -383,8 +390,8 @@ class LIBKCAL_EXPORT CalendarResources :
        @return the list of all unfiltered Events sorted as specified.
     */
     Event::List rawEvents(
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        EventSortField sortField = EventSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return an unfiltered list of all Events which occur on the given
@@ -395,7 +402,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @return the list of unfiltered Events occurring on the specified
        timestamp.
     */
-    Event::List rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate(const QDateTime &qdt);
 
     /**
        Return an unfiltered list of all Events occurring within a date range.
@@ -408,8 +415,8 @@ class LIBKCAL_EXPORT CalendarResources :
        @return the list of unfiltered Events occurring within the specified
        date range.
     */
-    Event::List rawEvents( const QDate &start, const QDate &end,
-                           bool inclusive = false );
+    Event::List rawEvents(const QDate &start, const QDate &end,
+                          bool inclusive = false);
 
     /**
        Return a sorted, unfiltered list of all Events which occur on the given
@@ -423,9 +430,9 @@ class LIBKCAL_EXPORT CalendarResources :
        @return the list of sorted, unfiltered Events occurring on @a date.
     */
     Event::List rawEventsForDate(
-      const QDate &date,
-      EventSortField sortField = EventSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        const QDate &date,
+        EventSortField sortField = EventSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Returns the Event associated with the given unique identifier.
@@ -435,9 +442,9 @@ class LIBKCAL_EXPORT CalendarResources :
        @return a pointer to the Event.
        A null pointer is returned if no such Event exists.
     */
-    Event *event( const QString &uid );
+    Event *event(const QString &uid);
 
-// Todo Specific Methods //
+    // Todo Specific Methods //
 
     /**
        Insert a Todo into a Calendar Resource.
@@ -449,7 +456,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        addIncidence( Incidence *incidence ) instead.
     */
-    bool addTodo( Todo *todo );
+    bool addTodo(Todo *todo);
 
     /**
        Insert an Todo into a Calendar Resource.
@@ -462,7 +469,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
     */
-    bool addTodo( Todo *todo, ResourceCalendar *resource );
+    bool addTodo(Todo *todo, ResourceCalendar *resource);
 
     /**
        Remove an Todo from the Calendar.
@@ -474,7 +481,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        deleteIncidence( Incidence *incidence ) instead.
     */
-    bool deleteTodo( Todo *todo );
+    bool deleteTodo(Todo *todo);
 
     /**
        Return a sorted, unfiltered list of all Todos for this Calendar.
@@ -484,8 +491,8 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the list of all unfiltered Todos sorted as specified.
     */
-    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted,
-                         SortDirection sortDirection = SortDirectionAscending );
+    Todo::List rawTodos(TodoSortField sortField = TodoSortUnsorted,
+                        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return an unfiltered list of all Todos which are due on the specified
@@ -495,7 +502,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the list of unfiltered Todos due on the specified date.
     */
-    Todo::List rawTodosForDate( const QDate &date );
+    Todo::List rawTodosForDate(const QDate &date);
 
     /**
        Returns the Todo associated with the given unique identifier.
@@ -505,9 +512,9 @@ class LIBKCAL_EXPORT CalendarResources :
        @return a pointer to the Todo.
        A null pointer is returned if no such Todo exists.
     */
-    Todo *todo( const QString &uid );
+    Todo *todo(const QString &uid);
 
-// Journal Specific Methods //
+    // Journal Specific Methods //
 
     /**
        Insert a Journal into the Calendar.
@@ -519,7 +526,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        addIncidence( Incidence *incidence ) instead.
     */
-    bool addJournal( Journal *journal );
+    bool addJournal(Journal *journal);
 
     /**
        Insert a Journal into a Calendar Resource.
@@ -532,7 +539,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        addIncidence( Incidence *incidence, ResourceCalendar *resource ) instead.
     */
-    bool addJournal( Journal *journal, ResourceCalendar *resource );
+    bool addJournal(Journal *journal, ResourceCalendar *resource);
 
     /**
        Remove a Journal from the Calendar.
@@ -544,7 +551,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @note In most cases use
        deleteIncidence( Incidence *incidence ) instead.
     */
-    bool deleteJournal( Journal *journal );
+    bool deleteJournal(Journal *journal);
 
     /**
        Return a sorted, unfiltered list of all Journals for this Calendar.
@@ -555,8 +562,8 @@ class LIBKCAL_EXPORT CalendarResources :
        @return the list of all unfiltered Journals sorted as specified.
     */
     Journal::List rawJournals(
-      JournalSortField sortField = JournalSortUnsorted,
-      SortDirection sortDirection = SortDirectionAscending );
+        JournalSortField sortField = JournalSortUnsorted,
+        SortDirection sortDirection = SortDirectionAscending);
 
     /**
        Return an unfiltered list of all Journals for on the specifed date.
@@ -565,7 +572,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the list of unfiltered Journals for the specified date.
     */
-    Journal::List rawJournalsForDate( const QDate &date );
+    Journal::List rawJournalsForDate(const QDate &date);
 
     /**
        Returns the Journal associated with the given unique identifier.
@@ -575,9 +582,9 @@ class LIBKCAL_EXPORT CalendarResources :
        @return a pointer to the Journal.
        A null pointer is returned if no such Journal exists.
     */
-    Journal *journal( const QString &uid );
+    Journal *journal(const QString &uid);
 
-// Alarm Specific Methods //
+    // Alarm Specific Methods //
 
     /**
        Return a list of Alarms within a time range for this Calendar.
@@ -587,7 +594,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the list of Alarms for the for the specified time range.
     */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+    Alarm::List alarms(const QDateTime &from, const QDateTime &to);
 
     /**
        Return a list of Alarms that occur before the specified timestamp.
@@ -596,7 +603,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the list of Alarms occurring before the specified QDateTime.
     */
-    Alarm::List alarmsTo( const QDateTime &to );
+    Alarm::List alarmsTo(const QDateTime &to);
 
     /**
      * Set the viewing time zone, which requires that all resources are saved,
@@ -605,33 +612,33 @@ class LIBKCAL_EXPORT CalendarResources :
      * If you want to change the times of the contents of the resources, use
      * setTimeZoneId
      */
-    void setTimeZoneIdViewOnly( const QString& tz );
+    void setTimeZoneIdViewOnly(const QString &tz);
 
-  signals:
+signals:
     /**
        Signal that the Resource has been modified.
     */
-    void signalResourceModified( ResourceCalendar *resource );
+    void signalResourceModified(ResourceCalendar *resource);
 
     /**
        Signal that an Incidence has been inserted to the Resource.
     */
-    void signalResourceAdded( ResourceCalendar *resource );
+    void signalResourceAdded(ResourceCalendar *resource);
 
     /**
        Signal that an Incidence has been removed from the Resource.
     */
-    void signalResourceDeleted( ResourceCalendar *resource );
+    void signalResourceDeleted(ResourceCalendar *resource);
 
     /**
        Signal an error message.
     */
-    void signalErrorMessage( const QString &err );
+    void signalErrorMessage(const QString &err);
 
-  protected:
-    void connectResource( ResourceCalendar *resource );
-    void resourceModified( ResourceCalendar *resource );
-    void resourceDeleted( ResourceCalendar *resource );
+protected:
+    void connectResource(ResourceCalendar *resource);
+    void resourceModified(ResourceCalendar *resource);
+    void resourceDeleted(ResourceCalendar *resource);
 
     /**
        Let CalendarResource subclasses set the Time Zone ID.
@@ -645,7 +652,7 @@ class LIBKCAL_EXPORT CalendarResources :
        Do Not pass an empty timeZoneId string as this may cause unintended
        consequences when storing Incidences into the Calendar.
     */
-    virtual void doSetTimeZoneId( const QString &timeZoneId );
+    virtual void doSetTimeZoneId(const QString &timeZoneId);
 
     /**
        Increment the number of times this Resource has been changed by 1.
@@ -654,7 +661,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the new number of times this Resource has been changed.
     */
-    int incrementChangeCount( ResourceCalendar *resource );
+    int incrementChangeCount(ResourceCalendar *resource);
 
     /**
        Decrement the number of times this Resource has been changed by 1.
@@ -663,22 +670,22 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return the new number of times this Resource has been changed.
     */
-    int decrementChangeCount( ResourceCalendar *resource );
+    int decrementChangeCount(ResourceCalendar *resource);
 
-  protected slots:
-    void slotLoadError( ResourceCalendar *resource, const QString &err );
-    void slotSaveError( ResourceCalendar *resource, const QString &err );
+protected slots:
+    void slotLoadError(ResourceCalendar *resource, const QString &err);
+    void slotSaveError(ResourceCalendar *resource, const QString &err);
 
-  private:
+private:
     /**
        Initialize the Resource object with starting values.
     */
-    void init( const QString &family );
+    void init(const QString &family);
 
     bool mOpen;
 
-    KRES::Manager<ResourceCalendar>* mManager;
-    QMap <Incidence*, ResourceCalendar*> mResourceMap;
+    KRES::Manager<ResourceCalendar> *mManager;
+    QMap <Incidence *, ResourceCalendar *> mResourceMap;
 
     DestinationPolicy *mDestinationPolicy;
     StandardDestinationPolicy *mStandardPolicy;

@@ -35,126 +35,140 @@
 
 namespace KMail {
 
-  /**
-    @short KMail Filter Log Collector.
-    @author Andreas Gungl <a.gungl@gmx.de>
+/**
+  @short KMail Filter Log Collector.
+  @author Andreas Gungl <a.gungl@gmx.de>
 
-    The filter log helps to collect log information about the
-    filter process in KMail. It's implemented as singleton,
-    so it's easy to direct pieces of information to a unique
-    instance.
-    It's possible to activate / deactivate logging. All
-    collected log information can get thrown away, the
-    next added log entry is the first one until another 
-    clearing.
-    A signal is emitted whenever a new logentry is added,
-    when the log was cleared or any log state was changed.
-  */
-  class FilterLog : public QObject
-  {
+  The filter log helps to collect log information about the
+  filter process in KMail. It's implemented as singleton,
+  so it's easy to direct pieces of information to a unique
+  instance.
+  It's possible to activate / deactivate logging. All
+  collected log information can get thrown away, the
+  next added log entry is the first one until another
+  clearing.
+  A signal is emitted whenever a new logentry is added,
+  when the log was cleared or any log state was changed.
+*/
+class FilterLog : public QObject {
     Q_OBJECT
 
-    public:
-      /** access to the singleton instance */
-      static FilterLog * instance();
-      
-      /** log data types */
-      enum ContentType 
-      { 
-        meta          = 1, 
-        patternDesc   = 2, 
-        ruleResult    = 4, 
-        patternResult = 8, 
+public:
+    /** access to the singleton instance */
+    static FilterLog *instance();
+
+    /** log data types */
+    enum ContentType
+    {
+        meta          = 1,
+        patternDesc   = 2,
+        ruleResult    = 4,
+        patternResult = 8,
         appliedAction = 16
-      };
-      
-      
-      /** check the logging state */
-      bool isLogging() { return mLogging; };
-      /** set the logging state */
-      void setLogging( bool active )
-      {
-        mLogging = active; 
+    };
+
+
+    /** check the logging state */
+    bool isLogging()
+    {
+        return mLogging;
+    };
+    /** set the logging state */
+    void setLogging(bool active)
+    {
+        mLogging = active;
         emit logStateChanged();
-      };
-      
-      
-      /** control the size of the log */
-      void setMaxLogSize( long size = -1 );
-      long getMaxLogSize() { return mMaxLogSize; };
-      
-      
-      /** add/remove a content type to the set of logged ones */
-      void setContentTypeEnabled( ContentType contentType, bool b )
-      { 
-        if ( b )
-          mAllowedTypes |= contentType;
+    };
+
+
+    /** control the size of the log */
+    void setMaxLogSize(long size = -1);
+    long getMaxLogSize()
+    {
+        return mMaxLogSize;
+    };
+
+
+    /** add/remove a content type to the set of logged ones */
+    void setContentTypeEnabled(ContentType contentType, bool b)
+    {
+        if(b)
+            mAllowedTypes |= contentType;
         else
-          mAllowedTypes &= ~contentType;
+            mAllowedTypes &= ~contentType;
         emit logStateChanged();
-      };
+    };
 
-      /** check a content type for inclusion in the set of logged ones */
-      bool isContentTypeEnabled( ContentType contentType )
-      { 
-        return mAllowedTypes & contentType; 
-      };
+    /** check a content type for inclusion in the set of logged ones */
+    bool isContentTypeEnabled(ContentType contentType)
+    {
+        return mAllowedTypes & contentType;
+    };
 
-      
-      /** add a log entry */
-      void add( QString logEntry, ContentType contentType );
-      /** add a separating line in the log */
-      void addSeparator() { add( "------------------------------", meta ); };
-      /** discard collected log data */
-      void clear() 
-      {
-        mLogEntries.clear(); 
+
+    /** add a log entry */
+    void add(QString logEntry, ContentType contentType);
+    /** add a separating line in the log */
+    void addSeparator()
+    {
+        add("------------------------------", meta);
+    };
+    /** discard collected log data */
+    void clear()
+    {
+        mLogEntries.clear();
         mCurrentLogSize = 0;
         emit logShrinked();
-      };
-      
-      
-      /** get access to the log entries */
-      const QStringList & getLogEntries() { return mLogEntries; };
-      /** dump the log - for testing purposes */
-      void dump();
-      /** save the log to a file - returns true if okay */
-      bool saveToFile( QString fileName );
-      
-      /** destructor */
-      virtual ~FilterLog();
-      
-      static QString recode( const QString & plain ) { return QStyleSheet::escape(plain); };
-      
-    signals:
-      void logEntryAdded( QString );
-      void logShrinked();
-      void logStateChanged();
+    };
 
-    protected:
-      /** Non-public constructor needed by the singleton implementation */
-      FilterLog();
-      
-      /** The list contains the single log pieces */
-      QStringList mLogEntries;
-      
-      /** the log status */
-      bool mLogging;
-      
-      /** max size for kept log items, when reached 
-          the last recently added items are discarded
-          -1 means unlimited */
-      long mMaxLogSize;
-      long mCurrentLogSize;
-      
-      /** types currently allowed to be legged */
-      int mAllowedTypes;
-      
-      void checkLogSize();
-      
-    private:
-      static FilterLog * mSelf;
-  };
+
+    /** get access to the log entries */
+    const QStringList &getLogEntries()
+    {
+        return mLogEntries;
+    };
+    /** dump the log - for testing purposes */
+    void dump();
+    /** save the log to a file - returns true if okay */
+    bool saveToFile(QString fileName);
+
+    /** destructor */
+    virtual ~FilterLog();
+
+    static QString recode(const QString &plain)
+    {
+        return QStyleSheet::escape(plain);
+    };
+
+signals:
+    void logEntryAdded(QString);
+    void logShrinked();
+    void logStateChanged();
+
+protected:
+    /** Non-public constructor needed by the singleton implementation */
+    FilterLog();
+
+    /** The list contains the single log pieces */
+    QStringList mLogEntries;
+
+    /** the log status */
+    bool mLogging;
+
+    /** max size for kept log items, when reached
+        the last recently added items are discarded
+        -1 means unlimited */
+    long mMaxLogSize;
+    long mCurrentLogSize;
+
+    /** types currently allowed to be legged */
+    int mAllowedTypes;
+
+    void checkLogSize();
+
+private:
+    static FilterLog *mSelf;
+};
 
 } // namespace KMail
 

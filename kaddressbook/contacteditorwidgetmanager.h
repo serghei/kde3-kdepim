@@ -34,11 +34,10 @@ class Addressee;
 
 class QGridLayout;
 
-class ContactEditorWidgetManager : public QObject
-{
-  Q_OBJECT
+class ContactEditorWidgetManager : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     static ContactEditorWidgetManager *self();
 
     /**
@@ -49,49 +48,48 @@ class ContactEditorWidgetManager : public QObject
     /**
       Returns a factory.
      */
-    KAB::ContactEditorWidgetFactory *factory( int pos ) const;
+    KAB::ContactEditorWidgetFactory *factory(int pos) const;
 
-  protected:
+protected:
     ContactEditorWidgetManager();
     ~ContactEditorWidgetManager();
 
-  private:
+private:
     void reload();
 
-    QValueList<KAB::ContactEditorWidgetFactory*> mFactories;
+    QValueList<KAB::ContactEditorWidgetFactory *> mFactories;
 
     static ContactEditorWidgetManager *mSelf;
 };
 
-class ContactEditorTabPage : public QWidget
-{
-  Q_OBJECT
+class ContactEditorTabPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    ContactEditorTabPage( QWidget *parent, const char *name = 0 );
+public:
+    ContactEditorTabPage(QWidget *parent, const char *name = 0);
 
     /**
       Adds a widget to the tab.
      */
-    void addWidget( KAB::ContactEditorWidget *widget );
+    void addWidget(KAB::ContactEditorWidget *widget);
 
     /**
       Load the contacts data into the GUI.
      */
-    void loadContact( KABC::Addressee *addr );
+    void loadContact(KABC::Addressee *addr);
 
     /**
       Save the data from the GUI into the passed contact
       object.
      */
-    void storeContact( KABC::Addressee *addr );
+    void storeContact(KABC::Addressee *addr);
 
     /**
       Sets whether the contact should be presented as
       read-only. You should update your GUI in the reimplemented
       method.
      */
-    void setReadOnly( bool readOnly );
+    void setReadOnly(bool readOnly);
 
     /**
       Calculates the layout of the widgets and moves them to the
@@ -99,13 +97,13 @@ class ContactEditorTabPage : public QWidget
      */
     void updateLayout();
 
-  signals:
+signals:
     /**
       Emitted whenever the page has changed.
      */
     void changed();
 
-  private:
+private:
     QGridLayout *mLayout;
     KAB::ContactEditorWidget::List mWidgets;
 };

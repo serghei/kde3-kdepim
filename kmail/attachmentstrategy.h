@@ -37,32 +37,32 @@ class partNode;
 
 namespace KMail {
 
-  class AttachmentStrategy {
-  protected:
+class AttachmentStrategy {
+protected:
     AttachmentStrategy();
     virtual ~AttachmentStrategy();
 
-  public:
+public:
     //
     // Factory methods:
     //
     enum Type { Iconic, Smart, Inlined, Hidden };
 
-    static const AttachmentStrategy * create( Type type );
-    static const AttachmentStrategy * create( const QString & type );
+    static const AttachmentStrategy *create(Type type);
+    static const AttachmentStrategy *create(const QString &type);
 
-    static const AttachmentStrategy * iconic();
-    static const AttachmentStrategy * smart();
-    static const AttachmentStrategy * inlined();
-    static const AttachmentStrategy * hidden();
+    static const AttachmentStrategy *iconic();
+    static const AttachmentStrategy *smart();
+    static const AttachmentStrategy *inlined();
+    static const AttachmentStrategy *hidden();
 
     //
     // Navigation methods:
     //
 
-    virtual const char * name() const = 0;
-    virtual const AttachmentStrategy * next() const = 0;
-    virtual const AttachmentStrategy * prev() const = 0;
+    virtual const char *name() const = 0;
+    virtual const AttachmentStrategy *next() const = 0;
+    virtual const AttachmentStrategy *prev() const = 0;
 
     //
     // Bahavioural:
@@ -71,8 +71,8 @@ namespace KMail {
     enum Display { None, AsIcon, Inline };
 
     virtual bool inlineNestedMessages() const = 0;
-    virtual Display defaultDisplay( const partNode * node ) const = 0;
-  };
+    virtual Display defaultDisplay(const partNode *node) const = 0;
+};
 
 } // namespace KMail
 

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   snippet feature from kdevelop/plugins/snippet/                        *
- *                                                                         * 
+ *                                                                         *
  *   Copyright (C) 2007 by Robert Gruber                                   *
  *   rgruber@users.sourceforge.net                                         *
  *                                                                         *
@@ -21,16 +21,16 @@
 
 
 SnippetSettings::SnippetSettings(QWidget *parent, const char *name)
- : SnippetSettingsBase(parent, name)
+    : SnippetSettingsBase(parent, name)
 {
-  _widget = NULL;
+    _widget = NULL;
 }
 
-SnippetSettings::SnippetSettings(SnippetWidget * w, QWidget *parent, const char *name)
- : SnippetSettingsBase(parent, name)
+SnippetSettings::SnippetSettings(SnippetWidget *w, QWidget *parent, const char *name)
+    : SnippetSettingsBase(parent, name)
 {
-  _cfg = w->getSnippetConfig();
-  _widget = w;
+    _cfg = w->getSnippetConfig();
+    _widget = w;
 }
 
 

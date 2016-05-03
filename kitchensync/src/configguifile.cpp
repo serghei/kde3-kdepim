@@ -30,52 +30,56 @@
 #include <qlabel.h>
 #include <qdom.h>
 
-ConfigGuiFile::ConfigGuiFile( const QSync::Member &member, QWidget *parent )
-  : ConfigGui( member, parent )
+ConfigGuiFile::ConfigGuiFile(const QSync::Member &member, QWidget *parent)
+    : ConfigGui(member, parent)
 {
-  QBoxLayout *filenameLayout = new QHBoxLayout( topLayout() );
+    QBoxLayout *filenameLayout = new QHBoxLayout(topLayout());
 
-  QLabel *label = new QLabel( i18n("Directory name:"), this );
-  filenameLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Directory name:"), this);
+    filenameLayout->addWidget(label);
 
-  mFilename = new KURLRequester( this );
-  mFilename->setMode( KFile::Directory | KFile::LocalOnly );
-  filenameLayout->addWidget( mFilename );
+    mFilename = new KURLRequester(this);
+    mFilename->setMode(KFile::Directory | KFile::LocalOnly);
+    filenameLayout->addWidget(mFilename);
 
-  QBoxLayout *recursiveLayout = new QHBoxLayout( topLayout() );
+    QBoxLayout *recursiveLayout = new QHBoxLayout(topLayout());
 
-  mRecursive = new QCheckBox( i18n("Sync all subdirectories"), this );
-  recursiveLayout->addWidget( mRecursive );
+    mRecursive = new QCheckBox(i18n("Sync all subdirectories"), this);
+    recursiveLayout->addWidget(mRecursive);
 
-  topLayout()->addStretch( 1 );
+    topLayout()->addStretch(1);
 }
 
-void ConfigGuiFile::load( const QString &xml )
+void ConfigGuiFile::load(const QString &xml)
 {
-  QDomDocument doc;
-  doc.setContent( xml );
-  QDomElement docElement = doc.documentElement();
-  QDomNode n;
-  for( n = docElement.firstChild(); !n.isNull(); n = n.nextSibling() ) {
-    QDomElement e = n.toElement();
-    if ( e.tagName() == "path" ) {
-      mFilename->setURL( e.text() );
-    } else if ( e.tagName() == "recursive" ) {
-      mRecursive->setChecked( e.text() == "TRUE" );
+    QDomDocument doc;
+    doc.setContent(xml);
+    QDomElement docElement = doc.documentElement();
+    QDomNode n;
+    for(n = docElement.firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        QDomElement e = n.toElement();
+        if(e.tagName() == "path")
+        {
+            mFilename->setURL(e.text());
+        }
+        else if(e.tagName() == "recursive")
+        {
+            mRecursive->setChecked(e.text() == "TRUE");
+        }
     }
-  }
 }
 
 QString ConfigGuiFile::save() const
 {
-  QString xml;
-  xml = "<config>";
-  xml += "<path>" + mFilename->url() + "</path>";
-  xml += "<recursive>";
-  if ( mRecursive->isChecked() ) xml += "TRUE";
-  else xml += "FALSE";
-  xml += "</recursive>";
-  xml += "</config>";
+    QString xml;
+    xml = "<config>";
+    xml += "<path>" + mFilename->url() + "</path>";
+    xml += "<recursive>";
+    if(mRecursive->isChecked()) xml += "TRUE";
+    else xml += "FALSE";
+    xml += "</recursive>";
+    xml += "</config>";
 
-  return xml;
+    return xml;
 }

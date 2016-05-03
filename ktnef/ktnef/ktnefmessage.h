@@ -24,21 +24,20 @@
 
 class KTNEFAttach;
 
-class KDE_EXPORT KTNEFMessage : public KTNEFPropertySet
-{
+class KDE_EXPORT KTNEFMessage : public KTNEFPropertySet {
 public:
-	KTNEFMessage();
-	~KTNEFMessage();
+    KTNEFMessage();
+    ~KTNEFMessage();
 
-	const QPtrList<KTNEFAttach>& attachmentList() const;
-	KTNEFAttach* attachment( const QString& filename ) const;
-	void addAttachment( KTNEFAttach* attach );
-	void clearAttachments();
-	QString rtfString();
+    const QPtrList<KTNEFAttach> &attachmentList() const;
+    KTNEFAttach *attachment(const QString &filename) const;
+    void addAttachment(KTNEFAttach *attach);
+    void clearAttachments();
+    QString rtfString();
 
 private:
-	class MessagePrivate;
-	MessagePrivate *d;
+    class MessagePrivate;
+    MessagePrivate *d;
 };
 
 #endif /* KTNEFMESSAGE_H */

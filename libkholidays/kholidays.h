@@ -27,14 +27,15 @@
 
 #include <kdepimmacros.h>
 
-struct KHoliday {
-  QString text;
-  QString shortText;
-  int Category;
+struct KHoliday
+{
+    QString text;
+    QString shortText;
+    int Category;
 };
 
 class KDE_EXPORT KHolidays {
-  public:
+public:
     /**
        Return a list of all available locations which have a holiday definition.
        One of these can then be passed to the constructor for a new KHolidays
@@ -44,33 +45,33 @@ class KDE_EXPORT KHolidays {
     /**
        Return the file name for the holiday file of the given location.
     */
-    static QString fileForLocation( const QString &location );
+    static QString fileForLocation(const QString &location);
     /**
        Return the directory for user-specific holiday files (i.e. somewhere below
        $KDEDIR/share/apps/). Don't automatically create that path by default.
     */
-    static QString userPath( bool create = false );
-    /** 
+    static QString userPath(bool create = false);
+    /**
        Generate the filename (without the path) for a given region.
     */
-    static QString generateFileName( const QString &location );
+    static QString generateFileName(const QString &location);
 
-    KHolidays( const QString& location );
+    KHolidays(const QString &location);
     ~KHolidays();
 
     /// return the location with which this object was constructed
     QString location() const;
 
-    QValueList<KHoliday> getHolidays( const QDate& );
-    
-    KDE_DEPRECATED QString shortText( const QDate& );
-    KDE_DEPRECATED QString getHoliday( const QDate& );
+    QValueList<KHoliday> getHolidays(const QDate &);
+
+    KDE_DEPRECATED QString shortText(const QDate &);
+    KDE_DEPRECATED QString getHoliday(const QDate &);
 
     enum { WORKDAY, HOLIDAY };
-    KDE_DEPRECATED int category( const QDate& );
+    KDE_DEPRECATED int category(const QDate &);
 
-  private:
-    bool parseFile( const QDate& );
+private:
+    bool parseFile(const QDate &);
 
     QString mLocation;    // location string used to determine holidays file
     QString mHolidayFile; // name of file containing holiday data

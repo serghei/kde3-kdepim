@@ -32,46 +32,46 @@
 
 #include "kmacctseldlg.moc"
 
-KMAcctSelDlg::KMAcctSelDlg( QWidget *parent, const char *name, bool modal )
-  : KDialogBase( parent, name, modal, i18n("Add Account"), Ok|Cancel, Ok )
+KMAcctSelDlg::KMAcctSelDlg(QWidget *parent, const char *name, bool modal)
+    : KDialogBase(parent, name, modal, i18n("Add Account"), Ok | Cancel, Ok)
 {
-  QFrame *page = makeMainWidget();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+    QFrame *page = makeMainWidget();
+    QVBoxLayout *topLayout = new QVBoxLayout(page, 0, spacingHint());
 
-  QButtonGroup *group = new QButtonGroup( i18n("Account Type"), page );
-  connect(group, SIGNAL(clicked(int)), SLOT(buttonClicked(int)) );
+    QButtonGroup *group = new QButtonGroup(i18n("Account Type"), page);
+    connect(group, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
-  topLayout->addWidget( group, 10 );
-  QVBoxLayout *vlay = new QVBoxLayout( group, spacingHint()*2, spacingHint() );
-  vlay->addSpacing( fontMetrics().lineSpacing() );
+    topLayout->addWidget(group, 10);
+    QVBoxLayout *vlay = new QVBoxLayout(group, spacingHint() * 2, spacingHint());
+    vlay->addSpacing(fontMetrics().lineSpacing());
 
-  QRadioButton *radioButton1 = new QRadioButton( i18n("&Local mailbox"), group );
-  vlay->addWidget( radioButton1 );
-  QRadioButton *radioButton2 = new QRadioButton( i18n("&POP3"), group );
-  vlay->addWidget( radioButton2 );
-  QRadioButton *radioButton3 = new QRadioButton( i18n("&IMAP"), group );
-  vlay->addWidget( radioButton3 );
-  QRadioButton *radioButton4 = new QRadioButton( i18n("&Disconnected IMAP"), group );
-  vlay->addWidget( radioButton4 );
-  QRadioButton *radioButton5 = new QRadioButton( i18n("&Maildir mailbox"), group );
-  vlay->addWidget( radioButton5 );
+    QRadioButton *radioButton1 = new QRadioButton(i18n("&Local mailbox"), group);
+    vlay->addWidget(radioButton1);
+    QRadioButton *radioButton2 = new QRadioButton(i18n("&POP3"), group);
+    vlay->addWidget(radioButton2);
+    QRadioButton *radioButton3 = new QRadioButton(i18n("&IMAP"), group);
+    vlay->addWidget(radioButton3);
+    QRadioButton *radioButton4 = new QRadioButton(i18n("&Disconnected IMAP"), group);
+    vlay->addWidget(radioButton4);
+    QRadioButton *radioButton5 = new QRadioButton(i18n("&Maildir mailbox"), group);
+    vlay->addWidget(radioButton5);
 
-  vlay->addStretch( 10 );
+    vlay->addStretch(10);
 
-  radioButton2->setChecked(true); // Pop is most common ?
-  buttonClicked(1);
+    radioButton2->setChecked(true); // Pop is most common ?
+    buttonClicked(1);
 }
 
 
-void KMAcctSelDlg::buttonClicked( int id )
+void KMAcctSelDlg::buttonClicked(int id)
 {
-  mSelectedButton = id;
+    mSelectedButton = id;
 }
 
 
-int KMAcctSelDlg::selected( void ) const
+int KMAcctSelDlg::selected(void) const
 {
-  return mSelectedButton;
+    return mSelectedButton;
 }
 
 

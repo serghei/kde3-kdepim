@@ -31,10 +31,9 @@ class Environment;
 
 class SyncProcess;
 
-class SyncProcessManager : public QObject
-{
+class SyncProcessManager : public QObject {
     Q_OBJECT
-  public:
+public:
     static SyncProcessManager *self();
 
     /**
@@ -45,7 +44,10 @@ class SyncProcessManager : public QObject
     /**
       Return OpenSync Environment.
     */
-    QSync::Environment *environment() const { return mEnvironment; }
+    QSync::Environment *environment() const
+    {
+        return mEnvironment;
+    }
 
     /**
       Returns the number of SyncProcesses.
@@ -55,43 +57,43 @@ class SyncProcessManager : public QObject
     /**
       Returns the SyncProcess at position @param pos.
      */
-    SyncProcess* at( int pos ) const;
+    SyncProcess *at(int pos) const;
 
     /**
       Returns the SyncProcess with the given @param group.
      */
-    SyncProcess* byGroup( const QSync::Group &group );
+    SyncProcess *byGroup(const QSync::Group &group);
 
     /**
       Returns the SyncProcess with the given group @param name.
      */
-    SyncProcess* byGroupName( const QString &name );
+    SyncProcess *byGroupName(const QString &name);
 
     /**
       Adds a group with given @param name.
      */
-    void addGroup( const QString &name );
+    void addGroup(const QString &name);
 
     /**
       Removes the given @param sync process.
      */
-    void remove( SyncProcess *syncProcess );
+    void remove(SyncProcess *syncProcess);
 
     /**
       Adds @param plugin instance as member to the group of @param process.
      */
-    QSync::Result addMember( SyncProcess *process, const QSync::Plugin &plugin );
+    QSync::Result addMember(SyncProcess *process, const QSync::Plugin &plugin);
 
-  signals:
+signals:
     void changed();
-    void syncProcessChanged( SyncProcess *process );
+    void syncProcessChanged(SyncProcess *process);
 
-  private:
+private:
     SyncProcessManager();
 
-    void init( QSync::Environment *environment );
+    void init(QSync::Environment *environment);
 
-    QValueList<SyncProcess*> mProcesses;
+    QValueList<SyncProcess *> mProcesses;
     QSync::Environment *mEnvironment;
 
     static SyncProcessManager *mSelf;

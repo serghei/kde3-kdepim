@@ -38,41 +38,44 @@
 #include <qstringlist.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
+class Error;
+class Context;
+class Key;
 }
 
 namespace Kpgp {
-  class Base;
+class Base;
 }
 
 namespace Kleo {
 
-  class KpgpKeyListJob : public KeyListJob {
+class KpgpKeyListJob : public KeyListJob {
     Q_OBJECT
-  public:
-    KpgpKeyListJob( Kpgp::Base * pgpBase );
+public:
+    KpgpKeyListJob(Kpgp::Base *pgpBase);
     ~KpgpKeyListJob();
 
     /*! \reimp from KeyListJob */
-    GpgME::Error start( const QStringList & patterns, bool secretOnly );
+    GpgME::Error start(const QStringList &patterns, bool secretOnly);
 
     /*! \reimp from KeyListJob */
-    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
-                               std::vector<GpgME::Key> & keys );
+    GpgME::KeyListResult exec(const QStringList &patterns, bool secretOnly,
+                              std::vector<GpgME::Key> &keys);
 
     /*! \reimp from Job */
-    void slotCancel() { /*FIXME*/ }
+    void slotCancel()
+    {
+        /*FIXME*/
+    }
 
-  private slots:
+private slots:
     void slotDoIt();
 
-  private:
-    Kpgp::Base * mPgpBase;
+private:
+    Kpgp::Base *mPgpBase;
     QStringList mPatterns;
     bool mSecretOnly;
-  };
+};
 
 }
 

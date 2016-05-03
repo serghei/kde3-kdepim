@@ -33,9 +33,8 @@ class SimpleType;
 /**
   Factory class, which creates InputFields for a given type.
  */
-class InputFieldFactory
-{
-  public:
+class InputFieldFactory {
+public:
     /**
       Destructor.
      */
@@ -44,22 +43,22 @@ class InputFieldFactory
     /**
       Creates an input field of the given type with the given name.
      */
-    InputField *createField( const QString &name, const QString &typeName, bool isList = false );
+    InputField *createField(const QString &name, const QString &typeName, bool isList = false);
 
     /**
       Creates an input field of the given type with the given name.
      */
-    InputField *createBasicField( const QString &name, const QString &typeName, const Schema::SimpleType *type, bool isList = false );
+    InputField *createBasicField(const QString &name, const QString &typeName, const Schema::SimpleType *type, bool isList = false);
 
     /**
       Sets the types description, so that the factory can pass
       them to the input fields.
      */
-    void setTypes( const Schema::Types &types );
+    void setTypes(const Schema::Types &types);
 
-    static InputFieldFactory* self();
+    static InputFieldFactory *self();
 
-  private:
+private:
     InputFieldFactory();
 
     static InputFieldFactory *mSelf;

@@ -36,29 +36,28 @@
 class QFile;
 class QTextStream;
 
-class LogFile : public QObject, public LoggerDCOP
-{
-Q_OBJECT
+class LogFile : public QObject, public LoggerDCOP {
+    Q_OBJECT
 
 public:
-	LogFile();
-	~LogFile() { } ;
+    LogFile();
+    ~LogFile() { } ;
 
-	/**
-	* DCOP interface.
-	*/
-	virtual ASYNC logStartSync();
-	virtual ASYNC logEndSync();
-	virtual ASYNC logError(QString);
-	virtual ASYNC logMessage(QString);
-	virtual ASYNC logProgress(QString,int);
+    /**
+    * DCOP interface.
+    */
+    virtual ASYNC logStartSync();
+    virtual ASYNC logEndSync();
+    virtual ASYNC logError(QString);
+    virtual ASYNC logMessage(QString);
+    virtual ASYNC logProgress(QString, int);
 
-	void addMessage(const QString &);
+    void addMessage(const QString &);
 
 private:
-	QFile*fOutfile;
-	bool fSyncing;
-	QTextStream fLogStream;
+    QFile *fOutfile;
+    bool fSyncing;
+    QTextStream fLogStream;
 } ;
 
 #endif

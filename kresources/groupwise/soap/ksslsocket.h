@@ -25,36 +25,35 @@
 
 class KSSLSocketPrivate;
 
-class KSSLSocket : public KExtendedSocket
-{
-	Q_OBJECT
+class KSSLSocket : public KExtendedSocket {
+    Q_OBJECT
 
-	public:
-		KSSLSocket();
-		~KSSLSocket();
+public:
+    KSSLSocket();
+    ~KSSLSocket();
 
-		Q_LONG readBlock( char* data, Q_ULONG maxLen );
-		Q_LONG writeBlock( const char* data, Q_ULONG len );
+    Q_LONG readBlock(char *data, Q_ULONG maxLen);
+    Q_LONG writeBlock(const char *data, Q_ULONG len);
 
-	signals:
-		void sslFailure();
+signals:
+    void sslFailure();
 
-	private slots:
-		void slotConnected();
-		void slotDisconnected();
+private slots:
+    void slotConnected();
+    void slotDisconnected();
 
-	private:
-		int verifyCertificate();
-		int messageBox( KIO::SlaveBase::MessageBoxType type, const QString &text,
-			const QString &caption,	const QString &buttonYes, const QString &buttonNo );
+private:
+    int verifyCertificate();
+    int messageBox(KIO::SlaveBase::MessageBoxType type, const QString &text,
+                   const QString &caption,	const QString &buttonYes, const QString &buttonNo);
 
 
-		//Copied frm tcpslavebase to simply integrating their dialog function
-		void setMetaData( const QString &, const QVariant & );
-		bool hasMetaData( const QString & );
-		QString metaData( const QString & );
+    //Copied frm tcpslavebase to simply integrating their dialog function
+    void setMetaData(const QString &, const QVariant &);
+    bool hasMetaData(const QString &);
+    QString metaData(const QString &);
 
-		KSSLSocketPrivate *d;
+    KSSLSocketPrivate *d;
 };
 
 #endif

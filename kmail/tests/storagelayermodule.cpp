@@ -1,7 +1,7 @@
 /**
  * Copyright (C)  2005 Till Adam <adam@kde.org>
- * 
- * This software is under the "if you run these tests and they break you 
+ *
+ * This software is under the "if you run these tests and they break you
  * have to fix it" license.
  */
 
@@ -12,5 +12,5 @@
 
 using namespace KUnitTest;
 
-KUNITTEST_MODULE( kunittest_storagelayermodule, "KMail Storage Layer Tests" );
-KUNITTEST_MODULE_REGISTER_TESTER( MessageDictTester );
+KUNITTEST_MODULE(kunittest_storagelayermodule, "KMail Storage Layer Tests");
+KUNITTEST_MODULE_REGISTER_TESTER(MessageDictTester);

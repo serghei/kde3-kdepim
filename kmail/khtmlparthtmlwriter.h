@@ -43,40 +43,41 @@ class KHTMLPart;
 
 namespace KMail {
 
-  class KHtmlPartHtmlWriter : public QObject, public HtmlWriter {
+class KHtmlPartHtmlWriter : public QObject, public HtmlWriter {
     Q_OBJECT
-  public:
+public:
     // Key is Content-Id, value is URL
     typedef QMap<QString, QString> EmbeddedPartMap;
-    KHtmlPartHtmlWriter( KHTMLPart * part,
-			 QObject * parent=0, const char * name = 0 );
+    KHtmlPartHtmlWriter(KHTMLPart *part,
+                        QObject *parent = 0, const char *name = 0);
     virtual ~KHtmlPartHtmlWriter();
 
-    void begin( const QString & cssDefs );
+    void begin(const QString &cssDefs);
     void end();
     void reset();
-    void write( const QString & str );
-    void queue( const QString & str );
+    void write(const QString &str);
+    void queue(const QString &str);
     void flush();
-    void embedPart( const QCString & contentId, const QString & url );
+    void embedPart(const QCString &contentId, const QString &url);
 
-  private slots:
+private slots:
     void slotWriteNextHtmlChunk();
 
-  private:
+private:
     void resolveCidUrls();
 
-  private:
-    KHTMLPart * mHtmlPart;
+private:
+    KHTMLPart *mHtmlPart;
     QStringList mHtmlQueue;
     QTimer mHtmlTimer;
-    enum State {
-      Begun,
-      Queued,
-      Ended
+    enum State
+    {
+        Begun,
+        Queued,
+        Ended
     } mState;
     EmbeddedPartMap mEmbeddedPartMap;
-  };
+};
 
 } // namespace KMail
 

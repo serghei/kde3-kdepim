@@ -26,18 +26,17 @@ class TemplateListView;
 class KAEvent;
 
 
-class TemplatePickDlg : public KDialogBase
-{
-		Q_OBJECT
-	public:
-		TemplatePickDlg(QWidget* parent = 0, const char* name = 0);
-		const KAEvent*    selectedTemplate() const;
-	protected:
-		virtual void      resizeEvent(QResizeEvent*);
-	private slots:
-		void              slotSelectionChanged();
-	private:
-		TemplateListView* mTemplateList;
+class TemplatePickDlg : public KDialogBase {
+    Q_OBJECT
+public:
+    TemplatePickDlg(QWidget *parent = 0, const char *name = 0);
+    const KAEvent    *selectedTemplate() const;
+protected:
+    virtual void      resizeEvent(QResizeEvent *);
+private slots:
+    void              slotSelectionChanged();
+private:
+    TemplateListView *mTemplateList;
 };
 
 #endif // TEMPLATEPICKDLG_H

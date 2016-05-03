@@ -57,29 +57,29 @@
 using namespace KNetwork;
 
 
-KNotesNetworkReceiver::KNotesNetworkReceiver( KBufferedSocket *s )
-  : QObject(),
-    m_buffer( new QByteArray() ), m_sock( s )
+KNotesNetworkReceiver::KNotesNetworkReceiver(KBufferedSocket *s)
+    : QObject(),
+      m_buffer(new QByteArray()), m_sock(s)
 {
-    QString date = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime(), true, false );
+    QString date = KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), true, false);
 
     // Add the remote IP or hostname and the date to the title, to help the
     // user guess who wrote it.
     m_titleAddon = QString(" [%1, %2]")
-                   .arg( m_sock->peerAddress().nodeName() )
-                   .arg( date );
+                   .arg(m_sock->peerAddress().nodeName())
+                   .arg(date);
 
     // Setup the communications
-    connect( m_sock, SIGNAL(readyRead()), SLOT(slotDataAvailable()) );
-    connect( m_sock, SIGNAL(closed()), SLOT(slotConnectionClosed()) );
-    connect( m_sock, SIGNAL(gotError( int )), SLOT(slotError( int )) );
+    connect(m_sock, SIGNAL(readyRead()), SLOT(slotDataAvailable()));
+    connect(m_sock, SIGNAL(closed()), SLOT(slotConnectionClosed()));
+    connect(m_sock, SIGNAL(gotError(int)), SLOT(slotError(int)));
 
-    m_sock->enableRead( true );
+    m_sock->enableRead(true);
 
     // Setup the timer
-    m_timer = new QTimer( this, "m_timer" );
-    connect( m_timer, SIGNAL(timeout()), SLOT(slotReceptionTimeout()) );
-    m_timer->start( MAXTIME, true );
+    m_timer = new QTimer(this, "m_timer");
+    connect(m_timer, SIGNAL(timeout()), SLOT(slotReceptionTimeout()));
+    m_timer->start(MAXTIME, true);
 }
 
 KNotesNetworkReceiver::~KNotesNetworkReceiver()
@@ -98,24 +98,24 @@ void KNotesNetworkReceiver::slotDataAvailable()
         // Append to "big buffer" only if we have some space left.
         int curLen = m_buffer->count();
 
-        smallBufferLen = m_sock->readBlock( smallBuffer, SBSIZE );
+        smallBufferLen = m_sock->readBlock(smallBuffer, SBSIZE);
 
         // Limit max transfer over buffer, to avoid overflow.
-        smallBufferLen = kMin( smallBufferLen, MAXBUFFER - curLen );
-        
-        if ( smallBufferLen > 0 )
+        smallBufferLen = kMin(smallBufferLen, MAXBUFFER - curLen);
+
+        if(smallBufferLen > 0)
         {
-            m_buffer->resize( curLen + smallBufferLen );
-            memcpy( m_buffer->data() + curLen, smallBuffer, smallBufferLen );
+            m_buffer->resize(curLen + smallBufferLen);
+            memcpy(m_buffer->data() + curLen, smallBuffer, smallBufferLen);
         }
     }
-    while ( smallBufferLen == SBSIZE );
+    while(smallBufferLen == SBSIZE);
 
     // If we are overflowing, close connection.
-    if ( m_buffer->count() == MAXBUFFER )
+    if(m_buffer->count() == MAXBUFFER)
         m_sock->close();
     else
-        m_timer->changeInterval( MAXTIME );
+        m_timer->changeInterval(MAXTIME);
 }
 
 void KNotesNetworkReceiver::slotReceptionTimeout()
@@ -125,27 +125,27 @@ void KNotesNetworkReceiver::slotReceptionTimeout()
 
 void KNotesNetworkReceiver::slotConnectionClosed()
 {
-    if ( m_timer->isActive() )
+    if(m_timer->isActive())
     {
-        QString noteText = QString( *m_buffer ).stripWhiteSpace();
+        QString noteText = QString(*m_buffer).stripWhiteSpace();
 
         // First line is the note title or, in case of ATnotes, the id
-        int pos = noteText.find( QRegExp("[\r\n]") );
-        QString noteTitle = noteText.left( pos ).stripWhiteSpace() + m_titleAddon;
+        int pos = noteText.find(QRegExp("[\r\n]"));
+        QString noteTitle = noteText.left(pos).stripWhiteSpace() + m_titleAddon;
 
-        noteText = noteText.mid( pos ).stripWhiteSpace();
+        noteText = noteText.mid(pos).stripWhiteSpace();
 
-        if ( !noteText.isEmpty() )
-            emit sigNoteReceived( noteTitle, noteText );
+        if(!noteText.isEmpty())
+            emit sigNoteReceived(noteTitle, noteText);
     }
 
     deleteLater();
 }
 
-void KNotesNetworkReceiver::slotError( int err )
+void KNotesNetworkReceiver::slotError(int err)
 {
     kdWarning() << k_funcinfo
-                << m_sock->errorString( static_cast<KSocketBase::SocketError>(err) ) 
+                << m_sock->errorString(static_cast<KSocketBase::SocketError>(err))
                 << endl;
 }
 

@@ -46,161 +46,173 @@
 #include <qdir.h>
 #include <qvgroupbox.h>
 
-static const char* log_levels[] = { "none", "basic", "advanced", "expert", "guru" };
+static const char *log_levels[] = { "none", "basic", "advanced", "expert", "guru" };
 
-static int log_level_to_int( const QString& loglevel )
+static int log_level_to_int(const QString &loglevel)
 {
-  if( loglevel == "none" ) {
-	return 0;
-  } else if( loglevel == "basic" ) {
-	return 1;
-  } else if( loglevel == "advanced" ) {
-	return 2;
-  } else if( loglevel == "expert" ) {
-	return 3;
-  } else if( loglevel == "guru" ) {
-	return 4;
-  } else {
-	// default
-	return 1;
-  }
+    if(loglevel == "none")
+    {
+        return 0;
+    }
+    else if(loglevel == "basic")
+    {
+        return 1;
+    }
+    else if(loglevel == "advanced")
+    {
+        return 2;
+    }
+    else if(loglevel == "expert")
+    {
+        return 3;
+    }
+    else if(loglevel == "guru")
+    {
+        return 4;
+    }
+    else
+    {
+        // default
+        return 1;
+    }
 }
 
-KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
-  : KDialogBase( Plain, i18n("Configure KWatchGnuPG"),
-		 Ok|Cancel, Ok, parent, name )
+KWatchGnuPGConfig::KWatchGnuPGConfig(QWidget *parent, const char *name)
+    : KDialogBase(Plain, i18n("Configure KWatchGnuPG"),
+                  Ok | Cancel, Ok, parent, name)
 {
-  // tmp vars:
-  QWidget * w;
-  QGridLayout * glay;
-  QGroupBox * group;
+    // tmp vars:
+    QWidget *w;
+    QGridLayout *glay;
+    QGroupBox *group;
 
-  QWidget * top = plainPage();
+    QWidget *top = plainPage();
 
-  QVBoxLayout * vlay = new QVBoxLayout( top, 0, spacingHint() );
+    QVBoxLayout *vlay = new QVBoxLayout(top, 0, spacingHint());
 
-  group = new QVGroupBox( i18n("WatchGnuPG"), top );
-  group->layout()->setSpacing( spacingHint() );
+    group = new QVGroupBox(i18n("WatchGnuPG"), top);
+    group->layout()->setSpacing(spacingHint());
 
-  w = new QWidget( group );
+    w = new QWidget(group);
 
-  glay = new QGridLayout( w, 3, 2, 0, spacingHint() );
-  glay->setColStretch( 1, 1 );
+    glay = new QGridLayout(w, 3, 2, 0, spacingHint());
+    glay->setColStretch(1, 1);
 
-  int row = -1;
+    int row = -1;
 
-  ++row;
-  mExeED = new KURLRequester( w );
-  glay->addWidget( new QLabel( mExeED, i18n("&Executable:"), w ), row, 0 );
-  glay->addWidget( mExeED, row, 1 );
-  connect( mExeED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );
+    ++row;
+    mExeED = new KURLRequester(w);
+    glay->addWidget(new QLabel(mExeED, i18n("&Executable:"), w), row, 0);
+    glay->addWidget(mExeED, row, 1);
+    connect(mExeED, SIGNAL(textChanged(const QString &)), SLOT(slotChanged()));
 
-  ++row;
-  mSocketED = new KURLRequester( w );
-  glay->addWidget( new QLabel( mSocketED, i18n("&Socket:"), w ), row, 0 );
-  glay->addWidget( mSocketED, row, 1 );
-  connect( mSocketED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );
+    ++row;
+    mSocketED = new KURLRequester(w);
+    glay->addWidget(new QLabel(mSocketED, i18n("&Socket:"), w), row, 0);
+    glay->addWidget(mSocketED, row, 1);
+    connect(mSocketED, SIGNAL(textChanged(const QString &)), SLOT(slotChanged()));
 
-  ++row;
-  mLogLevelCB = new QComboBox( false, w );
-  mLogLevelCB->insertItem( i18n("None") );
-  mLogLevelCB->insertItem( i18n("Basic") );
-  mLogLevelCB->insertItem( i18n("Advanced") );
-  mLogLevelCB->insertItem( i18n("Expert") );
-  mLogLevelCB->insertItem( i18n("Guru") );
-  glay->addWidget( new QLabel( mLogLevelCB, i18n("Default &log level:"), w ), row, 0 );
-  glay->addWidget( mLogLevelCB, row, 1 );
-  connect( mLogLevelCB, SIGNAL(activated(int)), SLOT(slotChanged()) );
+    ++row;
+    mLogLevelCB = new QComboBox(false, w);
+    mLogLevelCB->insertItem(i18n("None"));
+    mLogLevelCB->insertItem(i18n("Basic"));
+    mLogLevelCB->insertItem(i18n("Advanced"));
+    mLogLevelCB->insertItem(i18n("Expert"));
+    mLogLevelCB->insertItem(i18n("Guru"));
+    glay->addWidget(new QLabel(mLogLevelCB, i18n("Default &log level:"), w), row, 0);
+    glay->addWidget(mLogLevelCB, row, 1);
+    connect(mLogLevelCB, SIGNAL(activated(int)), SLOT(slotChanged()));
 
-  vlay->addWidget( group );
+    vlay->addWidget(group);
 
-  /******************* Log Window group *******************/
-  group = new QVGroupBox( i18n("Log Window"), top );
-  group->layout()->setSpacing( spacingHint() );
+    /******************* Log Window group *******************/
+    group = new QVGroupBox(i18n("Log Window"), top);
+    group->layout()->setSpacing(spacingHint());
 
-  w = new QWidget( group );
+    w = new QWidget(group);
 
-  glay = new QGridLayout( w, 2, 3, 0, spacingHint() );
-  glay->setColStretch( 1, 1 );
+    glay = new QGridLayout(w, 2, 3, 0, spacingHint());
+    glay->setColStretch(1, 1);
 
-  row = -1;
+    row = -1;
 
-  ++row;
-  mLoglenSB = new QSpinBox( 0, 1000000, 100, w );
-  mLoglenSB->setSuffix( i18n("history size spinbox suffix"," lines") );
-  mLoglenSB->setSpecialValueText( i18n("unlimited") );
-  glay->addWidget( new QLabel( mLoglenSB, i18n("&History size:"), w ), row, 0 );
-  glay->addWidget( mLoglenSB, row, 1 );
-  QPushButton * button = new QPushButton( i18n("Set &Unlimited"), w );
-  glay->addWidget( button, row, 2 );
+    ++row;
+    mLoglenSB = new QSpinBox(0, 1000000, 100, w);
+    mLoglenSB->setSuffix(i18n("history size spinbox suffix", " lines"));
+    mLoglenSB->setSpecialValueText(i18n("unlimited"));
+    glay->addWidget(new QLabel(mLoglenSB, i18n("&History size:"), w), row, 0);
+    glay->addWidget(mLoglenSB, row, 1);
+    QPushButton *button = new QPushButton(i18n("Set &Unlimited"), w);
+    glay->addWidget(button, row, 2);
 
-  connect( mLoglenSB, SIGNAL(valueChanged(int)), SLOT(slotChanged()) );
-  connect( button, SIGNAL(clicked()), SLOT(slotSetHistorySizeUnlimited()) );
+    connect(mLoglenSB, SIGNAL(valueChanged(int)), SLOT(slotChanged()));
+    connect(button, SIGNAL(clicked()), SLOT(slotSetHistorySizeUnlimited()));
 
-  ++row;
-  mWordWrapCB = new QCheckBox( i18n("Enable &word wrapping"), w );
-  mWordWrapCB->hide(); // QTextEdit doesn't support word wrapping in LogText mode
-  glay->addMultiCellWidget( mWordWrapCB, row, row, 0, 2 );
+    ++row;
+    mWordWrapCB = new QCheckBox(i18n("Enable &word wrapping"), w);
+    mWordWrapCB->hide(); // QTextEdit doesn't support word wrapping in LogText mode
+    glay->addMultiCellWidget(mWordWrapCB, row, row, 0, 2);
 
-  connect( mWordWrapCB, SIGNAL(clicked()), SLOT(slotChanged()) );
+    connect(mWordWrapCB, SIGNAL(clicked()), SLOT(slotChanged()));
 
-  vlay->addWidget( group );
-  vlay->addStretch( 1 );
+    vlay->addWidget(group);
+    vlay->addStretch(1);
 
-  connect( this, SIGNAL(applyClicked()), SLOT(slotSave()) );
-  connect( this, SIGNAL(okClicked()), SLOT(slotSave()) );
+    connect(this, SIGNAL(applyClicked()), SLOT(slotSave()));
+    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 }
 
-void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
-  mLoglenSB->setValue( 0 );
+void KWatchGnuPGConfig::slotSetHistorySizeUnlimited()
+{
+    mLoglenSB->setValue(0);
 }
 
 void KWatchGnuPGConfig::loadConfig()
 {
-  KConfig* config = kapp->config();
-  config->setGroup("WatchGnuPG");
-  mExeED->setURL( config->readEntry( "Executable", "watchgnupg" ) );
-  mSocketED->setURL( config->readEntry( "Socket", QDir::home().canonicalPath()
-										+ "/.gnupg/log-socket") );
-  mLogLevelCB->setCurrentItem( log_level_to_int( config->readEntry( "LogLevel", "basic" ) ) );
+    KConfig *config = kapp->config();
+    config->setGroup("WatchGnuPG");
+    mExeED->setURL(config->readEntry("Executable", "watchgnupg"));
+    mSocketED->setURL(config->readEntry("Socket", QDir::home().canonicalPath()
+                                        + "/.gnupg/log-socket"));
+    mLogLevelCB->setCurrentItem(log_level_to_int(config->readEntry("LogLevel", "basic")));
 
-  config->setGroup("LogWindow");
-  mLoglenSB->setValue( config->readNumEntry( "MaxLogLen", 10000 ) );
-  mWordWrapCB->setChecked( config->readBoolEntry("WordWrap", false ) );
+    config->setGroup("LogWindow");
+    mLoglenSB->setValue(config->readNumEntry("MaxLogLen", 10000));
+    mWordWrapCB->setChecked(config->readBoolEntry("WordWrap", false));
 
-  config->setGroup( QString::null );
-  enableButtonOK( false );
-  enableButtonApply( false );
+    config->setGroup(QString::null);
+    enableButtonOK(false);
+    enableButtonApply(false);
 }
 
 void KWatchGnuPGConfig::saveConfig()
 {
-  KConfig* config = kapp->config();
-  config->setGroup("WatchGnuPG");
-  config->writeEntry( "Executable", mExeED->url() );
-  config->writeEntry( "Socket", mSocketED->url() );
-  config->writeEntry( "LogLevel", log_levels[mLogLevelCB->currentItem()] );
+    KConfig *config = kapp->config();
+    config->setGroup("WatchGnuPG");
+    config->writeEntry("Executable", mExeED->url());
+    config->writeEntry("Socket", mSocketED->url());
+    config->writeEntry("LogLevel", log_levels[mLogLevelCB->currentItem()]);
 
-  config->setGroup("LogWindow");
-  config->writeEntry( "MaxLogLen", mLoglenSB->value() );
-  config->writeEntry( "WordWrap", mWordWrapCB->isChecked() );
+    config->setGroup("LogWindow");
+    config->writeEntry("MaxLogLen", mLoglenSB->value());
+    config->writeEntry("WordWrap", mWordWrapCB->isChecked());
 
-  config->setGroup( QString::null );
-  config->sync();
-  enableButtonOK( false );
-  enableButtonApply( false );
+    config->setGroup(QString::null);
+    config->sync();
+    enableButtonOK(false);
+    enableButtonApply(false);
 }
 
 void KWatchGnuPGConfig::slotChanged()
 {
-  enableButtonOK( true );
-  enableButtonApply( true );
+    enableButtonOK(true);
+    enableButtonApply(true);
 }
 
 void KWatchGnuPGConfig::slotSave()
 {
-  saveConfig();
-  emit reconfigure();
+    saveConfig();
+    emit reconfigure();
 }
 
 #include "kwatchgnupgconfig.moc"

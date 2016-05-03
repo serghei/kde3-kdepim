@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -38,46 +38,46 @@ public:
     //   will work only for well-known types or subtypes.  The enum
     //   values are defined in <mimepp/enum.h>.
     // Type
-    const DwString& TypeStr() const;
+    const DwString &TypeStr() const;
     int Type() const;
-    void SetTypeStr(const DwString& aStr);
+    void SetTypeStr(const DwString &aStr);
     void SetType(int aType);
     // Subtype
-    const DwString& SubtypeStr() const;
+    const DwString &SubtypeStr() const;
     int Subtype() const;
-    void SetSubtypeStr(const DwString& aStr);
+    void SetSubtypeStr(const DwString &aStr);
     void SetSubtype(int aSubtype);
 
     // Get or set the 'Content-Transfer-Encoding' header field
     // + The member functions that involve enumerated types (ints)
     //   will work only for well-known encodings.  The enum values
     //   are defined in <mimepp/enum.h>.
-    const DwString& ContentTransferEncodingStr() const;
+    const DwString &ContentTransferEncodingStr() const;
     int ContentTransferEncoding() const;
-    void SetContentTransferEncodingStr(const DwString& aStr);
+    void SetContentTransferEncodingStr(const DwString &aStr);
     void SetContentTransferEncoding(int aCte);
 
     // Cte is short for ContentTransferEncoding.
     // These functions are an alternative to the ones with longer names.
-    const DwString& CteStr() const;
+    const DwString &CteStr() const;
     int Cte() const;
-    void SetCteStr(const DwString& aStr);
+    void SetCteStr(const DwString &aStr);
     void SetCte(int aCte);
 
     // Get or set the 'Content-Description' header field
-    const DwString& ContentDescription() const;
-    void SetContentDescription(const DwString& aStr);
-    
+    const DwString &ContentDescription() const;
+    void SetContentDescription(const DwString &aStr);
+
     // Get or set the 'Content-Disposition' header field
-    const DwString& ContentDisposition() const;
-    void SetContentDisposition(const DwString& aStr);
+    const DwString &ContentDisposition() const;
+    void SetContentDisposition(const DwString &aStr);
 
     // Get or set the body of this body part
-    const DwString& Body() const;
-    void SetBody(const DwString& aStr);
-    
+    const DwString &Body() const;
+    void SetBody(const DwString &aStr);
+
 protected:
-    
+
     DwString mType;
     DwString mSubtype;
     DwString mCte;
@@ -97,7 +97,7 @@ public:
 
     // Use this constructor to create a wrapper for a DwMessage that has
     // been parsed and has been verified as a multipart
-    MultipartMessage(DwMessage* aMsg);
+    MultipartMessage(DwMessage *aMsg);
 
     virtual ~MultipartMessage();
 
@@ -112,16 +112,16 @@ public:
     // Get the body part at position in aIdx.  Indexing starts at 0.
     // If there is no body part at that index, aPart will have its
     // attributes set to empty values.
-    void BodyPart(int aIdx, MultipartBodyPart& aPart);
-    
+    void BodyPart(int aIdx, MultipartBodyPart &aPart);
+
     // Set the body part at position in aIdx.  Indexing starts at 0.
     // If you have aIdx = 10 and there are only 2 body parts, 7 empty
     // body parts will be created to fill slots 2 through 8.  If you
     // just want to add a body part at the end, use AddBodyPart().
-    void SetBodyPart(int aIdx, const MultipartBodyPart& aPart);
-    
+    void SetBodyPart(int aIdx, const MultipartBodyPart &aPart);
+
     // Append a body part to the message.
-    void AddBodyPart(const MultipartBodyPart& aPart);
+    void AddBodyPart(const MultipartBodyPart &aPart);
 
 };
 

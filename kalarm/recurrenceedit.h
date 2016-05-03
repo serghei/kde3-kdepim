@@ -53,139 +53,147 @@ class MonthlyRule;
 class YearlyRule;
 
 
-class RecurrenceEdit : public QFrame
-{
-		Q_OBJECT
-	public:
-		// Don't alter the order of these recurrence types
-		enum RepeatType { INVALID_RECUR = -1, NO_RECUR, AT_LOGIN, SUBDAILY, DAILY, WEEKLY, MONTHLY, ANNUAL };
+class RecurrenceEdit : public QFrame {
+    Q_OBJECT
+public:
+    // Don't alter the order of these recurrence types
+    enum RepeatType { INVALID_RECUR = -1, NO_RECUR, AT_LOGIN, SUBDAILY, DAILY, WEEKLY, MONTHLY, ANNUAL };
 
-		RecurrenceEdit(bool readOnly, QWidget* parent, const char* name = 0);
-		virtual ~RecurrenceEdit()  { }
+    RecurrenceEdit(bool readOnly, QWidget *parent, const char *name = 0);
+    virtual ~RecurrenceEdit()  { }
 
-		/** Set widgets to default values */
-		void          setDefaults(const QDateTime& from);
-		/** Initialise according to a specified event */
-		void          set(const KAEvent&, bool keepDuration);
-		/** Write recurrence settings into an event */
-		void          updateEvent(KAEvent&, bool adjustStart);
-		QWidget*      checkData(const QDateTime& startDateTime, QString& errorMessage) const;
-		RepeatType    repeatType() const                    { return mRuleButtonType; }
-		bool          isTimedRepeatType() const             { return mRuleButtonType >= SUBDAILY; }
-		int           subRepeatCount(int* subRepeatInterval = 0) const;
-		void          setSubRepetition(int reminderMinutes, bool dateOnly);
-		void          setStartDate(const QDate&, const QDate& today);
-		void          setDefaultEndDate(const QDate&);
-		void          setEndDateTime(const DateTime&);
-		DateTime      endDateTime() const;
-		bool          stateChanged() const;
-		void          activateSubRepetition();
+    /** Set widgets to default values */
+    void          setDefaults(const QDateTime &from);
+    /** Initialise according to a specified event */
+    void          set(const KAEvent &, bool keepDuration);
+    /** Write recurrence settings into an event */
+    void          updateEvent(KAEvent &, bool adjustStart);
+    QWidget      *checkData(const QDateTime &startDateTime, QString &errorMessage) const;
+    RepeatType    repeatType() const
+    {
+        return mRuleButtonType;
+    }
+    bool          isTimedRepeatType() const
+    {
+        return mRuleButtonType >= SUBDAILY;
+    }
+    int           subRepeatCount(int *subRepeatInterval = 0) const;
+    void          setSubRepetition(int reminderMinutes, bool dateOnly);
+    void          setStartDate(const QDate &, const QDate &today);
+    void          setDefaultEndDate(const QDate &);
+    void          setEndDateTime(const DateTime &);
+    DateTime      endDateTime() const;
+    bool          stateChanged() const;
+    void          activateSubRepetition();
 
-		static QString i18n_Norecur();           // text of 'No recurrence' selection, lower case
-		static QString i18n_NoRecur();           // text of 'No Recurrence' selection, initial capitals
-		static QString i18n_AtLogin();           // text of 'At Login' selection
-		static QString i18n_l_Atlogin();         // text of 'At &login' selection, with 'L' shortcut
-		static QString i18n_HourlyMinutely();    // text of 'Hourly/Minutely'
-		static QString i18n_u_HourlyMinutely();  // text of 'Ho&urly/Minutely' selection, with 'U' shortcut
-		static QString i18n_Daily();             // text of 'Daily' selection
-		static QString i18n_d_Daily();           // text of '&Daily' selection, with 'D' shortcut
-		static QString i18n_Weekly();            // text of 'Weekly' selection
-		static QString i18n_w_Weekly();          // text of '&Weekly' selection, with 'W' shortcut
-		static QString i18n_Monthly();           // text of 'Monthly' selection
-		static QString i18n_m_Monthly();         // text of '&Monthly' selection, with 'M' shortcut
-		static QString i18n_Yearly();            // text of 'Yearly' selection
-		static QString i18n_y_Yearly();          // text of '&Yearly' selection, with 'Y' shortcut
+    static QString i18n_Norecur();           // text of 'No recurrence' selection, lower case
+    static QString i18n_NoRecur();           // text of 'No Recurrence' selection, initial capitals
+    static QString i18n_AtLogin();           // text of 'At Login' selection
+    static QString i18n_l_Atlogin();         // text of 'At &login' selection, with 'L' shortcut
+    static QString i18n_HourlyMinutely();    // text of 'Hourly/Minutely'
+    static QString i18n_u_HourlyMinutely();  // text of 'Ho&urly/Minutely' selection, with 'U' shortcut
+    static QString i18n_Daily();             // text of 'Daily' selection
+    static QString i18n_d_Daily();           // text of '&Daily' selection, with 'D' shortcut
+    static QString i18n_Weekly();            // text of 'Weekly' selection
+    static QString i18n_w_Weekly();          // text of '&Weekly' selection, with 'W' shortcut
+    static QString i18n_Monthly();           // text of 'Monthly' selection
+    static QString i18n_m_Monthly();         // text of '&Monthly' selection, with 'M' shortcut
+    static QString i18n_Yearly();            // text of 'Yearly' selection
+    static QString i18n_y_Yearly();          // text of '&Yearly' selection, with 'Y' shortcut
 
-	public slots:
-		void          setDateTime(const QDateTime& start)   { mCurrStartDateTime = start; }
+public slots:
+    void          setDateTime(const QDateTime &start)
+    {
+        mCurrStartDateTime = start;
+    }
 
-	signals:
-		void          shown();
-		void          typeChanged(int recurType);   // returns a RepeatType value
-		void          frequencyChanged();
-		void          repeatNeedsInitialisation();
+signals:
+    void          shown();
+    void          typeChanged(int recurType);   // returns a RepeatType value
+    void          frequencyChanged();
+    void          repeatNeedsInitialisation();
 
-	protected:
-		virtual void  showEvent(QShowEvent*);
+protected:
+    virtual void  showEvent(QShowEvent *);
 
-	private slots:
-		void          periodClicked(int);
-		void          rangeTypeClicked();
-		void          repeatCountChanged(int value);
-		void          slotAnyTimeToggled(bool);
-		void          addException();
-		void          changeException();
-		void          deleteException();
-		void          enableExceptionButtons();
+private slots:
+    void          periodClicked(int);
+    void          rangeTypeClicked();
+    void          repeatCountChanged(int value);
+    void          slotAnyTimeToggled(bool);
+    void          addException();
+    void          changeException();
+    void          deleteException();
+    void          enableExceptionButtons();
 
-	private:
-		void          setRuleDefaults(const QDate& start);
-		void          saveState();
+private:
+    void          setRuleDefaults(const QDate &start);
+    void          saveState();
 
-		// Main rule box and choices
-		QWidgetStack*     mRuleStack;
-		Rule*             mRule;         // current rule widget, or 0 if NoRule
-		NoRule*           mNoRule;
-		SubDailyRule*     mSubDailyRule;
-		DailyRule*        mDailyRule;
-		WeeklyRule*       mWeeklyRule;
-		MonthlyRule*      mMonthlyRule;
-		YearlyRule*       mYearlyRule;
+    // Main rule box and choices
+    QWidgetStack     *mRuleStack;
+    Rule             *mRule;         // current rule widget, or 0 if NoRule
+    NoRule           *mNoRule;
+    SubDailyRule     *mSubDailyRule;
+    DailyRule        *mDailyRule;
+    WeeklyRule       *mWeeklyRule;
+    MonthlyRule      *mMonthlyRule;
+    YearlyRule       *mYearlyRule;
 
-		ButtonGroup*      mRuleButtonGroup;
-		RadioButton*      mNoneButton;
-		RadioButton*      mAtLoginButton;
-		RadioButton*      mSubDailyButton;
-		RadioButton*      mDailyButton;
-		RadioButton*      mWeeklyButton;
-		RadioButton*      mMonthlyButton;
-		RadioButton*      mYearlyButton;
-		int               mNoneButtonId;
-		int               mAtLoginButtonId;
-		int               mSubDailyButtonId;
-		int               mDailyButtonId;
-		int               mWeeklyButtonId;
-		int               mMonthlyButtonId;
-		int               mYearlyButtonId;
-		RepeatType        mRuleButtonType;
-		bool              mDailyShown;       // daily rule has been displayed at some time or other
-		bool              mWeeklyShown;      // weekly rule has been displayed at some time or other
-		bool              mMonthlyShown;     // monthly rule has been displayed at some time or other
-		bool              mYearlyShown;      // yearly rule has been displayed at some time or other
+    ButtonGroup      *mRuleButtonGroup;
+    RadioButton      *mNoneButton;
+    RadioButton      *mAtLoginButton;
+    RadioButton      *mSubDailyButton;
+    RadioButton      *mDailyButton;
+    RadioButton      *mWeeklyButton;
+    RadioButton      *mMonthlyButton;
+    RadioButton      *mYearlyButton;
+    int               mNoneButtonId;
+    int               mAtLoginButtonId;
+    int               mSubDailyButtonId;
+    int               mDailyButtonId;
+    int               mWeeklyButtonId;
+    int               mMonthlyButtonId;
+    int               mYearlyButtonId;
+    RepeatType        mRuleButtonType;
+    bool              mDailyShown;       // daily rule has been displayed at some time or other
+    bool              mWeeklyShown;      // weekly rule has been displayed at some time or other
+    bool              mMonthlyShown;     // monthly rule has been displayed at some time or other
+    bool              mYearlyShown;      // yearly rule has been displayed at some time or other
 
-		// Range
-		ButtonGroup*      mRangeButtonGroup;
-		RadioButton*      mNoEndDateButton;
-		RadioButton*      mRepeatCountButton;
-		SpinBox*          mRepeatCountEntry;
-		QLabel*           mRepeatCountLabel;
-		RadioButton*      mEndDateButton;
-		DateEdit*         mEndDateEdit;
-		TimeEdit*         mEndTimeEdit;
-		CheckBox*         mEndAnyTimeCheckBox;
+    // Range
+    ButtonGroup      *mRangeButtonGroup;
+    RadioButton      *mNoEndDateButton;
+    RadioButton      *mRepeatCountButton;
+    SpinBox          *mRepeatCountEntry;
+    QLabel           *mRepeatCountLabel;
+    RadioButton      *mEndDateButton;
+    DateEdit         *mEndDateEdit;
+    TimeEdit         *mEndTimeEdit;
+    CheckBox         *mEndAnyTimeCheckBox;
 
-		// Exceptions
-		QGroupBox*        mExceptionGroup;
-		QListBox*         mExceptionDateList;
-		DateEdit*         mExceptionDateEdit;
-		QPushButton*      mChangeExceptionButton;
-		QPushButton*      mDeleteExceptionButton;
-		QValueList<QDate> mExceptionDates;
+    // Exceptions
+    QGroupBox        *mExceptionGroup;
+    QListBox         *mExceptionDateList;
+    DateEdit         *mExceptionDateEdit;
+    QPushButton      *mChangeExceptionButton;
+    QPushButton      *mDeleteExceptionButton;
+    QValueList<QDate> mExceptionDates;
 
-		// Current start date and time
-		QDateTime         mCurrStartDateTime;
-		RepetitionButton* mSubRepetition;
-		bool              mNoEmitTypeChanged;        // suppress typeChanged() signal
-		bool              mReadOnly;
+    // Current start date and time
+    QDateTime         mCurrStartDateTime;
+    RepetitionButton *mSubRepetition;
+    bool              mNoEmitTypeChanged;        // suppress typeChanged() signal
+    bool              mReadOnly;
 
-		// Initial state of non-rule controls
-		QButton*          mSavedRuleButton;          // which rule button was selected
-		QButton*          mSavedRangeButton;         // which range button was selected
-		int               mSavedRecurCount;          // recurrence repeat count
-		DateTime          mSavedEndDateTime;         // end date/time
-		QValueList<QDate> mSavedExceptionDates;      // exception dates
-		int               mSavedRepeatInterval;      // sub-repetition interval (via mSubRepetition button)
-		int               mSavedRepeatCount;         // sub-repetition count (via mSubRepetition button)
+    // Initial state of non-rule controls
+    QButton          *mSavedRuleButton;          // which rule button was selected
+    QButton          *mSavedRangeButton;         // which range button was selected
+    int               mSavedRecurCount;          // recurrence repeat count
+    DateTime          mSavedEndDateTime;         // end date/time
+    QValueList<QDate> mSavedExceptionDates;      // exception dates
+    int               mSavedRepeatInterval;      // sub-repetition interval (via mSubRepetition button)
+    int               mSavedRepeatCount;         // sub-repetition count (via mSubRepetition button)
 };
 
 #endif // RECURRENCEEDIT_H

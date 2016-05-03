@@ -28,32 +28,31 @@
 
 class QTimer;
 
-class GlobalSettings : public QObject, public GlobalSettingsBase
-{
-  Q_OBJECT
+class GlobalSettings : public QObject, public GlobalSettingsBase {
+    Q_OBJECT
 public:
-  virtual ~GlobalSettings();
+    virtual ~GlobalSettings();
 
-  static GlobalSettings *self();
+    static GlobalSettings *self();
 
-  /** Call this slot instead of directly @ref KConfig::sync() to
-      minimize the overall config writes. Calling this slot will
-      schedule a sync of the application config file using a timer, so
-      that many consecutive calls can be condensed into a single
-      sync, which is more efficient. */
-  void requestSync();
+    /** Call this slot instead of directly @ref KConfig::sync() to
+        minimize the overall config writes. Calling this slot will
+        schedule a sync of the application config file using a timer, so
+        that many consecutive calls can be condensed into a single
+        sync, which is more efficient. */
+    void requestSync();
 
 private slots:
-  void slotSyncNow();
+    void slotSyncNow();
 
 private:
-  GlobalSettings();
-  static GlobalSettings *mSelf;
+    GlobalSettings();
+    static GlobalSettings *mSelf;
 
-  QTimer *mConfigSyncTimer;
+    QTimer *mConfigSyncTimer;
 
 };
 
-const int defaultmailcheckintervalmin=5; // check for mail every X minutes 
+const int defaultmailcheckintervalmin = 5; // check for mail every X minutes
 
 #endif /* KMAIL_GLOBALSETTINGS_H */

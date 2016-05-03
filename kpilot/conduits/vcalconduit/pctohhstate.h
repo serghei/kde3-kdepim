@@ -33,22 +33,21 @@
 class VCalConduitBase;
 
 /**
- * State that handles copying of records from pc to handheld. 
+ * State that handles copying of records from pc to handheld.
  * @see vcal-conduitstate.h
  */
-class PCToHHState : public ConduitState
-{
+class PCToHHState : public ConduitState {
 private:
-	ConduitState *fNextState;
-	int fPilotindex;
+    ConduitState *fNextState;
+    int fPilotindex;
 
 public:
-	PCToHHState();
-	virtual ~PCToHHState();
+    PCToHHState();
+    virtual ~PCToHHState();
 
-	virtual void startSync( ConduitAction* );
-	virtual void handleRecord( ConduitAction* );
-	virtual void finishSync( ConduitAction* );
+    virtual void startSync(ConduitAction *);
+    virtual void handleRecord(ConduitAction *);
+    virtual void finishSync(ConduitAction *);
 };
 
 #endif

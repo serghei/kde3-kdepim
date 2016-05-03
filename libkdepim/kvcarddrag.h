@@ -36,47 +36,46 @@ class KVCardDragPrivate;
  *
  * See the Qt drag'n'drop documentation.
  */
-class KDE_EXPORT KVCardDrag : public QStoredDrag
-{
-  Q_OBJECT
+class KDE_EXPORT KVCardDrag : public QStoredDrag {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Constructs an empty vcard drag.
      */
-    KVCardDrag( QWidget *dragsource = 0, const char *name = 0 );
+    KVCardDrag(QWidget *dragsource = 0, const char *name = 0);
 
     /**
      * Constructs a vcard drag with the @p addressee.
      */
-    KVCardDrag( const QString &content, QWidget *dragsource = 0, const char *name = 0 );
+    KVCardDrag(const QString &content, QWidget *dragsource = 0, const char *name = 0);
     virtual ~KVCardDrag() {}
 
     /**
      * Sets the vcard of the drag to @p content.
      */
-    void setVCard( const QString &content );
+    void setVCard(const QString &content);
 
     /**
      * Returns true if the MIME source @p e contains a vcard object.
      */
-    static bool canDecode( QMimeSource *e );
+    static bool canDecode(QMimeSource *e);
 
     /**
      * Decodes the MIME source @p e and puts the resulting vcard into @p content.
      */
-    static bool decode( QMimeSource *e, QString &content );
+    static bool decode(QMimeSource *e, QString &content);
 
     /**
      * Decodes the MIME source @p e and puts the resulting vcard into @p addresseess.
      */
-    static bool decode( QMimeSource *e, KABC::Addressee::List& addressees );
+    static bool decode(QMimeSource *e, KABC::Addressee::List &addressees);
 
-  protected:
-     virtual void virtual_hook( int id, void* data );
+protected:
+    virtual void virtual_hook(int id, void *data);
 
-  private:
-     KVCardDragPrivate *d;
+private:
+    KVCardDragPrivate *d;
 };
 
 #endif // KVCARDDRAG_H

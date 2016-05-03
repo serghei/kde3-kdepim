@@ -26,42 +26,43 @@
 
 class QWidget;
 
-namespace KParts
-{
+namespace KParts {
 
-  class ReadOnlyPart;
+class ReadOnlyPart;
 
-  /**
-   * Provides a way to export a widget which will be displayed in Kontacts
-   * stackview at the left
-   **/
-  class KDE_EXPORT SideBarExtension : public QObject
-  {
+/**
+ * Provides a way to export a widget which will be displayed in Kontacts
+ * stackview at the left
+ **/
+class KDE_EXPORT SideBarExtension : public QObject {
     Q_OBJECT
 
-    public:
-      /**
-       * Constucts a SideBarExtension.
-       *
-       * @param exported A QWidget derived widget that will be provided for the
-       *                 users of SideBarExtension.
-       * @param parent   The parent widget.
-       * @param name     The name of the class.
-       **/
-      SideBarExtension(QWidget *exported, KParts::ReadOnlyPart *parent, const char* name);
-      ~SideBarExtension();
+public:
+    /**
+     * Constucts a SideBarExtension.
+     *
+     * @param exported A QWidget derived widget that will be provided for the
+     *                 users of SideBarExtension.
+     * @param parent   The parent widget.
+     * @param name     The name of the class.
+     **/
+    SideBarExtension(QWidget *exported, KParts::ReadOnlyPart *parent, const char *name);
+    ~SideBarExtension();
 
-      /**
-       * Retrieve a pointer to the widget. May be 0 if 0 was passed in the constructor
-       **/
-      QWidget* widget() const { return m_exported; }
+    /**
+     * Retrieve a pointer to the widget. May be 0 if 0 was passed in the constructor
+     **/
+    QWidget *widget() const
+    {
+        return m_exported;
+    }
 
-    private:
-      QWidget* m_exported;
+private:
+    QWidget *m_exported;
 
-      class SideBarExtensionPrivate;
-      SideBarExtensionPrivate *d;
-  };
+    class SideBarExtensionPrivate;
+    SideBarExtensionPrivate *d;
+};
 }
 #endif // SIDEBAREXTENSION_H
 

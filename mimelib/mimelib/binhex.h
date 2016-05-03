@@ -6,7 +6,7 @@
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
-// 
+//
 // IN NO EVENT SHALL DOUGLAS W. SAUDER BE LIABLE TO ANY PARTY FOR DIRECT,
 // INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
 // THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF DOUGLAS W. SAUDER
@@ -87,20 +87,20 @@ public:
     //. this member function to reuse the object for more than one encode
     //. or decode operation.
 
-    const char* FileName() const;
-    void SetFileName(const char* aName);
+    const char *FileName() const;
+    void SetFileName(const char *aName);
     //. Gets or sets the file name.  The file name is restricted
     //. to a maximum length of 63 characters.
 
-    void FileType(char* aBuf) const;
-    void SetFileType(const char* aType);
+    void FileType(char *aBuf) const;
+    void SetFileType(const char *aType);
     //. Gets or sets the file type.  All Macintosh files have a file type,
     //. which is represented by four bytes.  Some examples include "TEXT"
     //. for a text file, or "APPL" for an application.  {\tt aBuf} should
     //. point to an array of at least four characters.
 
-    void FileCreator(char* aBuf) const;
-    void SetFileCreator(const char* aType);
+    void FileCreator(char *aBuf) const;
+    void SetFileCreator(const char *aType);
     //. Gets or sets the file creator.  Most Macintosh files have a creator,
     //. which is represented by a signature of four bytes.  The creator
     //. specifies which application to launch when a file's icon is double
@@ -119,20 +119,20 @@ public:
     //. files that originate on non-Macintosh systems, this byte should
     //. be set to zero (the default).
 
-    const DwString& DataFork() const;
-    void SetDataFork(const DwString& aStr);
+    const DwString &DataFork() const;
+    void SetDataFork(const DwString &aStr);
     //. Gets or sets the data fork for the file.  For files that originate
     //. on non-Macintosh systems, such as a GIF or JPEG file, the file data
     //. should be set as the data fork.
 
-    const DwString& ResourceFork() const;
-    void SetResourceFork(const DwString& aStr);
+    const DwString &ResourceFork() const;
+    void SetResourceFork(const DwString &aStr);
     //. Gets or sets the resource fork for the file.  For files that originate
     //. on non-Macintosh systems, such as a GIF or JPEG file, the resource
     //. should be normally be empty.
 
-    const DwString& BinhexChars() const;
-    void SetBinhexChars(const DwString& aStr);
+    const DwString &BinhexChars() const;
+    void SetBinhexChars(const DwString &aStr);
     //. Gets or sets the characters of the Binhex encoded file.
 
     void Encode();
@@ -142,7 +142,7 @@ public:
     //. Converts the Macintosh file information from Binhex format.  Returns
     //. zero if the decode operation completes successufully; otherwise,
     //. the function returns -1.
-   
+
 private:
 
     char mFileName[64];

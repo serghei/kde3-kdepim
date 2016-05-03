@@ -23,21 +23,21 @@
 
 #include "kimportpage.h"
 #include "kselfilterpage.h"
-  
+
 /** KMailCVT is the base class of the project */
 class KMailCVT : public KWizard {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	KMailCVT(QWidget* parent=0, const char *name=0);
-	~KMailCVT();
+    KMailCVT(QWidget *parent = 0, const char *name = 0);
+    ~KMailCVT();
 
-	virtual void next();
-	virtual void reject();
+    virtual void next();
+    virtual void reject();
 public slots:
-	void help();
+    void help();
 private:
-	KSelFilterPage* selfilterpage;
-	KImportPage* importpage;
+    KSelFilterPage *selfilterpage;
+    KImportPage *importpage;
 };
 
 #endif

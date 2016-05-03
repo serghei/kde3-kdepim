@@ -17,7 +17,7 @@
 
 #include <kstandarddirs.h>
 #include <qtextedit.h>
-#include <qcheckbox.h> 
+#include <qcheckbox.h>
 #include <klocale.h>
 #include "filters.hxx"
 
@@ -38,60 +38,62 @@
 
 #include "kselfilterpage.h"
 
-KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterPageDlg(parent,name) {
+KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name) : KSelFilterPageDlg(parent, name)
+{
 
-	mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
-	mFilterList.setAutoDelete( TRUE );
-	connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+    mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
+    mFilterList.setAutoDelete(TRUE);
+    connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
-	// Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
-        // The former approach was overengineered and only worked around problems in the design
-        // For now, we have to live without the warm and fuzzy feeling a refactoring might give. 
-        // Patches appreciated. (danimo)
+    // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
+    // The former approach was overengineered and only worked around problems in the design
+    // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
+    // Patches appreciated. (danimo)
 
-        addFilter(new FilterEvolution);
-        addFilter(new FilterEvolution_v2);
-        addFilter(new FilterKMail_maildir);
-        addFilter(new FilterMailApp);
-        addFilter(new FilterOpera);
-        addFilter(new FilterSylpheed);
-        addFilter(new FilterThunderbird);
-        addFilter(new FilterTheBat);
-        addFilter(new FilterOE);
-//        addFilter(new FilterOutlook);
-        addFilter(new FilterPMail);
-        addFilter(new FilterMBox);
-        addFilter(new FilterLNotes);
-        addFilter(new FilterPlain);
+    addFilter(new FilterEvolution);
+    addFilter(new FilterEvolution_v2);
+    addFilter(new FilterKMail_maildir);
+    addFilter(new FilterMailApp);
+    addFilter(new FilterOpera);
+    addFilter(new FilterSylpheed);
+    addFilter(new FilterThunderbird);
+    addFilter(new FilterTheBat);
+    addFilter(new FilterOE);
+    //        addFilter(new FilterOutlook);
+    addFilter(new FilterPMail);
+    addFilter(new FilterMBox);
+    addFilter(new FilterLNotes);
+    addFilter(new FilterPlain);
 }
 
-KSelFilterPage::~KSelFilterPage() {
+KSelFilterPage::~KSelFilterPage()
+{
 }
 
 void KSelFilterPage::filterSelected(int i)
 {
-	QString info = mFilterList.at(i)->info();
-	QString author = mFilterList.at(i)->author();
-	if(!author.isEmpty())
-		info += i18n("<p><i>Written by %1.</i></p>").arg(author);
-	mDesc->setText(info);
+    QString info = mFilterList.at(i)->info();
+    QString author = mFilterList.at(i)->author();
+    if(!author.isEmpty())
+        info += i18n("<p><i>Written by %1.</i></p>").arg(author);
+    mDesc->setText(info);
 }
 
 void KSelFilterPage::addFilter(Filter *f)
 {
-	mFilterList.append(f);
-	mFilterCombo->insertItem(f->name());
-	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
+    mFilterList.append(f);
+    mFilterCombo->insertItem(f->name());
+    if(mFilterCombo->count() == 1) filterSelected(0);  // Setup description box with fist filter selected
 }
 
 bool KSelFilterPage::removeDupMsg_checked()
 {
-        return remDupMsg->isChecked();
+    return remDupMsg->isChecked();
 }
 
-Filter * KSelFilterPage::getSelectedFilter(void)
+Filter *KSelFilterPage::getSelectedFilter(void)
 {
-	return mFilterList.at(mFilterCombo->currentItem());
+    return mFilterList.at(mFilterCombo->currentItem());
 }
 
 #include "kselfilterpage.moc"

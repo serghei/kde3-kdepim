@@ -27,20 +27,20 @@
 
 using namespace KCal;
 
-int main( int, char ** )
+int main(int, char **)
 {
 
- // std::cout << "Hello World!" << std::endl;
-  Event *ev = new Event;
-  ev->setSummary("Griazi");
-  ICalFormat iformat;
-  QString icalstr = iformat.toICalString(ev);
-  kdDebug(5800) << icalstr << endl;
-  Incidence *ev2 = iformat.fromString(icalstr);
-  kdDebug(5800) << "Event reread!" << endl ;
-  
-  if (ev2)
-    kdDebug(5800) << iformat.toICalString(ev2) << endl;
-  else
-    kdDebug(5800) << "Could not read incidence" << endl;
+    // std::cout << "Hello World!" << std::endl;
+    Event *ev = new Event;
+    ev->setSummary("Griazi");
+    ICalFormat iformat;
+    QString icalstr = iformat.toICalString(ev);
+    kdDebug(5800) << icalstr << endl;
+    Incidence *ev2 = iformat.fromString(icalstr);
+    kdDebug(5800) << "Event reread!" << endl ;
+
+    if(ev2)
+        kdDebug(5800) << iformat.toICalString(ev2) << endl;
+    else
+        kdDebug(5800) << "Could not read incidence" << endl;
 }

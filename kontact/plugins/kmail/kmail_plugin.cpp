@@ -52,131 +52,137 @@
 using namespace KCal;
 
 typedef KGenericFactory<KMailPlugin, Kontact::Core> KMailPluginFactory;
-K_EXPORT_COMPONENT_FACTORY( libkontact_kmailplugin,
-                            KMailPluginFactory( "kontact_kmailplugin" ) )
+K_EXPORT_COMPONENT_FACTORY(libkontact_kmailplugin,
+                           KMailPluginFactory("kontact_kmailplugin"))
 
-KMailPlugin::KMailPlugin(Kontact::Core *core, const char *, const QStringList& )
-  : Kontact::Plugin( core, core, "kmail" ),
-    mStub( 0 )
+KMailPlugin::KMailPlugin(Kontact::Core *core, const char *, const QStringList &)
+    : Kontact::Plugin(core, core, "kmail"),
+      mStub(0)
 {
-  setInstance( KMailPluginFactory::instance() );
+    setInstance(KMailPluginFactory::instance());
 
-  insertNewAction( new KAction( i18n( "New Message..." ), "mail_new",
-                   CTRL+SHIFT+Key_M, this, SLOT( slotNewMail() ), actionCollection(),
-                   "new_mail" ) );
+    insertNewAction(new KAction(i18n("New Message..."), "mail_new",
+                                CTRL + SHIFT + Key_M, this, SLOT(slotNewMail()), actionCollection(),
+                                "new_mail"));
 
-  insertSyncAction( new KAction( i18n( "Synchronize Mail" ), "reload",
-                   0, this, SLOT( slotSyncFolders() ), actionCollection(),
-                   "sync_mail" ) );
+    insertSyncAction(new KAction(i18n("Synchronize Mail"), "reload",
+                                 0, this, SLOT(slotSyncFolders()), actionCollection(),
+                                 "sync_mail"));
 
-  mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
-      new Kontact::UniqueAppHandlerFactory<KMailUniqueAppHandler>(), this );
+    mUniqueAppWatcher = new Kontact::UniqueAppWatcher(
+        new Kontact::UniqueAppHandlerFactory<KMailUniqueAppHandler>(), this);
 }
 
-bool KMailPlugin::canDecodeDrag( QMimeSource *qms )
+bool KMailPlugin::canDecodeDrag(QMimeSource *qms)
 {
-  return ( ICalDrag::canDecode( qms ) ||
-           VCalDrag::canDecode( qms ) ||
-           KVCardDrag::canDecode( qms ) );
+    return (ICalDrag::canDecode(qms) ||
+            VCalDrag::canDecode(qms) ||
+            KVCardDrag::canDecode(qms));
 }
 
-void KMailPlugin::processDropEvent( QDropEvent * de )
+void KMailPlugin::processDropEvent(QDropEvent *de)
 {
-  kdDebug() << k_funcinfo << endl;
-  CalendarLocal cal( QString::fromLatin1("UTC") );
-  KABC::Addressee::List list;
+    kdDebug() << k_funcinfo << endl;
+    CalendarLocal cal(QString::fromLatin1("UTC"));
+    KABC::Addressee::List list;
 
-  if ( VCalDrag::decode( de, &cal ) || ICalDrag::decode( de, &cal ) ) {
-    KTempFile tmp( locateLocal( "tmp", "incidences-" ), ".ics" );
-    cal.save( tmp.name() );
-    openComposer( KURL::fromPathOrURL( tmp.name() ) );
-  }
-  else if ( KVCardDrag::decode( de, list ) ) {
-    KABC::Addressee::List::Iterator it;
-    QStringList to;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      to.append( ( *it ).fullEmail() );
+    if(VCalDrag::decode(de, &cal) || ICalDrag::decode(de, &cal))
+    {
+        KTempFile tmp(locateLocal("tmp", "incidences-"), ".ics");
+        cal.save(tmp.name());
+        openComposer(KURL::fromPathOrURL(tmp.name()));
     }
-    openComposer( to.join(", ") );
-  }
+    else if(KVCardDrag::decode(de, list))
+    {
+        KABC::Addressee::List::Iterator it;
+        QStringList to;
+        for(it = list.begin(); it != list.end(); ++it)
+        {
+            to.append((*it).fullEmail());
+        }
+        openComposer(to.join(", "));
+    }
 
 }
 
-void KMailPlugin::openComposer( const KURL& attach )
+void KMailPlugin::openComposer(const KURL &attach)
 {
-  (void) part(); // ensure part is loaded
-  Q_ASSERT( mStub );
-  if ( mStub ) {
-    if ( attach.isValid() )
-      mStub->newMessage( "", "", "", false, true, KURL(), attach );
-    else
-      mStub->newMessage( "", "", "", false, true, KURL(), KURL() );
-  }
+    (void) part(); // ensure part is loaded
+    Q_ASSERT(mStub);
+    if(mStub)
+    {
+        if(attach.isValid())
+            mStub->newMessage("", "", "", false, true, KURL(), attach);
+        else
+            mStub->newMessage("", "", "", false, true, KURL(), KURL());
+    }
 }
 
-void KMailPlugin::openComposer( const QString& to )
+void KMailPlugin::openComposer(const QString &to)
 {
-  (void) part(); // ensure part is loaded
-  Q_ASSERT( mStub );
-  if ( mStub ) {
-    mStub->newMessage( to, "", "", false, true, KURL(), KURL() );
-  }
+    (void) part(); // ensure part is loaded
+    Q_ASSERT(mStub);
+    if(mStub)
+    {
+        mStub->newMessage(to, "", "", false, true, KURL(), KURL());
+    }
 }
 
 void KMailPlugin::slotNewMail()
 {
-  openComposer( QString::null );
+    openComposer(QString::null);
 }
 
 void KMailPlugin::slotSyncFolders()
 {
-  DCOPRef ref( "kmail", "KMailIface" );
-  ref.send( "checkMail" );
+    DCOPRef ref("kmail", "KMailIface");
+    ref.send("checkMail");
 }
 
 KMailPlugin::~KMailPlugin()
 {
 }
 
-bool KMailPlugin::createDCOPInterface( const QString& serviceType )
+bool KMailPlugin::createDCOPInterface(const QString &serviceType)
 {
-  if ( serviceType == "DCOP/ResourceBackend/IMAP" ) {
-    if ( part() )
-      return true;
-  }
+    if(serviceType == "DCOP/ResourceBackend/IMAP")
+    {
+        if(part())
+            return true;
+    }
 
-  return false;
+    return false;
 }
 
 QString KMailPlugin::tipFile() const
 {
-  QString file = ::locate("data", "kmail/tips");
-  return file;
+    QString file = ::locate("data", "kmail/tips");
+    return file;
 }
 
-KParts::ReadOnlyPart* KMailPlugin::createPart()
+KParts::ReadOnlyPart *KMailPlugin::createPart()
 {
-  KParts::ReadOnlyPart *part = loadPart();
-  if ( !part ) return 0;
+    KParts::ReadOnlyPart *part = loadPart();
+    if(!part) return 0;
 
-  mStub = new KMailIface_stub( dcopClient(), "kmail", "KMailIface" );
+    mStub = new KMailIface_stub(dcopClient(), "kmail", "KMailIface");
 
-  return part;
+    return part;
 }
 
 QStringList KMailPlugin::invisibleToolbarActions() const
 {
-  return QStringList( "new_message" );
+    return QStringList("new_message");
 }
 
 bool KMailPlugin::isRunningStandalone()
 {
-  return mUniqueAppWatcher->isRunningStandalone();
+    return mUniqueAppWatcher->isRunningStandalone();
 }
 
-Kontact::Summary *KMailPlugin::createSummaryWidget( QWidget *parent )
+Kontact::Summary *KMailPlugin::createSummaryWidget(QWidget *parent)
 {
-  return new SummaryWidget( this, parent );
+    return new SummaryWidget(this, parent);
 }
 
 ////
@@ -184,38 +190,42 @@ Kontact::Summary *KMailPlugin::createSummaryWidget( QWidget *parent )
 #include "../../../kmail/kmail_options.h"
 void KMailUniqueAppHandler::loadCommandLineOptions()
 {
-    KCmdLineArgs::addCmdLineOptions( kmail_options );
+    KCmdLineArgs::addCmdLineOptions(kmail_options);
 }
 
 int KMailUniqueAppHandler::newInstance()
 {
     // Ensure part is loaded
     (void)plugin()->part();
-    DCOPRef kmail( "kmail", "KMailIface" );
-    DCOPReply reply = kmail.call( "handleCommandLine", false );
-    if ( reply.isValid() ) {
+    DCOPRef kmail("kmail", "KMailIface");
+    DCOPReply reply = kmail.call("handleCommandLine", false);
+    if(reply.isValid())
+    {
         bool handled = reply;
         //kdDebug(5602) << k_funcinfo << "handled=" << handled << endl;
-        if ( !handled ) // no args -> simply bring kmail plugin to front
+        if(!handled)    // no args -> simply bring kmail plugin to front
             return Kontact::UniqueAppHandler::newInstance();
     }
     return 0;
 }
 
-bool KMailPlugin::queryClose() const {
-  KMailIface_stub stub( kapp->dcopClient(), "kmail", "KMailIface" );
-  bool canClose=stub.canQueryClose();
-  return canClose;
+bool KMailPlugin::queryClose() const
+{
+    KMailIface_stub stub(kapp->dcopClient(), "kmail", "KMailIface");
+    bool canClose = stub.canQueryClose();
+    return canClose;
 }
 
-void KMailPlugin::loadProfile( const QString& profileDirectory ) {
-  DCOPRef ref( "kmail", "KMailIface" );
-  ref.send( "loadProfile", profileDirectory );
+void KMailPlugin::loadProfile(const QString &profileDirectory)
+{
+    DCOPRef ref("kmail", "KMailIface");
+    ref.send("loadProfile", profileDirectory);
 }
 
-void KMailPlugin::saveToProfile( const QString& profileDirectory ) {
-  DCOPRef ref( "kmail", "KMailIface" );
-  ref.send( "saveToProfile", profileDirectory );
+void KMailPlugin::saveToProfile(const QString &profileDirectory)
+{
+    DCOPRef ref("kmail", "KMailIface");
+    ref.send("saveToProfile", profileDirectory);
 }
 
 #include "kmail_plugin.moc"

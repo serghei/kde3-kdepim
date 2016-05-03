@@ -45,257 +45,260 @@
 
 namespace KMail {
 
-SubscriptionDialogBase::SubscriptionDialogBase( QWidget *parent, const QString &caption,
-    KAccount *acct, QString startPath )
-  : KSubscription( parent, caption, acct, User1, QString::null, false ),
-    mStartPath( startPath ), mSubscribed( false ), mForceSubscriptionEnable( false)
+SubscriptionDialogBase::SubscriptionDialogBase(QWidget *parent, const QString &caption,
+        KAccount *acct, QString startPath)
+    : KSubscription(parent, caption, acct, User1, QString::null, false),
+      mStartPath(startPath), mSubscribed(false), mForceSubscriptionEnable(false)
 {
-  // hide unneeded checkboxes
-  hideTreeCheckbox();
-  hideNewOnlyCheckbox();
+    // hide unneeded checkboxes
+    hideTreeCheckbox();
+    hideNewOnlyCheckbox();
 
-  // ok-button
-  connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
+    // ok-button
+    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
-  // reload-list button
-  connect(this, SIGNAL(user1Clicked()), SLOT(slotLoadFolders()));
+    // reload-list button
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotLoadFolders()));
 
-  // get the folders, delayed execution style, otherwise there's bother
-  // with virtuals from ctors and whatnot
-  QTimer::singleShot(0, this, SLOT(slotLoadFolders()));
+    // get the folders, delayed execution style, otherwise there's bother
+    // with virtuals from ctors and whatnot
+    QTimer::singleShot(0, this, SLOT(slotLoadFolders()));
 }
 
 //------------------------------------------------------------------------------
-void SubscriptionDialogBase::slotListDirectory( const QStringList& subfolderNames,
-                                            const QStringList& subfolderPaths,
-                                            const QStringList& subfolderMimeTypes,
-                                            const QStringList& subfolderAttributes,
-                                            const ImapAccountBase::jobData& jobData )
+void SubscriptionDialogBase::slotListDirectory(const QStringList &subfolderNames,
+        const QStringList &subfolderPaths,
+        const QStringList &subfolderMimeTypes,
+        const QStringList &subfolderAttributes,
+        const ImapAccountBase::jobData &jobData)
 {
-  mFolderNames = subfolderNames;
-  mFolderPaths = subfolderPaths;
-  mFolderMimeTypes = subfolderMimeTypes;
-  mFolderAttributes = subfolderAttributes;
-  mJobData = jobData;
+    mFolderNames = subfolderNames;
+    mFolderPaths = subfolderPaths;
+    mFolderMimeTypes = subfolderMimeTypes;
+    mFolderAttributes = subfolderAttributes;
+    mJobData = jobData;
 
-  mCount = 0;
+    mCount = 0;
 
-  processFolderListing();
+    processFolderListing();
 }
 
-void SubscriptionDialogBase::moveChildrenToNewParent( GroupItem *oldItem, GroupItem *item  )
+void SubscriptionDialogBase::moveChildrenToNewParent(GroupItem *oldItem, GroupItem *item)
 {
-  if ( !oldItem || !item ) return;
+    if(!oldItem || !item) return;
 
-  QPtrList<QListViewItem> itemsToMove;
-  QListViewItem * myChild = oldItem->firstChild();
-  while (myChild)
-  {
-    itemsToMove.append(myChild);
-    myChild = myChild->nextSibling();
-  }
-  QPtrListIterator<QListViewItem> it( itemsToMove );
-  QListViewItem *cur;
-  while ((cur = it.current()))
-  {
-    oldItem->takeItem(cur);
-    item->insertItem(cur);
-    if ( cur->isSelected() ) // we have new parents so open them
-      folderTree()->ensureItemVisible( cur );
-    ++it;
-  }
-  delete oldItem;
-  itemsToMove.clear();
-}
-
-void SubscriptionDialogBase::createListViewItem( int i )
-{
-  GroupItem *item = 0;
-  GroupItem *parent = 0;
-
-  // get the parent
-  GroupItem *oldItem = 0;
-  QString parentPath;
-  findParentItem( mFolderNames[i], mFolderPaths[i], parentPath, &parent, &oldItem );
-
-  if (!parent && parentPath != "/")
-  {
-    // the parent is not available and it's no root-item
-    // this happens when the folders do not arrive in hierarchical order
-    // so we create each parent in advance
-    QStringList folders = QStringList::split(mDelimiter, parentPath);
-    uint i = 0;
-    for ( QStringList::Iterator it = folders.begin(); it != folders.end(); ++it )
+    QPtrList<QListViewItem> itemsToMove;
+    QListViewItem *myChild = oldItem->firstChild();
+    while(myChild)
     {
-      QString name = *it;
-      if (name.startsWith("/"))
-        name = name.right(name.length()-1);
-      if (name.endsWith("/"))
-        name.truncate(name.length()-1);
-      KGroupInfo info(name);
-      info.subscribed = false;
+        itemsToMove.append(myChild);
+        myChild = myChild->nextSibling();
+    }
+    QPtrListIterator<QListViewItem> it(itemsToMove);
+    QListViewItem *cur;
+    while((cur = it.current()))
+    {
+        oldItem->takeItem(cur);
+        item->insertItem(cur);
+        if(cur->isSelected())    // we have new parents so open them
+            folderTree()->ensureItemVisible(cur);
+        ++it;
+    }
+    delete oldItem;
+    itemsToMove.clear();
+}
 
-      QStringList tmpPath;
-      for ( uint j = 0; j <= i; ++j )
-        tmpPath << folders[j];
-      QString path = tmpPath.join(mDelimiter);
-      if (!path.startsWith("/"))
-        path = "/" + path;
-      if (!path.endsWith("/"))
-        path = path + "/";
-      info.path = path;
-      item = 0;
-      if (folders.count() > 1)
-      {
-        // we have to create more then one level, so better check if this
-        // folder already exists somewhere
-        item = mItemDict[path];
-      }
-      // as these items are "dummies" we create them non-checkable
-      if (!item)
-      {
-        if (parent)
-          item = new GroupItem(parent, info, this, false);
-        else
-          item = new GroupItem(folderTree(), info, this, false);
-        mItemDict.insert(info.path, item);
-      }
+void SubscriptionDialogBase::createListViewItem(int i)
+{
+    GroupItem *item = 0;
+    GroupItem *parent = 0;
 
-      parent = item;
-      ++i;
-    } // folders
-  } // parent
+    // get the parent
+    GroupItem *oldItem = 0;
+    QString parentPath;
+    findParentItem(mFolderNames[i], mFolderPaths[i], parentPath, &parent, &oldItem);
 
-  KGroupInfo info(mFolderNames[i]);
-  if (mFolderNames[i].upper() == "INBOX" &&
-      mFolderPaths[i] == "/INBOX/")
-    info.name = i18n("inbox");
-  info.subscribed = false;
-  info.path = mFolderPaths[i];
-  // only checkable when the folder is selectable
-  bool checkable = ( mFolderMimeTypes[i] == "inode/directory" ) ? false : true;
-  // create a new item
-  if (parent)
-    item = new GroupItem(parent, info, this, checkable);
-  else
-    item = new GroupItem(folderTree(), info, this, checkable);
+    if(!parent && parentPath != "/")
+    {
+        // the parent is not available and it's no root-item
+        // this happens when the folders do not arrive in hierarchical order
+        // so we create each parent in advance
+        QStringList folders = QStringList::split(mDelimiter, parentPath);
+        uint i = 0;
+        for(QStringList::Iterator it = folders.begin(); it != folders.end(); ++it)
+        {
+            QString name = *it;
+            if(name.startsWith("/"))
+                name = name.right(name.length() - 1);
+            if(name.endsWith("/"))
+                name.truncate(name.length() - 1);
+            KGroupInfo info(name);
+            info.subscribed = false;
 
-  if (oldItem) // remove old item
-    mItemDict.remove(info.path);
+            QStringList tmpPath;
+            for(uint j = 0; j <= i; ++j)
+                tmpPath << folders[j];
+            QString path = tmpPath.join(mDelimiter);
+            if(!path.startsWith("/"))
+                path = "/" + path;
+            if(!path.endsWith("/"))
+                path = path + "/";
+            info.path = path;
+            item = 0;
+            if(folders.count() > 1)
+            {
+                // we have to create more then one level, so better check if this
+                // folder already exists somewhere
+                item = mItemDict[path];
+            }
+            // as these items are "dummies" we create them non-checkable
+            if(!item)
+            {
+                if(parent)
+                    item = new GroupItem(parent, info, this, false);
+                else
+                    item = new GroupItem(folderTree(), info, this, false);
+                mItemDict.insert(info.path, item);
+            }
 
-  mItemDict.insert(info.path, item);
-  if (oldItem)
-    moveChildrenToNewParent( oldItem, item );
+            parent = item;
+            ++i;
+        } // folders
+    } // parent
 
-  // select the start item
-  if ( mFolderPaths[i] == mStartPath )
-  {
-    item->setSelected( true );
-    folderTree()->ensureItemVisible( item );
-  }
+    KGroupInfo info(mFolderNames[i]);
+    if(mFolderNames[i].upper() == "INBOX" &&
+            mFolderPaths[i] == "/INBOX/")
+        info.name = i18n("inbox");
+    info.subscribed = false;
+    info.path = mFolderPaths[i];
+    // only checkable when the folder is selectable
+    bool checkable = (mFolderMimeTypes[i] == "inode/directory") ? false : true;
+    // create a new item
+    if(parent)
+        item = new GroupItem(parent, info, this, checkable);
+    else
+        item = new GroupItem(folderTree(), info, this, checkable);
+
+    if(oldItem)  // remove old item
+        mItemDict.remove(info.path);
+
+    mItemDict.insert(info.path, item);
+    if(oldItem)
+        moveChildrenToNewParent(oldItem, item);
+
+    // select the start item
+    if(mFolderPaths[i] == mStartPath)
+    {
+        item->setSelected(true);
+        folderTree()->ensureItemVisible(item);
+    }
 }
 
 
 
 //------------------------------------------------------------------------------
-void SubscriptionDialogBase::findParentItem( QString &name, QString &path, QString &parentPath,
-    GroupItem **parent, GroupItem **oldItem )
+void SubscriptionDialogBase::findParentItem(QString &name, QString &path, QString &parentPath,
+        GroupItem **parent, GroupItem **oldItem)
 {
-  // remove the name (and the separator) from the path to get the parent path
-  int start = path.length() - (name.length()+2);
-  int length = name.length()+1;
-  if (start < 0) start = 0;
-  parentPath = path;
-  parentPath.remove(start, length);
+    // remove the name (and the separator) from the path to get the parent path
+    int start = path.length() - (name.length() + 2);
+    int length = name.length() + 1;
+    if(start < 0) start = 0;
+    parentPath = path;
+    parentPath.remove(start, length);
 
-  // find the parent by it's path
-  *parent = mItemDict[parentPath];
+    // find the parent by it's path
+    *parent = mItemDict[parentPath];
 
-  // check if the item already exists
-  *oldItem = mItemDict[path];
+    // check if the item already exists
+    *oldItem = mItemDict[path];
 }
 
 //------------------------------------------------------------------------------
 void SubscriptionDialogBase::slotSave()
 {
-  doSave();
+    doSave();
 }
 
 //------------------------------------------------------------------------------
 void SubscriptionDialogBase::slotLoadFolders()
 {
-  ImapAccountBase* ai = static_cast<ImapAccountBase*>(account());
-  // we need a connection
-  if ( ai->makeConnection() == ImapAccountBase::Error )
-  {
-    kdWarning(5006) << "SubscriptionDialog - got no connection" << endl;
-    return;
-  } else if ( ai->makeConnection() == ImapAccountBase::Connecting )
-  {
-    // We'll wait for the connectionResult signal from the account.
-    kdDebug(5006) << "SubscriptionDialog - waiting for connection" << endl;
-    connect( ai, SIGNAL( connectionResult(int, const QString&) ),
-        this, SLOT( slotConnectionResult(int, const QString&) ) );
-    return;
-  }
-  // clear the views
-  KSubscription::slotLoadFolders();
-  mItemDict.clear();
-  mSubscribed = false;
-  mLoading = true;
+    ImapAccountBase *ai = static_cast<ImapAccountBase *>(account());
+    // we need a connection
+    if(ai->makeConnection() == ImapAccountBase::Error)
+    {
+        kdWarning(5006) << "SubscriptionDialog - got no connection" << endl;
+        return;
+    }
+    else if(ai->makeConnection() == ImapAccountBase::Connecting)
+    {
+        // We'll wait for the connectionResult signal from the account.
+        kdDebug(5006) << "SubscriptionDialog - waiting for connection" << endl;
+        connect(ai, SIGNAL(connectionResult(int, const QString &)),
+                this, SLOT(slotConnectionResult(int, const QString &)));
+        return;
+    }
+    // clear the views
+    KSubscription::slotLoadFolders();
+    mItemDict.clear();
+    mSubscribed = false;
+    mLoading = true;
 
-  // first step is to load a list of all available folders and create listview
-  // items for them
-  listAllAvailableAndCreateItems();
+    // first step is to load a list of all available folders and create listview
+    // items for them
+    listAllAvailableAndCreateItems();
 }
 
 //------------------------------------------------------------------------------
 void SubscriptionDialogBase::processNext()
 {
-  if ( mPrefixList.isEmpty() )
-  {
-    if ( !mSubscribed )
+    if(mPrefixList.isEmpty())
     {
-      mSubscribed = true;
-      initPrefixList();
-      if ( mPrefixList.isEmpty() )
-      {
-          // still empty? then we have nothing to do here as this is an error
-          loadingComplete();
-          return;
-      }
-    } else {
-      loadingComplete();
-      return;
+        if(!mSubscribed)
+        {
+            mSubscribed = true;
+            initPrefixList();
+            if(mPrefixList.isEmpty())
+            {
+                // still empty? then we have nothing to do here as this is an error
+                loadingComplete();
+                return;
+            }
+        }
+        else
+        {
+            loadingComplete();
+            return;
+        }
     }
-  }
-  ImapAccountBase* ai = static_cast<ImapAccountBase*>(account());
-  ImapAccountBase::ListType type = ( mSubscribed ?
-      ImapAccountBase::ListSubscribedNoCheck : ImapAccountBase::List );
+    ImapAccountBase *ai = static_cast<ImapAccountBase *>(account());
+    ImapAccountBase::ListType type = (mSubscribed ?
+                                      ImapAccountBase::ListSubscribedNoCheck : ImapAccountBase::List);
 
-  bool completeListing = true;
-  mCurrentNamespace = mPrefixList.first();
-  mDelimiter = ai->delimiterForNamespace( mCurrentNamespace );
-  mPrefixList.pop_front();
-  if ( mCurrentNamespace == "/INBOX/" )
-  {
-    type = mSubscribed ?
-      ImapAccountBase::ListFolderOnlySubscribed : ImapAccountBase::ListFolderOnly;
-    completeListing = false;
-  }
+    bool completeListing = true;
+    mCurrentNamespace = mPrefixList.first();
+    mDelimiter = ai->delimiterForNamespace(mCurrentNamespace);
+    mPrefixList.pop_front();
+    if(mCurrentNamespace == "/INBOX/")
+    {
+        type = mSubscribed ?
+               ImapAccountBase::ListFolderOnlySubscribed : ImapAccountBase::ListFolderOnly;
+        completeListing = false;
+    }
 
-//  kdDebug(5006) << "process " << mCurrentNamespace << ",subscribed=" << mSubscribed << endl;
-  ListJob* job = new ListJob( ai, type, 0, ai->addPathToNamespace( mCurrentNamespace ), completeListing );
-  connect( job, SIGNAL(receivedFolders(const QStringList&, const QStringList&,
-          const QStringList&, const QStringList&, const ImapAccountBase::jobData&)),
-      this, SLOT(slotListDirectory(const QStringList&, const QStringList&,
-          const QStringList&, const QStringList&, const ImapAccountBase::jobData&)));
-  job->start();
+    //  kdDebug(5006) << "process " << mCurrentNamespace << ",subscribed=" << mSubscribed << endl;
+    ListJob *job = new ListJob(ai, type, 0, ai->addPathToNamespace(mCurrentNamespace), completeListing);
+    connect(job, SIGNAL(receivedFolders(const QStringList &, const QStringList &,
+                                        const QStringList &, const QStringList &, const ImapAccountBase::jobData &)),
+            this, SLOT(slotListDirectory(const QStringList &, const QStringList &,
+                                         const QStringList &, const QStringList &, const ImapAccountBase::jobData &)));
+    job->start();
 }
 
 void SubscriptionDialogBase::loadingComplete()
 {
-  slotLoadingComplete();
+    slotLoadingComplete();
 }
 
 
@@ -303,9 +306,9 @@ void SubscriptionDialogBase::loadingComplete()
 // implementation for server side subscription
 //------------------------------------------------------------------------------
 
-SubscriptionDialog::SubscriptionDialog( QWidget *parent, const QString &caption,
-    KAccount *acct, QString startPath )
-  : SubscriptionDialogBase( parent, caption, acct, startPath )
+SubscriptionDialog::SubscriptionDialog(QWidget *parent, const QString &caption,
+                                       KAccount *acct, QString startPath)
+    : SubscriptionDialogBase(parent, caption, acct, startPath)
 {
 }
 
@@ -318,46 +321,46 @@ SubscriptionDialog::~SubscriptionDialog()
 /* virtual */
 void SubscriptionDialog::listAllAvailableAndCreateItems()
 {
-  initPrefixList();
-  processNext();
+    initPrefixList();
+    processNext();
 }
 
 //------------------------------------------------------------------------------
 void SubscriptionDialogBase::initPrefixList()
 {
-  ImapAccountBase* ai = static_cast<ImapAccountBase*>(account());
-  ImapAccountBase::nsMap map = ai->namespaces();
-  mPrefixList.clear();
+    ImapAccountBase *ai = static_cast<ImapAccountBase *>(account());
+    ImapAccountBase::nsMap map = ai->namespaces();
+    mPrefixList.clear();
 
-  bool hasInbox = false;
-  const QStringList ns = map[ImapAccountBase::PersonalNS];
-  for ( QStringList::ConstIterator it = ns.begin(); it != ns.end(); ++it )
-  {
-    if ( (*it).isEmpty() )
-      hasInbox = true;
-  }
-  if ( !hasInbox && !ns.isEmpty() )
-  {
-    // the namespaces includes no listing for the root so start a special
-    // listing for the INBOX to make sure we get it
-    mPrefixList += "/INBOX/";
-  }
+    bool hasInbox = false;
+    const QStringList ns = map[ImapAccountBase::PersonalNS];
+    for(QStringList::ConstIterator it = ns.begin(); it != ns.end(); ++it)
+    {
+        if((*it).isEmpty())
+            hasInbox = true;
+    }
+    if(!hasInbox && !ns.isEmpty())
+    {
+        // the namespaces includes no listing for the root so start a special
+        // listing for the INBOX to make sure we get it
+        mPrefixList += "/INBOX/";
+    }
 
-  mPrefixList += map[ImapAccountBase::PersonalNS];
-  mPrefixList += map[ImapAccountBase::OtherUsersNS];
-  mPrefixList += map[ImapAccountBase::SharedNS];
+    mPrefixList += map[ImapAccountBase::PersonalNS];
+    mPrefixList += map[ImapAccountBase::OtherUsersNS];
+    mPrefixList += map[ImapAccountBase::SharedNS];
 }
 
-void SubscriptionDialogBase::slotConnectionResult( int errorCode, const QString& errorMsg )
+void SubscriptionDialogBase::slotConnectionResult(int errorCode, const QString &errorMsg)
 {
-  Q_UNUSED( errorMsg );
-  if ( !errorCode )
-    slotLoadFolders();
+    Q_UNUSED(errorMsg);
+    if(!errorCode)
+        slotLoadFolders();
 }
 
 void SubscriptionDialogBase::show()
 {
-  KDialogBase::show();
+    KDialogBase::show();
 }
 
 // =======
@@ -370,74 +373,78 @@ void SubscriptionDialog::processFolderListing()
 /* virtual */
 void SubscriptionDialog::doSave()
 {
-  KMail::ImapAccountBase *a = static_cast<KMail::ImapAccountBase*>(mAcct);
-  if( !a->onlySubscribedFolders() ) {
-      int result = KMessageBox::questionYesNoCancel( this,
-              i18n("Currently subscriptions are not used for server %1\ndo you want to enable subscriptions?")
-              .arg( a->name() ),
-              i18n("Enable Subscriptions?"), i18n("Enable"), i18n("Do Not Enable"));
-      switch(result) {
-          case KMessageBox::Yes:
-              mForceSubscriptionEnable = true;
-              break;
-          case KMessageBox::No:
-              break;
-          case KMessageBox::Cancel:
-              cancel();
-      }
-  }
+    KMail::ImapAccountBase *a = static_cast<KMail::ImapAccountBase *>(mAcct);
+    if(!a->onlySubscribedFolders())
+    {
+        int result = KMessageBox::questionYesNoCancel(this,
+                     i18n("Currently subscriptions are not used for server %1\ndo you want to enable subscriptions?")
+                     .arg(a->name()),
+                     i18n("Enable Subscriptions?"), i18n("Enable"), i18n("Do Not Enable"));
+        switch(result)
+        {
+            case KMessageBox::Yes:
+                mForceSubscriptionEnable = true;
+                break;
+            case KMessageBox::No:
+                break;
+            case KMessageBox::Cancel:
+                cancel();
+        }
+    }
 
-  // subscribe
-  QListViewItemIterator it(subView);
-  for ( ; it.current(); ++it)
-  {
-    static_cast<ImapAccountBase*>(account())->changeSubscription(true,
-        static_cast<GroupItem*>(it.current())->info().path);
-  }
+    // subscribe
+    QListViewItemIterator it(subView);
+    for(; it.current(); ++it)
+    {
+        static_cast<ImapAccountBase *>(account())->changeSubscription(true,
+                static_cast<GroupItem *>(it.current())->info().path);
+    }
 
-  // unsubscribe
-  QListViewItemIterator it2(unsubView);
-  for ( ; it2.current(); ++it2)
-  {
-    static_cast<ImapAccountBase*>(account())->changeSubscription(false,
-        static_cast<GroupItem*>(it2.current())->info().path);
-  }
+    // unsubscribe
+    QListViewItemIterator it2(unsubView);
+    for(; it2.current(); ++it2)
+    {
+        static_cast<ImapAccountBase *>(account())->changeSubscription(false,
+                static_cast<GroupItem *>(it2.current())->info().path);
+    }
 
-  if ( mForceSubscriptionEnable ) {
-    a->setOnlySubscribedFolders(true);
-  }
+    if(mForceSubscriptionEnable)
+    {
+        a->setOnlySubscribedFolders(true);
+    }
 }
 
 void SubscriptionDialog::processItems()
 {
-  bool onlySubscribed = mJobData.onlySubscribed;
-  uint done = 0;
-  for (uint i = mCount; i < mFolderNames.count(); ++i)
-  {
-    // give the dialog a chance to repaint
-    if (done == 1000)
+    bool onlySubscribed = mJobData.onlySubscribed;
+    uint done = 0;
+    for(uint i = mCount; i < mFolderNames.count(); ++i)
     {
-      emit listChanged();
-      QTimer::singleShot(0, this, SLOT(processItems()));
-      return;
+        // give the dialog a chance to repaint
+        if(done == 1000)
+        {
+            emit listChanged();
+            QTimer::singleShot(0, this, SLOT(processItems()));
+            return;
+        }
+        ++mCount;
+        ++done;
+        if(!onlySubscribed && mFolderPaths.size() > 0)
+        {
+            createListViewItem(i);
+        }
+        else if(onlySubscribed)
+        {
+            // find the item
+            if(mItemDict[mFolderPaths[i]])
+            {
+                GroupItem *item = mItemDict[mFolderPaths[i]];
+                item->setOn(true);
+            }
+        }
     }
-    ++mCount;
-    ++done;
-    if (!onlySubscribed && mFolderPaths.size() > 0)
-    {
-      createListViewItem( i );
-    } else if (onlySubscribed)
-    {
-      // find the item
-      if ( mItemDict[mFolderPaths[i]] )
-      {
-        GroupItem* item = mItemDict[mFolderPaths[i]];
-        item->setOn( true );
-      }
-    }
-  }
 
-  processNext();
+    processNext();
 }
 } // namespace
 

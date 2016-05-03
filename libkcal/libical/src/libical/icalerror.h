@@ -2,14 +2,14 @@
 /*======================================================================
   FILE: icalerror.h
   CREATOR: eric 09 May 1999
-  
+
 
 
  (C) COPYRIGHT 2000, Eric Busboom <eric@softwarestudio.org>
      http://www.softwarestudio.org
 
  This program is free software; you can redistribute it and/or modify
- it under the terms of either: 
+ it under the terms of either:
 
     The LGPL as published by the Free Software Foundation, version
     2.1, available at: http://www.fsf.org/copyleft/lesser.html
@@ -45,12 +45,13 @@ void icalerror_stop_here(void);
 
 void icalerror_crash_here(void);
 
-typedef enum icalerrorenum {
-    ICAL_NO_ERROR,     /* icalerrno may not be initialized - put it first so and pray that the compiler initialize things to zero */    
+typedef enum icalerrorenum
+{
+    ICAL_NO_ERROR,     /* icalerrno may not be initialized - put it first so and pray that the compiler initialize things to zero */
     ICAL_BADARG_ERROR,
     ICAL_NEWFAILED_ERROR,
     ICAL_ALLOCATION_ERROR,
-    ICAL_MALFORMEDDATA_ERROR, 
+    ICAL_MALFORMEDDATA_ERROR,
     ICAL_PARSE_ERROR,
     ICAL_INTERNAL_ERROR, /* Like assert --internal consist. prob */
     ICAL_FILE_ERROR,
@@ -60,7 +61,7 @@ typedef enum icalerrorenum {
 
 } icalerrorenum;
 
-icalerrorenum * icalerrno_return(void);
+icalerrorenum *icalerrno_return(void);
 #define icalerrno (*(icalerrno_return()))
 
 /** If true, libicl aborts after a call to icalerror_set_error
@@ -83,17 +84,18 @@ void icalerror_clear_errno(void);
 void _icalerror_set_errno(icalerrorenum);
 
 /* Make an individual error fatal or non-fatal. */
-typedef enum icalerrorstate { 
+typedef enum icalerrorstate
+{
     ICAL_ERROR_FATAL,     /* Not fata */
     ICAL_ERROR_NONFATAL,  /* Fatal */
     ICAL_ERROR_DEFAULT,   /* Use the value of icalerror_errors_are_fatal*/
     ICAL_ERROR_UNKNOWN    /* Asked state for an unknown error type */
 } icalerrorstate ;
 
-char* icalerror_strerror(icalerrorenum e);
-char* icalerror_perror();
-void icalerror_set_error_state( icalerrorenum error, icalerrorstate);
-icalerrorstate icalerror_get_error_state( icalerrorenum error);
+char *icalerror_strerror(icalerrorenum e);
+char *icalerror_perror();
+void icalerror_set_error_state(icalerrorenum error, icalerrorstate);
+icalerrorstate icalerror_get_error_state(icalerrorenum error);
 
 #ifndef ICAL_SETERROR_ISFUNC
 #define icalerror_set_errno(x) \
@@ -103,9 +105,9 @@ if(icalerror_get_error_state(x)==ICAL_ERROR_FATAL || \
     icalerror_errors_are_fatal == 1 )){ \
    icalerror_warn(icalerror_strerror(x)); \
    assert(0); \
-} 
+}
 #else
-void icalerror_set_errno(icalerrorenum x); 
+void icalerror_set_errno(icalerrorenum x);
 #endif
 
 #ifdef ICAL_ERRORS_ARE_FATAL
@@ -127,7 +129,7 @@ void icalerror_set_errno(icalerrorenum x);
 #endif /*__GNUC__*/
 
 #else /* ICAL_ERRORS_ARE_FATAL */
-#define icalerror_assert(test,message) 
+#define icalerror_assert(test,message)
 #endif /* ICAL_ERRORS_ARE_FATAL */
 
 /* Check & abort if check fails */
@@ -150,8 +152,8 @@ void icalerror_set_errno(icalerrorenum x);
 /* String interfaces to set an error to NONFATAL and restore it to its
    original value */
 
-icalerrorstate icalerror_supress(const char* error);
-void icalerror_restore(const char* error, icalerrorstate es);
+icalerrorstate icalerror_supress(const char *error);
+void icalerror_restore(const char *error, icalerrorstate es);
 
 
 #endif /* !ICALERROR_H */

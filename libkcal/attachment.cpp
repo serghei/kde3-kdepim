@@ -23,99 +23,99 @@
 
 using namespace KCal;
 
-Attachment::Attachment( const Attachment &attachment)
+Attachment::Attachment(const Attachment &attachment)
 {
-  mMimeType = attachment.mMimeType;
-  mData = attachment.mData;
-  mBinary = attachment.mBinary;
-	mShowInline = attachment.mShowInline;
-	mLabel = attachment.mLabel;
+    mMimeType = attachment.mMimeType;
+    mData = attachment.mData;
+    mBinary = attachment.mBinary;
+    mShowInline = attachment.mShowInline;
+    mLabel = attachment.mLabel;
 }
 
-Attachment::Attachment(const QString& uri, const QString& mime)
+Attachment::Attachment(const QString &uri, const QString &mime)
 {
-  mMimeType = mime;
-  mData = uri;
-  mBinary = false;
-	mShowInline = false;
-	mLabel = QString::null;
+    mMimeType = mime;
+    mData = uri;
+    mBinary = false;
+    mShowInline = false;
+    mLabel = QString::null;
 }
 
-Attachment::Attachment(const char *base64, const QString& mime)
+Attachment::Attachment(const char *base64, const QString &mime)
 {
-  mMimeType = mime;
-  mData = QString::fromUtf8(base64);
-  mBinary = true;
-	mShowInline = false;
-	mLabel = QString::null;
+    mMimeType = mime;
+    mData = QString::fromUtf8(base64);
+    mBinary = true;
+    mShowInline = false;
+    mLabel = QString::null;
 }
 
 bool Attachment::isUri() const
 {
-  return !mBinary;
+    return !mBinary;
 }
 
 QString Attachment::uri() const
 {
-  if (!mBinary)
-    return mData;
-  else
-    return QString::null;
+    if(!mBinary)
+        return mData;
+    else
+        return QString::null;
 }
 
-void Attachment::setUri(const QString& uri)
+void Attachment::setUri(const QString &uri)
 {
-  mData = uri;
-  mBinary = false;
+    mData = uri;
+    mBinary = false;
 }
 
 bool Attachment::isBinary() const
 {
-  return mBinary;
+    return mBinary;
 }
 
 char *Attachment::data() const
 {
-  if (mBinary)
-    // this method actually return a const char*, but that can't be done because of the uneededly non-const libical API
-    return const_cast<char*>( mData.latin1() ); //mData.utf8().data();
-  else
-    return 0;
+    if(mBinary)
+        // this method actually return a const char*, but that can't be done because of the uneededly non-const libical API
+        return const_cast<char *>(mData.latin1());  //mData.utf8().data();
+    else
+        return 0;
 }
 
 void Attachment::setData(const char *base64)
 {
-  mData = QString::fromUtf8(base64);
-  mBinary = true;
+    mData = QString::fromUtf8(base64);
+    mBinary = true;
 }
 
 QString Attachment::mimeType() const
 {
-  return mMimeType;
+    return mMimeType;
 }
 
-void Attachment::setMimeType(const QString& mime)
+void Attachment::setMimeType(const QString &mime)
 {
-  mMimeType = mime;
+    mMimeType = mime;
 }
 
 bool Attachment::showInline() const
 {
-  return mShowInline;
+    return mShowInline;
 }
 
-void Attachment::setShowInline( bool showinline )
+void Attachment::setShowInline(bool showinline)
 {
-  mShowInline = showinline;
+    mShowInline = showinline;
 }
 
 QString Attachment::label() const
 {
-  return mLabel;
+    return mLabel;
 }
 
-void Attachment::setLabel( const QString& label )
+void Attachment::setLabel(const QString &label)
 {
-  mLabel = label;
+    mLabel = label;
 }
 

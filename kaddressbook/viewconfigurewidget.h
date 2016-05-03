@@ -45,12 +45,11 @@ class ViewConfigureFilterPage;
   is to show a page with the select fields widget. For simple views this may
   be sufficient.
 */
-class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
-{
-  Q_OBJECT
+class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget {
+    Q_OBJECT
 
-  public:
-    ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    ViewConfigureWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
     virtual ~ViewConfigureWidget();
 
     /**
@@ -60,7 +59,7 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
 
       Do not change the group of the config object in this method.
      */
-    virtual void restoreSettings( KConfig *config );
+    virtual void restoreSettings(KConfig *config);
 
     /**
       Writes the configuration from the GUI to the config object. If this
@@ -68,38 +67,37 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
 
       Do not change the group of the config object in this method.
      */
-    virtual void saveSettings( KConfig *config );
+    virtual void saveSettings(KConfig *config);
 
 
     /**
       Use this method to add new pages to the widget.
      */
-    QVBox *addPage( const QString &item, const QString &header = QString::null,
-                    const QPixmap &pixmap = QPixmap() );
+    QVBox *addPage(const QString &item, const QString &header = QString::null,
+                   const QPixmap &pixmap = QPixmap());
 
-  private:
+private:
     KJanusWidget *mMainWidget;
 
     ViewConfigureFieldsPage *mFieldsPage;
     ViewConfigureFilterPage *mFilterPage;
 };
 
-class ViewConfigureDialog : public KDialogBase
-{
-  Q_OBJECT
+class ViewConfigureDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
-                         QWidget *parent, const char *name = 0 );
+public:
+    ViewConfigureDialog(ViewConfigureWidget *wdg, const QString &viewName,
+                        QWidget *parent, const char *name = 0);
     ~ViewConfigureDialog();
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings(KConfig *);
+    void saveSettings(KConfig *);
 
-  protected slots:
+protected slots:
     void slotHelp();
 
-  private:
+private:
     ViewConfigureWidget *mConfigWidget;
 };
 

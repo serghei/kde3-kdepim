@@ -49,105 +49,126 @@
 #include <qstring.h>
 
 Kleo::QGpgMEBackend::QGpgMEBackend()
-  : Kleo::CryptoBackend(),
-    mCryptoConfig( 0 ),
-    mOpenPGPProtocol( 0 ),
-    mSMIMEProtocol( 0 )
+    : Kleo::CryptoBackend(),
+      mCryptoConfig(0),
+      mOpenPGPProtocol(0),
+      mSMIMEProtocol(0)
 {
 
 }
 
-Kleo::QGpgMEBackend::~QGpgMEBackend() {
-  delete mCryptoConfig; mCryptoConfig = 0;
-  delete mOpenPGPProtocol; mOpenPGPProtocol = 0;
-  delete mSMIMEProtocol; mSMIMEProtocol = 0;
+Kleo::QGpgMEBackend::~QGpgMEBackend()
+{
+    delete mCryptoConfig;
+    mCryptoConfig = 0;
+    delete mOpenPGPProtocol;
+    mOpenPGPProtocol = 0;
+    delete mSMIMEProtocol;
+    mSMIMEProtocol = 0;
 }
 
-QString Kleo::QGpgMEBackend::name() const {
-  return "gpgme";
+QString Kleo::QGpgMEBackend::name() const
+{
+    return "gpgme";
 }
 
-QString Kleo::QGpgMEBackend::displayName() const {
-  return i18n( "GpgME" );
+QString Kleo::QGpgMEBackend::displayName() const
+{
+    return i18n("GpgME");
 }
 
-Kleo::CryptoConfig * Kleo::QGpgMEBackend::config() const {
-  if ( !mCryptoConfig ) {
-    static bool hasGpgConf = !KStandardDirs::findExe( "gpgconf" ).isEmpty();
-    if ( hasGpgConf )
-      mCryptoConfig = new QGpgMECryptoConfig();
-  }
-  return mCryptoConfig;
+Kleo::CryptoConfig *Kleo::QGpgMEBackend::config() const
+{
+    if(!mCryptoConfig)
+    {
+        static bool hasGpgConf = !KStandardDirs::findExe("gpgconf").isEmpty();
+        if(hasGpgConf)
+            mCryptoConfig = new QGpgMECryptoConfig();
+    }
+    return mCryptoConfig;
 }
 
-static bool check( GpgME::Context::Protocol proto, QString * reason ) {
-  if ( !GpgME::checkEngine( proto ) )
-    return true;
-  if ( !reason )
+static bool check(GpgME::Context::Protocol proto, QString *reason)
+{
+    if(!GpgME::checkEngine(proto))
+        return true;
+    if(!reason)
+        return false;
+    // error, check why:
+    const GpgME::EngineInfo ei = GpgME::engineInfo(proto);
+    if(ei.isNull())
+        *reason = i18n("GPGME was compiled without support for %1.").arg(proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP");
+    else if(ei.fileName() && !ei.version())
+        *reason = i18n("Engine %1 is not installed properly.").arg(QFile::decodeName(ei.fileName()));
+    else if(ei.fileName() && ei.version() && ei.requiredVersion())
+        *reason = i18n("Engine %1 version %2 installed, "
+                       "but at least version %3 is required.")
+                  .arg(QFile::decodeName(ei.fileName()), ei.version(), ei.requiredVersion());
+    else
+        *reason = i18n("Unknown problem with engine for protocol %1.").arg(proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP");
     return false;
-  // error, check why:
-  const GpgME::EngineInfo ei = GpgME::engineInfo( proto );
-  if ( ei.isNull() )
-    *reason = i18n("GPGME was compiled without support for %1.").arg( proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
-  else if ( ei.fileName() && !ei.version() )
-    *reason = i18n("Engine %1 is not installed properly.").arg( QFile::decodeName( ei.fileName() ) );
-  else if ( ei.fileName() && ei.version() && ei.requiredVersion() )
-    *reason = i18n("Engine %1 version %2 installed, "
-		   "but at least version %3 is required.")
-      .arg( QFile::decodeName( ei.fileName() ), ei.version(), ei.requiredVersion() );
-  else
-    *reason = i18n("Unknown problem with engine for protocol %1.").arg( proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
-  return false;
 }
 
-bool Kleo::QGpgMEBackend::checkForOpenPGP( QString * reason ) const {
-  return check( GpgME::Context::OpenPGP, reason );
+bool Kleo::QGpgMEBackend::checkForOpenPGP(QString *reason) const
+{
+    return check(GpgME::Context::OpenPGP, reason);
 }
 
-bool Kleo::QGpgMEBackend::checkForSMIME( QString * reason ) const {
-  return check( GpgME::Context::CMS, reason );
+bool Kleo::QGpgMEBackend::checkForSMIME(QString *reason) const
+{
+    return check(GpgME::Context::CMS, reason);
 }
 
-bool Kleo::QGpgMEBackend::checkForProtocol( const char * name, QString * reason ) const {
-  if ( qstricmp( name, OpenPGP ) == 0 )
-    return check( GpgME::Context::OpenPGP, reason );
-  if ( qstricmp( name, SMIME ) == 0 )
-    return check( GpgME::Context::CMS, reason );
-  if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"" ).arg( name );
-  return false;
+bool Kleo::QGpgMEBackend::checkForProtocol(const char *name, QString *reason) const
+{
+    if(qstricmp(name, OpenPGP) == 0)
+        return check(GpgME::Context::OpenPGP, reason);
+    if(qstricmp(name, SMIME) == 0)
+        return check(GpgME::Context::CMS, reason);
+    if(reason)
+        *reason = i18n("Unsupported protocol \"%1\"").arg(name);
+    return false;
 }
 
-Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::openpgp() const {
-  if ( !mOpenPGPProtocol )
-    if ( checkForOpenPGP() )
-      mOpenPGPProtocol = new CryptPlugWrapper( "gpg", "openpgp" );
-  return mOpenPGPProtocol;
+Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::openpgp() const
+{
+    if(!mOpenPGPProtocol)
+        if(checkForOpenPGP())
+            mOpenPGPProtocol = new CryptPlugWrapper("gpg", "openpgp");
+    return mOpenPGPProtocol;
 }
 
-Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::smime() const {
-  if ( !mSMIMEProtocol )
-    if ( checkForSMIME() )
-      mSMIMEProtocol = new CryptPlugWrapper( "gpgsm", "smime" );
-  return mSMIMEProtocol;
+Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::smime() const
+{
+    if(!mSMIMEProtocol)
+        if(checkForSMIME())
+            mSMIMEProtocol = new CryptPlugWrapper("gpgsm", "smime");
+    return mSMIMEProtocol;
 }
 
-Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::protocol( const char * name ) const {
-  if ( qstricmp( name, OpenPGP ) == 0 )
-    return openpgp();
-  if ( qstricmp( name, SMIME ) == 0 )
-    return smime();
-  return 0;
+Kleo::CryptoBackend::Protocol *Kleo::QGpgMEBackend::protocol(const char *name) const
+{
+    if(qstricmp(name, OpenPGP) == 0)
+        return openpgp();
+    if(qstricmp(name, SMIME) == 0)
+        return smime();
+    return 0;
 }
 
-bool Kleo::QGpgMEBackend::supportsProtocol( const char * name ) const {
-  return qstricmp( name, OpenPGP ) == 0 || qstricmp( name, SMIME ) == 0;
+bool Kleo::QGpgMEBackend::supportsProtocol(const char *name) const
+{
+    return qstricmp(name, OpenPGP) == 0 || qstricmp(name, SMIME) == 0;
 }
 
-const char * Kleo::QGpgMEBackend::enumerateProtocols( int i ) const {
-  switch ( i ) {
-  case 0: return OpenPGP;
-  case 1: return SMIME;
-  default: return 0;
-  }
+const char *Kleo::QGpgMEBackend::enumerateProtocols(int i) const
+{
+    switch(i)
+    {
+        case 0:
+            return OpenPGP;
+        case 1:
+            return SMIME;
+        default:
+            return 0;
+    }
 }

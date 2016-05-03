@@ -27,78 +27,78 @@
 
 void ParserTest::testSingleAttachment()
 {
-  KTNEFParser parser;
-  assert( parser.openFile( KDESRCDIR "/one-file.tnef" ) == true );
+    KTNEFParser parser;
+    assert(parser.openFile(KDESRCDIR "/one-file.tnef") == true);
 
-  KTNEFMessage *msg = parser.message();
-  assert( msg != 0 );
+    KTNEFMessage *msg = parser.message();
+    assert(msg != 0);
 
-  QPtrList<KTNEFAttach> atts = msg->attachmentList();
-  assert( atts.count() == 1 );
+    QPtrList<KTNEFAttach> atts = msg->attachmentList();
+    assert(atts.count() == 1);
 
-  KTNEFAttach* att = atts.first();
-  assert( att != 0 );
-  assert( att->size() == 244 );
-  assert( att->name() == QString( "AUTHORS" ) );
+    KTNEFAttach *att = atts.first();
+    assert(att != 0);
+    assert(att->size() == 244);
+    assert(att->name() == QString("AUTHORS"));
 }
 
 void ParserTest::testTwoAttachments()
 {
-  KTNEFParser parser;
-  assert( parser.openFile( KDESRCDIR "/two-files.tnef" ) == true );
+    KTNEFParser parser;
+    assert(parser.openFile(KDESRCDIR "/two-files.tnef") == true);
 
-  KTNEFMessage *msg = parser.message();
-  assert( msg != 0 );
+    KTNEFMessage *msg = parser.message();
+    assert(msg != 0);
 
-  QPtrList<KTNEFAttach> atts = msg->attachmentList();
-  assert( atts.count() == 2 );
+    QPtrList<KTNEFAttach> atts = msg->attachmentList();
+    assert(atts.count() == 2);
 
-  KTNEFAttach* att = atts.at( 0 );
-  assert( att != 0 );
-  assert( att->size() == 244 );
-  assert( att->name() == QString( "AUTHORS" ) );
+    KTNEFAttach *att = atts.at(0);
+    assert(att != 0);
+    assert(att->size() == 244);
+    assert(att->name() == QString("AUTHORS"));
 
-  att = atts.at( 1 );
-  assert( att != 0 );
-  assert( att->size() == 893 );
-  assert( att->name() == QString( "README" ) );
+    att = atts.at(1);
+    assert(att != 0);
+    assert(att->size() == 893);
+    assert(att->name() == QString("README"));
 }
 
 void ParserTest::testMAPIAttachments()
 {
-  KTNEFParser parser;
-  assert( parser.openFile( KDESRCDIR "/mapi_attach_data_obj.tnef" ) == true );
+    KTNEFParser parser;
+    assert(parser.openFile(KDESRCDIR "/mapi_attach_data_obj.tnef") == true);
 
-  KTNEFMessage *msg = parser.message();
-  assert( msg != 0 );
+    KTNEFMessage *msg = parser.message();
+    assert(msg != 0);
 
-  QPtrList<KTNEFAttach> atts = msg->attachmentList();
-  assert( atts.count() == 3 );
+    QPtrList<KTNEFAttach> atts = msg->attachmentList();
+    assert(atts.count() == 3);
 
-  KTNEFAttach* att = atts.at( 0 );
-  assert( att != 0 );
-  assert( att->size() == 61952 );
-  assert( att->name() == QString( "VIA_Nytt_1402.doc" ) );
+    KTNEFAttach *att = atts.at(0);
+    assert(att != 0);
+    assert(att->size() == 61952);
+    assert(att->name() == QString("VIA_Nytt_1402.doc"));
 
-  att = atts.at( 1 );
-  assert( att != 0 );
-  assert( att->size() == 213688 );
-  assert( att->name() == QString( "VIA_Nytt_1402.pdf" ) );
+    att = atts.at(1);
+    assert(att != 0);
+    assert(att->size() == 213688);
+    assert(att->name() == QString("VIA_Nytt_1402.pdf"));
 
-  att = atts.at( 2 );
-  assert( att != 0 );
-  assert( att->size() == 68920 );
-  assert( att->name() == QString( "VIA_Nytt_14021.htm" ) );
+    att = atts.at(2);
+    assert(att != 0);
+    assert(att->size() == 68920);
+    assert(att->name() == QString("VIA_Nytt_14021.htm"));
 }
 
 #include <kinstance.h>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  KInstance inst( "ktnef-parsertest" );
-  ParserTest test;
-  test.testSingleAttachment();
-  test.testTwoAttachments();
-  test.testMAPIAttachments();
-  return 0;
+    KInstance inst("ktnef-parsertest");
+    ParserTest test;
+    test.testSingleAttachment();
+    test.testTwoAttachments();
+    test.testMAPIAttachments();
+    return 0;
 }

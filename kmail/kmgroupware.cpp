@@ -43,46 +43,53 @@
 #include <assert.h>
 
 
-bool vPartFoundAndDecoded( KMMessage* msg, QString& s )
+bool vPartFoundAndDecoded(KMMessage *msg, QString &s)
 {
-  assert( msg );
+    assert(msg);
 
-  if( ( DwMime::kTypeText == msg->type() && ( DwMime::kSubtypeVCal   == msg->subtype() ||
-                                              DwMime::kSubtypeXVCard == msg->subtype() ) ) ||
-      ( DwMime::kTypeApplication == msg->type() &&
-        DwMime::kSubtypeOctetStream == msg->subtype() ) )
-  {
-    s = QString::fromUtf8( msg->bodyDecoded() );
-    return true;
-  } else if( DwMime::kTypeMultipart == msg->type() &&
-             (DwMime::kSubtypeMixed  == msg->subtype() ) ||
-             (DwMime::kSubtypeAlternative  == msg->subtype() ))
-  {
-    // kdDebug(5006) << "KMGroupware looking for TNEF data" << endl;
-    DwBodyPart* dwPart = msg->findDwBodyPart( DwMime::kTypeApplication,
-                                              DwMime::kSubtypeMsTNEF );
-    if( !dwPart )
-      dwPart = msg->findDwBodyPart( DwMime::kTypeApplication,
-                                    DwMime::kSubtypeOctetStream );
-    if( dwPart ){
-      // kdDebug(5006) << "KMGroupware analyzing TNEF data" << endl;
-      KMMessagePart msgPart;
-      KMMessage::bodyPart(dwPart, &msgPart);
-      s = KCal::IncidenceFormatter::msTNEFToVPart( msgPart.bodyDecodedBinary() );
-      return !s.isEmpty();
-    } else {
-      dwPart = msg->findDwBodyPart( DwMime::kTypeText, DwMime::kSubtypeVCal );
-      if (dwPart) {
-        KMMessagePart msgPart;
-        KMMessage::bodyPart(dwPart, &msgPart);
-        s = msgPart.body();
+    if((DwMime::kTypeText == msg->type() && (DwMime::kSubtypeVCal   == msg->subtype() ||
+            DwMime::kSubtypeXVCard == msg->subtype())) ||
+            (DwMime::kTypeApplication == msg->type() &&
+             DwMime::kSubtypeOctetStream == msg->subtype()))
+    {
+        s = QString::fromUtf8(msg->bodyDecoded());
         return true;
-      }
     }
-  }else if( DwMime::kTypeMultipart == msg->type() &&
-            DwMime::kSubtypeMixed  == msg->subtype() ) {
-    // TODO: Something?
-  }
+    else if(DwMime::kTypeMultipart == msg->type() &&
+            (DwMime::kSubtypeMixed  == msg->subtype()) ||
+            (DwMime::kSubtypeAlternative  == msg->subtype()))
+    {
+        // kdDebug(5006) << "KMGroupware looking for TNEF data" << endl;
+        DwBodyPart *dwPart = msg->findDwBodyPart(DwMime::kTypeApplication,
+                             DwMime::kSubtypeMsTNEF);
+        if(!dwPart)
+            dwPart = msg->findDwBodyPart(DwMime::kTypeApplication,
+                                         DwMime::kSubtypeOctetStream);
+        if(dwPart)
+        {
+            // kdDebug(5006) << "KMGroupware analyzing TNEF data" << endl;
+            KMMessagePart msgPart;
+            KMMessage::bodyPart(dwPart, &msgPart);
+            s = KCal::IncidenceFormatter::msTNEFToVPart(msgPart.bodyDecodedBinary());
+            return !s.isEmpty();
+        }
+        else
+        {
+            dwPart = msg->findDwBodyPart(DwMime::kTypeText, DwMime::kSubtypeVCal);
+            if(dwPart)
+            {
+                KMMessagePart msgPart;
+                KMMessage::bodyPart(dwPart, &msgPart);
+                s = msgPart.body();
+                return true;
+            }
+        }
+    }
+    else if(DwMime::kTypeMultipart == msg->type() &&
+            DwMime::kSubtypeMixed  == msg->subtype())
+    {
+        // TODO: Something?
+    }
 
-  return false;
+    return false;
 }

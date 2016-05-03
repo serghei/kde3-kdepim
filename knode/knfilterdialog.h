@@ -28,17 +28,20 @@ class QCheckBox;
 
 class KNFilterDialog : public KDialogBase {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class KNFilterManager;
+    friend class KNFilterManager;
 
-  public:
-    KNFilterDialog(KNArticleFilter *f=0, QWidget *parent=0, const char *name=0);
+public:
+    KNFilterDialog(KNArticleFilter *f = 0, QWidget *parent = 0, const char *name = 0);
     ~KNFilterDialog();
 
-    KNArticleFilter* filter() { return fltr; }
+    KNArticleFilter *filter()
+    {
+        return fltr;
+    }
 
-  protected:
+protected:
     KNFilterConfigWidget *fw;
     KLineEdit *fname;
     QComboBox *apon;
@@ -46,9 +49,9 @@ class KNFilterDialog : public KDialogBase {
 
     KNArticleFilter *fltr;
 
-  protected slots:
+protected slots:
     void slotOk();
-    void slotTextChanged( const QString & );
+    void slotTextChanged(const QString &);
 };
 
 #endif

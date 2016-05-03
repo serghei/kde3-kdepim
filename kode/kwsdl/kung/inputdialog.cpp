@@ -23,10 +23,10 @@
 
 #include "inputdialog.h"
 
-InputDialog::InputDialog( QWidget *page, QWidget *parent )
-  : KDialogBase( Swallow, "", Ok | Cancel, Ok, parent, "", true, true )
+InputDialog::InputDialog(QWidget *page, QWidget *parent)
+    : KDialogBase(Swallow, "", Ok | Cancel, Ok, parent, "", true, true)
 {
-  setMainWidget( page );
+    setMainWidget(page);
 
-  setButtonText( Ok, i18n( "Send" ) );
+    setButtonText(Ok, i18n("Send"));
 }

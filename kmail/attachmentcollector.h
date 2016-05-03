@@ -38,37 +38,43 @@ class partNode;
 
 namespace KMail {
 
-  class AttachmentCollector {
-  public:
+class AttachmentCollector {
+public:
     AttachmentCollector()
-      : mDiveIntoEncryptions( true ),
-	mDiveIntoSignatures( true ),
-	mDiveIntoMessages( false ) {}
+        : mDiveIntoEncryptions(true),
+          mDiveIntoSignatures(true),
+          mDiveIntoMessages(false) {}
 
-    void setDiveIntoEncryptions( bool dive ) {
-      mDiveIntoEncryptions = dive;
+    void setDiveIntoEncryptions(bool dive)
+    {
+        mDiveIntoEncryptions = dive;
     }
-    void setDiveIntoSignatures( bool dive ) {
-      mDiveIntoSignatures = dive;
+    void setDiveIntoSignatures(bool dive)
+    {
+        mDiveIntoSignatures = dive;
     }
-    void setDiveIntoMessages( bool dive ) {
-      mDiveIntoMessages = dive;
+    void setDiveIntoMessages(bool dive)
+    {
+        mDiveIntoMessages = dive;
     }
 
-    void collectAttachmentsFrom( partNode * node );
+    void collectAttachmentsFrom(partNode *node);
 
-    const std::vector<partNode*> & attachments() const { return mAttachments; }
+    const std::vector<partNode *> &attachments() const
+    {
+        return mAttachments;
+    }
 
-  private:
-    std::vector<partNode*> mAttachments;
+private:
+    std::vector<partNode *> mAttachments;
     bool mDiveIntoEncryptions : 1;
     bool mDiveIntoSignatures  : 1;
     bool mDiveIntoMessages    : 1;
 
-  private: // disabled
-    AttachmentCollector( const AttachmentCollector & );
-    void operator=( const AttachmentCollector & );
-  };
+private: // disabled
+    AttachmentCollector(const AttachmentCollector &);
+    void operator=(const AttachmentCollector &);
+};
 
 } // namespace KMail
 

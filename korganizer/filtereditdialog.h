@@ -31,8 +31,12 @@
 class FilterEdit;
 template<class type> class QPtrList;
 
-namespace KPIM { class CategorySelectDialog; }
-namespace KCal { class CalFilter; }
+namespace KPIM {
+class CategorySelectDialog;
+}
+namespace KCal {
+class CalFilter;
+}
 
 using namespace KCal;
 
@@ -42,34 +46,32 @@ using namespace KCal;
   @short Creates a dialog box to create/edit a calendar filter
   @author Cornelius Schumacher, Thomas Zander
 */
-class FilterEditDialog : public KDialogBase
-{
+class FilterEditDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    FilterEditDialog(QPtrList<CalFilter> *,QWidget *parent=0, const char *name=0);
+public:
+    FilterEditDialog(QPtrList<CalFilter> *, QWidget *parent = 0, const char *name = 0);
     virtual ~FilterEditDialog();
 
-  signals:
+signals:
     void filterChanged();
     void editCategories();
 
-  public slots:
+public slots:
     void updateFilterList();
     void updateCategoryConfig();
     void setDialogConsistent(bool consistent);
 
-  private:
+private:
     FilterEdit *mFilterEdit;
 
-  protected slots:
+protected slots:
     void slotApply();
     void slotOk();
 };
 
-class FilterEdit : public FilterEdit_base
-{
+class FilterEdit : public FilterEdit_base {
     Q_OBJECT
-  public:
+public:
     FilterEdit(QPtrList<CalFilter> *filters, QWidget *parent);
     ~FilterEdit();
 
@@ -77,12 +79,12 @@ class FilterEdit : public FilterEdit_base
     void saveChanges();
     void updateCategoryConfig();
 
-  signals:
+signals:
     void dataConsistent(bool);
     void filterChanged();
     void editCategories();
 
-  private slots:
+private slots:
     void filterSelected();
     void bNewPressed();
     void bDeletePressed();
@@ -90,7 +92,7 @@ class FilterEdit : public FilterEdit_base
     void updateCategorySelection(const QStringList &categories);
     void editCategorySelection();
 
-  private:
+private:
     void filterSelected(CalFilter *f);
 
     QPtrList<CalFilter> *mFilters;

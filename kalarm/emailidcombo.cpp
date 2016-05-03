@@ -21,42 +21,42 @@
 #include "emailidcombo.moc"
 
 
-EmailIdCombo::EmailIdCombo(KPIM::IdentityManager* manager, QWidget* parent, const char* name)
-	: KPIM::IdentityCombo(manager, parent, name),
-	  mReadOnly(false)
+EmailIdCombo::EmailIdCombo(KPIM::IdentityManager *manager, QWidget *parent, const char *name)
+    : KPIM::IdentityCombo(manager, parent, name),
+      mReadOnly(false)
 { }
 
-void EmailIdCombo::mousePressEvent(QMouseEvent* e)
+void EmailIdCombo::mousePressEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == LeftButton)
-			return;
-	}
-	KPIM::IdentityCombo::mousePressEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == LeftButton)
+            return;
+    }
+    KPIM::IdentityCombo::mousePressEvent(e);
 }
 
-void EmailIdCombo::mouseReleaseEvent(QMouseEvent* e)
+void EmailIdCombo::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		KPIM::IdentityCombo::mouseReleaseEvent(e);
+    if(!mReadOnly)
+        KPIM::IdentityCombo::mouseReleaseEvent(e);
 }
 
-void EmailIdCombo::mouseMoveEvent(QMouseEvent* e)
+void EmailIdCombo::mouseMoveEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		KPIM::IdentityCombo::mouseMoveEvent(e);
+    if(!mReadOnly)
+        KPIM::IdentityCombo::mouseMoveEvent(e);
 }
 
-void EmailIdCombo::keyPressEvent(QKeyEvent* e)
+void EmailIdCombo::keyPressEvent(QKeyEvent *e)
 {
-	if (!mReadOnly  ||  e->key() == Qt::Key_Escape)
-		KPIM::IdentityCombo::keyPressEvent(e);
+    if(!mReadOnly  ||  e->key() == Qt::Key_Escape)
+        KPIM::IdentityCombo::keyPressEvent(e);
 }
 
-void EmailIdCombo::keyReleaseEvent(QKeyEvent* e)
+void EmailIdCombo::keyReleaseEvent(QKeyEvent *e)
 {
-	if (!mReadOnly)
-		KPIM::IdentityCombo::keyReleaseEvent(e);
+    if(!mReadOnly)
+        KPIM::IdentityCombo::keyReleaseEvent(e);
 }

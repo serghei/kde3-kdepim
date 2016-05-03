@@ -41,7 +41,9 @@ class QWidgetStack;
 class QHBox;
 class QVButtonGroup;
 class KListView;
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 namespace KMail {
 
@@ -56,99 +58,98 @@ class ImapAccountBase;
  * "New Access Control Entry" dialog.
  * Internal class, only used by FolderDiaACLTab
  */
-class ACLEntryDialog :public KDialogBase {
-  Q_OBJECT
+class ACLEntryDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-  ACLEntryDialog( IMAPUserIdFormat userIdFormat, const QString& caption, QWidget* parent, const char* name = 0 );
+    ACLEntryDialog(IMAPUserIdFormat userIdFormat, const QString &caption, QWidget *parent, const char *name = 0);
 
-  void setValues( const QString& userId, unsigned int permissions );
+    void setValues(const QString &userId, unsigned int permissions);
 
-  QString userId() const;
-  QStringList userIds() const;
-  unsigned int permissions() const;
+    QString userId() const;
+    QStringList userIds() const;
+    unsigned int permissions() const;
 
 private slots:
-  void slotSelectAddresses();
-  void slotChanged();
+    void slotSelectAddresses();
+    void slotChanged();
 
 private:
-  QVButtonGroup* mButtonGroup;
-  KLineEdit* mUserIdLineEdit;
-  IMAPUserIdFormat mUserIdFormat;
+    QVButtonGroup *mButtonGroup;
+    KLineEdit *mUserIdLineEdit;
+    IMAPUserIdFormat mUserIdFormat;
 };
 
 /**
  * "Access Control" tab in the folder dialog
  * Internal class, only used by KMFolderDialog
  */
-class FolderDiaACLTab : public FolderDiaTab
-{
-  Q_OBJECT
+class FolderDiaACLTab : public FolderDiaTab {
+    Q_OBJECT
 
 public:
-  FolderDiaACLTab( KMFolderDialog* dlg, QWidget* parent, const char* name = 0 );
+    FolderDiaACLTab(KMFolderDialog *dlg, QWidget *parent, const char *name = 0);
 
-  virtual void load();
-  virtual bool save();
-  virtual AcceptStatus accept();
+    virtual void load();
+    virtual bool save();
+    virtual AcceptStatus accept();
 
-  static bool supports( KMFolder* refFolder );
+    static bool supports(KMFolder *refFolder);
 
 private slots:
-  // Network (KIO) slots
-  void slotConnectionResult( int, const QString& );
-  void slotReceivedACL( KMFolder*, KIO::Job*, const KMail::ACLList& );
-  void slotMultiSetACLResult(KIO::Job *);
-  void slotACLChanged( const QString&, int );
-  void slotReceivedUserRights( KMFolder* folder );
-  void slotDirectoryListingFinished(KMFolderImap*);
+    // Network (KIO) slots
+    void slotConnectionResult(int, const QString &);
+    void slotReceivedACL(KMFolder *, KIO::Job *, const KMail::ACLList &);
+    void slotMultiSetACLResult(KIO::Job *);
+    void slotACLChanged(const QString &, int);
+    void slotReceivedUserRights(KMFolder *folder);
+    void slotDirectoryListingFinished(KMFolderImap *);
 
-  // User (KListView) slots
-  void slotEditACL(QListViewItem*);
-  void slotSelectionChanged(QListViewItem*);
+    // User (KListView) slots
+    void slotEditACL(QListViewItem *);
+    void slotSelectionChanged(QListViewItem *);
 
-  // User (pushbuttons) slots
-  void slotAddACL();
-  void slotEditACL();
-  void slotRemoveACL();
+    // User (pushbuttons) slots
+    void slotAddACL();
+    void slotEditACL();
+    void slotRemoveACL();
 
-  void slotChanged( bool b );
-
-private:
-  KURL imapURL() const;
-  void initializeWithValuesFromFolder( KMFolder* folder );
-  void startListing();
-  void loadListView( const KMail::ACLList& aclList );
-  void loadFinished( const KMail::ACLList& aclList );
-  void addACLs( const QStringList& userIds, unsigned int permissions );
+    void slotChanged(bool b);
 
 private:
-  // The widget containing the ACL widgets (listview and buttons)
-  QHBox* mACLWidget;
-  //class ListView;
-  class ListViewItem;
-  KListView* mListView;
-  KPushButton* mAddACL;
-  KPushButton* mEditACL;
-  KPushButton* mRemoveACL;
+    KURL imapURL() const;
+    void initializeWithValuesFromFolder(KMFolder *folder);
+    void startListing();
+    void loadListView(const KMail::ACLList &aclList);
+    void loadFinished(const KMail::ACLList &aclList);
+    void addACLs(const QStringList &userIds, unsigned int permissions);
 
-  QStringList mRemovedACLs;
-  QString mImapPath;
-  ImapAccountBase* mImapAccount;
-  int mUserRights;
-  KMFolderType mFolderType;
-  ACLList mInitialACLList;
-  ACLList mACLList; // to be set
-  IMAPUserIdFormat mUserIdFormat;
+private:
+    // The widget containing the ACL widgets (listview and buttons)
+    QHBox *mACLWidget;
+    //class ListView;
+    class ListViewItem;
+    KListView *mListView;
+    KPushButton *mAddACL;
+    KPushButton *mEditACL;
+    KPushButton *mRemoveACL;
 
-  QLabel* mLabel;
-  QWidgetStack* mStack;
-  KMFolderDialog* mDlg;
+    QStringList mRemovedACLs;
+    QString mImapPath;
+    ImapAccountBase *mImapAccount;
+    int mUserRights;
+    KMFolderType mFolderType;
+    ACLList mInitialACLList;
+    ACLList mACLList; // to be set
+    IMAPUserIdFormat mUserIdFormat;
 
-  bool mChanged;
-  bool mAccepting; // i.e. close when done
-  bool mSaving;
+    QLabel *mLabel;
+    QWidgetStack *mStack;
+    KMFolderDialog *mDlg;
+
+    bool mChanged;
+    bool mAccepting; // i.e. close when done
+    bool mSaving;
 };
 
 } // end of namespace KMail

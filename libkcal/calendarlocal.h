@@ -33,13 +33,12 @@ class CalFormat;
 /**
   This class provides a calendar stored as a local file.
 */
-class LIBKCAL_EXPORT CalendarLocal : public Calendar
-{
-  public:
+class LIBKCAL_EXPORT CalendarLocal : public Calendar {
+public:
     /**
       Constructs a new calendar, with variables initialized to sane values.
     */
-    CalendarLocal( const QString &timeZoneId );
+    CalendarLocal(const QString &timeZoneId);
     ~CalendarLocal();
 
     /**
@@ -55,14 +54,14 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       @param fileName the name of the calendar on disk.
       @param format the format to use. If 0, iCalendar and vCalendar will be used
     */
-    bool load( const QString &fileName, CalFormat *format = 0 );
+    bool load(const QString &fileName, CalFormat *format = 0);
 
     /**
      * Reloads the contents of the storage into memory. The associated file name
      * must be known, in other words a previous load() must have been executed.
      * @return success or failure
     */
-    bool reload( const QString &tz );
+    bool reload(const QString &tz);
 
     /**
       Writes out the calendar to disk in the specified \a format.
@@ -71,7 +70,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       @param format the format to use
       @return true, if successful, false on error.
     */
-    bool save( const QString &fileName, CalFormat *format = 0 );
+    bool save(const QString &fileName, CalFormat *format = 0);
 
     /**
       Clears out the current calendar, freeing all used memory etc. etc.
@@ -83,11 +82,11 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Add Event to calendar.
     */
-    bool addEvent( Event *event );
+    bool addEvent(Event *event);
     /**
       Deletes an event from this calendar.
     */
-    bool deleteEvent( Event *event );
+    bool deleteEvent(Event *event);
     /**
       Deletes all events from this calendar.
     */
@@ -96,20 +95,20 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Retrieves an event on the basis of the unique string ID.
     */
-    Event *event( const QString &uid );
+    Event *event(const QString &uid);
     /**
       Return unfiltered list of all events in calendar.
     */
-    Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEvents(EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
 
     /**
       Add a todo to the todolist.
     */
-    bool addTodo( Todo *todo );
+    bool addTodo(Todo *todo);
     /**
       Remove a todo from the todolist.
     */
-    bool deleteTodo( Todo * );
+    bool deleteTodo(Todo *);
     /**
       Deletes all todos from this calendar.
     */
@@ -118,24 +117,24 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
     */
-    Todo *todo( const QString &uid );
+    Todo *todo(const QString &uid);
     /**
       Return list of all todos.
     */
-    Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Todo::List rawTodos(TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
     /**
       Returns list of todos due on the specified date.
     */
-    Todo::List rawTodosForDate( const QDate &date );
+    Todo::List rawTodosForDate(const QDate &date);
 
     /**
       Add a Journal entry to calendar.
     */
-    bool addJournal( Journal * );
+    bool addJournal(Journal *);
     /**
       Remove a Journal from the calendar.
     */
-    bool deleteJournal( Journal * );
+    bool deleteJournal(Journal *);
     /**
       Deletes all journals from this calendar.
     */
@@ -143,35 +142,35 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Return Journal with given UID.
     */
-    Journal *journal( const QString &uid );
+    Journal *journal(const QString &uid);
     /**
        Return list of all journals.
     */
-    Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Journal::List rawJournals(JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
     /**
        Get unfiltered journals for a given date.
     */
-    Journal::List rawJournalsForDate( const QDate &date );
+    Journal::List rawJournalsForDate(const QDate &date);
 
     /**
       Return all alarms, which ocur in the given time interval.
     */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+    Alarm::List alarms(const QDateTime &from, const QDateTime &to);
 
     /**
       Return all alarms, which ocur before given date.
     */
-    Alarm::List alarmsTo( const QDateTime &to );
+    Alarm::List alarmsTo(const QDateTime &to);
 
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
+    Event::List rawEventsForDate(const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending);
     /**
       Get unfiltered events for date \a qdt.
     */
-    Event::List rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate(const QDateTime &qdt);
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
@@ -181,33 +180,33 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
       from its start to its end date. For a recurring event, its time span is
       from its first to its last recurrence.
     */
-    Event::List rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false );
+    Event::List rawEvents(const QDate &start, const QDate &end,
+                          bool inclusive = false);
 
     /**
      * Set the timezone of the calendar to be used for interpreting the events
      * in the calendar. This requires that the calendar is saved first, so the
      * user is asked whether he wants to do that, or keep the timezone as is.
      */
-    void setTimeZoneIdViewOnly( const QString& tz );
-  
-  protected:
+    void setTimeZoneIdViewOnly(const QString &tz);
+
+protected:
 
     /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i );
+    void incidenceUpdated(IncidenceBase *i);
 
     /** inserts an event into its "proper place" in the calendar. */
-    void insertEvent( Event *event );
+    void insertEvent(Event *event);
 
     /** Append alarms of incidence in interval to list of alarms. */
-    void appendAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
+    void appendAlarms(Alarm::List &alarms, Incidence *incidence,
+                      const QDateTime &from, const QDateTime &to);
 
     /** Append alarms of recurring events in interval to list of alarms. */
-    void appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
-                       const QDateTime &from, const QDateTime &to );
+    void appendRecurringAlarms(Alarm::List &alarms, Incidence *incidence,
+                               const QDateTime &from, const QDateTime &to);
 
-  private:
+private:
     void init();
 
     typedef QDict<Event> EventDict;
@@ -217,7 +216,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     Journal::List mJournalList;
 
     Incidence::List mDeletedIncidences;
-		QString mFileName;
+    QString mFileName;
 
     class Private;
     Private *d;

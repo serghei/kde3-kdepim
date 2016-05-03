@@ -28,25 +28,24 @@
 
 class KDoubleSpinBox;
 
-class DoubleInputField : public SimpleInputField
-{
-  Q_OBJECT
+class DoubleInputField : public SimpleInputField {
+    Q_OBJECT
 
-  public:
-    DoubleInputField( const QString &name, const QString &typeName, const Schema::SimpleType *type );
+public:
+    DoubleInputField(const QString &name, const QString &typeName, const Schema::SimpleType *type);
 
-    virtual void setXMLData( const QDomElement &element );
-    virtual void xmlData( QDomDocument &document, QDomElement &parent );
+    virtual void setXMLData(const QDomElement &element);
+    virtual void xmlData(QDomDocument &document, QDomElement &parent);
 
-    virtual void setData( const QString &data );
+    virtual void setData(const QString &data);
     virtual QString data() const;
 
-    virtual QWidget *createWidget( QWidget *parent );
+    virtual QWidget *createWidget(QWidget *parent);
 
-  private slots:
-    void inputChanged( double );
+private slots:
+    void inputChanged(double);
 
-  private:
+private:
     KDoubleSpinBox *mInputWidget;
     double mValue;
     QString mTypeName;

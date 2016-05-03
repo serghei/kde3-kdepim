@@ -38,9 +38,9 @@ class KNJobData;
 
 class KNArticleManager : public QObject, public KNJobConsumer {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KNArticleManager();
     virtual ~KNArticleManager();
 
@@ -52,34 +52,37 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void openContent(KMime::Content *c);
 
     //listview handling
-    void showHdrs(bool clear=true);
+    void showHdrs(bool clear = true);
     void updateViewForCollection(KNArticleCollection *c);
     void updateListViewItems();
-    void setAllThreadsOpen(bool b=true);
+    void setAllThreadsOpen(bool b = true);
 
     void updateStatusString();
 
     //filter
-    KNArticleFilter* filter() const   { return f_ilter; }
+    KNArticleFilter *filter() const
+    {
+        return f_ilter;
+    }
     void search();
 
     //collection handling
     void setGroup(KNGroup *g);
     void setFolder(KNFolder *f);
-    KNArticleCollection* collection();
+    KNArticleCollection *collection();
 
     //article loading
     bool loadArticle(KNArticle *a);
-    bool unloadArticle(KNArticle *a, bool force=true);
+    bool unloadArticle(KNArticle *a, bool force = true);
 
     //article storage
     void copyIntoFolder(KNArticle::List &l, KNFolder *f);
     void moveIntoFolder(KNLocalArticle::List &l, KNFolder *f);
-    bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
+    bool deleteArticles(KNLocalArticle::List &l, bool ask = true);
 
     //article handling
-    void setAllRead( bool read = true, int lastcount = -1 );
-    void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
+    void setAllRead(bool read = true, int lastcount = -1);
+    void setRead(KNRemoteArticle::List &l, bool r = true, bool handleXPosts = true);
     /// mark all articles in the current group as not new
     void setAllNotNew();
 
@@ -91,14 +94,14 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     // Allow to delay the setup of UI elements, since the knode part may not
     // be available when the config dialog is called
-    void setView(KNHeaderView* v);
+    void setView(KNHeaderView *v);
 
-  signals:
+signals:
     // signals for the header view to adapt to the upcoming content
     void aboutToShowGroup();
     void aboutToShowFolder();
 
-  protected:
+protected:
     void processJob(KNJobData *j);
     void createThread(KNRemoteArticle *a);
     void createCompleteThread(KNRemoteArticle *a);
@@ -109,10 +112,10 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
-    QValueList<KTempFile*> mTempFiles;
+    QValueList<KTempFile *> mTempFiles;
     bool d_isableExpander;
 
-  public slots:
+public slots:
     void slotFilterChanged(KNArticleFilter *f);
     void slotSearchDialogDone();
     void slotItemExpanded(QListViewItem *p);

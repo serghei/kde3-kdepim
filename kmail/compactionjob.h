@@ -36,76 +36,82 @@ namespace KMail {
 /**
  * A job that runs in the background and compacts mbox folders.
  */
-class MboxCompactionJob : public ScheduledJob
-{
-  Q_OBJECT
+class MboxCompactionJob : public ScheduledJob {
+    Q_OBJECT
 public:
-  /// @p folder should be a folder with a KMFolderMbox storage.
-  MboxCompactionJob( KMFolder* folder, bool immediate );
-  virtual ~MboxCompactionJob();
+    /// @p folder should be a folder with a KMFolderMbox storage.
+    MboxCompactionJob(KMFolder *folder, bool immediate);
+    virtual ~MboxCompactionJob();
 
-  int executeNow( bool silent );
-  virtual void execute() { executeNow( false ); }
-  virtual void kill();
+    int executeNow(bool silent);
+    virtual void execute()
+    {
+        executeNow(false);
+    }
+    virtual void kill();
 
 private slots:
-  void slotDoWork();
+    void slotDoWork();
 
 private:
-  // Real folder location, != location in case of symlinks
-  QString realLocation() const;
-  void done( int rc );
+    // Real folder location, != location in case of symlinks
+    QString realLocation() const;
+    void done(int rc);
 
 private:
-  QTimer mTimer;
-  QString mTempName;
-  FILE *mTmpFile;
-  off_t mOffset;
-  int mCurrentIndex;
-  bool mFolderOpen;
-  bool mSilent;
+    QTimer mTimer;
+    QString mTempName;
+    FILE *mTmpFile;
+    off_t mOffset;
+    int mCurrentIndex;
+    bool mFolderOpen;
+    bool mSilent;
 };
 
 /**
  * A job that runs in the background and compacts maildir folders.
  */
-class MaildirCompactionJob : public ScheduledJob
-{
-  Q_OBJECT
+class MaildirCompactionJob : public ScheduledJob {
+    Q_OBJECT
 public:
-  /// @p folder should be a folder with a KMFolderMaildir storage.
-  MaildirCompactionJob( KMFolder* folder, bool immediate );
-  virtual ~MaildirCompactionJob();
+    /// @p folder should be a folder with a KMFolderMaildir storage.
+    MaildirCompactionJob(KMFolder *folder, bool immediate);
+    virtual ~MaildirCompactionJob();
 
-  int executeNow( bool silent );
-  virtual void execute() { executeNow( false ); }
-  virtual void kill();
+    int executeNow(bool silent);
+    virtual void execute()
+    {
+        executeNow(false);
+    }
+    virtual void kill();
 
 private slots:
-  void slotDoWork();
+    void slotDoWork();
 
 private:
-  void done( int rc );
+    void done(int rc);
 
 private:
-  QTimer mTimer;
-  QStringList mEntryList;
-  int mCurrentIndex;
-  bool mFolderOpen;
-  bool mSilent;
+    QTimer mTimer;
+    QStringList mEntryList;
+    int mCurrentIndex;
+    bool mFolderOpen;
+    bool mSilent;
 };
 
 /// A scheduled "compact mails in this folder" task.
-class ScheduledCompactionTask : public ScheduledTask
-{
+class ScheduledCompactionTask : public ScheduledTask {
 public:
-  /// If immediate is set, the job will execute synchronously. This is used when
-  /// the user requests explicitely that the operation should happen immediately.
-  ScheduledCompactionTask( KMFolder* folder, bool immediate )
-    : ScheduledTask( folder, immediate ) {}
-  virtual ~ScheduledCompactionTask() {}
-  virtual ScheduledJob* run();
-  virtual int taskTypeId() const { return 2; }
+    /// If immediate is set, the job will execute synchronously. This is used when
+    /// the user requests explicitely that the operation should happen immediately.
+    ScheduledCompactionTask(KMFolder *folder, bool immediate)
+        : ScheduledTask(folder, immediate) {}
+    virtual ~ScheduledCompactionTask() {}
+    virtual ScheduledJob *run();
+    virtual int taskTypeId() const
+    {
+        return 2;
+    }
 };
 
 } // namespace

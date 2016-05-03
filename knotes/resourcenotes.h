@@ -41,7 +41,7 @@ class KConfig;
 class KNotesResourceManager;
 
 namespace KCal {
-    class Journal;
+class Journal;
 }
 
 
@@ -52,10 +52,9 @@ namespace KCal {
  * \warning This code is still under heavy development. Don't expect source or
  *          binary compatibility in future versions.
  */
-class KDE_EXPORT ResourceNotes : public KRES::Resource
-{
+class KDE_EXPORT ResourceNotes : public KRES::Resource {
 public:
-    ResourceNotes( const KConfig * );
+    ResourceNotes(const KConfig *);
     virtual ~ResourceNotes();
 
     /**
@@ -68,13 +67,19 @@ public:
      */
     virtual bool save() = 0;
 
-    virtual bool addNote( KCal::Journal * ) = 0;
-    virtual bool deleteNote( KCal::Journal * ) = 0;
+    virtual bool addNote(KCal::Journal *) = 0;
+    virtual bool deleteNote(KCal::Journal *) = 0;
 
-    virtual KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to ) = 0;
+    virtual KCal::Alarm::List alarms(const QDateTime &from, const QDateTime &to) = 0;
 
-    void setManager( KNotesResourceManager *manager ) { mManager = manager; }
-    KNotesResourceManager *manager() const            { return mManager; }
+    void setManager(KNotesResourceManager *manager)
+    {
+        mManager = manager;
+    }
+    KNotesResourceManager *manager() const
+    {
+        return mManager;
+    }
 
 protected:
     KNotesResourceManager *mManager;

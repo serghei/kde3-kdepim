@@ -40,33 +40,34 @@
 #include <qcstring.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
+class Error;
+class Context;
 }
 
 namespace Kleo {
 
-  class QGpgMEVerifyOpaqueJob : public VerifyOpaqueJob, private QGpgMEJob {
+class QGpgMEVerifyOpaqueJob : public VerifyOpaqueJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
-  public:
-    QGpgMEVerifyOpaqueJob( GpgME::Context * context );
+public:
+    QGpgMEVerifyOpaqueJob(GpgME::Context *context);
     ~QGpgMEVerifyOpaqueJob();
 
     /*! \reimp from VerifyOpaqueJob */
-    GpgME::Error start( const QByteArray & signedData );
+    GpgME::Error start(const QByteArray &signedData);
 
     /*! \reimp form VerifyOpaqueJob */
-    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
+    GpgME::VerificationResult exec(const QByteArray &signedData, QByteArray &plainData);
 
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+private slots:
+    void slotOperationDoneEvent(GpgME::Context *context, const GpgME::Error &e)
+    {
+        QGpgMEJob::doSlotOperationDoneEvent(context, e);
     }
 
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & );
-  };
+private:
+    void doOperationDoneEvent(const GpgME::Error &e);
+    void setup(const QByteArray &);
+};
 
 }
 

@@ -48,16 +48,16 @@ class StoredTransferJob : public KIO::TransferJob {
     Q_OBJECT
 
 public:
-       /**
-	* Do not create a StoredTransferJob. Use storedGet() or storedPut()
-	* instead.
-	* @param url the url to get or put
-	* @param command the command to issue
-	* @param packedArgs the arguments
-	* @param _staticData additional data to transmit (e.g. in a HTTP Post)
-	* @param showProgressInfo true to show progress information to the user
-	*/
-    StoredTransferJob(const KURL& url, int command,
+    /**
+    * Do not create a StoredTransferJob. Use storedGet() or storedPut()
+    * instead.
+    * @param url the url to get or put
+    * @param command the command to issue
+    * @param packedArgs the arguments
+    * @param _staticData additional data to transmit (e.g. in a HTTP Post)
+    * @param showProgressInfo true to show progress information to the user
+    */
+    StoredTransferJob(const KURL &url, int command,
                       const QByteArray &packedArgs,
                       const QByteArray &_staticData,
                       bool showProgressInfo);
@@ -66,47 +66,50 @@ public:
      * Set data to be uploaded. This is for put jobs.
      * Automatically called by KIOext::put(const QByteArray &, ...), do not call this yourself.
      */
-    void setData( const QByteArray& arr );
+    void setData(const QByteArray &arr);
 
     /**
      * Get hold of the downloaded data. This is for get jobs.
      * You're supposed to call this only from the slot connected to the result() signal.
      */
-    QByteArray data() const { return m_data; }
+    QByteArray data() const
+    {
+        return m_data;
+    }
 
 private slots:
-    void slotData( KIO::Job *job, const QByteArray &data );
-    void slotDataReq( KIO::Job *job, QByteArray &data );
+    void slotData(KIO::Job *job, const QByteArray &data);
+    void slotDataReq(KIO::Job *job, QByteArray &data);
 private:
     QByteArray m_data;
     int m_uploadOffset;
 };
 
-    /**
-     * Get (a.k.a. read), into a single QByteArray.
-     * @see StoredTransferJob
-     *
-     * @param url the URL of the file
-     * @param reload true to reload the file, false if it can be taken from the cache
-     * @param showProgressInfo true to show progress information
-     * @return the job handling the operation.
-     */
-    StoredTransferJob *storedGet( const KURL& url, bool reload=false, bool showProgressInfo = true );
+/**
+ * Get (a.k.a. read), into a single QByteArray.
+ * @see StoredTransferJob
+ *
+ * @param url the URL of the file
+ * @param reload true to reload the file, false if it can be taken from the cache
+ * @param showProgressInfo true to show progress information
+ * @return the job handling the operation.
+ */
+StoredTransferJob *storedGet(const KURL &url, bool reload = false, bool showProgressInfo = true);
 
-    /**
-     * Put (a.k.a. write) data from a single QByteArray.
-     * @see StoredTransferJob
-     *
-     * @param url Where to write data.
-     * @param permissions May be -1. In this case no special permission mode is set.
-     * @param overwrite If true, any existing file will be overwritten.
-     * @param resume true to resume, false otherwise
-     * @param showProgressInfo true to show progress information
-     * @return the job handling the operation.
-     * @see multi_get()
-     */
-    StoredTransferJob *put( const QByteArray& arr, const KURL& url, int permissions,
-                            bool overwrite, bool resume, bool showProgressInfo = true );
+/**
+ * Put (a.k.a. write) data from a single QByteArray.
+ * @see StoredTransferJob
+ *
+ * @param url Where to write data.
+ * @param permissions May be -1. In this case no special permission mode is set.
+ * @param overwrite If true, any existing file will be overwritten.
+ * @param resume true to resume, false otherwise
+ * @param showProgressInfo true to show progress information
+ * @return the job handling the operation.
+ * @see multi_get()
+ */
+StoredTransferJob *put(const QByteArray &arr, const KURL &url, int permissions,
+                       bool overwrite, bool resume, bool showProgressInfo = true);
 
 } // namespace
 

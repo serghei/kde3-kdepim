@@ -25,19 +25,18 @@
 #include <qdatetime.h>
 #include <qdom.h>
 
-class WebdavHandler
-{
-  public:
+class WebdavHandler {
+public:
     WebdavHandler();
 
 
-    static QDomElement addElement( QDomDocument &, QDomNode &,
-                                   const QString &tag );
-    static QDomElement addDavElement( QDomDocument &, QDomNode &,
-                                      const QString &tag );
-    static QDomElement addSloxElement( QDomDocument &, QDomNode &,
-                                       const QString &tag,
-                                       const QString &text = QString::null );
+    static QDomElement addElement(QDomDocument &, QDomNode &,
+                                  const QString &tag);
+    static QDomElement addDavElement(QDomDocument &, QDomNode &,
+                                     const QString &tag);
+    static QDomElement addSloxElement(QDomDocument &, QDomNode &,
+                                      const QString &tag,
+                                      const QString &text = QString::null);
     static QDomDocument createAllPropsRequest();
 };
 

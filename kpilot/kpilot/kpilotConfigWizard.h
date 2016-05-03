@@ -34,25 +34,24 @@ class ConfigWizard_base1;
 class ConfigWizard_base2;
 class ConfigWizard_base3;
 
-class ConfigWizard : public KWizard
-{
-Q_OBJECT
+class ConfigWizard : public KWizard {
+    Q_OBJECT
 public:
-	enum Mode { InDialog=0, Standalone=1 } ;
+    enum Mode { InDialog = 0, Standalone = 1 } ;
 
-	ConfigWizard(QWidget *p=0L,const char *n=0L, int mode=(int)InDialog);
-	~ConfigWizard();
+    ConfigWizard(QWidget *p = 0L, const char *n = 0L, int mode = (int)InDialog);
+    ~ConfigWizard();
 
 protected slots:
-	void probeHandheld();
+    void probeHandheld();
 protected:
-	void accept();
-//	ConfigWizard_base1 *page1;
-	ConfigWizard_base2 *page2;
-	ConfigWizard_base3 *page3;
+    void accept();
+    //	ConfigWizard_base1 *page1;
+    ConfigWizard_base2 *page2;
+    ConfigWizard_base3 *page3;
 
-	Mode fMode;
-	QStringList mDBs;
+    Mode fMode;
+    QStringList mDBs;
 } ;
 
 #endif

@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -33,24 +33,23 @@
 #include <dcopobject.h>
 
 
-class LoggerDCOP : virtual public DCOPObject
-{
-	K_DCOP
+class LoggerDCOP : virtual public DCOPObject {
+    K_DCOP
 
 k_dcop:
-	// Indicates the start of a sync process
-	virtual ASYNC logStartSync() = 0 ;
-	// Indicates the end of a sync process
-	virtual ASYNC logEndSync() = 0 ;
-	// Adds a single message to the log, with formatting 
-	// showing it's an error message.
-	virtual ASYNC logError(QString) = 0 ;
-	// Adds a regular message.
-	virtual ASYNC logMessage(QString) = 0 ;
-	// Adds a message if the string is non-null, and
-	// sets the progress bar to @p n%. Limit @p n
-	// to the range 0 .. 100.
-	virtual ASYNC logProgress(QString,int n) = 0 ;
+    // Indicates the start of a sync process
+    virtual ASYNC logStartSync() = 0 ;
+    // Indicates the end of a sync process
+    virtual ASYNC logEndSync() = 0 ;
+    // Adds a single message to the log, with formatting
+    // showing it's an error message.
+    virtual ASYNC logError(QString) = 0 ;
+    // Adds a regular message.
+    virtual ASYNC logMessage(QString) = 0 ;
+    // Adds a message if the string is non-null, and
+    // sets the progress bar to @p n%. Limit @p n
+    // to the range 0 .. 100.
+    virtual ASYNC logProgress(QString, int n) = 0 ;
 } ;
 
 

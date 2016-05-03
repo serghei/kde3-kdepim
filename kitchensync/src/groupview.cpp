@@ -26,74 +26,80 @@
 
 #include "groupview.h"
 
-GroupView::GroupView( QWidget *parent )
-  : QWidget( parent ), mAboutPage( 0 )
+GroupView::GroupView(QWidget *parent)
+    : QWidget(parent), mAboutPage(0)
 {
-  mLayout = new QVBoxLayout( this );
+    mLayout = new QVBoxLayout(this);
 
-  mWidgetList = new KWidgetList( this );
+    mWidgetList = new KWidgetList(this);
 
-  mLayout->addWidget( mWidgetList );
+    mLayout->addWidget(mWidgetList);
 }
 
-SyncProcess* GroupView::selectedSyncProcess() const
+SyncProcess *GroupView::selectedSyncProcess() const
 {
-  GroupItem *item = static_cast<GroupItem*>( mWidgetList->selectedItem() );
-  if ( item )
-    return item->syncProcess();
-  else
-    return 0;
+    GroupItem *item = static_cast<GroupItem *>(mWidgetList->selectedItem());
+    if(item)
+        return item->syncProcess();
+    else
+        return 0;
 }
 
 void GroupView::clear()
 {
-  mWidgetList->clear();
+    mWidgetList->clear();
 }
 
 void GroupView::updateView()
 {
-  clear();
+    clear();
 
-  if ( SyncProcessManager::self()->count() == 0 ) {
-    mWidgetList->hide();
+    if(SyncProcessManager::self()->count() == 0)
+    {
+        mWidgetList->hide();
 
-    if ( !mAboutPage ) {
-      mAboutPage = new AboutPage( this );
-      mLayout->addWidget( mAboutPage );
+        if(!mAboutPage)
+        {
+            mAboutPage = new AboutPage(this);
+            mLayout->addWidget(mAboutPage);
 
-      connect( mAboutPage, SIGNAL( addGroup() ), SIGNAL( addGroup() ) );
+            connect(mAboutPage, SIGNAL(addGroup()), SIGNAL(addGroup()));
+        }
+
+        mAboutPage->show();
+
+    }
+    else
+    {
+        if(mAboutPage)
+            mAboutPage->hide();
+        mWidgetList->show();
     }
 
-    mAboutPage->show();
+    for(int i = 0; i < SyncProcessManager::self()->count(); ++i)
+    {
+        SyncProcess *process = SyncProcessManager::self()->at(i);
 
-  } else {
-    if ( mAboutPage )
-      mAboutPage->hide();
-    mWidgetList->show();
-  }
+        GroupItem *item = new GroupItem(mWidgetList, process);
+        connect(item, SIGNAL(synchronizeGroup(SyncProcess *)),
+                SIGNAL(synchronizeGroup(SyncProcess *)));
+        connect(item, SIGNAL(abortSynchronizeGroup(SyncProcess *)),
+                SIGNAL(abortSynchronizeGroup(SyncProcess *)));
+        connect(item, SIGNAL(configureGroup(SyncProcess *)),
+                SIGNAL(configureGroup(SyncProcess *)));
 
-  for ( int i = 0; i < SyncProcessManager::self()->count(); ++i ) {
-    SyncProcess *process = SyncProcessManager::self()->at( i );
-
-    GroupItem *item = new GroupItem( mWidgetList, process );
-    connect( item, SIGNAL( synchronizeGroup( SyncProcess* ) ),
-             SIGNAL( synchronizeGroup( SyncProcess* ) ) );
-    connect( item, SIGNAL( abortSynchronizeGroup( SyncProcess* ) ),
-             SIGNAL( abortSynchronizeGroup( SyncProcess* ) ) );
-    connect( item, SIGNAL( configureGroup( SyncProcess* ) ),
-             SIGNAL( configureGroup( SyncProcess* ) ) );
-
-    mWidgetList->appendItem( item );
-  }
+        mWidgetList->appendItem(item);
+    }
 }
 
-void GroupView::updateSyncProcess( SyncProcess *syncProcess )
+void GroupView::updateSyncProcess(SyncProcess *syncProcess)
 {
-  for ( int i = 0; i < (int)mWidgetList->count(); ++i ) {
-    GroupItem *item = static_cast<GroupItem*>( mWidgetList->item( i ) );
-    if ( item && item->syncProcess() == syncProcess )
-      item->update();
-  }
+    for(int i = 0; i < (int)mWidgetList->count(); ++i)
+    {
+        GroupItem *item = static_cast<GroupItem *>(mWidgetList->item(i));
+        if(item && item->syncProcess() == syncProcess)
+            item->update();
+    }
 }
 
 #include "groupview.moc"

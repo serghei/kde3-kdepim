@@ -34,47 +34,49 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class Slider : public QSlider
-{
-		Q_OBJECT
-		Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
-	public:
-		/** Constructor.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		explicit Slider(QWidget* parent = 0, const char* name = 0);
-		/** Constructor.
-		 *  @param orient The orientation of the slider, either Qt::Horizonal or Qt::Vertical.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		explicit Slider(Orientation orient, QWidget* parent = 0, const char* name = 0);
-		/** Constructor.
-		 *  @param minValue The minimum value which the slider can have.
-		 *  @param maxValue The maximum value which the slider can have.
-		 *  @param pageStep The page step increment.
-		 *  @param value The initial value for the slider.
-		 *  @param orient The orientation of the slider, either Qt::Horizonal or Qt::Vertical.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		Slider(int minValue, int maxValue, int pageStep, int value, Orientation orient,
-		       QWidget* parent = 0, const char* name = 0);
-		/** Returns true if the slider is read only. */
-		bool         isReadOnly() const  { return mReadOnly; }
-		/** Sets whether the slider is read-only for the user.
-		 *  @param readOnly True to set the widget read-only, false to set it read-write.
-		 */
-		virtual void setReadOnly(bool readOnly);
-	protected:
-		virtual void mousePressEvent(QMouseEvent*);
-		virtual void mouseReleaseEvent(QMouseEvent*);
-		virtual void mouseMoveEvent(QMouseEvent*);
-		virtual void keyPressEvent(QKeyEvent*);
-		virtual void keyReleaseEvent(QKeyEvent*);
-	private:
-		bool    mReadOnly;      // value cannot be changed by the user
+class Slider : public QSlider {
+    Q_OBJECT
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
+public:
+    /** Constructor.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    explicit Slider(QWidget *parent = 0, const char *name = 0);
+    /** Constructor.
+     *  @param orient The orientation of the slider, either Qt::Horizonal or Qt::Vertical.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    explicit Slider(Orientation orient, QWidget *parent = 0, const char *name = 0);
+    /** Constructor.
+     *  @param minValue The minimum value which the slider can have.
+     *  @param maxValue The maximum value which the slider can have.
+     *  @param pageStep The page step increment.
+     *  @param value The initial value for the slider.
+     *  @param orient The orientation of the slider, either Qt::Horizonal or Qt::Vertical.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    Slider(int minValue, int maxValue, int pageStep, int value, Orientation orient,
+           QWidget *parent = 0, const char *name = 0);
+    /** Returns true if the slider is read only. */
+    bool         isReadOnly() const
+    {
+        return mReadOnly;
+    }
+    /** Sets whether the slider is read-only for the user.
+     *  @param readOnly True to set the widget read-only, false to set it read-write.
+     */
+    virtual void setReadOnly(bool readOnly);
+protected:
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyReleaseEvent(QKeyEvent *);
+private:
+    bool    mReadOnly;      // value cannot be changed by the user
 };
 
 #endif // SLIDER_H

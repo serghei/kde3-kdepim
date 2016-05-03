@@ -23,46 +23,44 @@
 
 #include <klistbox.h>
 
-class ColorListBox : public KListBox
-{
-  Q_OBJECT
+class ColorListBox : public KListBox {
+    Q_OBJECT
 
-  public:
-    ColorListBox( QWidget *parent=0, const char * name=0, WFlags f=0 );
-    void setColor( uint index, const QColor &color );
-    QColor color( uint index ) const;
+public:
+    ColorListBox(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+    void setColor(uint index, const QColor &color);
+    QColor color(uint index) const;
 
-  public slots:
-    virtual void setEnabled( bool state );
+public slots:
+    virtual void setEnabled(bool state);
 
-  protected:
-    void dragEnterEvent( QDragEnterEvent *e );
-    void dragLeaveEvent( QDragLeaveEvent *e );
-    void dragMoveEvent( QDragMoveEvent *e );
-    void dropEvent( QDropEvent *e );
+protected:
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dragLeaveEvent(QDragLeaveEvent *e);
+    void dragMoveEvent(QDragMoveEvent *e);
+    void dropEvent(QDropEvent *e);
 
-  private slots:
-    void newColor( int index );
+private slots:
+    void newColor(int index);
 
-  private:
+private:
     int mCurrentOnDragEnter;
 
 };
 
 
-class ColorListItem : public QListBoxItem
-{
-  public:
-    ColorListItem( const QString &text, const QColor &color=Qt::black );
-    const QColor &color( void );
-    void  setColor( const QColor &color );
+class ColorListItem : public QListBoxItem {
+public:
+    ColorListItem(const QString &text, const QColor &color = Qt::black);
+    const QColor &color(void);
+    void  setColor(const QColor &color);
 
-  protected:
-    virtual void paint( QPainter * );
-    virtual int height( const QListBox * ) const;
-    virtual int width( const QListBox * ) const;
+protected:
+    virtual void paint(QPainter *);
+    virtual int height(const QListBox *) const;
+    virtual int width(const QListBox *) const;
 
-  private:
+private:
     QColor mColor;
     int mBoxWidth;
 };

@@ -26,7 +26,7 @@
 #include <qdatetime.h>
 
 extern "C" {
-  #include <libical/ical.h>
+#include <libical/ical.h>
 }
 
 
@@ -37,158 +37,171 @@ WebdavHandler::WebdavHandler()
 }
 
 
-KURL WebdavHandler::toDAV( const KURL& url )
+KURL WebdavHandler::toDAV(const KURL &url)
 {
-  KURL result( url );
+    KURL result(url);
 
-  if ( result.protocol() == "http" ) {
-    if ( result.port() == 443 ) {
-      // OpenGroupware.org returns 'http://server:443' instead of 'https://server'
-      result.setProtocol( "webdavs" );
-      result.setPort( 0 );
-    } else
-      result.setProtocol( "webdav" );
-  } else if ( result.protocol() == "https" )
-    result.setProtocol( "webdavs" );
-
-  return result;
-}
-
-
-
-QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
-                                       const QString &tag, const QString &value )
-{
-  QDomElement el = doc.createElement( tag );
-  node.appendChild( el );
-  if ( !value.isNull() ) {
-    QDomText txt = doc.createTextNode( value );
-    el.appendChild( txt );
-  }
-  return el;
-}
-
-QDomElement WebdavHandler::addElementNS( QDomDocument &doc, QDomNode &node,
-                                       const QString &ns, const QString &tag, const QString &value )
-{
-  QDomElement el = doc.createElementNS( ns, tag );
-  node.appendChild( el );
-  if ( !value.isNull() ) {
-    QDomText txt = doc.createTextNode( value );
-    el.appendChild( txt );
-  }
-  return el;
-}
-
-QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
-                                          const QString &tag, const QString &value )
-{
-  return addElementNS( doc, node, "DAV:", tag, value );
-}
-
-bool WebdavHandler::extractBool( const QDomElement &node, const QString &entry, bool &value )
-{
-  QDomElement element = node.namedItem( entry ).toElement();
-  if ( !element.isNull() ) {
-    value = (element.text() != "0");
-    return true;
-  }
-  return false;
-}
-
-bool WebdavHandler::extractLong( const QDomElement &node, const QString &entry, long &value )
-{
-  QDomElement element = node.namedItem( entry ).toElement();
-  if ( !element.isNull() ) {
-    value = element.text().toLong();
-    return true;
-  }
-  return false;
-}
-
-bool WebdavHandler::extractFloat( const QDomElement &node, const QString &entry, float &value )
-{
-  QDomElement element = node.namedItem( entry ).toElement();
-  if ( !element.isNull() ) {
-    value = element.text().toFloat();
-    return true;
-  }
-  return false;
-}
-
-bool WebdavHandler::extractDateTime( const QDomElement &node, const QString &entry, QDateTime &value )
-{
-  QDomElement element = node.namedItem( entry ).toElement();
-  if ( !element.isNull() && !element.text().isEmpty() ) {
-    value = QDateTime::fromString( element.text(), Qt::ISODate );
-    return true;
-  }
-  return false;
-}
-
-bool WebdavHandler::extractString( const QDomElement &node, const QString &entry, QString &value )
-{
-  QDomElement element = node.namedItem( entry ).toElement();
-  if ( !element.isNull() ) {
-    value = element.text();
-    return true;
-  }
-  return false;
-}
-
-bool WebdavHandler::extractStringList( const QDomElement &node, const QString &entry, QStringList &value )
-{
-  QDomElement element = node.namedItem( entry ).toElement();
-  if ( !element.isNull() ) {
-    value.clear();
-    QDomNodeList list = element.elementsByTagNameNS( "xml:", "v" );
-    for( uint i=0; i < list.count(); i++ ) {
-      QDomElement item = list.item(i).toElement();
-      value.append( item.text() );
+    if(result.protocol() == "http")
+    {
+        if(result.port() == 443)
+        {
+            // OpenGroupware.org returns 'http://server:443' instead of 'https://server'
+            result.setProtocol("webdavs");
+            result.setPort(0);
+        }
+        else
+            result.setProtocol("webdav");
     }
-    return true;
-  }
-  return false;
+    else if(result.protocol() == "https")
+        result.setProtocol("webdavs");
+
+    return result;
 }
 
 
-const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
+
+QDomElement WebdavHandler::addElement(QDomDocument &doc, QDomNode &node,
+                                      const QString &tag, const QString &value)
 {
-  int start = headers.find( "etag:", 0, false );
-  if ( start < 0 ) return QString();
-  start += 6;
-  return headers.mid( start, headers.find( "\n", start ) - start );
+    QDomElement el = doc.createElement(tag);
+    node.appendChild(el);
+    if(!value.isNull())
+    {
+        QDomText txt = doc.createTextNode(value);
+        el.appendChild(txt);
+    }
+    return el;
+}
+
+QDomElement WebdavHandler::addElementNS(QDomDocument &doc, QDomNode &node,
+                                        const QString &ns, const QString &tag, const QString &value)
+{
+    QDomElement el = doc.createElementNS(ns, tag);
+    node.appendChild(el);
+    if(!value.isNull())
+    {
+        QDomText txt = doc.createTextNode(value);
+        el.appendChild(txt);
+    }
+    return el;
+}
+
+QDomElement WebdavHandler::addDavElement(QDomDocument &doc, QDomNode &node,
+        const QString &tag, const QString &value)
+{
+    return addElementNS(doc, node, "DAV:", tag, value);
+}
+
+bool WebdavHandler::extractBool(const QDomElement &node, const QString &entry, bool &value)
+{
+    QDomElement element = node.namedItem(entry).toElement();
+    if(!element.isNull())
+    {
+        value = (element.text() != "0");
+        return true;
+    }
+    return false;
+}
+
+bool WebdavHandler::extractLong(const QDomElement &node, const QString &entry, long &value)
+{
+    QDomElement element = node.namedItem(entry).toElement();
+    if(!element.isNull())
+    {
+        value = element.text().toLong();
+        return true;
+    }
+    return false;
+}
+
+bool WebdavHandler::extractFloat(const QDomElement &node, const QString &entry, float &value)
+{
+    QDomElement element = node.namedItem(entry).toElement();
+    if(!element.isNull())
+    {
+        value = element.text().toFloat();
+        return true;
+    }
+    return false;
+}
+
+bool WebdavHandler::extractDateTime(const QDomElement &node, const QString &entry, QDateTime &value)
+{
+    QDomElement element = node.namedItem(entry).toElement();
+    if(!element.isNull() && !element.text().isEmpty())
+    {
+        value = QDateTime::fromString(element.text(), Qt::ISODate);
+        return true;
+    }
+    return false;
+}
+
+bool WebdavHandler::extractString(const QDomElement &node, const QString &entry, QString &value)
+{
+    QDomElement element = node.namedItem(entry).toElement();
+    if(!element.isNull())
+    {
+        value = element.text();
+        return true;
+    }
+    return false;
+}
+
+bool WebdavHandler::extractStringList(const QDomElement &node, const QString &entry, QStringList &value)
+{
+    QDomElement element = node.namedItem(entry).toElement();
+    if(!element.isNull())
+    {
+        value.clear();
+        QDomNodeList list = element.elementsByTagNameNS("xml:", "v");
+        for(uint i = 0; i < list.count(); i++)
+        {
+            QDomElement item = list.item(i).toElement();
+            value.append(item.text());
+        }
+        return true;
+    }
+    return false;
+}
+
+
+const QString WebdavHandler::getEtagFromHeaders(const QString &headers)
+{
+    int start = headers.find("etag:", 0, false);
+    if(start < 0) return QString();
+    start += 6;
+    return headers.mid(start, headers.find("\n", start) - start);
 }
 
 //TODO: should not call libical functions directly -- better to make
 //      a new libkcal abstraction method.
-QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZoneId )
+QDateTime WebdavHandler::utcAsZone(const QDateTime &utc, const QString &timeZoneId)
 {
-  int daylight;
-  QDateTime epoch;
-  epoch.setTime_t( 0 );
-  time_t v = epoch.secsTo( utc );
-  struct icaltimetype tt = 
-      icaltime_from_timet_with_zone( v, 0 /*is_date*/,
-         icaltimezone_get_builtin_timezone( "UTC" ) );
-  int offset = icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( timeZoneId.latin1() ),
-    &tt, &daylight );
-kdDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
-  return utc.addSecs( offset );
+    int daylight;
+    QDateTime epoch;
+    epoch.setTime_t(0);
+    time_t v = epoch.secsTo(utc);
+    struct icaltimetype tt =
+        icaltime_from_timet_with_zone(v, 0 /*is_date*/,
+                                      icaltimezone_get_builtin_timezone("UTC"));
+    int offset = icaltimezone_get_utc_offset(
+                     icaltimezone_get_builtin_timezone(timeZoneId.latin1()),
+                     &tt, &daylight);
+    kdDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
+    return utc.addSecs(offset);
 }
 
 //TODO: should not call libical functions directly -- better to make
 //      a new libkcal abstraction method.
-QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
+QDateTime WebdavHandler::zoneAsUtc(const QDateTime &zone, const QString &timeZoneId)
 {
-  int daylight;
-  QDateTime epoch;
-  epoch.setTime_t( 0 );
-  time_t v = epoch.secsTo( zone );
-  struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
-  int offset = icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( timeZoneId.latin1() ),
-    &tt, &daylight );
-  return zone.addSecs( - offset );
+    int daylight;
+    QDateTime epoch;
+    epoch.setTime_t(0);
+    time_t v = epoch.secsTo(zone);
+    struct icaltimetype tt = icaltime_from_timet(v, 0);   // 0: is_date=false
+    int offset = icaltimezone_get_utc_offset(
+                     icaltimezone_get_builtin_timezone(timeZoneId.latin1()),
+                     &tt, &daylight);
+    return zone.addSecs(- offset);
 }

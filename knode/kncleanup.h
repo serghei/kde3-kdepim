@@ -31,29 +31,32 @@ class Cleanup;
 
 class KNCleanUp {
 
-  public:
+public:
     KNCleanUp();
     ~KNCleanUp();
 
-    void appendCollection(KNArticleCollection *c)   { mColList.append( c ); }
+    void appendCollection(KNArticleCollection *c)
+    {
+        mColList.append(c);
+    }
     void start();
     void reset();
 
-    void expireGroup( KNGroup *g, bool showResult = false );
+    void expireGroup(KNGroup *g, bool showResult = false);
     void compactFolder(KNFolder *f);
 
-  protected:
+protected:
 
     class ProgressDialog : public QDialog  {
 
-      public:
+    public:
         ProgressDialog(int steps);
         ~ProgressDialog();
 
         void showMessage(const QString &s);
         void doProgress();
 
-      protected:
+    protected:
         void closeEvent(QCloseEvent *e);
 
         QLabel *m_sg;
@@ -63,7 +66,7 @@ class KNCleanUp {
     };
 
     ProgressDialog *d_lg;
-    QValueList<KNArticleCollection*> mColList;
+    QValueList<KNArticleCollection *> mColList;
 
 };
 

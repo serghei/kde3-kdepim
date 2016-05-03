@@ -34,7 +34,7 @@
 
 namespace KIO {
 
-  class XMLRPCResult;
+class XMLRPCResult;
 
 /**
  * The transfer job pumps data into and/or out of a Slave.
@@ -45,52 +45,59 @@ namespace KIO {
  * @since 3.4
  */
 class XmlrpcJob : public TransferJob {
-Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /** Indicates the response type of the call
      */
-    enum XMLRPCResponseType {
-      XMLRPCMessageResponse,
-      XMLRPCFaultResponse,
-      XMLRPCUnknownResponse
+    enum XMLRPCResponseType
+    {
+        XMLRPCMessageResponse,
+        XMLRPCFaultResponse,
+        XMLRPCUnknownResponse
     };
     /**
      * Use KIO::xmlrpcPropFind(), KIO::xmlrpcPropPatch() and
      * KIO::xmlrpcSearch() to create a new XmlrpcJob.
      */
-    XmlrpcJob( const KURL& url, const QString& method,
-				       const QValueList<QVariant> &params, bool showProgressInfo );
+    XmlrpcJob(const KURL &url, const QString &method,
+              const QValueList<QVariant> &params, bool showProgressInfo);
     virtual ~XmlrpcJob();
     /**
      * Returns the response as a QDomDocument.
      * @return the response document
      */
-    QValueList<QVariant> &response() { return m_response; }
+    QValueList<QVariant> &response()
+    {
+        return m_response;
+    }
     /**
      * Returns the type of the response.
      * @return the type of the response
      */
-    XMLRPCResponseType responseType() const { return m_responseType; }
+    XMLRPCResponseType responseType() const
+    {
+        return m_responseType;
+    }
 
-    static QString markupCall( const QString &cmd,
-                               const QValueList<QVariant> &args );
-  protected slots:
+    static QString markupCall(const QString &cmd,
+                              const QValueList<QVariant> &args);
+protected slots:
     virtual void slotFinished();
-    virtual void slotData( const QByteArray &data);
+    virtual void slotData(const QByteArray &data);
 
-  protected:
-    static QString marshal( const QVariant &arg );
-    static QVariant demarshal( const QDomElement &e );
+protected:
+    static QString marshal(const QVariant &arg);
+    static QVariant demarshal(const QDomElement &e);
 
-    static bool isMessageResponse( const QDomDocument &doc );
-    static bool isFaultResponse( const QDomDocument &doc );
+    static bool isMessageResponse(const QDomDocument &doc);
+    static bool isFaultResponse(const QDomDocument &doc);
 
-    static XMLRPCResult parseMessageResponse( const QDomDocument &doc );
-    static XMLRPCResult parseFaultResponse( const QDomDocument &doc );
+    static XMLRPCResult parseMessageResponse(const QDomDocument &doc);
+    static XMLRPCResult parseFaultResponse(const QDomDocument &doc);
 
 
-  private:
+private:
     class XmlrpcJobPrivate;
     XmlrpcJobPrivate *d;
     QString m_str_response;
@@ -107,17 +114,17 @@ Q_OBJECT
  * @param showProgressInfo true to show progress information
  * @return the new XmlrpcJob
  */
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
-                       const QValueList<QVariant> &params,
-                       bool showProgressInfo = true );
+XmlrpcJob *xmlrpcCall(const KURL &url, const QString &method,
+                      const QValueList<QVariant> &params,
+                      bool showProgressInfo = true);
 
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
-                       const QVariant &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
-                       const QStringList &arg, bool showProgressInfo = true );
+XmlrpcJob *xmlrpcCall(const KURL &url, const QString &method,
+                      const QVariant &arg, bool showProgressInfo = true);
+XmlrpcJob *xmlrpcCall(const KURL &url, const QString &method,
+                      const QStringList &arg, bool showProgressInfo = true);
 template <typename T>
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
-                       const QValueList<T>&arg,bool showProgressInfo = true );
+XmlrpcJob *xmlrpcCall(const KURL &url, const QString &method,
+                      const QValueList<T> &arg, bool showProgressInfo = true);
 }
 
 #endif

@@ -78,124 +78,135 @@ using namespace Kontact;
 
 int UniqueAppHandler::newInstance()
 {
-  // This bit is duplicated from KUniqueApplication::newInstance()
-  if ( kapp->mainWidget() ) {
-    kapp->mainWidget()->show();
-    KWin::forceActiveWindow( kapp->mainWidget()->winId() );
-    KStartupInfo::appStarted();
-  }
-
-  // Then ensure the part appears in kontact
-  mPlugin->core()->selectPlugin( mPlugin );
-  return 0;
-}
-
-bool UniqueAppHandler::process( const QCString &fun, const QByteArray &data,
-                                QCString& replyType, QByteArray &replyData )
-{
-  if ( fun == "newInstance()" ) {
-    replyType = "int";
-
-    KCmdLineArgs::reset(); // forget options defined by other "applications"
-    loadCommandLineOptions(); // implemented by plugin
-
-    // This bit is duplicated from KUniqueApplication::processDelayed()
-    QDataStream ds( data, IO_ReadOnly );
-    KCmdLineArgs::loadAppArgs( ds );
-    if ( !ds.atEnd() ) { // backwards compatibility
-      QCString asn_id;
-      ds >> asn_id;
-      kapp->setStartupId( asn_id );
+    // This bit is duplicated from KUniqueApplication::newInstance()
+    if(kapp->mainWidget())
+    {
+        kapp->mainWidget()->show();
+        KWin::forceActiveWindow(kapp->mainWidget()->winId());
+        KStartupInfo::appStarted();
     }
 
-    QDataStream _replyStream( replyData, IO_WriteOnly );
-    _replyStream << newInstance();
+    // Then ensure the part appears in kontact
+    mPlugin->core()->selectPlugin(mPlugin);
+    return 0;
+}
 
-    // OK, we're done, reload the initial kontact command line options,
-    // so that "kontact --module foo" keeps working (#103775).
+bool UniqueAppHandler::process(const QCString &fun, const QByteArray &data,
+                               QCString &replyType, QByteArray &replyData)
+{
+    if(fun == "newInstance()")
+    {
+        replyType = "int";
 
-    KCmdLineArgs::reset(); // forget options defined above
-    loadKontactCommandLineOptions();
+        KCmdLineArgs::reset(); // forget options defined by other "applications"
+        loadCommandLineOptions(); // implemented by plugin
 
-  } else if ( fun == "load()" ) {
-    replyType = "bool";
-    (void)mPlugin->part(); // load the part without bringing it to front
+        // This bit is duplicated from KUniqueApplication::processDelayed()
+        QDataStream ds(data, IO_ReadOnly);
+        KCmdLineArgs::loadAppArgs(ds);
+        if(!ds.atEnd())      // backwards compatibility
+        {
+            QCString asn_id;
+            ds >> asn_id;
+            kapp->setStartupId(asn_id);
+        }
 
-    QDataStream _replyStream( replyData, IO_WriteOnly );
-    _replyStream << true;
-  } else {
-    return DCOPObject::process( fun, data, replyType, replyData );
-  }
-  return true;
+        QDataStream _replyStream(replyData, IO_WriteOnly);
+        _replyStream << newInstance();
+
+        // OK, we're done, reload the initial kontact command line options,
+        // so that "kontact --module foo" keeps working (#103775).
+
+        KCmdLineArgs::reset(); // forget options defined above
+        loadKontactCommandLineOptions();
+
+    }
+    else if(fun == "load()")
+    {
+        replyType = "bool";
+        (void)mPlugin->part(); // load the part without bringing it to front
+
+        QDataStream _replyStream(replyData, IO_WriteOnly);
+        _replyStream << true;
+    }
+    else
+    {
+        return DCOPObject::process(fun, data, replyType, replyData);
+    }
+    return true;
 }
 
 QCStringList UniqueAppHandler::interfaces()
 {
-  QCStringList ifaces = DCOPObject::interfaces();
-  ifaces += "Kontact::UniqueAppHandler";
-  return ifaces;
+    QCStringList ifaces = DCOPObject::interfaces();
+    ifaces += "Kontact::UniqueAppHandler";
+    return ifaces;
 }
 
 QCStringList UniqueAppHandler::functions()
 {
-  QCStringList funcs = DCOPObject::functions();
-  funcs << "int newInstance()";
-  funcs << "bool load()";
-  return funcs;
+    QCStringList funcs = DCOPObject::functions();
+    funcs << "int newInstance()";
+    funcs << "bool load()";
+    return funcs;
 }
 
-UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase* factory, Plugin* plugin )
-    : QObject( plugin ), mFactory( factory ), mPlugin( plugin )
+UniqueAppWatcher::UniqueAppWatcher(UniqueAppHandlerFactoryBase *factory, Plugin *plugin)
+    : QObject(plugin), mFactory(factory), mPlugin(plugin)
 {
-  // The app is running standalone if 1) that name is known to DCOP
-  mRunningStandalone = kapp->dcopClient()->isApplicationRegistered( plugin->name() );
+    // The app is running standalone if 1) that name is known to DCOP
+    mRunningStandalone = kapp->dcopClient()->isApplicationRegistered(plugin->name());
 
-  // and 2) it's not registered by kontact (e.g. in another plugin)
-  if ( mRunningStandalone && kapp->dcopClient()->findLocalClient( plugin->name() ) )
-      mRunningStandalone = false;
+    // and 2) it's not registered by kontact (e.g. in another plugin)
+    if(mRunningStandalone && kapp->dcopClient()->findLocalClient(plugin->name()))
+        mRunningStandalone = false;
 
-  if ( mRunningStandalone ) {
-    kapp->dcopClient()->setNotifications( true );
-    connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString& ) ),
-             this, SLOT( unregisteredFromDCOP( const QCString& ) ) );
-  } else {
-    mFactory->createHandler( mPlugin );
-  }
+    if(mRunningStandalone)
+    {
+        kapp->dcopClient()->setNotifications(true);
+        connect(kapp->dcopClient(), SIGNAL(applicationRemoved(const QCString &)),
+                this, SLOT(unregisteredFromDCOP(const QCString &)));
+    }
+    else
+    {
+        mFactory->createHandler(mPlugin);
+    }
 }
 
 UniqueAppWatcher::~UniqueAppWatcher()
 {
-  if ( mRunningStandalone )
-    kapp->dcopClient()->setNotifications( false );
+    if(mRunningStandalone)
+        kapp->dcopClient()->setNotifications(false);
 
-  delete mFactory;
+    delete mFactory;
 }
 
-void UniqueAppWatcher::unregisteredFromDCOP( const QCString& appId )
+void UniqueAppWatcher::unregisteredFromDCOP(const QCString &appId)
 {
-  if ( appId == mPlugin->name() && mRunningStandalone ) {
-    disconnect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString& ) ),
-                this, SLOT( unregisteredFromDCOP( const QCString& ) ) );
-    kdDebug(5601) << k_funcinfo << appId << endl;
-    mFactory->createHandler( mPlugin );
-    kapp->dcopClient()->setNotifications( false );
-    mRunningStandalone = false;
-  }
+    if(appId == mPlugin->name() && mRunningStandalone)
+    {
+        disconnect(kapp->dcopClient(), SIGNAL(applicationRemoved(const QCString &)),
+                   this, SLOT(unregisteredFromDCOP(const QCString &)));
+        kdDebug(5601) << k_funcinfo << appId << endl;
+        mFactory->createHandler(mPlugin);
+        kapp->dcopClient()->setNotifications(false);
+        mRunningStandalone = false;
+    }
 }
 
 static KCmdLineOptions options[] =
 {
-    { "module <module>",   I18N_NOOP( "Start with a specific Kontact module" ), 0 },
-    { "iconify",   I18N_NOOP( "Start in iconified (minimized) mode" ), 0 },
-    { "list", I18N_NOOP( "List all possible modules and exit" ), 0 },
+    { "module <module>",   I18N_NOOP("Start with a specific Kontact module"), 0 },
+    { "iconify",   I18N_NOOP("Start in iconified (minimized) mode"), 0 },
+    { "list", I18N_NOOP("List all possible modules and exit"), 0 },
     KCmdLineLastOption
 };
 
 void Kontact::UniqueAppHandler::loadKontactCommandLineOptions()
 {
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
-  KApplication::addCmdLineOptions();
+    KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
+    KApplication::addCmdLineOptions();
 }
 
 #include "uniqueapphandler.moc"

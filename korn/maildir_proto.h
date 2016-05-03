@@ -25,32 +25,64 @@
  * Protocol for (postfix?) maildir
  * Only tested with a copy of a maildir forder
  */
-class Maildir_Protocol : public KIO_Protocol
-{
+class Maildir_Protocol : public KIO_Protocol {
 public:
-	Maildir_Protocol() {}
-	virtual ~Maildir_Protocol() {}
+    Maildir_Protocol() {}
+    virtual ~Maildir_Protocol() {}
 
-	virtual KIO_Protocol * clone() const { return new Maildir_Protocol; }
+    virtual KIO_Protocol *clone() const
+    {
+        return new Maildir_Protocol;
+    }
 
-	virtual QString protocol() const { return "file"; }
-	virtual QString configName() const { return "maildir"; }
+    virtual QString protocol() const
+    {
+        return "file";
+    }
+    virtual QString configName() const
+    {
+        return "maildir";
+    }
 
-	virtual bool canReadSubjects() const { return true; }
-	virtual bool canDeleteMail() const { return true; }
-	virtual bool canReadMail() const { return true; }
-	virtual bool fullMessage() const { return true; }
+    virtual bool canReadSubjects() const
+    {
+        return true;
+    }
+    virtual bool canDeleteMail() const
+    {
+        return true;
+    }
+    virtual bool canReadMail() const
+    {
+        return true;
+    }
+    virtual bool fullMessage() const
+    {
+        return true;
+    }
 
-	virtual int fields() const { return server | mailbox; }
-	virtual int urlFields() const { return no_fields; }
-		
-	virtual QString serverName() const { return i18n( "Path:" ); }
+    virtual int fields() const
+    {
+        return server | mailbox;
+    }
+    virtual int urlFields() const
+    {
+        return no_fields;
+    }
 
-	virtual void recheckKURL( KURL &kurl, KIO::MetaData & )
-	                               { kurl.setPath( kurl.host() + "/." + kurl.path().replace( '/' , '.' ) + "/new" ); kurl.setHost( "" ); }
-	virtual void readSubjectKURL( KURL &, KIO::MetaData & ) { }
-	virtual void deleteMailKURL( KURL &, KIO::MetaData & )  { }
-	virtual void readMailKURL( KURL &, KIO::MetaData & )    { }
+    virtual QString serverName() const
+    {
+        return i18n("Path:");
+    }
+
+    virtual void recheckKURL(KURL &kurl, KIO::MetaData &)
+    {
+        kurl.setPath(kurl.host() + "/." + kurl.path().replace('/' , '.') + "/new");
+        kurl.setHost("");
+    }
+    virtual void readSubjectKURL(KURL &, KIO::MetaData &) { }
+    virtual void deleteMailKURL(KURL &, KIO::MetaData &)  { }
+    virtual void readMailKURL(KURL &, KIO::MetaData &)    { }
 };
 
 #endif

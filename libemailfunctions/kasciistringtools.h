@@ -33,7 +33,7 @@ namespace KPIM {
   @param str  pointer to the string which should be converted to lower case
   @return     pointer to the converted string (same as @a str)
 */
-char * kAsciiToLower( char *str );
+char *kAsciiToLower(char *str);
 
 /**
   Locale-independent function to convert ASCII strings to upper case ASCII
@@ -42,7 +42,7 @@ char * kAsciiToLower( char *str );
   @param str  pointer to the string which should be converted to upper case
   @return     pointer to the converted string (same as @a str)
 */
-char * kAsciiToUpper( char *str );
+char *kAsciiToUpper(char *str);
 
 } // namespace KPIM
 

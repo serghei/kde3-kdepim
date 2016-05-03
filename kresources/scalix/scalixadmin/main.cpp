@@ -29,25 +29,25 @@ static const char description[] = I18N_NOOP("Configuration Tool for Scalix Group
 
 static KCmdLineOptions options[] =
 {
-  KCmdLineLastOption
+    KCmdLineLastOption
 };
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "scalixadmin", I18N_NOOP("ScalixAdmin"), "1.0", description,
-                        KAboutData::License_GPL, "(c) 2007, Tobias Koenig" );
-  aboutData.addAuthor( "Tobias Koenig",0, "tokoe@kde.org" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("scalixadmin", I18N_NOOP("ScalixAdmin"), "1.0", description,
+                         KAboutData::License_GPL, "(c) 2007, Tobias Koenig");
+    aboutData.addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "scalixadmin" );
+    KGlobal::locale()->insertCatalogue("scalixadmin");
 
-  MainWindow *window = new MainWindow;
-  window->show();
+    MainWindow *window = new MainWindow;
+    window->show();
 
-  app.setMainWidget( window );
+    app.setMainWidget(window);
 
-  return app.exec();
+    return app.exec();
 }

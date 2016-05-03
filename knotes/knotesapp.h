@@ -44,64 +44,63 @@ class KNotesAlarm;
 class KNotesResourceManager;
 
 namespace KCal {
-    class Journal;
+class Journal;
 }
 
 namespace KNetwork {
-    class KServerSocket;
+class KServerSocket;
 }
 
 
 class KNotesApp : public QLabel, public KSessionManaged, virtual public KXMLGUIClient,
-    virtual public KNotesAppIface
-{
+    virtual public KNotesAppIface {
     Q_OBJECT
 public:
     KNotesApp();
     ~KNotesApp();
 
-    void showNote( const QString& id ) const;
-    void hideNote( const QString& id ) const;
+    void showNote(const QString &id) const;
+    void hideNote(const QString &id) const;
 
-    void killNote( const QString& id );
-    void killNote( const QString& id, bool force );
+    void killNote(const QString &id);
+    void killNote(const QString &id, bool force);
 
-    QString name( const QString& id ) const;
-    QString text( const QString& id ) const;
+    QString name(const QString &id) const;
+    QString text(const QString &id) const;
 
-    void setName( const QString& id, const QString& newName );
-    void setText( const QString& id, const QString& newText );
+    void setName(const QString &id, const QString &newName);
+    void setText(const QString &id, const QString &newText);
 
-    QString fgColor( const QString& id ) const;
-    QString bgColor( const QString& id ) const;
+    QString fgColor(const QString &id) const;
+    QString bgColor(const QString &id) const;
 
-    void setColor( const QString& id, const QString& fgColor,
-                                      const QString& bgColor );
+    void setColor(const QString &id, const QString &fgColor,
+                  const QString &bgColor);
 
-    QMap<QString,QString> notes() const;
+    QMap<QString, QString> notes() const;
 
-    int width( const QString& noteId ) const;
-    int height( const QString& noteId ) const;
+    int width(const QString &noteId) const;
+    int height(const QString &noteId) const;
 
-    void move( const QString& noteId, int x, int y ) const;
-    void resize( const QString& noteId, int width, int height ) const;
+    void move(const QString &noteId, int x, int y) const;
+    void resize(const QString &noteId, int width, int height) const;
 
-    void sync( const QString& app );
-    bool isNew( const QString& app, const QString& id ) const;
-    bool isModified( const QString& app, const QString& id ) const;
+    void sync(const QString &app);
+    bool isNew(const QString &app, const QString &id) const;
+    bool isModified(const QString &app, const QString &id) const;
 
-    bool commitData( QSessionManager& );
+    bool commitData(QSessionManager &);
 
 public slots:
-    QString newNote( const QString& name = QString::null,
-                     const QString& text = QString::null );
-    QString newNoteFromClipboard( const QString& name = QString::null );
+    QString newNote(const QString &name = QString::null,
+                    const QString &text = QString::null);
+    QString newNoteFromClipboard(const QString &name = QString::null);
 
     void hideAllNotes() const;
     void showAllNotes() const;
 
 protected:
-    void mousePressEvent( QMouseEvent* );
+    void mousePressEvent(QMouseEvent *);
 
 protected slots:
     void slotShowNote();
@@ -113,12 +112,12 @@ protected slots:
     void slotPreferences();
     void slotConfigureAccels();
 
-    void slotNoteKilled( KCal::Journal *journal );
+    void slotNoteKilled(KCal::Journal *journal);
 
     void slotQuit();
 
 private:
-    void showNote( KNote *note ) const;
+    void showNote(KNote *note) const;
     void saveConfigs();
 
 private slots:
@@ -129,14 +128,13 @@ private slots:
     void updateNetworkListener();
     void updateStyle();
 
-    void createNote( KCal::Journal *journal );
-    void killNote( KCal::Journal *journal );
+    void createNote(KCal::Journal *journal);
+    void killNote(KCal::Journal *journal);
 
 private:
-    class KNoteActionList : public QPtrList<KAction>
-    {
+    class KNoteActionList : public QPtrList<KAction> {
     public:
-        virtual int compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 );
+        virtual int compareItems(QPtrCollection::Item s1, QPtrCollection::Item s2);
     };
 
     KNotesResourceManager *m_manager;

@@ -45,19 +45,18 @@ using namespace KCal;
 /**
   This class provides a dialog for editing an event.
 */
-class KOEventEditor : public KOIncidenceEditor
-{
+class KOEventEditor : public KOIncidenceEditor {
     Q_OBJECT
-  public:
+public:
     /**
       Construct new event editor.
     */
-    KOEventEditor( Calendar *calendar, QWidget *parent );
+    KOEventEditor(Calendar *calendar, QWidget *parent);
     virtual ~KOEventEditor(void);
 
     void init();
     /** This event has been modified externally */
-    void modified (int change=0);
+    void modified(int change = 0);
     void reload();
 
     /**
@@ -70,43 +69,46 @@ class KOEventEditor : public KOIncidenceEditor
       summary contains multiple lines, the summary will be used as description
       and only the first line of summary will be used as the summary.
     */
-    void setTexts( const QString &summary, const QString &description = QString::null );
+    void setTexts(const QString &summary, const QString &description = QString::null);
     /**
       Edit an existing event.
     */
-    void editIncidence( Incidence *incidence, Calendar *calendar );
+    void editIncidence(Incidence *incidence, Calendar *calendar);
 
     /**
       Set widgets to the given date/time values
     */
-    void setDates( const QDateTime &from, const QDateTime &to, bool allDay );
+    void setDates(const QDateTime &from, const QDateTime &to, bool allDay);
 
     /**
       Read event object and setup widgets accordingly. If tmpl is true, the
       event is read as template, i.e. the time and date information isn't set.
     */
-    void readEvent( Event *event, Calendar *calendar, bool tmpl = false );
+    void readEvent(Event *event, Calendar *calendar, bool tmpl = false);
     /**
       Write event settings to event object
     */
-    void writeEvent( Event * );
+    void writeEvent(Event *);
 
     QObject *typeAheadReceiver() const;
 
-    void selectInvitationCounterProposal( bool enable );
+    void selectInvitationCounterProposal(bool enable);
 
-  signals:
+signals:
     void focusReceivedSignal();
 
-  protected slots:
+protected slots:
     void loadDefaults();
     void deleteEvent();
 
-    void slotSaveTemplate( const QString & );
+    void slotSaveTemplate(const QString &);
     void updateRecurrenceSummary();
 
-  protected:
-    QString type() { return "Event"; }
+protected:
+    QString type()
+    {
+        return "Event";
+    }
     void setupGeneral();
     void setupRecurrence();
     void setupFreeBusy();
@@ -118,12 +120,12 @@ class KOEventEditor : public KOIncidenceEditor
     bool processInput();
     void processCancel();
     int msgItemDelete();
-    void loadTemplate( /*const*/ CalendarLocal& );
-    QStringList& templates() const;
+    void loadTemplate(/*const*/ CalendarLocal &);
+    QStringList &templates() const;
 
-  private:
+private:
     Event *mEvent;
-    Calendar* mCalendar;
+    Calendar *mCalendar;
 
     KOEditorGeneralEvent *mGeneral;
     KOEditorRecurrenceDialog *mRecurrenceDialog;

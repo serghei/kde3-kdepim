@@ -38,10 +38,10 @@ class KNScoringManager;
 class KNMemoryManager;
 class KXMLGUIClient;
 namespace Kpgp {
-   class Module;
+class Module;
 }
 namespace KNode {
-  class ArticleWidget;
+class ArticleWidget;
 }
 
 
@@ -50,7 +50,7 @@ namespace KNode {
     this removes many header dependencies.
     (knode.h isn't include everywhere) */
 class KDE_EXPORT KNGlobals {
-  public:
+public:
     /** topWidget == top, used for message boxes, */
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
@@ -73,7 +73,7 @@ class KDE_EXPORT KNGlobals {
     KNMemoryManager       *memoryManager();
 
     /** forwarded to top->setStatusMsg() if available */
-    void setStatusMsg(const QString& text = QString::null, int id = SB_MAIN);
+    void setStatusMsg(const QString &text = QString::null, int id = SB_MAIN);
 
 private:
     KSharedConfig::Ptr c_onfig;

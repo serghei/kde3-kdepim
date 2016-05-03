@@ -26,15 +26,14 @@
 
 using namespace KCal;
 
-typedef KRES::PluginFactory<KCalResourceSlox,KCalResourceSloxConfig> SLOXFactory;
+typedef KRES::PluginFactory<KCalResourceSlox, KCalResourceSloxConfig> SLOXFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_slox, SLOXFactory ); here
 // Problem: How do I insert the catalogue???
-extern "C"
-{
-  void *init_kcal_slox()
-  {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kabc_slox" );
-    return new SLOXFactory;
-  }
+extern "C" {
+    void *init_kcal_slox()
+    {
+        KGlobal::locale()->insertCatalogue("libkcal");
+        KGlobal::locale()->insertCatalogue("kabc_slox");
+        return new SLOXFactory;
+    }
 }

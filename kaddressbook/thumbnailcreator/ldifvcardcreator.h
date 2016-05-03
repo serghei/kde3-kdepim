@@ -26,21 +26,20 @@
 
 class KPixmapSplitter;
 
-class VCard_LDIFCreator : public ThumbCreator
-{
-  public:
+class VCard_LDIFCreator : public ThumbCreator {
+public:
     VCard_LDIFCreator();
     virtual ~VCard_LDIFCreator();
     virtual bool create(const QString &path, int width, int height, QImage &img);
     virtual Flags flags() const;
 
-  private:
+private:
     KPixmapSplitter *mSplitter;
     QPixmap mPixmap;
 
     QString name;
     QString text;
-    bool readContents( const QString &path );
+    bool readContents(const QString &path);
     int xborder, yborder;
     QSize pixmapSize;
     bool createImageSmall();

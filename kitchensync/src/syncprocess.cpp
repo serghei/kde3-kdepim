@@ -29,80 +29,84 @@
 
 using namespace QSync;
 
-SyncProcess::SyncProcess( const QSync::Group &group )
-  : QObject( 0, "SyncProcess" )
+SyncProcess::SyncProcess(const QSync::Group &group)
+    : QObject(0, "SyncProcess")
 {
-  mGroup = group;
-  mEngine = new QSync::Engine( mGroup );
+    mGroup = group;
+    mEngine = new QSync::Engine(mGroup);
 
-  Result result = mEngine->initialize();
-  if ( result.isError() )
-    kdDebug() << "SyncProcess::SyncProcess: " << result.message() << endl;
+    Result result = mEngine->initialize();
+    if(result.isError())
+        kdDebug() << "SyncProcess::SyncProcess: " << result.message() << endl;
 }
 
 SyncProcess::~SyncProcess()
 {
-  mEngine->finalize();
+    mEngine->finalize();
 
-  delete mEngine;
-  mEngine = 0;
+    delete mEngine;
+    mEngine = 0;
 }
 
 QString SyncProcess::groupStatus() const
 {
-  return i18n( "Ready" );
+    return i18n("Ready");
 }
 
-QString SyncProcess::memberStatus( const QSync::Member& ) const
+QString SyncProcess::memberStatus(const QSync::Member &) const
 {
-  return i18n( "Ready" );
+    return i18n("Ready");
 }
 
-QSync::Result SyncProcess::addMember( const QSync::Plugin &plugin )
+QSync::Result SyncProcess::addMember(const QSync::Plugin &plugin)
 {
-  QSync::Member member = mGroup.addMember();
-  QSync::Result result = member.instance( plugin );
+    QSync::Member member = mGroup.addMember();
+    QSync::Result result = member.instance(plugin);
 
-  if ( !result.isError() )
-    mGroup.save();
+    if(!result.isError())
+        mGroup.save();
 
-  return result;
+    return result;
 }
 
 void SyncProcess::reinitEngine()
 {
-  mEngine->finalize();
-  delete mEngine;
-  mEngine = new QSync::Engine( mGroup );
-  Result result = mEngine->initialize();
-  if ( result.isError() )
-    kdDebug() << "SyncProcess::reinitEngine: " << result.message() << endl;
+    mEngine->finalize();
+    delete mEngine;
+    mEngine = new QSync::Engine(mGroup);
+    Result result = mEngine->initialize();
+    if(result.isError())
+        kdDebug() << "SyncProcess::reinitEngine: " << result.message() << endl;
 
-  applyObjectTypeFilter();
+    applyObjectTypeFilter();
 
-  emit engineChanged( mEngine );
+    emit engineChanged(mEngine);
 }
 
 void SyncProcess::applyObjectTypeFilter()
 {
-  const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
-  const QStringList objectTypes = conversion.objectTypes();
-  const QStringList activeObjectTypes = mGroup.config().activeObjectTypes();
+    const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
+    const QStringList objectTypes = conversion.objectTypes();
+    const QStringList activeObjectTypes = mGroup.config().activeObjectTypes();
 
-  for ( uint i = 0; i < objectTypes.count(); ++i ) {
-    if ( activeObjectTypes.contains( objectTypes[ i ] ) ) {
-      kdDebug() << "Enabled object type: " <<  objectTypes[ i ] << endl;
-      /*
-       * This is not required. Also this lead to filtering problems when sync with "file-sync".
-       * Uncomment this line again when OpenSync is fixed!
-       *
-       * mGroup.setObjectTypeEnabled( objectTypes[ i ], true );
-       */
-    } else {
-      kdDebug() << "Disabled object type: " <<  objectTypes[ i ] << endl;
-      mGroup.setObjectTypeEnabled( objectTypes[ i ], false );
+    for(uint i = 0; i < objectTypes.count(); ++i)
+    {
+        if(activeObjectTypes.contains(objectTypes[ i ]))
+        {
+            kdDebug() << "Enabled object type: " <<  objectTypes[ i ] << endl;
+            /*
+             * This is not required. Also this lead to filtering problems when sync with "file-sync".
+             * Uncomment this line again when OpenSync is fixed!
+             *
+             * mGroup.setObjectTypeEnabled( objectTypes[ i ], true );
+             */
+        }
+        else
+        {
+            kdDebug() << "Disabled object type: " <<  objectTypes[ i ] << endl;
+            mGroup.setObjectTypeEnabled(objectTypes[ i ], false);
+        }
     }
-  }
 }
 
 #include "syncprocess.moc"

@@ -27,10 +27,9 @@
 
 #include <kuniqueapplication.h>
 
-class KOrganizerApp : public KUniqueApplication
-{
+class KOrganizerApp : public KUniqueApplication {
     Q_OBJECT
-  public:
+public:
     KOrganizerApp();
     ~KOrganizerApp();
 
@@ -40,12 +39,12 @@ class KOrganizerApp : public KUniqueApplication
     */
     int newInstance();
 
-  private:
+private:
     /**
       Process calendar from URL \arg url. If url is empty open the default
       calendar based on the resource framework.
     */
-    void processCalendar( const KURL &url );
+    void processCalendar(const KURL &url);
 };
 
 #endif

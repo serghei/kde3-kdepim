@@ -38,90 +38,90 @@
 #include "teststate.h"
 #include "vcal-conduitbase.h"
 
-TestState::TestState() : fCalendar( QString::null )
+TestState::TestState() : fCalendar(QString::null)
 {
-	fState = eTest;
+    fState = eTest;
 }
 
 TestState::~TestState()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 }
 
-void TestState::startSync( ConduitAction *ca )
+void TestState::startSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
-	
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
-	
-	DEBUGKPILOT << fname << ": Starting teststate." << endl;
+    FUNCTIONSETUP;
 
-	vccb->setHasNextRecord( true );
-	fPilotindex = 0;
-	fStarted = true;
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
+
+    DEBUGKPILOT << fname << ": Starting teststate." << endl;
+
+    vccb->setHasNextRecord(true);
+    fPilotindex = 0;
+    fStarted = true;
 }
 
-void TestState::handleRecord( ConduitAction *ca )
+void TestState::handleRecord(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	DEBUGKPILOT << fname << ": Handling record " << fPilotindex << endl;
+    DEBUGKPILOT << fname << ": Handling record " << fPilotindex << endl;
 
-	PilotRecord *record = vccb->readRecordByIndex( fPilotindex );
-	
-	if( record )
-	{
-		KCal::Incidence *i = vccb->incidenceFromRecord( record );
-		fCalendar.addIncidence( i );
-	
-		KPILOT_DELETE(record);
-	
-		// Schedule more work.
-		++fPilotindex;
-	}
-	else
-	{
-		vccb->setHasNextRecord( false );
-	}
+    PilotRecord *record = vccb->readRecordByIndex(fPilotindex);
+
+    if(record)
+    {
+        KCal::Incidence *i = vccb->incidenceFromRecord(record);
+        fCalendar.addIncidence(i);
+
+        KPILOT_DELETE(record);
+
+        // Schedule more work.
+        ++fPilotindex;
+    }
+    else
+    {
+        vccb->setHasNextRecord(false);
+    }
 }
 
-void TestState::finishSync( ConduitAction *ca )
+void TestState::finishSync(ConduitAction *ca)
 {
-	FUNCTIONSETUP;
-	
-	VCalConduitBase *vccb = dynamic_cast<VCalConduitBase*>(ca);
-	if( !vccb )
-	{
-		return;
-	}
+    FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname << ": finishing teststate." << endl;
+    VCalConduitBase *vccb = dynamic_cast<VCalConduitBase *>(ca);
+    if(!vccb)
+    {
+        return;
+    }
 
-	// No more records present on the device so lets dump the
-	// readed records in a file.
-	QFile f( CSL1("dump.ics") );
-	if( !f.exists() )
-	{
-		f.open( IO_WriteOnly );
-		f.close();
-	}
+    DEBUGKPILOT << fname << ": finishing teststate." << endl;
 
-	if( !fCalendar.save( CSL1("dump.ics") ) )
-	{
-		DEBUGKPILOT << fname << ": Can't save calendar file." << endl;
-	}
+    // No more records present on the device so lets dump the
+    // readed records in a file.
+    QFile f(CSL1("dump.ics"));
+    if(!f.exists())
+    {
+        f.open(IO_WriteOnly);
+        f.close();
+    }
 
-	fCalendar.close();
+    if(!fCalendar.save(CSL1("dump.ics")))
+    {
+        DEBUGKPILOT << fname << ": Can't save calendar file." << endl;
+    }
 
-	vccb->setState( 0L );
+    fCalendar.close();
+
+    vccb->setState(0L);
 }

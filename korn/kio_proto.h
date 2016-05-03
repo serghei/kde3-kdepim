@@ -34,124 +34,193 @@ class QString;
 
 #include "kio.h"
 
-class KIO_Protocol : public Protocol
-{
+class KIO_Protocol : public Protocol {
 public:
-	/*
-	 * Constuctor; empty
-	 */
-	KIO_Protocol() {}
+    /*
+     * Constuctor; empty
+     */
+    KIO_Protocol() {}
 
-	/*
-	 * Destructor; empty too
-	 */
-	virtual ~KIO_Protocol() {}
+    /*
+     * Destructor; empty too
+     */
+    virtual ~KIO_Protocol() {}
 
-	/*
-	 * Public enumeration
-	 */
-	enum DeleteTypeEnum { get, del };
-	/**
-	 * This are the implementation of the Protocol-functions
-	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+    /*
+     * Public enumeration
+     */
+    enum DeleteTypeEnum { get, del };
+    /**
+     * This are the implementation of the Protocol-functions
+     */
+    virtual const Protocol *getProtocol(KConfigGroup *) const
+    {
+        return this;
+    }
 
-	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const { return new KKioDrop( config ); }
+    virtual KMailDrop *createMaildrop(KConfigGroup *config) const
+    {
+        return new KKioDrop(config);
+    }
 
-	virtual QMap< QString, QString >* createConfig( KConfigGroup *group, const QString& password ) const;
+    virtual QMap< QString, QString > *createConfig(KConfigGroup *group, const QString &password) const;
 
-	/*
-	 * @return: the name of the kio_slave
-	 */
-	virtual QString protocol( bool ) const { return "file"; }
+    /*
+     * @return: the name of the kio_slave
+     */
+    virtual QString protocol(bool) const
+    {
+        return "file";
+    }
 
-	/*
-	 * @return: the name of the protocol used by the configuration
-	 */
-	virtual QString configName() const { return "not specified"; }
+    /*
+     * @return: the name of the protocol used by the configuration
+     */
+    virtual QString configName() const
+    {
+        return "not specified";
+    }
 
-	virtual bool connectionBased() const { return false; }
+    virtual bool connectionBased() const
+    {
+        return false;
+    }
 
-	/*
-	 * The next four functions return the [capebilities] of a protocol.
-	 * fullMessage means that by downloaden, the whole message is downloaded.
-	 * if it is false, only the headers should be downloaded.
-	 */
-	virtual bool  canReadSubjects() const { return false; }
-	virtual bool  canDeleteMail() const { return false; }
-	virtual bool  canReadMail() const { return false; }
-	virtual bool  fullMessage() const { return false; }
+    /*
+     * The next four functions return the [capebilities] of a protocol.
+     * fullMessage means that by downloaden, the whole message is downloaded.
+     * if it is false, only the headers should be downloaded.
+     */
+    virtual bool  canReadSubjects() const
+    {
+        return false;
+    }
+    virtual bool  canDeleteMail() const
+    {
+        return false;
+    }
+    virtual bool  canReadMail() const
+    {
+        return false;
+    }
+    virtual bool  fullMessage() const
+    {
+        return false;
+    }
 
-	/*
-	 * The following lines are the options in the configuration;
-	 * true means that an option is enabled;
-	 * false means that the option is disabled.
-	 */
-	//virtual int fields() const { return server | port | username | password | mailbox; }
-	//virtual int urlFields() const { return no_fields; }
-	virtual unsigned short defaultPort( bool ) const { return 0; }
+    /*
+     * The following lines are the options in the configuration;
+     * true means that an option is enabled;
+     * false means that the option is disabled.
+     */
+    //virtual int fields() const { return server | port | username | password | mailbox; }
+    //virtual int urlFields() const { return no_fields; }
+    virtual unsigned short defaultPort(bool) const
+    {
+        return 0;
+    }
 
-	/*
-	 * This sets the string of such fields in Configuration
-	 */
-	virtual QString serverName() const { return i18n( "Server:" ); }
-	virtual QString portName() const { return i18n( "Port:" ); }
-	virtual QString usernameName() const { return i18n( "Username:" ); }
-	virtual QString mailboxName() const { return i18n( "Mailbox:" ); }
-	virtual QString passwordName() const { return i18n( "Password:" ); }
-	virtual QString savePasswordName() const { return i18n( "Save password" ); }
-	virtual QString authName() const { return i18n( "Authentication:" ); }
+    /*
+     * This sets the string of such fields in Configuration
+     */
+    virtual QString serverName() const
+    {
+        return i18n("Server:");
+    }
+    virtual QString portName() const
+    {
+        return i18n("Port:");
+    }
+    virtual QString usernameName() const
+    {
+        return i18n("Username:");
+    }
+    virtual QString mailboxName() const
+    {
+        return i18n("Mailbox:");
+    }
+    virtual QString passwordName() const
+    {
+        return i18n("Password:");
+    }
+    virtual QString savePasswordName() const
+    {
+        return i18n("Save password");
+    }
+    virtual QString authName() const
+    {
+        return i18n("Authentication:");
+    }
 
-	/*
-	 * The next function returns the method of deleting: some protoocols
-	 * like to delete files with KIO::get; other with KIO::del
-	 */
-	virtual DeleteTypeEnum deleteFunction() const { return del; }
+    /*
+     * The next function returns the method of deleting: some protoocols
+     * like to delete files with KIO::get; other with KIO::del
+     */
+    virtual DeleteTypeEnum deleteFunction() const
+    {
+        return del;
+    }
 
-	/*
-	 * The next options are the input for the Authentication Combo, seperated by '|'.
-	 * The name should be the same as the auth-metadata.
-	 */
-	virtual QStringList authList() const { return QStringList::split( '|', "Plain", false ); }
+    /*
+     * The next options are the input for the Authentication Combo, seperated by '|'.
+     * The name should be the same as the auth-metadata.
+     */
+    virtual QStringList authList() const
+    {
+        return QStringList::split('|', "Plain", false);
+    }
 
-	/*
-	 * The next functions are manipulations of an KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
-	 * these have to had a little retouch. That is possible with these function.
-	 *
-	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
-	 *
-	 * The most functions are recognized by name.
-	 * commitDelete return true if a protocol has to confirm a deletion.
-	 * It will be called after marking the messages for deletion.
-	 * deleteCommitKURL is the KURL manipulator; the KURL is as in the settings.
-	 * That KURL isn't retouch by deleteMailKURL.
-	 */
-	virtual void recheckConnectKURL( KURL &, KIO::MetaData & ) const { }
-	virtual void recheckKURL     ( KURL &, KIO::MetaData & ) const { };
-	virtual void readSubjectConnectKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
-	virtual void readSubjectKURL ( KURL &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
-	virtual void deleteMailConnectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
-	virtual void deleteMailKURL  ( KURL &, KIO::MetaData & ) const { }
-	virtual bool commitDelete() const { return false; }
-	virtual void deleteCommitKURL( KURL &, KIO::MetaData & ) const { }
-	virtual void readMailKURL    ( KURL &, KIO::MetaData & ) const { }
+    /*
+     * The next functions are manipulations of an KURL.
+     * At some points in the code, a KURL is used. But sometimes,
+     * these have to had a little retouch. That is possible with these function.
+     *
+     * For example, by imap, by default, the whole message is downloaded and marked as reed.
+     * By changing an option to the KURL path, this can be prevented.
+     *
+     * The most functions are recognized by name.
+     * commitDelete return true if a protocol has to confirm a deletion.
+     * It will be called after marking the messages for deletion.
+     * deleteCommitKURL is the KURL manipulator; the KURL is as in the settings.
+     * That KURL isn't retouch by deleteMailKURL.
+     */
+    virtual void recheckConnectKURL(KURL &, KIO::MetaData &) const { }
+    virtual void recheckKURL(KURL &, KIO::MetaData &) const { };
+    virtual void readSubjectConnectKURL(KURL &kurl, KIO::MetaData &) const
+    {
+        kurl.setPath("");
+    }
+    virtual void readSubjectKURL(KURL &, KIO::MetaData &) const { }    //For editing a kurl (adding extra options)
+    virtual void deleteMailConnectKURL(KURL &kurl, KIO::MetaData &) const
+    {
+        kurl.setPath("");
+    }
+    virtual void deleteMailKURL(KURL &, KIO::MetaData &) const { }
+    virtual bool commitDelete() const
+    {
+        return false;
+    }
+    virtual void deleteCommitKURL(KURL &, KIO::MetaData &) const { }
+    virtual void readMailKURL(KURL &, KIO::MetaData &) const { }
 
 
-	virtual const KIO_Protocol* getKIOProtocol() const { return this; }
+    virtual const KIO_Protocol *getKIOProtocol() const
+    {
+        return this;
+    }
 
-	virtual void readEntries( QMap< QString, QString >* ) const;
-	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const = 0;
+    virtual void readEntries(QMap< QString, QString > *) const;
+    virtual void readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const = 0;
 
 protected:
-	/*
-	 * This enumeration is used when returning the capebilitys of a protocol
-	 */
-	enum Fields {	no_fields = 0, server = 1, port = 2, username = 4, password = 8,
-			mailbox = 16, save_password = 32, metadata = 64 };
+    /*
+     * This enumeration is used when returning the capebilitys of a protocol
+     */
+    enum Fields {	no_fields = 0, server = 1, port = 2, username = 4, password = 8,
+                    mailbox = 16, save_password = 32, metadata = 64
+                };
 
-	void clearFields( QMap< QString, QString > *map, const Fields fields ) const;
+    void clearFields(QMap< QString, QString > *map, const Fields fields) const;
 };
 
 #endif //MK_KIO_PROTO_H

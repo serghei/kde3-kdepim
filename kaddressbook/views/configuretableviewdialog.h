@@ -33,7 +33,9 @@ class QCheckBox;
 class KURLRequester;
 class KConfig;
 
-namespace KABC { class AddressBook; }
+namespace KABC {
+class AddressBook;
+}
 
 class LookAndFeelPage;
 
@@ -42,16 +44,15 @@ class LookAndFeelPage;
   standard view dialog in order to add a custom page for the table
   view.
  */
-class ConfigureTableViewWidget : public ViewConfigureWidget
-{
-  public:
-    ConfigureTableViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
+class ConfigureTableViewWidget : public ViewConfigureWidget {
+public:
+    ConfigureTableViewWidget(KABC::AddressBook *ab, QWidget *parent, const char *name);
     virtual ~ConfigureTableViewWidget();
 
-    virtual void restoreSettings( KConfig* );
-    virtual void saveSettings( KConfig* );
+    virtual void restoreSettings(KConfig *);
+    virtual void saveSettings(KConfig *);
 
-  private:
+private:
     void initGUI();
 
     LookAndFeelPage *mPage;
@@ -60,21 +61,20 @@ class ConfigureTableViewWidget : public ViewConfigureWidget
 /**
   Internal class. It is only defined here for moc
 */
-class LookAndFeelPage : public QWidget
-{
-  Q_OBJECT
+class LookAndFeelPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    LookAndFeelPage( QWidget *parent, const char *name = 0 );
+public:
+    LookAndFeelPage(QWidget *parent, const char *name = 0);
     ~LookAndFeelPage() {}
 
-    void restoreSettings( KConfig* );
-    void saveSettings( KConfig* );
+    void restoreSettings(KConfig *);
+    void saveSettings(KConfig *);
 
-  protected slots:
-    void enableBackgroundToggled( bool );
+protected slots:
+    void enableBackgroundToggled(bool);
 
-  private:
+private:
     void initGUI();
 
     QRadioButton *mAlternateButton;

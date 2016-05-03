@@ -25,8 +25,8 @@
 
 #include "dateparser.h"
 
-DateParser::DateParser( const QString &pattern )
-  : mPattern( pattern )
+DateParser::DateParser(const QString &pattern)
+    : mPattern(pattern)
 {
 }
 
@@ -34,79 +34,111 @@ DateParser::~DateParser()
 {
 }
 
-QDate DateParser::parse( const QString &dateStr ) const
+QDate DateParser::parse(const QString &dateStr) const
 {
-  int year, month, day;
-  year = month = day = 0;
+    int year, month, day;
+    year = month = day = 0;
 
-  uint currPos = 0;
-  for ( uint i = 0; i < mPattern.length(); ++i ) {
-    if ( mPattern[ i ] == 'y' ) { // 19YY
-      if ( currPos + 1 < dateStr.length() ) {
-        year = 1900 + dateStr.mid( currPos, 2 ).toInt();
-        currPos += 2;
-      } else
-        return QDate();
-    } else if ( mPattern[ i ] == 'Y' ) { // YYYY
-      if ( currPos + 3 < dateStr.length() ) {
-        year = dateStr.mid( currPos, 4 ).toInt();
-        currPos += 4;
-      } else
-        return QDate();
-    } else if ( mPattern[ i ] == 'm' ) { // M or MM
-      if ( currPos + 1 < dateStr.length() ) {
-        if ( dateStr[ currPos ].isDigit() ) {
-          if ( dateStr[ currPos + 1 ].isDigit() ) {
-            month = dateStr.mid( currPos, 2 ).toInt();
-            currPos += 2;
-            continue;
-          }
+    uint currPos = 0;
+    for(uint i = 0; i < mPattern.length(); ++i)
+    {
+        if(mPattern[ i ] == 'y')      // 19YY
+        {
+            if(currPos + 1 < dateStr.length())
+            {
+                year = 1900 + dateStr.mid(currPos, 2).toInt();
+                currPos += 2;
+            }
+            else
+                return QDate();
         }
-      }
-      if ( currPos < dateStr.length() ) {
-        if ( dateStr[ currPos ].isDigit() ) {
-          month = dateStr.mid( currPos, 1 ).toInt();
-          currPos++;
-          continue;
+        else if(mPattern[ i ] == 'Y')        // YYYY
+        {
+            if(currPos + 3 < dateStr.length())
+            {
+                year = dateStr.mid(currPos, 4).toInt();
+                currPos += 4;
+            }
+            else
+                return QDate();
         }
-      }
+        else if(mPattern[ i ] == 'm')        // M or MM
+        {
+            if(currPos + 1 < dateStr.length())
+            {
+                if(dateStr[ currPos ].isDigit())
+                {
+                    if(dateStr[ currPos + 1 ].isDigit())
+                    {
+                        month = dateStr.mid(currPos, 2).toInt();
+                        currPos += 2;
+                        continue;
+                    }
+                }
+            }
+            if(currPos < dateStr.length())
+            {
+                if(dateStr[ currPos ].isDigit())
+                {
+                    month = dateStr.mid(currPos, 1).toInt();
+                    currPos++;
+                    continue;
+                }
+            }
 
-      return QDate();
-    } else if ( mPattern[ i ] == 'M' ) { // 0M or MM
-      if ( currPos + 1 < dateStr.length() ) {
-        month = dateStr.mid( currPos, 2 ).toInt();
-        currPos += 2;
-      } else
-        return QDate();
-    } else if ( mPattern[ i ] == 'd' ) { // D or DD
-      if ( currPos + 1 < dateStr.length() ) {
-        if ( dateStr[ currPos ].isDigit() ) {
-          if ( dateStr[ currPos + 1 ].isDigit() ) {
-            day = dateStr.mid( currPos, 2 ).toInt();
-            currPos += 2;
-            continue;
-          }
+            return QDate();
         }
-      }
-      if ( currPos < dateStr.length() ) {
-        if ( dateStr[ currPos ].isDigit() ) {
-          day = dateStr.mid( currPos, 1 ).toInt();
-          currPos++;
-          continue;
+        else if(mPattern[ i ] == 'M')        // 0M or MM
+        {
+            if(currPos + 1 < dateStr.length())
+            {
+                month = dateStr.mid(currPos, 2).toInt();
+                currPos += 2;
+            }
+            else
+                return QDate();
         }
-      }
+        else if(mPattern[ i ] == 'd')        // D or DD
+        {
+            if(currPos + 1 < dateStr.length())
+            {
+                if(dateStr[ currPos ].isDigit())
+                {
+                    if(dateStr[ currPos + 1 ].isDigit())
+                    {
+                        day = dateStr.mid(currPos, 2).toInt();
+                        currPos += 2;
+                        continue;
+                    }
+                }
+            }
+            if(currPos < dateStr.length())
+            {
+                if(dateStr[ currPos ].isDigit())
+                {
+                    day = dateStr.mid(currPos, 1).toInt();
+                    currPos++;
+                    continue;
+                }
+            }
 
-      return QDate();
-    } else if ( mPattern[ i ] == 'D' ) { // 0D or DD
-      if ( currPos + 1 < dateStr.length() ) {
-        day = dateStr.mid( currPos, 2 ).toInt();
-        currPos += 2;
-      } else
-        return QDate();
-    } else {
-      currPos++;
+            return QDate();
+        }
+        else if(mPattern[ i ] == 'D')        // 0D or DD
+        {
+            if(currPos + 1 < dateStr.length())
+            {
+                day = dateStr.mid(currPos, 2).toInt();
+                currPos += 2;
+            }
+            else
+                return QDate();
+        }
+        else
+        {
+            currPos++;
+        }
     }
-  }
 
-  return QDate( year, month, day );
+    return QDate(year, month, day);
 }

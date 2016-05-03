@@ -37,24 +37,23 @@ class KListView;
 
 #include "filter.h"
 
-class FilterDialog : public KDialogBase
-{
-  Q_OBJECT
+class FilterDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    FilterDialog( QWidget *parent, const char *name = 0 );
+public:
+    FilterDialog(QWidget *parent, const char *name = 0);
     ~FilterDialog();
 
-    void setFilters( const Filter::List &list );
+    void setFilters(const Filter::List &list);
     Filter::List filters() const;
 
-  protected slots:
+protected slots:
     void add();
     void edit();
     void remove();
-    void selectionChanged( QListBoxItem* );
+    void selectionChanged(QListBoxItem *);
 
-  private:
+private:
     void initGUI();
     void refresh();
 
@@ -67,21 +66,20 @@ class FilterDialog : public KDialogBase
     QPushButton *mRemoveButton;
 };
 
-class FilterEditDialog : public KDialogBase
-{
+class FilterEditDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    FilterEditDialog( QWidget *parent, const char *name = 0 );
+public:
+    FilterEditDialog(QWidget *parent, const char *name = 0);
     ~FilterEditDialog();
 
-    void setFilter( const Filter &filter );
+    void setFilter(const Filter &filter);
     Filter filter();
 
-  protected slots:
-    void filterNameTextChanged( const QString& );
+protected slots:
+    void filterNameTextChanged(const QString &);
     void slotHelp();
 
-  private:
+private:
     void initGUI();
 
     Filter mFilter;

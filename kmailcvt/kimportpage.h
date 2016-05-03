@@ -21,10 +21,10 @@
 #include "kimportpagedlg.h"
 
 class KImportPage : public KImportPageDlg  {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	KImportPage(QWidget *parent=0, const char *name=0);
-	~KImportPage();
+    KImportPage(QWidget *parent = 0, const char *name = 0);
+    ~KImportPage();
 };
 
 #endif

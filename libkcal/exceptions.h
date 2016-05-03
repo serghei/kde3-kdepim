@@ -36,24 +36,23 @@ namespace KCal {
   KOrganizer exceptions base class. This is currently used as a fancy kind of
   error code not as an C++ exception.
 */
-class Exception
-{
-  public:
+class Exception {
+public:
     /**
       Construct exception with descriptive message \a message.
     */
-    Exception( const QString &message = QString::null );
+    Exception(const QString &message = QString::null);
     virtual ~Exception();
 
     /**
       Return descriptive message of exception.
-    */    
+    */
     virtual QString message();
-    
-  protected:
+
+protected:
     QString mMessage;
 
-  private:
+private:
     class Private;
     Private *d;
 };
@@ -61,21 +60,21 @@ class Exception
 /**
   Calendar format related error class.
 */
-class ErrorFormat : public Exception
-{
-  public:
+class ErrorFormat : public Exception {
+public:
     enum ErrorCodeFormat { LoadError, SaveError,
                            ParseErrorIcal, ParseErrorKcal,
                            NoCalendar,
-                           CalVersion1,CalVersion2,
+                           CalVersion1, CalVersion2,
                            CalVersionUnknown,
-                           Restriction };
-  
+                           Restriction
+                         };
+
     /**
       Create format error exception.
     */
-    ErrorFormat( ErrorCodeFormat code, const QString &message = QString::null );
-    
+    ErrorFormat(ErrorCodeFormat code, const QString &message = QString::null);
+
     /**
       Return format error message.
     */
@@ -84,8 +83,8 @@ class ErrorFormat : public Exception
       Return format error code.
     */
     ErrorCodeFormat errorCode();
-    
-  private:
+
+private:
     ErrorCodeFormat mCode;
 
     class Private;

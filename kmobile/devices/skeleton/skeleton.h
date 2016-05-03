@@ -26,16 +26,15 @@
 
 #include <kmobiledevice.h>
 
-class KMobileSkeleton : public KMobileDevice
-{
-Q_OBJECT
+class KMobileSkeleton : public KMobileDevice {
+    Q_OBJECT
 public:
-    KMobileSkeleton( QObject *obj=0, const char *name=0, const QStringList &args=QStringList() );
+    KMobileSkeleton(QObject *obj = 0, const char *name = 0, const QStringList &args = QStringList());
     ~KMobileSkeleton();
 
     // createObject needs to be reimplemented by every KMobileDevice driver
-    QObject *createObject( QObject *parent=0, const char *name=0,
-	const char *classname="QObject", const QStringList &args=QStringList() );
+    QObject *createObject(QObject *parent = 0, const char *name = 0,
+                          const char *classname = "QObject", const QStringList &args = QStringList());
 
     // connect, disconnect and current status
     bool connectDevice(QWidget *parent);
@@ -54,18 +53,18 @@ public:
      * Addressbook / Phonebook support
      */
     int numAddresses();
-    int readAddress( int index, KABC::Addressee &adr );
-    int storeAddress( int index, const KABC::Addressee &adr, bool append = false );
+    int readAddress(int index, KABC::Addressee &adr);
+    int storeAddress(int index, const KABC::Addressee &adr, bool append = false);
 
     /*
      * Notes support
      */
     int numNotes();
-    int readNote( int index, QString &note );
+    int readNote(int index, QString &note);
 
 signals:
-    void connectionChanged( bool connected );
-    void message( int msgLevel, const QString &msg );
+    void connectionChanged(bool connected);
+    void message(int msgLevel, const QString &msg);
 };
 
 #endif

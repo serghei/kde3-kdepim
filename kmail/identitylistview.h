@@ -34,51 +34,56 @@
 
 #include <klistview.h>
 
-namespace KPIM { class Identity; }
+namespace KPIM {
+class Identity;
+}
 class QDropEvent;
 class QDragEvent;
 
 namespace KMail {
 
-  class IdentityListView;
+class IdentityListView;
 
-  /** @short A QListViewItem for use in IdentityListView
-      @author Marc Mutz <mutz@kde.org>
-  **/
-  class IdentityListViewItem : public KListViewItem {
-  public:
-    IdentityListViewItem( IdentityListView * parent,
-			  const KPIM::Identity & ident );
-    IdentityListViewItem( IdentityListView * parent, QListViewItem * after,
-			  const KPIM::Identity & ident );
+/** @short A QListViewItem for use in IdentityListView
+    @author Marc Mutz <mutz@kde.org>
+**/
+class IdentityListViewItem : public KListViewItem {
+public:
+    IdentityListViewItem(IdentityListView *parent,
+                         const KPIM::Identity &ident);
+    IdentityListViewItem(IdentityListView *parent, QListViewItem *after,
+                         const KPIM::Identity &ident);
 
-    uint uoid() const { return mUOID; }
-    KPIM::Identity & identity() const;
-    virtual void setIdentity( const KPIM::Identity & ident );
+    uint uoid() const
+    {
+        return mUOID;
+    }
+    KPIM::Identity &identity() const;
+    virtual void setIdentity(const KPIM::Identity &ident);
     void redisplay();
-  private:
-    void init( const KPIM::Identity & ident );
+private:
+    void init(const KPIM::Identity &ident);
 
-  protected:
+protected:
     uint mUOID;
-  };
+};
 
-  /** @short A listview for KPIM::Identity
-      @author Marc Mutz <mutz@kde.org>
-  **/
-  class IdentityListView : public KListView {
+/** @short A listview for KPIM::Identity
+    @author Marc Mutz <mutz@kde.org>
+**/
+class IdentityListView : public KListView {
     Q_OBJECT
-  public:
-    IdentityListView( QWidget * parent=0, const char * name=0 );
+public:
+    IdentityListView(QWidget *parent = 0, const char *name = 0);
     virtual ~IdentityListView() {}
 
-  public slots:
-    void rename( QListViewItem *, int );
+public slots:
+    void rename(QListViewItem *, int);
 
-  protected:
-    bool acceptDrag( QDropEvent * ) const;
-    QDragObject * dragObject();
-  };
+protected:
+    bool acceptDrag(QDropEvent *) const;
+    QDragObject *dragObject();
+};
 
 
 } // namespace KMail

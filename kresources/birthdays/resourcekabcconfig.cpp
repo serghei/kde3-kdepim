@@ -33,103 +33,112 @@
 
 using namespace KCal;
 
-ResourceKABCConfig::ResourceKABCConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceKABCConfig::ResourceKABCConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  QGridLayout *topLayout = new QGridLayout( this, 5, 1, 11, 6 );
+    QGridLayout *topLayout = new QGridLayout(this, 5, 1, 11, 6);
 
-  mAlarm = new QCheckBox(i18n("Set reminder"), this);
-  topLayout->addWidget(mAlarm, 0, 0);
-  QBoxLayout *alarmLayout = new QHBoxLayout(topLayout);
+    mAlarm = new QCheckBox(i18n("Set reminder"), this);
+    topLayout->addWidget(mAlarm, 0, 0);
+    QBoxLayout *alarmLayout = new QHBoxLayout(topLayout);
 
-  mALabel = new QLabel(i18n("Reminder before (in days):"), this);
-  alarmLayout->addWidget(mALabel);
-  mAlarmTimeEdit = new KRestrictedLine(this, "alarmTimeEdit", "1234567890");
-  mAlarmTimeEdit->setText("0");
-  alarmLayout->addWidget(mAlarmTimeEdit);
+    mALabel = new QLabel(i18n("Reminder before (in days):"), this);
+    alarmLayout->addWidget(mALabel);
+    mAlarmTimeEdit = new KRestrictedLine(this, "alarmTimeEdit", "1234567890");
+    mAlarmTimeEdit->setText("0");
+    alarmLayout->addWidget(mAlarmTimeEdit);
 
-  QFrame *line = new QFrame( this );
-  line->setFrameStyle( QFrame::Sunken | QFrame::HLine );
-  topLayout->addMultiCellWidget( line, 2, 2, 0, 1 );
+    QFrame *line = new QFrame(this);
+    line->setFrameStyle(QFrame::Sunken | QFrame::HLine);
+    topLayout->addMultiCellWidget(line, 2, 2, 0, 1);
 
-  mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
-  topLayout->addMultiCellWidget( mUseCategories, 3, 3, 0, 1 );
+    mUseCategories = new QCheckBox(i18n("Filter by categories"), this);
+    topLayout->addMultiCellWidget(mUseCategories, 3, 3, 0, 1);
 
-  mCategoryView = new KListView( this );
-  mCategoryView->addColumn( "" );
-  mCategoryView->header()->hide();
-  mCategoryView->setEnabled( false );
-  topLayout->addMultiCellWidget( mCategoryView, 4, 4, 0, 1 );
+    mCategoryView = new KListView(this);
+    mCategoryView->addColumn("");
+    mCategoryView->header()->hide();
+    mCategoryView->setEnabled(false);
+    topLayout->addMultiCellWidget(mCategoryView, 4, 4, 0, 1);
 
-  connect( mUseCategories, SIGNAL( toggled( bool ) ),
-           mCategoryView, SLOT( setEnabled( bool ) ) );
+    connect(mUseCategories, SIGNAL(toggled(bool)),
+            mCategoryView, SLOT(setEnabled(bool)));
 
-  mAlarmTimeEdit->setDisabled(true);
-  mALabel->setDisabled(true);
+    mAlarmTimeEdit->setDisabled(true);
+    mALabel->setDisabled(true);
 
-  connect(mAlarm, SIGNAL(clicked()), SLOT(alarmClicked()));
+    connect(mAlarm, SIGNAL(clicked()), SLOT(alarmClicked()));
 
-  setReadOnly( true );
+    setReadOnly(true);
 
-  KABPrefs *prefs = KABPrefs::instance();
-  const QStringList categories = prefs->customCategories();
-  QStringList::ConstIterator it;
-  for ( it = categories.begin(); it != categories.end(); ++it )
-    new QCheckListItem( mCategoryView, *it, QCheckListItem::CheckBox );
+    KABPrefs *prefs = KABPrefs::instance();
+    const QStringList categories = prefs->customCategories();
+    QStringList::ConstIterator it;
+    for(it = categories.begin(); it != categories.end(); ++it)
+        new QCheckListItem(mCategoryView, *it, QCheckListItem::CheckBox);
 }
 
-void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
+void ResourceKABCConfig::loadSettings(KRES::Resource *resource)
 {
-  ResourceKABC *res = static_cast<ResourceKABC *>( resource );
-  if ( res ) {
-    mAlarm->setChecked( res->alarm() );
-    QString days;
-    mAlarmTimeEdit->setText( days.setNum(res->alarmDays()) );
+    ResourceKABC *res = static_cast<ResourceKABC *>(resource);
+    if(res)
+    {
+        mAlarm->setChecked(res->alarm());
+        QString days;
+        mAlarmTimeEdit->setText(days.setNum(res->alarmDays()));
 
-    mAlarmTimeEdit->setEnabled( res->alarm() );
-    mALabel->setEnabled( res->alarm() );
+        mAlarmTimeEdit->setEnabled(res->alarm());
+        mALabel->setEnabled(res->alarm());
 
-    const QStringList categories = res->categories();
-    QListViewItemIterator it( mCategoryView );
-    while ( it.current() ) {
-      if ( categories.contains( it.current()->text( 0 ) ) ) {
-        QCheckListItem *item = static_cast<QCheckListItem*>( it.current() );
-        item->setOn( true );
-      }
-      ++it;
+        const QStringList categories = res->categories();
+        QListViewItemIterator it(mCategoryView);
+        while(it.current())
+        {
+            if(categories.contains(it.current()->text(0)))
+            {
+                QCheckListItem *item = static_cast<QCheckListItem *>(it.current());
+                item->setOn(true);
+            }
+            ++it;
+        }
+
+        mUseCategories->setChecked(res->useCategories());
     }
-
-    mUseCategories->setChecked( res->useCategories() );
-  } else {
-    kdDebug(5700) << "ERROR: ResourceKABCConfig::loadSettings(): no ResourceKABC, cast failed" << endl;
-  }
+    else
+    {
+        kdDebug(5700) << "ERROR: ResourceKABCConfig::loadSettings(): no ResourceKABC, cast failed" << endl;
+    }
 }
 
-void ResourceKABCConfig::saveSettings( KRES::Resource *resource )
+void ResourceKABCConfig::saveSettings(KRES::Resource *resource)
 {
-  ResourceKABC *res = static_cast<ResourceKABC *>( resource );
-  if ( res ) {
-    res->setAlarm( mAlarm->isChecked() );
-    res->setAlarmDays( mAlarmTimeEdit->text().toInt() );
-    setReadOnly( true );
+    ResourceKABC *res = static_cast<ResourceKABC *>(resource);
+    if(res)
+    {
+        res->setAlarm(mAlarm->isChecked());
+        res->setAlarmDays(mAlarmTimeEdit->text().toInt());
+        setReadOnly(true);
 
-    QStringList categories;
-    QListViewItemIterator it( mCategoryView, QListViewItemIterator::Checked );
-    while ( it.current() ) {
-      categories.append( it.current()->text( 0 ) );
-      ++it;
+        QStringList categories;
+        QListViewItemIterator it(mCategoryView, QListViewItemIterator::Checked);
+        while(it.current())
+        {
+            categories.append(it.current()->text(0));
+            ++it;
+        }
+        res->setCategories(categories);
+        res->setUseCategories(mUseCategories->isChecked());
     }
-    res->setCategories( categories );
-    res->setUseCategories( mUseCategories->isChecked() );
-  } else {
-    kdDebug(5700) << "ERROR: ResourceKABCConfig::saveSettings(): no ResourceKABC, cast failed" << endl;
-  }
+    else
+    {
+        kdDebug(5700) << "ERROR: ResourceKABCConfig::saveSettings(): no ResourceKABC, cast failed" << endl;
+    }
 }
 
 void ResourceKABCConfig::alarmClicked()
 {
-  mAlarmTimeEdit->setDisabled(!mAlarm->isChecked());
-  mALabel->setDisabled(!mAlarm->isChecked());
+    mAlarmTimeEdit->setDisabled(!mAlarm->isChecked());
+    mALabel->setDisabled(!mAlarm->isChecked());
 }
 
 #include "resourcekabcconfig.moc"

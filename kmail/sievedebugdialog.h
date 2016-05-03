@@ -29,17 +29,14 @@ template <typename T> class QValueList;
 
 class KMAccount;
 
-namespace KMime
-{
-  namespace Types
-  {
-    struct AddrSpec;
-    typedef QValueList<AddrSpec> AddrSpecList;
-  }
+namespace KMime {
+namespace Types {
+struct AddrSpec;
+typedef QValueList<AddrSpec> AddrSpecList;
+}
 }
 
-namespace KMail
-{
+namespace KMail {
 class ImapAccountBase;
 class SieveJob;
 
@@ -47,27 +44,26 @@ class SieveJob;
  * Diagnostic info for Sieve. Only compiled when debug is enabled, it is
  * not useful enough for non-developers to have this in releases.
  */
-class SieveDebugDialog : public KDialogBase
-{
+class SieveDebugDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-    SieveDebugDialog( QWidget *parent = 0, const char *name = 0 );
+    SieveDebugDialog(QWidget *parent = 0, const char *name = 0);
     virtual ~SieveDebugDialog();
 
 protected:
-    void handlePutResult( KMail::SieveJob *job, bool success, bool );
+    void handlePutResult(KMail::SieveJob *job, bool success, bool);
 
 signals:
-    void result( bool success );
+    void result(bool success);
 
 protected slots:
-    void slotGetScript( KMail::SieveJob *job, bool success, const QString &script, bool active );
-    void slotGetScriptList( KMail::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
+    void slotGetScript(KMail::SieveJob *job, bool success, const QString &script, bool active);
+    void slotGetScriptList(KMail::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript);
 
     void slotDialogOk();
-    void slotPutActiveResult( KMail::SieveJob*, bool );
-    void slotPutInactiveResult( KMail::SieveJob*, bool );
+    void slotPutActiveResult(KMail::SieveJob *, bool);
+    void slotPutInactiveResult(KMail::SieveJob *, bool);
     void slotDiagNextAccount();
     void slotDiagNextScript();
 

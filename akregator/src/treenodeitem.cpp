@@ -36,34 +36,34 @@
 
 namespace Akregator {
 
-TreeNodeItem::TreeNodeItem(FolderItem* parent, TreeNode* node)
+TreeNodeItem::TreeNodeItem(FolderItem *parent, TreeNode *node)
     : KListViewItem(parent), m_node(node)
 {
     initialize(node);
 }
 
-TreeNodeItem::TreeNodeItem(KListView* parent, TreeNode* node) 
+TreeNodeItem::TreeNodeItem(KListView *parent, TreeNode *node)
     : KListViewItem(parent), m_node(node)
 {
     initialize(node);
 }
 
-TreeNodeItem::TreeNodeItem(KListView* parent, TreeNodeItem* after, TreeNode* node) : KListViewItem(parent, after), m_node(node)
+TreeNodeItem::TreeNodeItem(KListView *parent, TreeNodeItem *after, TreeNode *node) : KListViewItem(parent, after), m_node(node)
 {
     initialize(node);
 }
 
-TreeNodeItem::TreeNodeItem(FolderItem* parent, TreeNodeItem* after, TreeNode* node)
+TreeNodeItem::TreeNodeItem(FolderItem *parent, TreeNodeItem *after, TreeNode *node)
     : KListViewItem(parent, after), m_node(node)
 {
     initialize(node);
 }
 
-void TreeNodeItem::initialize(TreeNode* node)
+void TreeNodeItem::initialize(TreeNode *node)
 {
     setRenameEnabled(0, true);
-    if (node)
-        setText(0, node->title() );
+    if(node)
+        setText(0, node->title());
 }
 
 TreeNodeItem::~TreeNodeItem()
@@ -74,87 +74,87 @@ QString TreeNodeItem::toolTip() const
     return QString::null;
 }
 
-TreeNode* TreeNodeItem::node()
-{ 
-    return m_node; 
+TreeNode *TreeNodeItem::node()
+{
+    return m_node;
 }
 
 void TreeNodeItem::nodeChanged()
 {
-//    kdDebug() << "enter TreeNodeItem::nodeChanged item" << text(0) << endl; 
-    if (!node())
+    //    kdDebug() << "enter TreeNodeItem::nodeChanged item" << text(0) << endl;
+    if(!node())
         return;
-    if (text(0) != node()->title())
+    if(text(0) != node()->title())
         setText(0, node()->title());
-//    kdDebug() << "leave TreeNodeItem::nodeChanged item" << text(0) << endl; 
+    //    kdDebug() << "leave TreeNodeItem::nodeChanged item" << text(0) << endl;
 }
 
-TreeNodeItem* TreeNodeItem::firstChild() const 
-{ 
-    return static_cast<TreeNodeItem*>(KListViewItem::firstChild()); 
-} 
+TreeNodeItem *TreeNodeItem::firstChild() const
+{
+    return static_cast<TreeNodeItem *>(KListViewItem::firstChild());
+}
 
-TreeNodeItem* TreeNodeItem::nextSibling() const 
-{ 
-    return static_cast<TreeNodeItem*>(KListViewItem::nextSibling()); 
-} 
+TreeNodeItem *TreeNodeItem::nextSibling() const
+{
+    return static_cast<TreeNodeItem *>(KListViewItem::nextSibling());
+}
 
-FolderItem* TreeNodeItem::parent() const 
-{ 
-    return static_cast<FolderItem*>(KListViewItem::parent()); 
-} 
-    
+FolderItem *TreeNodeItem::parent() const
+{
+    return static_cast<FolderItem *>(KListViewItem::parent());
+}
+
 
 // TODO: reverse for reverse layout
-void TreeNodeItem::paintCell( QPainter * p, const QColorGroup & cg,
-                               int column, int width, int align )
+void TreeNodeItem::paintCell(QPainter *p, const QColorGroup &cg,
+                             int column, int width, int align)
 
 {
     int u = node() ? node()->unread() : 0;
 
-    if (u <= 0)
+    if(u <= 0)
     {
-        KListViewItem::paintCell(p,cg,column,width,align);
+        KListViewItem::paintCell(p, cg, column, width, align);
         return;
     }
 
     // from kfoldertree
     QString oldText = text(column);
-    setText( column, " " );
+    setText(column, " ");
 
     // draw bg
-    KListViewItem::paintCell(p,cg,column,width,align);
+    KListViewItem::paintCell(p, cg, column, width, align);
 
-    setText( column, oldText);
+    setText(column, oldText);
 
     // draw fg
     QFont f = p->font();
     f.setWeight(QFont::Bold);
     p->setFont(f);
 
-    QFontMetrics fm( p->fontMetrics() );
+    QFontMetrics fm(p->fontMetrics());
     QListView *lv = listView();
     int x = lv ? lv->itemMargin() : 1;
-    int m=x;
-    const QPixmap *icon = pixmap( column );
+    int m = x;
+    const QPixmap *icon = pixmap(column);
     QRect br;
 
-    if (icon)
+    if(icon)
         x += icon->width() + m;
 
     QString txt = " (" + QString::number(u) + ")";
-    int txtW=fm.width( txt );
+    int txtW = fm.width(txt);
 
-    if (fm.width( oldText ) + txtW + x > width)
-        oldText=KStringHandler::rPixelSqueeze(oldText,fm, width - txtW - x);
+    if(fm.width(oldText) + txtW + x > width)
+        oldText = KStringHandler::rPixelSqueeze(oldText, fm, width - txtW - x);
 
-    p->drawText( x, 0, width-m-x, height(), align | AlignVCenter, oldText, -1, &br );
+    p->drawText(x, 0, width - m - x, height(), align | AlignVCenter, oldText, -1, &br);
 
-    if ( !isSelected() )
-        p->setPen( Qt::blue ); // TODO: configurable
+    if(!isSelected())
+        p->setPen(Qt::blue);   // TODO: configurable
 
-    p->drawText( br.right(), 0, width-m-br.right(), height(),
-                 align | AlignVCenter, txt );
+    p->drawText(br.right(), 0, width - m - br.right(), height(),
+                align | AlignVCenter, txt);
 
     /*if ( isSelected() )
     p->setPen( cg.highlightedText() );

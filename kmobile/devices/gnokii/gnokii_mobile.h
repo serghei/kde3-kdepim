@@ -27,16 +27,15 @@
 #include <kmobiledevice.h>
 #include <kabc/addressee.h>
 
-class KMobileGnokii : public KMobileDevice
-{
-Q_OBJECT
+class KMobileGnokii : public KMobileDevice {
+    Q_OBJECT
 public:
-    KMobileGnokii( QObject *obj=0, const char *name=0, const QStringList &args=QStringList() );
+    KMobileGnokii(QObject *obj = 0, const char *name = 0, const QStringList &args = QStringList());
     ~KMobileGnokii();
 
     // createObject needs to be reimplemented by every KMobileDevice driver
-    QObject *createObject( QObject *parent=0, const char *name=0, 
-	const char *classname="QObject", const QStringList &args=QStringList() );
+    QObject *createObject(QObject *parent = 0, const char *name = 0,
+                          const char *classname = "QObject", const QStringList &args = QStringList());
 
     // connect, disconnect and current status
     bool connectDevice(QWidget *parent);
@@ -54,30 +53,30 @@ public:
      * Addressbook / Phonebook support
      */
     int numAddresses();
-    int readAddress( int index, KABC::Addressee &adr );
-    int storeAddress( int index, const KABC::Addressee &adr, bool append = false );
+    int readAddress(int index, KABC::Addressee &adr);
+    int storeAddress(int index, const KABC::Addressee &adr, bool append = false);
 
     /*
      * Calendar support
      */
     int numCalendarEntries();
-    int readCalendarEntry( int index, KCal::Event &entry );
-    int storeCalendarEntry( int index, const KCal::Event &entry );
+    int readCalendarEntry(int index, KCal::Event &entry);
+    int storeCalendarEntry(int index, const KCal::Event &entry);
 
     /*
      * Notes support
      */
     int numNotes();
-    int readNote( int index, QString &note );
+    int readNote(int index, QString &note);
 
 signals:
-    void connectionChanged( bool connected );
-    void message( int msgLevel, const QString &msg );
+    void connectionChanged(bool connected);
+    void message(int msgLevel, const QString &msg);
 
 protected:
     bool setGnokiiStateMachine();
-    bool saveConfig( KConfig &conf, QString group );
-    bool loadConfig( KConfig &conf, QString group );
+    bool saveConfig(KConfig &conf, QString group);
+    bool loadConfig(KConfig &conf, QString group);
     bool saveGnokiiConfiguration();
     bool loadGnokiiConfiguration();
     bool saveDeviceConfiguration();

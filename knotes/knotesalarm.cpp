@@ -42,36 +42,36 @@
 #include "knotesglobalconfig.h"
 
 
-KNotesAlarm::KNotesAlarm( KNotesResourceManager *manager, QObject *parent, const char *name )
-  : QObject( parent, name ),
-    m_manager( manager ),
-    m_checkTimer( 0, "m_checkTimer" )
+KNotesAlarm::KNotesAlarm(KNotesResourceManager *manager, QObject *parent, const char *name)
+    : QObject(parent, name),
+      m_manager(manager),
+      m_checkTimer(0, "m_checkTimer")
 {
     // TODO: fix timezone stuff?
 
-    connect( &m_checkTimer, SIGNAL(timeout()), SLOT(checkAlarms()) );
-    m_checkTimer.start( 1000 * KNotesGlobalConfig::self()->checkInterval() );  // interval in seconds
+    connect(&m_checkTimer, SIGNAL(timeout()), SLOT(checkAlarms()));
+    m_checkTimer.start(1000 * KNotesGlobalConfig::self()->checkInterval());    // interval in seconds
 }
 
 void KNotesAlarm::checkAlarms()
 {
-    QDateTime from = KNotesGlobalConfig::self()->alarmsLastChecked().addSecs( 1 );
-    if ( !from.isValid() )
-        from.setTime_t( 0 );
+    QDateTime from = KNotesGlobalConfig::self()->alarmsLastChecked().addSecs(1);
+    if(!from.isValid())
+        from.setTime_t(0);
 
-    KNotesGlobalConfig::self()->setAlarmsLastChecked( QDateTime::currentDateTime() );
-    QValueList<KCal::Alarm *> alarms = m_manager->alarms( from, KNotesGlobalConfig::self()->alarmsLastChecked() );
+    KNotesGlobalConfig::self()->setAlarmsLastChecked(QDateTime::currentDateTime());
+    QValueList<KCal::Alarm *> alarms = m_manager->alarms(from, KNotesGlobalConfig::self()->alarmsLastChecked());
 
     QStringList notes;
     QValueList<KCal::Alarm *>::ConstIterator it;
-    for ( it = alarms.begin(); it != alarms.end(); ++it )
+    for(it = alarms.begin(); it != alarms.end(); ++it)
     {
         KCal::Incidence *incidence = (*it)->parent();
         notes += incidence->summary();
     }
 
-    if ( !notes.isEmpty() )
-        KMessageBox::informationList( 0, i18n("The following notes triggered alarms:"), notes, i18n("Alarm") );
+    if(!notes.isEmpty())
+        KMessageBox::informationList(0, i18n("The following notes triggered alarms:"), notes, i18n("Alarm"));
 }
 
 

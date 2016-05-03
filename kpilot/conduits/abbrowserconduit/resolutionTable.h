@@ -32,38 +32,44 @@
 #include <qvaluelist.h>
 #include "syncAction.h"
 
-typedef enum eExistItems {
-	eExistsPC=0x1, eExistsPalm=0x2, eExistsBackup=0x4,
-	eExistsAll=eExistsPC|eExistsPalm|eExistsBackup
+typedef enum eExistItems
+{
+    eExistsPC = 0x1, eExistsPalm = 0x2, eExistsBackup = 0x4,
+    eExistsAll = eExistsPC | eExistsPalm | eExistsBackup
 };
 
-class ResolutionItem
-{
+class ResolutionItem {
 public:
-	enum eExistItems fExistItems;
-	QString fEntries[3];
-	QString fResolved;
-	QString fName;
+    enum eExistItems fExistItems;
+    QString fEntries[3];
+    QString fResolved;
+    QString fName;
 public:
-	ResolutionItem() {}
-	ResolutionItem(QString name, int ex, QString pc, QString palm, QString backup):fExistItems((eExistItems)ex),fName(name)
-		{fEntries[0]=pc;fEntries[1]=palm; fEntries[2]=backup; /*fExistItems=(eExistItems)ex;*/ }
-	~ResolutionItem() {}
+    ResolutionItem() {}
+    ResolutionItem(QString name, int ex, QString pc, QString palm, QString backup): fExistItems((eExistItems)ex), fName(name)
+    {
+        fEntries[0] = pc;
+        fEntries[1] = palm;
+        fEntries[2] = backup; /*fExistItems=(eExistItems)ex;*/
+    }
+    ~ResolutionItem() {}
 };
 
 /**
 @author Reinhold Kainhofer
 */
-class ResolutionTable : public QPtrList<ResolutionItem>
-{
+class ResolutionTable : public QPtrList<ResolutionItem> {
 public:
-	ResolutionTable():QPtrList<ResolutionItem>() {fResolution=SyncAction::eAskUser;};
+    ResolutionTable(): QPtrList<ResolutionItem>()
+    {
+        fResolution = SyncAction::eAskUser;
+    };
 
-	~ResolutionTable() {};
+    ~ResolutionTable() {};
 
-	SyncAction::ConflictResolution fResolution;
-	QString labels[3];
-	enum eExistItems fExistItems;
+    SyncAction::ConflictResolution fResolution;
+    QString labels[3];
+    enum eExistItems fExistItems;
 };
 
 #endif

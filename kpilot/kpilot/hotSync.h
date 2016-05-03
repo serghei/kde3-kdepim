@@ -38,138 +38,134 @@ class QTimer;
 
 #include "syncAction.h"
 
-class CheckUser : public SyncAction
-{
+class CheckUser : public SyncAction {
 public:
-	CheckUser(KPilotLink *p,QWidget *w=0L);
-	virtual ~CheckUser();
+    CheckUser(KPilotLink *p, QWidget *w = 0L);
+    virtual ~CheckUser();
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 } ;
 
 
-class BackupAction : public SyncAction
-{
-Q_OBJECT
+class BackupAction : public SyncAction {
+    Q_OBJECT
 
 public:
-	/** Constructor. Back up all the databases on
-	*   the link to a directory on the local disk.
-	*   If @p full is @c true, then a full backup,
-	*   including applications, is done. Otherwise,
-	*   only user data is backed-up.
-	*
-	* @see setDirectory()
-	*/
-	BackupAction(KPilotLink *, bool full);
+    /** Constructor. Back up all the databases on
+    *   the link to a directory on the local disk.
+    *   If @p full is @c true, then a full backup,
+    *   including applications, is done. Otherwise,
+    *   only user data is backed-up.
+    *
+    * @see setDirectory()
+    */
+    BackupAction(KPilotLink *, bool full);
 
-	enum Status { Init,
-		Error,
-		FastBackup,
-		FullBackup,
-		BackupIncomplete,
-		BackupEnded,
-		BackupComplete
-		} ;
-	virtual QString statusString() const;
+    enum Status { Init,
+                  Error,
+                  FastBackup,
+                  FullBackup,
+                  BackupIncomplete,
+                  BackupEnded,
+                  BackupComplete
+                } ;
+    virtual QString statusString() const;
 
-	/** By default, a path based on the user name (either
-	*   on the handheld or set in KPilot) is used to
-	*   determine the backup directory name ( generally
-	*   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
-	*   Use setDirectory() to change that and use a given
-	*   @p path as target for the backup. Use an empty
-	*   @p path to restore the default behavior of using
-	*   the username.
-	*/
-	void setDirectory( const QString &path );
+    /** By default, a path based on the user name (either
+    *   on the handheld or set in KPilot) is used to
+    *   determine the backup directory name ( generally
+    *   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
+    *   Use setDirectory() to change that and use a given
+    *   @p path as target for the backup. Use an empty
+    *   @p path to restore the default behavior of using
+    *   the username.
+    */
+    void setDirectory(const QString &path);
 
-	// Reimplemented to support threaded backup.
-	virtual bool event( QEvent *e );
+    // Reimplemented to support threaded backup.
+    virtual bool event(QEvent *e);
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 
 private:
-	/** Finish the backup and clean up resources. */
-	void endBackup();
+    /** Finish the backup and clean up resources. */
+    void endBackup();
 
-	/** Copy the database indicated by @p info to the local
-	*   disk; returns @c false on failure.
-	*/
-	bool startBackupThread(DBInfo *info);
+    /** Copy the database indicated by @p info to the local
+    *   disk; returns @c false on failure.
+    */
+    bool startBackupThread(DBInfo *info);
 
 private slots:
-	/** Implementation detail: databases get backed-up
-	*   one at a time because the backup function in
-	*   pilot-link isn't threaded.
-	*/
-	void backupOneDB();
+    /** Implementation detail: databases get backed-up
+    *   one at a time because the backup function in
+    *   pilot-link isn't threaded.
+    */
+    void backupOneDB();
 
 private:
-	class Private;
-	Private *fP;
-	class Thread;
-	Thread *fBackupThread;
+    class Private;
+    Private *fP;
+    class Thread;
+    Thread *fBackupThread;
 } ;
 
-class FileInstallAction : public SyncAction
-{
-Q_OBJECT
+class FileInstallAction : public SyncAction {
+    Q_OBJECT
 public:
-	FileInstallAction(KPilotLink *,
-		const QString &fileDir);
-	virtual ~FileInstallAction();
+    FileInstallAction(KPilotLink *,
+                      const QString &fileDir);
+    virtual ~FileInstallAction();
 
-	virtual QString statusString() const;
+    virtual QString statusString() const;
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 
 protected slots:
-	void installNextFile();
+    void installNextFile();
 
 private:
-	int fDBIndex;
-	QTimer *fTimer;
-	QString fDir;
-	QStringList fList;
+    int fDBIndex;
+    QTimer *fTimer;
+    QString fDir;
+    QStringList fList;
 
-	// TODO: not const because it calls logError(), which is
-	// non-const (but might be - can signals be const, anyway?)
-	bool resourceOK(const QString &, const QString &) /* const */ ;
+    // TODO: not const because it calls logError(), which is
+    // non-const (but might be - can signals be const, anyway?)
+    bool resourceOK(const QString &, const QString &) /* const */ ;
 } ;
 
-class RestoreAction : public SyncAction
-{
-Q_OBJECT
+class RestoreAction : public SyncAction {
+    Q_OBJECT
 public:
-	RestoreAction(KPilotLink *,QWidget *w=0L);
+    RestoreAction(KPilotLink *, QWidget *w = 0L);
 
-	typedef enum { InstallingFiles, GettingFileInfo,Done } Status;
-	virtual QString statusString() const;
+    typedef enum { InstallingFiles, GettingFileInfo, Done } Status;
+    virtual QString statusString() const;
 
-	/** By default, a path based on the user name (either
-	*   on the handheld or set in KPilot) is used to
-	*   determine the restory directory name ( generally
-	*   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
-	*   Use setDirectory() to change that and use a given
-	*   @p path as target for the source. Use an empty
-	*   @p path to restore the default behavior of using
-	*   the username.
-	*/
-	void setDirectory( const QString &path );
+    /** By default, a path based on the user name (either
+    *   on the handheld or set in KPilot) is used to
+    *   determine the restory directory name ( generally
+    *   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
+    *   Use setDirectory() to change that and use a given
+    *   @p path as target for the source. Use an empty
+    *   @p path to restore the default behavior of using
+    *   the username.
+    */
+    void setDirectory(const QString &path);
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 
 protected slots:
-	void installNextFile();
+    void installNextFile();
 
 private:
-	class Private;
-	Private *fP;
+    class Private;
+    Private *fP;
 } ;
 
 #endif

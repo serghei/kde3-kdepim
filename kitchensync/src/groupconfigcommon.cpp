@@ -38,121 +38,126 @@
 
 #include "groupconfigcommon.h"
 
-ObjectTypeSelector::ObjectTypeSelector( QWidget *parent )
-  : QWidget( parent )
+ObjectTypeSelector::ObjectTypeSelector(QWidget *parent)
+    : QWidget(parent)
 {
-  QGridLayout *layout = new QGridLayout( this );
-  layout->setMargin( 0 );
+    QGridLayout *layout = new QGridLayout(this);
+    layout->setMargin(0);
 
-  const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
+    const QSync::Conversion conversion = SyncProcessManager::self()->environment()->conversion();
 
-  QMap<QString, QString> objectTypeMap;
-  objectTypeMap.insert( "contact", i18n( "Contacts" ) );
-  objectTypeMap.insert( "event", i18n( "Events" ) );
-  objectTypeMap.insert( "todo", i18n( "To-dos" ) );
-  objectTypeMap.insert( "note", i18n( "Notes" ) );
+    QMap<QString, QString> objectTypeMap;
+    objectTypeMap.insert("contact", i18n("Contacts"));
+    objectTypeMap.insert("event", i18n("Events"));
+    objectTypeMap.insert("todo", i18n("To-dos"));
+    objectTypeMap.insert("note", i18n("Notes"));
 
-  QStringList objectTypes = conversion.objectTypes();
+    QStringList objectTypes = conversion.objectTypes();
 
-  // reorder the entries so that contact and event are the first one
-  qHeapSort( objectTypes );
+    // reorder the entries so that contact and event are the first one
+    qHeapSort(objectTypes);
 
-  QStringList reoderedObjectTypes, stack;
-  for ( uint i = 0; i < objectTypes.count(); ++i ) {
-    if ( objectTypes[ i ] == "contact" || objectTypes[ i ] == "event" )
-      reoderedObjectTypes.append( objectTypes[ i ] );
-    else
-      stack.append( objectTypes[ i ] );
-  }
-  reoderedObjectTypes += stack;
-
-  QStringList::ConstIterator it;
-
-  int row = 0;
-  int col = 0;
-  for( it = reoderedObjectTypes.begin(); it != reoderedObjectTypes.end(); ++it ) {
-    QString objectType = *it;
-
-    // Don't display object type "data". Object type "data" is a kind of wildcard - so don't filter * 
-    if ( objectType == "data" )
-      continue;
-
-    QCheckBox *objectCheckBox = new QCheckBox( objectTypeMap[ objectType ], this );
-    layout->addWidget( objectCheckBox, row, col );
-    mObjectTypeChecks.insert( objectType, objectCheckBox );
-
-    col++;
-    if ( (row == 0 && col == 2) || col == 3 ) {
-      col = 0;
-      row++;
+    QStringList reoderedObjectTypes, stack;
+    for(uint i = 0; i < objectTypes.count(); ++i)
+    {
+        if(objectTypes[ i ] == "contact" || objectTypes[ i ] == "event")
+            reoderedObjectTypes.append(objectTypes[ i ]);
+        else
+            stack.append(objectTypes[ i ]);
     }
-  }
+    reoderedObjectTypes += stack;
+
+    QStringList::ConstIterator it;
+
+    int row = 0;
+    int col = 0;
+    for(it = reoderedObjectTypes.begin(); it != reoderedObjectTypes.end(); ++it)
+    {
+        QString objectType = *it;
+
+        // Don't display object type "data". Object type "data" is a kind of wildcard - so don't filter *
+        if(objectType == "data")
+            continue;
+
+        QCheckBox *objectCheckBox = new QCheckBox(objectTypeMap[ objectType ], this);
+        layout->addWidget(objectCheckBox, row, col);
+        mObjectTypeChecks.insert(objectType, objectCheckBox);
+
+        col++;
+        if((row == 0 && col == 2) || col == 3)
+        {
+            col = 0;
+            row++;
+        }
+    }
 }
 
-void ObjectTypeSelector::load( const QSync::Group &group )
+void ObjectTypeSelector::load(const QSync::Group &group)
 {
-  const QSync::GroupConfig config = group.config();
+    const QSync::GroupConfig config = group.config();
 
-  const QStringList objectTypes = config.activeObjectTypes();
+    const QStringList objectTypes = config.activeObjectTypes();
 
-  // Enable everything on the inital load
-  bool initialLoad = false;
-  if ( objectTypes.isEmpty() )
-    initialLoad = true;
+    // Enable everything on the inital load
+    bool initialLoad = false;
+    if(objectTypes.isEmpty())
+        initialLoad = true;
 
-  QMap<QString, QCheckBox*>::ConstIterator it;
-  for( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
-    QCheckBox *check = it.data();
-    check->setChecked( objectTypes.contains( it.key() ) || initialLoad );
-  }
+    QMap<QString, QCheckBox *>::ConstIterator it;
+    for(it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it)
+    {
+        QCheckBox *check = it.data();
+        check->setChecked(objectTypes.contains(it.key()) || initialLoad);
+    }
 }
 
-void ObjectTypeSelector::save( QSync::Group group )
+void ObjectTypeSelector::save(QSync::Group group)
 {
-  QStringList objectTypes;
+    QStringList objectTypes;
 
-  QMap<QString,QCheckBox *>::ConstIterator it;
-  for( it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it ) {
-    QCheckBox *check = it.data();
-    if ( check->isChecked() )
-      objectTypes.append( it.key() );
-  }
+    QMap<QString, QCheckBox *>::ConstIterator it;
+    for(it = mObjectTypeChecks.begin(); it != mObjectTypeChecks.end(); ++it)
+    {
+        QCheckBox *check = it.data();
+        if(check->isChecked())
+            objectTypes.append(it.key());
+    }
 
-  // Always add object type "data"
-  objectTypes.append( "data" );
+    // Always add object type "data"
+    objectTypes.append("data");
 
-  QSync::GroupConfig config = group.config();
-  config.setActiveObjectTypes( objectTypes );
+    QSync::GroupConfig config = group.config();
+    config.setActiveObjectTypes(objectTypes);
 }
 
-GroupConfigCommon::GroupConfigCommon( QWidget *parent )
-  : QWidget( parent )
+GroupConfigCommon::GroupConfigCommon(QWidget *parent)
+    : QWidget(parent)
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+    QGridLayout *layout = new QGridLayout(this, 2, 2, KDialog::marginHint(), KDialog::spacingHint());
 
-  layout->addWidget( new QLabel( i18n( "Name:" ), this ), 0, 0 );
+    layout->addWidget(new QLabel(i18n("Name:"), this), 0, 0);
 
-  mGroupName = new KLineEdit( this );
-  layout->addWidget( mGroupName, 0, 1 );
+    mGroupName = new KLineEdit(this);
+    layout->addWidget(mGroupName, 0, 1);
 
-  layout->addWidget( new QLabel( i18n( "Object Types to be Synchronized:"), this ), 1, 0, Qt::AlignTop );
+    layout->addWidget(new QLabel(i18n("Object Types to be Synchronized:"), this), 1, 0, Qt::AlignTop);
 
-  mObjectTypeSelector = new ObjectTypeSelector( this );
-  layout->addWidget( mObjectTypeSelector, 1, 1 );
+    mObjectTypeSelector = new ObjectTypeSelector(this);
+    layout->addWidget(mObjectTypeSelector, 1, 1);
 
-  layout->setRowStretch( 2, 1 );
+    layout->setRowStretch(2, 1);
 }
 
-void GroupConfigCommon::setSyncProcess( SyncProcess *syncProcess )
+void GroupConfigCommon::setSyncProcess(SyncProcess *syncProcess)
 {
-  mSyncProcess = syncProcess;
+    mSyncProcess = syncProcess;
 
-  mGroupName->setText( mSyncProcess->group().name() );
-  mObjectTypeSelector->load( mSyncProcess->group() );
+    mGroupName->setText(mSyncProcess->group().name());
+    mObjectTypeSelector->load(mSyncProcess->group());
 }
 
 void GroupConfigCommon::save()
 {
-  mSyncProcess->group().setName( mGroupName->text() );
-  mObjectTypeSelector->save( mSyncProcess->group() );
+    mSyncProcess->group().setName(mGroupName->text());
+    mObjectTypeSelector->save(mSyncProcess->group());
 }

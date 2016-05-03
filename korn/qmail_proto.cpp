@@ -28,22 +28,22 @@
 
 #include "account_input.h"
 
-void QMail_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
+void QMail_Protocol::configFillGroupBoxes(QStringList *groupBoxes) const
 {
-	groupBoxes->append( "Maildir" );
+    groupBoxes->append("Maildir");
 }
 
-void QMail_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput > *result ) const
+void QMail_Protocol::configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *result) const
 {
-	result->append( new URLInput( (QWidget*)vector->at( 0 ), i18n( "Path:" ), "", "mailbox" ) );
-	dynamic_cast<KURLRequester*>(result->last()->rightWidget())->setMode( KFile::Directory );
+    result->append(new URLInput((QWidget *)vector->at(0), i18n("Path:"), "", "mailbox"));
+    dynamic_cast<KURLRequester *>(result->last()->rightWidget())->setMode(KFile::Directory);
 }
 
-void QMail_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const
+void QMail_Protocol::readEntries(QMap< QString, QString > *, QMap< QString, QString > *) const
 {
 }
 
-void QMail_Protocol::writeEntries( QMap< QString, QString >* map ) const
+void QMail_Protocol::writeEntries(QMap< QString, QString > *map) const
 {
-	clearFields( map, (KIO_Protocol::Fields)( server | port | username | password | save_password | metadata ) );
+    clearFields(map, (KIO_Protocol::Fields)(server | port | username | password | save_password | metadata));
 }

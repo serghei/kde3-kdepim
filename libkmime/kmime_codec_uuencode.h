@@ -38,37 +38,40 @@ namespace KMime {
 
 class UUCodec : public Codec {
 protected:
-  friend class Codec;
-  UUCodec() : Codec() {}
+    friend class Codec;
+    UUCodec() : Codec() {}
 
 public:
-  virtual ~UUCodec() {}
+    virtual ~UUCodec() {}
 
-  const char * name() const {
-    return "x-uuencode";
-  }
+    const char *name() const
+    {
+        return "x-uuencode";
+    }
 
-  int maxEncodedSizeFor( int insize, bool withCRLF=false ) const {
-    (void)withCRLF;
-    return insize; // we have no encoder!
-  }
+    int maxEncodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        (void)withCRLF;
+        return insize; // we have no encoder!
+    }
 
-  int maxDecodedSizeFor( int insize, bool withCRLF=false ) const {
-    // assuming all characters are part of the uuencode stream (which
-    // does almost never hold due to required linebreaking; but
-    // additional non-uu chars don't affect the output size), each
-    // 4-tupel of them becomes a 3-tupel in the decoded octet
-    // stream. So:
-    int result = ( ( insize + 3 ) / 4 ) * 3;
-    // but all of them may be \n, so
-    if ( withCRLF )
-      result *= 2; // :-o
+    int maxDecodedSizeFor(int insize, bool withCRLF = false) const
+    {
+        // assuming all characters are part of the uuencode stream (which
+        // does almost never hold due to required linebreaking; but
+        // additional non-uu chars don't affect the output size), each
+        // 4-tupel of them becomes a 3-tupel in the decoded octet
+        // stream. So:
+        int result = ((insize + 3) / 4) * 3;
+        // but all of them may be \n, so
+        if(withCRLF)
+            result *= 2; // :-o
 
-    return result;
-  }
+        return result;
+    }
 
-  Encoder * makeEncoder( bool withCRLF=false ) const;
-  Decoder * makeDecoder( bool withCRLF=false ) const;
+    Encoder *makeEncoder(bool withCRLF = false) const;
+    Decoder *makeDecoder(bool withCRLF = false) const;
 };
 
 } // namespace KMime

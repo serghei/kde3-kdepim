@@ -37,33 +37,36 @@ using KABC::Addressee;
 
 #include <qstring.h>
 
-KMail::VCardViewer::VCardViewer(QWidget *parent, const QString& vCard, const char* name)
-  : KDialogBase( parent, name, false, i18n("VCard Viewer"), User1|User2|User3|Close, Close,
-		 true, i18n("&Import"), i18n("&Next Card"), i18n("&Previous Card") )
+KMail::VCardViewer::VCardViewer(QWidget *parent, const QString &vCard, const char *name)
+    : KDialogBase(parent, name, false, i18n("VCard Viewer"), User1 | User2 | User3 | Close, Close,
+                  true, i18n("&Import"), i18n("&Next Card"), i18n("&Previous Card"))
 {
-  mAddresseeView = new AddresseeView(this);
-  mAddresseeView->enableLinks( 0 );
-  mAddresseeView->setVScrollBarMode(QScrollView::Auto);
-  setMainWidget(mAddresseeView);
+    mAddresseeView = new AddresseeView(this);
+    mAddresseeView->enableLinks(0);
+    mAddresseeView->setVScrollBarMode(QScrollView::Auto);
+    setMainWidget(mAddresseeView);
 
-  VCardConverter vcc;
-  mAddresseeList = vcc.parseVCards( vCard );
-  if ( !mAddresseeList.empty() ) {
-    itAddresseeList = mAddresseeList.begin();
-    mAddresseeView->setAddressee( *itAddresseeList );
-    if ( mAddresseeList.size() <= 1 ) {
-      showButton(User2, false);
-      showButton(User3, false);
+    VCardConverter vcc;
+    mAddresseeList = vcc.parseVCards(vCard);
+    if(!mAddresseeList.empty())
+    {
+        itAddresseeList = mAddresseeList.begin();
+        mAddresseeView->setAddressee(*itAddresseeList);
+        if(mAddresseeList.size() <= 1)
+        {
+            showButton(User2, false);
+            showButton(User3, false);
+        }
+        else
+            enableButton(User3, false);
     }
     else
-      enableButton(User3, false);
-  }
-  else {
-    mAddresseeView->setText(i18n("Failed to parse vCard."));
-    enableButton(User1, false);
-  }
+    {
+        mAddresseeView->setText(i18n("Failed to parse vCard."));
+        enableButton(User1, false);
+    }
 
-  resize(300,400);
+    resize(300, 400);
 }
 
 KMail::VCardViewer::~VCardViewer()
@@ -72,25 +75,25 @@ KMail::VCardViewer::~VCardViewer()
 
 void KMail::VCardViewer::slotUser1()
 {
-  KAddrBookExternal::addVCard( *itAddresseeList, this );
+    KAddrBookExternal::addVCard(*itAddresseeList, this);
 }
 
 void KMail::VCardViewer::slotUser2()
 {
-  // next vcard
-  mAddresseeView->setAddressee( *(++itAddresseeList) );
-  if ( itAddresseeList == --(mAddresseeList.end()) )
-    enableButton(User2, false);
-  enableButton(User3, true);
+    // next vcard
+    mAddresseeView->setAddressee(*(++itAddresseeList));
+    if(itAddresseeList == --(mAddresseeList.end()))
+        enableButton(User2, false);
+    enableButton(User3, true);
 }
 
 void KMail::VCardViewer::slotUser3()
 {
-  // previous vcard
-  mAddresseeView->setAddressee( *(--itAddresseeList) );
-  if ( itAddresseeList == mAddresseeList.begin() )
-    enableButton(User3, false);
-  enableButton(User2, true);
+    // previous vcard
+    mAddresseeView->setAddressee(*(--itAddresseeList));
+    if(itAddresseeList == mAddresseeList.begin())
+        enableButton(User3, false);
+    enableButton(User2, true);
 }
 
 #include "vcardviewer.moc"

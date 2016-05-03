@@ -8,17 +8,23 @@
 namespace KMail {
 
 class SieveEditor : public KDialogBase {
-  Q_OBJECT
-  Q_PROPERTY( QString script READ script WRITE setScript )
+    Q_OBJECT
+    Q_PROPERTY(QString script READ script WRITE setScript)
 public:
-  SieveEditor( QWidget * parent=0, const char * name=0 );
-  ~SieveEditor();
+    SieveEditor(QWidget *parent = 0, const char *name = 0);
+    ~SieveEditor();
 
-  QString script() const { return mTextEdit->text(); }
-  void setScript( const QString & script ) { mTextEdit->setText( script ); }
+    QString script() const
+    {
+        return mTextEdit->text();
+    }
+    void setScript(const QString &script)
+    {
+        mTextEdit->setText(script);
+    }
 
 private:
-  QTextEdit * mTextEdit;
+    QTextEdit *mTextEdit;
 };
 
 }

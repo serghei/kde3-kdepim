@@ -21,20 +21,20 @@ int main(int argc, char **argv)
 
     QByteArray data;
     QDataStream ds(data, IO_WriteOnly);
-//     ds << QString("a");
+    //     ds << QString("a");
 
     QCString replyType;
     QByteArray replyData;
     ok = client->call("kmobile", "kmobileIface", "deviceNames()", data, replyType, replyData);
 
-    QDataStream reply(replyData, IO_ReadOnly); 
-    QStringList deviceNames; 
+    QDataStream reply(replyData, IO_ReadOnly);
+    QStringList deviceNames;
     reply >> deviceNames;
 
-    kdDebug() << QString("%1\n").arg(ok?"Ok":"Failure");
+    kdDebug() << QString("%1\n").arg(ok ? "Ok" : "Failure");
     kdDebug() << QString("Number of currently registered drivers: %1\n").arg(deviceNames.count());
-    for (int i=0; i<deviceNames.count(); i++)
-      kdDebug() << QString("Device %1: %2\n").arg(i+1).arg(deviceNames[i]);
+    for(int i = 0; i < deviceNames.count(); i++)
+        kdDebug() << QString("Device %1: %2\n").arg(i + 1).arg(deviceNames[i]);
 
-  //  return app.exec();
+    //  return app.exec();
 }

@@ -41,39 +41,39 @@ using namespace KHE;
 /*************************************************
 **************************************************/
 
-DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent) :
-	KDialogBase(parent, "AppBlock Editor",false,
-		i18n("Edit AppInfo Block"),
-		Ok|Cancel), 
-	appInfo(appInfoData), 
-	len(l)
+DBAppInfoEditor::DBAppInfoEditor(char *appInfoData, int l, QWidget *parent) :
+    KDialogBase(parent, "AppBlock Editor", false,
+                i18n("Edit AppInfo Block"),
+                Ok | Cancel),
+    appInfo(appInfoData),
+    len(l)
 {
-	fAppInfoEdit = KHE::createBytesEditWidget( this, "fAppInfoEdit" );
-	if( fAppInfoEdit )
-	{
-		 // fetch the editor interface
-		KHE::BytesEditInterface* fAppInfoEditIf = KHE::bytesEditInterface( fAppInfoEdit );
-		Q_ASSERT( fAppInfoEditIf ); // This should not fail!
-		if( fAppInfoEditIf )
-		{
-			fAppInfoEditIf->setData( (char*)appInfoData, l );
-			fAppInfoEditIf->setMaxDataSize( l );
-			// TODO_RK: Make the app info editable. I need to find a way 
-			// to sync the appInfoBlock to the handheld
-			fAppInfoEditIf->setReadOnly( true );
-		}
-	}
-	else
-	{
-		QLabel*tmpW = new QLabel( i18n("To view the Application info block data, please install a hex editor (e.g. khexedit from kdeutils)."), this );
-		tmpW->setBackgroundMode( Qt::PaletteMid );
-		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
-		tmpW->setFrameShape( QFrame::Panel );
-		tmpW->setFrameShadow( QFrame::Sunken );
-		fAppInfoEdit = tmpW;
-	}
-	setMainWidget( fAppInfoEdit );
-	fillWidgets();
+    fAppInfoEdit = KHE::createBytesEditWidget(this, "fAppInfoEdit");
+    if(fAppInfoEdit)
+    {
+        // fetch the editor interface
+        KHE::BytesEditInterface *fAppInfoEditIf = KHE::bytesEditInterface(fAppInfoEdit);
+        Q_ASSERT(fAppInfoEditIf);   // This should not fail!
+        if(fAppInfoEditIf)
+        {
+            fAppInfoEditIf->setData((char *)appInfoData, l);
+            fAppInfoEditIf->setMaxDataSize(l);
+            // TODO_RK: Make the app info editable. I need to find a way
+            // to sync the appInfoBlock to the handheld
+            fAppInfoEditIf->setReadOnly(true);
+        }
+    }
+    else
+    {
+        QLabel *tmpW = new QLabel(i18n("To view the Application info block data, please install a hex editor (e.g. khexedit from kdeutils)."), this);
+        tmpW->setBackgroundMode(Qt::PaletteMid);
+        tmpW->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
+        tmpW->setFrameShape(QFrame::Panel);
+        tmpW->setFrameShadow(QFrame::Sunken);
+        fAppInfoEdit = tmpW;
+    }
+    setMainWidget(fAppInfoEdit);
+    fillWidgets();
 }
 
 
@@ -83,21 +83,21 @@ DBAppInfoEditor::~DBAppInfoEditor()
 
 void DBAppInfoEditor::slotOk()
 {
-	KMessageBox::sorry(this, i18n("Changing the AppInfo block isn't yet supported by KPilot!"));
-/*	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block "
-		"might corrupt the whole database. \n\nReally assign the new AppInfo "
-		"block?"), i18n("Changing AppInfo Block"), i18n("Assign"), KStdGuiItem::cancel())==KMessageBox::Yes)
-	{
-		// TODO: Copy the data over
-		// TODO: set the length
-		// (*len)=..;
-	}*/
-	KDialogBase::slotOk();
+    KMessageBox::sorry(this, i18n("Changing the AppInfo block isn't yet supported by KPilot!"));
+    /*	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block "
+    		"might corrupt the whole database. \n\nReally assign the new AppInfo "
+    		"block?"), i18n("Changing AppInfo Block"), i18n("Assign"), KStdGuiItem::cancel())==KMessageBox::Yes)
+    	{
+    		// TODO: Copy the data over
+    		// TODO: set the length
+    		// (*len)=..;
+    	}*/
+    KDialogBase::slotOk();
 }
 
 void DBAppInfoEditor::fillWidgets()
 {
-	// FUNCTIONSETUP
+    // FUNCTIONSETUP
 }
 
 

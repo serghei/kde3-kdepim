@@ -45,8 +45,8 @@ SystemTray::SystemTray(KMainWindow *parent, const char *name) : KSystemTray(pare
 
     m_actionCollection = parent->actionCollection();
     KAction *addAction = m_actionCollection->action("device_add");
-    
-    KPopupMenu* menu = contextMenu();
+
+    KPopupMenu *menu = contextMenu();
     addAction->plug(menu);
     menu->insertSeparator();
 }
@@ -63,26 +63,27 @@ void SystemTray::contextMenuAboutToShow(KPopupMenu *menu)
     KMobile *main = static_cast<KMobile *>(parent());
 
     const int pos = 3;
-    while (menu->idAt(pos)>=SYSTEMTRAY_STARTID &&
-	   menu->idAt(pos)<=(SYSTEMTRAY_STARTID+1000))
-	menu->removeItemAt(pos);
+    while(menu->idAt(pos) >= SYSTEMTRAY_STARTID &&
+            menu->idAt(pos) <= (SYSTEMTRAY_STARTID + 1000))
+        menu->removeItemAt(pos);
 
     // create menu entries for each mobile device and add it's icon
     QStringList list = main->mainView()->deviceNames();
-    for (unsigned int no=0; no<list.count(); no++) {
-	QString devName = list[no];
+    for(unsigned int no = 0; no < list.count(); no++)
+    {
+        QString devName = list[no];
         QString iconName = main->mainView()->iconFileName(devName);
         QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Small);
-	menu->insertItem(pm, devName, SYSTEMTRAY_STARTID+no, 3+no);
-	menu->connectItem(SYSTEMTRAY_STARTID+no, this, SLOT(menuItemSelected()));
+        menu->insertItem(pm, devName, SYSTEMTRAY_STARTID + no, 3 + no);
+        menu->connectItem(SYSTEMTRAY_STARTID + no, this, SLOT(menuItemSelected()));
     }
     connect(menu, SIGNAL(activated(int)), this, SLOT(menuItemActivated(int)));
 }
 
 void SystemTray::menuItemSelected()
 {
-    if (m_menuID<SYSTEMTRAY_STARTID || m_menuID>SYSTEMTRAY_STARTID+1000)
-	return;
+    if(m_menuID < SYSTEMTRAY_STARTID || m_menuID > SYSTEMTRAY_STARTID + 1000)
+        return;
     QString devName = contextMenu()->text(m_menuID);
     KMobile *main = static_cast<KMobile *>(parent());
     main->mainView()->startKonqueror(devName);
@@ -95,7 +96,7 @@ void SystemTray::menuItemActivated(int id)
 
 void SystemTray::setToolTip(const QString &tip)
 {
-    if (tip.isEmpty())
+    if(tip.isEmpty())
         QToolTip::add(this, "KMobile");
     else
         QToolTip::add(this, tip);

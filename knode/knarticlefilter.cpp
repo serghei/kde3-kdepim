@@ -26,18 +26,19 @@
 
 
 // the names of our default filters
-static const char *defFil[] = { "all","unread","new","watched","threads with unread",
-                                "threads with new","own articles","threads with own articles", 0 };
+static const char *defFil[] = { "all", "unread", "new", "watched", "threads with unread",
+                                "threads with new", "own articles", "threads with own articles", 0
+                              };
 void dummyFilter()
 {
-  i18n("default filter name","all");
-  i18n("default filter name","unread");
-  i18n("default filter name","new");
-  i18n("default filter name","watched");
-  i18n("default filter name","threads with unread");
-  i18n("default filter name","threads with new");
-  i18n("default filter name","own articles");
-  i18n("default filter name","threads with own articles");
+    i18n("default filter name", "all");
+    i18n("default filter name", "unread");
+    i18n("default filter name", "new");
+    i18n("default filter name", "watched");
+    i18n("default filter name", "threads with unread");
+    i18n("default filter name", "threads with new");
+    i18n("default filter name", "own articles");
+    i18n("default filter name", "threads with own articles");
 }
 
 
@@ -45,23 +46,23 @@ void dummyFilter()
 
 
 KNArticleFilter::KNArticleFilter(int id)
-: i_d(id), c_ount(0), l_oaded(false), e_nabled(true), translateName(true), s_earchFilter(false), apon(articles)
+    : i_d(id), c_ount(0), l_oaded(false), e_nabled(true), translateName(true), s_earchFilter(false), apon(articles)
 {}
 
 
 
 // constructs a copy of org
-KNArticleFilter::KNArticleFilter(const KNArticleFilter& org)
-: i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), translateName(true), s_earchFilter(org.s_earchFilter), apon(org.apon)
+KNArticleFilter::KNArticleFilter(const KNArticleFilter &org)
+    : i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), translateName(true), s_earchFilter(org.s_earchFilter), apon(org.apon)
 {
-  status = org.status;
-  score = org.score;
-  age = org.age;
-  lines = org.lines;
-  subject = org.subject;
-  from = org.from;
-  messageId = org.messageId;
-  references = org.messageId;
+    status = org.status;
+    score = org.score;
+    age = org.age;
+    lines = org.lines;
+    subject = org.subject;
+    from = org.from;
+    messageId = org.messageId;
+    references = org.messageId;
 }
 
 
@@ -73,60 +74,61 @@ KNArticleFilter::~KNArticleFilter()
 
 bool KNArticleFilter::loadInfo()
 {
-  if (i_d!=-1) {
-    QString fname(locate("data",QString( "knode/filters/%1.fltr" ).arg(i_d) ) );
+    if(i_d != -1)
+    {
+        QString fname(locate("data", QString("knode/filters/%1.fltr").arg(i_d)));
 
-    if (fname.isNull())
-      return false;
-    KSimpleConfig conf(fname,true);
+        if(fname.isNull())
+            return false;
+        KSimpleConfig conf(fname, true);
 
-    conf.setGroup("GENERAL");
-    n_ame=conf.readEntry("name");
-    translateName = conf.readBoolEntry("Translate_Name",true);
-    e_nabled=conf.readBoolEntry("enabled", true);
-    apon=(ApOn) conf.readNumEntry("applyOn", 0);
-    return true;
-  }
-  return false;
+        conf.setGroup("GENERAL");
+        n_ame = conf.readEntry("name");
+        translateName = conf.readBoolEntry("Translate_Name", true);
+        e_nabled = conf.readBoolEntry("enabled", true);
+        apon = (ApOn) conf.readNumEntry("applyOn", 0);
+        return true;
+    }
+    return false;
 }
 
 
 
 void KNArticleFilter::load()
 {
-  QString fname(locate("data",QString( "knode/filters/%1.fltr").arg(i_d) ) );
+    QString fname(locate("data", QString("knode/filters/%1.fltr").arg(i_d)));
 
-  if (fname.isNull())
-    return;
-  KSimpleConfig conf(fname,true);
+    if(fname.isNull())
+        return;
+    KSimpleConfig conf(fname, true);
 
-  conf.setGroup("STATUS");
-  status.load(&conf);
+    conf.setGroup("STATUS");
+    status.load(&conf);
 
-  conf.setGroup("SCORE");
-  score.load(&conf);
+    conf.setGroup("SCORE");
+    score.load(&conf);
 
-  conf.setGroup("AGE");
-  age.load(&conf);
+    conf.setGroup("AGE");
+    age.load(&conf);
 
-  conf.setGroup("LINES");
-  lines.load(&conf);
+    conf.setGroup("LINES");
+    lines.load(&conf);
 
-  conf.setGroup("SUBJECT");
-  subject.load(&conf);
+    conf.setGroup("SUBJECT");
+    subject.load(&conf);
 
-  conf.setGroup("FROM");
-  from.load(&conf);
+    conf.setGroup("FROM");
+    from.load(&conf);
 
-  conf.setGroup("MESSAGEID");
-  messageId.load(&conf);
+    conf.setGroup("MESSAGEID");
+    messageId.load(&conf);
 
-  conf.setGroup("REFERENCES");
-  references.load(&conf);
+    conf.setGroup("REFERENCES");
+    references.load(&conf);
 
-  l_oaded=true;
+    l_oaded = true;
 
-  kdDebug(5003) << "KNMessageFilter: filter loaded \"" << n_ame << "\" " << endl;
+    kdDebug(5003) << "KNMessageFilter: filter loaded \"" << n_ame << "\" " << endl;
 
 }
 
@@ -134,186 +136,205 @@ void KNArticleFilter::load()
 
 void KNArticleFilter::save()
 {
-  if (i_d==-1)
-    return;
-  QString dir(locateLocal("data","knode/")+"filters/");
-  if (dir.isNull()) {
-    KNHelper::displayInternalFileError();
-    return;
-  }
-  KSimpleConfig conf(dir+QString("%1.fltr").arg(i_d));
+    if(i_d == -1)
+        return;
+    QString dir(locateLocal("data", "knode/") + "filters/");
+    if(dir.isNull())
+    {
+        KNHelper::displayInternalFileError();
+        return;
+    }
+    KSimpleConfig conf(dir + QString("%1.fltr").arg(i_d));
 
-  conf.setGroup("GENERAL");
-  conf.writeEntry("name", QString(n_ame));
-  conf.writeEntry("Translate_Name",translateName);
-  conf.writeEntry("enabled", e_nabled);
-  conf.writeEntry("applyOn", (int) apon);
+    conf.setGroup("GENERAL");
+    conf.writeEntry("name", QString(n_ame));
+    conf.writeEntry("Translate_Name", translateName);
+    conf.writeEntry("enabled", e_nabled);
+    conf.writeEntry("applyOn", (int) apon);
 
-  conf.setGroup("STATUS");
-  status.save(&conf);
+    conf.setGroup("STATUS");
+    status.save(&conf);
 
-  conf.setGroup("SCORE");
-  score.save(&conf);
+    conf.setGroup("SCORE");
+    score.save(&conf);
 
-  conf.setGroup("AGE");
-  age.save(&conf);
+    conf.setGroup("AGE");
+    age.save(&conf);
 
-  conf.setGroup("LINES");
-  lines.save(&conf);
+    conf.setGroup("LINES");
+    lines.save(&conf);
 
-  conf.setGroup("SUBJECT");
-  subject.save(&conf);
+    conf.setGroup("SUBJECT");
+    subject.save(&conf);
 
-  conf.setGroup("FROM");
-  from.save(&conf);
+    conf.setGroup("FROM");
+    from.save(&conf);
 
-  conf.setGroup("MESSAGEID");
-  messageId.save(&conf);
+    conf.setGroup("MESSAGEID");
+    messageId.save(&conf);
 
-  conf.setGroup("REFERENCES");
-  references.save(&conf);
+    conf.setGroup("REFERENCES");
+    references.save(&conf);
 
-  kdDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
+    kdDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
 }
 
 
 
 void KNArticleFilter::doFilter(KNGroup *g)
 {
-  c_ount=0;
-  KNRemoteArticle *art=0, *ref=0;
-  KNRemoteArticle::List orphant_threads;
-  int idRef;
-  int mergeCnt=0;
-  bool inThread=false;
+    c_ount = 0;
+    KNRemoteArticle *art = 0, *ref = 0;
+    KNRemoteArticle::List orphant_threads;
+    int idRef;
+    int mergeCnt = 0;
+    bool inThread = false;
 
-  if(!l_oaded) load();
+    if(!l_oaded) load();
 
-  subject.expand(g);  // replace placeholders
-  from.expand(g);
-  messageId.expand(g);
-  references.expand(g);
+    subject.expand(g);  // replace placeholders
+    from.expand(g);
+    messageId.expand(g);
+    references.expand(g);
 
-  for(int idx=0; idx<g->length(); idx++) {
-    art=g->at(idx);
-    art->setFiltered(false);
-    art->setVisibleFollowUps(false);
-    art->setDisplayedReference(0);
-  }
-
-  for(int idx=0; idx<g->length(); idx++) {
-
-    art=g->at(idx);
-
-    if(!art->isFiltered() && applyFilter(art) && apon==threads) {
-      idRef=art->idRef();
-      while(idRef!=0) {
-        ref=g->byId(idRef);
-        ref->setFilterResult(true);
-        ref->setFiltered(true);
-        if ( idRef==ref->idRef() ) break;
-        idRef=ref->idRef();
-      }
+    for(int idx = 0; idx < g->length(); idx++)
+    {
+        art = g->at(idx);
+        art->setFiltered(false);
+        art->setVisibleFollowUps(false);
+        art->setDisplayedReference(0);
     }
 
-  }
+    for(int idx = 0; idx < g->length(); idx++)
+    {
 
-  for(int idx=0; idx<g->length(); idx++) {
+        art = g->at(idx);
 
-    art=g->at(idx);
+        if(!art->isFiltered() && applyFilter(art) && apon == threads)
+        {
+            idRef = art->idRef();
+            while(idRef != 0)
+            {
+                ref = g->byId(idRef);
+                ref->setFilterResult(true);
+                ref->setFiltered(true);
+                if(idRef == ref->idRef()) break;
+                idRef = ref->idRef();
+            }
+        }
 
-    if( apon==threads && !art->filterResult() ) {
-      inThread=false;
-      idRef=art->idRef();
-      while(idRef!=0 && !inThread) {
-        ref=g->byId(idRef);
-        inThread=ref->filterResult();
-        idRef=ref->idRef();
-      }
-      art->setFilterResult(inThread);
     }
 
-    if(art->filterResult()) {
-      c_ount++;
+    for(int idx = 0; idx < g->length(); idx++)
+    {
 
-      ref = (art->idRef()>0) ? g->byId(art->idRef()) : 0;
-      while(ref && !ref->filterResult())
-        ref = (ref->idRef()>0) ? g->byId(ref->idRef()) : 0;
+        art = g->at(idx);
 
-      art->setDisplayedReference(ref);
-      if(ref)
-        ref->setVisibleFollowUps(true);
-      else if(art->idRef()>0) {
-        orphant_threads.append(art);
-      }
+        if(apon == threads && !art->filterResult())
+        {
+            inThread = false;
+            idRef = art->idRef();
+            while(idRef != 0 && !inThread)
+            {
+                ref = g->byId(idRef);
+                inThread = ref->filterResult();
+                idRef = ref->idRef();
+            }
+            art->setFilterResult(inThread);
+        }
+
+        if(art->filterResult())
+        {
+            c_ount++;
+
+            ref = (art->idRef() > 0) ? g->byId(art->idRef()) : 0;
+            while(ref && !ref->filterResult())
+                ref = (ref->idRef() > 0) ? g->byId(ref->idRef()) : 0;
+
+            art->setDisplayedReference(ref);
+            if(ref)
+                ref->setVisibleFollowUps(true);
+            else if(art->idRef() > 0)
+            {
+                orphant_threads.append(art);
+            }
+        }
+
     }
 
-  }
+    if(orphant_threads.count() > 0)
+    {
+        // try to merge orphant threads by subject
+        KNRemoteArticle::List same_subjects;
+        QString s;
+        for(KNRemoteArticle::List::Iterator it = orphant_threads.begin(); it != orphant_threads.end(); ++it)
+        {
+            if((*it)->displayedReference())    // already processed
+                continue;
 
-  if( orphant_threads.count() > 0 ) {
-    // try to merge orphant threads by subject
-    KNRemoteArticle::List same_subjects;
-    QString s;
-    for ( KNRemoteArticle::List::Iterator it = orphant_threads.begin(); it != orphant_threads.end(); ++it ) {
-      if ( (*it)->displayedReference() ) // already processed
-        continue;
+            s = (*it)->subject()->asUnicodeString();
+            same_subjects.clear();
+            for(KNRemoteArticle::List::Iterator it2 = orphant_threads.begin(); it2 != orphant_threads.end(); ++it2)
+            {
+                if((*it2) != (*it) && (*it2)->subject()->asUnicodeString() == s)
+                    same_subjects.append((*it2));
+            }
 
-      s = (*it)->subject()->asUnicodeString();
-      same_subjects.clear();
-      for ( KNRemoteArticle::List::Iterator it2 = orphant_threads.begin(); it2 != orphant_threads.end(); ++it2 ) {
-        if ( (*it2) != (*it) && (*it2)->subject()->asUnicodeString() == s )
-          same_subjects.append( (*it2) );
-      }
-
-      (*it)->setVisibleFollowUps( (*it)->hasVisibleFollowUps() || same_subjects.count() > 0 );
-      for ( KNRemoteArticle::List::Iterator it2 = same_subjects.begin(); it2 != same_subjects.end(); ++it2 ) {
-        (*it2)->setDisplayedReference( (*it) );
-        mergeCnt++;
-      }
+            (*it)->setVisibleFollowUps((*it)->hasVisibleFollowUps() || same_subjects.count() > 0);
+            for(KNRemoteArticle::List::Iterator it2 = same_subjects.begin(); it2 != same_subjects.end(); ++it2)
+            {
+                (*it2)->setDisplayedReference((*it));
+                mergeCnt++;
+            }
+        }
     }
-  }
 
-  kdDebug(5003) << "KNArticleFilter::doFilter() : matched " << c_ount
-                << " articles , merged " << mergeCnt
-                << " threads by subject" << endl;
+    kdDebug(5003) << "KNArticleFilter::doFilter() : matched " << c_ount
+                  << " articles , merged " << mergeCnt
+                  << " threads by subject" << endl;
 
 }
 
 
 void KNArticleFilter::doFilter(KNFolder *f)
 {
-  c_ount=0;
-  KNLocalArticle *art=0;
+    c_ount = 0;
+    KNLocalArticle *art = 0;
 
-  if(!l_oaded) load();
+    if(!l_oaded) load();
 
-  subject.expand(0);  // replace placeholders
-  from.expand(0);
-  messageId.expand(0);
-  references.expand(0);
+    subject.expand(0);  // replace placeholders
+    from.expand(0);
+    messageId.expand(0);
+    references.expand(0);
 
-  for(int idx=0; idx<f->length(); idx++) {
-    art=f->at(idx);
-    if (applyFilter(art))
-      c_ount++;
-  }
+    for(int idx = 0; idx < f->length(); idx++)
+    {
+        art = f->at(idx);
+        if(applyFilter(art))
+            c_ount++;
+    }
 }
 
 
 // *tries* to translate the name
 QString KNArticleFilter::translatedName()
 {
-  if (translateName) {
-    // major hack alert !!!
-    if (!n_ame.isEmpty()) {
-      if (i18n("default filter name",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-        return i18n("default filter name",n_ame.local8Bit());
-      else
+    if(translateName)
+    {
+        // major hack alert !!!
+        if(!n_ame.isEmpty())
+        {
+            if(i18n("default filter name", n_ame.local8Bit()) != n_ame.local8Bit().data())  // try to guess if this english or not
+                return i18n("default filter name", n_ame.local8Bit());
+            else
+                return n_ame;
+        }
+        else
+            return QString::null;
+    }
+    else
         return n_ame;
-    } else
-      return QString::null;
-  } else
-    return n_ame;
 }
 
 
@@ -321,63 +342,69 @@ QString KNArticleFilter::translatedName()
 // *tries* to retranslate the name to english
 void KNArticleFilter::setTranslatedName(const QString &s)
 {
-  bool retranslated = false;
-  for (const char **c=defFil;(*c)!=0;c++)   // ok, try if it matches any of the standard filter names
-    if (s==i18n("default filter name",*c)) {
-      n_ame = QString::fromLatin1(*c);
-      retranslated = true;
-      break;
-    }
+    bool retranslated = false;
+    for(const char **c = defFil; (*c) != 0; c++)  // ok, try if it matches any of the standard filter names
+        if(s == i18n("default filter name", *c))
+        {
+            n_ame = QString::fromLatin1(*c);
+            retranslated = true;
+            break;
+        }
 
-  if (!retranslated) {      // ok, we give up and store the maybe non-english string
-    n_ame = s;
-    translateName = false;  // and don't try to translate it, so a german user *can* use the original english name
-  } else
-    translateName = true;
+    if(!retranslated)         // ok, we give up and store the maybe non-english string
+    {
+        n_ame = s;
+        translateName = false;  // and don't try to translate it, so a german user *can* use the original english name
+    }
+    else
+        translateName = true;
 }
 
 
 
 bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
 {
-  bool result=true;
+    bool result = true;
 
-  if(result) result=status.doFilter(a);
-  if(result) result=score.doFilter(a->score());
-  if(result) result=lines.doFilter(a->lines()->numberOfLines());
-  if(result) result=age.doFilter(a->date()->ageInDays());
-  if(result) result=subject.doFilter(a->subject()->asUnicodeString());
-  if(result) {
-    QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
-    result=from.doFilter(tmp);
-  }
-  if(result) result=messageId.doFilter(a->messageID()->asUnicodeString());
-  if(result) result=references.doFilter(a->references()->asUnicodeString());
+    if(result) result = status.doFilter(a);
+    if(result) result = score.doFilter(a->score());
+    if(result) result = lines.doFilter(a->lines()->numberOfLines());
+    if(result) result = age.doFilter(a->date()->ageInDays());
+    if(result) result = subject.doFilter(a->subject()->asUnicodeString());
+    if(result)
+    {
+        QString tmp = (a->from()->name() + "##") + QString(a->from()->email().data());
+        result = from.doFilter(tmp);
+    }
+    if(result) result = messageId.doFilter(a->messageID()->asUnicodeString());
+    if(result) result = references.doFilter(a->references()->asUnicodeString());
 
-  a->setFilterResult(result);
-  a->setFiltered(true);
+    a->setFilterResult(result);
+    a->setFiltered(true);
 
-  return result;
+    return result;
 }
 
 
 bool KNArticleFilter::applyFilter(KNLocalArticle *a)
 {
-  bool result=true;
+    bool result = true;
 
-  if (isSearchFilter()) {
-    if(result) result=lines.doFilter(a->lines()->numberOfLines());
-    if(result) result=age.doFilter(a->date()->ageInDays());
-    if(result) result=subject.doFilter(a->subject()->asUnicodeString());
-    if(result) {
-      QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
-      result=from.doFilter(tmp);
+    if(isSearchFilter())
+    {
+        if(result) result = lines.doFilter(a->lines()->numberOfLines());
+        if(result) result = age.doFilter(a->date()->ageInDays());
+        if(result) result = subject.doFilter(a->subject()->asUnicodeString());
+        if(result)
+        {
+            QString tmp = (a->from()->name() + "##") + QString(a->from()->email().data());
+            result = from.doFilter(tmp);
+        }
+        if(result) result = messageId.doFilter(a->messageID()->asUnicodeString());
+        if(result) result = references.doFilter(a->references()->asUnicodeString());
     }
-    if(result) result=messageId.doFilter(a->messageID()->asUnicodeString());
-    if(result) result=references.doFilter(a->references()->asUnicodeString());
-  }
 
-  a->setFilterResult(result);
+    a->setFilterResult(result);
 
-  return result;
+    return result;
 }

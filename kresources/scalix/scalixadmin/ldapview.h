@@ -27,24 +27,23 @@ class LdapClient;
 class LdapObject;
 }
 
-class LdapView : public KListView
-{
-  Q_OBJECT
+class LdapView : public KListView {
+    Q_OBJECT
 
-  public:
-    LdapView( QWidget *parent = 0 );
+public:
+    LdapView(QWidget *parent = 0);
     ~LdapView();
 
     QString selectedUser() const;
 
-  public slots:
-    void setQuery( const QString &query );
+public slots:
+    void setQuery(const QString &query);
 
-  private slots:
-    void entryAdded( const KABC::LdapObject& );
-    void error( const QString& );
+private slots:
+    void entryAdded(const KABC::LdapObject &);
+    void error(const QString &);
 
-  private:
+private:
     KABC::LdapClient *mClient;
 };
 

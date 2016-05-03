@@ -40,58 +40,64 @@
 
 using namespace KMail;
 
-AntiSpamConfig * AntiSpamConfig::sSelf = 0;
+AntiSpamConfig *AntiSpamConfig::sSelf = 0;
 static KStaticDeleter<AntiSpamConfig> antispamconfig_sd;
 
-AntiSpamConfig * AntiSpamConfig::instance() {
-  if ( !sSelf ) {
-    antispamconfig_sd.setObject( sSelf, new AntiSpamConfig() );
-    sSelf->readConfig();
-  }
-  return sSelf;
+AntiSpamConfig *AntiSpamConfig::instance()
+{
+    if(!sSelf)
+    {
+        antispamconfig_sd.setObject(sSelf, new AntiSpamConfig());
+        sSelf->readConfig();
+    }
+    return sSelf;
 }
 
 void AntiSpamConfig::readConfig()
 {
-  mAgents.clear();
-  KConfig config( "kmail.antispamrc", true );
-  config.setReadDefaults( true );
-  KConfigGroup general( &config, "General" );
-  unsigned int totalTools = general.readUnsignedNumEntry( "tools", 0 );
-  for ( unsigned int i = 1; i <= totalTools; ++i ) {
-    KConfigGroup tool( &config, QString("Spamtool #%1").arg( i ) );
-    if ( tool.hasKey( "ScoreHeader" ) ) {
-      QString name      = tool.readEntry( "ScoreName" );
-      QCString header   = tool.readEntry( "ScoreHeader" ).latin1();
-      QCString type     = tool.readEntry( "ScoreType" ).latin1();
-      QString score     = tool.readEntryUntranslated( "ScoreValueRegexp" );
-      QString threshold = tool.readEntryUntranslated( "ScoreThresholdRegexp" );
-      SpamAgentTypes typeE = SpamAgentNone;
-      if ( kasciistricmp( type.data(), "bool" ) == 0 )
-	typeE = SpamAgentBool;
-      else if ( kasciistricmp( type.data(), "decimal" ) == 0 )
-	typeE = SpamAgentFloat;
-      else if ( kasciistricmp( type.data(), "percentage" ) == 0 )
-	typeE = SpamAgentFloatLarge;
-      else if ( kasciistricmp( type.data(), "adjusted" ) == 0 )
-	typeE = SpamAgentAdjustedFloat;
-      mAgents.append( SpamAgent( name, typeE, header, QRegExp( score ),
-                                 QRegExp( threshold ) ) );
+    mAgents.clear();
+    KConfig config("kmail.antispamrc", true);
+    config.setReadDefaults(true);
+    KConfigGroup general(&config, "General");
+    unsigned int totalTools = general.readUnsignedNumEntry("tools", 0);
+    for(unsigned int i = 1; i <= totalTools; ++i)
+    {
+        KConfigGroup tool(&config, QString("Spamtool #%1").arg(i));
+        if(tool.hasKey("ScoreHeader"))
+        {
+            QString name      = tool.readEntry("ScoreName");
+            QCString header   = tool.readEntry("ScoreHeader").latin1();
+            QCString type     = tool.readEntry("ScoreType").latin1();
+            QString score     = tool.readEntryUntranslated("ScoreValueRegexp");
+            QString threshold = tool.readEntryUntranslated("ScoreThresholdRegexp");
+            SpamAgentTypes typeE = SpamAgentNone;
+            if(kasciistricmp(type.data(), "bool") == 0)
+                typeE = SpamAgentBool;
+            else if(kasciistricmp(type.data(), "decimal") == 0)
+                typeE = SpamAgentFloat;
+            else if(kasciistricmp(type.data(), "percentage") == 0)
+                typeE = SpamAgentFloatLarge;
+            else if(kasciistricmp(type.data(), "adjusted") == 0)
+                typeE = SpamAgentAdjustedFloat;
+            mAgents.append(SpamAgent(name, typeE, header, QRegExp(score),
+                                     QRegExp(threshold)));
+        }
     }
-  }
 }
 
 const SpamAgents AntiSpamConfig::uniqueAgents() const
 {
     QStringList seenAgents;
     SpamAgents agents;
-    SpamAgents::ConstIterator it( mAgents.begin() );
-    SpamAgents::ConstIterator end( mAgents.end() );
-    for ( ; it != end ; ++it ) {
-        const QString agent( ( *it ).name() );
-        if ( seenAgents.find( agent ) == seenAgents.end() ) {
-            agents.append( *it );
-            seenAgents.append( agent );
+    SpamAgents::ConstIterator it(mAgents.begin());
+    SpamAgents::ConstIterator end(mAgents.end());
+    for(; it != end ; ++it)
+    {
+        const QString agent((*it).name());
+        if(seenAgents.find(agent) == seenAgents.end())
+        {
+            agents.append(*it);
+            seenAgents.append(agent);
         }
     }
     return agents;

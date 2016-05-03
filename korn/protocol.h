@@ -36,27 +36,35 @@ template< class T, class S> class QMap;
 
 #include <qstring.h>
 
-class Protocol
-{
+class Protocol {
 public:
-	Protocol() {}
-	virtual ~Protocol() {}
+    Protocol() {}
+    virtual ~Protocol() {}
 
-	virtual const Protocol* getProtocol( KConfigGroup* ) const = 0;
-	virtual KMailDrop* createMaildrop( KConfigGroup* ) const = 0;
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const = 0;
-	virtual QString configName() const { return "not specified"; }
+    virtual const Protocol *getProtocol(KConfigGroup *) const = 0;
+    virtual KMailDrop *createMaildrop(KConfigGroup *) const = 0;
+    virtual QMap< QString, QString > *createConfig(KConfigGroup *config, const QString &password) const = 0;
+    virtual QString configName() const
+    {
+        return "not specified";
+    }
 
-	virtual void configFillGroupBoxes( QStringList* ) const = 0;
-	virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const = 0;
-	virtual void readEntries( QMap< QString, QString >* ) const = 0;
-	virtual void writeEntries( QMap< QString, QString >* ) const = 0;
+    virtual void configFillGroupBoxes(QStringList *) const = 0;
+    virtual void configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *) const = 0;
+    virtual void readEntries(QMap< QString, QString > *) const = 0;
+    virtual void writeEntries(QMap< QString, QString > *) const = 0;
 
-	virtual unsigned short defaultPort( bool ) const { return 0; }
+    virtual unsigned short defaultPort(bool) const
+    {
+        return 0;
+    }
 
-	//Functions that return a derived class.
-	//This way, no explicit cast is needed
-	virtual const KIO_Protocol* getKIOProtocol() const { return 0; }
+    //Functions that return a derived class.
+    //This way, no explicit cast is needed
+    virtual const KIO_Protocol *getKIOProtocol() const
+    {
+        return 0;
+    }
 };
 
 #endif //PROTOCOL_H

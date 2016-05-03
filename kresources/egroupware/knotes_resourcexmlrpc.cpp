@@ -42,174 +42,178 @@
 using namespace KNotes;
 
 typedef KRES::PluginFactory< ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
-K_EXPORT_COMPONENT_FACTORY( knotes_xmlrpc, XMLRPCFactory )
+K_EXPORT_COMPONENT_FACTORY(knotes_xmlrpc, XMLRPCFactory)
 
 static const QString SearchNotesCommand = "infolog.boinfolog.search";
 static const QString AddNoteCommand = "infolog.boinfolog.write";
 static const QString DeleteNoteCommand = "infolog.boinfolog.delete";
 static const QString LoadNoteCategoriesCommand = "infolog.boinfolog.categories";
 
-ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
-  : ResourceNotes( config ),  mCalendar( QString::fromLatin1("UTC") ),
-    mServer( 0 )
+ResourceXMLRPC::ResourceXMLRPC(const KConfig *config)
+    : ResourceNotes(config),  mCalendar(QString::fromLatin1("UTC")),
+      mServer(0)
 {
-  init();
+    init();
 
-  mPrefs->addGroupPrefix( identifier() );
+    mPrefs->addGroupPrefix(identifier());
 
-  if ( config )
-    readConfig( config );
+    if(config)
+        readConfig(config);
 }
 
-ResourceXMLRPC::ResourceXMLRPC( )
-  : ResourceNotes( 0 ), mCalendar( QString::fromLatin1("UTC") ),
-    mServer( 0 )
+ResourceXMLRPC::ResourceXMLRPC()
+    : ResourceNotes(0), mCalendar(QString::fromLatin1("UTC")),
+      mServer(0)
 {
-  init();
+    init();
 
-  mPrefs->addGroupPrefix( identifier() );
+    mPrefs->addGroupPrefix(identifier());
 }
 
 ResourceXMLRPC::~ResourceXMLRPC()
 {
-  delete mServer;
-  mServer = 0;
+    delete mServer;
+    mServer = 0;
 
-  delete mPrefs;
-  mPrefs = 0;
+    delete mPrefs;
+    mPrefs = 0;
 
-  delete mSynchronizer;
-  mSynchronizer = 0;
+    delete mSynchronizer;
+    mSynchronizer = 0;
 }
 
 void ResourceXMLRPC::init()
 {
-  setType( "xmlrpc" );
+    setType("xmlrpc");
 
-  mPrefs = new EGroupwarePrefs;
+    mPrefs = new EGroupwarePrefs;
 
-  mSynchronizer = new Synchronizer;
+    mSynchronizer = new Synchronizer;
 }
 
-void ResourceXMLRPC::readConfig( const KConfig* )
+void ResourceXMLRPC::readConfig(const KConfig *)
 {
-  mPrefs->readConfig();
+    mPrefs->readConfig();
 }
 
-void ResourceXMLRPC::writeConfig( KConfig* config )
+void ResourceXMLRPC::writeConfig(KConfig *config)
 {
-  ResourceNotes::writeConfig( config );
+    ResourceNotes::writeConfig(config);
 
-  mPrefs->writeConfig();
+    mPrefs->writeConfig();
 }
 
 bool ResourceXMLRPC::load()
 {
-  mCalendar.close();
+    mCalendar.close();
 
-  if ( mServer )
-    delete mServer;
+    if(mServer)
+        delete mServer;
 
-  mServer = new KXMLRPC::Server( KURL(), this );
-  mServer->setUrl( KURL( mPrefs->url() ) );
-  mServer->setUserAgent( "KDE-Notes" );
+    mServer = new KXMLRPC::Server(KURL(), this);
+    mServer->setUrl(KURL(mPrefs->url()));
+    mServer->setUserAgent("KDE-Notes");
 
-  QMap<QString, QVariant> args, columns;
-  args.insert( "domain", mPrefs->domain() );
-  args.insert( "username", mPrefs->user() );
-  args.insert( "password", mPrefs->password() );
+    QMap<QString, QVariant> args, columns;
+    args.insert("domain", mPrefs->domain());
+    args.insert("username", mPrefs->user());
+    args.insert("password", mPrefs->password());
 
-  mServer->call( "system.login", QVariant( args ),
-                 this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mServer->call("system.login", QVariant(args),
+                  this, SLOT(loginFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
 
-  mSynchronizer->start();
+    mSynchronizer->start();
 
-  columns.insert( "type", "note" );
-  args.clear();
-  args.insert( "filter", "none" );
-  args.insert( "col_filter", columns );
-  args.insert( "order", "id_parent" );
+    columns.insert("type", "note");
+    args.clear();
+    args.insert("filter", "none");
+    args.insert("col_filter", columns);
+    args.insert("order", "id_parent");
 
-  mServer->call( SearchNotesCommand, args,
-                 this, SLOT( listNotesFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+    mServer->call(SearchNotesCommand, args,
+                  this, SLOT(listNotesFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)));
 
-  mSynchronizer->start();
+    mSynchronizer->start();
 
-  return true;
+    return true;
 }
 
 bool ResourceXMLRPC::save()
 {
-  mCalendar.close();
+    mCalendar.close();
 
-  return true;
+    return true;
 }
 
-bool ResourceXMLRPC::addNote( KCal::Journal *journal )
+bool ResourceXMLRPC::addNote(KCal::Journal *journal)
 {
-  QMap<QString, QVariant> args;
-  writeNote( journal, args );
+    QMap<QString, QVariant> args;
+    writeNote(journal, args);
 
-  KCal::Journal *oldJournal = mCalendar.journal( journal->uid() );
+    KCal::Journal *oldJournal = mCalendar.journal(journal->uid());
 
-  bool added = false;
-  if ( oldJournal ) {
-    if ( !oldJournal->isReadOnly() ) {
-      writeNote( journal, args );
-      args.insert( "id", mUidMap[ journal->uid() ].toInt() );
-      mServer->call( AddNoteCommand, QVariant( args ),
-                     this, SLOT( updateNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
-      mCalendar.addJournal( journal );
-      added = true;
+    bool added = false;
+    if(oldJournal)
+    {
+        if(!oldJournal->isReadOnly())
+        {
+            writeNote(journal, args);
+            args.insert("id", mUidMap[ journal->uid() ].toInt());
+            mServer->call(AddNoteCommand, QVariant(args),
+                          this, SLOT(updateNoteFinished(const QValueList<QVariant> &, const QVariant &)),
+                          this, SLOT(fault(int, const QString &, const QVariant &)));
+            mCalendar.addJournal(journal);
+            added = true;
+        }
     }
-  } else {
-    mServer->call( AddNoteCommand, QVariant( args ),
-                   this, SLOT( addNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                   this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                   QVariant( journal->uid() ) );
+    else
+    {
+        mServer->call(AddNoteCommand, QVariant(args),
+                      this, SLOT(addNoteFinished(const QValueList<QVariant> &, const QVariant &)),
+                      this, SLOT(fault(int, const QString &, const QVariant &)),
+                      QVariant(journal->uid()));
 
-    mCalendar.addJournal( journal );
-    added = true;
-  }
+        mCalendar.addJournal(journal);
+        added = true;
+    }
 
-  if ( added )
+    if(added)
+        mSynchronizer->start();
+
+    return true;
+}
+
+bool ResourceXMLRPC::deleteNote(KCal::Journal *journal)
+{
+    int id = mUidMap[ journal->uid() ].toInt();
+
+    mServer->call(DeleteNoteCommand, id,
+                  this, SLOT(deleteNoteFinished(const QValueList<QVariant> &, const QVariant &)),
+                  this, SLOT(fault(int, const QString &, const QVariant &)),
+                  QVariant(journal->uid()));
     mSynchronizer->start();
 
-  return true;
+    return true;
 }
 
-bool ResourceXMLRPC::deleteNote( KCal::Journal *journal )
-{
-  int id = mUidMap[ journal->uid() ].toInt();
-
-  mServer->call( DeleteNoteCommand, id,
-                 this, SLOT( deleteNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                 QVariant( journal->uid() ) );
-  mSynchronizer->start();
-
-  return true;
-}
-
-KCal::Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime& to )
+KCal::Alarm::List ResourceXMLRPC::alarms(const QDateTime &from, const QDateTime &to)
 {
     KCal::Alarm::List alarms;
     KCal::Journal::List notes = mCalendar.journals();
     KCal::Journal::List::ConstIterator note;
-    for ( note = notes.begin(); note != notes.end(); ++note )
+    for(note = notes.begin(); note != notes.end(); ++note)
     {
-        QDateTime preTime = from.addSecs( -1 );
+        QDateTime preTime = from.addSecs(-1);
         KCal::Alarm::List::ConstIterator it;
-        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        for(it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it)
         {
-            if ( (*it)->enabled() )
+            if((*it)->enabled())
             {
-                QDateTime dt = (*it)->nextRepetition( preTime );
-                if ( dt.isValid() && dt <= to )
-                    alarms.append( *it );
+                QDateTime dt = (*it)->nextRepetition(preTime);
+                if(dt.isValid() && dt <= to)
+                    alarms.append(*it);
             }
         }
     }
@@ -217,117 +221,122 @@ KCal::Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime
     return alarms;
 }
 
-void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
-                                    const QVariant& )
+void ResourceXMLRPC::loginFinished(const QValueList<QVariant> &variant,
+                                   const QVariant &)
 {
-  QMap<QString, QVariant> map = variant[ 0 ].toMap();
+    QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
-  KURL url = KURL( mPrefs->url() );
-  if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
+    KURL url = KURL(mPrefs->url());
+    if(map[ "GOAWAY" ].toString() == "XOXO")      // failed
+    {
+        mSessionID = mKp3 = "";
+    }
+    else
+    {
+        mSessionID = map[ "sessionid" ].toString();
+        mKp3 = map[ "kp3" ].toString();
+    }
+
+    url.setUser(mSessionID);
+    url.setPass(mKp3);
+    mServer->setUrl(url);
+
+    mSynchronizer->stop();
+}
+
+void ResourceXMLRPC::logoutFinished(const QValueList<QVariant> &variant,
+                                    const QVariant &)
+{
+    QMap<QString, QVariant> map = variant[ 0 ].toMap();
+
+    if(map[ "GOODBYE" ].toString() != "XOXO")
+        kdError() << "logout failed" << endl;
+
+    KURL url = KURL(mPrefs->url());
     mSessionID = mKp3 = "";
-  } else {
-    mSessionID = map[ "sessionid" ].toString();
-    mKp3 = map[ "kp3" ].toString();
-  }
+    url.setUser(mSessionID);
+    url.setPass(mKp3);
+    mServer->setUrl(url);
 
-  url.setUser( mSessionID );
-  url.setPass( mKp3 );
-  mServer->setUrl( url );
-
-  mSynchronizer->stop();
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
-                                     const QVariant& )
+void ResourceXMLRPC::listNotesFinished(const QValueList<QVariant> &list, const QVariant &)
 {
-  QMap<QString, QVariant> map = variant[ 0 ].toMap();
+    QMap<QString, QString>::Iterator uidIt;
+    for(uidIt = mUidMap.begin(); uidIt != mUidMap.end(); ++uidIt)
+    {
+        KCal::Journal *journal = mCalendar.journal(uidIt.key());
+        mCalendar.deleteJournal(journal);
+    }
 
-  if ( map[ "GOODBYE" ].toString() != "XOXO" )
-    kdError() << "logout failed" << endl;
+    mUidMap.clear();
 
-  KURL url = KURL( mPrefs->url() );
-  mSessionID = mKp3 = "";
-  url.setUser( mSessionID );
-  url.setPass( mKp3 );
-  mServer->setUrl( url );
+    QValueList<QVariant> noteList = list[ 0 ].toList();
+    QValueList<QVariant>::Iterator noteIt;
 
-  mSynchronizer->stop();
+    for(noteIt = noteList.begin(); noteIt != noteList.end(); ++noteIt)
+    {
+        QMap<QString, QVariant> map = (*noteIt).toMap();
+
+        KCal::Journal *journal = new KCal::Journal();
+
+        QString uid;
+        readNote(map, journal, uid);
+        mUidMap.insert(journal->uid(), uid);
+
+        mCalendar.addJournal(journal);
+        manager()->registerNote(this, journal);
+    }
+
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::listNotesFinished( const QValueList<QVariant> &list, const QVariant& )
+void ResourceXMLRPC::addNoteFinished(const QValueList<QVariant> &list, const QVariant &id)
 {
-  QMap<QString, QString>::Iterator uidIt;
-  for ( uidIt = mUidMap.begin(); uidIt != mUidMap.end(); ++uidIt ) {
-    KCal::Journal *journal = mCalendar.journal( uidIt.key() );
-    mCalendar.deleteJournal( journal );
-  }
+    int uid = list[ 0 ].toInt();
+    mUidMap.insert(id.toString(), QString::number(uid));
 
-  mUidMap.clear();
-
-  QValueList<QVariant> noteList = list[ 0 ].toList();
-  QValueList<QVariant>::Iterator noteIt;
-
-  for ( noteIt = noteList.begin(); noteIt != noteList.end(); ++noteIt ) {
-    QMap<QString, QVariant> map = (*noteIt).toMap();
-
-    KCal::Journal *journal = new KCal::Journal();
-
-    QString uid;
-    readNote( map, journal, uid );
-    mUidMap.insert( journal->uid(), uid );
-
-    mCalendar.addJournal( journal );
-    manager()->registerNote( this, journal );
-  }
-
-  mSynchronizer->stop();
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::addNoteFinished( const QValueList<QVariant> &list, const QVariant &id )
+void ResourceXMLRPC::updateNoteFinished(const QValueList<QVariant> &, const QVariant &)
 {
-  int uid = list[ 0 ].toInt();
-  mUidMap.insert( id.toString(), QString::number( uid ) );
-
-  mSynchronizer->stop();
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::updateNoteFinished( const QValueList<QVariant>&, const QVariant& )
+void ResourceXMLRPC::deleteNoteFinished(const QValueList<QVariant> &, const QVariant &id)
 {
-  mSynchronizer->stop();
+    mUidMap.erase(id.toString());
+
+    KCal::Journal *journal = mCalendar.journal(id.toString());
+    mCalendar.deleteJournal(journal);
+
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::deleteNoteFinished( const QValueList<QVariant>&, const QVariant &id )
+void ResourceXMLRPC::fault(int error, const QString &errorMsg, const QVariant &)
 {
-  mUidMap.erase( id.toString() );
-
-  KCal::Journal *journal = mCalendar.journal( id.toString() );
-  mCalendar.deleteJournal( journal );
-
-  mSynchronizer->stop();
+    kdError() << "Server send error " << error << ": " << errorMsg << endl;
+    mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::fault( int error, const QString& errorMsg, const QVariant& )
+void ResourceXMLRPC::writeNote(KCal::Journal *journal, QMap<QString, QVariant> &args)
 {
-  kdError() << "Server send error " << error << ": " << errorMsg << endl;
-  mSynchronizer->stop();
+    args.insert("subject", journal->summary());
+    args.insert("des", journal->description());
+    args.insert("access",
+                (journal->secrecy() == KCal::Journal::SecrecyPublic ? "public" : "private"));
 }
 
-void ResourceXMLRPC::writeNote( KCal::Journal* journal, QMap<QString, QVariant>& args )
+void ResourceXMLRPC::readNote(const QMap<QString, QVariant> &args, KCal::Journal *journal, QString &uid)
 {
-  args.insert( "subject", journal->summary() );
-  args.insert( "des", journal->description() );
-  args.insert( "access",
-               (journal->secrecy() == KCal::Journal::SecrecyPublic ? "public" : "private" ) );
-}
+    uid = args[ "id" ].toString();
 
-void ResourceXMLRPC::readNote( const QMap<QString, QVariant>& args, KCal::Journal *journal, QString &uid )
-{
-  uid = args[ "id" ].toString();
-
-  journal->setSummary( args[ "subject" ].toString() );
-  journal->setDescription( args[ "des" ].toString() );
-  journal->setSecrecy( args[ "access" ].toString() == "public" ?
-                       KCal::Journal::SecrecyPublic : KCal::Journal::SecrecyPrivate );
+    journal->setSummary(args[ "subject" ].toString());
+    journal->setDescription(args[ "des" ].toString());
+    journal->setSecrecy(args[ "access" ].toString() == "public" ?
+                        KCal::Journal::SecrecyPublic : KCal::Journal::SecrecyPrivate);
 }
 
 #include "knotes_resourcexmlrpc.moc"

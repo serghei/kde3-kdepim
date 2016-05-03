@@ -34,14 +34,13 @@ class XSDType;
 
 namespace KWSDL {
 
-class TypeInfo
-{
-  public:
+class TypeInfo {
+public:
     TypeInfo()
     {}
 
-    TypeInfo( const QString &_xsdType, const QString &_type, const QString &_header )
-      : xsdType( _xsdType ), type( _type ), header( _header )
+    TypeInfo(const QString &_xsdType, const QString &_type, const QString &_header)
+        : xsdType(_xsdType), type(_type), header(_header)
     {}
 
     QString xsdType;
@@ -49,32 +48,31 @@ class TypeInfo
     QString header;
 };
 
-class TypeMapper
-{
-  public:
+class TypeMapper {
+public:
     TypeMapper();
 
-    void setTypes( const Schema::Types &types );
+    void setTypes(const Schema::Types &types);
 
-    QString type( const Schema::XSDType *type ) const;
-    QString type( const Schema::Element *element ) const;
-    QString type( const Schema::Attribute *attribute ) const;
-    QString type( const QString &typeName ) const;
+    QString type(const Schema::XSDType *type) const;
+    QString type(const Schema::Element *element) const;
+    QString type(const Schema::Attribute *attribute) const;
+    QString type(const QString &typeName) const;
 
-    QStringList header( const Schema::XSDType *type ) const;
-    QStringList header( const Schema::Element *element ) const;
-    QMap<QString,QString> headerDec( const Schema::Element *element ) const;
-    QStringList header( const Schema::Attribute *attribute ) const;
-    QMap<QString,QString> headerDec( const Schema::Attribute *attribute ) const;
-    QStringList header( const QString &typeName ) const;
-    QMap<QString,QString> headerDec( const QString &typeName ) const;
+    QStringList header(const Schema::XSDType *type) const;
+    QStringList header(const Schema::Element *element) const;
+    QMap<QString, QString> headerDec(const Schema::Element *element) const;
+    QStringList header(const Schema::Attribute *attribute) const;
+    QMap<QString, QString> headerDec(const Schema::Attribute *attribute) const;
+    QStringList header(const QString &typeName) const;
+    QMap<QString, QString> headerDec(const QString &typeName) const;
 
-    QString argument( const QString &name, const Schema::Element *element ) const;
-    QString argument( const QString &name, const Schema::Attribute *attribute ) const;
-    QString argument( const QString &name, const QString &typeName, bool isList = false ) const;
+    QString argument(const QString &name, const Schema::Element *element) const;
+    QString argument(const QString &name, const Schema::Attribute *attribute) const;
+    QString argument(const QString &name, const QString &typeName, bool isList = false) const;
 
-  private:
-    bool isBaseType( const QString& ) const;
+private:
+    bool isBaseType(const QString &) const;
 
     QMap<QString, TypeInfo> mMap;
     Schema::Types mTypes;

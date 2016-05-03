@@ -45,144 +45,155 @@
 #include <kio/global.h>
 
 //-----------------------------------------------------------------------------
-KMServerTest::KMServerTest( const QString & protocol, const QString & host, int port )
-  : QObject(),
-    mProtocol( protocol ), mHost( host ),
-    mSSL( false ), mJob( 0 ), mSlave( 0 ), mConnectionErrorCount( 0 )
+KMServerTest::KMServerTest(const QString &protocol, const QString &host, int port)
+    : QObject(),
+      mProtocol(protocol), mHost(host),
+      mSSL(false), mJob(0), mSlave(0), mConnectionErrorCount(0)
 {
-  KIO::Scheduler::connect(
-    SIGNAL(slaveError(KIO::Slave *, int, const QString &)),
-    this, SLOT(slotSlaveResult(KIO::Slave *, int, const QString &)));
+    KIO::Scheduler::connect(
+        SIGNAL(slaveError(KIO::Slave *, int, const QString &)),
+        this, SLOT(slotSlaveResult(KIO::Slave *, int, const QString &)));
 
-  if ( port == 993 || port == 995 || port == 465 )
-    port = 0;
+    if(port == 993 || port == 995 || port == 465)
+        port = 0;
 
-  startOffSlave( port );
+    startOffSlave(port);
 }
 
 //-----------------------------------------------------------------------------
 KMServerTest::~KMServerTest()
 {
-  if (mJob) mJob->kill(TRUE);
+    if(mJob) mJob->kill(TRUE);
 }
 
 
-KIO::MetaData KMServerTest::slaveConfig() const {
-  KIO::MetaData md;
-  md.insert( "nologin", "on" );
-  return md;
+KIO::MetaData KMServerTest::slaveConfig() const
+{
+    KIO::MetaData md;
+    md.insert("nologin", "on");
+    return md;
 }
 
-void KMServerTest::startOffSlave( int port ) {
-  KURL url;
-  url.setProtocol( mSSL ? mProtocol + 's' : mProtocol );
-  url.setHost( mHost );
-  if ( port )
-    url.setPort( port );
+void KMServerTest::startOffSlave(int port)
+{
+    KURL url;
+    url.setProtocol(mSSL ? mProtocol + 's' : mProtocol);
+    url.setHost(mHost);
+    if(port)
+        url.setPort(port);
 
-  mSlave = KIO::Scheduler::getConnectedSlave( url, slaveConfig() );
-  if ( !mSlave ) {
-    slotSlaveResult( 0, 1 );
-    return;
-  }
-  connect( mSlave, SIGNAL(metaData(const KIO::MetaData&)),
-	   SLOT(slotMetaData(const KIO::MetaData&)) );
+    mSlave = KIO::Scheduler::getConnectedSlave(url, slaveConfig());
+    if(!mSlave)
+    {
+        slotSlaveResult(0, 1);
+        return;
+    }
+    connect(mSlave, SIGNAL(metaData(const KIO::MetaData &)),
+            SLOT(slotMetaData(const KIO::MetaData &)));
 
-  QByteArray packedArgs;
-  QDataStream stream( packedArgs, IO_WriteOnly );
+    QByteArray packedArgs;
+    QDataStream stream(packedArgs, IO_WriteOnly);
 
-  stream << (int) 'c';
+    stream << (int) 'c';
 
-  mJob = KIO::special( url, packedArgs, false );
-  KIO::Scheduler::assignJobToSlave( mSlave, mJob );
-  connect( mJob, SIGNAL(result(KIO::Job*)), SLOT(slotResult(KIO::Job*)) );
-  connect( mJob, SIGNAL(infoMessage(KIO::Job*,const QString&)),
-	   SLOT(slotData(KIO::Job*,const QString&)) );
+    mJob = KIO::special(url, packedArgs, false);
+    KIO::Scheduler::assignJobToSlave(mSlave, mJob);
+    connect(mJob, SIGNAL(result(KIO::Job *)), SLOT(slotResult(KIO::Job *)));
+    connect(mJob, SIGNAL(infoMessage(KIO::Job *, const QString &)),
+            SLOT(slotData(KIO::Job *, const QString &)));
 }
 
 
 //-----------------------------------------------------------------------------
 void KMServerTest::slotData(KIO::Job *, const QString &data)
 {
-  if ( mSSL )
-    mListSSL = QStringList::split(' ', data);
-  else
-    mListNormal = QStringList::split(' ', data);
+    if(mSSL)
+        mListSSL = QStringList::split(' ', data);
+    else
+        mListNormal = QStringList::split(' ', data);
 }
 
 
-void KMServerTest::slotMetaData( const KIO::MetaData & md ) {
-  KIO::MetaData::const_iterator it = md.find( "PLAIN AUTH METHODS" );
-  if ( it != md.end() ) {
-    mAuthNone = it.data();
-    kdDebug(5006) << "mAuthNone: " << mAuthNone << endl;
-  }
-  it = md.find( "TLS AUTH METHODS" );
-  if ( it != md.end() ) {
-    mAuthTLS = it.data();
-    kdDebug(5006) << "mAuthTLS: " << mAuthTLS << endl;
-  }
-  it = md.find( "SSL AUTH METHODS" );
-  if ( it != md.end() ) {
-    mAuthSSL = it.data();
-    kdDebug(5006) << "mAuthSSL: " << mAuthSSL << endl;
-  }
+void KMServerTest::slotMetaData(const KIO::MetaData &md)
+{
+    KIO::MetaData::const_iterator it = md.find("PLAIN AUTH METHODS");
+    if(it != md.end())
+    {
+        mAuthNone = it.data();
+        kdDebug(5006) << "mAuthNone: " << mAuthNone << endl;
+    }
+    it = md.find("TLS AUTH METHODS");
+    if(it != md.end())
+    {
+        mAuthTLS = it.data();
+        kdDebug(5006) << "mAuthTLS: " << mAuthTLS << endl;
+    }
+    it = md.find("SSL AUTH METHODS");
+    if(it != md.end())
+    {
+        mAuthSSL = it.data();
+        kdDebug(5006) << "mAuthSSL: " << mAuthSSL << endl;
+    }
 }
 
 //-----------------------------------------------------------------------------
 void KMServerTest::slotResult(KIO::Job *job)
 {
-  slotSlaveResult(mSlave, job->error());
+    slotSlaveResult(mSlave, job->error());
 }
 
 //-----------------------------------------------------------------------------
 void KMServerTest::slotSlaveResult(KIO::Slave *aSlave, int error,
-  const QString &errorText)
+                                   const QString &errorText)
 {
-  if (aSlave != mSlave) return;
-  if ( mSSL && error == 0 ) {
-    // add a dummy entry to the list of SSL capabilities so that the receiver
-    // of the capabilities signal can use mListSSL.isEmpty() in order to find
-    // out whether SSL is supported
-    mListSSL.append("SSL");
-  }
-
-  if (error != KIO::ERR_SLAVE_DIED && mSlave)
-  {
-    // disconnect slave after every connect
-    KIO::Scheduler::disconnectSlave(mSlave);
-    mSlave = 0;
-  }
-  if ( error == KIO::ERR_COULD_NOT_CONNECT )
-  {
-    // if one of the two connection tests fails we ignore the error
-    // if both fail the host is probably not correct so we display the error
-    if ( mConnectionErrorCount == 0 )
+    if(aSlave != mSlave) return;
+    if(mSSL && error == 0)
     {
-      error = 0;
+        // add a dummy entry to the list of SSL capabilities so that the receiver
+        // of the capabilities signal can use mListSSL.isEmpty() in order to find
+        // out whether SSL is supported
+        mListSSL.append("SSL");
     }
-    ++mConnectionErrorCount;
-  }
-  if ( error )
-  {
-    mJob = 0;
-    KMessageBox::error( kapp->activeWindow(),
-        KIO::buildErrorString( error, errorText ),
-        i18n("Error") );
-    emit capabilities( mListNormal, mListSSL );
-    emit capabilities( mListNormal, mListSSL, mAuthNone, mAuthSSL, mAuthTLS );
-    return;
-  }
-  if (!mSSL) {
-    mSSL = true;
-    mListNormal.append("NORMAL-CONNECTION");
-    startOffSlave();
-  } else {
-    mJob = 0;
 
-    emit capabilities( mListNormal, mListSSL );
-    emit capabilities( mListNormal, mListSSL, mAuthNone, mAuthSSL, mAuthTLS );
-  }
+    if(error != KIO::ERR_SLAVE_DIED && mSlave)
+    {
+        // disconnect slave after every connect
+        KIO::Scheduler::disconnectSlave(mSlave);
+        mSlave = 0;
+    }
+    if(error == KIO::ERR_COULD_NOT_CONNECT)
+    {
+        // if one of the two connection tests fails we ignore the error
+        // if both fail the host is probably not correct so we display the error
+        if(mConnectionErrorCount == 0)
+        {
+            error = 0;
+        }
+        ++mConnectionErrorCount;
+    }
+    if(error)
+    {
+        mJob = 0;
+        KMessageBox::error(kapp->activeWindow(),
+                           KIO::buildErrorString(error, errorText),
+                           i18n("Error"));
+        emit capabilities(mListNormal, mListSSL);
+        emit capabilities(mListNormal, mListSSL, mAuthNone, mAuthSSL, mAuthTLS);
+        return;
+    }
+    if(!mSSL)
+    {
+        mSSL = true;
+        mListNormal.append("NORMAL-CONNECTION");
+        startOffSlave();
+    }
+    else
+    {
+        mJob = 0;
+
+        emit capabilities(mListNormal, mListSSL);
+        emit capabilities(mListNormal, mListSSL, mAuthNone, mAuthSSL, mAuthTLS);
+    }
 }
 
 

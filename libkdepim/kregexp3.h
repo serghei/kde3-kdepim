@@ -42,7 +42,7 @@
     enhancements of the mighty QRegExp (Qt3 version) regular
     expression engine, namely the method replace(), which can be
     used to do search-and-replace like one is used to from perl or sed.
-    
+
     It "simply" adds the ability to define a replacement string which
     contains references to the captured substrings. The following
     constructs are understood, which can be freely mixed in the
@@ -67,7 +67,7 @@
 
     Additionally, Perl supports the syntax ${nn}
     (dollarSign-leftCurlyBrace-digits-rightCurlyBrace), where @p nn
-    can be a multi-digit number. 
+    can be a multi-digit number.
 
     In all modes, counting of captured substrings starts with 1 (one)!
     To reference the entire matched string, use $0, ${0} or \\0.
@@ -76,36 +76,35 @@
     @see QRegExp
 */
 
-class KDE_EXPORT KRegExp3 : public QRegExp
-{
+class KDE_EXPORT KRegExp3 : public QRegExp {
 public:
-  KRegExp3()
-    : QRegExp() {}
-  KRegExp3( const QString & pattern,
-	    bool caseSensitive = TRUE,
-	    bool wildcard = FALSE )
-    : QRegExp( pattern, caseSensitive, wildcard ) {}
-  KRegExp3( const QRegExp & rx )
-    : QRegExp( rx ) {}
-  KRegExp3( const KRegExp3 & rx )
-    : QRegExp( (QRegExp)rx ) {}
+    KRegExp3()
+        : QRegExp() {}
+    KRegExp3(const QString &pattern,
+             bool caseSensitive = TRUE,
+             bool wildcard = FALSE)
+        : QRegExp(pattern, caseSensitive, wildcard) {}
+    KRegExp3(const QRegExp &rx)
+        : QRegExp(rx) {}
+    KRegExp3(const KRegExp3 &rx)
+        : QRegExp((QRegExp)rx) {}
 
-  /** Replaces each matching subpattern in @p str with
-      @p replacementStr, inserting captured substrings for
-      \\n, $n and ${nn} as described in the class documentation.
-      @param str The source string.
-      @param replacementStr The string which replaces matched
-             substrings of @p str.
-      @param start Start position for the search.
-             If @p start is negative, starts @p -(start) positions
-	     from the end of @p str.
-      @param global If @p TRUE, requests to replace all occurrences
-             of the regexp with @p replacementStr; if @p FALSE,
-	     only the first occurrence will be replaced.
-	     Equivalent to the /g switch to perl's s/// operator.
-      @return The modified string.
-  */
-  QString replace( const QString & str,
-		   const QString & replacementStr,
-		   int start=0, bool global=TRUE );
+    /** Replaces each matching subpattern in @p str with
+        @p replacementStr, inserting captured substrings for
+        \\n, $n and ${nn} as described in the class documentation.
+        @param str The source string.
+        @param replacementStr The string which replaces matched
+               substrings of @p str.
+        @param start Start position for the search.
+               If @p start is negative, starts @p -(start) positions
+         from the end of @p str.
+        @param global If @p TRUE, requests to replace all occurrences
+               of the regexp with @p replacementStr; if @p FALSE,
+         only the first occurrence will be replaced.
+         Equivalent to the /g switch to perl's s/// operator.
+        @return The modified string.
+    */
+    QString replace(const QString &str,
+                    const QString &replacementStr,
+                    int start = 0, bool global = TRUE);
 };

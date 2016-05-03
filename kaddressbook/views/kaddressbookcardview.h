@@ -40,54 +40,55 @@ class AddresseeCardView;
   point in the future I think this will be the default view of
   KAddressBook.
  */
-class KAddressBookCardView : public KAddressBookView
-{
-  Q_OBJECT
+class KAddressBookCardView : public KAddressBookView {
+    Q_OBJECT
 
-  public:
-    KAddressBookCardView( KAB::Core *core, QWidget *parent,
-                          const char *name = 0 );
+public:
+    KAddressBookCardView(KAB::Core *core, QWidget *parent,
+                         const char *name = 0);
     virtual ~KAddressBookCardView();
 
     virtual QStringList selectedUids();
-    virtual QString type() const { return "Card"; }
+    virtual QString type() const
+    {
+        return "Card";
+    }
     virtual KABC::Field *sortField() const;
 
-    virtual void readConfig( KConfig *config );
-    virtual void writeConfig( KConfig *config );
+    virtual void readConfig(KConfig *config);
+    virtual void writeConfig(KConfig *config);
 
     void scrollUp();
     void scrollDown();
 
-  public slots:
-    void refresh( const QString &uid = QString() );
-    void setSelected( const QString &uid = QString(), bool selected = true );
-    virtual void setFirstSelected( bool selected = true );
+public slots:
+    void refresh(const QString &uid = QString());
+    void setSelected(const QString &uid = QString(), bool selected = true);
+    virtual void setFirstSelected(bool selected = true);
 
-  protected slots:
-    void addresseeExecuted( CardViewItem* );
+protected slots:
+    void addresseeExecuted(CardViewItem *);
     void addresseeSelected();
-    void rmbClicked( CardViewItem*, const QPoint& );
+    void rmbClicked(CardViewItem *, const QPoint &);
 
-  private:
+private:
     AddresseeCardView *mCardView;
     bool mShowEmptyFields;
 };
 
-class AddresseeCardView : public CardView
-{
-  Q_OBJECT
-  public:
-    AddresseeCardView( QWidget *parent, const char *name = 0 );
+class AddresseeCardView : public CardView {
+    Q_OBJECT
+public:
+    AddresseeCardView(QWidget *parent, const char *name = 0);
     ~AddresseeCardView();
 
-  signals:
+signals:
     void startAddresseeDrag();
-    void addresseeDropped( QDropEvent* );
+    void addresseeDropped(QDropEvent *);
 
-  protected:
-    virtual void dragEnterEvent( QDragEnterEvent* );
-    virtual void dropEvent( QDropEvent* );
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
     virtual void startDrag();
 };
 

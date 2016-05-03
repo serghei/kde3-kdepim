@@ -29,33 +29,33 @@
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "textsloxaccounts",
-                        "SUSE LINUX Openexchange Server Configuration Wizard",
-                        "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("textsloxaccounts",
+                         "SUSE LINUX Openexchange Server Configuration Wizard",
+                         "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
+    bool verbose = false;
+    if(args->isSet("verbose")) verbose = true;
 
-  QPushButton button( "Close", 0 );
+    QPushButton button("Close", 0);
 
-  SloxAccounts::setServer( "f85.suse.de" );
-  SloxAccounts::self();
-  
-  app.setMainWidget( &button );
-  button.show();
-  QObject::connect( &button, SIGNAL( clicked() ), &app, SLOT( quit() ) );
-  
-  app.exec();
+    SloxAccounts::setServer("f85.suse.de");
+    SloxAccounts::self();
+
+    app.setMainWidget(&button);
+    button.show();
+    QObject::connect(&button, SIGNAL(clicked()), &app, SLOT(quit()));
+
+    app.exec();
 }

@@ -50,78 +50,78 @@ namespace Kolab {
  * clients).
  */
 class KDE_EXPORT ResourceKolab : public ResourceNotes,
-                      public KCal::IncidenceBase::Observer,
-                      public ResourceKolabBase
-{
-  Q_OBJECT
+    public KCal::IncidenceBase::Observer,
+    public ResourceKolabBase {
+    Q_OBJECT
 
 public:
-  ResourceKolab( const KConfig* );
-  virtual ~ResourceKolab();
+    ResourceKolab(const KConfig *);
+    virtual ~ResourceKolab();
 
-  /// Load resource data.
-  bool load();
+    /// Load resource data.
+    bool load();
 
-  /// Save resource data.
-  bool save();
+    /// Save resource data.
+    bool save();
 
-  /// Open the notes resource.
-  bool doOpen();
-  /// Close the notes resource.
-  void doClose();
+    /// Open the notes resource.
+    bool doOpen();
+    /// Close the notes resource.
+    void doClose();
 
-  bool addNote( KCal::Journal* );
+    bool addNote(KCal::Journal *);
 
-  bool deleteNote( KCal::Journal* );
+    bool deleteNote(KCal::Journal *);
 
-  KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
+    KCal::Alarm::List alarms(const QDateTime &from, const QDateTime &to);
 
-  /// Reimplemented from IncidenceBase::Observer to know when a note was changed
-  void incidenceUpdated( KCal::IncidenceBase* );
+    /// Reimplemented from IncidenceBase::Observer to know when a note was changed
+    void incidenceUpdated(KCal::IncidenceBase *);
 
-  /// The ResourceKolabBase methods called by KMail
-  bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                              Q_UINT32 sernum, int format, const QString& note );
-  void fromKMailDelIncidence( const QString& type, const QString& resource,
-                              const QString& uid );
-  void fromKMailRefresh( const QString& type, const QString& resource );
+    /// The ResourceKolabBase methods called by KMail
+    bool fromKMailAddIncidence(const QString &type, const QString &resource,
+                               Q_UINT32 sernum, int format, const QString &note);
+    void fromKMailDelIncidence(const QString &type, const QString &resource,
+                               const QString &uid);
+    void fromKMailRefresh(const QString &type, const QString &resource);
 
-  /// Listen to KMail changes in the amount of sub resources
-  void fromKMailAddSubresource( const QString& type, const QString& resource,
-                                const QString& label, bool writable,
-                                bool alarmRelevant );
-  void fromKMailDelSubresource( const QString& type, const QString& resource );
+    /// Listen to KMail changes in the amount of sub resources
+    void fromKMailAddSubresource(const QString &type, const QString &resource,
+                                 const QString &label, bool writable,
+                                 bool alarmRelevant);
+    void fromKMailDelSubresource(const QString &type, const QString &resource);
 
-  void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
-                                 const QString& type,
-                                 const QString& folder );
+    void fromKMailAsyncLoadResult(const QMap<Q_UINT32, QString> &map,
+                                  const QString &type,
+                                  const QString &folder);
 
-  /** Return the list of subresources. */
-  QStringList subresources() const;
+    /** Return the list of subresources. */
+    QStringList subresources() const;
 
-  /** Is this subresource active? */
-  bool subresourceActive( const QString& ) const;
+    /** Is this subresource active? */
+    bool subresourceActive(const QString &) const;
 
 signals:
-  void signalSubresourceAdded( Resource*, const QString&, const QString& );
-  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
+    void signalSubresourceAdded(Resource *, const QString &, const QString &);
+    void signalSubresourceRemoved(Resource *, const QString &, const QString &);
 
 private:
-  bool addNote( KCal::Journal* journal, const QString& resource,
-                Q_UINT32 sernum );
-  KCal::Journal* addNote( const QString& data, const QString& subresource,
-                          Q_UINT32 sernum, const QString &mimetype );
+    bool addNote(KCal::Journal *journal, const QString &resource,
+                 Q_UINT32 sernum);
+    KCal::Journal *addNote(const QString &data, const QString &subresource,
+                           Q_UINT32 sernum, const QString &mimetype);
 
-  bool loadSubResource( const QString& resource, const QString& mimetype );
+    bool loadSubResource(const QString &resource, const QString &mimetype);
 
-  QString configFile() const {
-    return ResourceKolabBase::configFile( "knotes" );
-  }
+    QString configFile() const
+    {
+        return ResourceKolabBase::configFile("knotes");
+    }
 
-  KCal::CalendarLocal mCalendar;
+    KCal::CalendarLocal mCalendar;
 
-  // The list of subresources
-  Kolab::ResourceMap mSubResources;
+    // The list of subresources
+    Kolab::ResourceMap mSubResources;
 };
 
 }

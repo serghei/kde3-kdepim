@@ -37,81 +37,83 @@
 
 using namespace KABC;
 
-ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  QGridLayout *mainLayout = new QGridLayout( this, 7, 2, 0, KDialog::spacingHint() );
+    QGridLayout *mainLayout = new QGridLayout(this, 7, 2, 0, KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "URL:" ), this );
-  mURL = new KURLRequester( this );
+    QLabel *label = new QLabel(i18n("URL:"), this);
+    mURL = new KURLRequester(this);
 
-  mainLayout->addWidget( label, 0, 0 );
-  mainLayout->addWidget( mURL, 0, 1 );
+    mainLayout->addWidget(label, 0, 0);
+    mainLayout->addWidget(mURL, 0, 1);
 
-  label = new QLabel( i18n( "User:" ), this );
-  mUser = new KLineEdit( this );
+    label = new QLabel(i18n("User:"), this);
+    mUser = new KLineEdit(this);
 
-  mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mUser, 1, 1 );
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(mUser, 1, 1);
 
-  label = new QLabel( i18n( "Password:" ), this );
-  mPassword = new KLineEdit( this );
-  mPassword->setEchoMode( QLineEdit::Password );
+    label = new QLabel(i18n("Password:"), this);
+    mPassword = new KLineEdit(this);
+    mPassword->setEchoMode(QLineEdit::Password);
 
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mPassword, 2, 1 );
+    mainLayout->addWidget(label, 2, 0);
+    mainLayout->addWidget(mPassword, 2, 1);
 
-  QFrame *hline = new QFrame( this );
-  hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+    QFrame *hline = new QFrame(this);
+    hline->setFrameStyle(QFrame::HLine | QFrame::Sunken);
 
-  mainLayout->addMultiCellWidget( hline, 3, 3, 0, 1 );
+    mainLayout->addMultiCellWidget(hline, 3, 3, 0, 1);
 
-  mFolderConfig = new KPIM::FolderConfig( this );
-  connect( mFolderConfig, SIGNAL( updateFoldersClicked() ),
-    SLOT( updateFolders() ) );
-  mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
+    mFolderConfig = new KPIM::FolderConfig(this);
+    connect(mFolderConfig, SIGNAL(updateFoldersClicked()),
+            SLOT(updateFolders()));
+    mainLayout->addMultiCellWidget(mFolderConfig, 4, 4, 0, 1);
 }
 
-void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *res )
+void ResourceGroupwareBaseConfig::loadSettings(KRES::Resource *res)
 {
-  mResource = dynamic_cast<ResourceGroupwareBase*>( res );
-  
-  if ( !mResource ) {
-    kdDebug(5700) << "ResourceGroupwareBaseConfig::loadSettings(): cast failed" << endl;
-    return;
-  }
+    mResource = dynamic_cast<ResourceGroupwareBase *>(res);
 
-  mURL->setURL( mResource->prefs()->url() );
-  mUser->setText( mResource->prefs()->user() );
-  mPassword->setText( mResource->prefs()->password() );
+    if(!mResource)
+    {
+        kdDebug(5700) << "ResourceGroupwareBaseConfig::loadSettings(): cast failed" << endl;
+        return;
+    }
 
-  mFolderConfig->setFolderLister( mResource->folderLister() );
-  mFolderConfig->updateFolderList();
+    mURL->setURL(mResource->prefs()->url());
+    mUser->setText(mResource->prefs()->user());
+    mPassword->setText(mResource->prefs()->password());
+
+    mFolderConfig->setFolderLister(mResource->folderLister());
+    mFolderConfig->updateFolderList();
 }
 
-void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *res )
+void ResourceGroupwareBaseConfig::saveSettings(KRES::Resource *res)
 {
-  ResourceGroupwareBase *resource = dynamic_cast<ResourceGroupwareBase*>( res );
-  
-  if ( !resource ) {
-    kdDebug(5700) << "ResourceGroupwareBaseConfig::saveSettings(): cast failed" << endl;
-    return;
-  }
+    ResourceGroupwareBase *resource = dynamic_cast<ResourceGroupwareBase *>(res);
 
-  resource->prefs()->setUrl( mURL->url() );
-  resource->prefs()->setUser( mUser->text() );
-  resource->prefs()->setPassword( mPassword->text() );  
+    if(!resource)
+    {
+        kdDebug(5700) << "ResourceGroupwareBaseConfig::saveSettings(): cast failed" << endl;
+        return;
+    }
 
-  mFolderConfig->saveSettings();
+    resource->prefs()->setUrl(mURL->url());
+    resource->prefs()->setUser(mUser->text());
+    resource->prefs()->setPassword(mPassword->text());
+
+    mFolderConfig->saveSettings();
 }
 
 void ResourceGroupwareBaseConfig::updateFolders()
 {
-  KURL url = mURL->url();
-  url.setUser( mUser->text() );
-  url.setPass( mPassword->text() );
+    KURL url = mURL->url();
+    url.setUser(mUser->text());
+    url.setPass(mPassword->text());
 
-  mFolderConfig->retrieveFolderList( url );
+    mFolderConfig->retrieveFolderList(url);
 }
 
 #include "kabc_resourcegroupwarebaseconfig.moc"

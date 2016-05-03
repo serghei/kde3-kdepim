@@ -47,8 +47,8 @@ class DW_EXPORT DwAddressList : public DwFieldBody {
 public:
 
     DwAddressList();
-    DwAddressList(const DwAddressList& aList);
-    DwAddressList(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwAddressList(const DwAddressList &aList);
+    DwAddressList(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwAddressList} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -66,7 +66,7 @@ public:
 
     virtual ~DwAddressList();
 
-    const DwAddressList& operator = (const DwAddressList& aList);
+    const DwAddressList &operator = (const DwAddressList &aList);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aList}.  The parent node of the {\tt DwAddressList} object
     //. is not changed.
@@ -104,22 +104,22 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwAddressList} on the free store that has the same
     //. value as this {\tt DwAddressList} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    DwAddress* FirstAddress() const;
+    DwAddress *FirstAddress() const;
     //. Gets the first {\tt DwAddress} object in the list.
     //. Use the member function {\tt DwAddress::Next()} to iterate.
     //. Returns {\tt NULL} if the list is empty.
 
-    void Add(DwAddress* aAddr);
+    void Add(DwAddress *aAddr);
     //. Adds {\tt aAddr} to the end of the list of {\tt DwAddress} objects
     //. maintained by this {\tt DwAddressList} object.
 
-    void Remove(DwAddress* aAddr);
+    void Remove(DwAddress *aAddr);
     //. Removes {\tt aAddr} from the list of {\tt DwAddress} objects
     //. maintained by this {\tt DwAddressList} object.  The {\tt DwAddress}
     //. object is not deleted by this member function.
@@ -128,8 +128,8 @@ public:
     //. Removes and deletes all {\tt DwAddress} objects from the list
     //. maintained by this {\tt DwAddressList} object.
 
-    static DwAddressList* NewAddressList(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwAddressList *NewAddressList(const DwString &aStr,
+                                         DwMessageComponent *aParent);
     //. Creates a new {\tt DwAddressList} object on the free store.
     //. If the static data member {\tt sNewAddressList} is {\tt NULL},
     //. this member function will create a new {\tt DwAddressList}
@@ -139,26 +139,26 @@ public:
     //. {\tt DwAddressList}, and return that object.
 
     //+ Var sNewAddressList
-    static DwAddressList* (*sNewAddressList)(const DwString&,
-        DwMessageComponent*);
+    static DwAddressList *(*sNewAddressList)(const DwString &,
+            DwMessageComponent *);
     //. If {\tt sNewAddressList} is not {\tt NULL}, it is assumed to point
     //. to a user-supplied function that returns a pointer to an object
     //. from a class derived from {\tt DwAddressList}.
 
 protected:
 
-    DwAddress* mFirstAddress;
+    DwAddress *mFirstAddress;
     //. Points to first {\tt DwMailbox} object in list.
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
-    void CopyList(const DwAddress* aFirstAddr);
+    void CopyList(const DwAddress *aFirstAddr);
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -176,28 +176,47 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 
 
 class DW_EXPORT DwAddressListParser {
 public:
-    enum {
+    enum
+    {
         eAddrError,
         eAddrGroup,
         eAddrMailbox,
         eAddrNull,
         eAddrEnd
     };
-    DwAddressListParser(const DwString& aStr);
+    DwAddressListParser(const DwString &aStr);
     virtual ~DwAddressListParser();
-    const DwString& AddrString() { return mAddrString.Tokens(); }
-    int AddrType()  { return mAddrType; }
-    int IsGroup()   { return (mAddrType == eAddrGroup) ? 1 : 0; }
-    int IsMailbox() { return (mAddrType == eAddrMailbox) ? 1 : 0; }
-    int IsNull()    { return (mAddrType == eAddrNull) ? 1 : 0; }
-    int IsEnd()     { return (mAddrType == eAddrEnd) ? 1 : 0; }
+    const DwString &AddrString()
+    {
+        return mAddrString.Tokens();
+    }
+    int AddrType()
+    {
+        return mAddrType;
+    }
+    int IsGroup()
+    {
+        return (mAddrType == eAddrGroup) ? 1 : 0;
+    }
+    int IsMailbox()
+    {
+        return (mAddrType == eAddrMailbox) ? 1 : 0;
+    }
+    int IsNull()
+    {
+        return (mAddrType == eAddrNull) ? 1 : 0;
+    }
+    int IsEnd()
+    {
+        return (mAddrType == eAddrEnd) ? 1 : 0;
+    }
     int Restart();
     int operator ++ (); // prefix increment operator
 protected:
@@ -207,8 +226,8 @@ protected:
     int mAddrType;
 private:
     DwAddressListParser();
-    DwAddressListParser(const DwAddressListParser&);
-    const DwAddressListParser& operator = (const DwAddressListParser&);
+    DwAddressListParser(const DwAddressListParser &);
+    const DwAddressListParser &operator = (const DwAddressListParser &);
 };
 
 #endif

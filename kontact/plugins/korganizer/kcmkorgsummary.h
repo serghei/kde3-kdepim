@@ -29,23 +29,22 @@
 class QSpinxBox;
 class QButtonGroup;
 
-class KCMKOrgSummary : public KCModule
-{
-  Q_OBJECT
+class KCMKOrgSummary : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMKOrgSummary( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMKOrgSummary(QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
     virtual void save();
     virtual void defaults();
 
-  private slots:
+private slots:
     void modified();
-    void buttonClicked( int );
-    void customDaysChanged( int );
+    void buttonClicked(int);
+    void customDaysChanged(int);
 
-  private:
+private:
     void initGUI();
 
     QButtonGroup *mCalendarGroup;

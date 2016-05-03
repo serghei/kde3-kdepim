@@ -27,18 +27,18 @@
 
 #include "todostatemapper.h"
 
-QDataStream& operator<<( QDataStream &stream, const TodoStateMapper::TodoStateMapEntry &entry )
+QDataStream &operator<<(QDataStream &stream, const TodoStateMapper::TodoStateMapEntry &entry)
 {
-  stream << entry.uid << entry.localState << entry.remoteState;
+    stream << entry.uid << entry.localState << entry.remoteState;
 
-  return stream;
+    return stream;
 }
 
-QDataStream& operator>>( QDataStream &stream, TodoStateMapper::TodoStateMapEntry &entry )
+QDataStream &operator>>(QDataStream &stream, TodoStateMapper::TodoStateMapEntry &entry)
 {
-  stream >> entry.uid >> entry.localState >> entry.remoteState;
+    stream >> entry.uid >> entry.localState >> entry.remoteState;
 
-  return stream;
+    return stream;
 }
 
 TodoStateMapper::TodoStateMapper()
@@ -49,119 +49,122 @@ TodoStateMapper::~TodoStateMapper()
 {
 }
 
-void TodoStateMapper::setPath( const QString &path )
+void TodoStateMapper::setPath(const QString &path)
 {
-  mPath = path;
+    mPath = path;
 }
 
-void TodoStateMapper::setIdentifier( const QString &identifier )
+void TodoStateMapper::setIdentifier(const QString &identifier)
 {
-  mIdentifier = identifier;
+    mIdentifier = identifier;
 }
 
 bool TodoStateMapper::load()
 {
-  QFile file( filename() );
-  if ( !file.open( IO_ReadOnly ) ) {
-    kdError() << "Can't read uid map file '" << filename() << "'" << endl;
-    return false;
-  }
+    QFile file(filename());
+    if(!file.open(IO_ReadOnly))
+    {
+        kdError() << "Can't read uid map file '" << filename() << "'" << endl;
+        return false;
+    }
 
-  clear();
+    clear();
 
-  QDataStream stream;
-  stream.setVersion( 6 );
-  stream.setDevice( &file );
-  stream >> mTodoStateMap;
+    QDataStream stream;
+    stream.setVersion(6);
+    stream.setDevice(&file);
+    stream >> mTodoStateMap;
 
-  file.close();
+    file.close();
 
-  return true;
+    return true;
 }
 
 bool TodoStateMapper::save()
 {
-  QFile file( filename() );
-  if ( !file.open( IO_WriteOnly ) ) {
-    kdError() << "Can't write uid map file '" << filename() << "'" << endl;
-    return false;
-  }
+    QFile file(filename());
+    if(!file.open(IO_WriteOnly))
+    {
+        kdError() << "Can't write uid map file '" << filename() << "'" << endl;
+        return false;
+    }
 
-  QDataStream stream;
-  stream.setVersion( 6 );
-  stream.setDevice( &file );
-  stream << mTodoStateMap;
+    QDataStream stream;
+    stream.setVersion(6);
+    stream.setDevice(&file);
+    stream << mTodoStateMap;
 
-  file.close();
+    file.close();
 
-  return true;
+    return true;
 }
 
 void TodoStateMapper::clear()
 {
-  mTodoStateMap.clear();
+    mTodoStateMap.clear();
 }
 
-void TodoStateMapper::addTodoState( const QString &uid, int localState, const QString &remoteState )
+void TodoStateMapper::addTodoState(const QString &uid, int localState, const QString &remoteState)
 {
-  TodoStateMapEntry entry;
-  entry.uid = uid;
-  entry.localState = localState;
-  entry.remoteState = remoteState;
+    TodoStateMapEntry entry;
+    entry.uid = uid;
+    entry.localState = localState;
+    entry.remoteState = remoteState;
 
-  mTodoStateMap.insert( uid, entry );
+    mTodoStateMap.insert(uid, entry);
 }
 
-QString TodoStateMapper::remoteState( const QString &uid, int localState )
+QString TodoStateMapper::remoteState(const QString &uid, int localState)
 {
-  if ( mTodoStateMap.find( uid ) == mTodoStateMap.end() )
-    kdError() << "TodoStateMapper: no entry for " << uid << " found" << endl;
+    if(mTodoStateMap.find(uid) == mTodoStateMap.end())
+        kdError() << "TodoStateMapper: no entry for " << uid << " found" << endl;
 
-  TodoStateMapEntry entry = mTodoStateMap[ uid ];
-  if ( entry.localState == localState )
-    return entry.remoteState;
-  else
-    return toRemote( localState );
+    TodoStateMapEntry entry = mTodoStateMap[ uid ];
+    if(entry.localState == localState)
+        return entry.remoteState;
+    else
+        return toRemote(localState);
 }
 
-void TodoStateMapper::remove( const QString &uid )
+void TodoStateMapper::remove(const QString &uid)
 {
-  mTodoStateMap.remove( uid );
+    mTodoStateMap.remove(uid);
 }
 
-int TodoStateMapper::toLocal( const QString &remoteState )
+int TodoStateMapper::toLocal(const QString &remoteState)
 {
-  if ( remoteState == "offer" )
-    return 0;
-  else if ( remoteState == "ongoing" )
-    return 50;
-  else if ( remoteState == "done" || remoteState == "billed" )
-    return 100;
-  else {
-    QString number( remoteState );
-    number.replace( "%", "" );
-    return number.toInt();
-  }
+    if(remoteState == "offer")
+        return 0;
+    else if(remoteState == "ongoing")
+        return 50;
+    else if(remoteState == "done" || remoteState == "billed")
+        return 100;
+    else
+    {
+        QString number(remoteState);
+        number.replace("%", "");
+        return number.toInt();
+    }
 }
 
-QString TodoStateMapper::toRemote( int localState )
+QString TodoStateMapper::toRemote(int localState)
 {
-  if ( localState == 0 )
-    return "offer";
-  else if ( localState == 50 )
-    return "ongoing";
-  else if ( localState == 100 )
-    return "done";
-  else
-    return QString( "%1%" ).arg( localState );
+    if(localState == 0)
+        return "offer";
+    else if(localState == 50)
+        return "ongoing";
+    else if(localState == 100)
+        return "done";
+    else
+        return QString("%1%").arg(localState);
 }
 
 QString TodoStateMapper::filename()
 {
-  QString file = mPath;
-  if ( !file.endsWith( "/" ) ) file += "/";
-  file += mIdentifier;
+    QString file = mPath;
+    if(!file.endsWith("/")) file += "/";
+    file += mIdentifier;
 
-  return locateLocal( "data", file );
+    return locateLocal("data", file);
 }
 

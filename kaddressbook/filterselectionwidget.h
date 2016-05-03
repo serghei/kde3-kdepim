@@ -33,23 +33,22 @@ class KComboBox;
   horizontal line. The combo box allows the user to select the active
   filter.
  */
-class FilterSelectionWidget : public QHBox
-{
-  Q_OBJECT
+class FilterSelectionWidget : public QHBox {
+    Q_OBJECT
 
-  public:
-    FilterSelectionWidget( QWidget *parent, const char *name = 0 );
+public:
+    FilterSelectionWidget(QWidget *parent, const char *name = 0);
     ~FilterSelectionWidget();
 
-    void setItems( const QStringList &names );
+    void setItems(const QStringList &names);
 
     int currentItem() const;
-    void setCurrentItem( int index );
+    void setCurrentItem(int index);
 
-  signals:
-    void filterActivated( int );
+signals:
+    void filterActivated(int);
 
-  private:
+private:
     KComboBox *mFilterCombo;
 };
 

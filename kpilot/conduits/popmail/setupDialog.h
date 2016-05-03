@@ -37,25 +37,26 @@
 
 class PopMailWidget; // From setup-dialog.ui
 
-class PopMailWidgetConfig : public ConduitConfigBase
-{
-Q_OBJECT
+class PopMailWidgetConfig : public ConduitConfigBase {
+    Q_OBJECT
 public:
-	PopMailWidgetConfig(QWidget *, const char *);
-	virtual void load();
-	virtual void commit();
+    PopMailWidgetConfig(QWidget *, const char *);
+    virtual void load();
+    virtual void commit();
 
-	static ConduitConfigBase *create(QWidget *w, const char *n)
-		{ return new PopMailWidgetConfig(w,n); } ;
+    static ConduitConfigBase *create(QWidget *w, const char *n)
+    {
+        return new PopMailWidgetConfig(w, n);
+    } ;
 
-	// These enums must follow the order of items in the combo box
-	enum SendMode { NoSend=0, SendKMail=1 } ;
+    // These enums must follow the order of items in the combo box
+    enum SendMode { NoSend = 0, SendKMail = 1 } ;
 
 protected:
-	PopMailWidget *fConfigWidget;
+    PopMailWidget *fConfigWidget;
 
 public slots:
-	void toggleSendMode(int);
+    void toggleSendMode(int);
 } ;
 
 

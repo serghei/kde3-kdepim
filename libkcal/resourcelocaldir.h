@@ -42,19 +42,18 @@ class Incidence;
 
   This class provides a calendar stored as a file per incidence in a directory.
 */
-class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
-{
+class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached {
     Q_OBJECT
 
     friend class ResourceLocalDirConfig;
 
-  public:
-    ResourceLocalDir( const KConfig * );
-    ResourceLocalDir( const QString& fileName );
+public:
+    ResourceLocalDir(const KConfig *);
+    ResourceLocalDir(const QString &fileName);
     virtual ~ResourceLocalDir();
 
-    void readConfig( const KConfig *config );
-    void writeConfig( KConfig* config );
+    void readConfig(const KConfig *config);
+    void writeConfig(KConfig *config);
 
     KABC::Lock *lock();
 
@@ -64,31 +63,31 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
     /**
       Remove a todo from the todolist.
     */
-    bool deleteTodo( Todo * );
+    bool deleteTodo(Todo *);
 
     /**
       Remove a journal from the journallist.
     */
-    bool deleteJournal( Journal * );
+    bool deleteJournal(Journal *);
 
     void dump() const;
 
-  protected slots:
-    void reload( const QString & );
+protected slots:
+    void reload(const QString &);
 
-  protected:
+protected:
     virtual bool doOpen();
     virtual bool doLoad();
     virtual bool doSave();
-    bool doSave( Incidence * );
-    virtual bool doFileLoad( CalendarLocal &, const QString &fileName );
+    bool doSave(Incidence *);
+    virtual bool doFileLoad(CalendarLocal &, const QString &fileName);
 
-  private:
+private:
     void init();
     bool deleteIncidenceFile(Incidence *incidence);
 
     KURL mURL;
-//     ICalFormat mFormat;
+    //     ICalFormat mFormat;
 
     KDirWatch mDirWatch;
 

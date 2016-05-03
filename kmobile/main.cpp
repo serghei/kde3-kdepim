@@ -31,7 +31,7 @@ static const char version[] = "0.1";
 
 static KCmdLineOptions options[] =
 {
-    { "minimized", I18N_NOOP( "Minimize on startup to system tray" ), 0 },
+    { "minimized", I18N_NOOP("Minimize on startup to system tray"), 0 },
     KCmdLineLastOption
 };
 
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 {
     KAboutData about("kmobile", I18N_NOOP("KMobile"), version, description,
                      KAboutData::License_GPL, "(C) 2003-2005 Helge Deller", 0, 0, "deller@kde.org");
-    about.addAuthor( "Helge Deller", 0, "deller@kde.org" );
+    about.addAuthor("Helge Deller", 0, "deller@kde.org");
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions(options);
     KUniqueApplication app;
@@ -50,15 +50,15 @@ int main(int argc, char **argv)
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     // see if we are starting with session management
-    if (app.isRestored())
+    if(app.isRestored())
     {
         RESTORE(KMobile);
     }
     else
     {
         KMobile *widget = new KMobile;
-	if (!args->isSet("minimized"))
-		widget->show();
+        if(!args->isSet("minimized"))
+            widget->show();
     }
 
     return app.exec();

@@ -37,22 +37,24 @@ class CalendarViewBase;
   @short interface for korganizer main window
   @author Cornelius Schumacher
 */
-class MainWindow
-{
-  public:
-    MainWindow() : mDocument( true ) {}
+class MainWindow {
+public:
+    MainWindow() : mDocument(true) {}
     virtual ~MainWindow() {}
 
-    virtual void init( bool hasDocument ) { Q_UNUSED( hasDocument ); }
+    virtual void init(bool hasDocument)
+    {
+        Q_UNUSED(hasDocument);
+    }
 
     virtual CalendarViewBase *view() const = 0;
 
     /** Load calendar file from URL. Merge into current calendar, if \a merge is true. */
-    virtual bool openURL( const KURL &url, bool merge = false ) = 0;
+    virtual bool openURL(const KURL &url, bool merge = false) = 0;
     /** Save calendar file to URL of current calendar */
     virtual bool saveURL() = 0;
     /** Save calendar file to URL */
-    virtual bool saveAsURL( const KURL &kurl ) = 0;
+    virtual bool saveAsURL(const KURL &kurl) = 0;
 
     /** Get current URL */
     virtual KURL getCurrentURL() const = 0;
@@ -80,17 +82,23 @@ class MainWindow
     /**
       Show status mesage in status bar.
     */
-    virtual void showStatusMessage( const QString &message ) = 0;
+    virtual void showStatusMessage(const QString &message) = 0;
 
     /**
       Set window title.
     */
     virtual void setTitle() = 0;
 
-    void setHasDocument( bool d ) { mDocument = d; } 
-    bool hasDocument() const { return mDocument; }
+    void setHasDocument(bool d)
+    {
+        mDocument = d;
+    }
+    bool hasDocument() const
+    {
+        return mDocument;
+    }
 
-  private:
+private:
     bool mDocument;
 };
 

@@ -41,35 +41,35 @@
 
 namespace KMail {
 
-FolderRequester::FolderRequester( QWidget *parent, KMFolderTree *tree )
-  : QWidget( parent ), mFolder( 0 ), mFolderTree( tree ),
-    mMustBeReadWrite( true ), mShowOutbox( true ), mShowImapFolders( true )
+FolderRequester::FolderRequester(QWidget *parent, KMFolderTree *tree)
+    : QWidget(parent), mFolder(0), mFolderTree(tree),
+      mMustBeReadWrite(true), mShowOutbox(true), mShowImapFolders(true)
 {
-  QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
-  hlay->setAutoAdd( true );
+    QHBoxLayout *hlay = new QHBoxLayout(this, 0, KDialog::spacingHint());
+    hlay->setAutoAdd(true);
 
-  edit = new KLineEdit( this );
-  edit->setReadOnly( true );
+    edit = new KLineEdit(this);
+    edit->setReadOnly(true);
 
-  QToolButton* button = new QToolButton( this );
-  button->setIconSet( KGlobal::iconLoader()->loadIconSet( "folder", KIcon::Small, 0 ) );
-  connect( button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()) );
+    QToolButton *button = new QToolButton(this);
+    button->setIconSet(KGlobal::iconLoader()->loadIconSet("folder", KIcon::Small, 0));
+    connect(button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()));
 
-  setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
-        QSizePolicy::Fixed ) );
-  setFocusPolicy( QWidget::StrongFocus );
+    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
+                              QSizePolicy::Fixed));
+    setFocusPolicy(QWidget::StrongFocus);
 }
 
 //-----------------------------------------------------------------------------
 void FolderRequester::slotOpenDialog()
 {
-  KMFolderSelDlg dlg( this, mFolderTree, i18n("Select Folder"),
-      mMustBeReadWrite, false );
-  dlg.setFlags( mMustBeReadWrite, mShowOutbox, mShowImapFolders );
-  dlg.setFolder( mFolder );
+    KMFolderSelDlg dlg(this, mFolderTree, i18n("Select Folder"),
+                       mMustBeReadWrite, false);
+    dlg.setFlags(mMustBeReadWrite, mShowOutbox, mShowImapFolders);
+    dlg.setFolder(mFolder);
 
-  if (!dlg.exec()) return;
-  setFolder( dlg.folder() );
+    if(!dlg.exec()) return;
+    setFolder(dlg.folder());
 }
 
 //-----------------------------------------------------------------------------
@@ -78,48 +78,55 @@ FolderRequester::~FolderRequester()
 }
 
 //-----------------------------------------------------------------------------
-KMFolder * FolderRequester::folder( void ) const
+KMFolder *FolderRequester::folder(void) const
 {
-  return mFolder;
+    return mFolder;
 }
 
 //-----------------------------------------------------------------------------
-void FolderRequester::setFolder( KMFolder *folder )
+void FolderRequester::setFolder(KMFolder *folder)
 {
-  mFolder = folder;
-  if ( mFolder ) {
-    edit->setText( mFolder->prettyURL() );
-    mFolderId = mFolder->idString();
-  }
-  else if ( !mMustBeReadWrite ) // the Local Folders root node was selected
-    edit->setText( i18n("Local Folders") );
-  emit folderChanged( folder );
-}
-
-//-----------------------------------------------------------------------------
-void FolderRequester::setFolder( const QString &idString )
-{
-  KMFolder *folder = kmkernel->findFolderById( idString );
-  if ( folder ) {
-    setFolder( folder );
-  } else {
-    if ( !idString.isEmpty() ) {
-      edit->setText( i18n( "Unknown folder '%1'" ).arg( idString ) );
-    } else {
-      edit->setText( i18n( "Please select a folder" ) );
+    mFolder = folder;
+    if(mFolder)
+    {
+        edit->setText(mFolder->prettyURL());
+        mFolderId = mFolder->idString();
     }
-    mFolder = 0;
-  }
-  mFolderId = idString;
+    else if(!mMustBeReadWrite)    // the Local Folders root node was selected
+        edit->setText(i18n("Local Folders"));
+    emit folderChanged(folder);
 }
 
 //-----------------------------------------------------------------------------
-void FolderRequester::keyPressEvent( QKeyEvent * e )
+void FolderRequester::setFolder(const QString &idString)
 {
-  if ( e->key() == Qt::Key_Space )
-    slotOpenDialog();
-  else
-    e->ignore();
+    KMFolder *folder = kmkernel->findFolderById(idString);
+    if(folder)
+    {
+        setFolder(folder);
+    }
+    else
+    {
+        if(!idString.isEmpty())
+        {
+            edit->setText(i18n("Unknown folder '%1'").arg(idString));
+        }
+        else
+        {
+            edit->setText(i18n("Please select a folder"));
+        }
+        mFolder = 0;
+    }
+    mFolderId = idString;
+}
+
+//-----------------------------------------------------------------------------
+void FolderRequester::keyPressEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Space)
+        slotOpenDialog();
+    else
+        e->ignore();
 }
 
 } // namespace KMail

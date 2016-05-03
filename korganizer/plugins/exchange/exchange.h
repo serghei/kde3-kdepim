@@ -35,33 +35,33 @@ using namespace KCal;
 
 class Exchange : public KOrg::Part {
     Q_OBJECT
-  public:
-    Exchange( KOrg::MainWindow *, const char *name );
+public:
+    Exchange(KOrg::MainWindow *, const char *name);
     ~Exchange();
 
     QString info();
     // This method is used for the category of the key bindings
     QString shortInfo();
 
-  signals:
-    void enableIncidenceActions( bool );
+signals:
+    void enableIncidenceActions(bool);
     void calendarChanged();
-    void calendarChanged(const QDate&start,const QDate&end);
+    void calendarChanged(const QDate &start, const QDate &end);
 
-  private slots:
+private slots:
     void download();
     void upload();
     void remove();
     void configure();
     void test();
-    void slotIncidenceSelected( Incidence * );
+    void slotIncidenceSelected(Incidence *);
 
-  private:
+private:
     void test2();
-    void showError( int error, const QString& moreInfo = QString::null );
+    void showError(int error, const QString &moreInfo = QString::null);
 
     KPIM::ExchangeClient *mClient;
-    KPIM::ExchangeAccount* mAccount;
+    KPIM::ExchangeAccount *mAccount;
 };
 
 #endif

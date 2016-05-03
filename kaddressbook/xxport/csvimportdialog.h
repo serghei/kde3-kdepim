@@ -38,35 +38,34 @@ class QPushButton;
 class QRadioButton;
 class QTable;
 
-class CSVImportDialog : public KDialogBase
-{
-  Q_OBJECT
+class CSVImportDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
-                     const char *name = 0 );
+public:
+    CSVImportDialog(KABC::AddressBook *ab, QWidget *parent,
+                    const char *name = 0);
     ~CSVImportDialog();
 
     KABC::AddresseeList contacts() const;
 
-  protected slots:
+protected slots:
     virtual void slotOk();
 
-  private slots:
+private slots:
     void returnPressed();
-    void delimiterClicked( int id );
-    void lineSelected( const QString& line );
-    void textquoteSelected( const QString& mark );
-    void textChanged ( const QString & );
-    void ignoreDuplicatesChanged( int );
-    void setFile( const QString& );
-    void urlChanged( const QString& );
+    void delimiterClicked(int id);
+    void lineSelected(const QString &line);
+    void textquoteSelected(const QString &mark);
+    void textChanged(const QString &);
+    void ignoreDuplicatesChanged(int);
+    void setFile(const QString &);
+    void urlChanged(const QString &);
     void codecChanged();
 
     void applyTemplate();
     void saveTemplate();
 
-  private:
+private:
     enum { Undefined, FormattedName, FamilyName, GivenName, AdditionalName,
            Prefix, Suffix, NickName, Birthday,
            HomeAddressStreet, HomeAddressLocality, HomeAddressRegion,
@@ -78,32 +77,32 @@ class CSVImportDialog : public KDialogBase
            Isdn, Pager, Email, Mailer, Title, Role, Organization, Note, URL
          };
 
-    QTable* mTable;
-    QButtonGroup* mDelimiterBox;
-    QRadioButton* mRadioComma;
-    QRadioButton* mRadioSemicolon;
-    QRadioButton* mRadioTab;
-    QRadioButton* mRadioSpace;
-    QRadioButton* mRadioOther;
-    QLineEdit* mDelimiterEdit;
-    QLineEdit* mDatePatternEdit;
-    QComboBox* mComboLine;
-    QComboBox* mComboQuote;
-    QCheckBox* mIgnoreDuplicates;
-    QComboBox* mCodecCombo;
-    QWidget* mPage;
-    KURLRequester* mUrlRequester;
+    QTable *mTable;
+    QButtonGroup *mDelimiterBox;
+    QRadioButton *mRadioComma;
+    QRadioButton *mRadioSemicolon;
+    QRadioButton *mRadioTab;
+    QRadioButton *mRadioSpace;
+    QRadioButton *mRadioOther;
+    QLineEdit *mDelimiterEdit;
+    QLineEdit *mDatePatternEdit;
+    QComboBox *mComboLine;
+    QComboBox *mComboQuote;
+    QCheckBox *mIgnoreDuplicates;
+    QComboBox *mCodecCombo;
+    QWidget *mPage;
+    KURLRequester *mUrlRequester;
 
     void initGUI();
     void fillTable();
     void clearTable();
     void fillComboBox();
-    void setText( int row, int col, const QString& text );
-    void adjustRows( int rows );
+    void setText(int row, int col, const QString &text);
+    void adjustRows(int rows);
     void resizeColumns();
-    QString getText( int row, int col );
-    uint posToType( int pos ) const;
-    int typeToPos( uint type ) const;
+    QString getText(int row, int col);
+    uint posToType(int pos) const;
+    int typeToPos(uint type) const;
 
     void reloadCodecs();
     QTextCodec *currentCodec();

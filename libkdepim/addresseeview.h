@@ -40,18 +40,17 @@ class QPopupMenu;
 namespace KPIM {
 
 
-class KDE_EXPORT AddresseeView : public KTextBrowser
-{
-  Q_OBJECT
-  public:
+class KDE_EXPORT AddresseeView : public KTextBrowser {
+    Q_OBJECT
+public:
     /**
       Constructor.
- 
+
       @param config The config object where the settings are stored
                     which fields will be shown.
      */
-    AddresseeView( QWidget *parent = 0, const char *name = 0,
-                   KConfig *config = 0 );
+    AddresseeView(QWidget *parent = 0, const char *name = 0,
+                  KConfig *config = 0);
 
     ~AddresseeView();
 
@@ -60,7 +59,7 @@ class KDE_EXPORT AddresseeView : public KTextBrowser
 
       @param addr The addressee object.
      */
-    void setAddressee( const KABC::Addressee& addr );
+    void setAddressee(const KABC::Addressee &addr);
 
     /**
       Returns the current addressee object.
@@ -72,36 +71,38 @@ class KDE_EXPORT AddresseeView : public KTextBrowser
       This enums are used by enableLinks to set which kind of links shall
       be enabled.
      */
-    enum LinkMask {
-      NoLinks = 0,
-      AddressLinks = 1,
-      EmailLinks = 2,
-      PhoneLinks = 4,
-      URLLinks = 8,
-      IMLinks = 16,
-      DefaultLinks = AddressLinks | EmailLinks | PhoneLinks | URLLinks | IMLinks
+    enum LinkMask
+    {
+        NoLinks = 0,
+        AddressLinks = 1,
+        EmailLinks = 2,
+        PhoneLinks = 4,
+        URLLinks = 8,
+        IMLinks = 16,
+        DefaultLinks = AddressLinks | EmailLinks | PhoneLinks | URLLinks | IMLinks
     };
 
     /**
       Sets which parts of the contact shall be presented as links.
       The mask can be OR'ed LinkMask. By default all links are enabled.
      */
-    void enableLinks( int linkMask );
+    void enableLinks(int linkMask);
 
     /**
       This enums are used by vCardAsHTML to decide which fields shall be
       shown.
      */
-    enum FieldMask {
-      NoFields = 0,
-      BirthdayFields = 1,
-      AddressFields = 2,
-      EmailFields = 4,
-      PhoneFields = 8,
-      URLFields = 16,
-      IMFields = 32,
-      CustomFields = 64,
-      DefaultFields = AddressFields | EmailFields | PhoneFields | URLFields
+    enum FieldMask
+    {
+        NoFields = 0,
+        BirthdayFields = 1,
+        AddressFields = 2,
+        EmailFields = 4,
+        PhoneFields = 8,
+        URLFields = 16,
+        IMFields = 32,
+        CustomFields = 64,
+        DefaultFields = AddressFields | EmailFields | PhoneFields | URLFields
     };
 
     /**
@@ -127,55 +128,55 @@ class KDE_EXPORT AddresseeView : public KTextBrowser
       @param fieldMask The mask for which fields of the contact will
                        be displayed.
      */
-    static QString vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *proxy, LinkMask linkMask = DefaultLinks,
-                                bool internalLoading = true, FieldMask fieldMask = DefaultFields );
+    static QString vCardAsHTML(const KABC::Addressee &addr, ::KIMProxy *proxy, LinkMask linkMask = DefaultLinks,
+                               bool internalLoading = true, FieldMask fieldMask = DefaultFields);
 
     /**
      * Encodes a QPixmap as a PNG into a data: URL (rfc2397), readable by the data kio protocol
      * @param pixmap the pixmap to encode
      * @return a data: URL
      */
-    static QString pixmapAsDataUrl( const QPixmap& pixmap );
+    static QString pixmapAsDataUrl(const QPixmap &pixmap);
 
-  signals:
-    void urlHighlighted( const QString &url );
-    void emailHighlighted( const QString &email );
-    void phoneNumberHighlighted( const QString &number );
-    void faxNumberHighlighted( const QString &number );
+signals:
+    void urlHighlighted(const QString &url);
+    void emailHighlighted(const QString &email);
+    void phoneNumberHighlighted(const QString &number);
+    void faxNumberHighlighted(const QString &number);
 
-    void highlightedMessage( const QString &message );
+    void highlightedMessage(const QString &message);
 
-    void addressClicked( const QString &uid );
+    void addressClicked(const QString &uid);
 
-  protected:
-    virtual void urlClicked( const QString &url );
-    virtual void emailClicked( const QString &mail );
-    virtual void phoneNumberClicked( const QString &number );
-    virtual void smsTextClicked( const QString &number );
-    virtual void sendSMS( const QString &number, const QString &msg );
-    virtual void faxNumberClicked( const QString &number );
+protected:
+    virtual void urlClicked(const QString &url);
+    virtual void emailClicked(const QString &mail);
+    virtual void phoneNumberClicked(const QString &number);
+    virtual void smsTextClicked(const QString &number);
+    virtual void sendSMS(const QString &number, const QString &msg);
+    virtual void faxNumberClicked(const QString &number);
     virtual void imAddressClicked();
 
-    virtual QPopupMenu *createPopupMenu( const QPoint& );
+    virtual QPopupMenu *createPopupMenu(const QPoint &);
 
-  private slots:
-    void slotMailClicked( const QString&, const QString& );
-    void slotUrlClicked( const QString& );
-    void slotHighlighted( const QString& );
-    void slotPresenceChanged( const QString & );
+private slots:
+    void slotMailClicked(const QString &, const QString &);
+    void slotUrlClicked(const QString &);
+    void slotHighlighted(const QString &);
+    void slotPresenceChanged(const QString &);
     void slotPresenceInfoExpired();
     void configChanged();
 
-    void data( KIO::Job*, const QByteArray& );
-    void result( KIO::Job* );
+    void data(KIO::Job *, const QByteArray &);
+    void result(KIO::Job *);
 
-  private:
+private:
     void load();
     void save();
 
     void updateView();
 
-    QString strippedNumber( const QString &number );
+    QString strippedNumber(const QString &number);
 
     KConfig *mConfig;
     bool mDefaultConfig;

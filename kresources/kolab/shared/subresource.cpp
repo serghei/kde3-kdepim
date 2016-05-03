@@ -34,18 +34,18 @@
 
 using namespace Kolab;
 
-SubResource::SubResource( bool active, bool writable, 
-                          bool alarmRelevant, const QString& label,
-                          int completionWeight )
-  : mActive( active ),  mWritable( writable ), mAlarmRelevant( alarmRelevant ),
-    mLabel( label ), mCompletionWeight( completionWeight )
+SubResource::SubResource(bool active, bool writable,
+                         bool alarmRelevant, const QString &label,
+                         int completionWeight)
+    : mActive(active),  mWritable(writable), mAlarmRelevant(alarmRelevant),
+      mLabel(label), mCompletionWeight(completionWeight)
 {
 }
 
-SubResource::SubResource( bool active, bool writable, 
-                          const QString& label, int completionWeight )
-  : mActive( active ),  mWritable( writable ), mAlarmRelevant( false ),
-    mLabel( label ), mCompletionWeight( completionWeight )
+SubResource::SubResource(bool active, bool writable,
+                         const QString &label, int completionWeight)
+    : mActive(active),  mWritable(writable), mAlarmRelevant(false),
+      mLabel(label), mCompletionWeight(completionWeight)
 {
 }
 
@@ -53,58 +53,58 @@ SubResource::~SubResource()
 {
 }
 
-void SubResource::setActive( bool active )
+void SubResource::setActive(bool active)
 {
-  mActive = active;
+    mActive = active;
 }
 
 bool SubResource::active() const
 {
-  return mActive;
+    return mActive;
 }
 
-void SubResource::setAlarmRelevant( bool active )
+void SubResource::setAlarmRelevant(bool active)
 {
-  mAlarmRelevant = active;
+    mAlarmRelevant = active;
 }
 
 bool SubResource::alarmRelevant() const
 {
-  return mAlarmRelevant;
+    return mAlarmRelevant;
 }
 
-void SubResource::setWritable( bool writable )
+void SubResource::setWritable(bool writable)
 {
-  mWritable = writable;
+    mWritable = writable;
 }
 
 bool SubResource::writable() const
 {
-  return mWritable;
+    return mWritable;
 }
 
-void SubResource::setLabel( const QString& label )
+void SubResource::setLabel(const QString &label)
 {
-  mLabel = label;
+    mLabel = label;
 }
 
 QString SubResource::label() const
 {
-  return mLabel;
+    return mLabel;
 }
 
-void SubResource::setCompletionWeight( int completionWeight )
+void SubResource::setCompletionWeight(int completionWeight)
 {
-  mCompletionWeight = completionWeight;
+    mCompletionWeight = completionWeight;
 }
 
 int SubResource::completionWeight() const
 {
-  return mCompletionWeight;
+    return mCompletionWeight;
 }
 
-StorageReference::StorageReference( const QString& resource, Q_UINT32 sernum )
-  : mResource( resource ), mSerialNumber( sernum )
+StorageReference::StorageReference(const QString &resource, Q_UINT32 sernum)
+    : mResource(resource), mSerialNumber(sernum)
 {
 }
 
@@ -112,22 +112,22 @@ StorageReference::~StorageReference()
 {
 }
 
-void StorageReference::setResource( const QString& resource )
+void StorageReference::setResource(const QString &resource)
 {
-  mResource = resource;
+    mResource = resource;
 }
 
 QString StorageReference::resource() const
 {
-  return mResource;
+    return mResource;
 }
 
-void StorageReference::setSerialNumber( Q_UINT32 serialNumber )
+void StorageReference::setSerialNumber(Q_UINT32 serialNumber)
 {
-  mSerialNumber = serialNumber;
+    mSerialNumber = serialNumber;
 }
 
 Q_UINT32 StorageReference::serialNumber() const
 {
-  return mSerialNumber;
+    return mSerialNumber;
 }

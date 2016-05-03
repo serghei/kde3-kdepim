@@ -34,13 +34,12 @@
 class VCalWidget;
 class VCalConduitSettings;
 
-class VCalWidgetSetup : public VCalWidgetSetupBase
-{
+class VCalWidgetSetup : public VCalWidgetSetupBase {
 public:
-	VCalWidgetSetup(QWidget *, const char *);
-	static ConduitConfigBase *create(QWidget *, const char *);
+    VCalWidgetSetup(QWidget *, const char *);
+    static ConduitConfigBase *create(QWidget *, const char *);
 protected:
-	virtual VCalConduitSettings*config();
+    virtual VCalConduitSettings *config();
 } ;
 
 #endif

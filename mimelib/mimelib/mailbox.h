@@ -82,8 +82,8 @@ class DW_EXPORT DwMailbox : public DwAddress {
 public:
 
     DwMailbox();
-    DwMailbox(const DwMailbox& aMailbox);
-    DwMailbox(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMailbox(const DwMailbox &aMailbox);
+    DwMailbox(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMailbox} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -101,7 +101,7 @@ public:
 
     virtual ~DwMailbox();
 
-    const DwMailbox& operator = (const DwMailbox& aMailbox);
+    const DwMailbox &operator = (const DwMailbox &aMailbox);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aMailbox}.  The parent node of the {\tt DwMailbox} object
     //. is not changed.
@@ -134,39 +134,39 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwMailbox} on the free store that has the same
     //. value as this {\tt DwMailbox} object.  The basic idea is that of
     //. a virtual copy constructor.
 
-    const DwString& FullName() const;
+    const DwString &FullName() const;
     //. Returns the full name for this {\tt DwMailbox} object.
 
-    void SetFullName(const DwString& aFullName);
+    void SetFullName(const DwString &aFullName);
     //. Sets the full name for this {\tt DwMailbox} object.
 
 
-    const DwString& Route() const;
+    const DwString &Route() const;
     //. Returns the route for this {\tt DwMailbox} object.
 
-    void SetRoute(const DwString& aRoute);
+    void SetRoute(const DwString &aRoute);
     //. Sets the route for this {\tt DwMailbox} object.
 
-    const DwString& LocalPart() const;
+    const DwString &LocalPart() const;
     //. Returns the local-part for this {\tt DwMailbox} object.
 
-    void SetLocalPart(const DwString& aLocalPart);
+    void SetLocalPart(const DwString &aLocalPart);
     //. Sets the local-part for this {\tt DwMailbox} object.
 
-    const DwString& Domain() const;
+    const DwString &Domain() const;
     //. Returns the domain for this {\tt DwMailbox} object.
 
-    void SetDomain(const DwString& aDomain);
+    void SetDomain(const DwString &aDomain);
     //. Sets the domain for this {\tt DwMailbox} object.
 
-    static DwMailbox* NewMailbox(const DwString& aStr, DwMessageComponent*
-        aParent);
+    static DwMailbox *NewMailbox(const DwString &aStr, DwMessageComponent *
+                                 aParent);
     //. Creates a new {\tt DwMailbox} object on the free store.
     //. If the static data member {\tt sNewMailbox} is {\tt NULL},
     //. this member function will create a new {\tt DwMailbox}
@@ -176,7 +176,7 @@ public:
     //. {\tt DwMailbox}, and return that object.
 
     //+ Var sNewMailbox
-    static DwMailbox* (*sNewMailbox)(const DwString&, DwMessageComponent*);
+    static DwMailbox *(*sNewMailbox)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewMailbox} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived
     //. from {\tt DwMailbox}.
@@ -187,11 +187,11 @@ private:
     DwString  mRoute;
     DwString  mLocalPart;
     DwString  mDomain;
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -209,7 +209,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

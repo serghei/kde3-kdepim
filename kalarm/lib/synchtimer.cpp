@@ -31,58 +31,58 @@
 
 SynchTimer::SynchTimer()
 {
-	mTimer = new QTimer(this, "mTimer");
+    mTimer = new QTimer(this, "mTimer");
 }
 
 SynchTimer::~SynchTimer()
 {
-	delete mTimer;
-	mTimer = 0;
+    delete mTimer;
+    mTimer = 0;
 }
 
 /******************************************************************************
 * Connect to the timer. The timer is started if necessary.
 */
-void SynchTimer::connecT(QObject* receiver, const char* member)
+void SynchTimer::connecT(QObject *receiver, const char *member)
 {
-	Connection connection(receiver, member);
-	if (mConnections.find(connection) != mConnections.end())
-		return;           // the slot is already connected, so ignore request
-	connect(mTimer, SIGNAL(timeout()), receiver, member);
-	mConnections.append(connection);
-	if (!mTimer->isActive())
-	{
-		connect(mTimer, SIGNAL(timeout()), this, SLOT(slotTimer()));
-		start();
-	}
+    Connection connection(receiver, member);
+    if(mConnections.find(connection) != mConnections.end())
+        return;           // the slot is already connected, so ignore request
+    connect(mTimer, SIGNAL(timeout()), receiver, member);
+    mConnections.append(connection);
+    if(!mTimer->isActive())
+    {
+        connect(mTimer, SIGNAL(timeout()), this, SLOT(slotTimer()));
+        start();
+    }
 }
 
 /******************************************************************************
 * Disconnect from the timer. The timer is stopped if no longer needed.
 */
-void SynchTimer::disconnecT(QObject* receiver, const char* member)
+void SynchTimer::disconnecT(QObject *receiver, const char *member)
 {
-	if (mTimer)
-	{
-		mTimer->disconnect(receiver, member);
-		if (member)
-			mConnections.remove(Connection(receiver, member));
-		else
-		{
-			for (QValueList<Connection>::Iterator it = mConnections.begin();  it != mConnections.end();  )
-			{
-				if ((*it).receiver == receiver)
-					it = mConnections.remove(it);
-				else
-					++it;
-			}
-		}
-		if (mConnections.isEmpty())
-		{
-			mTimer->disconnect();
-			mTimer->stop();
-		}
-	}
+    if(mTimer)
+    {
+        mTimer->disconnect(receiver, member);
+        if(member)
+            mConnections.remove(Connection(receiver, member));
+        else
+        {
+            for(QValueList<Connection>::Iterator it = mConnections.begin();  it != mConnections.end();)
+            {
+                if((*it).receiver == receiver)
+                    it = mConnections.remove(it);
+                else
+                    ++it;
+            }
+        }
+        if(mConnections.isEmpty())
+        {
+            mTimer->disconnect();
+            mTimer->stop();
+        }
+    }
 }
 
 
@@ -91,13 +91,13 @@ void SynchTimer::disconnecT(QObject* receiver, const char* member)
 =  Application-wide timer synchronised to the minute boundary.
 =============================================================================*/
 
-MinuteTimer* MinuteTimer::mInstance = 0;
+MinuteTimer *MinuteTimer::mInstance = 0;
 
-MinuteTimer* MinuteTimer::instance()
+MinuteTimer *MinuteTimer::instance()
 {
-	if (!mInstance)
-		mInstance = new MinuteTimer;
-	return mInstance;
+    if(!mInstance)
+        mInstance = new MinuteTimer;
+    return mInstance;
 }
 
 /******************************************************************************
@@ -108,9 +108,9 @@ MinuteTimer* MinuteTimer::instance()
 */
 void MinuteTimer::slotTimer()
 {
-	kdDebug(5950) << "MinuteTimer::slotTimer()" << endl;
-	int interval = 62 - QTime::currentTime().second();
-	mTimer->start(interval * 1000, true);     // execute a single shot
+    kdDebug(5950) << "MinuteTimer::slotTimer()" << endl;
+    int interval = 62 - QTime::currentTime().second();
+    mTimer->start(interval * 1000, true);     // execute a single shot
 }
 
 
@@ -119,73 +119,73 @@ void MinuteTimer::slotTimer()
 =  Application-wide timer synchronised to midnight.
 =============================================================================*/
 
-QValueList<DailyTimer*> DailyTimer::mFixedTimers;
+QValueList<DailyTimer *> DailyTimer::mFixedTimers;
 
-DailyTimer::DailyTimer(const QTime& timeOfDay, bool fixed)
-	: mTime(timeOfDay),
-	  mFixed(fixed)
+DailyTimer::DailyTimer(const QTime &timeOfDay, bool fixed)
+    : mTime(timeOfDay),
+      mFixed(fixed)
 {
-	if (fixed)
-		mFixedTimers.append(this);
+    if(fixed)
+        mFixedTimers.append(this);
 }
 
 DailyTimer::~DailyTimer()
 {
-	if (mFixed)
-		mFixedTimers.remove(this);
+    if(mFixed)
+        mFixedTimers.remove(this);
 }
 
-DailyTimer* DailyTimer::fixedInstance(const QTime& timeOfDay, bool create)
+DailyTimer *DailyTimer::fixedInstance(const QTime &timeOfDay, bool create)
 {
-	for (QValueList<DailyTimer*>::Iterator it = mFixedTimers.begin();  it != mFixedTimers.end();  ++it)
-		if ((*it)->mTime == timeOfDay)
-			return *it;
-	return create ? new DailyTimer(timeOfDay, true) : 0;
+    for(QValueList<DailyTimer *>::Iterator it = mFixedTimers.begin();  it != mFixedTimers.end();  ++it)
+        if((*it)->mTime == timeOfDay)
+            return *it;
+    return create ? new DailyTimer(timeOfDay, true) : 0;
 }
 
 /******************************************************************************
 * Disconnect from the timer signal which triggers at the given fixed time of day.
 * If there are no remaining connections to that timer, it is destroyed.
 */
-void DailyTimer::disconnect(const QTime& timeOfDay, QObject* receiver, const char* member)
+void DailyTimer::disconnect(const QTime &timeOfDay, QObject *receiver, const char *member)
 {
-	DailyTimer* timer = fixedInstance(timeOfDay, false);
-	if (!timer)
-		return;
-	timer->disconnecT(receiver, member);
-	if (!timer->hasConnections())
-		delete timer;
+    DailyTimer *timer = fixedInstance(timeOfDay, false);
+    if(!timer)
+        return;
+    timer->disconnecT(receiver, member);
+    if(!timer->hasConnections())
+        delete timer;
 }
 
 /******************************************************************************
 * Change the time at which the variable timer triggers.
 */
-void DailyTimer::changeTime(const QTime& newTimeOfDay, bool triggerMissed)
+void DailyTimer::changeTime(const QTime &newTimeOfDay, bool triggerMissed)
 {
-	if (mFixed)
-		return;
-	if (mTimer->isActive())
-	{
-		mTimer->stop();
-		bool triggerNow = false;
-		if (triggerMissed)
-		{
-			QTime now = QTime::currentTime();
-			if (now >= newTimeOfDay  &&  now < mTime)
-			{
-				// The trigger time is now earlier and it has already arrived today.
-				// Trigger a timer event immediately.
-				triggerNow = true;
-			}
-		}
-		mTime = newTimeOfDay;
-		if (triggerNow)
-			mTimer->start(0, true);    // trigger immediately
-		else
-			start();
-	}
-	else
-		mTime = newTimeOfDay;
+    if(mFixed)
+        return;
+    if(mTimer->isActive())
+    {
+        mTimer->stop();
+        bool triggerNow = false;
+        if(triggerMissed)
+        {
+            QTime now = QTime::currentTime();
+            if(now >= newTimeOfDay  &&  now < mTime)
+            {
+                // The trigger time is now earlier and it has already arrived today.
+                // Trigger a timer event immediately.
+                triggerNow = true;
+            }
+        }
+        mTime = newTimeOfDay;
+        if(triggerNow)
+            mTimer->start(0, true);    // trigger immediately
+        else
+            start();
+    }
+    else
+        mTime = newTimeOfDay;
 }
 
 /******************************************************************************
@@ -195,24 +195,25 @@ void DailyTimer::changeTime(const QTime& newTimeOfDay, bool triggerMissed)
 */
 void DailyTimer::start()
 {
-	// TIMEZONE = local time
-	QDateTime now = QDateTime::currentDateTime();
-	// Find out whether to trigger today or tomorrow.
-	// In preference, use the last trigger date to determine this, since
-	// that will avoid possible errors due to daylight savings time changes.
-	bool today;
-	if (mLastDate.isValid())
-		today = (mLastDate < now.date());
-	else
-		today = (now.time() < mTime);
-	QDateTime next;
-	if (today)
-		next = QDateTime(now.date(), mTime);
-	else
-		next = QDateTime(now.date().addDays(1), mTime);
-	uint interval = next.toTime_t() - now.toTime_t();
-	mTimer->start(interval * 1000, true);    // execute a single shot
-	kdDebug(5950) << "DailyTimer::start(at " << mTime.hour() << ":" << mTime.minute() << "): interval = " << interval/3600 << ":" << (interval/60)%60 << ":" << interval%60 << endl;
+    // TIMEZONE = local time
+    QDateTime now = QDateTime::currentDateTime();
+    // Find out whether to trigger today or tomorrow.
+    // In preference, use the last trigger date to determine this, since
+    // that will avoid possible errors due to daylight savings time changes.
+    bool today;
+    if(mLastDate.isValid())
+        today = (mLastDate < now.date());
+    else
+        today = (now.time() < mTime);
+    QDateTime next;
+    if(today)
+        next = QDateTime(now.date(), mTime);
+    else
+        next = QDateTime(now.date().addDays(1), mTime);
+    uint interval = next.toTime_t() - now.toTime_t();
+    mTimer->start(interval * 1000, true);    // execute a single shot
+    kdDebug(5950) << "DailyTimer::start(at " << mTime.hour() << ":" << mTime.minute() << "): interval = " << interval / 3600 << ":" <<
+                  (interval / 60) % 60 << ":" << interval % 60 << endl;
 }
 
 /******************************************************************************
@@ -223,11 +224,12 @@ void DailyTimer::start()
 */
 void DailyTimer::slotTimer()
 {
-	// TIMEZONE = local time
-	QDateTime now = QDateTime::currentDateTime();
-	mLastDate = now.date();
-	QDateTime next = QDateTime(mLastDate.addDays(1), mTime);
-	uint interval = next.toTime_t() - now.toTime_t();
-	mTimer->start(interval * 1000, true);    // execute a single shot
-	kdDebug(5950) << "DailyTimer::slotTimer(at " << mTime.hour() << ":" << mTime.minute() << "): interval = " << interval/3600 << ":" << (interval/60)%60 << ":" << interval%60 << endl;
+    // TIMEZONE = local time
+    QDateTime now = QDateTime::currentDateTime();
+    mLastDate = now.date();
+    QDateTime next = QDateTime(mLastDate.addDays(1), mTime);
+    uint interval = next.toTime_t() - now.toTime_t();
+    mTimer->start(interval * 1000, true);    // execute a single shot
+    kdDebug(5950) << "DailyTimer::slotTimer(at " << mTime.hour() << ":" << mTime.minute() << "): interval = " << interval / 3600 << ":" <<
+                  (interval / 60) % 60 << ":" << interval % 60 << endl;
 }

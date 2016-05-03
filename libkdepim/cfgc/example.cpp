@@ -32,24 +32,24 @@
 
 #include <libkdepim/kprefsdialog.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "example", I18N_NOOP("cfgc example"), "0.1" );
-  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+    KAboutData aboutData("example", I18N_NOOP("cfgc example"), "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  ExamplePrefsBase *prefs = ExamplePrefsBase::self();
+    ExamplePrefsBase *prefs = ExamplePrefsBase::self();
 
-  KPrefsDialog *dialog = new KPrefsDialog( prefs );
-  
-  dialog->autoCreate();
-  
-  app.setMainWidget( dialog );
+    KPrefsDialog *dialog = new KPrefsDialog(prefs);
 
-  dialog->show();
-    
-  return app.exec();
+    dialog->autoCreate();
+
+    app.setMainWidget(dialog);
+
+    dialog->show();
+
+    return app.exec();
 }

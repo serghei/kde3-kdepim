@@ -75,228 +75,263 @@ using namespace KPIM;
 
 namespace KPIM {
 
-int CompletionItemList::compareItems( QPtrCollection::Item s1, QPtrCollection::Item s2 )
+int CompletionItemList::compareItems(QPtrCollection::Item s1, QPtrCollection::Item s2)
 {
-  int w1 = ( (CompletionItem*)s1 )->completionWeight();
-  int w2 = ( (CompletionItem*)s2 )->completionWeight();
-  // s1 < s2 if it has a higher completion value, i.e. w1 > w2.
-  return w2 - w1;
+    int w1 = ((CompletionItem *)s1)->completionWeight();
+    int w2 = ((CompletionItem *)s2)->completionWeight();
+    // s1 < s2 if it has a higher completion value, i.e. w1 > w2.
+    return w2 - w1;
 }
 
-class LDAPCompletionItem : public CompletionItem
-{
+class LDAPCompletionItem : public CompletionItem {
 public:
-  LDAPCompletionItem( LdapClient* ldapClient ) : mLdapClient( ldapClient ) {}
-  virtual QString label() const { return i18n( "LDAP server %1" ).arg( mLdapClient->server().host() ); }
-  virtual int completionWeight() const { return mLdapClient->completionWeight(); }
-  virtual void save( CompletionOrderEditor* );
+    LDAPCompletionItem(LdapClient *ldapClient) : mLdapClient(ldapClient) {}
+    virtual QString label() const
+    {
+        return i18n("LDAP server %1").arg(mLdapClient->server().host());
+    }
+    virtual int completionWeight() const
+    {
+        return mLdapClient->completionWeight();
+    }
+    virtual void save(CompletionOrderEditor *);
 protected:
-  virtual void setCompletionWeight( int weight ) { mWeight = weight; }
+    virtual void setCompletionWeight(int weight)
+    {
+        mWeight = weight;
+    }
 private:
-  LdapClient* mLdapClient;
-  int mWeight;
+    LdapClient *mLdapClient;
+    int mWeight;
 };
 
-void LDAPCompletionItem::save( CompletionOrderEditor* )
+void LDAPCompletionItem::save(CompletionOrderEditor *)
 {
-  KConfig config( "kabldaprc" );
-  config.setGroup( "LDAP" );
-  config.writeEntry( QString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
-                     mWeight );
-  config.sync();
+    KConfig config("kabldaprc");
+    config.setGroup("LDAP");
+    config.writeEntry(QString("SelectedCompletionWeight%1").arg(mLdapClient->clientNumber()),
+                      mWeight);
+    config.sync();
 }
 
 // A simple item saved into kpimcompletionorder (no subresources, just name/identifier/weight)
-class SimpleCompletionItem : public CompletionItem
-{
+class SimpleCompletionItem : public CompletionItem {
 public:
-  SimpleCompletionItem( CompletionOrderEditor* editor, const QString& label, const QString& identifier )
-    : mLabel( label ), mIdentifier( identifier ) {
-      KConfigGroup group( editor->configFile(), "CompletionWeights" );
-      mWeight = group.readNumEntry( mIdentifier, 60 );
+    SimpleCompletionItem(CompletionOrderEditor *editor, const QString &label, const QString &identifier)
+        : mLabel(label), mIdentifier(identifier)
+    {
+        KConfigGroup group(editor->configFile(), "CompletionWeights");
+        mWeight = group.readNumEntry(mIdentifier, 60);
     }
-  virtual QString label() const { return mLabel; }
-  virtual int completionWeight() const { return mWeight; }
-  virtual void save( CompletionOrderEditor* );
+    virtual QString label() const
+    {
+        return mLabel;
+    }
+    virtual int completionWeight() const
+    {
+        return mWeight;
+    }
+    virtual void save(CompletionOrderEditor *);
 protected:
-  virtual void setCompletionWeight( int weight ) { mWeight = weight; }
+    virtual void setCompletionWeight(int weight)
+    {
+        mWeight = weight;
+    }
 private:
-  QString mLabel, mIdentifier;
-  int mWeight;
+    QString mLabel, mIdentifier;
+    int mWeight;
 };
 
-void SimpleCompletionItem::save( CompletionOrderEditor* editor )
+void SimpleCompletionItem::save(CompletionOrderEditor *editor)
 {
-  // Maybe KABC::Resource could have a completionWeight setting (for readConfig/writeConfig)
-  // But for kdelibs-3.2 compat purposes I can't do that.
-  KConfigGroup group( editor->configFile(), "CompletionWeights" );
-  group.writeEntry( mIdentifier, mWeight );
+    // Maybe KABC::Resource could have a completionWeight setting (for readConfig/writeConfig)
+    // But for kdelibs-3.2 compat purposes I can't do that.
+    KConfigGroup group(editor->configFile(), "CompletionWeights");
+    group.writeEntry(mIdentifier, mWeight);
 }
 
 // An imap subresource for kabc
-class KABCImapSubResCompletionItem : public CompletionItem
-{
+class KABCImapSubResCompletionItem : public CompletionItem {
 public:
-  KABCImapSubResCompletionItem( ResourceABC* resource, const QString& subResource )
-    : mResource( resource ), mSubResource( subResource ), mWeight( completionWeight() ) {}
-  virtual QString label() const {
-    return QString( "%1 %2" ).arg( mResource->resourceName() ).arg( mResource->subresourceLabel( mSubResource ) );
-  }
-  virtual int completionWeight() const {
-    return mResource->subresourceCompletionWeight( mSubResource );
-  }
-  virtual void setCompletionWeight( int weight ) {
-    mWeight = weight;
-  }
-  virtual void save( CompletionOrderEditor* ) {
-    mResource->setSubresourceCompletionWeight( mSubResource, mWeight );
-  }
+    KABCImapSubResCompletionItem(ResourceABC *resource, const QString &subResource)
+        : mResource(resource), mSubResource(subResource), mWeight(completionWeight()) {}
+    virtual QString label() const
+    {
+        return QString("%1 %2").arg(mResource->resourceName()).arg(mResource->subresourceLabel(mSubResource));
+    }
+    virtual int completionWeight() const
+    {
+        return mResource->subresourceCompletionWeight(mSubResource);
+    }
+    virtual void setCompletionWeight(int weight)
+    {
+        mWeight = weight;
+    }
+    virtual void save(CompletionOrderEditor *)
+    {
+        mResource->setSubresourceCompletionWeight(mSubResource, mWeight);
+    }
 private:
-  ResourceABC* mResource;
-  QString mSubResource;
-  int mWeight;
+    ResourceABC *mResource;
+    QString mSubResource;
+    int mWeight;
 };
 
 /////////
 
-class CompletionViewItem : public QListViewItem
-{
+class CompletionViewItem : public QListViewItem {
 public:
-  CompletionViewItem( QListView* lv, CompletionItem* item )
-    : QListViewItem( lv, lv->lastItem(), item->label() ), mItem( item ) {}
-  CompletionItem* item() const { return mItem; }
-  void setItem( CompletionItem* i ) { mItem = i; setText( 0, mItem->label() ); }
+    CompletionViewItem(QListView *lv, CompletionItem *item)
+        : QListViewItem(lv, lv->lastItem(), item->label()), mItem(item) {}
+    CompletionItem *item() const
+    {
+        return mItem;
+    }
+    void setItem(CompletionItem *i)
+    {
+        mItem = i;
+        setText(0, mItem->label());
+    }
 
 private:
-  CompletionItem* mItem;
+    CompletionItem *mItem;
 };
 
-CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
-                                              QWidget* parent, const char* name )
-  : KDialogBase( parent, name, true, i18n("Edit Completion Order"), Ok|Cancel, Ok, true ),
-    mConfig( "kpimcompletionorder" ), mDirty( false )
+CompletionOrderEditor::CompletionOrderEditor(KPIM::LdapSearch *ldapSearch,
+        QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("Edit Completion Order"), Ok | Cancel, Ok, true),
+      mConfig("kpimcompletionorder"), mDirty(false)
 {
-  mItems.setAutoDelete( true );
-  // The first step is to gather all the data, creating CompletionItem objects
-  QValueList< LdapClient* > ldapClients = ldapSearch->clients();
-  for( QValueList<LdapClient*>::const_iterator it = ldapClients.begin(); it != ldapClients.end(); ++it ) {
-    //kdDebug(5300) << "LDAP: host " << (*it)->host() << " weight " << (*it)->completionWeight() << endl;
-    mItems.append( new LDAPCompletionItem( *it ) );
-  }
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  QPtrList<KABC::Resource> resources = addressBook->resources();
-  for( QPtrListIterator<KABC::Resource> resit( resources ); *resit; ++resit ) {
-    //kdDebug(5300) << "KABC Resource: " << (*resit)->className() << endl;
-    ResourceABC* res = dynamic_cast<ResourceABC *>( *resit );
-    if ( res ) { // IMAP KABC resource
-      const QStringList subresources = res->subresources();
-      for( QStringList::const_iterator it = subresources.begin(); it != subresources.end(); ++it ) {
-        mItems.append( new KABCImapSubResCompletionItem( res, *it ) );
-      }
-    } else { // non-IMAP KABC resource
-      mItems.append( new SimpleCompletionItem( this, (*resit)->resourceName(),
-                                               (*resit)->identifier() ) );
+    mItems.setAutoDelete(true);
+    // The first step is to gather all the data, creating CompletionItem objects
+    QValueList< LdapClient * > ldapClients = ldapSearch->clients();
+    for(QValueList<LdapClient *>::const_iterator it = ldapClients.begin(); it != ldapClients.end(); ++it)
+    {
+        //kdDebug(5300) << "LDAP: host " << (*it)->host() << " weight " << (*it)->completionWeight() << endl;
+        mItems.append(new LDAPCompletionItem(*it));
     }
-  }
+    KABC::AddressBook *addressBook = KABC::StdAddressBook::self(true);
+    QPtrList<KABC::Resource> resources = addressBook->resources();
+    for(QPtrListIterator<KABC::Resource> resit(resources); *resit; ++resit)
+    {
+        //kdDebug(5300) << "KABC Resource: " << (*resit)->className() << endl;
+        ResourceABC *res = dynamic_cast<ResourceABC *>(*resit);
+        if(res)      // IMAP KABC resource
+        {
+            const QStringList subresources = res->subresources();
+            for(QStringList::const_iterator it = subresources.begin(); it != subresources.end(); ++it)
+            {
+                mItems.append(new KABCImapSubResCompletionItem(res, *it));
+            }
+        }
+        else     // non-IMAP KABC resource
+        {
+            mItems.append(new SimpleCompletionItem(this, (*resit)->resourceName(),
+                                                   (*resit)->identifier()));
+        }
+    }
 
 #ifndef KDEPIM_NEW_DISTRLISTS // new distr lists are normal contact, so no separate item if using them
-  // Add an item for distribution lists
-  mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ) );
+    // Add an item for distribution lists
+    mItems.append(new SimpleCompletionItem(this, i18n("Distribution Lists"), "DistributionLists"));
 #endif
 
-  // Now sort the items, then create the GUI
-  mItems.sort();
+    // Now sort the items, then create the GUI
+    mItems.sort();
 
-  QHBox* page = makeHBoxMainWidget();
-  mListView = new KListView( page );
-  mListView->setSorting( -1 );
-  mListView->addColumn( QString::null );
-  mListView->header()->hide();
+    QHBox *page = makeHBoxMainWidget();
+    mListView = new KListView(page);
+    mListView->setSorting(-1);
+    mListView->addColumn(QString::null);
+    mListView->header()->hide();
 
-  for( QPtrListIterator<CompletionItem> compit( mItems ); *compit; ++compit ) {
-    new CompletionViewItem( mListView, *compit );
-    kdDebug(5300) << "  " << (*compit)->label() << " " << (*compit)->completionWeight() << endl;
-  }
+    for(QPtrListIterator<CompletionItem> compit(mItems); *compit; ++compit)
+    {
+        new CompletionViewItem(mListView, *compit);
+        kdDebug(5300) << "  " << (*compit)->label() << " " << (*compit)->completionWeight() << endl;
+    }
 
-  QVBox* upDownBox = new QVBox( page );
-  mUpButton = new KPushButton( upDownBox, "mUpButton" );
-  mUpButton->setIconSet( BarIconSet( "up", KIcon::SizeSmall ) );
-  mUpButton->setEnabled( false ); // b/c no item is selected yet
-  mUpButton->setFocusPolicy( StrongFocus );
+    QVBox *upDownBox = new QVBox(page);
+    mUpButton = new KPushButton(upDownBox, "mUpButton");
+    mUpButton->setIconSet(BarIconSet("up", KIcon::SizeSmall));
+    mUpButton->setEnabled(false);   // b/c no item is selected yet
+    mUpButton->setFocusPolicy(StrongFocus);
 
-  mDownButton = new KPushButton( upDownBox, "mDownButton" );
-  mDownButton->setIconSet( BarIconSet( "down", KIcon::SizeSmall ) );
-  mDownButton->setEnabled( false ); // b/c no item is selected yet
-  mDownButton->setFocusPolicy( StrongFocus );
+    mDownButton = new KPushButton(upDownBox, "mDownButton");
+    mDownButton->setIconSet(BarIconSet("down", KIcon::SizeSmall));
+    mDownButton->setEnabled(false);   // b/c no item is selected yet
+    mDownButton->setFocusPolicy(StrongFocus);
 
-  QWidget* spacer = new QWidget( upDownBox );
-  upDownBox->setStretchFactor( spacer, 100 );
+    QWidget *spacer = new QWidget(upDownBox);
+    upDownBox->setStretchFactor(spacer, 100);
 
-  connect( mListView, SIGNAL( selectionChanged( QListViewItem* ) ),
-           SLOT( slotSelectionChanged( QListViewItem* ) ) );
-  connect( mUpButton, SIGNAL( clicked() ), this, SLOT( slotMoveUp() ) );
-  connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
+    connect(mListView, SIGNAL(selectionChanged(QListViewItem *)),
+            SLOT(slotSelectionChanged(QListViewItem *)));
+    connect(mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()));
+    connect(mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()));
 }
 
 CompletionOrderEditor::~CompletionOrderEditor()
 {
 }
 
-void CompletionOrderEditor::slotSelectionChanged( QListViewItem *item )
+void CompletionOrderEditor::slotSelectionChanged(QListViewItem *item)
 {
-  mDownButton->setEnabled( item && item->itemBelow() );
-  mUpButton->setEnabled( item && item->itemAbove() );
+    mDownButton->setEnabled(item && item->itemBelow());
+    mUpButton->setEnabled(item && item->itemAbove());
 }
 
-static void swapItems( CompletionViewItem *one, CompletionViewItem *other )
+static void swapItems(CompletionViewItem *one, CompletionViewItem *other)
 {
-  CompletionItem* i = one->item();
-  one->setItem( other->item() );
-  other->setItem( i );
+    CompletionItem *i = one->item();
+    one->setItem(other->item());
+    other->setItem(i);
 }
 
 void CompletionOrderEditor::slotMoveUp()
 {
-  CompletionViewItem *item = static_cast<CompletionViewItem *>( mListView->selectedItem() );
-  if ( !item ) return;
-  CompletionViewItem *above = static_cast<CompletionViewItem *>( item->itemAbove() );
-  if ( !above ) return;
-  swapItems( item, above );
-  mListView->setCurrentItem( above );
-  mListView->setSelected( above, true );
-  mDirty = true;
+    CompletionViewItem *item = static_cast<CompletionViewItem *>(mListView->selectedItem());
+    if(!item) return;
+    CompletionViewItem *above = static_cast<CompletionViewItem *>(item->itemAbove());
+    if(!above) return;
+    swapItems(item, above);
+    mListView->setCurrentItem(above);
+    mListView->setSelected(above, true);
+    mDirty = true;
 }
 
 void CompletionOrderEditor::slotMoveDown()
 {
-  CompletionViewItem *item = static_cast<CompletionViewItem *>( mListView->selectedItem() );
-  if ( !item ) return;
-  CompletionViewItem *below = static_cast<CompletionViewItem *>( item->itemBelow() );
-  if ( !below ) return;
-  swapItems( item, below );
-  mListView->setCurrentItem( below );
-  mListView->setSelected( below, true );
-  mDirty = true;
+    CompletionViewItem *item = static_cast<CompletionViewItem *>(mListView->selectedItem());
+    if(!item) return;
+    CompletionViewItem *below = static_cast<CompletionViewItem *>(item->itemBelow());
+    if(!below) return;
+    swapItems(item, below);
+    mListView->setCurrentItem(below);
+    mListView->setSelected(below, true);
+    mDirty = true;
 }
 
 void CompletionOrderEditor::slotOk()
 {
-  if ( mDirty ) {
-    int w = 100;
-    for ( QListViewItem* it = mListView->firstChild(); it; it = it->nextSibling() ) {
-      CompletionViewItem *item = static_cast<CompletionViewItem *>( it );
-      item->item()->setCompletionWeight( w );
-      item->item()->save( this );
-      kdDebug(5300) << "slotOk:   " << item->item()->label() << " " << w << endl;
-      --w;
-    }
+    if(mDirty)
+    {
+        int w = 100;
+        for(QListViewItem *it = mListView->firstChild(); it; it = it->nextSibling())
+        {
+            CompletionViewItem *item = static_cast<CompletionViewItem *>(it);
+            item->item()->setCompletionWeight(w);
+            item->item()->save(this);
+            kdDebug(5300) << "slotOk:   " << item->item()->label() << " " << w << endl;
+            --w;
+        }
 
-    // Emit DCOP signal
-    // The emitter is always set to KPIM::IMAPCompletionOrder, so that the connect works
-    // This is why we can't use k_dcop_signals here, but need to use emitDCOPSignal
-    kapp->dcopClient()->emitDCOPSignal( "KPIM::IMAPCompletionOrder", "orderChanged()", QByteArray() );
-  }
-  KDialogBase::slotOk();
+        // Emit DCOP signal
+        // The emitter is always set to KPIM::IMAPCompletionOrder, so that the connect works
+        // This is why we can't use k_dcop_signals here, but need to use emitDCOPSignal
+        kapp->dcopClient()->emitDCOPSignal("KPIM::IMAPCompletionOrder", "orderChanged()", QByteArray());
+    }
+    KDialogBase::slotOk();
 }
 
 } // namespace KPIM

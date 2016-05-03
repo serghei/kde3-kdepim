@@ -39,46 +39,44 @@ class QPushButton;
 class QLabel;
 class KEditListBox;
 
-namespace KMail
-{
+namespace KMail {
 
-class MailingListFolderPropertiesDialog : public KDialogBase
-{
-  Q_OBJECT
+class MailingListFolderPropertiesDialog : public KDialogBase {
+    Q_OBJECT
 public:
-  MailingListFolderPropertiesDialog( QWidget *parent, KMFolder *folder );
-  ~MailingListFolderPropertiesDialog() {};
+    MailingListFolderPropertiesDialog(QWidget *parent, KMFolder *folder);
+    ~MailingListFolderPropertiesDialog() {};
 protected:
-  void load();
-  bool save();
+    void load();
+    bool save();
 
 protected slots:
-  void slotOk();
+    void slotOk();
 
 private slots:
-  /*
-   * Detects mailing-list related stuff
-   */
-  void slotDetectMailingList();
-  void slotInvokeHandler();
-  void slotMLHandling( int element );
-  void slotHoldsML( bool holdsML );
-  void slotAddressChanged( int addr );
+    /*
+     * Detects mailing-list related stuff
+     */
+    void slotDetectMailingList();
+    void slotInvokeHandler();
+    void slotMLHandling(int element);
+    void slotHoldsML(bool holdsML);
+    void slotAddressChanged(int addr);
 
 private:
-  KMFolder *mFolder;
-  void fillMLFromWidgets();
-  void fillEditBox();
+    KMFolder *mFolder;
+    void fillMLFromWidgets();
+    void fillEditBox();
 
-  bool          mMLInfoChanged;
-  QCheckBox    *mHoldsMailingList;
-  QComboBox    *mMLHandlerCombo;
-  QPushButton  *mDetectButton;
-  QComboBox    *mAddressCombo;
-  int           mLastItem;
-  KEditListBox *mEditList;
-  QLabel       *mMLId;
-  MailingList   mMailingList;
+    bool          mMLInfoChanged;
+    QCheckBox    *mHoldsMailingList;
+    QComboBox    *mMLHandlerCombo;
+    QPushButton  *mDetectButton;
+    QComboBox    *mAddressCombo;
+    int           mLastItem;
+    KEditListBox *mEditList;
+    QLabel       *mMLId;
+    MailingList   mMailingList;
 }; // End of class MailingListFolderProperties
 
 } // End of namespace KMail

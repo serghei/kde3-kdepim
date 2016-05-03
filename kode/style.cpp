@@ -36,19 +36,19 @@ Style::~Style()
 {
 }
 
-QString Style::className( const QString &str )
+QString Style::className(const QString &str)
 {
-  return upperFirst( str );
+    return upperFirst(str);
 }
 
-QString Style::upperFirst( const QString &str )
+QString Style::upperFirst(const QString &str)
 {
-  if ( str.isEmpty() ) return str;
-  return str[ 0 ].upper() + str.mid( 1 );
+    if(str.isEmpty()) return str;
+    return str[ 0 ].upper() + str.mid(1);
 }
 
-QString Style::lowerFirst( const QString &str )
+QString Style::lowerFirst(const QString &str)
 {
-  if ( str.isEmpty() ) return str;
-  return str[ 0 ].lower() + str.mid( 1 );
+    if(str.isEmpty()) return str;
+    return str[ 0 ].lower() + str.mid(1);
 }

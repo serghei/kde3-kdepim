@@ -23,5 +23,5 @@
 
 using namespace KABC;
 
-typedef KRES::PluginFactory<ResourceExchange,ResourceGroupwareBaseConfig> ExchangeFactory;
-K_EXPORT_COMPONENT_FACTORY( kabc_newexchange, ExchangeFactory )
+typedef KRES::PluginFactory<ResourceExchange, ResourceGroupwareBaseConfig> ExchangeFactory;
+K_EXPORT_COMPONENT_FACTORY(kabc_newexchange, ExchangeFactory)

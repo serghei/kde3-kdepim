@@ -41,94 +41,88 @@ class DeviceConfigWidget;
 class ViewersConfigWidget;
 class BackupConfigWidget;
 
-class ConfigPage : public ConduitConfigBase
-{
+class ConfigPage : public ConduitConfigBase {
 public:
-	ConfigPage( QWidget *w, const char *n ) : ConduitConfigBase(w,n) { } ;
+    ConfigPage(QWidget *w, const char *n) : ConduitConfigBase(w, n) { } ;
 protected:
-	// Override base class virtual function.
-	virtual QString maybeSaveText() const;
+    // Override base class virtual function.
+    virtual QString maybeSaveText() const;
 } ;
 
-class DeviceConfigPage : public ConfigPage
-{
-Q_OBJECT
+class DeviceConfigPage : public ConfigPage {
+    Q_OBJECT
 public:
-	DeviceConfigPage( QWidget *, const char * );
+    DeviceConfigPage(QWidget *, const char *);
 
 protected:
-	virtual bool validate();
-	virtual void load();
-	virtual void commit();
+    virtual bool validate();
+    virtual void load();
+    virtual void commit();
 
 protected slots:
-	void changePortType(int);
+    void changePortType(int);
 
 private:
-	DeviceConfigWidget *fConfigWidget;
+    DeviceConfigWidget *fConfigWidget;
 
-	// Read and write the values of Encoding
-	// and EncodingDD.
-	void getEncoding();
-	void setEncoding();
+    // Read and write the values of Encoding
+    // and EncodingDD.
+    void getEncoding();
+    void setEncoding();
 } ;
 
 
-class KDE_EXPORT SyncConfigPage : public ConfigPage
-{
+class KDE_EXPORT SyncConfigPage : public ConfigPage {
 public:
-	SyncConfigPage( QWidget *, const char * );
+    SyncConfigPage(QWidget *, const char *);
 
 protected:
-	virtual void load();
-	virtual void commit();
+    virtual void load();
+    virtual void commit();
 
 private:
-	SyncConfigWidget *fConfigWidget;
+    SyncConfigWidget *fConfigWidget;
 } ;
 
-class BackupConfigPage : public ConfigPage
-{
-Q_OBJECT
+class BackupConfigPage : public ConfigPage {
+    Q_OBJECT
 public:
-	BackupConfigPage( QWidget *, const char * );
+    BackupConfigPage(QWidget *, const char *);
 
 protected:
-	virtual void load();
-	virtual void commit();
+    virtual void load();
+    virtual void commit();
 
 protected slots:
-	void slotSelectNoBackupDBs();
-	void slotSelectNoRestoreDBs();
+    void slotSelectNoBackupDBs();
+    void slotSelectNoRestoreDBs();
 
 private:
-	BackupConfigWidget *fConfigWidget;
+    BackupConfigWidget *fConfigWidget;
 } ;
 
-class StartExitConfigPage : public ConfigPage
-{
+class StartExitConfigPage : public ConfigPage {
 public:
-	StartExitConfigPage( QWidget *, const char * );
+    StartExitConfigPage(QWidget *, const char *);
 
 protected:
-	virtual void load();
-	virtual void commit();
+    virtual void load();
+    virtual void commit();
 
 private:
-	StartExitConfigWidget *fConfigWidget;
+    StartExitConfigWidget *fConfigWidget;
 } ;
 
-class ViewersConfigPage : public ConfigPage
-{
+class ViewersConfigPage : public ConfigPage {
 public:
-	ViewersConfigPage( QWidget *, const char * );
+    ViewersConfigPage(QWidget *, const char *);
 
 protected:
-	virtual void load();
-	virtual void commit();
+    virtual void load();
+    virtual void commit();
 
 private:
-	ViewersConfigWidget *fConfigWidget;
+    ViewersConfigWidget *fConfigWidget;
 } ;
 
 #endif

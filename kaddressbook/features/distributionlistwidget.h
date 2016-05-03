@@ -45,12 +45,11 @@ class AddressBook;
 class DistributionListManager;
 }
 
-class DistributionListWidget : public KAB::ExtensionWidget
-{
+class DistributionListWidget : public KAB::ExtensionWidget {
     Q_OBJECT
 
-  public:
-    DistributionListWidget( KAB::Core*, QWidget *parent, const char *name = 0 );
+public:
+    DistributionListWidget(KAB::Core *, QWidget *parent, const char *name = 0);
     virtual ~DistributionListWidget();
 
     void contactsSelectionChanged();
@@ -58,13 +57,13 @@ class DistributionListWidget : public KAB::ExtensionWidget
     QString title() const;
     QString identifier() const;
 
-  public slots:
+public slots:
     void save();
-    void dropped( QDropEvent*, QListViewItem* );
+    void dropped(QDropEvent *, QListViewItem *);
 
     void removeContact();
 
-  private slots:
+private slots:
     void createList();
     void editList();
     void removeList();
@@ -74,18 +73,18 @@ class DistributionListWidget : public KAB::ExtensionWidget
     void updateContactView();
     void selectionContactViewChanged();
 
-  private:
+private:
 #ifdef KDEPIM_NEW_DISTRLISTS
-    void changed( const KABC::Addressee& dist );
+    void changed(const KABC::Addressee &dist);
 #else
     void changed();
 #endif
-    bool alreadyExists( const QString& distrListName ) const;
+    bool alreadyExists(const QString &distrListName) const;
 
-  protected:
-    void dropEvent( QDropEvent* );
+protected:
+    void dropEvent(QDropEvent *);
 
-  private:
+private:
     QComboBox *mNameCombo;
     QLabel *mEntryCountLabel;
     DistributionListView *mContactView;
@@ -104,35 +103,33 @@ class DistributionListWidget : public KAB::ExtensionWidget
 /**
   @short Helper class
 */
-class DistributionListView : public KListView
-{
-  Q_OBJECT
+class DistributionListView : public KListView {
+    Q_OBJECT
 
-  public:
-    DistributionListView( QWidget *parent, const char* name = 0 );
+public:
+    DistributionListView(QWidget *parent, const char *name = 0);
 
-  protected:
-    void dragEnterEvent( QDragEnterEvent *e );
-    void dropEvent( QDropEvent *e );
-    void viewportDragMoveEvent( QDragMoveEvent *e );
-    void viewportDropEvent( QDropEvent *e );
+protected:
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
+    void viewportDragMoveEvent(QDragMoveEvent *e);
+    void viewportDropEvent(QDropEvent *e);
 };
 
 /**
   @short Helper class
 */
-class EmailSelector : public KDialogBase
-{
-  public:
-    EmailSelector( const QStringList &emails, const QString &current,
-                   QWidget *parent );
+class EmailSelector : public KDialogBase {
+public:
+    EmailSelector(const QStringList &emails, const QString &current,
+                  QWidget *parent);
 
     QString selected() const;
 
-    static QString getEmail( const QStringList &emails, const QString &current,
-                             QWidget *parent, bool &canceled );
+    static QString getEmail(const QStringList &emails, const QString &current,
+                            QWidget *parent, bool &canceled);
 
-  private:
+private:
     QButtonGroup *mButtonGroup;
     QMap<int, QString> mEmailMap;
 };

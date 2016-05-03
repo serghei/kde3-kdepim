@@ -20,14 +20,12 @@
 #ifndef KNODE_ABOUTDATA_H
 #define KNODE_ABOUTDATA_H
 
-namespace KNode
-{
-  class KDE_EXPORT AboutData : public KAboutData
-  {
-  public:
+namespace KNode {
+class KDE_EXPORT AboutData : public KAboutData {
+public:
     AboutData();
     ~AboutData();
-  };
+};
 
 } // namespace KNode
 

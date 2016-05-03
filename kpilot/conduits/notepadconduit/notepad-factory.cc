@@ -44,81 +44,79 @@
 //----------------------------------------------------------------------------
 // Conduit Configuration
 //----------------------------------------------------------------------------
-class NotepadConduitConfig : public ConduitConfigBase
-{
+class NotepadConduitConfig : public ConduitConfigBase {
 public:
-	NotepadConduitConfig(QWidget *parent=0L, const char *n=0L);
-	virtual void commit();
-	virtual void load();
-	static ConduitConfigBase *create(QWidget *p, const char *n)
-	{
-		return new NotepadConduitConfig(p, n);
-	};
+    NotepadConduitConfig(QWidget *parent = 0L, const char *n = 0L);
+    virtual void commit();
+    virtual void load();
+    static ConduitConfigBase *create(QWidget *p, const char *n)
+    {
+        return new NotepadConduitConfig(p, n);
+    };
 
 protected:
-	NotepadWidget *fConfigWidget;
+    NotepadWidget *fConfigWidget;
 } ;
 
 static KAboutData *createAbout()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	KAboutData *fAbout = new KAboutData("NotepadConduit",
-		I18N_NOOP("Saves notepads to png files"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Notepad Conduit for KPilot"),
-		KAboutData::License_LGPL,
-		"(C) 2004, Joern Ahrens");
-	fAbout->addAuthor("Joern Ahrens",
-		I18N_NOOP("Primary Author"),
-		"kde@jokele.de",
-		"http://www.jokele.de/");
-	fAbout->addCredit("Adriaan de Groot");
-	fAbout->addCredit("Angus Ainslies",
-		I18N_NOOP("Notepad conduit is based on Angus' read-notepad, part of pilot-link" ));
-	return fAbout;
+    KAboutData *fAbout = new KAboutData("NotepadConduit",
+                                        I18N_NOOP("Saves notepads to png files"),
+                                        KPILOT_VERSION,
+                                        I18N_NOOP("Configures the Notepad Conduit for KPilot"),
+                                        KAboutData::License_LGPL,
+                                        "(C) 2004, Joern Ahrens");
+    fAbout->addAuthor("Joern Ahrens",
+                      I18N_NOOP("Primary Author"),
+                      "kde@jokele.de",
+                      "http://www.jokele.de/");
+    fAbout->addCredit("Adriaan de Groot");
+    fAbout->addCredit("Angus Ainslies",
+                      I18N_NOOP("Notepad conduit is based on Angus' read-notepad, part of pilot-link"));
+    return fAbout;
 }
 
 
 NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p, n),
-	fConfigWidget(new NotepadWidget(p))
+    ConduitConfigBase(p, n),
+    fConfigWidget(new NotepadWidget(p))
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	fConduitName = i18n("Notepad");
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, createAbout());
-	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fOutputDirectory, SIGNAL(textChanged(const QString&)),
-		this, SLOT(modified()));
-	fConfigWidget->fOutputDirectory->setMode(KFile::Directory |
-											KFile::LocalOnly);
+    fConduitName = i18n("Notepad");
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, createAbout());
+    fWidget = fConfigWidget;
+    QObject::connect(fConfigWidget->fOutputDirectory, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
+    fConfigWidget->fOutputDirectory->setMode(KFile::Directory |
+            KFile::LocalOnly);
 }
 
 /* virtual */ void NotepadConduitConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	NotepadConduitSettings::setOutputDirectory(fConfigWidget->fOutputDirectory->url());
-	NotepadConduitSettings::self()->writeConfig();
+    NotepadConduitSettings::setOutputDirectory(fConfigWidget->fOutputDirectory->url());
+    NotepadConduitSettings::self()->writeConfig();
 }
 
 /* virtual */ void NotepadConduitConfig::load()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
-	NotepadConduitSettings::self()->readConfig();
-	fConfigWidget->fOutputDirectory->setURL(NotepadConduitSettings::outputDirectory());
-	fModified=false;
+    NotepadConduitSettings::self()->readConfig();
+    fConfigWidget->fOutputDirectory->setURL(NotepadConduitSettings::outputDirectory());
+    fModified = false;
 }
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_notepad()
-{
-	return new ConduitFactory<NotepadConduitConfig,NotepadConduit>(0,"abbrowserconduit");
-}
+    void *init_conduit_notepad()
+    {
+        return new ConduitFactory<NotepadConduitConfig, NotepadConduit>(0, "abbrowserconduit");
+    }
 
 }
 

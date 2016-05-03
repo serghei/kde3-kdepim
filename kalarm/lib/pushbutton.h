@@ -34,44 +34,46 @@
  *
  *  @author David Jarvie <software@astrojar.org.uk>
  */
-class PushButton : public QPushButton
-{
-		Q_OBJECT
-		Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
-	public:
-		/** Constructor.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		explicit PushButton(QWidget* parent, const char* name = 0);
-		/** Constructor for a push button which displays a text.
-		 *  @param text The text to show on the button.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		PushButton(const QString& text, QWidget* parent, const char* name = 0);
-		/** Constructor for a push button which displays an icon and a text.
-		 *  @param icon The icon to show on the button.
-		 *  @param text The text to show on the button.
-		 *  @param parent The parent object of this widget.
-		 *  @param name The name of this widget.
-		 */
-		PushButton(const QIconSet& icon, const QString& text, QWidget* parent, const char* name = 0);
-		/** Sets whether the push button is read-only for the user.
-		 *  @param readOnly True to set the widget read-only, false to enable its action.
-		 */
-		virtual void  setReadOnly(bool readOnly);
-		/** Returns true if the widget is read only. */
-		virtual bool  isReadOnly() const  { return mReadOnly; }
-	protected:
-		virtual void mousePressEvent(QMouseEvent*);
-		virtual void mouseReleaseEvent(QMouseEvent*);
-		virtual void mouseMoveEvent(QMouseEvent*);
-		virtual void keyPressEvent(QKeyEvent*);
-		virtual void keyReleaseEvent(QKeyEvent*);
-	private:
-		QWidget::FocusPolicy mFocusPolicy;   // default focus policy for the QPushButton
-		bool                 mReadOnly;      // value cannot be changed
+class PushButton : public QPushButton {
+    Q_OBJECT
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
+public:
+    /** Constructor.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    explicit PushButton(QWidget *parent, const char *name = 0);
+    /** Constructor for a push button which displays a text.
+     *  @param text The text to show on the button.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    PushButton(const QString &text, QWidget *parent, const char *name = 0);
+    /** Constructor for a push button which displays an icon and a text.
+     *  @param icon The icon to show on the button.
+     *  @param text The text to show on the button.
+     *  @param parent The parent object of this widget.
+     *  @param name The name of this widget.
+     */
+    PushButton(const QIconSet &icon, const QString &text, QWidget *parent, const char *name = 0);
+    /** Sets whether the push button is read-only for the user.
+     *  @param readOnly True to set the widget read-only, false to enable its action.
+     */
+    virtual void  setReadOnly(bool readOnly);
+    /** Returns true if the widget is read only. */
+    virtual bool  isReadOnly() const
+    {
+        return mReadOnly;
+    }
+protected:
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void keyReleaseEvent(QKeyEvent *);
+private:
+    QWidget::FocusPolicy mFocusPolicy;   // default focus policy for the QPushButton
+    bool                 mReadOnly;      // value cannot be changed
 };
 
 #endif // PUSHBUTTON_H

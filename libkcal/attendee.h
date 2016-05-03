@@ -33,11 +33,11 @@ namespace KCal {
 /**
   This class represents information related to an attendee of an event.
 */
-class LIBKCAL_EXPORT Attendee : public Person
-{
-  public:
+class LIBKCAL_EXPORT Attendee : public Person {
+public:
     enum PartStat { NeedsAction, Accepted, Declined, Tentative,
-                    Delegated, Completed, InProcess };
+                    Delegated, Completed, InProcess
+                  };
     enum Role { ReqParticipant, OptParticipant, NonParticipant, Chair };
 
     typedef ListBase<Attendee> List;
@@ -52,9 +52,9 @@ class LIBKCAL_EXPORT Attendee : public Person
       @param role Role
       @param u the uid for the attendee
     */
-    Attendee( const QString &name, const QString &email,
-              bool rsvp = false, PartStat status = NeedsAction,
-              Role role = ReqParticipant, const QString &u = QString::null );
+    Attendee(const QString &name, const QString &email,
+             bool rsvp = false, PartStat status = NeedsAction,
+             Role role = ReqParticipant, const QString &u = QString::null);
     /**
       Destruct Attendee.
     */
@@ -64,7 +64,7 @@ class LIBKCAL_EXPORT Attendee : public Person
       Set role of Attendee.
     */
     // FIXME: List of roles still has to be documented.
-    void setRole( Role );
+    void setRole(Role);
 
     /**
       Return role of Attendee.
@@ -78,7 +78,7 @@ class LIBKCAL_EXPORT Attendee : public Person
     /**
       Return string represenation of role.
     */
-    static QString roleName( Role );
+    static QString roleName(Role);
     /**
       Return string representations of all available roles.
     */
@@ -91,12 +91,12 @@ class LIBKCAL_EXPORT Attendee : public Person
     /**
       Set unique id of attendee.
     */
-    void setUid ( const QString & );
+    void setUid(const QString &);
 
     /**
       Set status. See enum for definitions of possible values.
     */
-    void setStatus( PartStat s );
+    void setStatus(PartStat s);
 
     /**
       Return status.
@@ -110,7 +110,7 @@ class LIBKCAL_EXPORT Attendee : public Person
     /**
       Return string representation of attendee status.
     */
-    static QString statusName( PartStat );
+    static QString statusName(PartStat);
     /**
       Return string representations of all available attendee status values.
     */
@@ -119,31 +119,49 @@ class LIBKCAL_EXPORT Attendee : public Person
     /**
       Set if Attendee is asked to reply.
     */
-    void setRSVP( bool r ) { mRSVP = r; }
+    void setRSVP(bool r)
+    {
+        mRSVP = r;
+    }
     /**
       Return, if Attendee is asked to reply.
     */
-    bool RSVP() const { return mRSVP; }
+    bool RSVP() const
+    {
+        return mRSVP;
+    }
 
     /**
       Sets the delegate.
     */
-    void setDelegate( const QString &delegate ) { mDelegate = delegate; }
+    void setDelegate(const QString &delegate)
+    {
+        mDelegate = delegate;
+    }
     /**
       Returns the delegate.
     */
-    QString delegate() const { return mDelegate; }
+    QString delegate() const
+    {
+        return mDelegate;
+    }
 
     /**
       Sets the delegator.
     */
-    void setDelegator( const QString &delegator ) { mDelegator = delegator; }
+    void setDelegator(const QString &delegator)
+    {
+        mDelegator = delegator;
+    }
     /**
       Returns the delegator.
     */
-    QString delegator() const { return mDelegator; }
+    QString delegator() const
+    {
+        return mDelegator;
+    }
 
-  private:
+private:
     bool mRSVP;
     Role mRole;
     PartStat mStatus;
@@ -155,7 +173,7 @@ class LIBKCAL_EXPORT Attendee : public Person
     Private *d;
 };
 
-bool LIBKCAL_EXPORT operator==( const Attendee& a1, const Attendee& a2 );
+bool LIBKCAL_EXPORT operator==(const Attendee &a1, const Attendee &a2);
 
 }
 

@@ -24,48 +24,50 @@
 
 #include "otheruserview.h"
 
-class OtherUserItem : public QListViewItem
-{
-  public:
-    OtherUserItem( QListView *parent, const QString &user )
-      : QListViewItem( parent ), mUser( user )
+class OtherUserItem : public QListViewItem {
+public:
+    OtherUserItem(QListView *parent, const QString &user)
+        : QListViewItem(parent), mUser(user)
     {
-      setText( 0, mUser );
+        setText(0, mUser);
     }
 
-    QString user() const { return mUser; }
+    QString user() const
+    {
+        return mUser;
+    }
 
-  private:
+private:
     QString mUser;
 };
 
-OtherUserView::OtherUserView( OtherUserManager *manager, QWidget *parent )
-  : KListView( parent ), mManager( manager )
+OtherUserView::OtherUserView(OtherUserManager *manager, QWidget *parent)
+    : KListView(parent), mManager(manager)
 {
-  addColumn( i18n( "Registered Accounts" ) );
-  setFullWidth( true );
+    addColumn(i18n("Registered Accounts"));
+    setFullWidth(true);
 
-  connect( mManager, SIGNAL( changed() ), SLOT( userChanged() ) );
+    connect(mManager, SIGNAL(changed()), SLOT(userChanged()));
 
-  userChanged();
+    userChanged();
 }
 
 QString OtherUserView::selectedUser() const
 {
-  OtherUserItem *item = dynamic_cast<OtherUserItem*>( selectedItem() );
-  if ( item )
-    return item->user();
+    OtherUserItem *item = dynamic_cast<OtherUserItem *>(selectedItem());
+    if(item)
+        return item->user();
 
-  return QString();
+    return QString();
 }
 
 void OtherUserView::userChanged()
 {
-  clear();
+    clear();
 
-  QStringList users = mManager->otherUsers();
-  for ( uint i = 0; i < users.count(); ++i )
-    new OtherUserItem( this, users[ i ] );
+    QStringList users = mManager->otherUsers();
+    for(uint i = 0; i < users.count(); ++i)
+        new OtherUserItem(this, users[ i ]);
 }
 
 #include "otheruserview.moc"

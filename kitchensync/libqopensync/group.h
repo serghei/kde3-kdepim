@@ -35,32 +35,30 @@ namespace QSync {
 /**
   @internal
  */
-class GroupConfig
-{
-  friend class Group;
+class GroupConfig {
+    friend class Group;
 
-  public:
+public:
     GroupConfig();
 
     QStringList activeObjectTypes() const;
-    void setActiveObjectTypes( const QStringList &objectTypes );
+    void setActiveObjectTypes(const QStringList &objectTypes);
 
-  private:
+private:
     OSyncGroup *mGroup;
 };
 
 
-class Group
-{
-  friend class Engine;
-  friend class Environment;
+class Group {
+    friend class Engine;
+    friend class Environment;
 
-  public:
+public:
     enum LockType
     {
-      LockOk,
-      Locked,
-      LockStale
+        LockOk,
+        Locked,
+        LockStale
     };
 
     Group();
@@ -71,35 +69,56 @@ class Group
      */
     bool isValid() const;
 
-    class Iterator
-    {
-      friend class Group;
+    class Iterator {
+        friend class Group;
 
-      public:
-        Iterator( Group *group )
-          : mGroup( group ), mPos( -1 )
+    public:
+        Iterator(Group *group)
+            : mGroup(group), mPos(-1)
         {
         }
 
-        Iterator( const Iterator &it )
+        Iterator(const Iterator &it)
         {
-          mGroup = it.mGroup;
-          mPos = it.mPos;
+            mGroup = it.mGroup;
+            mPos = it.mPos;
         }
 
-        Member operator*() 
+        Member operator*()
         {
-          return mGroup->memberAt( mPos );
+            return mGroup->memberAt(mPos);
         }
 
-        Iterator &operator++() { mPos++; return *this; }
-        Iterator &operator++( int ) { mPos++; return *this; }
-        Iterator &operator--() { mPos--; return *this; }
-        Iterator &operator--( int ) { mPos--; return *this; }
-        bool operator==( const Iterator &it ) { return mGroup == it.mGroup && mPos == it.mPos; }
-        bool operator!=( const Iterator &it ) { return mGroup == it.mGroup && mPos != it.mPos; }
+        Iterator &operator++()
+        {
+            mPos++;
+            return *this;
+        }
+        Iterator &operator++(int)
+        {
+            mPos++;
+            return *this;
+        }
+        Iterator &operator--()
+        {
+            mPos--;
+            return *this;
+        }
+        Iterator &operator--(int)
+        {
+            mPos--;
+            return *this;
+        }
+        bool operator==(const Iterator &it)
+        {
+            return mGroup == it.mGroup && mPos == it.mPos;
+        }
+        bool operator!=(const Iterator &it)
+        {
+            return mGroup == it.mGroup && mPos != it.mPos;
+        }
 
-      private:
+    private:
         Group *mGroup;
         int mPos;
     };
@@ -119,7 +138,7 @@ class Group
     /**
       Sets the name of the group.
      */
-    void setName( const QString &name );
+    void setName(const QString &name);
 
     /**
       Returns the name of the group.
@@ -129,7 +148,7 @@ class Group
     /**
       Sets the time of the last successfull synchronization.
      */
-    void setLastSynchronization( const QDateTime &dateTime );
+    void setLastSynchronization(const QDateTime &dateTime);
 
     /**
       Returns the time of the last successfull synchronization.
@@ -148,7 +167,7 @@ class Group
 
       @param removeFile Whether the lock file shall be removed.
      */
-    void unlock( bool removeFile = true );
+    void unlock(bool removeFile = true);
 
     /**
       Adds a new member to the group.
@@ -160,7 +179,7 @@ class Group
     /**
       Removes a member from the group.
      */
-    void removeMember( const Member &member );
+    void removeMember(const Member &member);
 
     /**
       Returns the number of members.
@@ -170,7 +189,7 @@ class Group
     /**
       Returns the member at position @param pos.
      */
-    Member memberAt( int pos ) const;
+    Member memberAt(int pos) const;
 
     /**
       Returns the number of filters.
@@ -180,19 +199,19 @@ class Group
     /**
       Returns the filter at position @param pos.
      */
-    Filter filterAt( int pos );
+    Filter filterAt(int pos);
 
     /**
       Set, if the object type with given name is enabled for synchronisation for
       this group.
      */
-    void setObjectTypeEnabled( const QString &objectType, bool enabled );
+    void setObjectTypeEnabled(const QString &objectType, bool enabled);
 
     /**
       Returns whether the object type with given name is enabled for synchronisation for
       this group.
      */
-    bool isObjectTypeEnabled( const QString &objectType ) const;
+    bool isObjectTypeEnabled(const QString &objectType) const;
 
     /**
       Saves the configuration to hard disc.
@@ -206,9 +225,12 @@ class Group
      */
     GroupConfig config() const;
 
-    bool operator==( const Group &group ) const { return mGroup == group.mGroup; }
+    bool operator==(const Group &group) const
+    {
+        return mGroup == group.mGroup;
+    }
 
-  private:
+private:
     OSyncGroup *mGroup;
 };
 

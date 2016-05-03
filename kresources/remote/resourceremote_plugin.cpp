@@ -27,15 +27,14 @@
 
 using namespace KCal;
 
-typedef KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig> RemoteFactory;
+typedef KRES::PluginFactory<ResourceRemote, ResourceRemoteConfig> RemoteFactory;
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_remote, RemoteFactory ); here
 // Problem: How do I insert the catalogue???
-extern "C"
-{
-  void *init_kcal_remote()
-  {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kres_remote" );
-    return new RemoteFactory;
-  }
+extern "C" {
+    void *init_kcal_remote()
+    {
+        KGlobal::locale()->insertCatalogue("libkcal");
+        KGlobal::locale()->insertCatalogue("kres_remote");
+        return new RemoteFactory;
+    }
 }

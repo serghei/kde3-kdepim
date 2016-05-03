@@ -24,10 +24,10 @@
 #include "knglobals.h"
 
 //----------------------------------------------------------------------------
-NotifyCollection* KNScorableArticle::notifyC = 0;
+NotifyCollection *KNScorableArticle::notifyC = 0;
 
-KNScorableArticle::KNScorableArticle(KNRemoteArticle* a)
-  : ScorableArticle(), _a(a)
+KNScorableArticle::KNScorableArticle(KNRemoteArticle *a)
+    : ScorableArticle(), _a(a)
 {
 }
 
@@ -39,47 +39,47 @@ KNScorableArticle::~KNScorableArticle()
 
 void KNScorableArticle::addScore(short s)
 {
-  _a->setScore(_a->score()+s);
-  _a->setChanged(true);
+    _a->setScore(_a->score() + s);
+    _a->setChanged(true);
 }
 
-void KNScorableArticle::changeColor(const QColor& c)
+void KNScorableArticle::changeColor(const QColor &c)
 {
-  _a->setColor(c);
+    _a->setColor(c);
 }
 
-void KNScorableArticle::displayMessage(const QString& s)
+void KNScorableArticle::displayMessage(const QString &s)
 {
-  if (!_a->isNew()) return;
-  if (!notifyC) notifyC = new NotifyCollection();
-  notifyC->addNote(*this,s);
+    if(!_a->isNew()) return;
+    if(!notifyC) notifyC = new NotifyCollection();
+    notifyC->addNote(*this, s);
 }
 
 QString KNScorableArticle::from() const
 {
-  return _a->from()->asUnicodeString();
+    return _a->from()->asUnicodeString();
 }
 
 
 QString KNScorableArticle::subject() const
 {
-  return _a->subject()->asUnicodeString();
+    return _a->subject()->asUnicodeString();
 }
 
 
-QString KNScorableArticle::getHeaderByType(const QString& s) const
+QString KNScorableArticle::getHeaderByType(const QString &s) const
 {
-  KMime::Headers::Base *h = _a->getHeaderByType(s.latin1());
-  if (!h) return "";
-  QString t = _a->getHeaderByType(s.latin1())->asUnicodeString();
-  Q_ASSERT( !t.isEmpty() );
-  return t;
+    KMime::Headers::Base *h = _a->getHeaderByType(s.latin1());
+    if(!h) return "";
+    QString t = _a->getHeaderByType(s.latin1())->asUnicodeString();
+    Q_ASSERT(!t.isEmpty());
+    return t;
 }
 
 
 void KNScorableArticle::markAsRead()
 {
-  _a->setRead();
+    _a->setRead();
 }
 
 //----------------------------------------------------------------------------
@@ -107,36 +107,38 @@ KNScoringManager::~KNScoringManager()
 
 QStringList KNScoringManager::getGroups() const
 {
-  KNAccountManager *am = knGlobals.accountManager();
-  QStringList res;
-  QValueList<KNNntpAccount*>::Iterator it;
-  for ( it = am->begin(); it != am->end(); ++it ) {
-    QStringList groups;
-    knGlobals.groupManager()->getSubscribed( (*it), groups);
-    res += groups;
-  }
-  res.sort();
-  return res;
+    KNAccountManager *am = knGlobals.accountManager();
+    QStringList res;
+    QValueList<KNNntpAccount *>::Iterator it;
+    for(it = am->begin(); it != am->end(); ++it)
+    {
+        QStringList groups;
+        knGlobals.groupManager()->getSubscribed((*it), groups);
+        res += groups;
+    }
+    res.sort();
+    return res;
 }
 
 
 QStringList KNScoringManager::getDefaultHeaders() const
 {
-  QStringList l = KScoringManager::getDefaultHeaders();
-  l << "Lines";
-  l << "References";
-  return l;
+    QStringList l = KScoringManager::getDefaultHeaders();
+    l << "Lines";
+    l << "References";
+    return l;
 }
 
 
 void KNScoringManager::configure()
 {
-  KScoringEditor *dlg = KScoringEditor::createEditor(this, knGlobals.topWidget);
+    KScoringEditor *dlg = KScoringEditor::createEditor(this, knGlobals.topWidget);
 
-  if (dlg) {
-    dlg->show();
-    KWin::activateWindow(dlg->winId());
-  }
+    if(dlg)
+    {
+        dlg->show();
+        KWin::activateWindow(dlg->winId());
+    }
 }
 
 #include "knscoring.moc"

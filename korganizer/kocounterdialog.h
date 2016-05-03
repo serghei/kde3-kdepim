@@ -37,18 +37,17 @@ class KOEventViewer;
 /**
   Viewer dialog for counter events.
 */
-class KOCounterDialog : public KDialogBase
-{
+class KOCounterDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    KOCounterDialog(QWidget *parent = 0, const char *name = 0 );
+public:
+    KOCounterDialog(QWidget *parent = 0, const char *name = 0);
     virtual ~KOCounterDialog();
 
-    void setIncidence( Incidence *incidence );
-    void addIncidence( Incidence *incidence );
-    void addText( const QString &text );
+    void setIncidence(Incidence *incidence);
+    void addIncidence(Incidence *incidence);
+    void addText(const QString &text);
 
-  private:
+private:
     KOEventViewer *mEventViewer;
 };
 

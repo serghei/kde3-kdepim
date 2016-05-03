@@ -37,32 +37,31 @@
 
 #include "KDGanttViewItem.h"
 
-class KDGanttViewSummaryItem : public KDGanttViewItem
-{
+class KDGanttViewSummaryItem : public KDGanttViewItem {
 public:
-    KDGanttViewSummaryItem( KDGanttView* view,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
-    KDGanttViewSummaryItem( KDGanttViewItem* parent,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
-    KDGanttViewSummaryItem( KDGanttView* view, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
-    KDGanttViewSummaryItem( KDGanttViewItem* parent, KDGanttViewItem* after,
-                            const QString& lvtext = QString::null,
-                            const QString& name = QString::null );
+    KDGanttViewSummaryItem(KDGanttView *view,
+                           const QString &lvtext = QString::null,
+                           const QString &name = QString::null);
+    KDGanttViewSummaryItem(KDGanttViewItem *parent,
+                           const QString &lvtext = QString::null,
+                           const QString &name = QString::null);
+    KDGanttViewSummaryItem(KDGanttView *view, KDGanttViewItem *after,
+                           const QString &lvtext = QString::null,
+                           const QString &name = QString::null);
+    KDGanttViewSummaryItem(KDGanttViewItem *parent, KDGanttViewItem *after,
+                           const QString &lvtext = QString::null,
+                           const QString &name = QString::null);
     virtual ~KDGanttViewSummaryItem();
 
-    void setMiddleTime( const QDateTime& );
+    void setMiddleTime(const QDateTime &);
     QDateTime middleTime() const;
-    void setActualEndTime( const QDateTime& end );
+    void setActualEndTime(const QDateTime &end);
     QDateTime actualEndTime() const;
-    void setStartTime( const QDateTime& start );
-    void setEndTime( const QDateTime& end );
+    void setStartTime(const QDateTime &start);
+    void setEndTime(const QDateTime &end);
 private:
-    void showItem( bool show = true, int coordY = 0 );
-    QDateTime* myActualEndTime,*myMiddleTime;
+    void showItem(bool show = true, int coordY = 0);
+    QDateTime *myActualEndTime, *myMiddleTime;
     void initItem();
     void hideMe();
 

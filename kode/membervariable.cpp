@@ -26,26 +26,31 @@
 using namespace KODE;
 
 MemberVariable::MemberVariable()
-  : Variable()
+    : Variable()
 {
 }
 
-MemberVariable::MemberVariable( const QString &name, const QString &type,
-                                bool isStatic )
-  : Variable( name, type, isStatic )
+MemberVariable::MemberVariable(const QString &name, const QString &type,
+                               bool isStatic)
+    : Variable(name, type, isStatic)
 {
-  QString n;
+    QString n;
 
-  if ( name.isEmpty() ) {
-    n = "mUndefined";
-  } else if ( name.length() >= 2  && name[ 0 ] == "m" &&
-              ( name[ 1 ].upper() == name[ 1 ] ) ) {
-    n = name;
-  } else {
-    n = "m";
-    n += name[ 0 ].upper();
-    n += name.mid( 1 );
-  }
+    if(name.isEmpty())
+    {
+        n = "mUndefined";
+    }
+    else if(name.length() >= 2  && name[ 0 ] == "m" &&
+            (name[ 1 ].upper() == name[ 1 ]))
+    {
+        n = name;
+    }
+    else
+    {
+        n = "m";
+        n += name[ 0 ].upper();
+        n += name.mid(1);
+    }
 
-  setName( n );
+    setName(n);
 }

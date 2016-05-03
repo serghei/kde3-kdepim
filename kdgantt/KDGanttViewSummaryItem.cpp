@@ -53,12 +53,12 @@
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
-                                                const QString& lvtext,
-                                                const QString& name ) :
-    KDGanttViewItem( Summary, view, lvtext, name )
+KDGanttViewSummaryItem::KDGanttViewSummaryItem(KDGanttView *view,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Summary, view, lvtext, name)
 {
-  initItem();
+    initItem();
 }
 
 
@@ -70,12 +70,12 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
-                                                const QString& lvtext,
-                                                const QString& name ) :
-    KDGanttViewItem( Summary, parent, lvtext, name )
+KDGanttViewSummaryItem::KDGanttViewSummaryItem(KDGanttViewItem *parent,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Summary, parent, lvtext, name)
 {
-  initItem();
+    initItem();
 }
 
 
@@ -88,13 +88,13 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
-                                                KDGanttViewItem* after,
-                                                const QString& lvtext,
-                                                const QString& name ) :
-    KDGanttViewItem( Summary, view, after, lvtext, name )
+KDGanttViewSummaryItem::KDGanttViewSummaryItem(KDGanttView *view,
+        KDGanttViewItem *after,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Summary, view, after, lvtext, name)
 {
-  initItem();
+    initItem();
 }
 
 
@@ -107,14 +107,14 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttView* view,
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
-                                                KDGanttViewItem* after,
-                                                const QString& lvtext,
-                                                const QString& name ) :
-    KDGanttViewItem( Summary, parent, after, lvtext, name )
+KDGanttViewSummaryItem::KDGanttViewSummaryItem(KDGanttViewItem *parent,
+        KDGanttViewItem *after,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Summary, parent, after, lvtext, name)
 {
 
-  initItem();
+    initItem();
 
 }
 
@@ -135,19 +135,20 @@ KDGanttViewSummaryItem::~KDGanttViewSummaryItem()
   \param dateTime the middle time
   \sa middleTime()
 */
-void KDGanttViewSummaryItem::setMiddleTime( const QDateTime& dateTime )
+void KDGanttViewSummaryItem::setMiddleTime(const QDateTime &dateTime)
 {
- if (! dateTime.isValid() ) {
-    qDebug("KDGanttViewSummaryItem::setMiddleTime():Invalid parameter-no time set");
-    return;
-  }
-  if (!myMiddleTime) myMiddleTime = new QDateTime;
-  *myMiddleTime = dateTime;
-  if ( myEndTime < middleTime() )
-      setEndTime( middleTime() );
-  if ( myStartTime > middleTime() )
-      setStartTime( middleTime() );
-  updateCanvasItems();
+    if(! dateTime.isValid())
+    {
+        qDebug("KDGanttViewSummaryItem::setMiddleTime():Invalid parameter-no time set");
+        return;
+    }
+    if(!myMiddleTime) myMiddleTime = new QDateTime;
+    *myMiddleTime = dateTime;
+    if(myEndTime < middleTime())
+        setEndTime(middleTime());
+    if(myStartTime > middleTime())
+        setStartTime(middleTime());
+    updateCanvasItems();
 }
 
 
@@ -160,9 +161,9 @@ void KDGanttViewSummaryItem::setMiddleTime( const QDateTime& dateTime )
 */
 QDateTime KDGanttViewSummaryItem::middleTime() const
 {
-  if(myMiddleTime)
-    return *myMiddleTime;
-  return myStartTime;
+    if(myMiddleTime)
+        return *myMiddleTime;
+    return myStartTime;
 }
 
 
@@ -174,17 +175,18 @@ QDateTime KDGanttViewSummaryItem::middleTime() const
   \param end the end time
   \sa endTime(), setStartTime(), startTime()
 */
-void KDGanttViewSummaryItem::setEndTime( const QDateTime& end )
+void KDGanttViewSummaryItem::setEndTime(const QDateTime &end)
 {
-  if (! end.isValid() ) {
-    qDebug("KDGanttViewSummaryItem::setEndTime():Invalid parameter-no time set");
-    return;
-  }
-  myEndTime = end;
-  if ( myEndTime < middleTime() )
-      setMiddleTime( myEndTime );
-  else
-    updateCanvasItems();
+    if(! end.isValid())
+    {
+        qDebug("KDGanttViewSummaryItem::setEndTime():Invalid parameter-no time set");
+        return;
+    }
+    myEndTime = end;
+    if(myEndTime < middleTime())
+        setMiddleTime(myEndTime);
+    else
+        updateCanvasItems();
 }
 
 
@@ -197,18 +199,20 @@ void KDGanttViewSummaryItem::setEndTime( const QDateTime& end )
   \param start the start time
   \sa startTime(), setEndTime(), endTime()
 */
-void KDGanttViewSummaryItem::setStartTime( const QDateTime& start )
+void KDGanttViewSummaryItem::setStartTime(const QDateTime &start)
 {
-  if (! start.isValid() ) {
-    qDebug("KDGanttViewSummaryItem::setStartTime():Invalid parameter-no time set");
-    return;
-  }
+    if(! start.isValid())
+    {
+        qDebug("KDGanttViewSummaryItem::setStartTime():Invalid parameter-no time set");
+        return;
+    }
     myStartTime = start;
- if ( myStartTime > middleTime() ) {
-      setMiddleTime( myStartTime );
- }
+    if(myStartTime > middleTime())
+    {
+        setMiddleTime(myStartTime);
+    }
     else
-      updateCanvasItems();
+        updateCanvasItems();
 }
 
 
@@ -221,12 +225,12 @@ void KDGanttViewSummaryItem::setStartTime( const QDateTime& start )
   \sa actualEndTime()
   startTime()
 */
-void KDGanttViewSummaryItem::setActualEndTime( const QDateTime& end )
+void KDGanttViewSummaryItem::setActualEndTime(const QDateTime &end)
 {
-  if (!myActualEndTime) myActualEndTime = new QDateTime;
-  *myActualEndTime =  end;
+    if(!myActualEndTime) myActualEndTime = new QDateTime;
+    *myActualEndTime =  end;
 
-  updateCanvasItems();
+    updateCanvasItems();
 
 }
 
@@ -240,9 +244,9 @@ void KDGanttViewSummaryItem::setActualEndTime( const QDateTime& end )
 */
 QDateTime KDGanttViewSummaryItem::actualEndTime() const
 {
-  if(myActualEndTime)
-    return *myActualEndTime;
-  return myEndTime;
+    if(myActualEndTime)
+        return *myActualEndTime;
+    return myEndTime;
 }
 
 
@@ -264,114 +268,123 @@ void KDGanttViewSummaryItem::hideMe()
 
 // shows the item
 // if coordY >0, this is taken as the middle y-coordinate
-void KDGanttViewSummaryItem::showItem( bool show, int coordY )
+void KDGanttViewSummaryItem::showItem(bool show, int coordY)
 {
-  isVisibleInGanttView = show;
-  invalidateHeight () ;
-  if (!show) {
-    hideMe();
-    return;
-  }
- if ( displaySubitemsAsGroup() && !parent() && !isOpen() ) {
-    hideMe();
-    return;
-  }
-  float prio = ((float) ( priority() - 100 )) / 100.0;
-  startShape->setZ( prio + 0.0055 );
-  midShape->setZ( prio + 0.004 );
-  endShape->setZ( prio + 0.005 );
-  startShapeBack->setZ( prio + 0.003 );
-  midShapeBack->setZ( prio + 0.003 );
-  endShapeBack->setZ( prio + 0.003 );
-  startLine->setZ( prio + 0.0015  );
-  endLine->setZ( prio + 0.001 );
-  textCanvas->setZ( prio + 0.006 );
-  startLineBack->setZ( prio );
-  endLineBack->setZ( prio );
-  actualEnd->setZ( prio  + 0.007 );
-  if ( displaySubitemsAsGroup() && firstChild() ) {
-    myStartTime = myChildStartTime();
-    myEndTime = myChildEndTime();
-  }
-  int startX, endX, midX = 0,allY;
-  if ( coordY )
-    allY = coordY;
-  else
-    allY = getCoordY();
-  startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
-  endX = myGanttView->myTimeHeader->getCoordX(myEndTime);
-  if (myMiddleTime)
-    midX = myGanttView->myTimeHeader->getCoordX(*myMiddleTime);
-  else
-    midX = endX;
-
-  startLine->setPoints(startX,allY,midX,allY);
-  startLine->show();
-  startLineBack->setPoints(startX-1,allY,midX+1,allY);
-  startLineBack->show();
-  startShape->move(startX,allY);
-  startShapeBack->move(startX,allY);
-
-  endShape->move(endX,allY);
-  endShapeBack->move(endX,allY);
-  moveTextCanvas(endX,allY);
-  startShape->show();
-  startShapeBack->show();
-  endShape->show();
-  endShapeBack->show();
-  textCanvas->show();
-  if (myMiddleTime) {
-    endLine->setPoints(midX,allY,endX,allY);
-    endLine->show();
-    endLineBack->setPoints(midX,allY,endX+1,allY);
-    endLineBack->show();
-    midShape->move(midX,allY);
-    midShape->show();
-    midShapeBack->move(midX,allY);
-    midShapeBack->show();
-  }
-  else {
-    endLine->hide();
-    endLineBack->hide();
-    midShape->hide();
-    midShapeBack->hide();
-  }
-  if (myActualEndTime) {
-    if ( *myActualEndTime == myEndTime ) {
-      actualEnd->hide();
-    }
-    else {
-      int actendX = myGanttView->myTimeHeader->getCoordX(*myActualEndTime);
-      actualEnd->setPoints(actendX,allY-5,actendX,allY+5);
-      actualEnd->show();
-    }
-  }
-  else {
-    actualEnd->hide();
-  }
-  if(myStartTime == myEndTime)
+    isVisibleInGanttView = show;
+    invalidateHeight() ;
+    if(!show)
     {
-      endShape->moveBy(myItemSize+4,0);
-      endShapeBack->moveBy(myItemSize+4,0);
-      textCanvas->moveBy(myItemSize+4,0);
-      midShape->hide();
-      midShapeBack->hide();
-      startLine->hide();
-      endLine->hide();
-      startLineBack->hide();
-      endLineBack->hide();
+        hideMe();
+        return;
     }
-  if (textCanvas->text().isEmpty())
-    textCanvas->hide();
+    if(displaySubitemsAsGroup() && !parent() && !isOpen())
+    {
+        hideMe();
+        return;
+    }
+    float prio = ((float)(priority() - 100)) / 100.0;
+    startShape->setZ(prio + 0.0055);
+    midShape->setZ(prio + 0.004);
+    endShape->setZ(prio + 0.005);
+    startShapeBack->setZ(prio + 0.003);
+    midShapeBack->setZ(prio + 0.003);
+    endShapeBack->setZ(prio + 0.003);
+    startLine->setZ(prio + 0.0015);
+    endLine->setZ(prio + 0.001);
+    textCanvas->setZ(prio + 0.006);
+    startLineBack->setZ(prio);
+    endLineBack->setZ(prio);
+    actualEnd->setZ(prio  + 0.007);
+    if(displaySubitemsAsGroup() && firstChild())
+    {
+        myStartTime = myChildStartTime();
+        myEndTime = myChildEndTime();
+    }
+    int startX, endX, midX = 0, allY;
+    if(coordY)
+        allY = coordY;
+    else
+        allY = getCoordY();
+    startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
+    endX = myGanttView->myTimeHeader->getCoordX(myEndTime);
+    if(myMiddleTime)
+        midX = myGanttView->myTimeHeader->getCoordX(*myMiddleTime);
+    else
+        midX = endX;
+
+    startLine->setPoints(startX, allY, midX, allY);
+    startLine->show();
+    startLineBack->setPoints(startX - 1, allY, midX + 1, allY);
+    startLineBack->show();
+    startShape->move(startX, allY);
+    startShapeBack->move(startX, allY);
+
+    endShape->move(endX, allY);
+    endShapeBack->move(endX, allY);
+    moveTextCanvas(endX, allY);
+    startShape->show();
+    startShapeBack->show();
+    endShape->show();
+    endShapeBack->show();
+    textCanvas->show();
+    if(myMiddleTime)
+    {
+        endLine->setPoints(midX, allY, endX, allY);
+        endLine->show();
+        endLineBack->setPoints(midX, allY, endX + 1, allY);
+        endLineBack->show();
+        midShape->move(midX, allY);
+        midShape->show();
+        midShapeBack->move(midX, allY);
+        midShapeBack->show();
+    }
+    else
+    {
+        endLine->hide();
+        endLineBack->hide();
+        midShape->hide();
+        midShapeBack->hide();
+    }
+    if(myActualEndTime)
+    {
+        if(*myActualEndTime == myEndTime)
+        {
+            actualEnd->hide();
+        }
+        else
+        {
+            int actendX = myGanttView->myTimeHeader->getCoordX(*myActualEndTime);
+            actualEnd->setPoints(actendX, allY - 5, actendX, allY + 5);
+            actualEnd->show();
+        }
+    }
+    else
+    {
+        actualEnd->hide();
+    }
+    if(myStartTime == myEndTime)
+    {
+        endShape->moveBy(myItemSize + 4, 0);
+        endShapeBack->moveBy(myItemSize + 4, 0);
+        textCanvas->moveBy(myItemSize + 4, 0);
+        midShape->hide();
+        midShapeBack->hide();
+        startLine->hide();
+        endLine->hide();
+        startLineBack->hide();
+        endLineBack->hide();
+    }
+    if(textCanvas->text().isEmpty())
+        textCanvas->hide();
 }
 void KDGanttViewSummaryItem::initItem()
 {
-  isVisibleInGanttView = false;
-  myActualEndTime = 0;
-  myMiddleTime = 0;
-  showItem(true);
-  myGanttView->myTimeTable->updateMyContent();
-  setDragEnabled( myGanttView->dragEnabled() );
-  setDropEnabled( myGanttView->dropEnabled() );
+    isVisibleInGanttView = false;
+    myActualEndTime = 0;
+    myMiddleTime = 0;
+    showItem(true);
+    myGanttView->myTimeTable->updateMyContent();
+    setDragEnabled(myGanttView->dragEnabled());
+    setDropEnabled(myGanttView->dropEnabled());
 }
 

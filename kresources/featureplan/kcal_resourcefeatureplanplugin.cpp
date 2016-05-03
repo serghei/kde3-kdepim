@@ -30,11 +30,10 @@ using namespace KCal;
 typedef KRES::PluginFactory< ResourceFeaturePlan, ResourceFeaturePlanConfig > FeatureplanFactory;
 // FIXME K_EXPORT_COMPONENT_FACTORY( kcal_resourcefeatureplan, FeatureplanFactory )
 // Problem: How to insert the catalogue!
-extern "C"
-{
-  void* init_kcal_resourcefeatureplan()
-  {
-    KGlobal::locale()->insertCatalogue( "kres_featureplan" );
-    return new FeatureplanFactory;
-  }
+extern "C" {
+    void *init_kcal_resourcefeatureplan()
+    {
+        KGlobal::locale()->insertCatalogue("kres_featureplan");
+        return new FeatureplanFactory;
+    }
 }

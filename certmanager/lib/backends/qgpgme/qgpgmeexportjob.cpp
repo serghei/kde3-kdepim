@@ -46,33 +46,36 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEExportJob::QGpgMEExportJob( GpgME::Context * context )
-  : ExportJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEExportJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEExportJob::QGpgMEExportJob(GpgME::Context *context)
+    : ExportJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEExportJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEExportJob::~QGpgMEExportJob() {
+Kleo::QGpgMEExportJob::~QGpgMEExportJob()
+{
 }
 
-GpgME::Error Kleo::QGpgMEExportJob::start( const QStringList & pats ) {
-  assert( !patterns() );
-  assert( !mOutData );
+GpgME::Error Kleo::QGpgMEExportJob::start(const QStringList &pats)
+{
+    assert(!patterns());
+    assert(!mOutData);
 
-  createOutData();
-  setPatterns( pats );
-  hookupContextToEventLoopInteractor();
+    createOutData();
+    setPatterns(pats);
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startPublicKeyExport(patterns(), *mOutData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-void Kleo::QGpgMEExportJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  emit result( error, mOutDataDataProvider->data() );
+void Kleo::QGpgMEExportJob::doOperationDoneEvent(const GpgME::Error &error)
+{
+    emit result(error, mOutDataDataProvider->data());
 }
 
 #include "qgpgmeexportjob.moc"

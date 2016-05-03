@@ -33,36 +33,36 @@
 #include "syncAction.h"
 
 
-class InternalEditorAction : public SyncAction
-{
-Q_OBJECT
+class InternalEditorAction : public SyncAction {
+    Q_OBJECT
 
 public:
-	InternalEditorAction(KPilotLink *);
-	~InternalEditorAction() {}
+    InternalEditorAction(KPilotLink *);
+    ~InternalEditorAction() {}
 
 protected:
-	virtual bool exec();
+    virtual bool exec();
 
 private:
 private slots:
-	void syncDirtyDB();
-	void syncFlagsChangedDB();
-	void syncAppBlockChangedDB();
-	void cleanup();
+    void syncDirtyDB();
+    void syncFlagsChangedDB();
+    void syncAppBlockChangedDB();
+    void cleanup();
 
 private:
-	bool queryUseKPilotChanges(QString dbName, recordid_t id,
-		PilotRecord*localrec, PilotRecord*serialrec, PilotDatabase*db);
-	QStringList dirtyDBs;
-	QStringList::Iterator dbIter;
-	enum eInternalEditorSyncStatus {
-		eSyncStarted,
-		eSyncDirtyDB,
-		eSyncFlagsChangedDB,
-		eSyncAppBlockChangedDB,
-		eSyncFinished
-	} fInternalEditorSyncStatus;
+    bool queryUseKPilotChanges(QString dbName, recordid_t id,
+                               PilotRecord *localrec, PilotRecord *serialrec, PilotDatabase *db);
+    QStringList dirtyDBs;
+    QStringList::Iterator dbIter;
+    enum eInternalEditorSyncStatus
+    {
+        eSyncStarted,
+        eSyncDirtyDB,
+        eSyncFlagsChangedDB,
+        eSyncAppBlockChangedDB,
+        eSyncFinished
+    } fInternalEditorSyncStatus;
 } ;
 
 #endif

@@ -7,16 +7,16 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-    
+
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
@@ -29,155 +29,155 @@
 #include <resultelementarray.h>
 #include <directorycategoryarray.h>
 
-void GoogleSearchResult::setDocumentFiltering( bool* documentFiltering )
+void GoogleSearchResult::setDocumentFiltering(bool *documentFiltering)
 {
-  mDocumentFiltering = documentFiltering;
+    mDocumentFiltering = documentFiltering;
 }
 
-bool*GoogleSearchResult::documentFiltering() const
+bool *GoogleSearchResult::documentFiltering() const
 {
-   return mDocumentFiltering;
+    return mDocumentFiltering;
 }
 
-void GoogleSearchResult::setSearchComments( QString* searchComments )
+void GoogleSearchResult::setSearchComments(QString *searchComments)
 {
-  mSearchComments = searchComments;
+    mSearchComments = searchComments;
 }
 
-QString*GoogleSearchResult::searchComments() const
+QString *GoogleSearchResult::searchComments() const
 {
-   return mSearchComments;
+    return mSearchComments;
 }
 
-void GoogleSearchResult::setEstimatedTotalResultsCount( int* estimatedTotalResultsCount )
+void GoogleSearchResult::setEstimatedTotalResultsCount(int *estimatedTotalResultsCount)
 {
-  mEstimatedTotalResultsCount = estimatedTotalResultsCount;
+    mEstimatedTotalResultsCount = estimatedTotalResultsCount;
 }
 
-int*GoogleSearchResult::estimatedTotalResultsCount() const
+int *GoogleSearchResult::estimatedTotalResultsCount() const
 {
-   return mEstimatedTotalResultsCount;
+    return mEstimatedTotalResultsCount;
 }
 
-void GoogleSearchResult::setEstimateIsExact( bool* estimateIsExact )
+void GoogleSearchResult::setEstimateIsExact(bool *estimateIsExact)
 {
-  mEstimateIsExact = estimateIsExact;
+    mEstimateIsExact = estimateIsExact;
 }
 
-bool*GoogleSearchResult::estimateIsExact() const
+bool *GoogleSearchResult::estimateIsExact() const
 {
-   return mEstimateIsExact;
+    return mEstimateIsExact;
 }
 
-void GoogleSearchResult::setResultElements( ResultElementArray* resultElements )
+void GoogleSearchResult::setResultElements(ResultElementArray *resultElements)
 {
-  mResultElements = resultElements;
+    mResultElements = resultElements;
 }
 
-ResultElementArray*GoogleSearchResult::resultElements() const
+ResultElementArray *GoogleSearchResult::resultElements() const
 {
-   return mResultElements;
+    return mResultElements;
 }
 
-void GoogleSearchResult::setSearchQuery( QString* searchQuery )
+void GoogleSearchResult::setSearchQuery(QString *searchQuery)
 {
-  mSearchQuery = searchQuery;
+    mSearchQuery = searchQuery;
 }
 
-QString*GoogleSearchResult::searchQuery() const
+QString *GoogleSearchResult::searchQuery() const
 {
-   return mSearchQuery;
+    return mSearchQuery;
 }
 
-void GoogleSearchResult::setStartIndex( int* startIndex )
+void GoogleSearchResult::setStartIndex(int *startIndex)
 {
-  mStartIndex = startIndex;
+    mStartIndex = startIndex;
 }
 
-int*GoogleSearchResult::startIndex() const
+int *GoogleSearchResult::startIndex() const
 {
-   return mStartIndex;
+    return mStartIndex;
 }
 
-void GoogleSearchResult::setEndIndex( int* endIndex )
+void GoogleSearchResult::setEndIndex(int *endIndex)
 {
-  mEndIndex = endIndex;
+    mEndIndex = endIndex;
 }
 
-int*GoogleSearchResult::endIndex() const
+int *GoogleSearchResult::endIndex() const
 {
-   return mEndIndex;
+    return mEndIndex;
 }
 
-void GoogleSearchResult::setSearchTips( QString* searchTips )
+void GoogleSearchResult::setSearchTips(QString *searchTips)
 {
-  mSearchTips = searchTips;
+    mSearchTips = searchTips;
 }
 
-QString*GoogleSearchResult::searchTips() const
+QString *GoogleSearchResult::searchTips() const
 {
-   return mSearchTips;
+    return mSearchTips;
 }
 
-void GoogleSearchResult::setDirectoryCategories( DirectoryCategoryArray* directoryCategories )
+void GoogleSearchResult::setDirectoryCategories(DirectoryCategoryArray *directoryCategories)
 {
-  mDirectoryCategories = directoryCategories;
+    mDirectoryCategories = directoryCategories;
 }
 
-DirectoryCategoryArray*GoogleSearchResult::directoryCategories() const
+DirectoryCategoryArray *GoogleSearchResult::directoryCategories() const
 {
-   return mDirectoryCategories;
+    return mDirectoryCategories;
 }
 
-void GoogleSearchResult::setSearchTime( double* searchTime )
+void GoogleSearchResult::setSearchTime(double *searchTime)
 {
-  mSearchTime = searchTime;
+    mSearchTime = searchTime;
 }
 
-double*GoogleSearchResult::searchTime() const
+double *GoogleSearchResult::searchTime() const
 {
-   return mSearchTime;
+    return mSearchTime;
 }
 
 GoogleSearchResult::GoogleSearchResult()
 {
-  mDocumentFiltering = 0;
-  mSearchComments = 0;
-  mEstimatedTotalResultsCount = 0;
-  mEstimateIsExact = 0;
-  mResultElements = 0;
-  mSearchQuery = 0;
-  mStartIndex = 0;
-  mEndIndex = 0;
-  mSearchTips = 0;
-  mDirectoryCategories = 0;
-  mSearchTime = 0;
+    mDocumentFiltering = 0;
+    mSearchComments = 0;
+    mEstimatedTotalResultsCount = 0;
+    mEstimateIsExact = 0;
+    mResultElements = 0;
+    mSearchQuery = 0;
+    mStartIndex = 0;
+    mEndIndex = 0;
+    mSearchTips = 0;
+    mDirectoryCategories = 0;
+    mSearchTime = 0;
 }
 
 GoogleSearchResult::~GoogleSearchResult()
 {
-  delete mDocumentFiltering;
-  mDocumentFiltering = 0;
-  delete mSearchComments;
-  mSearchComments = 0;
-  delete mEstimatedTotalResultsCount;
-  mEstimatedTotalResultsCount = 0;
-  delete mEstimateIsExact;
-  mEstimateIsExact = 0;
-  delete mResultElements;
-  mResultElements = 0;
-  delete mSearchQuery;
-  mSearchQuery = 0;
-  delete mStartIndex;
-  mStartIndex = 0;
-  delete mEndIndex;
-  mEndIndex = 0;
-  delete mSearchTips;
-  mSearchTips = 0;
-  delete mDirectoryCategories;
-  mDirectoryCategories = 0;
-  delete mSearchTime;
-  mSearchTime = 0;
+    delete mDocumentFiltering;
+    mDocumentFiltering = 0;
+    delete mSearchComments;
+    mSearchComments = 0;
+    delete mEstimatedTotalResultsCount;
+    mEstimatedTotalResultsCount = 0;
+    delete mEstimateIsExact;
+    mEstimateIsExact = 0;
+    delete mResultElements;
+    mResultElements = 0;
+    delete mSearchQuery;
+    mSearchQuery = 0;
+    delete mStartIndex;
+    mStartIndex = 0;
+    delete mEndIndex;
+    mEndIndex = 0;
+    delete mSearchTips;
+    mSearchTips = 0;
+    delete mDirectoryCategories;
+    mDirectoryCategories = 0;
+    delete mSearchTime;
+    mSearchTime = 0;
 }
 
 

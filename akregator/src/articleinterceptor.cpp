@@ -4,46 +4,44 @@
 #include <qvaluelist.h>
 #include <kstaticdeleter.h>
 
-namespace Akregator
-{
+namespace Akregator {
 
-class ArticleInterceptorManager::ArticleInterceptorManagerPrivate 
-{
-    public:
-        QValueList<ArticleInterceptor*> interceptors;
+class ArticleInterceptorManager::ArticleInterceptorManagerPrivate {
+public:
+    QValueList<ArticleInterceptor *> interceptors;
 };
 
 
-ArticleInterceptorManager* ArticleInterceptorManager::m_self = 0;
+ArticleInterceptorManager *ArticleInterceptorManager::m_self = 0;
 KStaticDeleter<ArticleInterceptorManager> interceptormanagersd;
 
-ArticleInterceptorManager* ArticleInterceptorManager::self()
+ArticleInterceptorManager *ArticleInterceptorManager::self()
 {
-    if (!m_self)
+    if(!m_self)
         interceptormanagersd.setObject(m_self, new ArticleInterceptorManager);
     return m_self;
 }
 
-ArticleInterceptorManager::~ArticleInterceptorManager() 
+ArticleInterceptorManager::~ArticleInterceptorManager()
 {
-    delete d; 
+    delete d;
     d = 0;
 }
 
 ArticleInterceptorManager::ArticleInterceptorManager() : d(new ArticleInterceptorManagerPrivate)
 {}
 
-void ArticleInterceptorManager::addInterceptor(ArticleInterceptor* interceptor)
+void ArticleInterceptorManager::addInterceptor(ArticleInterceptor *interceptor)
 {
     d->interceptors.append(interceptor);
 }
 
-void ArticleInterceptorManager::removeInterceptor(ArticleInterceptor* interceptor)
+void ArticleInterceptorManager::removeInterceptor(ArticleInterceptor *interceptor)
 {
     d->interceptors.remove(interceptor);
 }
 
-QValueList<ArticleInterceptor*> ArticleInterceptorManager::interceptors() const
+QValueList<ArticleInterceptor *> ArticleInterceptorManager::interceptors() const
 {
     return d->interceptors;
 }

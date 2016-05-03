@@ -20,9 +20,9 @@
 
 #include "dcopdrop.h"
 
-DCOPDropInterface::DCOPDropInterface( DCOPDrop* drop, const char* name )
-	: DCOPObject( name ),
-	_drop( drop )
+DCOPDropInterface::DCOPDropInterface(DCOPDrop *drop, const char *name)
+    : DCOPObject(name),
+      _drop(drop)
 {
 }
 
@@ -30,17 +30,17 @@ DCOPDropInterface::~DCOPDropInterface()
 {
 }
 
-void DCOPDropInterface::changeName( const QString& name )
+void DCOPDropInterface::changeName(const QString &name)
 {
-	this->setObjId( name.utf8() );
+    this->setObjId(name.utf8());
 }
 
-int DCOPDropInterface::addMessage( const QString& subject, const QString& message )
+int DCOPDropInterface::addMessage(const QString &subject, const QString &message)
 {
-	return _drop->addMessage( subject, message );
+    return _drop->addMessage(subject, message);
 }
 
-bool DCOPDropInterface::removeMessage( int id )
+bool DCOPDropInterface::removeMessage(int id)
 {
-	return _drop->removeMessage( id );
+    return _drop->removeMessage(id);
 }

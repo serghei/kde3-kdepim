@@ -1,5 +1,5 @@
 /*
- *  find.h  -  search facility 
+ *  find.h  -  search facility
  *  Program:  kalarm
  *  Copyright © 2005,2006,2008 by David Jarvie <djarvie@kde.org>
  *
@@ -33,42 +33,47 @@ class EventListViewBase;
 class EventListViewItemBase;
 
 
-class Find : public QObject
-{
-		Q_OBJECT
-	public:
-		explicit Find(EventListViewBase* parent);
-		~Find();
-		void         display();
-		void         findNext(bool forward)     { findNext(forward, true); }
+class Find : public QObject {
+    Q_OBJECT
+public:
+    explicit Find(EventListViewBase *parent);
+    ~Find();
+    void         display();
+    void         findNext(bool forward)
+    {
+        findNext(forward, true);
+    }
 
-	signals:
-		void         active(bool);
+signals:
+    void         active(bool);
 
-	private slots:
-		void         slotFind();
-		void         slotKFindDestroyed()       { emit active(false); }
+private slots:
+    void         slotFind();
+    void         slotKFindDestroyed()
+    {
+        emit active(false);
+    }
 
-	private:
-		void         findNext(bool forward, bool sort, bool checkEnd = false, bool fromCurrent = false);
-		EventListViewItemBase* nextItem(EventListViewItemBase*, bool forward) const;
+private:
+    void         findNext(bool forward, bool sort, bool checkEnd = false, bool fromCurrent = false);
+    EventListViewItemBase *nextItem(EventListViewItemBase *, bool forward) const;
 
-		EventListViewBase* mListView;        // parent list view
-		QGuardedPtr<KFindDialog> mDialog;
-		QCheckBox*         mExpired;
-		QCheckBox*         mLive;
-		KSeparator*        mActiveExpiredSep;
-		QCheckBox*         mMessageType;
-		QCheckBox*         mFileType;
-		QCheckBox*         mCommandType;
-		QCheckBox*         mEmailType;
-		KFind*             mFind;
-		QStringList        mHistory;         // list of history items for Find dialog
-		QString            mLastPattern;     // pattern used in last search
-		QString            mStartID;         // ID of first alarm searched if 'from cursor' was selected
-		long               mOptions;         // OR of find dialog options
-		bool               mNoCurrentItem;   // there is no current item for the purposes of searching
-		bool               mFound;           // true if any matches have been found
+    EventListViewBase *mListView;        // parent list view
+    QGuardedPtr<KFindDialog> mDialog;
+    QCheckBox         *mExpired;
+    QCheckBox         *mLive;
+    KSeparator        *mActiveExpiredSep;
+    QCheckBox         *mMessageType;
+    QCheckBox         *mFileType;
+    QCheckBox         *mCommandType;
+    QCheckBox         *mEmailType;
+    KFind             *mFind;
+    QStringList        mHistory;         // list of history items for Find dialog
+    QString            mLastPattern;     // pattern used in last search
+    QString            mStartID;         // ID of first alarm searched if 'from cursor' was selected
+    long               mOptions;         // OR of find dialog options
+    bool               mNoCurrentItem;   // there is no current item for the purposes of searching
+    bool               mFound;           // true if any matches have been found
 };
 
 #endif // FIND_H

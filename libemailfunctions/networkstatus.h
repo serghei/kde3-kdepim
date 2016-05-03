@@ -32,17 +32,17 @@ namespace KPIM {
     the machine KDE is running on going from "online" mode to
     offline. What this means is left as an exercise for the reader.
  */
-class NetworkStatus : public QObject, public DCOPObject
-{
-  Q_OBJECT
+class NetworkStatus : public QObject, public DCOPObject {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * The possible states.
      */
-    enum Status {
-      Online,     //< The machine now has internet connectivity
-      Offline     //< The machine has no internet connectivity
+    enum Status
+    {
+        Online,     //< The machine now has internet connectivity
+        Offline     //< The machine has no internet connectivity
     };
 
     /**
@@ -60,35 +60,35 @@ class NetworkStatus : public QObject, public DCOPObject
      *
      * @param status The new status.
      */
-    void setStatus( Status status );
+    void setStatus(Status status);
 
     /**
      * Returns the current status.
      */
     Status status() const;
 
-  k_dcop:
+k_dcop:
     /**
      * Called by the network interface watcher in KDED.
      */
     void onlineStatusChanged();
 
-  signals:
+signals:
     /**
      * Emitted whenever the status has changed.
      *
      * @param status The new status.
      */
-    void statusChanged( Status status );
+    void statusChanged(Status status);
 
-  protected:
+protected:
     /**
      * Constructor. This is protected, so you must use self()
      * to get the singleton object of this class.
      */
     NetworkStatus();
 
-  private:
+private:
     Status mStatus;
     static NetworkStatus *mSelf;
 };

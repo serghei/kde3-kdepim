@@ -46,33 +46,36 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEDownloadJob::QGpgMEDownloadJob( GpgME::Context * context )
-  : DownloadJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDownloadJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEDownloadJob::QGpgMEDownloadJob(GpgME::Context *context)
+    : DownloadJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEDownloadJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEDownloadJob::~QGpgMEDownloadJob() {
+Kleo::QGpgMEDownloadJob::~QGpgMEDownloadJob()
+{
 }
 
-GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & pats ) {
-  assert( !patterns() );
-  assert( !mOutData );
+GpgME::Error Kleo::QGpgMEDownloadJob::start(const QStringList &pats)
+{
+    assert(!patterns());
+    assert(!mOutData);
 
-  createOutData();
-  setPatterns( pats );
-  hookupContextToEventLoopInteractor();
+    createOutData();
+    setPatterns(pats);
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
-						  
-  if ( err )
-    deleteLater();
-  return err;
+    const GpgME::Error err = mCtx->startPublicKeyExport(patterns(), *mOutData);
+
+    if(err)
+        deleteLater();
+    return err;
 }
 
-void Kleo::QGpgMEDownloadJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  emit result( error, mOutDataDataProvider->data() );
+void Kleo::QGpgMEDownloadJob::doOperationDoneEvent(const GpgME::Error &error)
+{
+    emit result(error, mOutDataDataProvider->data());
 }
 
 #include "qgpgmedownloadjob.moc"

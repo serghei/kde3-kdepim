@@ -37,12 +37,11 @@ namespace KAB {
 class Core;
 }
 
-class KDE_EXPORT XXPortManager : public QObject
-{
-  Q_OBJECT
+class KDE_EXPORT XXPortManager : public QObject {
+    Q_OBJECT
 
-  public:
-    XXPortManager( KAB::Core *core, QObject *parent, const char *name = 0 );
+public:
+    XXPortManager(KAB::Core *core, QObject *parent, const char *name = 0);
     ~XXPortManager();
 
     void restoreSettings();
@@ -51,18 +50,18 @@ class KDE_EXPORT XXPortManager : public QObject
     static KURL importURL;
     static QString importData;
 
-  public slots:
-    void importVCard( const KURL &url );
-    void importVCardFromData( const QString &vCard );
+public slots:
+    void importVCard(const KURL &url);
+    void importVCardFromData(const QString &vCard);
 
-  signals:
+signals:
     void modified();
 
-  protected slots:
-    void slotImport( const QString&, const QString& );
-    void slotExport( const QString&, const QString& );
+protected slots:
+    void slotImport(const QString &, const QString &);
+    void slotExport(const QString &, const QString &);
 
-  private:
+private:
     void loadPlugins();
 
     QDict<KAB::XXPort> mXXPortObjects;

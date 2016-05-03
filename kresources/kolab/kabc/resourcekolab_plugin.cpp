@@ -34,19 +34,18 @@
 
 using namespace Kolab;
 
-class KolabFactory : public KRES::PluginFactoryBase
-{
-  public:
-    KRES::Resource *resource( const KConfig *config )
+class KolabFactory : public KRES::PluginFactoryBase {
+public:
+    KRES::Resource *resource(const KConfig *config)
     {
-      return new KABC::ResourceKolab( config );
+        return new KABC::ResourceKolab(config);
     }
 
-    KRES::ConfigWidget *configWidget( QWidget* )
+    KRES::ConfigWidget *configWidget(QWidget *)
     {
-      return 0;
+        return 0;
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY(kabc_kolab,KolabFactory)
+K_EXPORT_COMPONENT_FACTORY(kabc_kolab, KolabFactory)
 

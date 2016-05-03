@@ -60,813 +60,846 @@
 namespace KPIM {
 
 // private start :
-struct AddresseeViewItem::AddresseeViewItemPrivate {
-  KABC::Addressee               address;
-  AddresseeViewItem::Category   category;
-  KABC::Addressee::List         addresses;
+struct AddresseeViewItem::AddresseeViewItemPrivate
+{
+    KABC::Addressee               address;
+    AddresseeViewItem::Category   category;
+    KABC::Addressee::List         addresses;
 };
 
-struct AddressesDialog::AddressesDialogPrivate {
-  AddressesDialogPrivate() : 
-    ui(0), personal(0), recent(0),
-    toItem(0), ccItem(0), bccItem(0),
-    ldapSearchDialog(0)
-  {}
+struct AddressesDialog::AddressesDialogPrivate
+{
+    AddressesDialogPrivate() :
+        ui(0), personal(0), recent(0),
+        toItem(0), ccItem(0), bccItem(0),
+        ldapSearchDialog(0)
+    {}
 
-  AddressPickerUI             *ui;
+    AddressPickerUI             *ui;
 
-  AddresseeViewItem           *personal;
-  AddresseeViewItem           *recent;
+    AddresseeViewItem           *personal;
+    AddresseeViewItem           *recent;
 
-  AddresseeViewItem           *toItem;
-  AddresseeViewItem           *ccItem;
-  AddresseeViewItem           *bccItem;
+    AddresseeViewItem           *toItem;
+    AddresseeViewItem           *ccItem;
+    AddresseeViewItem           *bccItem;
 
-  QDict<AddresseeViewItem>     groupDict;
+    QDict<AddresseeViewItem>     groupDict;
 
-  KABC::Addressee::List       recentAddresses;
-  LDAPSearchDialog            *ldapSearchDialog;
+    KABC::Addressee::List       recentAddresses;
+    LDAPSearchDialog            *ldapSearchDialog;
 };
 // privates end
 
-AddresseeViewItem::AddresseeViewItem( AddresseeViewItem *parent, const KABC::Addressee& addr,
-                                      int emailIndex )
-  : QObject( 0 ), KListViewItem( parent, addr.realName(),
-                               ( emailIndex == 0 ? addr.preferredEmail() : addr.emails()[ emailIndex ] ) )
+AddresseeViewItem::AddresseeViewItem(AddresseeViewItem *parent, const KABC::Addressee &addr,
+                                     int emailIndex)
+    : QObject(0), KListViewItem(parent, addr.realName(),
+                                (emailIndex == 0 ? addr.preferredEmail() : addr.emails()[ emailIndex ]))
 {
-  d = new AddresseeViewItemPrivate;
-  d->address = addr;
-  d->category = Entry;
+    d = new AddresseeViewItemPrivate;
+    d->address = addr;
+    d->category = Entry;
 
-  if ( text( 0 ).stripWhiteSpace().isEmpty() )
-    setText( 0, addr.preferredEmail() );
+    if(text(0).stripWhiteSpace().isEmpty())
+        setText(0, addr.preferredEmail());
 
-  if ( addr.photo().url().isEmpty() ) {
-    if ( addr.photo().data().isNull() )
-      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "personal", KIcon::Small ) );
+    if(addr.photo().url().isEmpty())
+    {
+        if(addr.photo().data().isNull())
+            setPixmap(0, KGlobal::iconLoader()->loadIcon("personal", KIcon::Small));
+        else
+            setPixmap(0, addr.photo().data().smoothScale(16, 16));
+    }
     else
-      setPixmap( 0, addr.photo().data().smoothScale( 16, 16 ) );
-  } else {
-    setPixmap( 0, KGlobal::iconLoader()->loadIcon( addr.photo().url(), KIcon::Small ) );
-  }
+    {
+        setPixmap(0, KGlobal::iconLoader()->loadIcon(addr.photo().url(), KIcon::Small));
+    }
 }
 
-AddresseeViewItem::AddresseeViewItem( KListView *lv, const QString& name, Category cat )
-  : QObject(0), KListViewItem( lv, name )
+AddresseeViewItem::AddresseeViewItem(KListView *lv, const QString &name, Category cat)
+    : QObject(0), KListViewItem(lv, name)
 {
-  d = new AddresseeViewItemPrivate;
-  d->category = cat;
+    d = new AddresseeViewItemPrivate;
+    d->category = cat;
 }
 
-AddresseeViewItem::AddresseeViewItem(  AddresseeViewItem *parent, const QString& name,
-                                       const KABC::Addressee::List &lst )
-  : QObject(0), KListViewItem( parent, name, i18n("<group>") )
+AddresseeViewItem::AddresseeViewItem(AddresseeViewItem *parent, const QString &name,
+                                     const KABC::Addressee::List &lst)
+    : QObject(0), KListViewItem(parent, name, i18n("<group>"))
 {
-  d = new AddresseeViewItemPrivate;
-  d->category = FilledGroup;
-  d->addresses = lst;
+    d = new AddresseeViewItemPrivate;
+    d->category = FilledGroup;
+    d->addresses = lst;
 }
 
-AddresseeViewItem::AddresseeViewItem(  AddresseeViewItem *parent, const QString& name )
-  : QObject(0), KListViewItem( parent, name, i18n("<group>") )
+AddresseeViewItem::AddresseeViewItem(AddresseeViewItem *parent, const QString &name)
+    : QObject(0), KListViewItem(parent, name, i18n("<group>"))
 {
-  d = new AddresseeViewItemPrivate;
-  d->category = DistList;
+    d = new AddresseeViewItemPrivate;
+    d->category = DistList;
 
-  setPixmap( 0, KGlobal::iconLoader()->loadIcon( "kdmconfig", KIcon::Small ) );
+    setPixmap(0, KGlobal::iconLoader()->loadIcon("kdmconfig", KIcon::Small));
 }
 
 AddresseeViewItem::~AddresseeViewItem()
 {
-  delete d;
-  d = 0;
+    delete d;
+    d = 0;
 }
 
 KABC::Addressee
 AddresseeViewItem::addressee() const
 {
-  return d->address;
+    return d->address;
 }
 
 KABC::Addressee::List
 AddresseeViewItem::addresses() const
 {
-  return d->addresses;
+    return d->addresses;
 }
 
 AddresseeViewItem::Category
 AddresseeViewItem::category() const
 {
-  return d->category;
+    return d->category;
 }
 
 QString
 AddresseeViewItem::name() const
 {
-  return text(0);
+    return text(0);
 }
 
 QString
 AddresseeViewItem::email() const
 {
-  return text(1);
+    return text(1);
 }
 
-bool AddresseeViewItem::matches(const QString& txt) const
+bool AddresseeViewItem::matches(const QString &txt) const
 {
     return d->address.realName().contains(txt, false) || d->address.preferredEmail().contains(txt, false);
 }
 
 void AddresseeViewItem::setSelected(bool selected)
 {
-    if (selected == isSelected())
+    if(selected == isSelected())
     {
         return;
     }
 
-    emit addressSelected( this, selected );
+    emit addressSelected(this, selected);
     QListViewItem::setSelected(selected);
 }
 
 int
-AddresseeViewItem::compare( QListViewItem * i, int col, bool ascending ) const
+AddresseeViewItem::compare(QListViewItem *i, int col, bool ascending) const
 {
-  if ( category() == Group || category() == Entry )
-    return KListViewItem::compare( i , col, ascending );
+    if(category() == Group || category() == Entry)
+        return KListViewItem::compare(i , col, ascending);
 
-  AddresseeViewItem *item = static_cast<AddresseeViewItem*>( i );
-  int a = static_cast<int>( category() );
-  int b = static_cast<int>( item->category() );
+    AddresseeViewItem *item = static_cast<AddresseeViewItem *>(i);
+    int a = static_cast<int>(category());
+    int b = static_cast<int>(item->category());
 
-  if ( ascending )
-    if ( a < b )
-      return -1;
+    if(ascending)
+        if(a < b)
+            return -1;
+        else
+            return 1;
+    else if(a < b)
+        return 1;
     else
-      return 1;
-  else
-    if ( a < b )
-      return 1;
-    else
-      return -1;
+        return -1;
 }
 
-AddressesDialog::AddressesDialog( QWidget *widget, const char *name )
-  : KDialogBase( widget, name, true, i18n("Address Selection"),
-                 Ok|Cancel, Ok, true )
+AddressesDialog::AddressesDialog(QWidget *widget, const char *name)
+    : KDialogBase(widget, name, true, i18n("Address Selection"),
+                  Ok | Cancel, Ok, true)
 {
-  QVBox *page = makeVBoxMainWidget();
-  d = new AddressesDialogPrivate;
-  d->ui = new AddressPickerUI( page );
+    QVBox *page = makeVBoxMainWidget();
+    d = new AddressesDialogPrivate;
+    d->ui = new AddressPickerUI(page);
 
-  KABC::StdAddressBook::self( true );
-  updateAvailableAddressees();
-  initConnections();
+    KABC::StdAddressBook::self(true);
+    updateAvailableAddressees();
+    initConnections();
 
-  d->ui->mAvailableView->setFocus();
+    d->ui->mAvailableView->setFocus();
 }
 
 AddressesDialog::~AddressesDialog()
 {
-  delete d;
-  d = 0;
+    delete d;
+    d = 0;
 }
 
-AddresseeViewItem* AddressesDialog::selectedToItem()
+AddresseeViewItem *AddressesDialog::selectedToItem()
 {
-  if ( !d->toItem )
-  {
-    d->toItem = new AddresseeViewItem( d->ui->mSelectedView, i18n("To"), AddresseeViewItem::To );
-    connect(d->toItem, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
-  return d->toItem;
+    if(!d->toItem)
+    {
+        d->toItem = new AddresseeViewItem(d->ui->mSelectedView, i18n("To"), AddresseeViewItem::To);
+        connect(d->toItem, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
+    return d->toItem;
 }
 
-AddresseeViewItem* AddressesDialog::selectedCcItem()
+AddresseeViewItem *AddressesDialog::selectedCcItem()
 {
-  if ( !d->ccItem )
-  {
-    d->ccItem = new AddresseeViewItem( d->ui->mSelectedView, i18n("CC"), AddresseeViewItem::CC );
-    connect(d->ccItem, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
-  return d->ccItem;
+    if(!d->ccItem)
+    {
+        d->ccItem = new AddresseeViewItem(d->ui->mSelectedView, i18n("CC"), AddresseeViewItem::CC);
+        connect(d->ccItem, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
+    return d->ccItem;
 }
 
-AddresseeViewItem* AddressesDialog::selectedBccItem()
+AddresseeViewItem *AddressesDialog::selectedBccItem()
 {
-  if ( !d->bccItem )
-  {
-    d->bccItem = new AddresseeViewItem( d->ui->mSelectedView, i18n("BCC"), AddresseeViewItem::BCC );
-    connect(d->bccItem, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
-  return d->bccItem;
-}
-
-void
-AddressesDialog::setSelectedTo( const QStringList& l )
-{
-  QString name, email;
-  for ( QStringList::ConstIterator it = l.begin(); it != l.end(); ++it ) {
-    KABC::Addressee addr;
-    KABC::Addressee::parseEmailAddress( *it, name, email );
-    addr.setNameFromString( name );
-    addr.insertEmail( email );
-    addAddresseeToSelected( addr, selectedToItem() );
-  }
+    if(!d->bccItem)
+    {
+        d->bccItem = new AddresseeViewItem(d->ui->mSelectedView, i18n("BCC"), AddresseeViewItem::BCC);
+        connect(d->bccItem, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
+    return d->bccItem;
 }
 
 void
-AddressesDialog::setSelectedCC( const QStringList& l )
+AddressesDialog::setSelectedTo(const QStringList &l)
 {
-  QString name, email;
-  for ( QStringList::ConstIterator it = l.begin(); it != l.end(); ++it ) {
-    KABC::Addressee addr;
-    KABC::Addressee::parseEmailAddress( *it, name, email );
-    addr.setNameFromString( name );
-    addr.insertEmail( email );
-    addAddresseeToSelected( addr, selectedCcItem() );
-  }
+    QString name, email;
+    for(QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
+    {
+        KABC::Addressee addr;
+        KABC::Addressee::parseEmailAddress(*it, name, email);
+        addr.setNameFromString(name);
+        addr.insertEmail(email);
+        addAddresseeToSelected(addr, selectedToItem());
+    }
 }
 
 void
-AddressesDialog::setSelectedBCC( const QStringList& l )
+AddressesDialog::setSelectedCC(const QStringList &l)
 {
-  QString name, email;
-  for ( QStringList::ConstIterator it = l.begin(); it != l.end(); ++it ) {
-    KABC::Addressee addr;
-    KABC::Addressee::parseEmailAddress( *it, name, email );
-    addr.setNameFromString( name );
-    addr.insertEmail( email );
-    addAddresseeToSelected( addr, selectedBccItem() );
-  }
+    QString name, email;
+    for(QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
+    {
+        KABC::Addressee addr;
+        KABC::Addressee::parseEmailAddress(*it, name, email);
+        addr.setNameFromString(name);
+        addr.insertEmail(email);
+        addAddresseeToSelected(addr, selectedCcItem());
+    }
 }
 
 void
-AddressesDialog::setRecentAddresses( const KABC::Addressee::List& list )
+AddressesDialog::setSelectedBCC(const QStringList &l)
 {
-  d->recentAddresses = list;
+    QString name, email;
+    for(QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
+    {
+        KABC::Addressee addr;
+        KABC::Addressee::parseEmailAddress(*it, name, email);
+        addr.setNameFromString(name);
+        addr.insertEmail(email);
+        addAddresseeToSelected(addr, selectedBccItem());
+    }
+}
 
-  updateRecentAddresses();
+void
+AddressesDialog::setRecentAddresses(const KABC::Addressee::List &list)
+{
+    d->recentAddresses = list;
 
-  checkForSingleAvailableGroup();
+    updateRecentAddresses();
+
+    checkForSingleAvailableGroup();
 }
 
 void
 AddressesDialog::updateRecentAddresses()
 {
-  static const QString &recentGroup = KGlobal::staticQString( i18n( "Recent Addresses" ) );
+    static const QString &recentGroup = KGlobal::staticQString(i18n("Recent Addresses"));
 
-  if ( !d->recent ) {
-    d->recent = new AddresseeViewItem( d->ui->mAvailableView, recentGroup );
-    connect(d->recent, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
-    d->recent->setVisible( false );
-    d->groupDict.insert( recentGroup, d->recent );
-  }
+    if(!d->recent)
+    {
+        d->recent = new AddresseeViewItem(d->ui->mAvailableView, recentGroup);
+        connect(d->recent, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(availableAddressSelected(AddresseeViewItem *, bool)));
+        d->recent->setVisible(false);
+        d->groupDict.insert(recentGroup, d->recent);
+    }
 
-  KABC::Addressee::List::ConstIterator it;
-  for ( it = d->recentAddresses.begin(); it != d->recentAddresses.end(); ++it )
-    addAddresseeToAvailable( *it, d->recent );
+    KABC::Addressee::List::ConstIterator it;
+    for(it = d->recentAddresses.begin(); it != d->recentAddresses.end(); ++it)
+        addAddresseeToAvailable(*it, d->recent);
 
-  if ( d->recent->childCount() > 0 ) {
-    d->recent->setVisible( true );
-  }
+    if(d->recent->childCount() > 0)
+    {
+        d->recent->setVisible(true);
+    }
 }
 
 void
-AddressesDialog::setShowCC( bool b )
+AddressesDialog::setShowCC(bool b)
 {
-  d->ui->mCCButton->setShown( b );
+    d->ui->mCCButton->setShown(b);
 }
 
 void
-AddressesDialog::setShowBCC( bool b )
+AddressesDialog::setShowBCC(bool b)
 {
-  d->ui->mBCCButton->setShown( b );
+    d->ui->mBCCButton->setShown(b);
 }
 
 QStringList
 AddressesDialog::to() const
 {
-  QStringList emails = allDistributionLists( d->toItem );
-  KABC::Addressee::List l = toAddresses();
-  emails += entryToString( l );
+    QStringList emails = allDistributionLists(d->toItem);
+    KABC::Addressee::List l = toAddresses();
+    emails += entryToString(l);
 
-  return emails;
+    return emails;
 }
 
 QStringList
 AddressesDialog::cc() const
 {
-  QStringList emails = allDistributionLists( d->ccItem );
-  KABC::Addressee::List l = ccAddresses();
-  emails += entryToString( l );
+    QStringList emails = allDistributionLists(d->ccItem);
+    KABC::Addressee::List l = ccAddresses();
+    emails += entryToString(l);
 
-  return emails;
+    return emails;
 }
 
 QStringList
 AddressesDialog::bcc() const
 {
-  QStringList emails = allDistributionLists( d->bccItem );
+    QStringList emails = allDistributionLists(d->bccItem);
 
-  KABC::Addressee::List l = bccAddresses();
-  emails += entryToString( l );
+    KABC::Addressee::List l = bccAddresses();
+    emails += entryToString(l);
 
-  return emails;
+    return emails;
 }
 
 KABC::Addressee::List
 AddressesDialog::toAddresses()  const
 {
-  return allAddressee( d->toItem );
+    return allAddressee(d->toItem);
 }
 KABC::Addressee::List
 AddressesDialog::allToAddressesNoDuplicates()  const
 {
-  KABC::Addressee::List aList = allAddressee( d->toItem );
-  const QStringList dList = toDistributionLists();
-  KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
+    KABC::Addressee::List aList = allAddressee(d->toItem);
+    const QStringList dList = toDistributionLists();
+    KABC::AddressBook *abook = KABC::StdAddressBook::self(true);
 #ifdef KDEPIM_NEW_DISTRLISTS
-  for ( QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it ) {
-    const QValueList<KPIM::DistributionList::Entry> eList
-      = KPIM::DistributionList::findByName(abook, *it).entries(abook);
-    QValueList<KPIM::DistributionList::Entry>::ConstIterator eit;
-    for( eit = eList.begin(); eit != eList.end(); ++eit ) {
-      KABC::Addressee a = (*eit).addressee;
-      if ( !a.preferredEmail().isEmpty() && aList.find( a ) == aList.end() ) {
-          aList.append( a ) ;
-      }
+    for(QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it)
+    {
+        const QValueList<KPIM::DistributionList::Entry> eList
+            = KPIM::DistributionList::findByName(abook, *it).entries(abook);
+        QValueList<KPIM::DistributionList::Entry>::ConstIterator eit;
+        for(eit = eList.begin(); eit != eList.end(); ++eit)
+        {
+            KABC::Addressee a = (*eit).addressee;
+            if(!a.preferredEmail().isEmpty() && aList.find(a) == aList.end())
+            {
+                aList.append(a) ;
+            }
+        }
     }
-  }
 #else
-  KABC::DistributionListManager manager( abook );
-  manager.load();
-  for ( QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it ) {
-    const QValueList<KABC::DistributionList::Entry> eList = manager.list( *it )->entries();
-    QValueList<KABC::DistributionList::Entry>::ConstIterator eit;
-    for( eit = eList.begin(); eit != eList.end(); ++eit ) {
-      KABC::Addressee a = (*eit).addressee;
-      if ( !a.preferredEmail().isEmpty() && aList.find( a ) == aList.end() ) {
-          aList.append( a ) ;
-      }
+    KABC::DistributionListManager manager(abook);
+    manager.load();
+    for(QStringList::ConstIterator it = dList.begin(); it != dList.end(); ++it)
+    {
+        const QValueList<KABC::DistributionList::Entry> eList = manager.list(*it)->entries();
+        QValueList<KABC::DistributionList::Entry>::ConstIterator eit;
+        for(eit = eList.begin(); eit != eList.end(); ++eit)
+        {
+            KABC::Addressee a = (*eit).addressee;
+            if(!a.preferredEmail().isEmpty() && aList.find(a) == aList.end())
+            {
+                aList.append(a) ;
+            }
+        }
     }
-  }
 #endif
-  return aList;
+    return aList;
 }
 
 KABC::Addressee::List
 AddressesDialog::ccAddresses()  const
 {
-  return allAddressee( d->ccItem );
+    return allAddressee(d->ccItem);
 }
 
 KABC::Addressee::List
 AddressesDialog::bccAddresses()  const
 {
-  return allAddressee( d->bccItem );
+    return allAddressee(d->bccItem);
 }
 
 
 QStringList
 AddressesDialog::toDistributionLists() const
 {
-  return allDistributionLists( d->toItem );
+    return allDistributionLists(d->toItem);
 }
 
 QStringList
 AddressesDialog::ccDistributionLists() const
 {
-  return allDistributionLists( d->ccItem );
+    return allDistributionLists(d->ccItem);
 }
 
 QStringList
 AddressesDialog::bccDistributionLists() const
 {
-  return allDistributionLists( d->bccItem );
+    return allDistributionLists(d->bccItem);
 }
 
 void
 AddressesDialog::updateAvailableAddressees()
 {
-  d->ui->mAvailableView->clear();
-  d->groupDict.clear();
+    d->ui->mAvailableView->clear();
+    d->groupDict.clear();
 
-  static const QString &personalGroup = KGlobal::staticQString( i18n( "Other Addresses" ) );
-  d->ui->mAvailableView->setRootIsDecorated( true );
-  d->personal = new AddresseeViewItem( d->ui->mAvailableView, personalGroup );
-  //connect(d->personal, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-  //        this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  d->personal->setVisible( false );
-  d->groupDict.insert( personalGroup, d->personal );
+    static const QString &personalGroup = KGlobal::staticQString(i18n("Other Addresses"));
+    d->ui->mAvailableView->setRootIsDecorated(true);
+    d->personal = new AddresseeViewItem(d->ui->mAvailableView, personalGroup);
+    //connect(d->personal, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
+    //        this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
+    d->personal->setVisible(false);
+    d->groupDict.insert(personalGroup, d->personal);
 
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  for( KABC::AddressBook::Iterator it = addressBook->begin();
-       it != addressBook->end(); ++it ) {
-    addAddresseeToAvailable( *it, d->personal );
-  }
+    KABC::AddressBook *addressBook = KABC::StdAddressBook::self(true);
+    for(KABC::AddressBook::Iterator it = addressBook->begin();
+            it != addressBook->end(); ++it)
+    {
+        addAddresseeToAvailable(*it, d->personal);
+    }
 
-  d->recent = 0;
-  updateRecentAddresses();
+    d->recent = 0;
+    updateRecentAddresses();
 
-  addDistributionLists();
-  if ( d->personal->childCount() > 0 ) {
-    d->personal->setVisible( true );
-  }
+    addDistributionLists();
+    if(d->personal->childCount() > 0)
+    {
+        d->personal->setVisible(true);
+    }
 
-  checkForSingleAvailableGroup();
+    checkForSingleAvailableGroup();
 }
 
 void AddressesDialog::checkForSingleAvailableGroup()
 {
-  QListViewItem* item = d->ui->mAvailableView->firstChild();
-  QListViewItem* firstGroup = 0;
-  int found = 0;
-  while (item)
-  {
-    if (item->isVisible())
+    QListViewItem *item = d->ui->mAvailableView->firstChild();
+    QListViewItem *firstGroup = 0;
+    int found = 0;
+    while(item)
     {
-      if (!firstGroup && static_cast<AddresseeViewItem*>(item)->category() != AddresseeViewItem::Entry)
-      {
-        firstGroup = item;
-      }
-      ++found;
+        if(item->isVisible())
+        {
+            if(!firstGroup && static_cast<AddresseeViewItem *>(item)->category() != AddresseeViewItem::Entry)
+            {
+                firstGroup = item;
+            }
+            ++found;
+        }
+        item = item->nextSibling();
     }
-    item = item->nextSibling();
-  }
 
-  if (found == 1 && firstGroup)
-  {
-    firstGroup->setOpen(true);
-  }
+    if(found == 1 && firstGroup)
+    {
+        firstGroup->setOpen(true);
+    }
 }
 
 void
 AddressesDialog::availableSelectionChanged()
 {
-  bool selection = !selectedAvailableAddresses.isEmpty();
-  d->ui->mToButton->setEnabled(selection);
-  d->ui->mCCButton->setEnabled(selection);
-  d->ui->mBCCButton->setEnabled(selection);
+    bool selection = !selectedAvailableAddresses.isEmpty();
+    d->ui->mToButton->setEnabled(selection);
+    d->ui->mCCButton->setEnabled(selection);
+    d->ui->mBCCButton->setEnabled(selection);
 }
 
 void
 AddressesDialog::selectedSelectionChanged()
 {
-  bool selection = !selectedSelectedAddresses.isEmpty();
-  d->ui->mRemoveButton->setEnabled(selection);
+    bool selection = !selectedSelectedAddresses.isEmpty();
+    d->ui->mRemoveButton->setEnabled(selection);
 }
 
 void
-AddressesDialog::availableAddressSelected( AddresseeViewItem* item, bool selected )
+AddressesDialog::availableAddressSelected(AddresseeViewItem *item, bool selected)
 {
-  if (selected)
-  {
-    selectedAvailableAddresses.append(item);
-  }
-  else
-  {
-    selectedAvailableAddresses.remove(item);
-  }
-}
-
-void
-AddressesDialog::selectedAddressSelected( AddresseeViewItem* item, bool selected )
-{
-  // we have to avoid that a parent and a child is selected together
-  // because in this case we get a double object deletion ( program crashes )
-  // when removing the selected items from list
-  AddresseeViewItem* parent = static_cast<AddresseeViewItem*>(((QListViewItem*)item)->parent());
-  if ( parent  && selected )
-    parent->setSelected( false );
-  if (selected)
-  {
-    selectedSelectedAddresses.append(item);
-  }
-  else
-  {
-    selectedSelectedAddresses.remove(item);
-  }
-  if ( selected ) {
-    AddresseeViewItem* child = static_cast<AddresseeViewItem*>(item->firstChild());
-    while (child) {
-      child->setSelected( false );
-      child = static_cast<AddresseeViewItem*>(child->nextSibling());
+    if(selected)
+    {
+        selectedAvailableAddresses.append(item);
     }
-  }
+    else
+    {
+        selectedAvailableAddresses.remove(item);
+    }
+}
+
+void
+AddressesDialog::selectedAddressSelected(AddresseeViewItem *item, bool selected)
+{
+    // we have to avoid that a parent and a child is selected together
+    // because in this case we get a double object deletion ( program crashes )
+    // when removing the selected items from list
+    AddresseeViewItem *parent = static_cast<AddresseeViewItem *>(((QListViewItem *)item)->parent());
+    if(parent  && selected)
+        parent->setSelected(false);
+    if(selected)
+    {
+        selectedSelectedAddresses.append(item);
+    }
+    else
+    {
+        selectedSelectedAddresses.remove(item);
+    }
+    if(selected)
+    {
+        AddresseeViewItem *child = static_cast<AddresseeViewItem *>(item->firstChild());
+        while(child)
+        {
+            child->setSelected(false);
+            child = static_cast<AddresseeViewItem *>(child->nextSibling());
+        }
+    }
 }
 
 void
 AddressesDialog::initConnections()
 {
-  connect( d->ui->mFilterEdit, SIGNAL(textChanged(const QString &)),
-           SLOT(filterChanged(const QString &)) );
-  connect( d->ui->mToButton, SIGNAL(clicked()),
-           SLOT(addSelectedTo()) );
-  connect( d->ui->mCCButton, SIGNAL(clicked()),
-           SLOT(addSelectedCC()) );
-  connect( d->ui->mBCCButton, SIGNAL(clicked()),
-           SLOT(addSelectedBCC())  );
-  connect( d->ui->mSaveAs, SIGNAL(clicked()),
-           SLOT(saveAs())  );
-  connect( d->ui->mLdapSearch, SIGNAL(clicked()),
-           SLOT(searchLdap())  );
-  connect( d->ui->mRemoveButton, SIGNAL(clicked()),
-           SLOT(removeEntry()) );
-  connect( d->ui->mAvailableView, SIGNAL(selectionChanged()),
-           SLOT(availableSelectionChanged())  );
-  connect( d->ui->mAvailableView, SIGNAL(doubleClicked(QListViewItem*)),
-           SLOT(addSelectedTo()) );
-  connect( d->ui->mSelectedView, SIGNAL(selectionChanged()),
-           SLOT(selectedSelectionChanged()) );
-  connect( d->ui->mSelectedView, SIGNAL(doubleClicked(QListViewItem*)),
-           SLOT(removeEntry()) );
+    connect(d->ui->mFilterEdit, SIGNAL(textChanged(const QString &)),
+            SLOT(filterChanged(const QString &)));
+    connect(d->ui->mToButton, SIGNAL(clicked()),
+            SLOT(addSelectedTo()));
+    connect(d->ui->mCCButton, SIGNAL(clicked()),
+            SLOT(addSelectedCC()));
+    connect(d->ui->mBCCButton, SIGNAL(clicked()),
+            SLOT(addSelectedBCC()));
+    connect(d->ui->mSaveAs, SIGNAL(clicked()),
+            SLOT(saveAs()));
+    connect(d->ui->mLdapSearch, SIGNAL(clicked()),
+            SLOT(searchLdap()));
+    connect(d->ui->mRemoveButton, SIGNAL(clicked()),
+            SLOT(removeEntry()));
+    connect(d->ui->mAvailableView, SIGNAL(selectionChanged()),
+            SLOT(availableSelectionChanged()));
+    connect(d->ui->mAvailableView, SIGNAL(doubleClicked(QListViewItem *)),
+            SLOT(addSelectedTo()));
+    connect(d->ui->mSelectedView, SIGNAL(selectionChanged()),
+            SLOT(selectedSelectionChanged()));
+    connect(d->ui->mSelectedView, SIGNAL(doubleClicked(QListViewItem *)),
+            SLOT(removeEntry()));
 
 #ifndef KDEPIM_NEW_DISTRLISTS
-  connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
-           this, SLOT( updateAvailableAddressees() ) );
+    connect(KABC::DistributionListWatcher::self(), SIGNAL(changed()),
+            this, SLOT(updateAvailableAddressees()));
 #endif
 
-  connect( KABC::StdAddressBook::self( true ), SIGNAL( addressBookChanged(AddressBook*) ),
-           this, SLOT( updateAvailableAddressees() ) );
+    connect(KABC::StdAddressBook::self(true), SIGNAL(addressBookChanged(AddressBook *)),
+            this, SLOT(updateAvailableAddressees()));
 }
 
 void
-AddressesDialog::addAddresseeToAvailable( const KABC::Addressee& addr, AddresseeViewItem* defaultParent, bool useCategory )
+AddressesDialog::addAddresseeToAvailable(const KABC::Addressee &addr, AddresseeViewItem *defaultParent, bool useCategory)
 {
-  if ( addr.preferredEmail().isEmpty() )
-    return;
+    if(addr.preferredEmail().isEmpty())
+        return;
 
-  if ( useCategory ) {
-    QStringList categories = addr.categories();
-
-    for ( QStringList::Iterator it = categories.begin(); it != categories.end(); ++it ) {
-      if ( !d->groupDict[ *it ] ) {  //we don't have the category yet
-        AddresseeViewItem* category = new AddresseeViewItem( d->ui->mAvailableView, *it );
-        d->groupDict.insert( *it,  category );
-      }
-
-      for ( uint i = 0; i < addr.emails().count(); ++i ) {
-        AddresseeViewItem* addressee = new AddresseeViewItem( d->groupDict[ *it ], addr, i );
-        connect(addressee, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-                this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
-      }
-    }
-  }
-
-  bool noCategory = false;
-  if ( useCategory ) {
-    if ( addr.categories().isEmpty() )
-      noCategory = true;
-  } else
-    noCategory = true;
-
-  if ( defaultParent && noCategory ) { // only non-categorized items here
-    AddresseeViewItem* addressee = new AddresseeViewItem( defaultParent, addr );
-    connect(addressee, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
-  }
-}
-
-void
-AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, AddresseeViewItem* defaultParent )
-{
-  if ( addr.preferredEmail().isEmpty() )
-    return;
-
-  if ( defaultParent ) {
-    AddresseeViewItem *myChild = static_cast<AddresseeViewItem*>( defaultParent->firstChild() );
-    while( myChild ) {
-      if ( myChild->addressee().preferredEmail() == addr.preferredEmail() )
-        return;//already got it
-      myChild = static_cast<AddresseeViewItem*>( myChild->nextSibling() );
-    }
-    AddresseeViewItem* addressee = new AddresseeViewItem( defaultParent, addr );
-    connect(addressee, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-    defaultParent->setOpen( true );
-  }
-
-  d->ui->mSaveAs->setEnabled(true);
-}
-
-void
-AddressesDialog::addAddresseesToSelected( AddresseeViewItem *parent,
-                                          const QPtrList<AddresseeViewItem>& addresses )
-{
-  Q_ASSERT( parent );
-
-  QPtrListIterator<AddresseeViewItem> itr( addresses );
-
-  if (itr.current())
-  {
-    d->ui->mSaveAs->setEnabled(true);
-  }
-
-  while ( itr.current() ) {
-    AddresseeViewItem* address = itr.current();
-    ++itr;
-
-    if (selectedToAvailableMapping.find(address) != 0)
+    if(useCategory)
     {
-      continue;
+        QStringList categories = addr.categories();
+
+        for(QStringList::Iterator it = categories.begin(); it != categories.end(); ++it)
+        {
+            if(!d->groupDict[ *it ])       //we don't have the category yet
+            {
+                AddresseeViewItem *category = new AddresseeViewItem(d->ui->mAvailableView, *it);
+                d->groupDict.insert(*it,  category);
+            }
+
+            for(uint i = 0; i < addr.emails().count(); ++i)
+            {
+                AddresseeViewItem *addressee = new AddresseeViewItem(d->groupDict[ *it ], addr, i);
+                connect(addressee, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                        this, SLOT(availableAddressSelected(AddresseeViewItem *, bool)));
+            }
+        }
     }
 
-    AddresseeViewItem* newItem = 0;
-    if (address->category() == AddresseeViewItem::Entry)
+    bool noCategory = false;
+    if(useCategory)
     {
-      newItem = new AddresseeViewItem( parent, address->addressee() );
-    }
-    else if (address->category() == AddresseeViewItem::DistList)
-    {
-      newItem = new AddresseeViewItem( parent, address->name() );
+        if(addr.categories().isEmpty())
+            noCategory = true;
     }
     else
+        noCategory = true;
+
+    if(defaultParent && noCategory)      // only non-categorized items here
     {
-      newItem = new AddresseeViewItem( parent, address->name(), allAddressee( address ) );
+        AddresseeViewItem *addressee = new AddresseeViewItem(defaultParent, addr);
+        connect(addressee, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(availableAddressSelected(AddresseeViewItem *, bool)));
+    }
+}
+
+void
+AddressesDialog::addAddresseeToSelected(const KABC::Addressee &addr, AddresseeViewItem *defaultParent)
+{
+    if(addr.preferredEmail().isEmpty())
+        return;
+
+    if(defaultParent)
+    {
+        AddresseeViewItem *myChild = static_cast<AddresseeViewItem *>(defaultParent->firstChild());
+        while(myChild)
+        {
+            if(myChild->addressee().preferredEmail() == addr.preferredEmail())
+                return;//already got it
+            myChild = static_cast<AddresseeViewItem *>(myChild->nextSibling());
+        }
+        AddresseeViewItem *addressee = new AddresseeViewItem(defaultParent, addr);
+        connect(addressee, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+        defaultParent->setOpen(true);
     }
 
-    address->setSelected( false );
-    address->setVisible( false );
-    selectedToAvailableMapping.insert(address, newItem);
-    selectedToAvailableMapping.insert(newItem, address);
-    connect(newItem, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
+    d->ui->mSaveAs->setEnabled(true);
+}
 
-  parent->setOpen( true );
+void
+AddressesDialog::addAddresseesToSelected(AddresseeViewItem *parent,
+        const QPtrList<AddresseeViewItem> &addresses)
+{
+    Q_ASSERT(parent);
+
+    QPtrListIterator<AddresseeViewItem> itr(addresses);
+
+    if(itr.current())
+    {
+        d->ui->mSaveAs->setEnabled(true);
+    }
+
+    while(itr.current())
+    {
+        AddresseeViewItem *address = itr.current();
+        ++itr;
+
+        if(selectedToAvailableMapping.find(address) != 0)
+        {
+            continue;
+        }
+
+        AddresseeViewItem *newItem = 0;
+        if(address->category() == AddresseeViewItem::Entry)
+        {
+            newItem = new AddresseeViewItem(parent, address->addressee());
+        }
+        else if(address->category() == AddresseeViewItem::DistList)
+        {
+            newItem = new AddresseeViewItem(parent, address->name());
+        }
+        else
+        {
+            newItem = new AddresseeViewItem(parent, address->name(), allAddressee(address));
+        }
+
+        address->setSelected(false);
+        address->setVisible(false);
+        selectedToAvailableMapping.insert(address, newItem);
+        selectedToAvailableMapping.insert(newItem, address);
+        connect(newItem, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
+
+    parent->setOpen(true);
 }
 
 QStringList
-AddressesDialog::entryToString( const KABC::Addressee::List& l ) const
+AddressesDialog::entryToString(const KABC::Addressee::List &l) const
 {
-  QStringList entries;
+    QStringList entries;
 
-  for( KABC::Addressee::List::ConstIterator it = l.begin(); it != l.end(); ++it ) {
-    entries += (*it).fullEmail();
-  }
-  return entries;
+    for(KABC::Addressee::List::ConstIterator it = l.begin(); it != l.end(); ++it)
+    {
+        entries += (*it).fullEmail();
+    }
+    return entries;
 }
 
 void
 AddressesDialog::addSelectedTo()
 {
-  if ( !d->toItem )
-  {
-    d->toItem = new AddresseeViewItem( d->ui->mSelectedView, i18n("To"), AddresseeViewItem::To );
-    connect(d->toItem, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
+    if(!d->toItem)
+    {
+        d->toItem = new AddresseeViewItem(d->ui->mSelectedView, i18n("To"), AddresseeViewItem::To);
+        connect(d->toItem, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
 
-  addAddresseesToSelected( d->toItem, selectedAvailableAddresses );
-  selectedAvailableAddresses.clear();
+    addAddresseesToSelected(d->toItem, selectedAvailableAddresses);
+    selectedAvailableAddresses.clear();
 
-  if ( d->toItem->childCount() > 0 )
-    d->toItem->setVisible( true );
-  else
-  {
-    delete d->toItem;
-    d->toItem = 0;
-  }
+    if(d->toItem->childCount() > 0)
+        d->toItem->setVisible(true);
+    else
+    {
+        delete d->toItem;
+        d->toItem = 0;
+    }
 }
 
 void
 AddressesDialog::addSelectedCC()
 {
-  if ( !d->ccItem )
-  {
-    d->ccItem = new AddresseeViewItem( d->ui->mSelectedView, i18n("CC"), AddresseeViewItem::CC );
-    connect(d->ccItem , SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
+    if(!d->ccItem)
+    {
+        d->ccItem = new AddresseeViewItem(d->ui->mSelectedView, i18n("CC"), AddresseeViewItem::CC);
+        connect(d->ccItem , SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
 
-  addAddresseesToSelected( d->ccItem, selectedAvailableAddresses );
-  selectedAvailableAddresses.clear();
+    addAddresseesToSelected(d->ccItem, selectedAvailableAddresses);
+    selectedAvailableAddresses.clear();
 
-  if ( d->ccItem->childCount() > 0 )
-    d->ccItem->setVisible( true );
-  else
-  {
-    delete d->ccItem;
-    d->ccItem = 0;
-  }
+    if(d->ccItem->childCount() > 0)
+        d->ccItem->setVisible(true);
+    else
+    {
+        delete d->ccItem;
+        d->ccItem = 0;
+    }
 }
 
 void
 AddressesDialog::addSelectedBCC()
 {
-  if ( !d->bccItem )
-  {
-    d->bccItem = new AddresseeViewItem( d->ui->mSelectedView, i18n("BCC"), AddresseeViewItem::BCC );
-    connect(d->bccItem , SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(selectedAddressSelected(AddresseeViewItem*, bool)));
-  }
+    if(!d->bccItem)
+    {
+        d->bccItem = new AddresseeViewItem(d->ui->mSelectedView, i18n("BCC"), AddresseeViewItem::BCC);
+        connect(d->bccItem , SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(selectedAddressSelected(AddresseeViewItem *, bool)));
+    }
 
-  addAddresseesToSelected( d->bccItem, selectedAvailableAddresses );
-  selectedAvailableAddresses.clear();
+    addAddresseesToSelected(d->bccItem, selectedAvailableAddresses);
+    selectedAvailableAddresses.clear();
 
-  if ( d->bccItem->childCount() > 0 )
-    d->bccItem->setVisible( true );
-  else
-  {
-    delete d->bccItem;
-    d->bccItem = 0;
-  }
+    if(d->bccItem->childCount() > 0)
+        d->bccItem->setVisible(true);
+    else
+    {
+        delete d->bccItem;
+        d->bccItem = 0;
+    }
 }
 
-void AddressesDialog::unmapSelectedAddress(AddresseeViewItem* item)
+void AddressesDialog::unmapSelectedAddress(AddresseeViewItem *item)
 {
-  AddresseeViewItem* correspondingItem = selectedToAvailableMapping[item];
-  if (correspondingItem)
-  {
-    correspondingItem->setVisible( true );
-    selectedToAvailableMapping.remove( item );
-    selectedToAvailableMapping.remove( correspondingItem );
-  }
+    AddresseeViewItem *correspondingItem = selectedToAvailableMapping[item];
+    if(correspondingItem)
+    {
+        correspondingItem->setVisible(true);
+        selectedToAvailableMapping.remove(item);
+        selectedToAvailableMapping.remove(correspondingItem);
+    }
 
-  AddresseeViewItem* child = static_cast<AddresseeViewItem*>(item->firstChild());
-  while (child)
-  {
-    unmapSelectedAddress(child);
-    child = static_cast<AddresseeViewItem*>(child->nextSibling());
-  }
+    AddresseeViewItem *child = static_cast<AddresseeViewItem *>(item->firstChild());
+    while(child)
+    {
+        unmapSelectedAddress(child);
+        child = static_cast<AddresseeViewItem *>(child->nextSibling());
+    }
 }
 
 void
 AddressesDialog::removeEntry()
 {
-  QPtrList<AddresseeViewItem> lst;
-  bool resetTo  = false;
-  bool resetCC  = false;
-  bool resetBCC = false;
+    QPtrList<AddresseeViewItem> lst;
+    bool resetTo  = false;
+    bool resetCC  = false;
+    bool resetBCC = false;
 
-  lst.setAutoDelete( false );
-  QPtrListIterator<AddresseeViewItem> it( selectedSelectedAddresses );
-  while ( it.current() ) {
-    AddresseeViewItem* item = it.current();
-    ++it;
-    if ( d->toItem == item )
-      resetTo = true;
-    else if ( d->ccItem == item )
-      resetCC = true;
-    else if( d->bccItem == item )
-      resetBCC = true;
-    // we may only append parent items
-    unmapSelectedAddress(item);
-    lst.append( item );
-  }
-  selectedSelectedAddresses.clear();
-  lst.setAutoDelete( true );
-  lst.clear();
-  if ( resetTo )
-    d->toItem  = 0;
-  else if ( d->toItem && d->toItem->childCount() == 0 )
-  {
-    delete d->toItem;
-    d->toItem = 0;
-  }
-  if ( resetCC )
-    d->ccItem = 0;
-  else if ( d->ccItem && d->ccItem->childCount() == 0 )
-  {
-    delete d->ccItem;
-    d->ccItem = 0;
-  }
-  if ( resetBCC )
-    d->bccItem  = 0;
-  else if ( d->bccItem && d->bccItem->childCount() == 0 )
-  {
-    delete d->bccItem;
-    d->bccItem = 0;
-  }
-  d->ui->mSaveAs->setEnabled(d->ui->mSelectedView->firstChild() != 0);
+    lst.setAutoDelete(false);
+    QPtrListIterator<AddresseeViewItem> it(selectedSelectedAddresses);
+    while(it.current())
+    {
+        AddresseeViewItem *item = it.current();
+        ++it;
+        if(d->toItem == item)
+            resetTo = true;
+        else if(d->ccItem == item)
+            resetCC = true;
+        else if(d->bccItem == item)
+            resetBCC = true;
+        // we may only append parent items
+        unmapSelectedAddress(item);
+        lst.append(item);
+    }
+    selectedSelectedAddresses.clear();
+    lst.setAutoDelete(true);
+    lst.clear();
+    if(resetTo)
+        d->toItem  = 0;
+    else if(d->toItem && d->toItem->childCount() == 0)
+    {
+        delete d->toItem;
+        d->toItem = 0;
+    }
+    if(resetCC)
+        d->ccItem = 0;
+    else if(d->ccItem && d->ccItem->childCount() == 0)
+    {
+        delete d->ccItem;
+        d->ccItem = 0;
+    }
+    if(resetBCC)
+        d->bccItem  = 0;
+    else if(d->bccItem && d->bccItem->childCount() == 0)
+    {
+        delete d->bccItem;
+        d->bccItem = 0;
+    }
+    d->ui->mSaveAs->setEnabled(d->ui->mSelectedView->firstChild() != 0);
 }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
 
 // copied from kabcore.cpp :(
 // KDE4: should be in libkabc I think
-static KABC::Resource *requestResource( KABC::AddressBook* abook, QWidget *parent )
+static KABC::Resource *requestResource(KABC::AddressBook *abook, QWidget *parent)
 {
-  QPtrList<KABC::Resource> kabcResources = abook->resources();
+    QPtrList<KABC::Resource> kabcResources = abook->resources();
 
-  QPtrList<KRES::Resource> kresResources;
-  QPtrListIterator<KABC::Resource> resIt( kabcResources );
-  KABC::Resource *resource;
-  while ( ( resource = resIt.current() ) != 0 ) {
-    ++resIt;
-    if ( !resource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
-      if ( res )
-        kresResources.append( res );
+    QPtrList<KRES::Resource> kresResources;
+    QPtrListIterator<KABC::Resource> resIt(kabcResources);
+    KABC::Resource *resource;
+    while((resource = resIt.current()) != 0)
+    {
+        ++resIt;
+        if(!resource->readOnly())
+        {
+            KRES::Resource *res = static_cast<KRES::Resource *>(resource);
+            if(res)
+                kresResources.append(res);
+        }
     }
-  }
 
-  KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, parent );
-  return static_cast<KABC::Resource*>( res );
+    KRES::Resource *res = KRES::SelectDialog::getResource(kresResources, parent);
+    return static_cast<KABC::Resource *>(res);
 }
 #endif
 
@@ -874,75 +907,80 @@ void
 AddressesDialog::saveAs()
 {
 #ifndef KDEPIM_NEW_DISTRLISTS
-  KABC::DistributionListManager manager( KABC::StdAddressBook::self( true ) );
-  manager.load();
+    KABC::DistributionListManager manager(KABC::StdAddressBook::self(true));
+    manager.load();
 #endif
 
-  if ( !d->ui->mSelectedView->firstChild() ) {
-    KMessageBox::information( 0,
-                              i18n("There are no addresses in your list. "
-                                   "First add some addresses from your address book, "
-                                   "then try again.") );
-    return;
-  }
+    if(!d->ui->mSelectedView->firstChild())
+    {
+        KMessageBox::information(0,
+                                 i18n("There are no addresses in your list. "
+                                      "First add some addresses from your address book, "
+                                      "then try again."));
+        return;
+    }
 
-  bool ok = false;
-  QString name = KInputDialog::getText( i18n("New Distribution List"),
-                                        i18n("Please enter name:"),
-                                        QString::null, &ok,
-                                        this );
-  if ( !ok || name.isEmpty() )
-    return;
+    bool ok = false;
+    QString name = KInputDialog::getText(i18n("New Distribution List"),
+                                         i18n("Please enter name:"),
+                                         QString::null, &ok,
+                                         this);
+    if(!ok || name.isEmpty())
+        return;
 
-  bool alreadyExists = false;
+    bool alreadyExists = false;
 #ifdef KDEPIM_NEW_DISTRLISTS
-  KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
-  KPIM::DistributionList dlist = KPIM::DistributionList::findByName( abook, name );
-  alreadyExists = !dlist.isEmpty();
+    KABC::AddressBook *abook = KABC::StdAddressBook::self(true);
+    KPIM::DistributionList dlist = KPIM::DistributionList::findByName(abook, name);
+    alreadyExists = !dlist.isEmpty();
 #else
-  alreadyExists = manager.list( name );
+    alreadyExists = manager.list(name);
 #endif
 
-  if ( alreadyExists ) {
-    KMessageBox::information( 0,
-                              i18n( "<qt>Distribution list with the given name <b>%1</b> "
-                                    "already exists. Please select a different name.</qt>" )
-                              .arg( name ) );
-    return;
-  }
+    if(alreadyExists)
+    {
+        KMessageBox::information(0,
+                                 i18n("<qt>Distribution list with the given name <b>%1</b> "
+                                      "already exists. Please select a different name.</qt>")
+                                 .arg(name));
+        return;
+    }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-  KABC::Resource* resource = requestResource( abook, this );
-  if ( !resource )
-    return;
+    KABC::Resource *resource = requestResource(abook, this);
+    if(!resource)
+        return;
 
-  dlist.setResource( resource );
-  dlist.setName( name );
-  KABC::Addressee::List addrl = allAddressee( d->ui->mSelectedView, false );
-  for ( KABC::Addressee::List::iterator itr = addrl.begin();
-        itr != addrl.end(); ++itr ) {
-    dlist.insertEntry( *itr );
-  }
-  abook->insertAddressee( dlist );
+    dlist.setResource(resource);
+    dlist.setName(name);
+    KABC::Addressee::List addrl = allAddressee(d->ui->mSelectedView, false);
+    for(KABC::Addressee::List::iterator itr = addrl.begin();
+            itr != addrl.end(); ++itr)
+    {
+        dlist.insertEntry(*itr);
+    }
+    abook->insertAddressee(dlist);
 #else
-  KABC::DistributionList *dlist = new KABC::DistributionList( &manager, name );
-  KABC::Addressee::List addrl = allAddressee( d->ui->mSelectedView, false );
-  for ( KABC::Addressee::List::iterator itr = addrl.begin();
-        itr != addrl.end(); ++itr ) {
-    dlist->insertEntry( *itr );
-  }
+    KABC::DistributionList *dlist = new KABC::DistributionList(&manager, name);
+    KABC::Addressee::List addrl = allAddressee(d->ui->mSelectedView, false);
+    for(KABC::Addressee::List::iterator itr = addrl.begin();
+            itr != addrl.end(); ++itr)
+    {
+        dlist->insertEntry(*itr);
+    }
 
-  manager.save();
+    manager.save();
 #endif
 }
 
 void
 AddressesDialog::searchLdap()
 {
-    if ( !d->ldapSearchDialog ) {
-      d->ldapSearchDialog = new LDAPSearchDialog( this );
-      connect( d->ldapSearchDialog, SIGNAL( addresseesAdded() ),
-               SLOT(ldapSearchResult() ) );
+    if(!d->ldapSearchDialog)
+    {
+        d->ldapSearchDialog = new LDAPSearchDialog(this);
+        connect(d->ldapSearchDialog, SIGNAL(addresseesAdded()),
+                SLOT(ldapSearchResult()));
     }
     d->ldapSearchDialog->show();
 }
@@ -950,169 +988,183 @@ AddressesDialog::searchLdap()
 void
 AddressesDialog::ldapSearchResult()
 {
-  QStringList emails = QStringList::split(',', d->ldapSearchDialog->selectedEMails() );
-  QStringList::iterator it( emails.begin() );
-  QStringList::iterator end( emails.end() );
-  for ( ; it != end; ++it ){
-      QString name;
-      QString email;
-      KPIM::getNameAndMail( (*it), name, email );
-      KABC::Addressee ad;
-      ad.setNameFromString( name );
-      ad.insertEmail( email );
-      addAddresseeToSelected( ad, selectedToItem() );
-  }
+    QStringList emails = QStringList::split(',', d->ldapSearchDialog->selectedEMails());
+    QStringList::iterator it(emails.begin());
+    QStringList::iterator end(emails.end());
+    for(; it != end; ++it)
+    {
+        QString name;
+        QString email;
+        KPIM::getNameAndMail((*it), name, email);
+        KABC::Addressee ad;
+        ad.setNameFromString(name);
+        ad.insertEmail(email);
+        addAddresseeToSelected(ad, selectedToItem());
+    }
 }
 
 void
 AddressesDialog::launchAddressBook()
 {
-  kapp->startServiceByDesktopName( "kaddressbook", QString() );
+    kapp->startServiceByDesktopName("kaddressbook", QString());
 }
 
 void
-AddressesDialog::filterChanged( const QString& txt )
+AddressesDialog::filterChanged(const QString &txt)
 {
-  QListViewItemIterator it( d->ui->mAvailableView );
-  bool showAll = false;
+    QListViewItemIterator it(d->ui->mAvailableView);
+    bool showAll = false;
 
-  if ( txt.isEmpty() )
-    showAll = true;
+    if(txt.isEmpty())
+        showAll = true;
 
-  while ( it.current() ) {
-    AddresseeViewItem* item = static_cast<AddresseeViewItem*>( it.current() );
-    ++it;
-    if ( showAll ) {
-      item->setVisible( true );
-      if ( item->category() == AddresseeViewItem::Group )
-        item->setOpen( false );//close to not have too many entries
-      continue;
-    }
-    if ( item->category() == AddresseeViewItem::Entry ) {
-      bool matches = item->matches( txt ) ;
-      item->setVisible( matches );
-      if ( matches && static_cast<QListViewItem*>(item)->parent() ) {
-          static_cast<QListViewItem*>(item)->parent()->setOpen( true );//open the parents with found entries
-      }
-    }
-  }
-}
-
-KABC::Addressee::List
-AddressesDialog::allAddressee( KListView* view, bool onlySelected ) const
-{
-  KABC::Addressee::List lst;
-  QListViewItemIterator it( view );
-  while ( it.current() ) {
-    AddresseeViewItem* item = static_cast<AddresseeViewItem*>( it.current() );
-    if ( !onlySelected || item->isSelected() ) {
-      if ( item->category() != AddresseeViewItem::Entry  ) {
-        AddresseeViewItem *myChild = static_cast<AddresseeViewItem*>( item->firstChild() );
-        while( myChild ) {
-          lst.append( myChild->addressee() );
-          myChild = static_cast<AddresseeViewItem*>( myChild->nextSibling() );
+    while(it.current())
+    {
+        AddresseeViewItem *item = static_cast<AddresseeViewItem *>(it.current());
+        ++it;
+        if(showAll)
+        {
+            item->setVisible(true);
+            if(item->category() == AddresseeViewItem::Group)
+                item->setOpen(false);  //close to not have too many entries
+            continue;
         }
-      } else {
-        lst.append( item->addressee() );
-      }
+        if(item->category() == AddresseeViewItem::Entry)
+        {
+            bool matches = item->matches(txt) ;
+            item->setVisible(matches);
+            if(matches && static_cast<QListViewItem *>(item)->parent())
+            {
+                static_cast<QListViewItem *>(item)->parent()->setOpen(true); //open the parents with found entries
+            }
+        }
     }
-    ++it;
-  }
-
-  return lst;
 }
 
 KABC::Addressee::List
-AddressesDialog::allAddressee( AddresseeViewItem* parent ) const
+AddressesDialog::allAddressee(KListView *view, bool onlySelected) const
 {
-  KABC::Addressee::List lst;
+    KABC::Addressee::List lst;
+    QListViewItemIterator it(view);
+    while(it.current())
+    {
+        AddresseeViewItem *item = static_cast<AddresseeViewItem *>(it.current());
+        if(!onlySelected || item->isSelected())
+        {
+            if(item->category() != AddresseeViewItem::Entry)
+            {
+                AddresseeViewItem *myChild = static_cast<AddresseeViewItem *>(item->firstChild());
+                while(myChild)
+                {
+                    lst.append(myChild->addressee());
+                    myChild = static_cast<AddresseeViewItem *>(myChild->nextSibling());
+                }
+            }
+            else
+            {
+                lst.append(item->addressee());
+            }
+        }
+        ++it;
+    }
 
-  if ( !parent ) return lst;
-
-  if ( parent->category() == AddresseeViewItem::Entry )
-  {
-    lst.append( parent->addressee() );
     return lst;
-  }
+}
 
-  AddresseeViewItem *myChild = static_cast<AddresseeViewItem*>( parent->firstChild() );
-  while( myChild ) {
-    if ( myChild->category() == AddresseeViewItem::FilledGroup )
-      lst += myChild->addresses();
-    else if ( !myChild->addressee().isEmpty() )
-      lst.append( myChild->addressee() );
-    myChild = static_cast<AddresseeViewItem*>( myChild->nextSibling() );
-  }
+KABC::Addressee::List
+AddressesDialog::allAddressee(AddresseeViewItem *parent) const
+{
+    KABC::Addressee::List lst;
 
-  return lst;
+    if(!parent) return lst;
+
+    if(parent->category() == AddresseeViewItem::Entry)
+    {
+        lst.append(parent->addressee());
+        return lst;
+    }
+
+    AddresseeViewItem *myChild = static_cast<AddresseeViewItem *>(parent->firstChild());
+    while(myChild)
+    {
+        if(myChild->category() == AddresseeViewItem::FilledGroup)
+            lst += myChild->addresses();
+        else if(!myChild->addressee().isEmpty())
+            lst.append(myChild->addressee());
+        myChild = static_cast<AddresseeViewItem *>(myChild->nextSibling());
+    }
+
+    return lst;
 }
 
 QStringList
-AddressesDialog::allDistributionLists( AddresseeViewItem* parent ) const
+AddressesDialog::allDistributionLists(AddresseeViewItem *parent) const
 {
-  QStringList lists;
+    QStringList lists;
 
-  if ( !parent )
-    return QStringList();
+    if(!parent)
+        return QStringList();
 
-  AddresseeViewItem *item = static_cast<AddresseeViewItem*>( parent->firstChild() );
-  while ( item ) {
-    if ( item->category() == AddresseeViewItem::DistList && !item->name().isEmpty() )
-      lists.append( item->name() );
+    AddresseeViewItem *item = static_cast<AddresseeViewItem *>(parent->firstChild());
+    while(item)
+    {
+        if(item->category() == AddresseeViewItem::DistList && !item->name().isEmpty())
+            lists.append(item->name());
 
-    item = static_cast<AddresseeViewItem*>( item->nextSibling() );
-  }
+        item = static_cast<AddresseeViewItem *>(item->nextSibling());
+    }
 
-  return lists;
+    return lists;
 }
 
 void
 AddressesDialog::addDistributionLists()
 {
-  KABC::AddressBook* abook = KABC::StdAddressBook::self( true );
+    KABC::AddressBook *abook = KABC::StdAddressBook::self(true);
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-  const QValueList<KPIM::DistributionList> distLists =
-    KPIM::DistributionList::allDistributionLists( abook );
+    const QValueList<KPIM::DistributionList> distLists =
+        KPIM::DistributionList::allDistributionLists(abook);
 #else
-  KABC::DistributionListManager manager( abook );
-  manager.load();
+    KABC::DistributionListManager manager(abook);
+    manager.load();
 
-  QStringList distLists = manager.listNames();
+    QStringList distLists = manager.listNames();
 #endif
 
-  if ( distLists.isEmpty() )
-    return;
+    if(distLists.isEmpty())
+        return;
 
-  AddresseeViewItem *topItem = new AddresseeViewItem( d->ui->mAvailableView,
-                                                      i18n( "Distribution Lists" ) );
+    AddresseeViewItem *topItem = new AddresseeViewItem(d->ui->mAvailableView,
+            i18n("Distribution Lists"));
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-  QValueList<KPIM::DistributionList>::ConstIterator listIt;
+    QValueList<KPIM::DistributionList>::ConstIterator listIt;
 #else
-  QStringList::Iterator listIt;
+    QStringList::Iterator listIt;
 #endif
-  for ( listIt = distLists.begin(); listIt != distLists.end(); ++listIt ) {
+    for(listIt = distLists.begin(); listIt != distLists.end(); ++listIt)
+    {
 #ifdef KDEPIM_NEW_DISTRLISTS
-    KPIM::DistributionList dlist = *listIt;
-    KPIM::DistributionList::Entry::List entries = dlist.entries(abook);
+        KPIM::DistributionList dlist = *listIt;
+        KPIM::DistributionList::Entry::List entries = dlist.entries(abook);
 #else
-    KABC::DistributionList& dlist = *manager.list( *listIt );
-    KABC::DistributionList::Entry::List entries = dlist.entries();
+        KABC::DistributionList &dlist = *manager.list(*listIt);
+        KABC::DistributionList::Entry::List entries = dlist.entries();
 #endif
 
-    AddresseeViewItem *item = new AddresseeViewItem( topItem, dlist.name() );
-    connect( item, SIGNAL( addressSelected( AddresseeViewItem*, bool ) ),
-             this, SLOT( availableAddressSelected( AddresseeViewItem*, bool ) ) );
+        AddresseeViewItem *item = new AddresseeViewItem(topItem, dlist.name());
+        connect(item, SIGNAL(addressSelected(AddresseeViewItem *, bool)),
+                this, SLOT(availableAddressSelected(AddresseeViewItem *, bool)));
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-    KPIM::DistributionList::Entry::List::Iterator itemIt;
+        KPIM::DistributionList::Entry::List::Iterator itemIt;
 #else
-    KABC::DistributionList::Entry::List::Iterator itemIt;
+        KABC::DistributionList::Entry::List::Iterator itemIt;
 #endif
-    for ( itemIt = entries.begin(); itemIt != entries.end(); ++itemIt )
-      addAddresseeToAvailable( (*itemIt).addressee, item, false );
-  }
+        for(itemIt = entries.begin(); itemIt != entries.end(); ++itemIt)
+            addAddresseeToAvailable((*itemIt).addressee, item, false);
+    }
 }
 
 } // namespace

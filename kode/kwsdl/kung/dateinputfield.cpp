@@ -23,59 +23,60 @@
 
 #include "dateinputfield.h"
 
-DateInputField::DateInputField( const QString &name, const Schema::SimpleType *type )
-  : SimpleInputField( name, type ),
-    mValue( QDate::currentDate() )
+DateInputField::DateInputField(const QString &name, const Schema::SimpleType *type)
+    : SimpleInputField(name, type),
+      mValue(QDate::currentDate())
 {
 }
 
-void DateInputField::setXMLData( const QDomElement &element )
+void DateInputField::setXMLData(const QDomElement &element)
 {
-  if ( mName != element.tagName() ) {
-    qDebug( "DateInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1() );
-    return;
-  }
+    if(mName != element.tagName())
+    {
+        qDebug("DateInputField: Wrong dom element passed: expected %s, got %s", mName.latin1(), element.tagName().latin1());
+        return;
+    }
 
-  setData( element.text() );
+    setData(element.text());
 }
 
-void DateInputField::xmlData( QDomDocument &document, QDomElement &parent )
+void DateInputField::xmlData(QDomDocument &document, QDomElement &parent)
 {
-  QDomElement element = document.createElement( mName );
-  element.setAttribute( "xsi:type", "xsd:date" );
-  QDomText text = document.createTextNode( data() );
-  element.appendChild( text );
+    QDomElement element = document.createElement(mName);
+    element.setAttribute("xsi:type", "xsd:date");
+    QDomText text = document.createTextNode(data());
+    element.appendChild(text);
 
-  parent.appendChild( element );
+    parent.appendChild(element);
 }
 
-void DateInputField::setData( const QString &data )
+void DateInputField::setData(const QString &data)
 {
-  mValue = QDate::fromString( data, Qt::ISODate );
+    mValue = QDate::fromString(data, Qt::ISODate);
 }
 
 QString DateInputField::data() const
 {
-  return mValue.toString( Qt::ISODate );
+    return mValue.toString(Qt::ISODate);
 }
 
-QWidget *DateInputField::createWidget( QWidget *parent )
+QWidget *DateInputField::createWidget(QWidget *parent)
 {
-  mInputWidget = new KDatePicker( parent );
+    mInputWidget = new KDatePicker(parent);
 
-  mInputWidget->setDate( mValue );
+    mInputWidget->setDate(mValue);
 
-  connect( mInputWidget, SIGNAL( dateChanged( QDate ) ),
-           this, SLOT( inputChanged( QDate ) ) );
+    connect(mInputWidget, SIGNAL(dateChanged(QDate)),
+            this, SLOT(inputChanged(QDate)));
 
-  return mInputWidget;
+    return mInputWidget;
 }
 
-void DateInputField::inputChanged( QDate date )
+void DateInputField::inputChanged(QDate date)
 {
-  mValue = date;
+    mValue = date;
 
-  emit modified();
+    emit modified();
 }
 
 #include "dateinputfield.moc"

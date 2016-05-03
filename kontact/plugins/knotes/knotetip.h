@@ -38,25 +38,24 @@ class QTextEdit;
 class KIconView;
 class KNotesIconViewItem;
 
-class KNoteTip : public QFrame
-{
-  public:
-    KNoteTip( KIconView *parent );
+class KNoteTip : public QFrame {
+public:
+    KNoteTip(KIconView *parent);
     ~KNoteTip();
 
-    void setNote( KNotesIconViewItem *item );
+    void setNote(KNotesIconViewItem *item);
 
-  protected:
-    virtual bool eventFilter( QObject *, QEvent *e );
-    virtual void timerEvent( QTimerEvent * );
-    virtual void resizeEvent( QResizeEvent * );
+protected:
+    virtual bool eventFilter(QObject *, QEvent *e);
+    virtual void timerEvent(QTimerEvent *);
+    virtual void resizeEvent(QResizeEvent *);
 
-  private:
-    void setColor( const QColor &fg, const QColor &bg );
-    void setFilter( bool enable );
+private:
+    void setColor(const QColor &fg, const QColor &bg);
+    void setFilter(bool enable);
     void reposition();
 
-  private:
+private:
     bool mFilter;
 
     KIconView *mView;

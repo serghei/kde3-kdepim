@@ -30,19 +30,19 @@ namespace KNConfig {
  * Code mostly taken from kmail.
  */
 class KDE_EXPORT BasePageWithTabs : public KCModule {
-  Q_OBJECT
-  public:
-    BasePageWithTabs( QWidget * parent=0, const char * name=0 );
+    Q_OBJECT
+public:
+    BasePageWithTabs(QWidget *parent = 0, const char *name = 0);
     ~BasePageWithTabs() {};
 
     virtual void load();
     virtual void save();
     virtual void defaults();
 
-  protected:
-    void addTab( KCModule* tab, const QString & title );
-    
-  private:
+protected:
+    void addTab(KCModule *tab, const QString &title);
+
+private:
     QTabWidget *mTabWidget;
 
 };
@@ -50,26 +50,26 @@ class KDE_EXPORT BasePageWithTabs : public KCModule {
 
 // accounts page
 class AccountsPage : public BasePageWithTabs {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     AccountsPage(QWidget *parent = 0, const char *name = 0);
 };
 
 
 // read news page
 class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
-  Q_OBJECT
- 
-  public:
+    Q_OBJECT
+
+public:
     ReadNewsPage(QWidget *parent = 0, const char *name = 0);
 };
 
 // post news page
 class KDE_EXPORT PostNewsPage : public BasePageWithTabs {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     PostNewsPage(QWidget *parent = 0, const char *name = 0);
 };
 

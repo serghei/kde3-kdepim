@@ -27,150 +27,157 @@ using namespace KODE;
 
 Class::Class()
 {
-  mBaseClasses.setAutoDelete( true );
+    mBaseClasses.setAutoDelete(true);
 }
 
-Class::Class( const QString &name, const QString &nameSpace )
-  : mName( name ), mNameSpace( nameSpace )
+Class::Class(const QString &name, const QString &nameSpace)
+    : mName(name), mNameSpace(nameSpace)
 {
 }
 
-Class::Class( const Class &c )
+Class::Class(const Class &c)
 {
-  *this = c;
+    *this = c;
 }
 
-Class &Class::operator=( const Class &c )
+Class &Class::operator=(const Class &c)
 {
-  if ( this == &c ) return *this;
+    if(this == &c) return *this;
 
-  mName = c.mName;
-  mNameSpace = c.mNameSpace;
-  mFunctions = c.mFunctions;
-  mMemberVariables = c.mMemberVariables;
-  mIncludes = c.mIncludes;
-  mHeaderIncludes = c.mHeaderIncludes;
-  mForwardDeclarations = c.mForwardDeclarations;
-  mEnums = c.mEnums;
-  mDocs = c.mDocs;
+    mName = c.mName;
+    mNameSpace = c.mNameSpace;
+    mFunctions = c.mFunctions;
+    mMemberVariables = c.mMemberVariables;
+    mIncludes = c.mIncludes;
+    mHeaderIncludes = c.mHeaderIncludes;
+    mForwardDeclarations = c.mForwardDeclarations;
+    mEnums = c.mEnums;
+    mDocs = c.mDocs;
 
-  QPtrListIterator<Class> it( c.mBaseClasses );
-  while( it.current() ) {
-    mBaseClasses.append( new Class( *( it.current() ) ) );
-    ++it;
-  }
+    QPtrListIterator<Class> it(c.mBaseClasses);
+    while(it.current())
+    {
+        mBaseClasses.append(new Class(*(it.current())));
+        ++it;
+    }
 
-  mTypedefs = c.mTypedefs;
-  
-  return *this;
+    mTypedefs = c.mTypedefs;
+
+    return *this;
 }
 
-void Class::setName( const QString &name )
+void Class::setName(const QString &name)
 {
-  mName = name;
+    mName = name;
 }
 
-void Class::setNameSpace( const QString &nameSpace )
+void Class::setNameSpace(const QString &nameSpace)
 {
-  mNameSpace = nameSpace;
+    mNameSpace = nameSpace;
 }
 
-void Class::addInclude( const QString &include,
-  const QString &forwardDeclaration )
+void Class::addInclude(const QString &include,
+                       const QString &forwardDeclaration)
 {
-  if ( mIncludes.find( include ) == mIncludes.end() ) {
-    mIncludes.append( include );
-  }
+    if(mIncludes.find(include) == mIncludes.end())
+    {
+        mIncludes.append(include);
+    }
 
-  if( !forwardDeclaration.isEmpty() &&
-      mForwardDeclarations.find( forwardDeclaration ) ==
-      mForwardDeclarations.end() ) {
-    mForwardDeclarations.append( forwardDeclaration );
-  }
+    if(!forwardDeclaration.isEmpty() &&
+            mForwardDeclarations.find(forwardDeclaration) ==
+            mForwardDeclarations.end())
+    {
+        mForwardDeclarations.append(forwardDeclaration);
+    }
 }
 
-void Class::addHeaderInclude( const QString &include )
+void Class::addHeaderInclude(const QString &include)
 {
-  if ( include.isEmpty() )
-    return;
+    if(include.isEmpty())
+        return;
 
-  if ( mHeaderIncludes.find( include ) == mHeaderIncludes.end() ) {
-    mHeaderIncludes.append( include );
-  }
+    if(mHeaderIncludes.find(include) == mHeaderIncludes.end())
+    {
+        mHeaderIncludes.append(include);
+    }
 }
 
-void Class::addHeaderIncludes( const QStringList &includes )
+void Class::addHeaderIncludes(const QStringList &includes)
 {
-  QStringList::ConstIterator it;
-  for ( it = includes.begin(); it != includes.end(); ++it )
-    addHeaderInclude( *it );
+    QStringList::ConstIterator it;
+    for(it = includes.begin(); it != includes.end(); ++it)
+        addHeaderInclude(*it);
 }
 
-void Class::addBaseClass( const Class &c )
+void Class::addBaseClass(const Class &c)
 {
-  mBaseClasses.append( new Class( c ) );
+    mBaseClasses.append(new Class(c));
 }
 
-void Class::addFunction( const Function &function )
+void Class::addFunction(const Function &function)
 {
-  mFunctions.append( function );
+    mFunctions.append(function);
 }
 
-void Class::addMemberVariable( const MemberVariable &v )
+void Class::addMemberVariable(const MemberVariable &v)
 {
-  mMemberVariables.append( v );
+    mMemberVariables.append(v);
 }
 
 Class::List Class::baseClasses() const
 {
-  Class::List b;
-  
-  QPtrListIterator<Class> it( mBaseClasses );
-  while( it.current() ) {
-    b.append( Class( *( it.current() ) ) );
-    ++it;
-  }
+    Class::List b;
 
-  return b;
+    QPtrListIterator<Class> it(mBaseClasses);
+    while(it.current())
+    {
+        b.append(Class(*(it.current())));
+        ++it;
+    }
+
+    return b;
 }
 
-void Class::addTypedef( const Typedef &t )
+void Class::addTypedef(const Typedef &t)
 {
-  mTypedefs.append( t );
+    mTypedefs.append(t);
 }
 
-void Class::addEnum( const Enum &e )
+void Class::addEnum(const Enum &e)
 {
-  mEnums.append( e );
+    mEnums.append(e);
 }
 
 bool Class::isValid() const
 {
-  return !mName.isEmpty();
+    return !mName.isEmpty();
 }
 
-bool Class::hasFunction( const QString &functionName ) const
+bool Class::hasFunction(const QString &functionName) const
 {
-  Function::List::ConstIterator it;
-  for( it = mFunctions.begin(); it != mFunctions.end(); ++it ) {
-    if ( (*it).name() == functionName ) return true;
-  }
+    Function::List::ConstIterator it;
+    for(it = mFunctions.begin(); it != mFunctions.end(); ++it)
+    {
+        if((*it).name() == functionName) return true;
+    }
 
-  return false;
+    return false;
 }
 
 bool Class::isQObject() const
 {
-  Function::List::ConstIterator it;
-  for( it = mFunctions.begin(); it != mFunctions.end(); ++it ) {
-    if ( (*it).access() & Function::Signal || (*it).access() & Function::Slot )
-      return true;
-  }
+    Function::List::ConstIterator it;
+    for(it = mFunctions.begin(); it != mFunctions.end(); ++it)
+    {
+        if((*it).access() & Function::Signal || (*it).access() & Function::Slot)
+            return true;
+    }
 
-  return false;
+    return false;
 }
 
-void Class::setDocs( const QString &str )
+void Class::setDocs(const QString &str)
 {
-  mDocs = str;
+    mDocs = str;
 }

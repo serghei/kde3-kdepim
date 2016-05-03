@@ -34,22 +34,24 @@
 
 class KAboutData;
 
-class KarmPlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KarmPlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KarmPlugin( Kontact::Core *core, const char *name,
-                       const QStringList & );
+public:
+    KarmPlugin(Kontact::Core *core, const char *name,
+               const QStringList &);
     ~KarmPlugin();
 
-    int weight() const { return 700; }
+    int weight() const
+    {
+        return 700;
+    }
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
     KarmDCOPIface_stub *mStub;
 
-  public slots:
+public slots:
     void newTask();
 
 };

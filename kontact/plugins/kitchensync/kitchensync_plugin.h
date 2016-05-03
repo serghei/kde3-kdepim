@@ -32,19 +32,21 @@
 
 class KAboutData;
 
-class KitchenSyncPlugin : public Kontact::Plugin
-{
-  Q_OBJECT
+class KitchenSyncPlugin : public Kontact::Plugin {
+    Q_OBJECT
 
-  public:
-    KitchenSyncPlugin( Kontact::Core *core, const char *name,
-                       const QStringList & );
+public:
+    KitchenSyncPlugin(Kontact::Core *core, const char *name,
+                      const QStringList &);
     ~KitchenSyncPlugin();
 
-    int weight() const { return 800; }
+    int weight() const
+    {
+        return 800;
+    }
 
     virtual QStringList configModules() const;
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
 };
 

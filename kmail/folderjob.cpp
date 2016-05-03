@@ -43,86 +43,89 @@
 namespace KMail {
 
 //----------------------------------------------------------------------------
-FolderJob::FolderJob( KMMessage *msg, JobType jt, KMFolder* folder,
-                          QString partSpecifier )
-  : mType( jt ), mSrcFolder( 0 ), mDestFolder( folder ), mPartSpecifier( partSpecifier ),
-    mErrorCode( 0 ),
-    mPassiveDestructor( false ), mStarted( false )
+FolderJob::FolderJob(KMMessage *msg, JobType jt, KMFolder *folder,
+                     QString partSpecifier)
+    : mType(jt), mSrcFolder(0), mDestFolder(folder), mPartSpecifier(partSpecifier),
+      mErrorCode(0),
+      mPassiveDestructor(false), mStarted(false)
 {
-  if ( msg ) {
-    mMsgList.append(msg);
-    mSets = msg->headerField("X-UID");
-  }
-  init();
+    if(msg)
+    {
+        mMsgList.append(msg);
+        mSets = msg->headerField("X-UID");
+    }
+    init();
 }
 
 //----------------------------------------------------------------------------
-FolderJob::FolderJob( const QPtrList<KMMessage>& msgList, const QString& sets,
-                          JobType jt, KMFolder *folder )
-  : mMsgList( msgList ),mType( jt ),
-    mSets( sets ), mSrcFolder( 0 ), mDestFolder( folder ),
-    mErrorCode( 0 ),
-    mPassiveDestructor( false ), mStarted( false )
+FolderJob::FolderJob(const QPtrList<KMMessage> &msgList, const QString &sets,
+                     JobType jt, KMFolder *folder)
+    : mMsgList(msgList), mType(jt),
+      mSets(sets), mSrcFolder(0), mDestFolder(folder),
+      mErrorCode(0),
+      mPassiveDestructor(false), mStarted(false)
 {
-  init();
+    init();
 }
 
 //----------------------------------------------------------------------------
-FolderJob::FolderJob( JobType jt )
-  : mType( jt ),
-    mErrorCode( 0 ),
-    mPassiveDestructor( false ), mStarted( false )
+FolderJob::FolderJob(JobType jt)
+    : mType(jt),
+      mErrorCode(0),
+      mPassiveDestructor(false), mStarted(false)
 {
-  init();
+    init();
 }
 
 //----------------------------------------------------------------------------
 void FolderJob::init()
 {
-  switch ( mType ) {
-  case tListMessages:
-  case tGetFolder:
-  case tGetMessage:
-  case tCheckUidValidity:
-    mCancellable = true;
-    break;
-  default:
-    mCancellable = false;
-  }
+    switch(mType)
+    {
+        case tListMessages:
+        case tGetFolder:
+        case tGetMessage:
+        case tCheckUidValidity:
+            mCancellable = true;
+            break;
+        default:
+            mCancellable = false;
+    }
 }
 
 //----------------------------------------------------------------------------
 FolderJob::~FolderJob()
 {
-  if( !mPassiveDestructor ) {
-    emit result( this );
-    emit finished();
-  }
+    if(!mPassiveDestructor)
+    {
+        emit result(this);
+        emit finished();
+    }
 }
 
 //----------------------------------------------------------------------------
 void
 FolderJob::start()
 {
-  if (!mStarted)
-  {
-    mStarted = true;
-    execute();
-  }
+    if(!mStarted)
+    {
+        mStarted = true;
+        execute();
+    }
 }
 
 //----------------------------------------------------------------------------
 void FolderJob::kill()
 {
-  mErrorCode = KIO::ERR_USER_CANCELED;
-  delete this;
+    mErrorCode = KIO::ERR_USER_CANCELED;
+    delete this;
 }
 
 //----------------------------------------------------------------------------
 QPtrList<KMMessage>
 FolderJob::msgList() const
 {
-  return mMsgList;
+    return mMsgList;
 }
 
 }

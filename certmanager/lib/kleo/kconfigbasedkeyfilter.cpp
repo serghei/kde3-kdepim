@@ -39,69 +39,76 @@
 #include <kconfigbase.h>
 #include <klocale.h>
 
-static const struct {
-  const char * name;
-  GpgME::Key::OwnerTrust trust;
-  GpgME::UserID::Validity validity;
-} ownerTrustAndValidityMap[] = {
-  { "unknown",   GpgME::Key::Unknown,   GpgME::UserID::Unknown   },
-  { "undefined", GpgME::Key::Undefined, GpgME::UserID::Undefined },
-  { "never",     GpgME::Key::Never,     GpgME::UserID::Never     },
-  { "marginal",  GpgME::Key::Marginal,  GpgME::UserID::Marginal  },
-  { "full",      GpgME::Key::Full,      GpgME::UserID::Full      },
-  { "ultimate",  GpgME::Key::Ultimate,  GpgME::UserID::Ultimate  },
+static const struct
+{
+    const char *name;
+    GpgME::Key::OwnerTrust trust;
+    GpgME::UserID::Validity validity;
+} ownerTrustAndValidityMap[] =
+{
+    { "unknown",   GpgME::Key::Unknown,   GpgME::UserID::Unknown   },
+    { "undefined", GpgME::Key::Undefined, GpgME::UserID::Undefined },
+    { "never",     GpgME::Key::Never,     GpgME::UserID::Never     },
+    { "marginal",  GpgME::Key::Marginal,  GpgME::UserID::Marginal  },
+    { "full",      GpgME::Key::Full,      GpgME::UserID::Full      },
+    { "ultimate",  GpgME::Key::Ultimate,  GpgME::UserID::Ultimate  },
 };
 
-static GpgME::Key::OwnerTrust map2OwnerTrust( const QString & s ) {
-  for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
-    if ( s.lower() == ownerTrustAndValidityMap[i].name )
-      return ownerTrustAndValidityMap[i].trust;
-  return ownerTrustAndValidityMap[0].trust;
-}
-
-static GpgME::UserID::Validity map2Validity( const QString & s ) {
-  for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
-    if ( s.lower() == ownerTrustAndValidityMap[i].name )
-      return ownerTrustAndValidityMap[i].validity;
-  return ownerTrustAndValidityMap[0].validity;
-}
-
-
-Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
-  : KeyFilter(),
-    mSpecificity( 0 ),
-    mItalic( false ),
-    mBold( false ),
-    mStrikeOut( false ),
-    mUseFullFont( false ),
-    mRevoked( DoesNotMatter ),
-    mExpired( DoesNotMatter ),
-    mDisabled( DoesNotMatter ),
-    mRoot( DoesNotMatter ),
-    mCanEncrypt( DoesNotMatter ),
-    mCanSign( DoesNotMatter ),
-    mCanCertify( DoesNotMatter ),
-    mCanAuthenticate( DoesNotMatter ),
-    mHasSecret( DoesNotMatter ),
-    mIsOpenPGP( DoesNotMatter ),
-    mWasValidated( DoesNotMatter ),
-    mOwnerTrust( LevelDoesNotMatter ),
-    mOwnerTrustReferenceLevel( GpgME::Key::Unknown ),
-    mValidity( LevelDoesNotMatter ),
-    mValidityReferenceLevel( GpgME::UserID::Unknown )
+static GpgME::Key::OwnerTrust map2OwnerTrust(const QString &s)
 {
-  mFgColor = config.readColorEntry( "foreground-color" );
-  mBgColor = config.readColorEntry( "background-color" );
-  mName = config.readEntry( "name", i18n("<unnamed>") );
-  mIcon = config.readEntry( "icon" );
-  if ( config.hasKey( "font" ) ) {
-    mUseFullFont = true;
-    mFont = config.readFontEntry( "font" );
-  } else {
-    mItalic = config.readBoolEntry( "font-italic", false );
-    mBold = config.readBoolEntry( "font-bold", false );
-  }
-  mStrikeOut = config.readBoolEntry( "font-strikeout", false );
+    for(unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof * ownerTrustAndValidityMap ; ++i)
+        if(s.lower() == ownerTrustAndValidityMap[i].name)
+            return ownerTrustAndValidityMap[i].trust;
+    return ownerTrustAndValidityMap[0].trust;
+}
+
+static GpgME::UserID::Validity map2Validity(const QString &s)
+{
+    for(unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof * ownerTrustAndValidityMap ; ++i)
+        if(s.lower() == ownerTrustAndValidityMap[i].name)
+            return ownerTrustAndValidityMap[i].validity;
+    return ownerTrustAndValidityMap[0].validity;
+}
+
+
+Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter(const KConfigBase &config)
+    : KeyFilter(),
+      mSpecificity(0),
+      mItalic(false),
+      mBold(false),
+      mStrikeOut(false),
+      mUseFullFont(false),
+      mRevoked(DoesNotMatter),
+      mExpired(DoesNotMatter),
+      mDisabled(DoesNotMatter),
+      mRoot(DoesNotMatter),
+      mCanEncrypt(DoesNotMatter),
+      mCanSign(DoesNotMatter),
+      mCanCertify(DoesNotMatter),
+      mCanAuthenticate(DoesNotMatter),
+      mHasSecret(DoesNotMatter),
+      mIsOpenPGP(DoesNotMatter),
+      mWasValidated(DoesNotMatter),
+      mOwnerTrust(LevelDoesNotMatter),
+      mOwnerTrustReferenceLevel(GpgME::Key::Unknown),
+      mValidity(LevelDoesNotMatter),
+      mValidityReferenceLevel(GpgME::UserID::Unknown)
+{
+    mFgColor = config.readColorEntry("foreground-color");
+    mBgColor = config.readColorEntry("background-color");
+    mName = config.readEntry("name", i18n("<unnamed>"));
+    mIcon = config.readEntry("icon");
+    if(config.hasKey("font"))
+    {
+        mUseFullFont = true;
+        mFont = config.readFontEntry("font");
+    }
+    else
+    {
+        mItalic = config.readBoolEntry("font-italic", false);
+        mBold = config.readBoolEntry("font-bold", false);
+    }
+    mStrikeOut = config.readBoolEntry("font-strikeout", false);
 #ifdef SET
 #undef SET
 #endif
@@ -110,52 +117,60 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     member = config.readBoolEntry( key ) ? Set : NotSet ; \
     ++mSpecificity; \
   }
-  SET( mRevoked, "is-revoked" );
-  SET( mExpired, "is-expired" );
-  SET( mDisabled, "is-disabled" );
-  SET( mRoot, "is-root-certificate" );
-  SET( mCanEncrypt, "can-encrypt" );
-  SET( mCanSign, "can-sign" );
-  SET( mCanCertify, "can-certify" );
-  SET( mCanAuthenticate, "can-authenticate" );
-  SET( mHasSecret, "has-secret-key" );
-  SET( mIsOpenPGP, "is-openpgp-key" );
-  SET( mWasValidated, "was-validated" );
+    SET(mRevoked, "is-revoked");
+    SET(mExpired, "is-expired");
+    SET(mDisabled, "is-disabled");
+    SET(mRoot, "is-root-certificate");
+    SET(mCanEncrypt, "can-encrypt");
+    SET(mCanSign, "can-sign");
+    SET(mCanCertify, "can-certify");
+    SET(mCanAuthenticate, "can-authenticate");
+    SET(mHasSecret, "has-secret-key");
+    SET(mIsOpenPGP, "is-openpgp-key");
+    SET(mWasValidated, "was-validated");
 #undef SET
-  static const struct {
-    const char * prefix;
-    LevelState state;
-  } prefixMap[] = {
-    { "is-", Is },
-    { "is-not-", IsNot },
-    { "is-at-least-", IsAtLeast },
-    { "is-at-most-", IsAtMost },
-  };
-  for ( unsigned int i = 0 ; i < sizeof prefixMap / sizeof *prefixMap ; ++i ) {
-    const QString key = QString( prefixMap[i].prefix ) + "ownertrust";
-    if ( config.hasKey( key ) ) {
-      mOwnerTrust = prefixMap[i].state;
-      mOwnerTrustReferenceLevel = map2OwnerTrust( config.readEntry( key ) );
-      ++mSpecificity;
-      break;
+    static const struct
+    {
+        const char *prefix;
+        LevelState state;
+    } prefixMap[] =
+    {
+        { "is-", Is },
+        { "is-not-", IsNot },
+        { "is-at-least-", IsAtLeast },
+        { "is-at-most-", IsAtMost },
+    };
+    for(unsigned int i = 0 ; i < sizeof prefixMap / sizeof * prefixMap ; ++i)
+    {
+        const QString key = QString(prefixMap[i].prefix) + "ownertrust";
+        if(config.hasKey(key))
+        {
+            mOwnerTrust = prefixMap[i].state;
+            mOwnerTrustReferenceLevel = map2OwnerTrust(config.readEntry(key));
+            ++mSpecificity;
+            break;
+        }
     }
-  }
-  for ( unsigned int i = 0 ; i < sizeof prefixMap / sizeof *prefixMap ; ++i ) {
-    const QString key = QString( prefixMap[i].prefix ) + "validity";
-    if ( config.hasKey( key ) ) {
-      mValidity = prefixMap[i].state;
-      mValidityReferenceLevel = map2Validity( config.readEntry( key ) );
-      ++mSpecificity;
-      break;
+    for(unsigned int i = 0 ; i < sizeof prefixMap / sizeof * prefixMap ; ++i)
+    {
+        const QString key = QString(prefixMap[i].prefix) + "validity";
+        if(config.hasKey(key))
+        {
+            mValidity = prefixMap[i].state;
+            mValidityReferenceLevel = map2Validity(config.readEntry(key));
+            ++mSpecificity;
+            break;
+        }
     }
-  }
 }
 
-Kleo::KConfigBasedKeyFilter::~KConfigBasedKeyFilter() {
+Kleo::KConfigBasedKeyFilter::~KConfigBasedKeyFilter()
+{
 
 }
 
-bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
+bool Kleo::KConfigBasedKeyFilter::matches(const GpgME::Key &key) const
+{
 #ifdef MATCH
 #undef MATCH
 #endif
@@ -164,88 +179,93 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
     return false
 #define IS_MATCH(what) MATCH( m##what, is##what )
 #define CAN_MATCH(what) MATCH( mCan##what, can##what )
-  IS_MATCH( Revoked );
-  IS_MATCH( Expired );
-  IS_MATCH( Disabled );
-  IS_MATCH( Root );
-  CAN_MATCH( Encrypt );
-  CAN_MATCH( Sign );
-  CAN_MATCH( Certify );
-  CAN_MATCH( Authenticate );
-  MATCH( mHasSecret, isSecret );
+    IS_MATCH(Revoked);
+    IS_MATCH(Expired);
+    IS_MATCH(Disabled);
+    IS_MATCH(Root);
+    CAN_MATCH(Encrypt);
+    CAN_MATCH(Sign);
+    CAN_MATCH(Certify);
+    CAN_MATCH(Authenticate);
+    MATCH(mHasSecret, isSecret);
 #undef MATCH
-  if ( mIsOpenPGP != DoesNotMatter &&
-       bool( key.protocol() == GpgME::Context::OpenPGP ) != bool( mIsOpenPGP == Set ) )
-    return false;
-  if ( mWasValidated != DoesNotMatter &&
-       bool( key.keyListMode() & GpgME::Context::Validate ) != bool( mWasValidated == Set ) )
-    return false;
-  switch ( mOwnerTrust ) {
-  default:
-  case LevelDoesNotMatter:
-    break;
-  case Is:
-    if ( key.ownerTrust() != mOwnerTrustReferenceLevel )
-      return false;
-    break;
-  case IsNot:
-    if ( key.ownerTrust() == mOwnerTrustReferenceLevel )
-      return false;
-    break;
-  case IsAtLeast:
-    if ( (int)key.ownerTrust() < (int)mOwnerTrustReferenceLevel )
-      return false;
-    break;
-  case IsAtMost:
-    if ( (int)key.ownerTrust() > (int)mOwnerTrustReferenceLevel )
-      return false;
-    break;
-  }
-  const GpgME::UserID uid = key.userID(0);
-  switch ( mValidity ) {
-  default:
-  case LevelDoesNotMatter:
-    break;
-  case Is:
-    if ( uid.validity() != mValidityReferenceLevel )
-      return false;
-    break;
-  case IsNot:
-    if ( uid.validity() == mValidityReferenceLevel )
-      return false;
-    break;
-  case IsAtLeast:
-    if ( (int)uid.validity() < (int)mValidityReferenceLevel )
-      return false;
-    break;
-  case IsAtMost:
-    if ( (int)uid.validity() > (int)mValidityReferenceLevel )
-      return false;
-    break;
-  }
-  return true;
+    if(mIsOpenPGP != DoesNotMatter &&
+            bool(key.protocol() == GpgME::Context::OpenPGP) != bool(mIsOpenPGP == Set))
+        return false;
+    if(mWasValidated != DoesNotMatter &&
+            bool(key.keyListMode() & GpgME::Context::Validate) != bool(mWasValidated == Set))
+        return false;
+    switch(mOwnerTrust)
+    {
+        default:
+        case LevelDoesNotMatter:
+            break;
+        case Is:
+            if(key.ownerTrust() != mOwnerTrustReferenceLevel)
+                return false;
+            break;
+        case IsNot:
+            if(key.ownerTrust() == mOwnerTrustReferenceLevel)
+                return false;
+            break;
+        case IsAtLeast:
+            if((int)key.ownerTrust() < (int)mOwnerTrustReferenceLevel)
+                return false;
+            break;
+        case IsAtMost:
+            if((int)key.ownerTrust() > (int)mOwnerTrustReferenceLevel)
+                return false;
+            break;
+    }
+    const GpgME::UserID uid = key.userID(0);
+    switch(mValidity)
+    {
+        default:
+        case LevelDoesNotMatter:
+            break;
+        case Is:
+            if(uid.validity() != mValidityReferenceLevel)
+                return false;
+            break;
+        case IsNot:
+            if(uid.validity() == mValidityReferenceLevel)
+                return false;
+            break;
+        case IsAtLeast:
+            if((int)uid.validity() < (int)mValidityReferenceLevel)
+                return false;
+            break;
+        case IsAtMost:
+            if((int)uid.validity() > (int)mValidityReferenceLevel)
+                return false;
+            break;
+    }
+    return true;
 }
 
-static inline QFont resizedFont( QFont font, int pointSize, bool strike ) {
-  font.setPointSize( pointSize );
-  if ( strike )
-    font.setStrikeOut( true );
-  return font;
+static inline QFont resizedFont(QFont font, int pointSize, bool strike)
+{
+    font.setPointSize(pointSize);
+    if(strike)
+        font.setStrikeOut(true);
+    return font;
 }
 
-static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
-  if ( it )
-    font.setItalic( true );
-  if ( b )
-    font.setBold( true );
-  if ( strike )
-    font.setStrikeOut( true );
-  return font;
+static inline QFont adapt(QFont font, bool it, bool b, bool strike)
+{
+    if(it)
+        font.setItalic(true);
+    if(b)
+        font.setBold(true);
+    if(strike)
+        font.setStrikeOut(true);
+    return font;
 }
 
-QFont Kleo::KConfigBasedKeyFilter::font( const QFont & f ) const {
-  if ( mUseFullFont )
-    return resizedFont( mFont, f.pointSize(), mStrikeOut );
-  else
-    return adapt( f, mItalic, mBold, mStrikeOut );
+QFont Kleo::KConfigBasedKeyFilter::font(const QFont &f) const
+{
+    if(mUseFullFont)
+        return resizedFont(mFont, f.pointSize(), mStrikeOut);
+    else
+        return adapt(f, mItalic, mBold, mStrikeOut);
 }

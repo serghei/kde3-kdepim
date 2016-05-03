@@ -45,55 +45,57 @@ namespace KABC {
 
 class SloxPrefs;
 
-class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
-{
+class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase {
     Q_OBJECT
-  public:
-    ResourceSlox( const KConfig * );
-    ResourceSlox( const KURL &url,
-                  const QString &user, const QString &password );
+public:
+    ResourceSlox(const KConfig *);
+    ResourceSlox(const KURL &url,
+                 const QString &user, const QString &password);
     ~ResourceSlox();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig(const KConfig *);
+    void writeConfig(KConfig *);
 
-    SloxPrefs *prefs() const { return mPrefs; }
+    SloxPrefs *prefs() const
+    {
+        return mPrefs;
+    }
 
     bool doOpen();
     void doClose();
 
     Ticket *requestSaveTicket();
-    void releaseSaveTicket( Ticket* );
+    void releaseSaveTicket(Ticket *);
 
     bool load();
     bool asyncLoad();
-    bool save( Ticket * );
-    bool asyncSave( Ticket * );
+    bool save(Ticket *);
+    bool asyncSave(Ticket *);
 
-    void setReadOnly( bool );
+    void setReadOnly(bool);
     bool readOnly() const;
 
-  protected:
+protected:
     void init();
 
-    int phoneNumberType( const QString &fieldName ) const;
-    void parseContactAttribute( const QDomElement &e, Addressee &a );
+    int phoneNumberType(const QString &fieldName) const;
+    void parseContactAttribute(const QDomElement &e, Addressee &a);
 
-    void createAddresseeFields( QDomDocument &doc, QDomElement &prop, const Addressee &a );
-    void createAddressFields( QDomDocument &doc, QDomElement &parent,
-                              const QString &prefix, const KABC::Address &addr );
+    void createAddresseeFields(QDomDocument &doc, QDomElement &prop, const Addressee &a);
+    void createAddressFields(QDomDocument &doc, QDomElement &parent,
+                             const QString &prefix, const KABC::Address &addr);
 
     void uploadContacts();
 
-  protected slots:
-    void slotResult( KIO::Job *job );
-    void slotUploadResult( KIO::Job *job );
-    void slotProgress( KIO::Job *job, unsigned long percent );
+protected slots:
+    void slotResult(KIO::Job *job);
+    void slotUploadResult(KIO::Job *job);
+    void slotProgress(KIO::Job *job, unsigned long percent);
 
     void cancelDownload();
     void cancelUpload();
 
-  private:
+private:
     SloxPrefs *mPrefs;
 
     KIO::DavJob *mDownloadJob;

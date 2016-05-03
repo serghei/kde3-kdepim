@@ -27,34 +27,34 @@
 
 class KActionMenu;
 
-class TemplatesInsertCommand : public QPushButton
-{
-  Q_OBJECT
+class TemplatesInsertCommand : public QPushButton {
+    Q_OBJECT
 
-  public:
-    TemplatesInsertCommand( QWidget *parent, const char *name = 0 );
+public:
+    TemplatesInsertCommand(QWidget *parent, const char *name = 0);
     ~TemplatesInsertCommand();
 
-  public:
-    enum Command {CDnl = 1, CRem, CInsert, CSystem, CQuotePipe, CQuote, CQHeaders, CHeaders, 
-                  CTextPipe, CMsgPipe, CBodyPipe, CClearPipe, CText, 
-                  CToAddr, CToName, CFromAddr, CFromName, CFullSubject, CMsgId, 
-                  COHeader, CHeader, COToAddr, COToName, COFromAddr, COFromName, COFullSubject, 
-                  COMsgId, CDateEn, CDateShort, CDate, CDow, CTimeLongEn, CTimeLong, CTime, 
-                  CODateEn, CODateShort, CODate, CODow, COTimeLongEn, COTimeLong, COTime, 
-                  CBlank, CNop, CClear, CDebug, CDebugOff, CToFName, CToLName, CFromFName, CFromLName, 
-                  COToFName, COToLName, COFromFName, COFromLName, CCursor, 
-                  CCCAddr, CCCName, CCCFName, CCCLName, COCCAddr, COCCName, COCCFName, COCCLName };
+public:
+    enum Command {CDnl = 1, CRem, CInsert, CSystem, CQuotePipe, CQuote, CQHeaders, CHeaders,
+                  CTextPipe, CMsgPipe, CBodyPipe, CClearPipe, CText,
+                  CToAddr, CToName, CFromAddr, CFromName, CFullSubject, CMsgId,
+                  COHeader, CHeader, COToAddr, COToName, COFromAddr, COFromName, COFullSubject,
+                  COMsgId, CDateEn, CDateShort, CDate, CDow, CTimeLongEn, CTimeLong, CTime,
+                  CODateEn, CODateShort, CODate, CODow, COTimeLongEn, COTimeLong, COTime,
+                  CBlank, CNop, CClear, CDebug, CDebugOff, CToFName, CToLName, CFromFName, CFromLName,
+                  COToFName, COToLName, COFromFName, COFromLName, CCursor,
+                  CCCAddr, CCCName, CCCFName, CCCLName, COCCAddr, COCCName, COCCFName, COCCLName
+                 };
 
-  signals:
-    void insertCommand( TemplatesInsertCommand::Command cmd );
-    void insertCommand( QString cmd, int adjustCursor = 0 );
+signals:
+    void insertCommand(TemplatesInsertCommand::Command cmd);
+    void insertCommand(QString cmd, int adjustCursor = 0);
 
-  public slots:
+public slots:
     void slotClicked();
-    void slotMapped( int cmd );
+    void slotMapped(int cmd);
 
-  protected:
+protected:
     KActionMenu *mMenu;
 };
 

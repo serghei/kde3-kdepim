@@ -46,35 +46,35 @@ namespace Scalix {
  */
 class SubResource {
 public:
-  // This is just for QMap
-  SubResource() {}
+    // This is just for QMap
+    SubResource() {}
 
-  SubResource( bool active, bool writable, const QString& label,
-               int completionWeight = 100 );
-  virtual ~SubResource();
+    SubResource(bool active, bool writable, const QString &label,
+                int completionWeight = 100);
+    virtual ~SubResource();
 
-  virtual void setActive( bool active );
-  virtual bool active() const;
+    virtual void setActive(bool active);
+    virtual bool active() const;
 
-  virtual void setWritable( bool writable );
-  virtual bool writable() const;
+    virtual void setWritable(bool writable);
+    virtual bool writable() const;
 
-  virtual void setLabel( const QString& label );
-  virtual QString label() const;
+    virtual void setLabel(const QString &label);
+    virtual QString label() const;
 
-  virtual void setCompletionWeight( int completionWeight );
-  virtual int completionWeight() const;
+    virtual void setCompletionWeight(int completionWeight);
+    virtual int completionWeight() const;
 
 private:
-  bool mActive;   // Controlled by the applications
-  bool mWritable; // Set if the KMail folder is writable
-  QString mLabel; // The GUI name of this resource
+    bool mActive;   // Controlled by the applications
+    bool mWritable; // Set if the KMail folder is writable
+    QString mLabel; // The GUI name of this resource
 
-  // This is just for the abc plugin. But as long as only this is here,
-  // it's just as cheap to have it in here as making a d-pointer that
-  // subclasses could add to. If more are added, then we should refactor
-  // to a d-pointer instead.
-  int mCompletionWeight;
+    // This is just for the abc plugin. But as long as only this is here,
+    // it's just as cheap to have it in here as making a d-pointer that
+    // subclasses could add to. If more are added, then we should refactor
+    // to a d-pointer instead.
+    int mCompletionWeight;
 };
 
 typedef QMap<QString, SubResource> ResourceMap;
@@ -86,21 +86,21 @@ typedef QMap<QString, SubResource> ResourceMap;
  */
 class StorageReference {
 public:
-  // Just for QMap
-  StorageReference() {}
+    // Just for QMap
+    StorageReference() {}
 
-  StorageReference( const QString& resource, Q_UINT32 sernum );
-  virtual ~StorageReference();
+    StorageReference(const QString &resource, Q_UINT32 sernum);
+    virtual ~StorageReference();
 
-  virtual void setResource( const QString& resource );
-  virtual QString resource() const;
+    virtual void setResource(const QString &resource);
+    virtual QString resource() const;
 
-  virtual void setSerialNumber( Q_UINT32 serialNumber );
-  virtual Q_UINT32 serialNumber() const;
+    virtual void setSerialNumber(Q_UINT32 serialNumber);
+    virtual Q_UINT32 serialNumber() const;
 
 private:
-  QString mResource;
-  Q_UINT32 mSerialNumber;
+    QString mResource;
+    Q_UINT32 mSerialNumber;
 };
 
 typedef QMap<QString, StorageReference> UidMap;

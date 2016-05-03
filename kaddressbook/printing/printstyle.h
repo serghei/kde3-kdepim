@@ -57,25 +57,24 @@ class PrintProgress;
  to the wizard object.
  */
 
-class PrintStyle : public QObject
-{
-  Q_OBJECT
+class PrintStyle : public QObject {
+    Q_OBJECT
 
-  public:
-    PrintStyle( PrintingWizard* parent, const char* name = 0 );
+public:
+    PrintStyle(PrintingWizard *parent, const char *name = 0);
     virtual ~PrintStyle();
 
     /**
      Reimplement this method to actually print.
      */
-    virtual void print( const KABC::Addressee::List &contacts, PrintProgress* ) = 0;
+    virtual void print(const KABC::Addressee::List &contacts, PrintProgress *) = 0;
 
     /**
      Reimplement this method to provide a preview of what will
      be printed. It returns an invalid QPixmap by default,
      resulting in a message that no preview is available.
      */
-    const QPixmap& preview();
+    const QPixmap &preview();
 
     /**
      Hide all style specific pages in the wizard.
@@ -90,7 +89,7 @@ class PrintStyle : public QObject
     /**
       Returns the preferred sort criterion field.
      */
-    KABC::Field* preferredSortField();
+    KABC::Field *preferredSortField();
 
     /**
       Returns the preferred sort type.
@@ -100,24 +99,24 @@ class PrintStyle : public QObject
      */
     bool preferredSortType();
 
-  protected:
+protected:
     /**
      Load the preview image from the kaddressbook data
      directory. The image should be located in the subdirectory
      "printing". Give only the file name without any prefix as
      the parameter.
      */
-    bool setPreview( const QString& fileName );
+    bool setPreview(const QString &fileName);
 
     /**
      Set the preview image.
      */
-    void setPreview( const QPixmap& image );
+    void setPreview(const QPixmap &image);
 
     /**
       Set preferred sort options for this printing style.
      */
-    void setPreferredSortOptions( KABC::Field *field, bool ascending = true );
+    void setPreferredSortOptions(KABC::Field *field, bool ascending = true);
 
     /**
      Return the wizard object.
@@ -128,9 +127,9 @@ class PrintStyle : public QObject
      Add additional page to the wizard e.g. a configuration page for
      the style.
      */
-    void addPage( QWidget *page, const QString &title );
+    void addPage(QWidget *page, const QString &title);
 
-  private:
+private:
     PrintingWizard *mWizard;
     QPixmap mPreview;
     QPtrList<QWidget> mPageList;
@@ -147,10 +146,9 @@ class PrintStyle : public QObject
   This will maybe be changed to a template because of its simple
   nature :-)
 */
-class PrintStyleFactory
-{
-  public:
-    PrintStyleFactory( PrintingWizard* parent, const char* name = 0 );
+class PrintStyleFactory {
+public:
+    PrintStyleFactory(PrintingWizard *parent, const char *name = 0);
     virtual ~PrintStyleFactory();
 
     virtual PrintStyle *create() const = 0;
@@ -161,9 +159,9 @@ class PrintStyleFactory
      */
     virtual QString description() const = 0;
 
-  protected:
-    PrintingWizard* mParent;
-    const char* mName;
+protected:
+    PrintingWizard *mParent;
+    const char *mName;
 };
 
 }

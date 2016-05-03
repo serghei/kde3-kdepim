@@ -28,11 +28,15 @@
 #include <qobject.h>
 #include <qptrlist.h>
 
-namespace KCal{class CalFilter; }
+namespace KCal {
+class CalFilter;
+}
 class CalendarView;
 class KCMultiDialog;
 class KConfigureDialog;
-namespace KPIM { class CategoryEditDialog; }
+namespace KPIM {
+class CategoryEditDialog;
+}
 class KOIncidenceEditor;
 class KOEventEditor;
 class KOTodoEditor;
@@ -40,7 +44,9 @@ class KOJournalEditor;
 class SearchDialog;
 class ArchiveDialog;
 class FilterEditDialog;
-namespace KOrg { class AgendaView; }
+namespace KOrg {
+class AgendaView;
+}
 
 using namespace KCal;
 
@@ -48,44 +54,43 @@ using namespace KCal;
   This class manages the dialogs used by the calendar view. It owns the objects
   and handles creation and selection.
 */
-class KODialogManager : public QObject
-{
+class KODialogManager : public QObject {
     Q_OBJECT
-  public:
-    KODialogManager( CalendarView * );
+public:
+    KODialogManager(CalendarView *);
     virtual ~KODialogManager();
 
     /** Get the appropriate editor for the given incidence */
-    KOIncidenceEditor *getEditor( Incidence * );
+    KOIncidenceEditor *getEditor(Incidence *);
     /** Get an editor dialog for an Event. */
     KOEventEditor *getEventEditor();
     /** Get an editor dialog for a Todo. */
     KOTodoEditor *getTodoEditor();
     /** Get an editor dialog for a Journal. */
     KOJournalEditor *getJournalEditor();
-    void connectEditor( KOIncidenceEditor*editor );
+    void connectEditor(KOIncidenceEditor *editor);
 
     void updateSearchDialog();
 
-    void connectTypeAhead( KOEventEditor *editor, KOrg::AgendaView *agenda );
+    void connectTypeAhead(KOEventEditor *editor, KOrg::AgendaView *agenda);
 
-    static void errorSaveIncidence( QWidget *parent, Incidence *incidence );
+    static void errorSaveIncidence(QWidget *parent, Incidence *incidence);
 
-  public slots:
+public slots:
     void showOptionsDialog();
     void showCategoryEditDialog();
     void showSearchDialog();
     void showArchiveDialog();
     void showFilterEditDialog(QPtrList<CalFilter> *filters);
 
-  private:
+private:
     class DialogManagerVisitor;
     class EditorDialogVisitor;
 
     CalendarView *mMainView;
 
     KCMultiDialog *mOptionsDialog;
-//    KConfigureDialog *mOptionsDialog;
+    //    KConfigureDialog *mOptionsDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
     SearchDialog *mSearchDialog;
     ArchiveDialog *mArchiveDialog;

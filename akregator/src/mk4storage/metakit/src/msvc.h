@@ -8,7 +8,7 @@
 
 #define q4_MSVC 1
 
-  // get rid of several common warning messages
+// get rid of several common warning messages
 #if !q4_STRICT
 //#pragma warning(disable: 4244) // conversion ..., possible loss of data
 //#pragma warning(disable: 4135) // conversion between diff. integral types

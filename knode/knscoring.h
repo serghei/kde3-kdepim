@@ -22,32 +22,30 @@ class KNRemoteArticle;
 class KNGroup;
 
 
-class KNScorableArticle : public ScorableArticle
-{
+class KNScorableArticle : public ScorableArticle {
 public:
-  KNScorableArticle(KNRemoteArticle*);
-  virtual ~KNScorableArticle();
+    KNScorableArticle(KNRemoteArticle *);
+    virtual ~KNScorableArticle();
 
-  virtual void addScore(short s);
-  virtual void changeColor(const QColor&);
-  virtual void displayMessage(const QString&);
-  virtual QString from() const;
-  virtual QString subject() const;
-  virtual QString getHeaderByType(const QString&) const;
-  virtual void markAsRead();
+    virtual void addScore(short s);
+    virtual void changeColor(const QColor &);
+    virtual void displayMessage(const QString &);
+    virtual QString from() const;
+    virtual QString subject() const;
+    virtual QString getHeaderByType(const QString &) const;
+    virtual void markAsRead();
 
-  static NotifyCollection* notifyC;
+    static NotifyCollection *notifyC;
 
 private:
-  KNRemoteArticle *_a;
+    KNRemoteArticle *_a;
 };
 
 
-class KNScorableGroup : public ScorableGroup
-{
+class KNScorableGroup : public ScorableGroup {
 public:
-  KNScorableGroup();
-  virtual ~KNScorableGroup();
+    KNScorableGroup();
+    virtual ~KNScorableGroup();
 };
 
 
@@ -58,19 +56,24 @@ public:
 // };
 
 
-class KNScoringManager : public KScoringManager
-{
-  Q_OBJECT
+class KNScoringManager : public KScoringManager {
+    Q_OBJECT
 
 public:
-  KNScoringManager();
-  virtual ~KNScoringManager();
-  virtual QStringList getGroups() const;
-  virtual QStringList getDefaultHeaders() const;
+    KNScoringManager();
+    virtual ~KNScoringManager();
+    virtual QStringList getGroups() const;
+    virtual QStringList getDefaultHeaders() const;
 
-  void configure();
-  bool canColors()const { return true; }
-  bool canMarkAsRead() const { return true; }
+    void configure();
+    bool canColors()const
+    {
+        return true;
+    }
+    bool canMarkAsRead() const
+    {
+        return true;
+    }
 };
 
 #endif

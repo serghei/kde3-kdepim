@@ -24,20 +24,20 @@
 
 #include "ldapdialog.h"
 
-LdapDialog::LdapDialog( QWidget *parent )
-  : KDialogBase( parent, "", true, "", Ok | Cancel, Ok, true )
+LdapDialog::LdapDialog(QWidget *parent)
+    : KDialogBase(parent, "", true, "", Ok | Cancel, Ok, true)
 {
-  setCaption( i18n( "User Account Selection" ) );
+    setCaption(i18n("User Account Selection"));
 
-  mView = new LdapView( this );
-  setMainWidget( mView );
+    mView = new LdapView(this);
+    setMainWidget(mView);
 
-  mView->setQuery( "cn=*" );
+    mView->setQuery("cn=*");
 
-  resize( 400, 250 );
+    resize(400, 250);
 }
 
 QString LdapDialog::selectedUser() const
 {
-  return mView->selectedUser();
+    return mView->selectedUser();
 }

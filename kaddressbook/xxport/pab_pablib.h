@@ -28,48 +28,56 @@
 #define PAB_REC_OK	0xbcec
 #define PAB_FILE_ID 0x4e444221
 
-class pab
-{
-  friend class pabrec;
+class pab {
+    friend class pabrec;
 
-  private:
+private:
     QFile in;
     const char *pabfile;
     QString     cap;
     QWidget    *parent;
-  public:
+public:
     pab(const char *pabFile);
-   ~pab();
-  private:
-    content_t  skip(int longwords) { return relative(longwords); }
+    ~pab();
+private:
+    content_t  skip(int longwords)
+    {
+        return relative(longwords);
+    }
     content_t  go(adr_t);
     content_t  relative(int longwords);
     content_t  relative(pabsize_t);
-    content_t  add(adr_t &,int words);
+    content_t  add(adr_t &, int words);
     content_t  read(void);
-    void       read(unsigned char *mem,content_t size);
+    void       read(unsigned char *mem, content_t size);
     void       read(word_t &);
     pabsize_t  size(content_t);
-    void       size(content_t,pabsize_t &, pabsize_t &);
+    void       size(content_t, pabsize_t &, pabsize_t &);
     word_t     lower(content_t);
     word_t     upper(content_t);
     byte_t     readbyte(void);
-    adr_t      curpos(void) { return in.at(); }
-    adr_t      tell(void)   { return curpos(); }
-  private:
-    bool  recUnknown(pabrec & R);
-    bool  recNoFunction(pabrec & R);
-    const char *get(unsigned char *mem,pabrec_entry e,pabrec & R);
+    adr_t      curpos(void)
+    {
+        return in.at();
+    }
+    adr_t      tell(void)
+    {
+        return curpos();
+    }
+private:
+    bool  recUnknown(pabrec &R);
+    bool  recNoFunction(pabrec &R);
+    const char *get(unsigned char *mem, pabrec_entry e, pabrec &R);
     bool  knownPAB(void);
-  private:
-    void rdPabRec(pabrec & R);
-    void prt(unsigned char *mem,pabrec & R,pabrec_entry E);
-    void getrange(pabrec & R,pabrec_entry e,word_t & b,word_t & _e);
-  private:
-    bool convert(adr_t A,content_t start,content_t stop);
-    void dotable(adr_t table,content_t start,content_t stop);
+private:
+    void rdPabRec(pabrec &R);
+    void prt(unsigned char *mem, pabrec &R, pabrec_entry E);
+    void getrange(pabrec &R, pabrec_entry e, word_t &b, word_t &_e);
+private:
+    bool convert(adr_t A, content_t start, content_t stop);
+    void dotable(adr_t table, content_t start, content_t stop);
     void processRec(adr_t REC);
-  public:
+public:
     bool convert(void);
 };
 

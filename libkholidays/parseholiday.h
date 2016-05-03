@@ -36,35 +36,36 @@
 /* Tokens.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     NUMBER = 258,
-     MONTH = 259,
-     WDAY = 260,
-     COLOR = 261,
-     STRING = 262,
-     IN = 263,
-     PLUS = 264,
-     MINUS = 265,
-     SMALL = 266,
-     CYEAR = 267,
-     LEAPYEAR = 268,
-     SHIFT = 269,
-     IF = 270,
-     LENGTH = 271,
-     EASTER = 272,
-     EQ = 273,
-     NE = 274,
-     LE = 275,
-     GE = 276,
-     LT = 277,
-     GT = 278,
-     PASCHA = 279,
-     OR = 280,
-     AND = 281,
-     UMINUS = 282
-   };
+/* Put the tokens into the symbol table, so that GDB and other debuggers
+   know about them.  */
+enum yytokentype
+{
+    NUMBER = 258,
+    MONTH = 259,
+    WDAY = 260,
+    COLOR = 261,
+    STRING = 262,
+    IN = 263,
+    PLUS = 264,
+    MINUS = 265,
+    SMALL = 266,
+    CYEAR = 267,
+    LEAPYEAR = 268,
+    SHIFT = 269,
+    IF = 270,
+    LENGTH = 271,
+    EASTER = 272,
+    EQ = 273,
+    NE = 274,
+    LE = 275,
+    GE = 276,
+    LT = 277,
+    GT = 278,
+    PASCHA = 279,
+    OR = 280,
+    AND = 281,
+    UMINUS = 282
+};
 #endif
 /* Tokens.  */
 #define NUMBER 258
@@ -99,10 +100,13 @@
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
 #line 111 "parseholiday.y"
-{ int ival; char *sval; }
+{
+    int ival;
+    char *sval;
+}
 /* Line 1529 of yacc.c.  */
 #line 105 "parseholiday.h"
-	YYSTYPE;
+YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

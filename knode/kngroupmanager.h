@@ -35,14 +35,15 @@ class KNCleanUp;
 
 class KNGroupInfo {
 
-  public:
+public:
 
     KNGroupInfo();
-    KNGroupInfo(const QString &n_ame, const QString &d_escription, bool n_ewGroup=false, bool s_ubscribed=false, KNGroup::Status s_tatus=KNGroup::unknown );
+    KNGroupInfo(const QString &n_ame, const QString &d_escription, bool n_ewGroup = false, bool s_ubscribed = false,
+                KNGroup::Status s_tatus = KNGroup::unknown);
     ~KNGroupInfo();
 
     /** group names will be utf-8 encoded in the future... */
-    QString name,description;
+    QString name, description;
     bool newGroup, subscribed;
     KNGroup::Status status;
 
@@ -53,15 +54,15 @@ class KNGroupInfo {
 
 class KNGroupListData : public KNJobItem {
 
-  public:
+public:
     KNGroupListData();
     ~KNGroupListData();
 
-    bool readIn(KNProtocolClient *client=0);
+    bool readIn(KNProtocolClient *client = 0);
     bool writeOut();
-    void merge(QSortedList<KNGroupInfo>* newGroups);
+    void merge(QSortedList<KNGroupInfo> *newGroups);
 
-    QSortedList<KNGroupInfo>* extractList();
+    QSortedList<KNGroupInfo> *extractList();
 
     QStringList subscribed;
     QString path;
@@ -77,43 +78,49 @@ class KNGroupListData : public KNJobItem {
 
 class KNGroupManager : public QObject , public KNJobConsumer {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
-    KNGroupManager(QObject * parent=0, const char * name=0);
+    KNGroupManager(QObject *parent = 0, const char *name = 0);
     ~KNGroupManager();
 
     // group access
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStringList &l);
-    QValueList<KNGroup*> groupsOfAccount( KNNntpAccount *a );
+    QValueList<KNGroup *> groupsOfAccount(KNNntpAccount *a);
 
     bool loadHeaders(KNGroup *g);
-    bool unloadHeaders(KNGroup *g, bool force=true);
+    bool unloadHeaders(KNGroup *g, bool force = true);
 
-    KNGroup* group(const QString &gName, const KNServerInfo *s);
-    KNGroup* firstGroupOfAccount(const KNServerInfo *s);
-    KNGroup* currentGroup() const              { return c_urrentGroup; }
-    bool hasCurrentGroup() const               { return (c_urrentGroup!=0); }
+    KNGroup *group(const QString &gName, const KNServerInfo *s);
+    KNGroup *firstGroupOfAccount(const KNServerInfo *s);
+    KNGroup *currentGroup() const
+    {
+        return c_urrentGroup;
+    }
+    bool hasCurrentGroup() const
+    {
+        return (c_urrentGroup != 0);
+    }
     void setCurrentGroup(KNGroup *g);
 
     // group handling
-    void showGroupDialog(KNNntpAccount *a, QWidget *parent=0);
+    void showGroupDialog(KNNntpAccount *a, QWidget *parent = 0);
     void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
-    bool unsubscribeGroup(KNGroup *g=0);
-    void showGroupProperties(KNGroup *g=0);
-    void expireGroupNow(KNGroup *g=0);
-    void reorganizeGroup(KNGroup *g=0);
+    bool unsubscribeGroup(KNGroup *g = 0);
+    void showGroupProperties(KNGroup *g = 0);
+    void expireGroupNow(KNGroup *g = 0);
+    void reorganizeGroup(KNGroup *g = 0);
 
-    void checkGroupForNewHeaders(KNGroup *g=0);
-    void checkAll(KNNntpAccount *a, bool silent=false);
+    void checkGroupForNewHeaders(KNGroup *g = 0);
+    void checkAll(KNNntpAccount *a, bool silent = false);
 
     void expireAll(KNCleanUp *cup);
     void expireAll(KNNntpAccount *a);
     void syncGroups();
 
-  public slots:
+public slots:
     /** load group list from disk (if this fails: ask user if we should fetch the list) */
     void slotLoadGroupList(KNNntpAccount *a);
     /** fetch group list from server */
@@ -121,19 +128,19 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     /** check for new groups (created after the given date) */
     void slotCheckForNewGroups(KNNntpAccount *a, QDate date);
 
-  protected:
+protected:
     /** reimplemented from @ref KNJobConsumer */
     void processJob(KNJobData *j);
-    QValueList<KNGroup*> mGroupList;
+    QValueList<KNGroup *> mGroupList;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;
 
-  signals:
-    void newListReady(KNGroupListData* d);
+signals:
+    void newListReady(KNGroupListData *d);
 
-    void groupAdded(KNGroup* g);
-    void groupRemoved(KNGroup* g);
-    void groupUpdated(KNGroup* g);
+    void groupAdded(KNGroup *g);
+    void groupRemoved(KNGroup *g);
+    void groupUpdated(KNGroup *g);
 
 };
 

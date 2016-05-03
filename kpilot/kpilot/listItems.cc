@@ -46,35 +46,35 @@
 
 /* static */ void PilotListItem::counts()
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": created=" << crt << " deletions=" << del << endl;
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname
+                << ": created=" << crt << " deletions=" << del << endl;
 }
 #endif
 
-PilotListItem::PilotListItem(const QString & text,
-	recordid_t pilotid, void *r) :
-	QListBoxText(text),
-	fid(pilotid),
-	fr(r)
+PilotListItem::PilotListItem(const QString &text,
+                             recordid_t pilotid, void *r) :
+    QListBoxText(text),
+    fid(pilotid),
+    fr(r)
 {
-	// FUNCTIONSETUP;
+    // FUNCTIONSETUP;
 #ifdef DEBUG
-	crt++;
-	count++;
-	if (!(count & 0xff))
-		counts();
+    crt++;
+    count++;
+    if(!(count & 0xff))
+        counts();
 #endif
 }
 
 PilotListItem::~PilotListItem()
 {
-	// FUNCTIONSETUP;
+    // FUNCTIONSETUP;
 #ifdef DEBUG
-	del++;
-	count++;
-	if (!(count & 0xff))
-		counts();
+    del++;
+    count++;
+    if(!(count & 0xff))
+        counts();
 #endif
 }
 
@@ -88,41 +88,41 @@ PilotListItem::~PilotListItem()
 
 /* static */ void PilotCheckListItem::counts()
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": created=" << crt << " deletions=" << del << endl;
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname
+                << ": created=" << crt << " deletions=" << del << endl;
 }
 #endif
 
-PilotCheckListItem::PilotCheckListItem(QListView * parent, const QString & text, recordid_t pilotid, void *r) :
-	QCheckListItem(parent, text, QCheckListItem::CheckBox),
-	fid(pilotid),
-	fr(r)
+PilotCheckListItem::PilotCheckListItem(QListView *parent, const QString &text, recordid_t pilotid, void *r) :
+    QCheckListItem(parent, text, QCheckListItem::CheckBox),
+    fid(pilotid),
+    fr(r)
 {
-	// FUNCTIONSETUP;
+    // FUNCTIONSETUP;
 #ifdef DEBUG
-	crt++;
-	count++;
-	if (!(count & 0xff))
-		counts();
+    crt++;
+    count++;
+    if(!(count & 0xff))
+        counts();
 #endif
 }
 
 PilotCheckListItem::~PilotCheckListItem()
 {
-	// FUNCTIONSETUP;
+    // FUNCTIONSETUP;
 #ifdef DEBUG
-	del++;
-	count++;
-	if (!(count & 0xff))
-		counts();
+    del++;
+    count++;
+    if(!(count & 0xff))
+        counts();
 #endif
 }
 
-void PilotCheckListItem::stateChange ( bool on)
+void PilotCheckListItem::stateChange(bool on)
 {
-	// FUNCTIONSETUP;
-	QCheckListItem::stateChange(on);
+    // FUNCTIONSETUP;
+    QCheckListItem::stateChange(on);
 
 }
 
@@ -136,107 +136,107 @@ void PilotCheckListItem::stateChange ( bool on)
 
 /* static */ void PilotListViewItem::counts()
 {
-	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
-		<< ": created=" << crt << " deletions=" << del << endl;
+    FUNCTIONSETUP;
+    DEBUGKPILOT << fname
+                << ": created=" << crt << " deletions=" << del << endl;
 }
 #endif
 
-PilotListViewItem::PilotListViewItem( QListView * parent,
-	QString label1, QString label2, QString label3, QString label4,
-	recordid_t pilotid, void *r):
-	QListViewItem(parent, label1, label2, label3, label4,
-		QString::null, QString::null, QString::null, QString::null),
-	fid(pilotid),
-	fr(r),
-	d(new PilotListViewItemData)
+PilotListViewItem::PilotListViewItem(QListView *parent,
+                                     QString label1, QString label2, QString label3, QString label4,
+                                     recordid_t pilotid, void *r):
+    QListViewItem(parent, label1, label2, label3, label4,
+                  QString::null, QString::null, QString::null, QString::null),
+    fid(pilotid),
+    fr(r),
+    d(new PilotListViewItemData)
 {
-	// FUNCTIONSETUP;
-	if (d) d->valCol=-1;
+    // FUNCTIONSETUP;
+    if(d) d->valCol = -1;
 #ifdef DEBUG
-	crt++;
-	count++;
-	if (!(count & 0xff))
-		counts();
+    crt++;
+    count++;
+    if(!(count & 0xff))
+        counts();
 #endif
 }
 
 PilotListViewItem::~PilotListViewItem()
 {
-	// FUNCTIONSETUP;
+    // FUNCTIONSETUP;
 #ifdef DEBUG
-	del++;
-	count++;
-	if (!(count & 0xff))
-		counts();
+    del++;
+    count++;
+    if(!(count & 0xff))
+        counts();
 #endif
 }
 void PilotListViewItem::setNumericCol(int col, bool numeric)
 {
-	// FUNCTIONSETUP;
-	if (numeric)
-	{
-		if (!numericCols.contains(col))
-			numericCols.append(col);
-	}
-	else
-	{
-		if (numericCols.contains(col))
-			numericCols.remove(col);
-	}
+    // FUNCTIONSETUP;
+    if(numeric)
+    {
+        if(!numericCols.contains(col))
+            numericCols.append(col);
+    }
+    else
+    {
+        if(numericCols.contains(col))
+            numericCols.remove(col);
+    }
 }
 
 unsigned long PilotListViewItem::colValue(int col, bool *ok) const
 {
-//	FUNCTIONSETUP;
-/*	if (!d)
-	{
-		d=new PilotListViewItemData;
-		d->valCol=-1;
-	}*/
-	if (d->valCol!=col)
-	{
-		// Use true for ascending for now...
-		d->val=key(col, true).toULong(&d->valOk);
-		d->valCol=col;
-	}
-	if (ok) (*ok)=d->valOk;
-	return d->val;
+    //	FUNCTIONSETUP;
+    /*	if (!d)
+    	{
+    		d=new PilotListViewItemData;
+    		d->valCol=-1;
+    	}*/
+    if(d->valCol != col)
+    {
+        // Use true for ascending for now...
+        d->val = key(col, true).toULong(&d->valOk);
+        d->valCol = col;
+    }
+    if(ok)(*ok) = d->valOk;
+    return d->val;
 }
 
-int PilotListViewItem::compare( QListViewItem *i, int col, bool ascending ) const
+int PilotListViewItem::compare(QListViewItem *i, int col, bool ascending) const
 {
-// 	FUNCTIONSETUP;
-	PilotListViewItem*item=dynamic_cast<PilotListViewItem*>(i);
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"Item of dyn cast: "<<item<<endl;
-#endif*/
-	if (item && numericCols.contains(col))
-	{
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"Comparing: col "<<col<<", Ascending: "<<ascending<<endl;
-#endif*/
-		bool ok1, ok2;
-		/// Do the toULong call just once if the sorting column changed:
-		unsigned long l1=colValue(col, &ok1);
-		unsigned long l2=item->colValue(col, &ok2);
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"l1="<<l1<<"(ok: "<<ok1<<"), l2="<<l2<<"(ok: "<<ok2<<")"<<endl;
-#endif*/
-		if (ok1 && ok2)
-		{
-			// Returns -1 if this item is less than i, 0 if they are
-			// equal and 1 if this item is greater than i.
-			int res=0;
-			if (l1<l2) res=-1;
-			else if (l1>l2) res=1;
-			//else res=0;
-/*#ifdef DEBUG
-	DEBUGKPILOT<<"RESULT="<<res<<endl;
-#endif*/
-			return res;
-		}
-	}
-	return QListViewItem::compare(i, col, ascending);
+    // 	FUNCTIONSETUP;
+    PilotListViewItem *item = dynamic_cast<PilotListViewItem *>(i);
+    /*#ifdef DEBUG
+    	DEBUGKPILOT<<"Item of dyn cast: "<<item<<endl;
+    #endif*/
+    if(item && numericCols.contains(col))
+    {
+        /*#ifdef DEBUG
+        	DEBUGKPILOT<<"Comparing: col "<<col<<", Ascending: "<<ascending<<endl;
+        #endif*/
+        bool ok1, ok2;
+        /// Do the toULong call just once if the sorting column changed:
+        unsigned long l1 = colValue(col, &ok1);
+        unsigned long l2 = item->colValue(col, &ok2);
+        /*#ifdef DEBUG
+        	DEBUGKPILOT<<"l1="<<l1<<"(ok: "<<ok1<<"), l2="<<l2<<"(ok: "<<ok2<<")"<<endl;
+        #endif*/
+        if(ok1 && ok2)
+        {
+            // Returns -1 if this item is less than i, 0 if they are
+            // equal and 1 if this item is greater than i.
+            int res = 0;
+            if(l1 < l2) res = -1;
+            else if(l1 > l2) res = 1;
+            //else res=0;
+            /*#ifdef DEBUG
+            	DEBUGKPILOT<<"RESULT="<<res<<endl;
+            #endif*/
+            return res;
+        }
+    }
+    return QListViewItem::compare(i, col, ascending);
 }
 

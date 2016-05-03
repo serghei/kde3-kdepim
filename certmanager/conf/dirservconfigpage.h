@@ -40,9 +40,9 @@ class QCheckBox;
 class QTimeEdit;
 class KIntNumInput;
 namespace Kleo {
-  class CryptoConfig;
-  class CryptoConfigEntry;
-  class DirectoryServicesWidget;
+class CryptoConfig;
+class CryptoConfigEntry;
+class DirectoryServicesWidget;
 }
 
 /**
@@ -51,34 +51,34 @@ namespace Kleo {
  * remote certificates in kleopatra.
  */
 class KDE_EXPORT DirectoryServicesConfigurationPage : public KCModule {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  DirectoryServicesConfigurationPage( QWidget * parent=0, const char * name=0 );
+    DirectoryServicesConfigurationPage(QWidget *parent = 0, const char *name = 0);
 
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
 
 private slots:
-  void slotChanged();
+    void slotChanged();
 
 private:
-  Kleo::CryptoConfigEntry* configEntry( const char* componentName,
-                                        const char* groupName,
-                                        const char* entryName,
-                                        Kleo::CryptoConfigEntry::ArgType argType,
-                                        bool isList );
+    Kleo::CryptoConfigEntry *configEntry(const char *componentName,
+                                         const char *groupName,
+                                         const char *entryName,
+                                         Kleo::CryptoConfigEntry::ArgType argType,
+                                         bool isList);
 
-  Kleo::DirectoryServicesWidget* mWidget;
-  QTimeEdit* mTimeout;
-  KIntNumInput* mMaxItems;
-  QCheckBox* mAddNewServersCB;
+    Kleo::DirectoryServicesWidget *mWidget;
+    QTimeEdit *mTimeout;
+    KIntNumInput *mMaxItems;
+    QCheckBox *mAddNewServersCB;
 
-  Kleo::CryptoConfigEntry* mTimeoutConfigEntry;
-  Kleo::CryptoConfigEntry* mMaxItemsConfigEntry;
-  Kleo::CryptoConfigEntry* mAddNewServersConfigEntry;
+    Kleo::CryptoConfigEntry *mTimeoutConfigEntry;
+    Kleo::CryptoConfigEntry *mMaxItemsConfigEntry;
+    Kleo::CryptoConfigEntry *mAddNewServersConfigEntry;
 
-  Kleo::CryptoConfig* mConfig;
+    Kleo::CryptoConfig *mConfig;
 };
 
 #endif

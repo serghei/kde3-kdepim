@@ -54,35 +54,38 @@ namespace KMail {
     for the plugins. */
 class KDE_EXPORT Callback {
 public:
-  Callback( KMMessage* msg, KMReaderWin* readerWin );
+    Callback(KMMessage *msg, KMReaderWin *readerWin);
 
-  /** Get the full message */
-  KMMessage* getMsg() const { return mMsg; }
+    /** Get the full message */
+    KMMessage *getMsg() const
+    {
+        return mMsg;
+    }
 
-  /** Mail a message
-   * @ param status can be accepted/cancel/tentative/delegated
-   */
-  bool mailICal( const QString &to, const QString &iCal,
-                 const QString &subject, const QString &status,
-                 bool delMessage = true ) const;
+    /** Mail a message
+     * @ param status can be accepted/cancel/tentative/delegated
+     */
+    bool mailICal(const QString &to, const QString &iCal,
+                  const QString &subject, const QString &status,
+                  bool delMessage = true) const;
 
-  /** Get the receiver of the mail */
-  QString receiver() const;
+    /** Get the receiver of the mail */
+    QString receiver() const;
 
-  /** Returns the sender of the mail. */
-  QString sender() const;
+    /** Returns the sender of the mail. */
+    QString sender() const;
 
-  /** Close the main window showing this message, if it's a secondary window. */
-  void closeIfSecondaryWindow() const;
+    /** Close the main window showing this message, if it's a secondary window. */
+    void closeIfSecondaryWindow() const;
 
-  bool askForComment( KCal::Attendee::PartStat status ) const;
-  bool deleteInvitationAfterReply() const;
+    bool askForComment(KCal::Attendee::PartStat status) const;
+    bool deleteInvitationAfterReply() const;
 
 private:
-  KMMessage* mMsg;
-  KMReaderWin* mReaderWin;
-  mutable QString mReceiver;
-  mutable bool mReceiverSet;
+    KMMessage *mMsg;
+    KMReaderWin *mReaderWin;
+    mutable QString mReceiver;
+    mutable bool mReceiverSet;
 };
 
 }

@@ -53,50 +53,50 @@ class ProgressDialog;
 
 class KDE_EXPORT StatusbarProgressWidget : public QFrame {
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
 
-  StatusbarProgressWidget( ProgressDialog* progressDialog, QWidget* parent, bool button = true );
+    StatusbarProgressWidget(ProgressDialog *progressDialog, QWidget *parent, bool button = true);
 
 public slots:
 
-  void slotClean();
-  void slotSetSSL( bool );
+    void slotClean();
+    void slotSetSSL(bool);
 
-  void slotProgressItemAdded( KPIM::ProgressItem *i );
-  void slotProgressItemCompleted( KPIM::ProgressItem *i );
-  void slotProgressItemProgress( KPIM::ProgressItem *i, unsigned int value );
+    void slotProgressItemAdded(KPIM::ProgressItem *i);
+    void slotProgressItemCompleted(KPIM::ProgressItem *i);
+    void slotProgressItemProgress(KPIM::ProgressItem *i, unsigned int value);
 
 protected slots:
-  void slotProgressDialogVisible( bool );
-  void slotShowItemDelayed();
-  void slotBusyIndicator();
+    void slotProgressDialogVisible(bool);
+    void slotShowItemDelayed();
+    void slotBusyIndicator();
 
 protected:
-  void setMode();
-  void connectSingleItem();
-  void activateSingleItemMode();
+    void setMode();
+    void connectSingleItem();
+    void activateSingleItemMode();
 
-  virtual bool eventFilter( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
 
 private:
-  KProgress* m_pProgressBar;
-  QLabel* m_pLabel;
-  SSLLabel* m_sslLabel;
-  QPushButton* m_pButton;
+    KProgress *m_pProgressBar;
+    QLabel *m_pLabel;
+    SSLLabel *m_sslLabel;
+    QPushButton *m_pButton;
 
-  enum Mode { None, /*Label,*/ Progress };
+    enum Mode { None, /*Label,*/ Progress };
 
-  uint mode;
-  bool m_bShowButton;
+    uint mode;
+    bool m_bShowButton;
 
-  QBoxLayout *box;
-  QWidgetStack *stack;
-  ProgressItem *mCurrentItem;
-  ProgressDialog* mProgressDialog;
-  QTimer *mDelayTimer;
-  QTimer *mBusyTimer;
+    QBoxLayout *box;
+    QWidgetStack *stack;
+    ProgressItem *mCurrentItem;
+    ProgressDialog *mProgressDialog;
+    QTimer *mDelayTimer;
+    QTimer *mBusyTimer;
 };
 
 } // namespace

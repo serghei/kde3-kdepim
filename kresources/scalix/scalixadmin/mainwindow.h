@@ -23,9 +23,8 @@
 
 #include <kmainwindow.h>
 
-class MainWindow : public KMainWindow
-{
-  public:
+class MainWindow : public KMainWindow {
+public:
     MainWindow();
 };
 

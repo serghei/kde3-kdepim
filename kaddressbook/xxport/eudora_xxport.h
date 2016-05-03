@@ -26,24 +26,26 @@
 
 #include <xxport.h>
 
-class EudoraXXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class EudoraXXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    EudoraXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "eudora"; }
+    QString identifier() const
+    {
+        return "eudora";
+    }
 
-  public slots:
-    KABC::AddresseeList importContacts( const QString &data ) const;
+public slots:
+    KABC::AddresseeList importContacts(const QString &data) const;
 
-  private:
-    QString get( const QString& line, const QString& key ) const;
-    QString comment( const QString& line ) const;
-    QString email( const QString& line ) const;
-    QString key( const QString& line ) const;
-    int find( const QString& key ) const;
+private:
+    QString get(const QString &line, const QString &key) const;
+    QString comment(const QString &line) const;
+    QString email(const QString &line) const;
+    QString key(const QString &line) const;
+    int find(const QString &key) const;
 };
 
 #endif

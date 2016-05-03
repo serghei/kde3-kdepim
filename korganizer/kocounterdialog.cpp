@@ -32,36 +32,36 @@
 #include "kocounterdialog.h"
 #include "kocounterdialog.moc"
 
-KOCounterDialog::KOCounterDialog( QWidget *parent, const char *name )
-  : KDialogBase( parent, name, false, i18n("Counter-Event Viewer"),
-                 User1 | User2, User1, false, i18n("Decline"), i18n("Accept") )
+KOCounterDialog::KOCounterDialog(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, false, i18n("Counter-Event Viewer"),
+                  User1 | User2, User1, false, i18n("Decline"), i18n("Accept"))
 {
-  mEventViewer = new KOEventViewer( this );
-  setMainWidget( mEventViewer );
+    mEventViewer = new KOEventViewer(this);
+    setMainWidget(mEventViewer);
 
-  connect( this, SIGNAL( user1Clicked() ), SLOT( slotCancel() ) );
-  connect( this, SIGNAL( user2Clicked() ), SLOT( slotOk( ) ) );
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotCancel()));
+    connect(this, SIGNAL(user2Clicked()), SLOT(slotOk()));
 
-  // FIXME: Set a sensible size (based on the content?).
-  setMinimumSize( 300, 200 );
-  resize( 320, 300 );
+    // FIXME: Set a sensible size (based on the content?).
+    setMinimumSize(300, 200);
+    resize(320, 300);
 }
 
 KOCounterDialog::~KOCounterDialog()
 {
 }
 
-void KOCounterDialog::setIncidence( Incidence *incidence )
+void KOCounterDialog::setIncidence(Incidence *incidence)
 {
-  mEventViewer->setIncidence( incidence );
+    mEventViewer->setIncidence(incidence);
 }
 
-void KOCounterDialog::addIncidence( Incidence *incidence )
+void KOCounterDialog::addIncidence(Incidence *incidence)
 {
-  mEventViewer->appendIncidence( incidence );
+    mEventViewer->appendIncidence(incidence);
 }
 
-void KOCounterDialog::addText( const QString &text )
+void KOCounterDialog::addText(const QString &text)
 {
-  mEventViewer->addText( text );
+    mEventViewer->addText(text);
 }

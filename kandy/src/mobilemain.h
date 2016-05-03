@@ -43,10 +43,9 @@ class CommandScheduler;
  * @author Cornelius Schumacher <schumacher@kde.org>
  * @version 0.1
  */
-class MobileMain : public KMainWindow
-{
+class MobileMain : public KMainWindow {
     Q_OBJECT
-  public:
+public:
     /**
      * Default Constructor
      */
@@ -57,13 +56,16 @@ class MobileMain : public KMainWindow
      */
     virtual ~MobileMain();
 
-    MobileGui *view() { return mView; };
+    MobileGui *view()
+    {
+        return mView;
+    };
 
-  signals:
+signals:
     void showTerminalWin();
     void showPreferencesWin();
 
-  protected:
+protected:
     /**
      * Overridden virtuals for Qt drag 'n drop (XDND)
      */
@@ -72,7 +74,7 @@ class MobileMain : public KMainWindow
 
     bool queryClose();
 
-  protected:
+protected:
     /**
      * This function is called when it is time for the app to save its
      * properties for session management purposes.
@@ -87,22 +89,22 @@ class MobileMain : public KMainWindow
     void readProperties(KConfig *);
 
 
-  private slots:
+private slots:
     void showTerminal();
     void optionsConfigureKeys();
     void optionsConfigureToolbars();
     void optionsPreferences();
     void newToolbarConfig();
 
-    void showStatusMessage(const QString& text);
-    void showTransientStatusMessage(const QString& text);
-    void changeCaption(const QString& text);
+    void showStatusMessage(const QString &text);
+    void showTransientStatusMessage(const QString &text);
+    void changeCaption(const QString &text);
 
 
-  private:
+private:
     void setupActions();
 
-  private:
+private:
     MobileGui *mView;
 };
 

@@ -35,13 +35,12 @@
 #include "pluginfactory.h"
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_popmail()
-{
-	return new ConduitFactory<PopMailWidgetConfig,PopMailConduit>;
-}
+    void *init_conduit_popmail()
+    {
+        return new ConduitFactory<PopMailWidgetConfig, PopMailConduit>;
+    }
 
 }
 

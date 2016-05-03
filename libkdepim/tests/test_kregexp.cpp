@@ -5,12 +5,12 @@
 int
 main()
 {
-  KInstance app("# ");
+    KInstance app("# ");
 
-  // test for http://bugs.kde.org/show_bug.cgi?id=54886
-  KRegExp3 reg("^");
-  QString res = reg.replace(QString::fromLatin1("Fun stuff"),
-			    QString::fromLatin1("[fun] "));
-  kdDebug() << res << endl;
+    // test for http://bugs.kde.org/show_bug.cgi?id=54886
+    KRegExp3 reg("^");
+    QString res = reg.replace(QString::fromLatin1("Fun stuff"),
+                              QString::fromLatin1("[fun] "));
+    kdDebug() << res << endl;
 
 }

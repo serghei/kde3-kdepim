@@ -26,21 +26,20 @@
 
 class QWidget;
 
-class KDE_EXPORT KPimURLRequesterDlg
-{
-	public:
+class KDE_EXPORT KPimURLRequesterDlg {
+public:
     /**
-     * Creates a modal dialog with the given label text, executes it and 
-		 * returns the selected URL.
+     * Creates a modal dialog with the given label text, executes it and
+    	 * returns the selected URL.
      *
      * @param url This specifies the initial path of the input line.
-		 * @param text The text to be shown on the label.
+    	 * @param text The text to be shown on the label.
      * @param parent The widget the dialog will be centered on initially.
      */
-		static KURL getURL( const QString &url = QString::null, 
-			                const QString &text = QString::null,
-                      QWidget *parent = 0, 
-			                const QString &caption = QString::null );
+    static KURL getURL(const QString &url = QString::null,
+                       const QString &text = QString::null,
+                       QWidget *parent = 0,
+                       const QString &caption = QString::null);
 };
 
 #endif // KPIMURLREQUESTDLG_H_INCLUDED

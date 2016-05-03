@@ -40,819 +40,943 @@
 
 using namespace KCal;
 
-Calendar::Calendar( const QString &timeZoneId )
+Calendar::Calendar(const QString &timeZoneId)
 {
-  mTimeZoneId = timeZoneId;
-  mLocalTime = false;
+    mTimeZoneId = timeZoneId;
+    mLocalTime = false;
 
-  init();
+    init();
 }
 
 void Calendar::init()
 {
-  mNewObserver = false;
-  mObserversEnabled = true;
+    mNewObserver = false;
+    mObserversEnabled = true;
 
-  mModified = false;
+    mModified = false;
 
-  // Setup default filter, which does nothing
-  mDefaultFilter = new CalFilter;
-  mFilter = mDefaultFilter;
-  mFilter->setEnabled( false );
+    // Setup default filter, which does nothing
+    mDefaultFilter = new CalFilter;
+    mFilter = mDefaultFilter;
+    mFilter->setEnabled(false);
 
-  // user information...
-  setOwner( Person( i18n( "Unknown Name" ), i18n( "unknown@nowhere" ) ) );
+    // user information...
+    setOwner(Person(i18n("Unknown Name"), i18n("unknown@nowhere")));
 }
 
 Calendar::~Calendar()
 {
-  delete mDefaultFilter;
+    delete mDefaultFilter;
 }
 
 const Person &Calendar::getOwner() const
 {
-  return mOwner;
+    return mOwner;
 }
 
-void Calendar::setOwner( const Person &owner )
+void Calendar::setOwner(const Person &owner)
 {
-  mOwner = owner;
+    mOwner = owner;
 
-  setModified( true );
+    setModified(true);
 }
 
-void Calendar::setTimeZoneId( const QString &timeZoneId )
+void Calendar::setTimeZoneId(const QString &timeZoneId)
 {
-  mTimeZoneId = timeZoneId;
-  mLocalTime = false;
+    mTimeZoneId = timeZoneId;
+    mLocalTime = false;
 
-  setModified( true );
-  doSetTimeZoneId( timeZoneId );
+    setModified(true);
+    doSetTimeZoneId(timeZoneId);
 }
 
 QString Calendar::timeZoneId() const
 {
-  return mTimeZoneId;
+    return mTimeZoneId;
 }
 
 void Calendar::setLocalTime()
 {
-  mLocalTime = true;
-  mTimeZoneId = "";
+    mLocalTime = true;
+    mTimeZoneId = "";
 
-  setModified( true );
+    setModified(true);
 }
 
 bool Calendar::isLocalTime() const
 {
-  return mLocalTime;
+    return mLocalTime;
 }
 
-void Calendar::setFilter( CalFilter *filter )
+void Calendar::setFilter(CalFilter *filter)
 {
-  if ( filter ) {
-    mFilter = filter;
-  } else {
-    mFilter = mDefaultFilter;
-  }
+    if(filter)
+    {
+        mFilter = filter;
+    }
+    else
+    {
+        mFilter = mDefaultFilter;
+    }
 }
 
 CalFilter *Calendar::filter()
 {
-  return mFilter;
+    return mFilter;
 }
 
 QStringList Calendar::categories()
 {
-  Incidence::List rawInc( rawIncidences() );
-  QStringList cats, thisCats;
-  // @TODO: For now just iterate over all incidences. In the future,
-  // the list of categories should be built when reading the file.
-  for ( Incidence::List::ConstIterator i = rawInc.constBegin();
-        i != rawInc.constEnd(); ++i ) {
-    thisCats = (*i)->categories();
-    for ( QStringList::ConstIterator si = thisCats.constBegin();
-          si != thisCats.constEnd(); ++si ) {
-      if ( cats.find( *si ) == cats.end() ) {
-        cats.append( *si );
-      }
+    Incidence::List rawInc(rawIncidences());
+    QStringList cats, thisCats;
+    // @TODO: For now just iterate over all incidences. In the future,
+    // the list of categories should be built when reading the file.
+    for(Incidence::List::ConstIterator i = rawInc.constBegin();
+            i != rawInc.constEnd(); ++i)
+    {
+        thisCats = (*i)->categories();
+        for(QStringList::ConstIterator si = thisCats.constBegin();
+                si != thisCats.constEnd(); ++si)
+        {
+            if(cats.find(*si) == cats.end())
+            {
+                cats.append(*si);
+            }
+        }
     }
-  }
-  return cats;
+    return cats;
 }
 
-Incidence::List Calendar::incidences( const QDate &date )
+Incidence::List Calendar::incidences(const QDate &date)
 {
-  return mergeIncidenceList( events( date ), todos( date ), journals( date ) );
+    return mergeIncidenceList(events(date), todos(date), journals(date));
 }
 
 Incidence::List Calendar::incidences()
 {
-  return mergeIncidenceList( events(), todos(), journals() );
+    return mergeIncidenceList(events(), todos(), journals());
 }
 
 Incidence::List Calendar::rawIncidences()
 {
-  return mergeIncidenceList( rawEvents(), rawTodos(), rawJournals() );
+    return mergeIncidenceList(rawEvents(), rawTodos(), rawJournals());
 }
 
-Event::List Calendar::sortEvents( Event::List *eventList,
-                                  EventSortField sortField,
-                                  SortDirection sortDirection )
+Event::List Calendar::sortEvents(Event::List *eventList,
+                                 EventSortField sortField,
+                                 SortDirection sortDirection)
 {
-  Event::List eventListSorted;
-  Event::List tempList, t;
-  Event::List alphaList;
-  Event::List::Iterator sortIt;
-  Event::List::Iterator eit;
+    Event::List eventListSorted;
+    Event::List tempList, t;
+    Event::List alphaList;
+    Event::List::Iterator sortIt;
+    Event::List::Iterator eit;
 
-  // Notice we alphabetically presort Summaries first.
-  // We do this so comparison "ties" stay in a nice order.
+    // Notice we alphabetically presort Summaries first.
+    // We do this so comparison "ties" stay in a nice order.
 
-  switch( sortField ) {
-  case EventSortUnsorted:
-    eventListSorted = *eventList;
-    break;
+    switch(sortField)
+    {
+        case EventSortUnsorted:
+            eventListSorted = *eventList;
+            break;
 
-  case EventSortStartDate:
-    alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
-    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      sortIt = eventListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != eventListSorted.end() &&
-                (*eit)->dtStart() >= (*sortIt)->dtStart() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != eventListSorted.end() &&
-                (*eit)->dtStart() < (*sortIt)->dtStart() ) {
-          ++sortIt;
-        }
-      }
-      eventListSorted.insert( sortIt, *eit );
+        case EventSortStartDate:
+            alphaList = sortEvents(eventList, EventSortSummary, sortDirection);
+            for(eit = alphaList.begin(); eit != alphaList.end(); ++eit)
+            {
+                sortIt = eventListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != eventListSorted.end() &&
+                            (*eit)->dtStart() >= (*sortIt)->dtStart())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != eventListSorted.end() &&
+                            (*eit)->dtStart() < (*sortIt)->dtStart())
+                    {
+                        ++sortIt;
+                    }
+                }
+                eventListSorted.insert(sortIt, *eit);
+            }
+            break;
+
+        case EventSortEndDate:
+            alphaList = sortEvents(eventList, EventSortSummary, sortDirection);
+            for(eit = alphaList.begin(); eit != alphaList.end(); ++eit)
+            {
+                if((*eit)->hasEndDate())
+                {
+                    sortIt = eventListSorted.begin();
+                    if(sortDirection == SortDirectionAscending)
+                    {
+                        while(sortIt != eventListSorted.end() &&
+                                (*eit)->dtEnd() >= (*sortIt)->dtEnd())
+                        {
+                            ++sortIt;
+                        }
+                    }
+                    else
+                    {
+                        while(sortIt != eventListSorted.end() &&
+                                (*eit)->dtEnd() < (*sortIt)->dtEnd())
+                        {
+                            ++sortIt;
+                        }
+                    }
+                }
+                else
+                {
+                    // Keep a list of the Events without End DateTimes
+                    tempList.append(*eit);
+                }
+                eventListSorted.insert(sortIt, *eit);
+            }
+            if(sortDirection == SortDirectionAscending)
+            {
+                // Append the list of Events without End DateTimes
+                eventListSorted += tempList;
+            }
+            else
+            {
+                // Prepend the list of Events without End DateTimes
+                tempList += eventListSorted;
+                eventListSorted = tempList;
+            }
+            break;
+
+        case EventSortSummary:
+            for(eit = eventList->begin(); eit != eventList->end(); ++eit)
+            {
+                sortIt = eventListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != eventListSorted.end() &&
+                            (*eit)->summary() >= (*sortIt)->summary())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != eventListSorted.end() &&
+                            (*eit)->summary() < (*sortIt)->summary())
+                    {
+                        ++sortIt;
+                    }
+                }
+                eventListSorted.insert(sortIt, *eit);
+            }
+            break;
     }
-    break;
 
-  case EventSortEndDate:
-    alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
-    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      if ( (*eit)->hasEndDate() ) {
-        sortIt = eventListSorted.begin();
-        if ( sortDirection == SortDirectionAscending ) {
-          while ( sortIt != eventListSorted.end() &&
-                  (*eit)->dtEnd() >= (*sortIt)->dtEnd() ) {
-            ++sortIt;
-          }
-        } else {
-          while ( sortIt != eventListSorted.end() &&
-                  (*eit)->dtEnd() < (*sortIt)->dtEnd() ) {
-            ++sortIt;
-          }
-        }
-      } else {
-        // Keep a list of the Events without End DateTimes
-        tempList.append( *eit );
-      }
-      eventListSorted.insert( sortIt, *eit );
+    return eventListSorted;
+
+}
+
+Event::List Calendar::events(const QDate &date,
+                             EventSortField sortField,
+                             SortDirection sortDirection)
+{
+    Event::List el = rawEventsForDate(date, sortField, sortDirection);
+    mFilter->apply(&el);
+    return el;
+}
+
+Event::List Calendar::events(const QDateTime &qdt)
+{
+    Event::List el = rawEventsForDate(qdt);
+    mFilter->apply(&el);
+    return el;
+}
+
+Event::List Calendar::events(const QDate &start, const QDate &end,
+                             bool inclusive)
+{
+    Event::List el = rawEvents(start, end, inclusive);
+    mFilter->apply(&el);
+    return el;
+}
+
+Event::List Calendar::events(EventSortField sortField,
+                             SortDirection sortDirection)
+{
+    Event::List el = rawEvents(sortField, sortDirection);
+    mFilter->apply(&el);
+    return el;
+}
+
+bool Calendar::addIncidence(Incidence *incidence)
+{
+    Incidence::AddVisitor<Calendar> v(this);
+
+    return incidence->accept(v);
+}
+
+bool Calendar::deleteIncidence(Incidence *incidence)
+{
+    if(beginChange(incidence))
+    {
+        Incidence::DeleteVisitor<Calendar> v(this);
+        bool result = incidence->accept(v);
+        endChange(incidence);
+        return result;
     }
-    if ( sortDirection == SortDirectionAscending ) {
-      // Append the list of Events without End DateTimes
-      eventListSorted += tempList;
-    } else {
-      // Prepend the list of Events without End DateTimes
-      tempList += eventListSorted;
-      eventListSorted = tempList;
-    }
-    break;
-
-  case EventSortSummary:
-    for ( eit = eventList->begin(); eit != eventList->end(); ++eit ) {
-      sortIt = eventListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != eventListSorted.end() &&
-                (*eit)->summary() >= (*sortIt)->summary() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != eventListSorted.end() &&
-                (*eit)->summary() < (*sortIt)->summary() ) {
-          ++sortIt;
-        }
-      }
-      eventListSorted.insert( sortIt, *eit );
-    }
-    break;
-  }
-
-  return eventListSorted;
-
-}
-
-Event::List Calendar::events( const QDate &date,
-                              EventSortField sortField,
-                              SortDirection sortDirection )
-{
-  Event::List el = rawEventsForDate( date, sortField, sortDirection );
-  mFilter->apply( &el );
-  return el;
-}
-
-Event::List Calendar::events( const QDateTime &qdt )
-{
-  Event::List el = rawEventsForDate( qdt );
-  mFilter->apply( &el );
-  return el;
-}
-
-Event::List Calendar::events( const QDate &start, const QDate &end,
-                              bool inclusive)
-{
-  Event::List el = rawEvents( start, end, inclusive );
-  mFilter->apply( &el );
-  return el;
-}
-
-Event::List Calendar::events( EventSortField sortField,
-                              SortDirection sortDirection )
-{
-  Event::List el = rawEvents( sortField, sortDirection );
-  mFilter->apply( &el );
-  return el;
-}
-
-bool Calendar::addIncidence( Incidence *incidence )
-{
-  Incidence::AddVisitor<Calendar> v( this );
-
-  return incidence->accept(v);
-}
-
-bool Calendar::deleteIncidence( Incidence *incidence )
-{
-  if ( beginChange( incidence ) ) {
-    Incidence::DeleteVisitor<Calendar> v( this );
-    bool result = incidence->accept( v );
-    endChange( incidence );
-    return result;
-  } else
-    return false;
+    else
+        return false;
 }
 
 /** Dissociate a single occurrence or all future occurrences from a recurring sequence.
     The new incidence is returned, but not automatically inserted into the calendar,
     which is left to the calling application */
-Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
-                                           bool single )
+Incidence *Calendar::dissociateOccurrence(Incidence *incidence, QDate date,
+        bool single)
 {
-  if ( !incidence || !incidence->doesRecur() )
-    return 0;
+    if(!incidence || !incidence->doesRecur())
+        return 0;
 
-  Incidence *newInc = incidence->clone();
-  newInc->recreate();
-  newInc->setRelatedTo( incidence );
-  Recurrence *recur = newInc->recurrence();
-  if ( single ) {
-    recur->clear();
-  } else {
-    // Adjust the recurrence for the future incidences. In particular
-    // adjust the "end after n occurrences" rules! "No end date" and "end by ..."
-    // don't need to be modified.
-    int duration = recur->duration();
-    if ( duration > 0 ) {
-      int doneduration = recur->durationTo( date.addDays(-1) );
-      if ( doneduration >= duration ) {
-        kdDebug(5850) << "The dissociated event already occurred more often "
-                      << "than it was supposed to ever occur. ERROR!" << endl;
+    Incidence *newInc = incidence->clone();
+    newInc->recreate();
+    newInc->setRelatedTo(incidence);
+    Recurrence *recur = newInc->recurrence();
+    if(single)
+    {
         recur->clear();
-      } else {
-        recur->setDuration( duration - doneduration );
-      }
     }
-  }
-  // Adjust the date of the incidence
-  if ( incidence->type() == "Event" ) {
-    Event *ev = static_cast<Event *>( newInc );
-    QDateTime start( ev->dtStart() );
-    int daysTo = start.date().daysTo( date );
-    ev->setDtStart( start.addDays( daysTo ) );
-    ev->setDtEnd( ev->dtEnd().addDays( daysTo ) );
-  } else if ( incidence->type() == "Todo" ) {
-    Todo *td = static_cast<Todo *>( newInc );
-    bool haveOffset = false;
-    int daysTo = 0;
-    if ( td->hasDueDate() ) {
-      QDateTime due( td->dtDue() );
-      daysTo = due.date().daysTo( date );
-      td->setDtDue( due.addDays( daysTo ), true );
-      haveOffset = true;
+    else
+    {
+        // Adjust the recurrence for the future incidences. In particular
+        // adjust the "end after n occurrences" rules! "No end date" and "end by ..."
+        // don't need to be modified.
+        int duration = recur->duration();
+        if(duration > 0)
+        {
+            int doneduration = recur->durationTo(date.addDays(-1));
+            if(doneduration >= duration)
+            {
+                kdDebug(5850) << "The dissociated event already occurred more often "
+                              << "than it was supposed to ever occur. ERROR!" << endl;
+                recur->clear();
+            }
+            else
+            {
+                recur->setDuration(duration - doneduration);
+            }
+        }
     }
-    if ( td->hasStartDate() ) {
-      QDateTime start( td->dtStart() );
-      if ( !haveOffset )
-        daysTo = start.date().daysTo( date );
-      td->setDtStart( start.addDays( daysTo ) );
-      haveOffset = true;
+    // Adjust the date of the incidence
+    if(incidence->type() == "Event")
+    {
+        Event *ev = static_cast<Event *>(newInc);
+        QDateTime start(ev->dtStart());
+        int daysTo = start.date().daysTo(date);
+        ev->setDtStart(start.addDays(daysTo));
+        ev->setDtEnd(ev->dtEnd().addDays(daysTo));
     }
-  }
-  recur = incidence->recurrence();
-  if ( recur ) {
-    if ( single ) {
-      recur->addExDate( date );
-    } else {
-      // Make sure the recurrence of the past events ends
-      // at the corresponding day
-      recur->setEndDate( date.addDays(-1) );
+    else if(incidence->type() == "Todo")
+    {
+        Todo *td = static_cast<Todo *>(newInc);
+        bool haveOffset = false;
+        int daysTo = 0;
+        if(td->hasDueDate())
+        {
+            QDateTime due(td->dtDue());
+            daysTo = due.date().daysTo(date);
+            td->setDtDue(due.addDays(daysTo), true);
+            haveOffset = true;
+        }
+        if(td->hasStartDate())
+        {
+            QDateTime start(td->dtStart());
+            if(!haveOffset)
+                daysTo = start.date().daysTo(date);
+            td->setDtStart(start.addDays(daysTo));
+            haveOffset = true;
+        }
     }
-  }
-  return newInc;
+    recur = incidence->recurrence();
+    if(recur)
+    {
+        if(single)
+        {
+            recur->addExDate(date);
+        }
+        else
+        {
+            // Make sure the recurrence of the past events ends
+            // at the corresponding day
+            recur->setEndDate(date.addDays(-1));
+        }
+    }
+    return newInc;
 }
 
-Incidence *Calendar::incidence( const QString &uid )
+Incidence *Calendar::incidence(const QString &uid)
 {
-  Incidence *i = event( uid );
-  if ( i )
+    Incidence *i = event(uid);
+    if(i)
+        return i;
+    i = todo(uid);
+    if(i)
+        return i;
+    i = journal(uid);
     return i;
-  i = todo( uid );
-  if ( i )
-    return i;
-  i = journal( uid );
-  return i;
 }
 
-Incidence::List Calendar::incidencesFromSchedulingID( const QString &UID )
+Incidence::List Calendar::incidencesFromSchedulingID(const QString &UID)
 {
-  Incidence::List result;
-  Incidence::List incidences = rawIncidences();
-  Incidence::List::iterator it = incidences.begin();
-  for ( ; it != incidences.end(); ++it )
-    if ( (*it)->schedulingID() == UID )
-      result.append( *it );
-  return result;
+    Incidence::List result;
+    Incidence::List incidences = rawIncidences();
+    Incidence::List::iterator it = incidences.begin();
+    for(; it != incidences.end(); ++it)
+        if((*it)->schedulingID() == UID)
+            result.append(*it);
+    return result;
 }
 
-Incidence *Calendar::incidenceFromSchedulingID( const QString &UID )
+Incidence *Calendar::incidenceFromSchedulingID(const QString &UID)
 {
-  Incidence::List incidences = rawIncidences();
-  Incidence::List::iterator it = incidences.begin();
-  for ( ; it != incidences.end(); ++it )
-    if ( (*it)->schedulingID() == UID )
-      // Touchdown, and the crowd goes wild
-      return *it;
-  // Not found
-  return 0;
+    Incidence::List incidences = rawIncidences();
+    Incidence::List::iterator it = incidences.begin();
+    for(; it != incidences.end(); ++it)
+        if((*it)->schedulingID() == UID)
+            // Touchdown, and the crowd goes wild
+            return *it;
+    // Not found
+    return 0;
 }
 
-Todo::List Calendar::sortTodos( Todo::List *todoList,
-                                TodoSortField sortField,
-                                SortDirection sortDirection )
+Todo::List Calendar::sortTodos(Todo::List *todoList,
+                               TodoSortField sortField,
+                               SortDirection sortDirection)
 {
-  Todo::List todoListSorted;
-  Todo::List tempList, t;
-  Todo::List alphaList;
-  Todo::List::Iterator sortIt;
-  Todo::List::Iterator eit;
+    Todo::List todoListSorted;
+    Todo::List tempList, t;
+    Todo::List alphaList;
+    Todo::List::Iterator sortIt;
+    Todo::List::Iterator eit;
 
-  // Notice we alphabetically presort Summaries first.
-  // We do this so comparison "ties" stay in a nice order.
+    // Notice we alphabetically presort Summaries first.
+    // We do this so comparison "ties" stay in a nice order.
 
-  // Note that Todos may not have Start DateTimes nor due DateTimes.
+    // Note that Todos may not have Start DateTimes nor due DateTimes.
 
-  switch( sortField ) {
-  case TodoSortUnsorted:
-    todoListSorted = *todoList;
-    break;
+    switch(sortField)
+    {
+        case TodoSortUnsorted:
+            todoListSorted = *todoList;
+            break;
 
-  case TodoSortStartDate:
-    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
-    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      if ( (*eit)->hasStartDate() ) {
-        sortIt = todoListSorted.begin();
-        if ( sortDirection == SortDirectionAscending ) {
-          while ( sortIt != todoListSorted.end() &&
-                  (*eit)->dtStart() >= (*sortIt)->dtStart() ) {
-            ++sortIt;
-          }
-        } else {
-          while ( sortIt != todoListSorted.end() &&
-                  (*eit)->dtStart() < (*sortIt)->dtStart() ) {
-            ++sortIt;
-          }
-        }
-        todoListSorted.insert( sortIt, *eit );
-      } else {
-        // Keep a list of the Todos without Start DateTimes
-        tempList.append( *eit );
-      }
+        case TodoSortStartDate:
+            alphaList = sortTodos(todoList, TodoSortSummary, sortDirection);
+            for(eit = alphaList.begin(); eit != alphaList.end(); ++eit)
+            {
+                if((*eit)->hasStartDate())
+                {
+                    sortIt = todoListSorted.begin();
+                    if(sortDirection == SortDirectionAscending)
+                    {
+                        while(sortIt != todoListSorted.end() &&
+                                (*eit)->dtStart() >= (*sortIt)->dtStart())
+                        {
+                            ++sortIt;
+                        }
+                    }
+                    else
+                    {
+                        while(sortIt != todoListSorted.end() &&
+                                (*eit)->dtStart() < (*sortIt)->dtStart())
+                        {
+                            ++sortIt;
+                        }
+                    }
+                    todoListSorted.insert(sortIt, *eit);
+                }
+                else
+                {
+                    // Keep a list of the Todos without Start DateTimes
+                    tempList.append(*eit);
+                }
+            }
+            if(sortDirection == SortDirectionAscending)
+            {
+                // Append the list of Todos without Start DateTimes
+                todoListSorted += tempList;
+            }
+            else
+            {
+                // Prepend the list of Todos without Start DateTimes
+                tempList += todoListSorted;
+                todoListSorted = tempList;
+            }
+            break;
+
+        case TodoSortDueDate:
+            alphaList = sortTodos(todoList, TodoSortSummary, sortDirection);
+            for(eit = alphaList.begin(); eit != alphaList.end(); ++eit)
+            {
+                if((*eit)->hasDueDate())
+                {
+                    sortIt = todoListSorted.begin();
+                    if(sortDirection == SortDirectionAscending)
+                    {
+                        while(sortIt != todoListSorted.end() &&
+                                (*eit)->dtDue() >= (*sortIt)->dtDue())
+                        {
+                            ++sortIt;
+                        }
+                    }
+                    else
+                    {
+                        while(sortIt != todoListSorted.end() &&
+                                (*eit)->dtDue() < (*sortIt)->dtDue())
+                        {
+                            ++sortIt;
+                        }
+                    }
+                    todoListSorted.insert(sortIt, *eit);
+                }
+                else
+                {
+                    // Keep a list of the Todos without Due DateTimes
+                    tempList.append(*eit);
+                }
+            }
+            if(sortDirection == SortDirectionAscending)
+            {
+                // Append the list of Todos without Due DateTimes
+                todoListSorted += tempList;
+            }
+            else
+            {
+                // Prepend the list of Todos without Due DateTimes
+                tempList += todoListSorted;
+                todoListSorted = tempList;
+            }
+            break;
+
+        case TodoSortPriority:
+            alphaList = sortTodos(todoList, TodoSortSummary, sortDirection);
+            for(eit = alphaList.begin(); eit != alphaList.end(); ++eit)
+            {
+                sortIt = todoListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != todoListSorted.end() &&
+                            (*eit)->priority() >= (*sortIt)->priority())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != todoListSorted.end() &&
+                            (*eit)->priority() < (*sortIt)->priority())
+                    {
+                        ++sortIt;
+                    }
+                }
+                todoListSorted.insert(sortIt, *eit);
+            }
+            break;
+
+        case TodoSortPercentComplete:
+            alphaList = sortTodos(todoList, TodoSortSummary, sortDirection);
+            for(eit = alphaList.begin(); eit != alphaList.end(); ++eit)
+            {
+                sortIt = todoListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != todoListSorted.end() &&
+                            (*eit)->percentComplete() >= (*sortIt)->percentComplete())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != todoListSorted.end() &&
+                            (*eit)->percentComplete() < (*sortIt)->percentComplete())
+                    {
+                        ++sortIt;
+                    }
+                }
+                todoListSorted.insert(sortIt, *eit);
+            }
+            break;
+
+        case TodoSortSummary:
+            for(eit = todoList->begin(); eit != todoList->end(); ++eit)
+            {
+                sortIt = todoListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != todoListSorted.end() &&
+                            (*eit)->summary() >= (*sortIt)->summary())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != todoListSorted.end() &&
+                            (*eit)->summary() < (*sortIt)->summary())
+                    {
+                        ++sortIt;
+                    }
+                }
+                todoListSorted.insert(sortIt, *eit);
+            }
+            break;
     }
-    if ( sortDirection == SortDirectionAscending ) {
-      // Append the list of Todos without Start DateTimes
-      todoListSorted += tempList;
-    } else {
-      // Prepend the list of Todos without Start DateTimes
-      tempList += todoListSorted;
-      todoListSorted = tempList;
-    }
-    break;
 
-  case TodoSortDueDate:
-    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
-    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      if ( (*eit)->hasDueDate() ) {
-        sortIt = todoListSorted.begin();
-        if ( sortDirection == SortDirectionAscending ) {
-          while ( sortIt != todoListSorted.end() &&
-                  (*eit)->dtDue() >= (*sortIt)->dtDue() ) {
-            ++sortIt;
-          }
-        } else {
-          while ( sortIt != todoListSorted.end() &&
-                  (*eit)->dtDue() < (*sortIt)->dtDue() ) {
-            ++sortIt;
-          }
-        }
-        todoListSorted.insert( sortIt, *eit );
-      } else {
-        // Keep a list of the Todos without Due DateTimes
-        tempList.append( *eit );
-      }
-    }
-    if ( sortDirection == SortDirectionAscending ) {
-      // Append the list of Todos without Due DateTimes
-      todoListSorted += tempList;
-    } else {
-      // Prepend the list of Todos without Due DateTimes
-      tempList += todoListSorted;
-      todoListSorted = tempList;
-    }
-    break;
-
-  case TodoSortPriority:
-    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
-    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      sortIt = todoListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != todoListSorted.end() &&
-                (*eit)->priority() >= (*sortIt)->priority() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != todoListSorted.end() &&
-                (*eit)->priority() < (*sortIt)->priority() ) {
-          ++sortIt;
-        }
-      }
-      todoListSorted.insert( sortIt, *eit );
-    }
-    break;
-
-  case TodoSortPercentComplete:
-    alphaList = sortTodos( todoList, TodoSortSummary, sortDirection );
-    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      sortIt = todoListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != todoListSorted.end() &&
-                (*eit)->percentComplete() >= (*sortIt)->percentComplete() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != todoListSorted.end() &&
-                (*eit)->percentComplete() < (*sortIt)->percentComplete() ) {
-          ++sortIt;
-        }
-      }
-      todoListSorted.insert( sortIt, *eit );
-    }
-    break;
-
-  case TodoSortSummary:
-    for ( eit = todoList->begin(); eit != todoList->end(); ++eit ) {
-      sortIt = todoListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != todoListSorted.end() &&
-                (*eit)->summary() >= (*sortIt)->summary() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != todoListSorted.end() &&
-                (*eit)->summary() < (*sortIt)->summary() ) {
-          ++sortIt;
-        }
-      }
-      todoListSorted.insert( sortIt, *eit );
-    }
-    break;
-  }
-
-  return todoListSorted;
+    return todoListSorted;
 }
 
-Todo::List Calendar::todos( TodoSortField sortField,
-                            SortDirection sortDirection )
+Todo::List Calendar::todos(TodoSortField sortField,
+                           SortDirection sortDirection)
 {
-  Todo::List tl = rawTodos( sortField, sortDirection );
-  mFilter->apply( &tl );
-  return tl;
+    Todo::List tl = rawTodos(sortField, sortDirection);
+    mFilter->apply(&tl);
+    return tl;
 }
 
-Todo::List Calendar::todos( const QDate &date )
+Todo::List Calendar::todos(const QDate &date)
 {
-  Todo::List el = rawTodosForDate( date );
-  mFilter->apply( &el );
-  return el;
+    Todo::List el = rawTodosForDate(date);
+    mFilter->apply(&el);
+    return el;
 }
 
-Journal::List Calendar::sortJournals( Journal::List *journalList,
-                                      JournalSortField sortField,
-                                      SortDirection sortDirection )
+Journal::List Calendar::sortJournals(Journal::List *journalList,
+                                     JournalSortField sortField,
+                                     SortDirection sortDirection)
 {
-  Journal::List journalListSorted;
-  Journal::List::Iterator sortIt;
-  Journal::List::Iterator eit;
+    Journal::List journalListSorted;
+    Journal::List::Iterator sortIt;
+    Journal::List::Iterator eit;
 
-  switch( sortField ) {
-  case JournalSortUnsorted:
-    journalListSorted = *journalList;
-    break;
+    switch(sortField)
+    {
+        case JournalSortUnsorted:
+            journalListSorted = *journalList;
+            break;
 
-  case JournalSortDate:
-    for ( eit = journalList->begin(); eit != journalList->end(); ++eit ) {
-      sortIt = journalListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != journalListSorted.end() &&
-                (*eit)->dtStart() >= (*sortIt)->dtStart() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != journalListSorted.end() &&
-                (*eit)->dtStart() < (*sortIt)->dtStart() ) {
-          ++sortIt;
-        }
-      }
-      journalListSorted.insert( sortIt, *eit );
+        case JournalSortDate:
+            for(eit = journalList->begin(); eit != journalList->end(); ++eit)
+            {
+                sortIt = journalListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != journalListSorted.end() &&
+                            (*eit)->dtStart() >= (*sortIt)->dtStart())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != journalListSorted.end() &&
+                            (*eit)->dtStart() < (*sortIt)->dtStart())
+                    {
+                        ++sortIt;
+                    }
+                }
+                journalListSorted.insert(sortIt, *eit);
+            }
+            break;
+
+        case JournalSortSummary:
+            for(eit = journalList->begin(); eit != journalList->end(); ++eit)
+            {
+                sortIt = journalListSorted.begin();
+                if(sortDirection == SortDirectionAscending)
+                {
+                    while(sortIt != journalListSorted.end() &&
+                            (*eit)->summary() >= (*sortIt)->summary())
+                    {
+                        ++sortIt;
+                    }
+                }
+                else
+                {
+                    while(sortIt != journalListSorted.end() &&
+                            (*eit)->summary() < (*sortIt)->summary())
+                    {
+                        ++sortIt;
+                    }
+                }
+                journalListSorted.insert(sortIt, *eit);
+            }
+            break;
     }
-    break;
 
-  case JournalSortSummary:
-    for ( eit = journalList->begin(); eit != journalList->end(); ++eit ) {
-      sortIt = journalListSorted.begin();
-      if ( sortDirection == SortDirectionAscending ) {
-        while ( sortIt != journalListSorted.end() &&
-                (*eit)->summary() >= (*sortIt)->summary() ) {
-          ++sortIt;
-        }
-      } else {
-        while ( sortIt != journalListSorted.end() &&
-                (*eit)->summary() < (*sortIt)->summary() ) {
-          ++sortIt;
-        }
-      }
-      journalListSorted.insert( sortIt, *eit );
-    }
-    break;
-  }
-
-  return journalListSorted;
+    return journalListSorted;
 }
 
-Journal::List Calendar::journals( JournalSortField sortField,
-                                  SortDirection sortDirection )
+Journal::List Calendar::journals(JournalSortField sortField,
+                                 SortDirection sortDirection)
 {
-  Journal::List jl = rawJournals( sortField, sortDirection );
-  mFilter->apply( &jl );
-  return jl;
+    Journal::List jl = rawJournals(sortField, sortDirection);
+    mFilter->apply(&jl);
+    return jl;
 }
 
-Journal::List Calendar::journals( const QDate &date )
+Journal::List Calendar::journals(const QDate &date)
 {
-  Journal::List el = rawJournalsForDate( date );
-  mFilter->apply( &el );
-  return el;
+    Journal::List el = rawJournalsForDate(date);
+    mFilter->apply(&el);
+    return el;
 }
 
 // When this is called, the todo have already been added to the calendar.
 // This method is only about linking related todos
-void Calendar::setupRelations( Incidence *forincidence )
+void Calendar::setupRelations(Incidence *forincidence)
 {
-  if ( !forincidence ) return;
-// kdDebug(5850) << "Calendar::setupRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
-  QString uid = forincidence->uid();
+    if(!forincidence) return;
+    // kdDebug(5850) << "Calendar::setupRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
+    QString uid = forincidence->uid();
 
-  // First, go over the list of orphans and see if this is their parent
-  while ( Incidence* i = mOrphans[ uid ] ) {
-    mOrphans.remove( uid );
-    i->setRelatedTo( forincidence );
-    forincidence->addRelation( i );
-    mOrphanUids.remove( i->uid() );
-  }
-
-  // Now see about this incidences parent
-  if ( !forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty() ) {
-    // This incidence has a uid it is related to but is not registered to it yet
-    // Try to find it
-    Incidence* parent = incidence( forincidence->relatedToUid() );
-    if ( parent ) {
-      // Found it
-      forincidence->setRelatedTo( parent );
-      parent->addRelation( forincidence );
-    } else {
-      // Not found, put this in the mOrphans list
-      // Note that the mOrphans dict might have several entries with the same key! That are
-      // multiple children that wait for the parent incidence to be inserted.
-      mOrphans.insert( forincidence->relatedToUid(), forincidence );
-      mOrphanUids.insert( forincidence->uid(), forincidence );
+    // First, go over the list of orphans and see if this is their parent
+    while(Incidence *i = mOrphans[ uid ])
+    {
+        mOrphans.remove(uid);
+        i->setRelatedTo(forincidence);
+        forincidence->addRelation(i);
+        mOrphanUids.remove(i->uid());
     }
-  }
+
+    // Now see about this incidences parent
+    if(!forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty())
+    {
+        // This incidence has a uid it is related to but is not registered to it yet
+        // Try to find it
+        Incidence *parent = incidence(forincidence->relatedToUid());
+        if(parent)
+        {
+            // Found it
+            forincidence->setRelatedTo(parent);
+            parent->addRelation(forincidence);
+        }
+        else
+        {
+            // Not found, put this in the mOrphans list
+            // Note that the mOrphans dict might have several entries with the same key! That are
+            // multiple children that wait for the parent incidence to be inserted.
+            mOrphans.insert(forincidence->relatedToUid(), forincidence);
+            mOrphanUids.insert(forincidence->uid(), forincidence);
+        }
+    }
 }
 
 // If a task with subtasks is deleted, move it's subtasks to the orphans list
-void Calendar::removeRelations( Incidence *incidence )
+void Calendar::removeRelations(Incidence *incidence)
 {
-  if( !incidence ) {
-    kdDebug(5800) << "Warning: Calendar::removeRelations( 0 )!\n";
-    return;
-  }
-
-// kdDebug(5850) << "Calendar::removeRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
-  QString uid = incidence->uid();
-
-  Incidence::List relations = incidence->relations();
-  Incidence::List::ConstIterator it;
-  for ( it = relations.begin(); it != relations.end(); ++it ) {
-    Incidence *i = *it;
-    if ( !mOrphanUids.find( i->uid() ) ) {
-      mOrphans.insert( uid, i );
-      mOrphanUids.insert( i->uid(), i );
-      i->setRelatedTo( 0 );
-      i->setRelatedToUid( uid );
-    }
-  }
-
-  // If this incidence is related to something else, tell that about it
-  if ( incidence->relatedTo() )
-    incidence->relatedTo()->removeRelation( incidence );
-
-  // Remove this one from the orphans list
-  if ( mOrphanUids.remove( uid ) ) {
-    // This incidence is located in the orphans list - it should be removed
-    // Since the mOrphans dict might contain the same key (with different
-    // child incidence pointers!) multiple times, take care that we remove
-    // the correct one. So we need to remove all items with the given
-    // parent UID, and readd those that are not for this item. Also, there
-    // might be other entries with differnet UID that point to this
-    // incidence (this might happen when the relatedTo of the item is
-    // changed before its parent is inserted. This might happen with
-    // groupware servers....). Remove them, too
-    QStringList relatedToUids;
-    // First get the list of all keys in the mOrphans list that point to the removed item
-    relatedToUids << incidence->relatedToUid();
-    for ( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
-      if ( it.current()->uid() == uid ) {
-        relatedToUids << it.currentKey();
-      }
+    if(!incidence)
+    {
+        kdDebug(5800) << "Warning: Calendar::removeRelations( 0 )!\n";
+        return;
     }
 
-    // now go through all uids that have one entry that point to the incidence
-    for ( QStringList::Iterator uidit = relatedToUids.begin();
-          uidit != relatedToUids.end(); ++uidit ) {
-      Incidence::List tempList;
-      // Remove all to get access to the remaining entries
-      while( Incidence* i = mOrphans[ *uidit ] ) {
-        mOrphans.remove( *uidit );
-        if ( i != incidence ) tempList.append( i );
-      }
-      // Readd those that point to a different orphan incidence
-      for ( Incidence::List::Iterator incit = tempList.begin();
-            incit != tempList.end(); ++incit ) {
-        mOrphans.insert( *uidit, *incit );
-      }
+    // kdDebug(5850) << "Calendar::removeRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
+    QString uid = incidence->uid();
+
+    Incidence::List relations = incidence->relations();
+    Incidence::List::ConstIterator it;
+    for(it = relations.begin(); it != relations.end(); ++it)
+    {
+        Incidence *i = *it;
+        if(!mOrphanUids.find(i->uid()))
+        {
+            mOrphans.insert(uid, i);
+            mOrphanUids.insert(i->uid(), i);
+            i->setRelatedTo(0);
+            i->setRelatedToUid(uid);
+        }
     }
-  }
+
+    // If this incidence is related to something else, tell that about it
+    if(incidence->relatedTo())
+        incidence->relatedTo()->removeRelation(incidence);
+
+    // Remove this one from the orphans list
+    if(mOrphanUids.remove(uid))
+    {
+        // This incidence is located in the orphans list - it should be removed
+        // Since the mOrphans dict might contain the same key (with different
+        // child incidence pointers!) multiple times, take care that we remove
+        // the correct one. So we need to remove all items with the given
+        // parent UID, and readd those that are not for this item. Also, there
+        // might be other entries with differnet UID that point to this
+        // incidence (this might happen when the relatedTo of the item is
+        // changed before its parent is inserted. This might happen with
+        // groupware servers....). Remove them, too
+        QStringList relatedToUids;
+        // First get the list of all keys in the mOrphans list that point to the removed item
+        relatedToUids << incidence->relatedToUid();
+        for(QDictIterator<Incidence> it(mOrphans); it.current(); ++it)
+        {
+            if(it.current()->uid() == uid)
+            {
+                relatedToUids << it.currentKey();
+            }
+        }
+
+        // now go through all uids that have one entry that point to the incidence
+        for(QStringList::Iterator uidit = relatedToUids.begin();
+                uidit != relatedToUids.end(); ++uidit)
+        {
+            Incidence::List tempList;
+            // Remove all to get access to the remaining entries
+            while(Incidence *i = mOrphans[ *uidit ])
+            {
+                mOrphans.remove(*uidit);
+                if(i != incidence) tempList.append(i);
+            }
+            // Readd those that point to a different orphan incidence
+            for(Incidence::List::Iterator incit = tempList.begin();
+                    incit != tempList.end(); ++incit)
+            {
+                mOrphans.insert(*uidit, *incit);
+            }
+        }
+    }
 }
 
-void Calendar::registerObserver( Observer *observer )
+void Calendar::registerObserver(Observer *observer)
 {
-  if( !mObservers.contains( observer ) )
-    mObservers.append( observer );
-  mNewObserver = true;
+    if(!mObservers.contains(observer))
+        mObservers.append(observer);
+    mNewObserver = true;
 }
 
-void Calendar::unregisterObserver( Observer *observer )
+void Calendar::unregisterObserver(Observer *observer)
 {
-  mObservers.remove( observer );
+    mObservers.remove(observer);
 }
 
-void Calendar::setModified( bool modified )
+void Calendar::setModified(bool modified)
 {
-  if ( modified != mModified || mNewObserver ) {
-    mNewObserver = false;
+    if(modified != mModified || mNewObserver)
+    {
+        mNewObserver = false;
+        Observer *observer;
+        for(observer = mObservers.first(); observer;
+                observer = mObservers.next())
+        {
+            observer->calendarModified(modified, this);
+        }
+        mModified = modified;
+    }
+}
+
+void Calendar::incidenceUpdated(IncidenceBase *incidence)
+{
+    incidence->setSyncStatus(Event::SYNCMOD);
+    incidence->setLastModified(QDateTime::currentDateTime());
+    // we should probably update the revision number here,
+    // or internally in the Event itself when certain things change.
+    // need to verify with ical documentation.
+
+    // The static_cast is ok as the CalendarLocal only observes Incidence objects
+    notifyIncidenceChanged(static_cast<Incidence *>(incidence));
+
+    setModified(true);
+}
+
+void Calendar::notifyIncidenceAdded(Incidence *i)
+{
+    if(!mObserversEnabled)
+        return;
+
     Observer *observer;
-    for ( observer = mObservers.first(); observer;
-          observer = mObservers.next() ) {
-      observer->calendarModified( modified, this );
+    for(observer = mObservers.first(); observer;
+            observer = mObservers.next())
+    {
+        observer->calendarIncidenceAdded(i);
     }
-    mModified = modified;
-  }
 }
 
-void Calendar::incidenceUpdated( IncidenceBase *incidence )
+void Calendar::notifyIncidenceChanged(Incidence *i)
 {
-  incidence->setSyncStatus( Event::SYNCMOD );
-  incidence->setLastModified( QDateTime::currentDateTime() );
-  // we should probably update the revision number here,
-  // or internally in the Event itself when certain things change.
-  // need to verify with ical documentation.
+    if(!mObserversEnabled)
+        return;
 
-  // The static_cast is ok as the CalendarLocal only observes Incidence objects
-  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
-
-  setModified( true );
+    Observer *observer;
+    for(observer = mObservers.first(); observer;
+            observer = mObservers.next())
+    {
+        observer->calendarIncidenceChanged(i);
+    }
 }
 
-void Calendar::notifyIncidenceAdded( Incidence *i )
+void Calendar::notifyIncidenceDeleted(Incidence *i)
 {
-  if ( !mObserversEnabled )
-    return;
+    if(!mObserversEnabled)
+        return;
 
-  Observer *observer;
-  for ( observer = mObservers.first(); observer;
-        observer = mObservers.next() ) {
-    observer->calendarIncidenceAdded( i );
-  }
-}
-
-void Calendar::notifyIncidenceChanged( Incidence *i )
-{
-  if ( !mObserversEnabled )
-    return;
-
-  Observer *observer;
-  for ( observer = mObservers.first(); observer;
-        observer = mObservers.next() ) {
-    observer->calendarIncidenceChanged( i );
-  }
-}
-
-void Calendar::notifyIncidenceDeleted( Incidence *i )
-{
-  if ( !mObserversEnabled )
-    return;
-
-  Observer *observer;
-  for ( observer = mObservers.first(); observer;
-        observer = mObservers.next() ) {
-    observer->calendarIncidenceDeleted( i );
-  }
+    Observer *observer;
+    for(observer = mObservers.first(); observer;
+            observer = mObservers.next())
+    {
+        observer->calendarIncidenceDeleted(i);
+    }
 }
 
 void Calendar::customPropertyUpdated()
 {
-  setModified( true );
+    setModified(true);
 }
 
-void Calendar::setProductId( const QString &productId )
+void Calendar::setProductId(const QString &productId)
 {
-  mProductId = productId;
+    mProductId = productId;
 }
 
 QString Calendar::productId()
 {
-  return mProductId;
+    return mProductId;
 }
 
-Incidence::List Calendar::mergeIncidenceList( const Event::List &events,
-                                              const Todo::List &todos,
-                                              const Journal::List &journals )
+Incidence::List Calendar::mergeIncidenceList(const Event::List &events,
+        const Todo::List &todos,
+        const Journal::List &journals)
 {
-  Incidence::List incidences;
+    Incidence::List incidences;
 
-  Event::List::ConstIterator it1;
-  for ( it1 = events.begin(); it1 != events.end(); ++it1 )
-    incidences.append( *it1 );
+    Event::List::ConstIterator it1;
+    for(it1 = events.begin(); it1 != events.end(); ++it1)
+        incidences.append(*it1);
 
-  Todo::List::ConstIterator it2;
-  for ( it2 = todos.begin(); it2 != todos.end(); ++it2 )
-    incidences.append( *it2 );
+    Todo::List::ConstIterator it2;
+    for(it2 = todos.begin(); it2 != todos.end(); ++it2)
+        incidences.append(*it2);
 
-  Journal::List::ConstIterator it3;
-  for ( it3 = journals.begin(); it3 != journals.end(); ++it3 )
-    incidences.append( *it3 );
+    Journal::List::ConstIterator it3;
+    for(it3 = journals.begin(); it3 != journals.end(); ++it3)
+        incidences.append(*it3);
 
-  return incidences;
+    return incidences;
 }
 
-bool Calendar::beginChange( Incidence * )
+bool Calendar::beginChange(Incidence *)
 {
-  return true;
+    return true;
 }
 
-bool Calendar::endChange( Incidence * )
+bool Calendar::endChange(Incidence *)
 {
-  return true;
+    return true;
 }
 
-void Calendar::setObserversEnabled( bool enabled )
+void Calendar::setObserversEnabled(bool enabled)
 {
-  mObserversEnabled = enabled;
+    mObserversEnabled = enabled;
 }
 
 #include "calendar.moc"

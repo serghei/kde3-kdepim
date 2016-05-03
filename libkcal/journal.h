@@ -30,24 +30,29 @@ namespace KCal {
 /**
   This class provides a Journal in the sense of RFC2445.
 */
-class LIBKCAL_EXPORT Journal : public Incidence
-{
-  public:
+class LIBKCAL_EXPORT Journal : public Incidence {
+public:
     typedef ListBase<Journal> List;
-  
+
     Journal();
     ~Journal();
-    bool accept( Visitor &v ) { return v.visit(this); }
-    bool operator==( const Journal& ) const;
+    bool accept(Visitor &v)
+    {
+        return v.visit(this);
+    }
+    bool operator==(const Journal &) const;
 
-    QCString type() const { return "Journal"; }
-    
+    QCString type() const
+    {
+        return "Journal";
+    }
+
     /**
       Return copy of this Journal. The caller owns the returned object.
     */
     Journal *clone();
 
-  private:
+private:
     class Private;
     Private *d;
 };

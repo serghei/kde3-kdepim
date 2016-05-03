@@ -39,43 +39,43 @@
 #include "timespanwidget.h"
 #include "timespanwidget.moc"
 
-TimeSpanWidget::TimeSpanWidget( QWidget *parent, const char *name ) :
-  QWidget( parent, name )
+TimeSpanWidget::TimeSpanWidget(QWidget *parent, const char *name) :
+    QWidget(parent, name)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
 
-  mSplitter = new QSplitter( this );
-  topLayout->addWidget( mSplitter );
+    mSplitter = new QSplitter(this);
+    topLayout->addWidget(mSplitter);
 
-  mList = new QListView( mSplitter );
-  mList->addColumn( i18n("Summary") );
-  
-  QWidget *rightPane = new QWidget( mSplitter );
-  QBoxLayout *rightPaneLayout = new QVBoxLayout( rightPane );
+    mList = new QListView(mSplitter);
+    mList->addColumn(i18n("Summary"));
 
-  mTimeLine = new TimeLine( rightPane );
-  mTimeLine->setFixedHeight( mList->header()->height() );
-  rightPaneLayout->addWidget( mTimeLine );
-  
-  mLineView = new LineView( rightPane );
-  rightPaneLayout->addWidget( mLineView );
+    QWidget *rightPane = new QWidget(mSplitter);
+    QBoxLayout *rightPaneLayout = new QVBoxLayout(rightPane);
 
-  QBoxLayout *buttonLayout = new QHBoxLayout( rightPaneLayout );
-  
-  QPushButton *zoomInButton = new QPushButton( i18n("Zoom In"), rightPane );
-  connect( zoomInButton, SIGNAL( clicked() ), SLOT( zoomIn() ) );
-  buttonLayout->addWidget( zoomInButton );
-  
-  QPushButton *zoomOutButton = new QPushButton( i18n("Zoom Out"), rightPane );
-  connect( zoomOutButton, SIGNAL( clicked() ), SLOT( zoomOut() ) );
-  buttonLayout->addWidget( zoomOutButton );
-  
-  QPushButton *centerButton = new QPushButton( i18n("Center View"), rightPane );
-  connect( centerButton, SIGNAL( clicked() ), SLOT( centerView() ) );
-  buttonLayout->addWidget( centerButton );
+    mTimeLine = new TimeLine(rightPane);
+    mTimeLine->setFixedHeight(mList->header()->height());
+    rightPaneLayout->addWidget(mTimeLine);
 
-  connect(mLineView->horizontalScrollBar(),SIGNAL(valueChanged(int)),
-          mTimeLine,SLOT(setContentsPos(int)));
+    mLineView = new LineView(rightPane);
+    rightPaneLayout->addWidget(mLineView);
+
+    QBoxLayout *buttonLayout = new QHBoxLayout(rightPaneLayout);
+
+    QPushButton *zoomInButton = new QPushButton(i18n("Zoom In"), rightPane);
+    connect(zoomInButton, SIGNAL(clicked()), SLOT(zoomIn()));
+    buttonLayout->addWidget(zoomInButton);
+
+    QPushButton *zoomOutButton = new QPushButton(i18n("Zoom Out"), rightPane);
+    connect(zoomOutButton, SIGNAL(clicked()), SLOT(zoomOut()));
+    buttonLayout->addWidget(zoomOutButton);
+
+    QPushButton *centerButton = new QPushButton(i18n("Center View"), rightPane);
+    connect(centerButton, SIGNAL(clicked()), SLOT(centerView()));
+    buttonLayout->addWidget(centerButton);
+
+    connect(mLineView->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+            mTimeLine, SLOT(setContentsPos(int)));
 }
 
 TimeSpanWidget::~TimeSpanWidget()
@@ -84,92 +84,92 @@ TimeSpanWidget::~TimeSpanWidget()
 
 QValueList<int> TimeSpanWidget::splitterSizes()
 {
-  return mSplitter->sizes();
+    return mSplitter->sizes();
 }
 
-void TimeSpanWidget::setSplitterSizes( QValueList<int> sizes )
+void TimeSpanWidget::setSplitterSizes(QValueList<int> sizes)
 {
-  mSplitter->setSizes( sizes );
+    mSplitter->setSizes(sizes);
 }
 
-void TimeSpanWidget::addItem( KCal::Event *event )
+void TimeSpanWidget::addItem(KCal::Event *event)
 {
-  new QListViewItem( mList, event->summary() );
-  
-  QDateTime startDt = event->dtStart();
-  QDateTime endDt = event->dtEnd();
+    new QListViewItem(mList, event->summary());
 
-//  kdDebug(5850) << "TimeSpanWidget::addItem(): start: " << startDt.toString()
-//            << "  end: " << endDt.toString() << endl;
+    QDateTime startDt = event->dtStart();
+    QDateTime endDt = event->dtEnd();
 
-//  int startSecs = mStartDate.secsTo( startDt );
-//  int durationSecs = startDt.secsTo( endDt );
-  
-//  kdDebug(5850) << "--- startSecs: " << startSecs << "  dur: " << durationSecs << endl;
+    //  kdDebug(5850) << "TimeSpanWidget::addItem(): start: " << startDt.toString()
+    //            << "  end: " << endDt.toString() << endl;
 
-  int startX = mStartDate.secsTo( startDt ) / mSecsPerPixel;
-  int endX = startX + startDt.secsTo( endDt ) / mSecsPerPixel;
-  
-//  kdDebug(5850) << "TimeSpanWidget::addItem(): s: " << startX << "  e: " << endX << endl;
-  
-  mLineView->addLine( startX, endX );
+    //  int startSecs = mStartDate.secsTo( startDt );
+    //  int durationSecs = startDt.secsTo( endDt );
+
+    //  kdDebug(5850) << "--- startSecs: " << startSecs << "  dur: " << durationSecs << endl;
+
+    int startX = mStartDate.secsTo(startDt) / mSecsPerPixel;
+    int endX = startX + startDt.secsTo(endDt) / mSecsPerPixel;
+
+    //  kdDebug(5850) << "TimeSpanWidget::addItem(): s: " << startX << "  e: " << endX << endl;
+
+    mLineView->addLine(startX, endX);
 }
 
 void TimeSpanWidget::clear()
 {
-  mList->clear();
-  mLineView->clear();
+    mList->clear();
+    mLineView->clear();
 }
 
 void TimeSpanWidget::updateView()
 {
 #if QT_VERSION >= 300
-  mLineView->updateContents();
-  mTimeLine->updateContents();
+    mLineView->updateContents();
+    mTimeLine->updateContents();
 #else
 #endif
 }
 
-void TimeSpanWidget::setDateRange( const QDateTime &start, const QDateTime &end )
+void TimeSpanWidget::setDateRange(const QDateTime &start, const QDateTime &end)
 {
-  mStartDate = start;
-  mEndDate = end;
-  
-  mTimeLine->setDateRange( start, end );
+    mStartDate = start;
+    mEndDate = end;
 
-  mSecsPerPixel = mStartDate.secsTo( mEndDate ) / mLineView->pixelWidth();
+    mTimeLine->setDateRange(start, end);
+
+    mSecsPerPixel = mStartDate.secsTo(mEndDate) / mLineView->pixelWidth();
 }
 
 QDateTime TimeSpanWidget::startDateTime()
 {
-  return mStartDate;
+    return mStartDate;
 }
 
 QDateTime TimeSpanWidget::endDateTime()
 {
-  return mEndDate;
+    return mEndDate;
 }
 
 void TimeSpanWidget::zoomIn()
 {
-  int span = mStartDate.daysTo( mEndDate );
-  setDateRange( mStartDate.addDays( span / 4 ), mEndDate.addDays( span / -4 ) );
+    int span = mStartDate.daysTo(mEndDate);
+    setDateRange(mStartDate.addDays(span / 4), mEndDate.addDays(span / -4));
 
-  emit dateRangeChanged();
+    emit dateRangeChanged();
 }
 
 void TimeSpanWidget::zoomOut()
 {
-  int span = mStartDate.daysTo( mEndDate );
-  setDateRange( mStartDate.addDays( span / -4 ), mEndDate.addDays( span / 4 ) );
+    int span = mStartDate.daysTo(mEndDate);
+    setDateRange(mStartDate.addDays(span / -4), mEndDate.addDays(span / 4));
 
-  emit dateRangeChanged();
+    emit dateRangeChanged();
 }
 
 void TimeSpanWidget::centerView()
 {
-  QScrollBar *scrollBar = mLineView->horizontalScrollBar();
-  int min = scrollBar->minValue();
-  int max = scrollBar->maxValue();
-  scrollBar->setValue( min + (max-min) / 2 );
+    QScrollBar *scrollBar = mLineView->horizontalScrollBar();
+    int min = scrollBar->minValue();
+    int max = scrollBar->maxValue();
+    scrollBar->setValue(min + (max - min) / 2);
 }

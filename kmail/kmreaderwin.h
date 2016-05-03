@@ -40,29 +40,29 @@ class KMFolder;
 class KMMessage;
 class KMMessagePart;
 namespace KMail {
-  namespace Interface {
-    class Observable;
-  }
-  class PartMetaData;
-  class ObjectTreeParser;
-  class AttachmentStrategy;
-  class HeaderStrategy;
-  class HeaderStyle;
-  class HtmlWriter;
-  class KHtmlPartHtmlWriter;
-  class ISubject;
-  class HtmlStatusBar;
-  class FolderJob;
-  class CSSHelper;
+namespace Interface {
+class Observable;
+}
+class PartMetaData;
+class ObjectTreeParser;
+class AttachmentStrategy;
+class HeaderStrategy;
+class HeaderStyle;
+class HtmlWriter;
+class KHtmlPartHtmlWriter;
+class ISubject;
+class HtmlStatusBar;
+class FolderJob;
+class CSSHelper;
 }
 
 class partNode; // might be removed when KMime is used instead of mimelib
-                //                                      (khz, 29.11.2001)
+//                                      (khz, 29.11.2001)
 
 class NewByteArray; // providing operator+ on a QByteArray (khz, 21.06.2002)
 
 namespace KParts {
-  struct URLArgs;
+struct URLArgs;
 }
 
 /**
@@ -71,474 +71,577 @@ namespace KParts {
 */
 
 class KMReaderWin: public QWidget, public KMail::Interface::Observer {
-  Q_OBJECT
+    Q_OBJECT
 
-  friend void KMMimePartTree::itemClicked( QListViewItem* item );
-  friend void KMMimePartTree::itemRightClicked( QListViewItem* item, const QPoint & );
-  friend void KMMimePartTree::slotSaveAs();
-  friend void KMMimePartTree::startDrag();
+    friend void KMMimePartTree::itemClicked(QListViewItem *item);
+    friend void KMMimePartTree::itemRightClicked(QListViewItem *item, const QPoint &);
+    friend void KMMimePartTree::slotSaveAs();
+    friend void KMMimePartTree::startDrag();
 
-  friend class KMail::ObjectTreeParser;
-  friend class KMail::KHtmlPartHtmlWriter;
+    friend class KMail::ObjectTreeParser;
+    friend class KMail::KHtmlPartHtmlWriter;
 
 public:
-  KMReaderWin( QWidget *parent,
-	       QWidget *mainWindow,
-	       KActionCollection *actionCollection,
-               const char *name=0,
-	       int f=0 );
-  virtual ~KMReaderWin();
+    KMReaderWin(QWidget *parent,
+                QWidget *mainWindow,
+                KActionCollection *actionCollection,
+                const char *name = 0,
+                int f = 0);
+    virtual ~KMReaderWin();
 
-  /**
-     \reimp from Interface::Observer
-     Updates the current message
-   */
-  void update( KMail::Interface::Observable * );
+    /**
+       \reimp from Interface::Observer
+       Updates the current message
+     */
+    void update(KMail::Interface::Observable *);
 
-  /** Read settings from app's config file. */
-  void readConfig();
+    /** Read settings from app's config file. */
+    void readConfig();
 
-  /** Write settings to app's config file. Calls sync() if withSync is TRUE. */
-  void writeConfig( bool withSync=true ) const;
+    /** Write settings to app's config file. Calls sync() if withSync is TRUE. */
+    void writeConfig(bool withSync = true) const;
 
-  const KMail::HeaderStyle * headerStyle() const {
-    return mHeaderStyle;
-  }
-  /** Set the header style and strategy. We only want them to be set
-      together. */
-  void setHeaderStyleAndStrategy( const KMail::HeaderStyle * style,
-				  const KMail::HeaderStrategy * strategy );
+    const KMail::HeaderStyle *headerStyle() const
+    {
+        return mHeaderStyle;
+    }
+    /** Set the header style and strategy. We only want them to be set
+        together. */
+    void setHeaderStyleAndStrategy(const KMail::HeaderStyle *style,
+                                   const KMail::HeaderStrategy *strategy);
 
-  /** Getthe message header strategy. */
-  const KMail::HeaderStrategy * headerStrategy() const {
-    return mHeaderStrategy;
-  }
+    /** Getthe message header strategy. */
+    const KMail::HeaderStrategy *headerStrategy() const
+    {
+        return mHeaderStrategy;
+    }
 
-  /** Get/set the message attachment strategy. */
-  const KMail::AttachmentStrategy * attachmentStrategy() const {
-    return mAttachmentStrategy;
-  }
-  void setAttachmentStrategy( const KMail::AttachmentStrategy * strategy );
+    /** Get/set the message attachment strategy. */
+    const KMail::AttachmentStrategy *attachmentStrategy() const
+    {
+        return mAttachmentStrategy;
+    }
+    void setAttachmentStrategy(const KMail::AttachmentStrategy *strategy);
 
-  /** Get selected override character encoding.
-      @return The encoding selected by the user or an empty string if auto-detection
-      is selected. */
-  QString overrideEncoding() const { return mOverrideEncoding; }
+    /** Get selected override character encoding.
+        @return The encoding selected by the user or an empty string if auto-detection
+        is selected. */
+    QString overrideEncoding() const
+    {
+        return mOverrideEncoding;
+    }
 
-  /** Set the override character encoding. */
-  void setOverrideEncoding( const QString & encoding );
+    /** Set the override character encoding. */
+    void setOverrideEncoding(const QString &encoding);
 
-  void setPrintFont( const QFont& font );
+    void setPrintFont(const QFont &font);
 
-  /** Get codec corresponding to the currently selected override character encoding.
-      @return The override codec or 0 if auto-detection is selected. */
-  const QTextCodec * overrideCodec() const;
+    /** Get codec corresponding to the currently selected override character encoding.
+        @return The override codec or 0 if auto-detection is selected. */
+    const QTextCodec *overrideCodec() const;
 
-  /** Set printing mode */
-  virtual void setPrinting(bool enable) { mPrinting = enable; }
+    /** Set printing mode */
+    virtual void setPrinting(bool enable)
+    {
+        mPrinting = enable;
+    }
 
-  /** Set the message that shall be shown. If msg is 0, an empty page is
-      displayed. */
-  virtual void setMsg(KMMessage* msg, bool force = false);
+    /** Set the message that shall be shown. If msg is 0, an empty page is
+        displayed. */
+    virtual void setMsg(KMMessage *msg, bool force = false);
 
-  /** Instead of settings a message to be shown sets a message part
-      to be shown */
-  void setMsgPart( KMMessagePart* aMsgPart, bool aHTML,
-		   const QString& aFileName, const QString& pname );
+    /** Instead of settings a message to be shown sets a message part
+        to be shown */
+    void setMsgPart(KMMessagePart *aMsgPart, bool aHTML,
+                    const QString &aFileName, const QString &pname);
 
-  void setMsgPart( partNode * node );
+    void setMsgPart(partNode *node);
 
-  /** Show or hide the Mime Tree Viewer if configuration
-      is set to smart mode.  */
-  void showHideMimeTree( bool isPlainTextTopLevel );
+    /** Show or hide the Mime Tree Viewer if configuration
+        is set to smart mode.  */
+    void showHideMimeTree(bool isPlainTextTopLevel);
 
-  /** Store message id of last viewed message,
-      normally no need to call this function directly,
-      since correct value is set automatically in
-      parseMsg(KMMessage* aMsg, bool onlyProcessHeaders). */
-  void setIdOfLastViewedMessage( const QString & msgId )
-    { mIdOfLastViewedMessage = msgId; }
+    /** Store message id of last viewed message,
+        normally no need to call this function directly,
+        since correct value is set automatically in
+        parseMsg(KMMessage* aMsg, bool onlyProcessHeaders). */
+    void setIdOfLastViewedMessage(const QString &msgId)
+    {
+        mIdOfLastViewedMessage = msgId;
+    }
 
-  /** Clear the reader and discard the current message. */
-  void clear(bool force = false) { setMsg(0, force); }
+    /** Clear the reader and discard the current message. */
+    void clear(bool force = false)
+    {
+        setMsg(0, force);
+    }
 
-  /** Saves the relative position of the scroll view. Call this before calling update()
-      if you want to preserve the current view. */
-  void saveRelativePosition();
+    /** Saves the relative position of the scroll view. Call this before calling update()
+        if you want to preserve the current view. */
+    void saveRelativePosition();
 
-  /** Re-parse the current message. */
-  void update(bool force = false);
+    /** Re-parse the current message. */
+    void update(bool force = false);
 
-  /** Print current message. */
-  virtual void printMsg(void);
+    /** Print current message. */
+    virtual void printMsg(void);
 
-  /** Return selected text */
-  QString copyText();
+    /** Return selected text */
+    QString copyText();
 
-  /** Get/set auto-delete msg flag. */
-  bool autoDelete(void) const { return mAutoDelete; }
-  void setAutoDelete(bool f) { mAutoDelete=f; }
+    /** Get/set auto-delete msg flag. */
+    bool autoDelete(void) const
+    {
+        return mAutoDelete;
+    }
+    void setAutoDelete(bool f)
+    {
+        mAutoDelete = f;
+    }
 
-  /** Override default html mail setting */
-  bool htmlOverride() const { return mHtmlOverride; }
-  void setHtmlOverride( bool override );
+    /** Override default html mail setting */
+    bool htmlOverride() const
+    {
+        return mHtmlOverride;
+    }
+    void setHtmlOverride(bool override);
 
-  /** Override default load external references setting */
-  bool htmlLoadExtOverride() const { return mHtmlLoadExtOverride; }
-  void setHtmlLoadExtOverride( bool override );
+    /** Override default load external references setting */
+    bool htmlLoadExtOverride() const
+    {
+        return mHtmlLoadExtOverride;
+    }
+    void setHtmlLoadExtOverride(bool override);
 
-  /** Is html mail to be supported? Takes into account override */
-  bool htmlMail();
+    /** Is html mail to be supported? Takes into account override */
+    bool htmlMail();
 
-  /** Is loading ext. references to be supported? Takes into account override */
-  bool htmlLoadExternal();
+    /** Is loading ext. references to be supported? Takes into account override */
+    bool htmlLoadExternal();
 
-  /** Returns the MD5 hash for the list of new features */
-  static QString newFeaturesMD5();
+    /** Returns the MD5 hash for the list of new features */
+    static QString newFeaturesMD5();
 
-  /** Display a generic HTML splash page instead of a message */
-  void displaySplashPage( const QString &info );
+    /** Display a generic HTML splash page instead of a message */
+    void displaySplashPage(const QString &info);
 
-  /** Display the about page instead of a message */
-  void displayAboutPage();
+    /** Display the about page instead of a message */
+    void displayAboutPage();
 
-  /** Display the 'please wait' page instead of a message */
-  void displayBusyPage();
-  /** Display the 'we are currently in offline mode' page instead of a message */
-  void displayOfflinePage();
+    /** Display the 'please wait' page instead of a message */
+    void displayBusyPage();
+    /** Display the 'we are currently in offline mode' page instead of a message */
+    void displayOfflinePage();
 
-  /** Enable the displaying of messages again after an URL was displayed */
-  void enableMsgDisplay();
+    /** Enable the displaying of messages again after an URL was displayed */
+    void enableMsgDisplay();
 
-  /** View message part of type message/RFC822 in extra viewer window. */
-  void atmViewMsg(KMMessagePart* msgPart);
+    /** View message part of type message/RFC822 in extra viewer window. */
+    void atmViewMsg(KMMessagePart *msgPart);
 
-  bool atBottom() const;
+    bool atBottom() const;
 
-  bool isFixedFont() { return mUseFixedFont; }
-  void setUseFixedFont( bool useFixedFont ) { mUseFixedFont = useFixedFont; }
+    bool isFixedFont()
+    {
+        return mUseFixedFont;
+    }
+    void setUseFixedFont(bool useFixedFont)
+    {
+        mUseFixedFont = useFixedFont;
+    }
 
-  /** Return the HtmlWriter connected to the KHTMLPart we use */
-  KMail::HtmlWriter * htmlWriter() { return mHtmlWriter; }
+    /** Return the HtmlWriter connected to the KHTMLPart we use */
+    KMail::HtmlWriter *htmlWriter()
+    {
+        return mHtmlWriter;
+    }
 
-  // Action to reply to a message
-  // but action( "some_name" ) some name could be used instead.
-  KToggleAction *toggleFixFontAction() { return mToggleFixFontAction; }
-  KAction *mailToComposeAction() { return mMailToComposeAction; }
-  KAction *mailToReplyAction() { return mMailToReplyAction; }
-  KAction *mailToForwardAction() { return mMailToForwardAction; }
-  KAction *addAddrBookAction() { return mAddAddrBookAction; }
-  KAction *openAddrBookAction() { return mOpenAddrBookAction; }
-  KAction *copyAction() { return mCopyAction; }
-  KAction *selectAllAction() { return mSelectAllAction; }
-  KAction *copyURLAction() { return mCopyURLAction; }
-  KAction *urlOpenAction() { return mUrlOpenAction; }
-  KAction *urlSaveAsAction() { return mUrlSaveAsAction; }
-  KAction *addBookmarksAction() { return mAddBookmarksAction;}
-  KAction *startImChatAction() { return mStartIMChatAction; }
-  // This function returns the complete data that were in this
-  // message parts - *after* all encryption has been removed that
-  // could be removed.
-  // - This is used to store the message in decrypted form.
-  void objectTreeToDecryptedMsg( partNode* node,
-                                 NewByteArray& resultingData,
-                                 KMMessage& theMessage,
-                                 bool weAreReplacingTheRootNode = false,
-                                 int recCount = 0 );
+    // Action to reply to a message
+    // but action( "some_name" ) some name could be used instead.
+    KToggleAction *toggleFixFontAction()
+    {
+        return mToggleFixFontAction;
+    }
+    KAction *mailToComposeAction()
+    {
+        return mMailToComposeAction;
+    }
+    KAction *mailToReplyAction()
+    {
+        return mMailToReplyAction;
+    }
+    KAction *mailToForwardAction()
+    {
+        return mMailToForwardAction;
+    }
+    KAction *addAddrBookAction()
+    {
+        return mAddAddrBookAction;
+    }
+    KAction *openAddrBookAction()
+    {
+        return mOpenAddrBookAction;
+    }
+    KAction *copyAction()
+    {
+        return mCopyAction;
+    }
+    KAction *selectAllAction()
+    {
+        return mSelectAllAction;
+    }
+    KAction *copyURLAction()
+    {
+        return mCopyURLAction;
+    }
+    KAction *urlOpenAction()
+    {
+        return mUrlOpenAction;
+    }
+    KAction *urlSaveAsAction()
+    {
+        return mUrlSaveAsAction;
+    }
+    KAction *addBookmarksAction()
+    {
+        return mAddBookmarksAction;
+    }
+    KAction *startImChatAction()
+    {
+        return mStartIMChatAction;
+    }
+    // This function returns the complete data that were in this
+    // message parts - *after* all encryption has been removed that
+    // could be removed.
+    // - This is used to store the message in decrypted form.
+    void objectTreeToDecryptedMsg(partNode *node,
+                                  NewByteArray &resultingData,
+                                  KMMessage &theMessage,
+                                  bool weAreReplacingTheRootNode = false,
+                                  int recCount = 0);
 
-  /** Returns message part from given URL or null if invalid. */
-  partNode* partNodeFromUrl(const KURL &url);
+    /** Returns message part from given URL or null if invalid. */
+    partNode *partNodeFromUrl(const KURL &url);
 
-  partNode * partNodeForId( int id );
+    partNode *partNodeForId(int id);
 
-  KURL tempFileUrlFromPartNode( const partNode * node );
+    KURL tempFileUrlFromPartNode(const partNode *node);
 
-  /** Returns id of message part from given URL or -1 if invalid. */
-  static int msgPartFromUrl(const KURL &url);
+    /** Returns id of message part from given URL or -1 if invalid. */
+    static int msgPartFromUrl(const KURL &url);
 
-  void setUpdateAttachment( bool update = true ) { mAtmUpdate = update; }
+    void setUpdateAttachment(bool update = true)
+    {
+        mAtmUpdate = update;
+    }
 
-  /** Access to the KHTMLPart used for the viewer. Use with
-      care! */
-  KHTMLPart * htmlPart() const { return mViewer; }
+    /** Access to the KHTMLPart used for the viewer. Use with
+        care! */
+    KHTMLPart *htmlPart() const
+    {
+        return mViewer;
+    }
 
-  /** Returns the current message or 0 if none. */
-  KMMessage* message(KMFolder** folder=0) const;
+    /** Returns the current message or 0 if none. */
+    KMMessage *message(KMFolder **folder = 0) const;
 
-  void openAttachment( int id, const QString & name );
+    void openAttachment(int id, const QString &name);
 
-  void emitUrlClicked( const KURL & url, int button ) {
-    emit urlClicked( url, button );
-  }
+    void emitUrlClicked(const KURL &url, int button)
+    {
+        emit urlClicked(url, button);
+    }
 
-  void emitPopupMenu( const KURL & url, const QPoint & p ) {
-    if ( message() )
-      emit popupMenu( *message(), url, p );
-  }
+    void emitPopupMenu(const KURL &url, const QPoint &p)
+    {
+        if(message())
+            emit popupMenu(*message(), url, p);
+    }
 
-  void showAttachmentPopup( int id, const QString & name, const QPoint & p );
+    void showAttachmentPopup(int id, const QString &name, const QPoint &p);
 
-  /** Set the serial number of the message this reader window is currently
-   *  waiting for. Used to discard updates for already deselected messages. */
-  void setWaitingForSerNum( unsigned long serNum ) { mWaitingForSerNum = serNum; }
+    /** Set the serial number of the message this reader window is currently
+     *  waiting for. Used to discard updates for already deselected messages. */
+    void setWaitingForSerNum(unsigned long serNum)
+    {
+        mWaitingForSerNum = serNum;
+    }
 
-  QWidget* mainWindow() { return mMainWindow; }
+    QWidget *mainWindow()
+    {
+        return mMainWindow;
+    }
 
-  /** Returns wether the message should be decryted. */
-  bool decryptMessage() const;
+    /** Returns wether the message should be decryted. */
+    bool decryptMessage() const;
 
-  /** Enforce message decryption. */
-  void setDecryptMessageOverwrite( bool overwrite = true ) { mDecrytMessageOverwrite = overwrite; }
+    /** Enforce message decryption. */
+    void setDecryptMessageOverwrite(bool overwrite = true)
+    {
+        mDecrytMessageOverwrite = overwrite;
+    }
 
-  /** Show signature details. */
-  bool showSignatureDetails() const { return mShowSignatureDetails; }
+    /** Show signature details. */
+    bool showSignatureDetails() const
+    {
+        return mShowSignatureDetails;
+    }
 
-  /** Show signature details. */
-  void setShowSignatureDetails( bool showDetails = true ) { mShowSignatureDetails = showDetails; }
+    /** Show signature details. */
+    void setShowSignatureDetails(bool showDetails = true)
+    {
+        mShowSignatureDetails = showDetails;
+    }
 
-  /* show or hide the list that points to the attachments */
-  bool showAttachmentQuicklist() const { return mShowAttachmentQuicklist; }
+    /* show or hide the list that points to the attachments */
+    bool showAttachmentQuicklist() const
+    {
+        return mShowAttachmentQuicklist;
+    }
 
-  /* show or hide the list that points to the attachments */
-  void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true ) { mShowAttachmentQuicklist = showAttachmentQuicklist; }
+    /* show or hide the list that points to the attachments */
+    void setShowAttachmentQuicklist(bool showAttachmentQuicklist = true)
+    {
+        mShowAttachmentQuicklist = showAttachmentQuicklist;
+    }
 
 signals:
-  /** Emitted after parsing of a message to have it stored
-      in unencrypted state in it's folder. */
-  void replaceMsgByUnencryptedVersion();
+    /** Emitted after parsing of a message to have it stored
+        in unencrypted state in it's folder. */
+    void replaceMsgByUnencryptedVersion();
 
-  /** The user presses the right mouse button. 'url' may be 0. */
-  void popupMenu(KMMessage &msg, const KURL &url, const QPoint& mousePos);
+    /** The user presses the right mouse button. 'url' may be 0. */
+    void popupMenu(KMMessage &msg, const KURL &url, const QPoint &mousePos);
 
-  /** The user has clicked onto an URL that is no attachment. */
-  void urlClicked(const KURL &url, int button);
+    /** The user has clicked onto an URL that is no attachment. */
+    void urlClicked(const KURL &url, int button);
 
-  /** Pgp displays a password dialog */
-  void noDrag(void);
+    /** Pgp displays a password dialog */
+    void noDrag(void);
 
 public slots:
 
-  /** Select message body. */
-  void selectAll();
+    /** Select message body. */
+    void selectAll();
 
-  /** Force update even if message is the same */
-  void clearCache();
+    /** Force update even if message is the same */
+    void clearCache();
 
-  /** Refresh the reader window */
-  void updateReaderWin();
+    /** Refresh the reader window */
+    void updateReaderWin();
 
-  /** HTML Widget scrollbar and layout handling. */
-  void slotScrollUp();
-  void slotScrollDown();
-  void slotScrollPrior();
-  void slotScrollNext();
-  void slotJumpDown();
-  void slotDocumentChanged();
-  void slotDocumentDone();
-  void slotTextSelected(bool);
+    /** HTML Widget scrollbar and layout handling. */
+    void slotScrollUp();
+    void slotScrollDown();
+    void slotScrollPrior();
+    void slotScrollNext();
+    void slotJumpDown();
+    void slotDocumentChanged();
+    void slotDocumentDone();
+    void slotTextSelected(bool);
 
-  /** An URL has been activate with a click. */
-  void slotUrlOpen(const KURL &url, const KParts::URLArgs &args);
+    /** An URL has been activate with a click. */
+    void slotUrlOpen(const KURL &url, const KParts::URLArgs &args);
 
-  /** The mouse has moved on or off an URL. */
-  void slotUrlOn(const QString &url);
+    /** The mouse has moved on or off an URL. */
+    void slotUrlOn(const QString &url);
 
-  /** The user presses the right mouse button on an URL. */
-  void slotUrlPopup(const QString &, const QPoint& mousePos);
+    /** The user presses the right mouse button on an URL. */
+    void slotUrlPopup(const QString &, const QPoint &mousePos);
 
-  /** The user selected "Find" from the menu. */
-  void slotFind();
-  /** The user selected "Find Next" from the menu. */
-  void slotFindNext();
+    /** The user selected "Find" from the menu. */
+    void slotFind();
+    /** The user selected "Find Next" from the menu. */
+    void slotFindNext();
 
-  /** The user toggled the "Fixed Font" flag from the view menu. */
-  void slotToggleFixedFont();
+    /** The user toggled the "Fixed Font" flag from the view menu. */
+    void slotToggleFixedFont();
 
-  /** Copy the selected text to the clipboard */
-  void slotCopySelectedText();
+    /** Copy the selected text to the clipboard */
+    void slotCopySelectedText();
 
-   void slotUrlClicked();
+    void slotUrlClicked();
 
-  /** Operations on mailto: URLs. */
-  void slotMailtoReply();
-  void slotMailtoCompose();
-  void slotMailtoForward();
-  void slotMailtoAddAddrBook();
-  void slotMailtoOpenAddrBook();
-  /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
-      beginning of URL before copying. */
-  void slotUrlCopy();
-  void slotUrlOpen( const KURL &url = KURL() );
-  /** Save the page to a file */
-  void slotUrlSave();
-  void slotAddBookmarks();
-  void slotSaveMsg();
-  void slotSaveAttachments();
+    /** Operations on mailto: URLs. */
+    void slotMailtoReply();
+    void slotMailtoCompose();
+    void slotMailtoForward();
+    void slotMailtoAddAddrBook();
+    void slotMailtoOpenAddrBook();
+    /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
+        beginning of URL before copying. */
+    void slotUrlCopy();
+    void slotUrlOpen(const KURL &url = KURL());
+    /** Save the page to a file */
+    void slotUrlSave();
+    void slotAddBookmarks();
+    void slotSaveMsg();
+    void slotSaveAttachments();
 
-  void slotMessageArrived( KMMessage *msg );
-  /** start IM Chat with addressee */
-  void slotIMChat();
-  void contactStatusChanged( const QString &uid);
+    void slotMessageArrived(KMMessage *msg);
+    /** start IM Chat with addressee */
+    void slotIMChat();
+    void contactStatusChanged(const QString &uid);
 
-  void slotLevelQuote( int l );
-  void slotTouchMessage();
+    void slotLevelQuote(int l);
+    void slotTouchMessage();
 
-  void slotDeleteAttachment( partNode* node );
-  void slotEditAttachment( partNode* node );
+    void slotDeleteAttachment(partNode *node);
+    void slotEditAttachment(partNode *node);
 
-  KMail::CSSHelper* cssHelper();
+    KMail::CSSHelper *cssHelper();
 
 protected slots:
-  void slotCycleHeaderStyles();
-  void slotBriefHeaders();
-  void slotFancyHeaders();
-  void slotEnterpriseHeaders();
-  void slotStandardHeaders();
-  void slotLongHeaders();
-  void slotAllHeaders();
+    void slotCycleHeaderStyles();
+    void slotBriefHeaders();
+    void slotFancyHeaders();
+    void slotEnterpriseHeaders();
+    void slotStandardHeaders();
+    void slotLongHeaders();
+    void slotAllHeaders();
 
-  void slotCycleAttachmentStrategy();
-  void slotIconicAttachments();
-  void slotSmartAttachments();
-  void slotInlineAttachments();
-  void slotHideAttachments();
+    void slotCycleAttachmentStrategy();
+    void slotIconicAttachments();
+    void slotSmartAttachments();
+    void slotInlineAttachments();
+    void slotHideAttachments();
 
-  /** Some attachment operations. */
-  void slotAtmView( int id, const QString& name );
-  void slotDelayedResize();
-  void slotHandleAttachment( int );
+    /** Some attachment operations. */
+    void slotAtmView(int id, const QString &name);
+    void slotDelayedResize();
+    void slotHandleAttachment(int);
 
 protected:
-  /** reimplemented in order to update the frame width in case of a changed
-      GUI style */
-  void styleChange( QStyle& oldStyle );
+    /** reimplemented in order to update the frame width in case of a changed
+        GUI style */
+    void styleChange(QStyle &oldStyle);
 
-  /** Set the width of the frame to a reasonable value for the current GUI
-      style */
-  void setStyleDependantFrameWidth();
+    /** Set the width of the frame to a reasonable value for the current GUI
+        style */
+    void setStyleDependantFrameWidth();
 
-  /** Watch for palette changes */
-  virtual bool event(QEvent *e);
+    /** Watch for palette changes */
+    virtual bool event(QEvent *e);
 
-  /** Calculate the pixel size */
-  int pointsToPixel(int pointSize) const;
+    /** Calculate the pixel size */
+    int pointsToPixel(int pointSize) const;
 
-  /** Feeds the HTML viewer with the contents of the given message.
-    HTML begin/end parts are written around the message. */
-  void displayMessage();
+    /** Feeds the HTML viewer with the contents of the given message.
+      HTML begin/end parts are written around the message. */
+    void displayMessage();
 
-  /** Parse given message and add it's contents to the reader window. */
-  virtual void parseMsg( KMMessage* msg  );
+    /** Parse given message and add it's contents to the reader window. */
+    virtual void parseMsg(KMMessage *msg);
 
-  /** Creates a nice mail header depending on the current selected
-    header style. */
-  QString writeMsgHeader(KMMessage* aMsg, bool hasVCard=false, bool topLevel=false);
+    /** Creates a nice mail header depending on the current selected
+      header style. */
+    QString writeMsgHeader(KMMessage *aMsg, bool hasVCard = false, bool topLevel = false);
 
-  /** Writes the given message part to a temporary file and returns the
-      name of this file or QString::null if writing failed.
-  */
-  QString writeMessagePartToTempFile( KMMessagePart* msgPart, int partNumber );
+    /** Writes the given message part to a temporary file and returns the
+        name of this file or QString::null if writing failed.
+    */
+    QString writeMessagePartToTempFile(KMMessagePart *msgPart, int partNumber);
 
-  /**
-    Creates a temporary dir for saving attachments, etc.
-    Will be automatically deleted when another message is viewed.
-    @param param Optional part of the directory name.
-  */
-  QString createTempDir( const QString &param = QString() );
+    /**
+      Creates a temporary dir for saving attachments, etc.
+      Will be automatically deleted when another message is viewed.
+      @param param Optional part of the directory name.
+    */
+    QString createTempDir(const QString &param = QString());
 
-  /** show window containing infos about a vCard. */
-  void showVCard(KMMessagePart *msgPart);
+    /** show window containing infos about a vCard. */
+    void showVCard(KMMessagePart *msgPart);
 
-  /** HTML initialization. */
-  virtual void initHtmlWidget(void);
+    /** HTML initialization. */
+    virtual void initHtmlWidget(void);
 
-  /** Some necessary event handling. */
-  virtual void closeEvent(QCloseEvent *);
-  virtual void resizeEvent(QResizeEvent *);
+    /** Some necessary event handling. */
+    virtual void closeEvent(QCloseEvent *);
+    virtual void resizeEvent(QResizeEvent *);
 
-  /** Cleanup the attachment temp files */
-  virtual void removeTempFiles();
+    /** Cleanup the attachment temp files */
+    virtual void removeTempFiles();
 
-  /** Event filter */
-  bool eventFilter( QObject *obj, QEvent *ev );
+    /** Event filter */
+    bool eventFilter(QObject *obj, QEvent *ev);
 
 private slots:
-  void slotSetEncoding();
-  void injectAttachments();
+    void slotSetEncoding();
+    void injectAttachments();
 
 private:
-  void adjustLayout();
-  void createWidgets();
-  void createActions( KActionCollection * ac );
-  void saveSplitterSizes( KConfigBase & c ) const;
+    void adjustLayout();
+    void createWidgets();
+    void createActions(KActionCollection *ac);
+    void saveSplitterSizes(KConfigBase &c) const;
 
-  KRadioAction * actionForHeaderStyle( const KMail::HeaderStyle *,
-                                       const KMail::HeaderStrategy * );
-  KRadioAction * actionForAttachmentStrategy( const KMail::AttachmentStrategy * );
-  /** Read override codec from configuration */
-  void readGlobalOverrideCodec();
+    KRadioAction *actionForHeaderStyle(const KMail::HeaderStyle *,
+                                       const KMail::HeaderStrategy *);
+    KRadioAction *actionForAttachmentStrategy(const KMail::AttachmentStrategy *);
+    /** Read override codec from configuration */
+    void readGlobalOverrideCodec();
 
-  QString renderAttachments( partNode *node, const QColor &bgColor );
+    QString renderAttachments(partNode *node, const QColor &bgColor);
 
 private:
-  bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
-  int mAtmCurrent;
-  QString mAtmCurrentName;
-  KMMessage *mMessage;
-  // widgets:
-  QSplitter * mSplitter;
-  QHBox *mBox;
-  KMail::HtmlStatusBar *mColorBar;
-  KMMimePartTree* mMimePartTree;
-  KHTMLPart *mViewer;
+    bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
+    int mAtmCurrent;
+    QString mAtmCurrentName;
+    KMMessage *mMessage;
+    // widgets:
+    QSplitter *mSplitter;
+    QHBox *mBox;
+    KMail::HtmlStatusBar *mColorBar;
+    KMMimePartTree *mMimePartTree;
+    KHTMLPart *mViewer;
 
-  const KMail::AttachmentStrategy * mAttachmentStrategy;
-  const KMail::HeaderStrategy * mHeaderStrategy;
-  const KMail::HeaderStyle * mHeaderStyle;
-  bool mAutoDelete;
-  /** where did the user save the attachment last time */
-  QString mSaveAttachDir;
-  static const int delay;
-  QTimer mUpdateReaderWinTimer;
-  QTimer mResizeTimer;
-  QTimer mDelayedMarkTimer;
-  QString mOverrideEncoding;
-  QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
-  bool mMsgDisplay;
-  bool mNoMDNsWhenEncrypted;
-  unsigned long mLastSerNum;
-  KMMsgStatus mLastStatus;
+    const KMail::AttachmentStrategy *mAttachmentStrategy;
+    const KMail::HeaderStrategy *mHeaderStrategy;
+    const KMail::HeaderStyle *mHeaderStyle;
+    bool mAutoDelete;
+    /** where did the user save the attachment last time */
+    QString mSaveAttachDir;
+    static const int delay;
+    QTimer mUpdateReaderWinTimer;
+    QTimer mResizeTimer;
+    QTimer mDelayedMarkTimer;
+    QString mOverrideEncoding;
+    QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
+    bool mMsgDisplay;
+    bool mNoMDNsWhenEncrypted;
+    unsigned long mLastSerNum;
+    KMMsgStatus mLastStatus;
 
-  KMail::CSSHelper * mCSSHelper;
-  bool mUseFixedFont;
-  bool mPrinting;
-  bool mShowColorbar;
-  //bool mShowCompleteMessage;
-  QStringList mTempFiles;
-  QStringList mTempDirs;
-  int mMimeTreeMode;
-  bool mMimeTreeAtBottom;
-  QValueList<int> mSplitterSizes;
-  partNode* mRootNode;
-  QString mIdOfLastViewedMessage;
-  QWidget *mMainWindow;
-  KActionCollection *mActionCollection;
-  KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
-      *mAddAddrBookAction, *mOpenAddrBookAction, *mCopyAction, *mCopyURLAction,
-      *mUrlOpenAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mStartIMChatAction, *mSelectAllAction;
-  KSelectAction *mSelectEncodingAction;
-  KToggleAction *mToggleFixFontAction;
-  KURL mUrlClicked;
-  KMail::HtmlWriter * mHtmlWriter;
-  // an attachment should be updated
-  bool mAtmUpdate;
-  int mChoice;
-  unsigned long mWaitingForSerNum;
-  float mSavedRelativePosition;
-	int mLevelQuote;
-  bool mDecrytMessageOverwrite;
-  bool mShowSignatureDetails;
-  bool mShowAttachmentQuicklist;
+    KMail::CSSHelper *mCSSHelper;
+    bool mUseFixedFont;
+    bool mPrinting;
+    bool mShowColorbar;
+    //bool mShowCompleteMessage;
+    QStringList mTempFiles;
+    QStringList mTempDirs;
+    int mMimeTreeMode;
+    bool mMimeTreeAtBottom;
+    QValueList<int> mSplitterSizes;
+    partNode *mRootNode;
+    QString mIdOfLastViewedMessage;
+    QWidget *mMainWindow;
+    KActionCollection *mActionCollection;
+    KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
+            *mAddAddrBookAction, *mOpenAddrBookAction, *mCopyAction, *mCopyURLAction,
+            *mUrlOpenAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mStartIMChatAction, *mSelectAllAction;
+    KSelectAction *mSelectEncodingAction;
+    KToggleAction *mToggleFixFontAction;
+    KURL mUrlClicked;
+    KMail::HtmlWriter *mHtmlWriter;
+    // an attachment should be updated
+    bool mAtmUpdate;
+    int mChoice;
+    unsigned long mWaitingForSerNum;
+    float mSavedRelativePosition;
+    int mLevelQuote;
+    bool mDecrytMessageOverwrite;
+    bool mShowSignatureDetails;
+    bool mShowAttachmentQuicklist;
 };
 
 

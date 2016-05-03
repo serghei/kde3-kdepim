@@ -39,113 +39,128 @@
 
 #include "lunarphase.h"
 
-LunarPhase::LunarPhase( Hemisphere hemisphere )
+LunarPhase::LunarPhase(Hemisphere hemisphere)
 {
-  mHemisphere = hemisphere;
+    mHemisphere = hemisphere;
 }
 
 LunarPhase::~LunarPhase()
 {
 }
 
-void LunarPhase::setHemisphere( Hemisphere hemisphere )
+void LunarPhase::setHemisphere(Hemisphere hemisphere)
 {
-  mHemisphere = hemisphere;
+    mHemisphere = hemisphere;
 }
 
 LunarPhase::Hemisphere LunarPhase::hemisphere() const
 {
-  return( mHemisphere );
+    return(mHemisphere);
 }
 
 QString LunarPhase::hemisphereStr() const
 {
-  return hemisphereName( mHemisphere );
+    return hemisphereName(mHemisphere);
 }
 
-QString LunarPhase::hemisphereName( LunarPhase::Hemisphere hemisphere )
+QString LunarPhase::hemisphereName(LunarPhase::Hemisphere hemisphere)
 {
-  switch( hemisphere ) {
-  case Northern:
-  default:
-    return( i18n( "Northern" ) );
-    break;
-  case Southern:
-    return( i18n( "Southern" ) );
-    break;
-  }
-}
-
-QString LunarPhase::phaseStr( const QDate &date ) const
-{
-  return phaseName( phase( date ) );
-}
-
-QString LunarPhase::phaseName( LunarPhase::Phase phase )
-{
-  switch ( phase ) {
-  case New:
-    return( i18n( "New Moon" ) );
-    break;
-  case Full:
-    return( i18n( "Full Moon" ) );
-    break;
-  case FirstQ:
-    return( i18n( "First Quarter Moon" ) );
-    break;
-  case LastQ:
-    return( i18n( "Last Quarter Moon" ) );
-    break;
-  default:
-  case None:
-    return( QString::null );
-    break;
-  }
-}
-
-LunarPhase::Phase LunarPhase::phase( const QDate &date ) const
-{
-  Phase retPhase = None;
-
-  // compute percent-full for the middle of today and yesterday.
-  QTime noontime( 12, 0, 0 );
-  QDateTime today( date, noontime );
-  double todayPer = percentFull( today.toTime_t() );
-  QDateTime yesterday( date.addDays(-1), noontime );
-  double yesterdayPer = percentFull( yesterday.toTime_t() );
-
-  if ( ( todayPer < 0.50 ) && ( yesterdayPer > 0.50 ) ) {
-     retPhase = New;
-  } else if ( ( todayPer > 99.50 ) && ( yesterdayPer < 99.50 ) ) {
-      retPhase = Full;
-  } else {
-    // compute percent-full for the start of today.
-    QTime sqt( 0, 0, 0 );
-    QDateTime start( date, sqt );
-    double startPer = percentFull( start.toTime_t() );
-    // compute percent-full for the end of today.
-    QTime eqt( 23, 59, 59 );
-    QDateTime end( date, eqt );
-    double endPer = percentFull( end.toTime_t() );
-
-    if ( ( startPer <= 50 ) && ( endPer > 50 ) ) {
-      if ( mHemisphere == Northern ) {
-        retPhase = FirstQ;
-      } else {
-        retPhase = LastQ;
-      }
+    switch(hemisphere)
+    {
+        case Northern:
+        default:
+            return(i18n("Northern"));
+            break;
+        case Southern:
+            return(i18n("Southern"));
+            break;
     }
-    if ( ( endPer <= 50 ) && ( startPer > 50 ) ) {
-      if ( mHemisphere == Northern ) {
-        retPhase = LastQ;
-      } else {
-        retPhase = FirstQ;
-      }
+}
+
+QString LunarPhase::phaseStr(const QDate &date) const
+{
+    return phaseName(phase(date));
+}
+
+QString LunarPhase::phaseName(LunarPhase::Phase phase)
+{
+    switch(phase)
+    {
+        case New:
+            return(i18n("New Moon"));
+            break;
+        case Full:
+            return(i18n("Full Moon"));
+            break;
+        case FirstQ:
+            return(i18n("First Quarter Moon"));
+            break;
+        case LastQ:
+            return(i18n("Last Quarter Moon"));
+            break;
+        default:
+        case None:
+            return(QString::null);
+            break;
     }
-    // Note: if you want to support crescent and gibbous phases then please
-    //  read the source for the original BSD 'pom' program.
-  }
-  return( retPhase );
+}
+
+LunarPhase::Phase LunarPhase::phase(const QDate &date) const
+{
+    Phase retPhase = None;
+
+    // compute percent-full for the middle of today and yesterday.
+    QTime noontime(12, 0, 0);
+    QDateTime today(date, noontime);
+    double todayPer = percentFull(today.toTime_t());
+    QDateTime yesterday(date.addDays(-1), noontime);
+    double yesterdayPer = percentFull(yesterday.toTime_t());
+
+    if((todayPer < 0.50) && (yesterdayPer > 0.50))
+    {
+        retPhase = New;
+    }
+    else if((todayPer > 99.50) && (yesterdayPer < 99.50))
+    {
+        retPhase = Full;
+    }
+    else
+    {
+        // compute percent-full for the start of today.
+        QTime sqt(0, 0, 0);
+        QDateTime start(date, sqt);
+        double startPer = percentFull(start.toTime_t());
+        // compute percent-full for the end of today.
+        QTime eqt(23, 59, 59);
+        QDateTime end(date, eqt);
+        double endPer = percentFull(end.toTime_t());
+
+        if((startPer <= 50) && (endPer > 50))
+        {
+            if(mHemisphere == Northern)
+            {
+                retPhase = FirstQ;
+            }
+            else
+            {
+                retPhase = LastQ;
+            }
+        }
+        if((endPer <= 50) && (startPer > 50))
+        {
+            if(mHemisphere == Northern)
+            {
+                retPhase = LastQ;
+            }
+            else
+            {
+                retPhase = FirstQ;
+            }
+        }
+        // Note: if you want to support crescent and gibbous phases then please
+        //  read the source for the original BSD 'pom' program.
+    }
+    return(retPhase);
 }
 
 /*
@@ -232,60 +247,60 @@ LunarPhase::Phase LunarPhase::phase( const QDate &date ) const
  * percentFull --
  *	return phase of the moon as a percentage of full
  */
-double LunarPhase::percentFull( uint tmpt ) const
+double LunarPhase::percentFull(uint tmpt) const
 {
-  double N, Msol, Ec, LambdaSol, l, Mm, Ev, Ac, A3, Mmprime;
-  double A4, lprime, V, ldprime, D, Nm;
+    double N, Msol, Ec, LambdaSol, l, Mm, Ev, Ac, A3, Mmprime;
+    double A4, lprime, V, ldprime, D, Nm;
 
-  double days;
-  days = ( tmpt - EPOCH_MINUS_1970 * 86400 ) / 86400.0;
+    double days;
+    days = (tmpt - EPOCH_MINUS_1970 * 86400) / 86400.0;
 
-  N = 360 * days / 365.242191;                                  /* sec 46 #3 */
-  adj360(&N);
-  Msol = N + EPSILONg - RHOg;                                   /* sec 46 #4 */
-  adj360(&Msol);
-  Ec = 360 / PI * ECCEN * sin(degreesToRadians(Msol));          /* sec 46 #5 */
-  LambdaSol = N + Ec + EPSILONg;                                /* sec 46 #6 */
-  adj360(&LambdaSol);
-  l = 13.1763966 * days + lzero;                                /* sec 65 #4 */
-  adj360(&l);
-  Mm = l - (0.1114041 * days) - Pzero;                          /* sec 65 #5 */
-  adj360(&Mm);
-  Nm = Nzero - (0.0529539 * days);                              /* sec 65 #6 */
-  adj360(&Nm);
-  Ev = 1.2739 * sin(degreesToRadians(2*(l - LambdaSol) - Mm));  /* sec 65 #7 */
-  Ac = 0.1858 * sin(degreesToRadians(Msol));                    /* sec 65 #8 */
-  A3 = 0.37 * sin(degreesToRadians(Msol));
-  Mmprime = Mm + Ev - Ac - A3;                                  /* sec 65 #9 */
-  Ec = 6.2886 * sin(degreesToRadians(Mmprime));                 /* sec 65 #10 */
-  A4 = 0.214 * sin(degreesToRadians(2 * Mmprime));              /* sec 65 #11 */
-  lprime = l + Ev + Ec - Ac + A4;                               /* sec 65 #12 */
-  V = 0.6583 * sin(degreesToRadians(2 * (lprime - LambdaSol))); /* sec 65 #13 */
-  ldprime = lprime + V;                                         /* sec 65 #14 */
-  D = ldprime - LambdaSol;                                      /* sec 67 #2 */
-  return(50.0 * (1 - cos(degreesToRadians(D))));                /* sec 67 #3 */
+    N = 360 * days / 365.242191;                                  /* sec 46 #3 */
+    adj360(&N);
+    Msol = N + EPSILONg - RHOg;                                   /* sec 46 #4 */
+    adj360(&Msol);
+    Ec = 360 / PI * ECCEN * sin(degreesToRadians(Msol));          /* sec 46 #5 */
+    LambdaSol = N + Ec + EPSILONg;                                /* sec 46 #6 */
+    adj360(&LambdaSol);
+    l = 13.1763966 * days + lzero;                                /* sec 65 #4 */
+    adj360(&l);
+    Mm = l - (0.1114041 * days) - Pzero;                          /* sec 65 #5 */
+    adj360(&Mm);
+    Nm = Nzero - (0.0529539 * days);                              /* sec 65 #6 */
+    adj360(&Nm);
+    Ev = 1.2739 * sin(degreesToRadians(2 * (l - LambdaSol) - Mm)); /* sec 65 #7 */
+    Ac = 0.1858 * sin(degreesToRadians(Msol));                    /* sec 65 #8 */
+    A3 = 0.37 * sin(degreesToRadians(Msol));
+    Mmprime = Mm + Ev - Ac - A3;                                  /* sec 65 #9 */
+    Ec = 6.2886 * sin(degreesToRadians(Mmprime));                 /* sec 65 #10 */
+    A4 = 0.214 * sin(degreesToRadians(2 * Mmprime));              /* sec 65 #11 */
+    lprime = l + Ev + Ec - Ac + A4;                               /* sec 65 #12 */
+    V = 0.6583 * sin(degreesToRadians(2 * (lprime - LambdaSol))); /* sec 65 #13 */
+    ldprime = lprime + V;                                         /* sec 65 #14 */
+    D = ldprime - LambdaSol;                                      /* sec 67 #2 */
+    return(50.0 * (1 - cos(degreesToRadians(D))));                /* sec 67 #3 */
 }
 
 /*
  * degreesToRadians --
  *	convert degrees to radians
  */
-double LunarPhase::degreesToRadians( double degree ) const
+double LunarPhase::degreesToRadians(double degree) const
 {
-  return( degree * PI / 180 );
+    return(degree * PI / 180);
 }
 
 /*
  * adj360 --
  *	adjust value so 0 <= degree <= 360
  */
-void LunarPhase::adj360( double *degree ) const
+void LunarPhase::adj360(double *degree) const
 {
-  for( ;; )
-    if( *degree < 0 )
-      *degree += 360;
-    else if( *degree > 360 )
-      *degree -= 360;
-    else
-      break;
+    for(;;)
+        if(*degree < 0)
+            *degree += 360;
+        else if(*degree > 360)
+            *degree -= 360;
+        else
+            break;
 }

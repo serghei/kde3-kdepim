@@ -26,17 +26,19 @@
 
 #include <xxport.h>
 
-class KDE2XXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class KDE2XXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    KDE2XXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "kde2"; }
+    QString identifier() const
+    {
+        return "kde2";
+    }
 
-  public slots:
-    KABC::AddresseeList importContacts( const QString &data ) const;
+public slots:
+    KABC::AddresseeList importContacts(const QString &data) const;
 };
 
 #endif

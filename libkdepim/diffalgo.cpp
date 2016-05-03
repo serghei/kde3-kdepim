@@ -25,61 +25,61 @@ using namespace KPIM;
 
 void DiffAlgo::begin()
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->begin();
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->begin();
 }
 
 void DiffAlgo::end()
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->end();
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->end();
 }
 
-void DiffAlgo::setLeftSourceTitle( const QString &title )
+void DiffAlgo::setLeftSourceTitle(const QString &title)
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->setLeftSourceTitle( title );
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->setLeftSourceTitle(title);
 }
 
-void DiffAlgo::setRightSourceTitle( const QString &title )
+void DiffAlgo::setRightSourceTitle(const QString &title)
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->setRightSourceTitle( title );
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->setRightSourceTitle(title);
 }
 
-void DiffAlgo::additionalLeftField( const QString &id, const QString &value )
+void DiffAlgo::additionalLeftField(const QString &id, const QString &value)
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->additionalLeftField( id, value );
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->additionalLeftField(id, value);
 }
 
-void DiffAlgo::additionalRightField( const QString &id, const QString &value )
+void DiffAlgo::additionalRightField(const QString &id, const QString &value)
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->additionalRightField( id, value );
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->additionalRightField(id, value);
 }
 
-void DiffAlgo::conflictField( const QString &id, const QString &leftValue,
-                                 const QString &rightValue )
+void DiffAlgo::conflictField(const QString &id, const QString &leftValue,
+                             const QString &rightValue)
 {
-  QValueList<DiffAlgoDisplay*>::Iterator it;
-  for ( it = mDisplays.begin(); it != mDisplays.end(); ++it )
-    (*it)->conflictField( id, leftValue, rightValue );
+    QValueList<DiffAlgoDisplay *>::Iterator it;
+    for(it = mDisplays.begin(); it != mDisplays.end(); ++it)
+        (*it)->conflictField(id, leftValue, rightValue);
 }
 
-void DiffAlgo::addDisplay( DiffAlgoDisplay *display )
+void DiffAlgo::addDisplay(DiffAlgoDisplay *display)
 {
-  if ( mDisplays.find( display ) == mDisplays.end() )
-    mDisplays.append( display );
+    if(mDisplays.find(display) == mDisplays.end())
+        mDisplays.append(display);
 }
 
-void DiffAlgo::removeDisplay( DiffAlgoDisplay *display )
+void DiffAlgo::removeDisplay(DiffAlgoDisplay *display)
 {
-  mDisplays.remove( display );
+    mDisplays.remove(display);
 }

@@ -19,10 +19,9 @@
 
 #include <kuniqueapplication.h>
 
-class KNApplication : public KUniqueApplication
-{
+class KNApplication : public KUniqueApplication {
     Q_OBJECT
-  public:
+public:
     KNApplication(): KUniqueApplication() { };
 
 

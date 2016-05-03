@@ -30,12 +30,10 @@
 
 class QString;
 
-namespace RSS
-{
+namespace RSS {
 
-class Category::CategoryPrivate : public Shared
-{
-    public:
+class Category::CategoryPrivate : public Shared {
+public:
     bool isNull;
     QString category;
     QString domain;
@@ -45,9 +43,9 @@ class Category::CategoryPrivate : public Shared
         return (isNull && other.isNull) || (category == other.category && domain == other.domain);
     }
 
-    static CategoryPrivate* copyOnWrite(CategoryPrivate* ep)
+    static CategoryPrivate *copyOnWrite(CategoryPrivate *ep)
     {
-        if (ep->count > 1)
+        if(ep->count > 1)
         {
             ep->deref();
             ep = new CategoryPrivate(*ep);
@@ -61,10 +59,10 @@ bool Category::isNull() const
     return d == 0;
 }
 
-Category Category::fromXML(const QDomElement& e)
+Category Category::fromXML(const QDomElement &e)
 {
     Category obj;
-    if (e.hasAttribute(QString::fromLatin1("domain")))
+    if(e.hasAttribute(QString::fromLatin1("domain")))
         obj.d->domain = e.attribute(QString::fromLatin1("domain"));
     obj.d->category = e.text();
     obj.d->isNull = false;
@@ -76,12 +74,12 @@ Category::Category() : d(new CategoryPrivate)
     d->isNull = true;
 }
 
-Category::Category(const Category& other) : d(0)
+Category::Category(const Category &other) : d(0)
 {
-     *this = other;
+    *this = other;
 }
 
-Category::Category(const QString& category, const QString& domain) : d(new CategoryPrivate)
+Category::Category(const QString &category, const QString &domain) : d(new CategoryPrivate)
 {
     d->isNull = false;
     d->category = category;
@@ -90,19 +88,19 @@ Category::Category(const QString& category, const QString& domain) : d(new Categ
 
 Category::~Category()
 {
-    if (d->deref())
+    if(d->deref())
     {
         delete d;
         d = 0;
     }
 }
 
-Category& Category::operator=(const Category& other)
+Category &Category::operator=(const Category &other)
 {
-    if (d != other.d)
+    if(d != other.d)
     {
         other.d->ref();
-        if (d && d->deref())
+        if(d && d->deref())
             delete d;
         d = other.d;
     }

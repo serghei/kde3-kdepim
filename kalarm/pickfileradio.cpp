@@ -30,69 +30,69 @@
 #include "pickfileradio.moc"
 
 
-PickFileRadio::PickFileRadio(QPushButton* button, LineEdit* edit, const QString& text, QButtonGroup* parent, const char* name)
-	: RadioButton(text, parent, name),
-	  mGroup(parent),
-	  mEdit(edit),
-	  mButton(button),
-	  mLastId(-1),     // set to an invalid value
-	  mRevertId(false)
+PickFileRadio::PickFileRadio(QPushButton *button, LineEdit *edit, const QString &text, QButtonGroup *parent, const char *name)
+    : RadioButton(text, parent, name),
+      mGroup(parent),
+      mEdit(edit),
+      mButton(button),
+      mLastId(-1),     // set to an invalid value
+      mRevertId(false)
 {
-	Q_ASSERT(parent);
-	Q_ASSERT(button);
-	mButton->setEnabled(false);
-	connect(mButton, SIGNAL(clicked()), SLOT(slotPickFile()));
-	if (mEdit)
-		mEdit->setEnabled(false);
-	connect(mGroup, SIGNAL(buttonSet(int)), SLOT(slotSelectionChanged(int)));
+    Q_ASSERT(parent);
+    Q_ASSERT(button);
+    mButton->setEnabled(false);
+    connect(mButton, SIGNAL(clicked()), SLOT(slotPickFile()));
+    if(mEdit)
+        mEdit->setEnabled(false);
+    connect(mGroup, SIGNAL(buttonSet(int)), SLOT(slotSelectionChanged(int)));
 }
 
-PickFileRadio::PickFileRadio(const QString& text, QButtonGroup* parent, const char* name)
-	: RadioButton(text, parent, name),
-	  mGroup(parent),
-	  mEdit(0),
-	  mButton(0),
-	  mLastId(-1),     // set to an invalid value
-	  mRevertId(false)
+PickFileRadio::PickFileRadio(const QString &text, QButtonGroup *parent, const char *name)
+    : RadioButton(text, parent, name),
+      mGroup(parent),
+      mEdit(0),
+      mButton(0),
+      mLastId(-1),     // set to an invalid value
+      mRevertId(false)
 {
-	Q_ASSERT(parent);
+    Q_ASSERT(parent);
 }
 
-void PickFileRadio::init(QPushButton* button, LineEdit* edit)
+void PickFileRadio::init(QPushButton *button, LineEdit *edit)
 {
-	Q_ASSERT(button);
-	mEdit   = edit;
-	mButton = button;
-	mButton->setEnabled(false);
-	connect(mButton, SIGNAL(clicked()), SLOT(slotPickFile()));
-	if (mEdit)
-		mEdit->setEnabled(false);
-	connect(mGroup, SIGNAL(buttonSet(int)), SLOT(slotSelectionChanged(int)));
-	setReadOnly(RadioButton::isReadOnly());
+    Q_ASSERT(button);
+    mEdit   = edit;
+    mButton = button;
+    mButton->setEnabled(false);
+    connect(mButton, SIGNAL(clicked()), SLOT(slotPickFile()));
+    if(mEdit)
+        mEdit->setEnabled(false);
+    connect(mGroup, SIGNAL(buttonSet(int)), SLOT(slotSelectionChanged(int)));
+    setReadOnly(RadioButton::isReadOnly());
 }
 
 void PickFileRadio::setReadOnly(bool ro)
 {
-	RadioButton::setReadOnly(ro);
-	if (mButton)
-	{
-		if (mEdit)
-			mEdit->setReadOnly(ro);
-		if (ro)
-			mButton->hide();
-		else
-			mButton->show();
-	}
+    RadioButton::setReadOnly(ro);
+    if(mButton)
+    {
+        if(mEdit)
+            mEdit->setReadOnly(ro);
+        if(ro)
+            mButton->hide();
+        else
+            mButton->show();
+    }
 }
 
-void PickFileRadio::setFile(const QString& file)
+void PickFileRadio::setFile(const QString &file)
 {
-	mFile = file;
+    mFile = file;
 }
 
 QString PickFileRadio::file() const
 {
-	return mEdit ? mEdit->text() : mFile;
+    return mEdit ? mEdit->text() : mFile;
 }
 
 /******************************************************************************
@@ -101,17 +101,17 @@ QString PickFileRadio::file() const
 */
 void PickFileRadio::setEnabled(bool enable)
 {
-	Q_ASSERT(mButton);
-	RadioButton::setEnabled(enable);
-	enable = enable  &&  mGroup->selected() == this;
-	if (enable)
-	{
-		if (!pickFileIfNone())
-			enable = false;    // revert to previously selected type
-	}
-	mButton->setEnabled(enable);
-	if (mEdit)
-		mEdit->setEnabled(enable);
+    Q_ASSERT(mButton);
+    RadioButton::setEnabled(enable);
+    enable = enable  &&  mGroup->selected() == this;
+    if(enable)
+    {
+        if(!pickFileIfNone())
+            enable = false;    // revert to previously selected type
+    }
+    mButton->setEnabled(enable);
+    if(mEdit)
+        mEdit->setEnabled(enable);
 }
 
 /******************************************************************************
@@ -119,24 +119,24 @@ void PickFileRadio::setEnabled(bool enable)
 */
 void PickFileRadio::slotSelectionChanged(int id)
 {
-	if (id == mLastId  ||  mRevertId)
-		return;
-	int radioId = mGroup->id(this);
-	if (mLastId == radioId)
-	{
-		mButton->setEnabled(false);
-		if (mEdit)
-			mEdit->setEnabled(false);
-	}
-	else if (id == radioId)
-	{
-		if (!pickFileIfNone())
-			return;    // revert to previously selected type
-		mButton->setEnabled(true);
-		if (mEdit)
-			mEdit->setEnabled(true);
-	}
-	mLastId = id;
+    if(id == mLastId  ||  mRevertId)
+        return;
+    int radioId = mGroup->id(this);
+    if(mLastId == radioId)
+    {
+        mButton->setEnabled(false);
+        if(mEdit)
+            mEdit->setEnabled(false);
+    }
+    else if(id == radioId)
+    {
+        if(!pickFileIfNone())
+            return;    // revert to previously selected type
+        mButton->setEnabled(true);
+        if(mEdit)
+            mEdit->setEnabled(true);
+    }
+    mLastId = id;
 }
 
 /******************************************************************************
@@ -144,12 +144,12 @@ void PickFileRadio::slotSelectionChanged(int id)
 */
 bool PickFileRadio::pickFileIfNone()
 {
-	if (mEdit)
-		mFile = mEdit->text();
-	if (!mFile.isEmpty())
-		return true;
-	slotPickFile();
-	return !mFile.isEmpty();
+    if(mEdit)
+        mFile = mEdit->text();
+    if(!mFile.isEmpty())
+        return true;
+    slotPickFile();
+    return !mFile.isEmpty();
 }
 
 /******************************************************************************
@@ -157,16 +157,16 @@ bool PickFileRadio::pickFileIfNone()
 */
 void PickFileRadio::slotPickFile()
 {
-	mFile = pickFile();
-	if (mEdit)
-		mEdit->setText(mFile);
-	if (mFile.isEmpty())
-	{
-		// No file is selected, so revert to the previous radio button selection.
-		// But wait a moment before setting the radio button, or it won't work.
-		mRevertId = true;   // prevent picker dialogue popping up twice
-		QTimer::singleShot(0, this, SLOT(setLastId()));
-	}
+    mFile = pickFile();
+    if(mEdit)
+        mEdit->setText(mFile);
+    if(mFile.isEmpty())
+    {
+        // No file is selected, so revert to the previous radio button selection.
+        // But wait a moment before setting the radio button, or it won't work.
+        mRevertId = true;   // prevent picker dialogue popping up twice
+        QTimer::singleShot(0, this, SLOT(setLastId()));
+    }
 }
 
 /******************************************************************************
@@ -174,9 +174,9 @@ void PickFileRadio::slotPickFile()
 */
 void PickFileRadio::setLastId()
 {
-	if (mLastId == -1)
-		setOn(false);    // we don't know the previous selection, so just turn this button off
-	else
-		mGroup->setButton(mLastId);
-	mRevertId = false;
+    if(mLastId == -1)
+        setOn(false);    // we don't know the previous selection, so just turn this button off
+    else
+        mGroup->setButton(mLastId);
+    mRevertId = false;
 }

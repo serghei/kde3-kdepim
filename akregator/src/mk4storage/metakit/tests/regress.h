@@ -8,7 +8,7 @@
 
 #define TraceAll  false
 
-  // default for dos and unix is to assume they don't support exceptions
+// default for dos and unix is to assume they don't support exceptions
 #if defined (_DOS) || defined (unix) || defined (__unix__) || \
     defined (__GNUC__) || defined (_WIN32_WCE)
 #if !defined (q4_NOTHROW)
@@ -17,7 +17,7 @@
 #endif
 
 #ifdef _WIN32_WCE
-int remove(const char*);
+int remove(const char *);
 #endif
 
 #if _MSC_VER == 800
@@ -25,7 +25,7 @@ int remove(const char*);
 
 // also no exceptions in MSVC 1.52 when used with a QuickWin target
 #if defined (_QWINVER) && !defined (q4_NOTHROW)
-#define q4_NOTHROW 1    
+#define q4_NOTHROW 1
 #endif
 #endif
 
@@ -33,10 +33,10 @@ int remove(const char*);
 #define try
 #define catch(x)  if (0)
 
-extern const char* msg;
-#endif     
+extern const char *msg;
+#endif
 
-#if defined (macintosh)  
+#if defined (macintosh)
 #define TESTDIR ":tests:"
 #define TEXTOUT "wt"
 #define LINESEP "\r"
@@ -109,11 +109,11 @@ extern const char* msg;
 
 typedef c4_BytesProp c4_MemoProp;
 
-extern void DumpFile(const char* in_, const char* out_);
-extern void Fail(const char* msg);
-extern void FailExpr(const char* expr);
-extern int StartTest(int, const char*, const char*);
-extern void CatchMsg(const char* msg);
+extern void DumpFile(const char *in_, const char *out_);
+extern void Fail(const char *msg);
+extern void FailExpr(const char *expr);
+extern int StartTest(int, const char *, const char *);
+extern void CatchMsg(const char *msg);
 extern void CatchOther();
 
 extern void TestBasics1();
@@ -133,12 +133,12 @@ extern void TestStores3();
 extern void TestStores4();
 extern void TestStores5();
 
-  //  The Borland C++ RTL does not want file handle objects to cross
-  //  DLL boundaries, so we use special fopen/fclose hooks in the DLL.
+//  The Borland C++ RTL does not want file handle objects to cross
+//  DLL boundaries, so we use special fopen/fclose hooks in the DLL.
 
 #if defined (__BORLANDC__) // this assumes Metakit is in a DLL!
-extern FILE* f4_FileOpenInDLL(const char*, const char*);
-extern int f4_FileCloseInDLL(FILE*);
+extern FILE *f4_FileOpenInDLL(const char *, const char *);
+extern int f4_FileCloseInDLL(FILE *);
 
 #define fopen f4_FileOpenInDLL
 #define fclose f4_FileCloseInDLL

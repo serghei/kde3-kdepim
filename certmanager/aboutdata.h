@@ -37,7 +37,7 @@
 
 class AboutData : public KAboutData {
 public:
-  AboutData();
+    AboutData();
 };
 
 #endif // __ABOUTDATA_H__

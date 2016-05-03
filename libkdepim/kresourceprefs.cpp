@@ -23,16 +23,16 @@
 
 #include "kresourceprefs.h"
 
-KResourcePrefs::KResourcePrefs( const QString &name )
-  : KConfigSkeleton( name )
+KResourcePrefs::KResourcePrefs(const QString &name)
+    : KConfigSkeleton(name)
 {
 }
 
-void KResourcePrefs::addGroupPrefix( const QString &prefix )
+void KResourcePrefs::addGroupPrefix(const QString &prefix)
 {
-  KConfigSkeletonItem::List itemList = items();
-  KConfigSkeletonItem::List::Iterator it;
+    KConfigSkeletonItem::List itemList = items();
+    KConfigSkeletonItem::List::Iterator it;
 
-  for ( it = itemList.begin(); it != itemList.end(); ++it )
-    (*it)->setGroup( prefix + ":" + (*it)->group() );
+    for(it = itemList.begin(); it != itemList.end(); ++it)
+        (*it)->setGroup(prefix + ":" + (*it)->group());
 }

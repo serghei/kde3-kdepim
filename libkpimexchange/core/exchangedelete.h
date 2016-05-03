@@ -35,23 +35,23 @@ class ExchangeAccount;
 
 class KDE_EXPORT ExchangeDelete : public QObject {
     Q_OBJECT
-  public:
-    ExchangeDelete( KCal::Event* event, ExchangeAccount* account, QWidget* window=0 );
+public:
+    ExchangeDelete(KCal::Event *event, ExchangeAccount *account, QWidget *window = 0);
     ~ExchangeDelete();
 
-  private slots:
-    void slotDeleteResult( KIO::Job * );
-    void slotFindUidResult( KIO::Job * );
+private slots:
+    void slotDeleteResult(KIO::Job *);
+    void slotFindUidResult(KIO::Job *);
 
-  signals:
-    void finished( ExchangeDelete* worker, int result, const QString& moreInfo );
+signals:
+    void finished(ExchangeDelete *worker, int result, const QString &moreInfo);
 
-  private:
-    void findUidSingleMaster( QString const& uid );
-    void startDelete( const KURL& url );
-    
-    ExchangeAccount* mAccount;
-    QWidget* mWindow;
+private:
+    void findUidSingleMaster(QString const &uid);
+    void startDelete(const KURL &url);
+
+    ExchangeAccount *mAccount;
+    QWidget *mWindow;
 };
 
 }

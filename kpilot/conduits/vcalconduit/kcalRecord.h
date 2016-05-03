@@ -30,19 +30,17 @@
 
 class PilotRecordBase;
 
-namespace KCal
-{
-	class Incidence;
+namespace KCal {
+class Incidence;
 }
 
-namespace KCalSync
-{
-	void setCategory(PilotRecordBase *de,
-		const KCal::Incidence *incidence,
-		const CategoryAppInfo &info);
-	void setCategory(KCal::Incidence *e,
-		const PilotRecordBase *de,
-		const CategoryAppInfo &info);
+namespace KCalSync {
+void setCategory(PilotRecordBase *de,
+                 const KCal::Incidence *incidence,
+                 const CategoryAppInfo &info);
+void setCategory(KCal::Incidence *e,
+                 const PilotRecordBase *de,
+                 const CategoryAppInfo &info);
 }
 
 #endif

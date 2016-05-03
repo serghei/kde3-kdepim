@@ -31,34 +31,45 @@
 
 namespace KOrg {
 
-class KDE_EXPORT CellItem
-{
-  public:
+class KDE_EXPORT CellItem {
+public:
     CellItem()
-      : mSubCells( 0 ), mSubCell( -1 )
+        : mSubCells(0), mSubCell(-1)
     {
     }
-  
-    void setSubCells( int v ) { mSubCells = v; }
-    int subCells() const { return mSubCells; }
-    
-    void setSubCell( int v ) { mSubCell = v; }
-    int subCell() const { return mSubCell; }
-    
-    virtual bool overlaps( CellItem *other ) const = 0;
+
+    void setSubCells(int v)
+    {
+        mSubCells = v;
+    }
+    int subCells() const
+    {
+        return mSubCells;
+    }
+
+    void setSubCell(int v)
+    {
+        mSubCell = v;
+    }
+    int subCell() const
+    {
+        return mSubCell;
+    }
+
+    virtual bool overlaps(CellItem *other) const = 0;
 
     virtual QString label() const;
 
     /**
       Place item \arg placeItem into stripe containing items \arg cells in a
       way that items don't overlap.
-      
+
       \return Placed items
     */
-    static QPtrList<CellItem> placeItem( QPtrList<CellItem> cells,
-                                         CellItem *placeItem );
-    
-  private:
+    static QPtrList<CellItem> placeItem(QPtrList<CellItem> cells,
+                                        CellItem *placeItem);
+
+private:
     int mSubCells;
     int mSubCell;
 };

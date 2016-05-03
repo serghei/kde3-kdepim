@@ -20,18 +20,18 @@
 
 #include "dockeditem.h"
 
-DockedContainer::DockedContainer( QObject * parent, const char * name )
-	: BoxContainer( parent, name )
+DockedContainer::DockedContainer(QObject *parent, const char *name)
+    : BoxContainer(parent, name)
 {
-}	
+}
 
 DockedContainer::~DockedContainer()
 {
 }
 
-BoxContainerItem* DockedContainer::newBoxInstance() const
+BoxContainerItem *DockedContainer::newBoxInstance() const
 {
-	return new DockedItem( 0, "foobar" );
+    return new DockedItem(0, "foobar");
 }
 
 #include "dockedcontainer.moc"

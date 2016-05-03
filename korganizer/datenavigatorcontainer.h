@@ -29,33 +29,32 @@
 
 class KDateNavigator;
 
-class DateNavigatorContainer: public QFrame
-{
+class DateNavigatorContainer: public QFrame {
     Q_OBJECT
-  public:
-    DateNavigatorContainer( QWidget *parent = 0, const char *name = 0 );
+public:
+    DateNavigatorContainer(QWidget *parent = 0, const char *name = 0);
     ~DateNavigatorContainer();
 
     /**
       Associate date navigator with a calendar. It is used by KODayMatrix.
     */
-    void setCalendar( Calendar * );
+    void setCalendar(Calendar *);
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-  public slots:
-    void selectDates( const KCal::DateList & );
+public slots:
+    void selectDates(const KCal::DateList &);
     void updateView();
     void updateConfig();
     void updateDayMatrix();
     void updateToday();
 
-  signals:
-    void datesSelected( const KCal::DateList & );
-    void incidenceDropped( Incidence *, const QDate & );
-    void incidenceDroppedMove( Incidence *, const QDate & );
-    void weekClicked( const QDate &);
+signals:
+    void datesSelected(const KCal::DateList &);
+    void incidenceDropped(Incidence *, const QDate &);
+    void incidenceDroppedMove(Incidence *, const QDate &);
+    void weekClicked(const QDate &);
 
     void goPrevious();
     void goNext();
@@ -65,20 +64,20 @@ class DateNavigatorContainer: public QFrame
     void goNextYear();
     void goPrevYear();
 
-    void goMonth( int month );
+    void goMonth(int month);
 
-  protected:
-    void resizeEvent( QResizeEvent * );
-    void setBaseDates( const QDate &start );
-    void connectNavigatorView( KDateNavigator *v );
-  protected slots:
+protected:
+    void resizeEvent(QResizeEvent *);
+    void setBaseDates(const QDate &start);
+    void connectNavigatorView(KDateNavigator *v);
+protected slots:
     /** Resizes all the child elements after the size of the widget
         changed. This slot is called by a QTimer::singleShot from
         resizeEvent. This makes the UI seem more responsive, since
         the other parts of the splitter are resized earlier now */
     void resizeAllContents();
 
-  private:
+private:
     KDateNavigator *mNavigatorView;
 
     KCal::Calendar *mCalendar;

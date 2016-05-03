@@ -39,20 +39,19 @@ class ResourceCachedSaveConfig;
 
 /**
   Configuration widget for remote resource.
-  
+
   @see ResourceRemote
 */
-class KDE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget
-{ 
+class KDE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget {
     Q_OBJECT
-  public:
-    ResourceRemoteConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceRemoteConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void loadSettings( KRES::Resource *resource );
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void loadSettings(KRES::Resource *resource);
+    virtual void saveSettings(KRES::Resource *resource);
 
-  private:
+private:
     KURLRequester *mDownloadUrl;
     KURLRequester *mUploadUrl;
 

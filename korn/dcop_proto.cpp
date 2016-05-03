@@ -29,34 +29,34 @@
 #include <qptrlist.h>
 #include <qptrvector.h>
 
-KMailDrop* DCOP_Protocol::createMaildrop( KConfigGroup* ) const
+KMailDrop *DCOP_Protocol::createMaildrop(KConfigGroup *) const
 {
-	return new DCOPDrop();
+    return new DCOPDrop();
 }
 
-QMap< QString, QString > * DCOP_Protocol::createConfig( KConfigGroup* config, const QString& ) const
+QMap< QString, QString > *DCOP_Protocol::createConfig(KConfigGroup *config, const QString &) const
 {
-	QMap< QString, QString > *result = new QMap< QString, QString >;
+    QMap< QString, QString > *result = new QMap< QString, QString >;
 
-	result->insert( "dcopname", config->readEntry( "dcopname", "korn_dcop" ) );
+    result->insert("dcopname", config->readEntry("dcopname", "korn_dcop"));
 
-	return result;
+    return result;
 }
 
-void DCOP_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
+void DCOP_Protocol::configFillGroupBoxes(QStringList *groupBoxes) const
 {
-	groupBoxes->append( "DCOP" );
+    groupBoxes->append("DCOP");
 }
 
-void DCOP_Protocol::configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* result ) const
+void DCOP_Protocol::configFields(QPtrVector< QWidget > *vector, const QObject *, QPtrList< AccountInput > *result) const
 {
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "DCOP name" ), TextInput::text, "korn_dcop", "dcopname" ) );
+    result->append(new TextInput((QWidget *)vector->at(0), i18n("DCOP name"), TextInput::text, "korn_dcop", "dcopname"));
 }
 
-void DCOP_Protocol::readEntries( QMap< QString, QString >* ) const
+void DCOP_Protocol::readEntries(QMap< QString, QString > *) const
 {
 }
 
-void DCOP_Protocol::writeEntries( QMap< QString, QString >* ) const
+void DCOP_Protocol::writeEntries(QMap< QString, QString > *) const
 {
 }

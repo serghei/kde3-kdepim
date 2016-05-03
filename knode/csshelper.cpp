@@ -17,26 +17,26 @@
 #include "knglobals.h"
 
 
-KNode::CSSHelper::CSSHelper( const QPaintDeviceMetrics &pdm ) :
-  KPIM::CSSHelper( pdm )
+KNode::CSSHelper::CSSHelper(const QPaintDeviceMetrics &pdm) :
+    KPIM::CSSHelper(pdm)
 {
-  KNConfig::Appearance *app = knGlobals.configManager()->appearance();
+    KNConfig::Appearance *app = knGlobals.configManager()->appearance();
 
-  mForegroundColor = app->textColor();
-  mLinkColor = app->linkColor();
-  mVisitedLinkColor = app->linkColor();
-  mBackgroundColor = app->backgroundColor();
-  for ( int i = 0; i < 3; ++i )
-    mQuoteColor[i] = app->quoteColor( i );
+    mForegroundColor = app->textColor();
+    mLinkColor = app->linkColor();
+    mVisitedLinkColor = app->linkColor();
+    mBackgroundColor = app->backgroundColor();
+    for(int i = 0; i < 3; ++i)
+        mQuoteColor[i] = app->quoteColor(i);
 
-  cHtmlWarning = app->htmlWarningColor();
-  cPgpOk1H  = app->signOkKeyOkColor();
-  cPgpOk0H  = app->signOkKeyBadColor();
-  cPgpWarnH = app->signWarnColor();
-  cPgpErrH  = app->signErrColor();
+    cHtmlWarning = app->htmlWarningColor();
+    cPgpOk1H  = app->signOkKeyOkColor();
+    cPgpOk0H  = app->signOkKeyBadColor();
+    cPgpWarnH = app->signWarnColor();
+    cPgpErrH  = app->signErrColor();
 
-  mBodyFont = mPrintFont = app->articleFont();
-  mFixedFont = mFixedPrintFont = app->articleFixedFont();
+    mBodyFont = mPrintFont = app->articleFont();
+    mFixedFont = mFixedPrintFont = app->articleFixedFont();
 
-  recalculatePGPColors();
+    recalculatePGPColors();
 }

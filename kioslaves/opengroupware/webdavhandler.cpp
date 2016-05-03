@@ -37,45 +37,46 @@ WebdavHandler::WebdavHandler()
 }
 
 
-QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
-                                       const QString &tag )
+QDomElement WebdavHandler::addElement(QDomDocument &doc, QDomNode &node,
+                                      const QString &tag)
 {
-  QDomElement el = doc.createElement( tag );
-  node.appendChild( el );
-  return el;
+    QDomElement el = doc.createElement(tag);
+    node.appendChild(el);
+    return el;
 }
 
-QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
-                                          const QString &tag )
+QDomElement WebdavHandler::addDavElement(QDomDocument &doc, QDomNode &node,
+        const QString &tag)
 {
-  QDomElement el = doc.createElementNS( "DAV", tag );
-  node.appendChild( el );
-  return el;
+    QDomElement el = doc.createElementNS("DAV", tag);
+    node.appendChild(el);
+    return el;
 }
 
-QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
-                                           const QString &tag,
-                                           const QString &text )
+QDomElement WebdavHandler::addSloxElement(QDomDocument &doc, QDomNode &node,
+        const QString &tag,
+        const QString &text)
 {
-  QDomElement el = doc.createElementNS( "SLOX", tag );
-  if ( !text.isEmpty() ) {
-    QDomText textnode = doc.createTextNode( text );
-    el.appendChild( textnode );
-  }
-  node.appendChild( el );
-  return el;
+    QDomElement el = doc.createElementNS("SLOX", tag);
+    if(!text.isEmpty())
+    {
+        QDomText textnode = doc.createTextNode(text);
+        el.appendChild(textnode);
+    }
+    node.appendChild(el);
+    return el;
 }
 
 QDomDocument WebdavHandler::createAllPropsRequest()
 {
-  QDomDocument doc;
+    QDomDocument doc;
 
-  QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
-  QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
-  WebdavHandler::addDavElement(  doc, prop, "getcontentlength");
-  WebdavHandler::addDavElement(  doc, prop, "getlastmodified" );
-  WebdavHandler::addDavElement(  doc, prop, "displayname" );
-  WebdavHandler::addDavElement(  doc, prop, "resourcetype" );
-  prop.appendChild( doc.createElementNS( "http://apache.org/dav/props/", "executable" ) );
-  return doc;
+    QDomElement root = WebdavHandler::addDavElement(doc, doc, "propfind");
+    QDomElement prop = WebdavHandler::addDavElement(doc, root, "prop");
+    WebdavHandler::addDavElement(doc, prop, "getcontentlength");
+    WebdavHandler::addDavElement(doc, prop, "getlastmodified");
+    WebdavHandler::addDavElement(doc, prop, "displayname");
+    WebdavHandler::addDavElement(doc, prop, "resourcetype");
+    prop.appendChild(doc.createElementNS("http://apache.org/dav/props/", "executable"));
+    return doc;
 }

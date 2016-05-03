@@ -20,6 +20,6 @@
 
 class QIODevice;
 
-int lzfu_decompress( QIODevice *input, QIODevice *output );
+int lzfu_decompress(QIODevice *input, QIODevice *output);
 
 #endif /* LZFU_H */

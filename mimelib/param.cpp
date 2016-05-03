@@ -32,20 +32,22 @@
 #include <mimelib/token.h>
 
 
-const char* const DwParameter::sClassName = "DwParameter";
+const char *const DwParameter::sClassName = "DwParameter";
 
 
-DwParameter* (*DwParameter::sNewParameter)(const DwString&,
-    DwMessageComponent*) = 0;
+DwParameter *(*DwParameter::sNewParameter)(const DwString &,
+        DwMessageComponent *) = 0;
 
 
-DwParameter* DwParameter::NewParameter(const DwString& aStr,
-    DwMessageComponent* aParent)
+DwParameter *DwParameter::NewParameter(const DwString &aStr,
+                                       DwMessageComponent *aParent)
 {
-    if (sNewParameter) {
+    if(sNewParameter)
+    {
         return sNewParameter(aStr, aParent);
     }
-    else {
+    else
+    {
         return new DwParameter(aStr, aParent);
     }
 }
@@ -59,11 +61,11 @@ DwParameter::DwParameter()
 }
 
 
-DwParameter::DwParameter(const DwParameter& aParam)
-  : DwMessageComponent(aParam),
-    mAttribute(aParam.mAttribute),
-    mValue(aParam.mValue),
-    mForceNoQuotes(aParam.mForceNoQuotes)
+DwParameter::DwParameter(const DwParameter &aParam)
+    : DwMessageComponent(aParam),
+      mAttribute(aParam.mAttribute),
+      mValue(aParam.mValue),
+      mForceNoQuotes(aParam.mForceNoQuotes)
 {
     mNext = 0;
     mClassId = kCidParameter;
@@ -71,7 +73,7 @@ DwParameter::DwParameter(const DwParameter& aParam)
 }
 
 
-DwParameter::DwParameter(const DwString& aStr, DwMessageComponent* aParent)
+DwParameter::DwParameter(const DwString &aStr, DwMessageComponent *aParent)
     : DwMessageComponent(aStr, aParent)
 {
     mNext = 0;
@@ -86,9 +88,9 @@ DwParameter::~DwParameter()
 }
 
 
-const DwParameter& DwParameter::operator = (const DwParameter& aParam)
+const DwParameter &DwParameter::operator = (const DwParameter &aParam)
 {
-    if (this == &aParam) return *this;
+    if(this == &aParam) return *this;
     DwMessageComponent::operator = (aParam);
     mAttribute = aParam.mAttribute;
     mValue     = aParam.mValue;
@@ -98,26 +100,26 @@ const DwParameter& DwParameter::operator = (const DwParameter& aParam)
 }
 
 
-const DwString& DwParameter::Attribute() const
+const DwString &DwParameter::Attribute() const
 {
     return mAttribute;
 }
 
 
-void DwParameter::SetAttribute(const DwString& aAttribute)
+void DwParameter::SetAttribute(const DwString &aAttribute)
 {
     mAttribute = aAttribute;
     SetModified();
 }
 
 
-const DwString& DwParameter::Value() const
+const DwString &DwParameter::Value() const
 {
     return mValue;
 }
 
 
-void DwParameter::SetValue(const DwString& aValue, bool forceNoQuote)
+void DwParameter::SetValue(const DwString &aValue, bool forceNoQuote)
 {
     mValue = aValue;
     mForceNoQuotes = forceNoQuote;
@@ -125,13 +127,13 @@ void DwParameter::SetValue(const DwString& aValue, bool forceNoQuote)
 }
 
 
-DwParameter* DwParameter::Next() const
+DwParameter *DwParameter::Next() const
 {
     return mNext;
 }
 
 
-void DwParameter::SetNext(DwParameter* aParam)
+void DwParameter::SetNext(DwParameter *aParam)
 {
     mNext = aParam;
 }
@@ -141,12 +143,14 @@ void DwParameter::Parse()
 {
     mIsModified = 0;
     mAttribute = mValue = "";
-    if (mString.length() == 0) return;
+    if(mString.length() == 0) return;
     DwRfc1521Tokenizer tokenizer(mString);
     // Get attribute
     int found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkToken) {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkToken)
+        {
             mAttribute = tokenizer.Token();
             found = 1;
         }
@@ -154,21 +158,26 @@ void DwParameter::Parse()
     }
     // Get '='
     found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkTspecial
-            && tokenizer.Token()[0] == '=') {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkTspecial
+                && tokenizer.Token()[0] == '=')
+        {
             found = 1;
         }
         ++tokenizer;
     }
     // Get value
     found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkToken) {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkToken)
+        {
             mValue = tokenizer.Token();
             found = 1;
         }
-        else if (tokenizer.Type() == eTkQuotedString) {
+        else if(tokenizer.Type() == eTkQuotedString)
+        {
             tokenizer.StripDelimiters();
             mValue = tokenizer.Token();
             found = 1;
@@ -179,12 +188,14 @@ void DwParameter::Parse()
     // the boundary string.  This is incorrect, but we will try to detect
     // it and work with it.
     //
-	// If the first character and last character of the boundary string
+    // If the first character and last character of the boundary string
     // are single quote, strip them off.
-    if (DwStrcasecmp(mAttribute, "boundary") == 0) {
+    if(DwStrcasecmp(mAttribute, "boundary") == 0)
+    {
         size_t len = mValue.length();
-        if (len > 2 && mValue[0] == '\'' && mValue[len-1] == '\'') {
-            mValue = mValue.substr(1, len-2);
+        if(len > 2 && mValue[0] == '\'' && mValue[len - 1] == '\'')
+        {
+            mValue = mValue.substr(1, len - 2);
         }
     }
 }
@@ -192,54 +203,56 @@ void DwParameter::Parse()
 
 void DwParameter::Assemble()
 {
-    if (mIsModified == 0) return;
+    if(mIsModified == 0) return;
     mString = "";
     mString += mAttribute;
     bool noQuotes = mForceNoQuotes || (DwStrcasecmp(mAttribute, "micalg") == 0);
-    if( noQuotes )
-      mString += "=";
+    if(noQuotes)
+        mString += "=";
     else
-      mString += "=\"";
+        mString += "=\"";
     mString += mValue;
-    if( !noQuotes )
-      mString += "\"";
+    if(!noQuotes)
+        mString += "\"";
     mIsModified = 0;
 }
 
 
-DwMessageComponent* DwParameter::Clone() const
+DwMessageComponent *DwParameter::Clone() const
 {
     return new DwParameter(*this);
 }
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwParameter::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwParameter::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "--------------- Debug info for DwParameter class ---------------\n";
+          "--------------- Debug info for DwParameter class ---------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwParameter::PrintDebugInfo(std::ostream& , int ) const {}
+void DwParameter::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwParameter::_PrintDebugInfo(std::ostream& aStrm) const
+void DwParameter::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwMessageComponent::_PrintDebugInfo(aStrm);
     aStrm << "Attribute:        " << mAttribute << '\n';
     aStrm << "Value:            " << mValue << '\n';
-    if (mNext) {
+    if(mNext)
+    {
         aStrm << "Next parameter:   " << mNext->ObjectId() << '\n';
     }
-    else {
+    else
+    {
         aStrm << "Next parameter:   " << "(none)\n";
     }
 }
 #else
-void DwParameter::_PrintDebugInfo(std::ostream& ) const {}
+void DwParameter::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 

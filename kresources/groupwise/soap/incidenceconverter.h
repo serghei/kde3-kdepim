@@ -30,41 +30,40 @@
 
 class ngwt__Recipient;
 
-class IncidenceConverter : public GWConverter
-{
-  public:
-    IncidenceConverter( struct soap* );
+class IncidenceConverter : public GWConverter {
+public:
+    IncidenceConverter(struct soap *);
 
-    void setFrom( const QString &name, const QString &email,
-      const QString &uuid );
+    void setFrom(const QString &name, const QString &email,
+                 const QString &uuid);
 
-    KCal::Event* convertFromAppointment( ngwt__Appointment* );
-    ngwt__Appointment* convertToAppointment( KCal::Event* );
+    KCal::Event *convertFromAppointment(ngwt__Appointment *);
+    ngwt__Appointment *convertToAppointment(KCal::Event *);
 
-    KCal::Todo* convertFromTask( ngwt__Task* );
-    ngwt__Task* convertToTask( KCal::Todo* );
+    KCal::Todo *convertFromTask(ngwt__Task *);
+    ngwt__Task *convertToTask(KCal::Todo *);
 
-    KCal::Journal* convertFromNote( ngwt__Note* note);
-    ngwt__Note* convertToNote( KCal::Journal* journal );
+    KCal::Journal *convertFromNote(ngwt__Note *note);
+    ngwt__Note *convertToNote(KCal::Journal *journal);
 
-  private:
-    bool convertToCalendarItem( KCal::Incidence*, ngwt__CalendarItem* );
-    bool convertFromCalendarItem( ngwt__CalendarItem*, KCal::Incidence* );
+private:
+    bool convertToCalendarItem(KCal::Incidence *, ngwt__CalendarItem *);
+    bool convertFromCalendarItem(ngwt__CalendarItem *, KCal::Incidence *);
 
-    void getItemDescription( ngwt__CalendarItem*, KCal::Incidence* );
-    void setItemDescription( KCal::Incidence*, ngwt__CalendarItem* );
+    void getItemDescription(ngwt__CalendarItem *, KCal::Incidence *);
+    void setItemDescription(KCal::Incidence *, ngwt__CalendarItem *);
 
-    void getAttendees( ngwt__CalendarItem*, KCal::Incidence* );
-    void setAttendees( KCal::Incidence *, ngwt__CalendarItem * );
+    void getAttendees(ngwt__CalendarItem *, KCal::Incidence *);
+    void setAttendees(KCal::Incidence *, ngwt__CalendarItem *);
 
-    void getRecurrence( ngwt__CalendarItem*, KCal::Incidence* );
-    void setRecurrence( KCal::Incidence *, ngwt__CalendarItem * );
+    void getRecurrence(ngwt__CalendarItem *, KCal::Incidence *);
+    void setRecurrence(KCal::Incidence *, ngwt__CalendarItem *);
 
     // used for converting weekly recurrences from GW
-//     QBitArray getDayBitArray( ngwt__DayOfWeekList * );
+    //     QBitArray getDayBitArray( ngwt__DayOfWeekList * );
 
-    ngwt__Recipient *createRecipient( const QString &name,
-      const QString &email, const QString &uuid = QString::null );
+    ngwt__Recipient *createRecipient(const QString &name,
+                                     const QString &email, const QString &uuid = QString::null);
 
     QString mTimezone;
 

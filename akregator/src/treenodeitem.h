@@ -38,36 +38,35 @@ class TreeNode;
 /**
     abstract base class for all items in the feeds tree
 */
-class TreeNodeItem : public KListViewItem
-{
-    
+class TreeNodeItem : public KListViewItem {
+
 public:
-     
-    TreeNodeItem(FolderItem* parent, TreeNode* node);
-    TreeNodeItem(FolderItem* parent, TreeNodeItem* after, TreeNode* node);
-    TreeNodeItem(KListView* parent, TreeNode* node);
-    TreeNodeItem(KListView* parent, TreeNodeItem* after, TreeNode* node);
+
+    TreeNodeItem(FolderItem *parent, TreeNode *node);
+    TreeNodeItem(FolderItem *parent, TreeNodeItem *after, TreeNode *node);
+    TreeNodeItem(KListView *parent, TreeNode *node);
+    TreeNodeItem(KListView *parent, TreeNodeItem *after, TreeNode *node);
     virtual ~TreeNodeItem();
-    virtual TreeNode* node();
-    
+    virtual TreeNode *node();
+
     virtual void nodeChanged();
 
     virtual QString toolTip() const;
-    virtual TreeNodeItem* firstChild() const;
-    virtual TreeNodeItem* nextSibling() const;
-    virtual FolderItem* parent() const;
+    virtual TreeNodeItem *firstChild() const;
+    virtual TreeNodeItem *nextSibling() const;
+    virtual FolderItem *parent() const;
 
-    virtual void showContextMenu(const QPoint& p) = 0;
+    virtual void showContextMenu(const QPoint &p) = 0;
 
-    protected:
-    
-    TreeNode* m_node;
-    
-    virtual void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int align );
+protected:
 
-    private:
+    TreeNode *m_node;
 
-    void initialize(TreeNode* node);
+    virtual void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int align);
+
+private:
+
+    void initialize(TreeNode *node);
 };
 
 }

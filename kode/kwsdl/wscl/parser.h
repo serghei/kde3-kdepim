@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE WSCL Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -26,18 +26,17 @@
 
 namespace WSCL {
 
-class Parser
-{
-  public:
+class Parser {
+public:
     Parser();
     ~Parser();
 
-    void parse( const QString &xml );
+    void parse(const QString &xml);
     void reset();
 
     Conversation conversation() const;
 
-  private:
+private:
     Conversation mConversation;
 };
 

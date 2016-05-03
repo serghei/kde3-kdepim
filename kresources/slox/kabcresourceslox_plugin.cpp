@@ -28,12 +28,11 @@ using namespace KABC;
 
 typedef KRES::PluginFactory< ResourceSlox, ResourceSloxConfig > SloxFactory;
 
-extern "C"
-{
-  void *init_kabc_slox()
-  {
-    KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kabc_slox" );
-    return new SloxFactory;
-  }
+extern "C" {
+    void *init_kabc_slox()
+    {
+        KGlobal::locale()->insertCatalogue("libkcal");
+        KGlobal::locale()->insertCatalogue("kabc_slox");
+        return new SloxFactory;
+    }
 }

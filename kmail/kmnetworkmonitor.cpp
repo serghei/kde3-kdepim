@@ -49,7 +49,8 @@ protected slots:
     {
         // connect to DBUS
         QDBusConnection dbus = QDBusConnection::systemBus();
-        if(!dbus.isConnected()) {
+        if(!dbus.isConnected())
+        {
             kdDebug() << "Unable to connect to DBus: " << dbus.lastError().message() << endl;
             return;
         }
@@ -57,7 +58,8 @@ protected slots:
 
         // check for current status
         int rc = sendWithAsyncReply("state", QValueList<QDBusData>());
-        if(0 == rc) {
+        if(0 == rc)
+        {
             kdDebug() << "Unable to send \"state\" command to DBus" << endl;
             return;
         }
@@ -80,15 +82,17 @@ protected slots:
         bool ok;
         Q_UINT32 state = message[0].toUInt32(&ok);
 
-        if(!ok) {
+        if(!ok)
+        {
             kdDebug() << "KMNetworkMonitor: received unexpected type for state (" << message[0].typeName() << ")" << endl;
             return;
         }
 
         int currStatus = (50 < state ? 1 : 0);
 
-        if(lastStatus != currStatus) {
-            emit static_cast<KMNetworkMonitor*>(parent())->stateChanged(1 == currStatus);
+        if(lastStatus != currStatus)
+        {
+            emit static_cast<KMNetworkMonitor *>(parent())->stateChanged(1 == currStatus);
             lastStatus = currStatus;
         }
     }

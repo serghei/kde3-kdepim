@@ -38,37 +38,35 @@ class QPoint;
 class QPushButton;
 
 namespace KABC {
-    class DistributionListManager;
+class DistributionListManager;
 }
 
 namespace KAB {
 namespace DistributionListNg {
 
-class ListBox : public KListBox
-{
+class ListBox : public KListBox {
     Q_OBJECT
 public:
-    ListBox( QWidget* parent = 0 );
+    ListBox(QWidget *parent = 0);
 
 signals:
 
-    void dropped( const QString &listName, const KABC::Addressee::List &addressees );
+    void dropped(const QString &listName, const KABC::Addressee::List &addressees);
 
 protected:
     //override
-    void dragEnterEvent( QDragEnterEvent *event );
+    void dragEnterEvent(QDragEnterEvent *event);
     //override
-    void dragMoveEvent( QDragMoveEvent *event );
+    void dragMoveEvent(QDragMoveEvent *event);
     //override
-    void dropEvent( QDropEvent *event );
+    void dropEvent(QDropEvent *event);
 };
 
-class MainWidget : public KAB::ExtensionWidget
-{
+class MainWidget : public KAB::ExtensionWidget {
     Q_OBJECT
 
 public:
-    explicit MainWidget( KAB::Core *core, QWidget *parent = 0, const char *name = 0 );
+    explicit MainWidget(KAB::Core *core, QWidget *parent = 0, const char *name = 0);
 
     //impl
     QString title() const;
@@ -78,17 +76,17 @@ public:
 
 
 private:
-    void changed( const KABC::Addressee& );
+    void changed(const KABC::Addressee &);
 
 private slots:
 
     void deleteSelectedDistributionList();
     void editSelectedDistributionList();
 
-    void contextMenuRequested( QListBoxItem *item, const QPoint &point );
+    void contextMenuRequested(QListBoxItem *item, const QPoint &point);
     void updateEntries();
-    void itemSelected( int index );
-    void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees );
+    void itemSelected(int index);
+    void contactsDropped(const QString &listName, const KABC::Addressee::List &addressees);
 
 private:
     ListBox *mListBox;

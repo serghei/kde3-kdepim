@@ -30,28 +30,28 @@
 
 static const KCmdLineOptions options[] =
 {
-  {"verbose", "Verbose output", 0},
-  KCmdLineLastOption
+    {"verbose", "Verbose output", 0},
+    KCmdLineLastOption
 };
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KLocale::setMainCatalogue( "kdepimwizards" );
+    KLocale::setMainCatalogue("kdepimwizards");
 
-  KAboutData aboutData( "scalixwizard", I18N_NOOP( "Scalix Configuration Wizard" ), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+    KAboutData aboutData("scalixwizard", I18N_NOOP("Scalix Configuration Wizard"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+    KGlobal::locale()->insertCatalogue("libkdepim");
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  bool verbose = false;
-  if ( args->isSet( "verbose" ) ) verbose = true;
+    bool verbose = false;
+    if(args->isSet("verbose")) verbose = true;
 
-  ScalixWizard wizard;
+    ScalixWizard wizard;
 
-  wizard.exec();
+    wizard.exec();
 }

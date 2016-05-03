@@ -25,14 +25,13 @@
 
 namespace KCal {
 
-class KDE_EXPORT ResourceBloggingConfig : public ResourceGroupwareBaseConfig
-{
-  Q_OBJECT
-  public:
-    ResourceBloggingConfig( QWidget *parent = 0, const char *name = 0 );
+class KDE_EXPORT ResourceBloggingConfig : public ResourceGroupwareBaseConfig {
+    Q_OBJECT
+public:
+    ResourceBloggingConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    virtual void saveSettings( KRES::Resource *resource );
+public slots:
+    virtual void saveSettings(KRES::Resource *resource);
 };
 
 }

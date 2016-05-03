@@ -36,12 +36,11 @@ namespace KAB {
 class Core;
 class ConfigureWidget;
 
-class KDE_EXPORT ExtensionWidget : public QWidget
-{
-  Q_OBJECT
+class KDE_EXPORT ExtensionWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    ExtensionWidget( Core *core, QWidget *parent, const char *name = 0 );
+public:
+    ExtensionWidget(Core *core, QWidget *parent, const char *name = 0);
     ~ExtensionWidget();
 
     /**
@@ -77,29 +76,31 @@ class KDE_EXPORT ExtensionWidget : public QWidget
      */
     virtual QString identifier() const = 0;
 
-  signals:
-    void modified( const KABC::Addressee::List &list );
-    void deleted( const QStringList& uidList );
+signals:
+    void modified(const KABC::Addressee::List &list);
+    void deleted(const QStringList &uidList);
 
-  private:
+private:
     KAB::Core *mCore;
 
     class ExtensionWidgetPrivate;
     ExtensionWidgetPrivate *d;
 };
 
-class ExtensionFactory : public KLibFactory
-{
-  public:
-    virtual ExtensionWidget *extension( KAB::Core *core, QWidget *parent,
-                                        const char *name = 0 ) = 0;
+class ExtensionFactory : public KLibFactory {
+public:
+    virtual ExtensionWidget *extension(KAB::Core *core, QWidget *parent,
+                                       const char *name = 0) = 0;
 
-    virtual ConfigureWidget *configureWidget( QWidget*, const char* = 0 )
+    virtual ConfigureWidget *configureWidget(QWidget *, const char * = 0)
     {
-      return 0;
+        return 0;
     }
 
-    virtual bool configureWidgetAvailable() { return false; }
+    virtual bool configureWidgetAvailable()
+    {
+        return false;
+    }
 
     /**
       This method should return the same identifier like the config
@@ -107,11 +108,11 @@ class ExtensionFactory : public KLibFactory
      */
     virtual QString identifier() const = 0;
 
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const char*,
-                                   const QStringList & )
+protected:
+    virtual QObject *createObject(QObject *, const char *, const char *,
+                                  const QStringList &)
     {
-      return 0;
+        return 0;
     }
 };
 

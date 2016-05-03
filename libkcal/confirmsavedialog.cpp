@@ -29,38 +29,39 @@
 
 using namespace KCal;
 
-ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
-                                      QWidget *parent, const char *name )
-  : KDialogBase( parent, name, true, i18n("Confirm Save"), Ok | Cancel )
+ConfirmSaveDialog::ConfirmSaveDialog(const QString &destination,
+                                     QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("Confirm Save"), Ok | Cancel)
 {
-  QFrame *topFrame = makeMainWidget();
+    QFrame *topFrame = makeMainWidget();
 
-  QBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  topLayout->setSpacing( spacingHint() );
+    QBoxLayout *topLayout = new QVBoxLayout(topFrame);
+    topLayout->setSpacing(spacingHint());
 
-  QLabel *label = new QLabel(
-      i18n("You have requested to save the following objects to '%1':")
-      .arg( destination ), topFrame );
-  topLayout->addWidget( label );
+    QLabel *label = new QLabel(
+        i18n("You have requested to save the following objects to '%1':")
+        .arg(destination), topFrame);
+    topLayout->addWidget(label);
 
-  mListView = new KListView( topFrame );
-  mListView->addColumn( i18n("Operation") );
-  mListView->addColumn( i18n("Type") );
-  mListView->addColumn( i18n("Summary") );
-  mListView->addColumn( i18n("UID") );
-  topLayout->addWidget( mListView );
+    mListView = new KListView(topFrame);
+    mListView->addColumn(i18n("Operation"));
+    mListView->addColumn(i18n("Type"));
+    mListView->addColumn(i18n("Summary"));
+    mListView->addColumn(i18n("UID"));
+    topLayout->addWidget(mListView);
 }
 
-void ConfirmSaveDialog::addIncidences( const Incidence::List &incidences,
-                                       const QString &operation )
+void ConfirmSaveDialog::addIncidences(const Incidence::List &incidences,
+                                      const QString &operation)
 {
-  Incidence::List::ConstIterator it;
-  for( it = incidences.begin(); it != incidences.end(); ++it ) {
-    Incidence *i = *it;
-    KListViewItem *item = new KListViewItem( mListView );
-    item->setText( 0, operation );
-    item->setText( 1, i->type() );
-    item->setText( 2, i->summary() );
-    item->setText( 3, i->uid() );
-  }
+    Incidence::List::ConstIterator it;
+    for(it = incidences.begin(); it != incidences.end(); ++it)
+    {
+        Incidence *i = *it;
+        KListViewItem *item = new KListViewItem(mListView);
+        item->setText(0, operation);
+        item->setText(1, i->type());
+        item->setText(2, i->summary());
+        item->setText(3, i->uid());
+    }
 }

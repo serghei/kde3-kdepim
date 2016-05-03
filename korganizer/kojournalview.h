@@ -38,47 +38,49 @@ class QVBox;
  * @author Cornelius Schumacher <schumacher@kde.org>, Reinhold Kainhofer <reinhold@kainhofer.com>
  * @see KOBaseView
  */
-class KOJournalView : public KOrg::BaseView
-{
+class KOJournalView : public KOrg::BaseView {
     Q_OBJECT
-  public:
-    KOJournalView( Calendar *calendar, QWidget *parent = 0,
-                   const char *name = 0);
+public:
+    KOJournalView(Calendar *calendar, QWidget *parent = 0,
+                  const char *name = 0);
     ~KOJournalView();
 
     virtual int currentDateCount();
     virtual Incidence::List selectedIncidences();
-    DateList selectedDates() { return DateList(); }
-    void appendJournal( Journal*journal, const QDate &dt);
+    DateList selectedDates()
+    {
+        return DateList();
+    }
+    void appendJournal(Journal *journal, const QDate &dt);
 
     CalPrinterBase::PrintType printType();
 
-  public slots:
+public slots:
     // Don't update the view when midnight passed, otherwise we'll have data loss (bug 79145)
-    virtual void dayPassed( const QDate & ) {}
+    virtual void dayPassed(const QDate &) {}
     void updateView();
     void flushView();
 
-    void showDates( const QDate &start, const QDate &end );
-    void showIncidences( const Incidence::List &incidenceList );
+    void showDates(const QDate &start, const QDate &end);
+    void showIncidences(const Incidence::List &incidenceList);
 
-    void changeIncidenceDisplay( Incidence *, int );
-    void setIncidenceChanger( IncidenceChangerBase *changer );
+    void changeIncidenceDisplay(Incidence *, int);
+    void setIncidenceChanger(IncidenceChangerBase *changer);
     void newJournal();
-  signals:
+signals:
     void flushEntries();
-    void setIncidenceChangerSignal( IncidenceChangerBase * );
-    void journalEdited( Journal* );
-    void journalDeleted( Journal* );
+    void setIncidenceChangerSignal(IncidenceChangerBase *);
+    void journalEdited(Journal *);
+    void journalDeleted(Journal *);
 
-  protected:
+protected:
     void clearEntries();
 
-  private:
+private:
     QScrollView *mSV;
     QVBox *mVBox;
-    QMap<QDate, JournalDateEntry*> mEntries;
-//    DateList mSelectedDates;  // List of dates to be displayed
+    QMap<QDate, JournalDateEntry *> mEntries;
+    //    DateList mSelectedDates;  // List of dates to be displayed
 };
 
 #endif

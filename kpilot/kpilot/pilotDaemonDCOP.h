@@ -36,68 +36,67 @@
 #include <qdatetime.h>
 #include <qstringlist.h>
 
-class PilotDaemonDCOP : virtual public DCOPObject
-{
-	K_DCOP
+class PilotDaemonDCOP : virtual public DCOPObject {
+    K_DCOP
 public:
 k_dcop:
-	/**
-	* Start a HotSync. What kind of HotSync is determined
-	* by the int parameter (use the enum in kpilot.kcfg, or
-	* better yet, use requestSyncType and pass the name).
-	* Using a value of 0 (zero, which isn't a legal mode for
-	* sync actions) uses the configuration file default.
-	*/
-	virtual ASYNC requestSync(int) = 0;
-	/**
-	* Request a particular kind of sync next; pass in the name
-	* of a sync type instead.
-	*/
-	virtual ASYNC requestSyncType(QString) = 0;
-	/** Shortcut for using requestSync(1) */
-	virtual ASYNC requestRegularSyncNext() = 0;
-	/** Query what type is set most recently. */
-	virtual int nextSyncType() const = 0;
-	/** Set the mix-ins (see SyncAction::SyncMode for details). */
-	virtual ASYNC requestSyncOptions(bool test, bool local) = 0;
+    /**
+    * Start a HotSync. What kind of HotSync is determined
+    * by the int parameter (use the enum in kpilot.kcfg, or
+    * better yet, use requestSyncType and pass the name).
+    * Using a value of 0 (zero, which isn't a legal mode for
+    * sync actions) uses the configuration file default.
+    */
+    virtual ASYNC requestSync(int) = 0;
+    /**
+    * Request a particular kind of sync next; pass in the name
+    * of a sync type instead.
+    */
+    virtual ASYNC requestSyncType(QString) = 0;
+    /** Shortcut for using requestSync(1) */
+    virtual ASYNC requestRegularSyncNext() = 0;
+    /** Query what type is set most recently. */
+    virtual int nextSyncType() const = 0;
+    /** Set the mix-ins (see SyncAction::SyncMode for details). */
+    virtual ASYNC requestSyncOptions(bool test, bool local) = 0;
 
-	/**
-	* Functions for the KPilot UI, indicating what the daemon
-	* should do.
-	*/
-	virtual ASYNC quitNow() = 0;
-	virtual ASYNC reloadSettings() = 0; // Indicate changed config file.
-	virtual ASYNC setTempDevice(QString d) =0; // use this device
-	virtual void stopListening() = 0;
-	virtual void startListening() = 0;
-	virtual bool isListening() =0 ;
+    /**
+    * Functions for the KPilot UI, indicating what the daemon
+    * should do.
+    */
+    virtual ASYNC quitNow() = 0;
+    virtual ASYNC reloadSettings() = 0; // Indicate changed config file.
+    virtual ASYNC setTempDevice(QString d) = 0; // use this device
+    virtual void stopListening() = 0;
+    virtual void startListening() = 0;
+    virtual bool isListening() = 0 ;
 
-	/**
-	* Functions requesting the status of the daemon.
-	*/
-	virtual QString statusString() = 0;
-	virtual QString shortStatusString() = 0;
+    /**
+    * Functions requesting the status of the daemon.
+    */
+    virtual QString statusString() = 0;
+    virtual QString shortStatusString() = 0;
 
-	/**
-	* Functions reporting same status data, e.g. for the kontact plugin.
-	*/
-	virtual QDateTime lastSyncDate() = 0;
-	virtual QStringList configuredConduitList() = 0;
-	virtual QString logFileName() = 0;
-	virtual QString userName() = 0;
-	virtual QString pilotDevice() = 0;
-	virtual bool killDaemonOnExit() = 0;
+    /**
+    * Functions reporting same status data, e.g. for the kontact plugin.
+    */
+    virtual QDateTime lastSyncDate() = 0;
+    virtual QStringList configuredConduitList() = 0;
+    virtual QString logFileName() = 0;
+    virtual QString userName() = 0;
+    virtual QString pilotDevice() = 0;
+    virtual bool killDaemonOnExit() = 0;
 
-	/**
-	* Some other useful functionality
-	*/
-	virtual void addInstallFiles(const QStringList &) = 0;
+    /**
+    * Some other useful functionality
+    */
+    virtual void addInstallFiles(const QStringList &) = 0;
 
 
 k_dcop_signals:
-	void kpilotDaemonStatusChanged();
-	// used to push status information
-	void kpilotDaemonStatusDetails( QDateTime, QString, QStringList, QString, QString, QString, bool );
+    void kpilotDaemonStatusChanged();
+    // used to push status information
+    void kpilotDaemonStatusDetails(QDateTime, QString, QStringList, QString, QString, QString, bool);
 } ;
 
 #endif

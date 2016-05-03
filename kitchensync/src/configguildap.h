@@ -33,17 +33,16 @@ class KABC::LdapConfigWidget;
 class KComboBox;
 class KLineEdit;
 
-class ConfigGuiLdap : public ConfigGui
-{
-  Q_OBJECT
+class ConfigGuiLdap : public ConfigGui {
+    Q_OBJECT
 
-  public:
-    ConfigGuiLdap( const QSync::Member &, QWidget *parent );
+public:
+    ConfigGuiLdap(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     void initGUI();
 
     KABC::LdapConfigWidget *mLdapWidget;

@@ -22,57 +22,57 @@
 #include "combobox.moc"
 
 
-ComboBox::ComboBox(QWidget* parent, const char* name)
-	: QComboBox(parent, name),
-	  mReadOnly(false)
+ComboBox::ComboBox(QWidget *parent, const char *name)
+    : QComboBox(parent, name),
+      mReadOnly(false)
 { }
 
-ComboBox::ComboBox(bool rw, QWidget* parent, const char* name)
-	: QComboBox(rw, parent, name),
-	  mReadOnly(false)
+ComboBox::ComboBox(bool rw, QWidget *parent, const char *name)
+    : QComboBox(rw, parent, name),
+      mReadOnly(false)
 { }
 
 void ComboBox::setReadOnly(bool ro)
 {
-	if ((int)ro != (int)mReadOnly)
-	{
-		mReadOnly = ro;
-		if (lineEdit())
-			lineEdit()->setReadOnly(ro);
-	}
+    if((int)ro != (int)mReadOnly)
+    {
+        mReadOnly = ro;
+        if(lineEdit())
+            lineEdit()->setReadOnly(ro);
+    }
 }
 
-void ComboBox::mousePressEvent(QMouseEvent* e)
+void ComboBox::mousePressEvent(QMouseEvent *e)
 {
-	if (mReadOnly)
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	QComboBox::mousePressEvent(e);
+    if(mReadOnly)
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    QComboBox::mousePressEvent(e);
 }
 
-void ComboBox::mouseReleaseEvent(QMouseEvent* e)
+void ComboBox::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		QComboBox::mouseReleaseEvent(e);
+    if(!mReadOnly)
+        QComboBox::mouseReleaseEvent(e);
 }
 
-void ComboBox::mouseMoveEvent(QMouseEvent* e)
+void ComboBox::mouseMoveEvent(QMouseEvent *e)
 {
-	if (!mReadOnly)
-		QComboBox::mouseMoveEvent(e);
+    if(!mReadOnly)
+        QComboBox::mouseMoveEvent(e);
 }
 
-void ComboBox::keyPressEvent(QKeyEvent* e)
+void ComboBox::keyPressEvent(QKeyEvent *e)
 {
-	if (!mReadOnly  ||  e->key() == Qt::Key_Escape)
-		QComboBox::keyPressEvent(e);
+    if(!mReadOnly  ||  e->key() == Qt::Key_Escape)
+        QComboBox::keyPressEvent(e);
 }
 
-void ComboBox::keyReleaseEvent(QKeyEvent* e)
+void ComboBox::keyReleaseEvent(QKeyEvent *e)
 {
-	if (!mReadOnly)
-		QComboBox::keyReleaseEvent(e);
+    if(!mReadOnly)
+        QComboBox::keyReleaseEvent(e);
 }

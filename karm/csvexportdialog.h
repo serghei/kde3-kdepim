@@ -24,16 +24,15 @@
 #include "csvexportdialog_base.h"
 #include "reportcriteria.h"
 
-class CSVExportDialog : public CSVExportDialogBase
-{
-  Q_OBJECT
+class CSVExportDialog : public CSVExportDialogBase {
+    Q_OBJECT
 
-  public:
-    CSVExportDialog( ReportCriteria::REPORTTYPE rt,
-                     QWidget *parent = 0, 
-                     const char *name = 0
-                     );
-    
+public:
+    CSVExportDialog(ReportCriteria::REPORTTYPE rt,
+                    QWidget *parent = 0,
+                    const char *name = 0
+                   );
+
     /**
      Enable the "Tasks to export" question in the dialog.
 
@@ -50,14 +49,14 @@ class CSVExportDialog : public CSVExportDialogBase
      */
     ReportCriteria reportCriteria();
 
-  private slots:
+private slots:
 
     /**
     Enable export button if export url entered.
     */
     void enableExportButton();
 
-  private:
+private:
     ReportCriteria rc;
 };
 

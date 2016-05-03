@@ -54,8 +54,8 @@ class DW_EXPORT DwMechanism : public DwFieldBody {
 public:
 
     DwMechanism();
-    DwMechanism(const DwMechanism& aCte);
-    DwMechanism(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMechanism(const DwMechanism &aCte);
+    DwMechanism(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMechanism} object's string representation to the empty
     //. string and sets its parent to {\tt NULL}.
@@ -73,7 +73,7 @@ public:
 
     virtual ~DwMechanism();
 
-    const DwMechanism& operator = (const DwMechanism& aCte);
+    const DwMechanism &operator = (const DwMechanism &aCte);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aCte}.  The parent node of the {\tt DwMechanism} object
     //. is not changed.
@@ -97,7 +97,7 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwMechanism} object on the free store that has
     //. the same value as this {\tt DwMechanism} object.  The basic idea
@@ -119,8 +119,8 @@ public:
     //. encoding to any string value, standard or non-standard, by using the
     //. inherited member function {\tt DwMessageComponent::FromString()}.
 
-    static DwMechanism*
-        NewMechanism(const DwString& aStr, DwMessageComponent* aParent);
+    static DwMechanism *
+    NewMechanism(const DwString &aStr, DwMessageComponent *aParent);
     //. Creates a new {\tt DwMechanism} object on the free store.
     //. If the static data member {\tt sNewMechanism} is {\tt NULL},
     //. this member function will create a new {\tt DwMechanism}
@@ -131,8 +131,8 @@ public:
     //. return that object.
 
     //+ Var sNewMechanism
-    static DwMechanism*
-        (*sNewMechanism)(const DwString&, DwMessageComponent*);
+    static DwMechanism *
+    (*sNewMechanism)(const DwString &, DwMessageComponent *);
     //. If {\tt sNewMechanism} is not {\tt NULL}, it is assumed
     //. to point to a user-supplied function that returns an object from
     //. a class derived from {\tt DwMechanism}.
@@ -140,14 +140,14 @@ public:
 private:
 
     int mCteEnum;
-    static const char* const sClassName;
+    static const char *const sClassName;
 
     void EnumToString();
     void StringToEnum();
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -165,7 +165,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

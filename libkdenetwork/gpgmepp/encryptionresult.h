@@ -2,12 +2,12 @@
    Copyright (C) 2004 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -29,49 +29,49 @@
 
 namespace GpgME {
 
-  class Error;
-  class InvalidRecipient;
+class Error;
+class InvalidRecipient;
 
-  class KDE_EXPORT EncryptionResult : public Result {
-  public:
-    EncryptionResult( gpgme_ctx_t ctx=0, int error=0 );
-    explicit EncryptionResult( const Error & err );
-    EncryptionResult( const EncryptionResult & other );
+class KDE_EXPORT EncryptionResult : public Result {
+public:
+    EncryptionResult(gpgme_ctx_t ctx = 0, int error = 0);
+    explicit EncryptionResult(const Error &err);
+    EncryptionResult(const EncryptionResult &other);
     ~EncryptionResult();
 
-    const EncryptionResult & operator=( const EncryptionResult & other );
+    const EncryptionResult &operator=(const EncryptionResult &other);
 
     bool isNull() const;
 
     unsigned int numInvalidRecipients() const;
 
-    InvalidRecipient invalidEncryptionKey( unsigned int index ) const;
+    InvalidRecipient invalidEncryptionKey(unsigned int index) const;
     std::vector<InvalidRecipient> invalidEncryptionKeys() const;
 
     class Private;
-  private:
-    Private * d;
-  };
+private:
+    Private *d;
+};
 
-  class KDE_EXPORT InvalidRecipient {
+class KDE_EXPORT InvalidRecipient {
     friend class EncryptionResult;
-    InvalidRecipient( EncryptionResult::Private * parent, unsigned int index );
-  public:
+    InvalidRecipient(EncryptionResult::Private *parent, unsigned int index);
+public:
     InvalidRecipient();
-    InvalidRecipient( const InvalidRecipient & other );
+    InvalidRecipient(const InvalidRecipient &other);
     ~InvalidRecipient();
 
-    const InvalidRecipient & operator=( const InvalidRecipient & other );
+    const InvalidRecipient &operator=(const InvalidRecipient &other);
 
     bool isNull() const;
 
-    const char * fingerprint() const;
+    const char *fingerprint() const;
     Error reason() const;
 
-  private:
-    EncryptionResult::Private * d;
+private:
+    EncryptionResult::Private *d;
     unsigned int idx;
-  };
+};
 
 }
 

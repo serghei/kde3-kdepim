@@ -62,9 +62,8 @@ class KConfig;
  * @author Helge Deller <deller@kde.org>
  */
 
-class KDE_EXPORT KMobileDevice : public KLibFactory
-{
-Q_OBJECT
+class KDE_EXPORT KMobileDevice : public KLibFactory {
+    Q_OBJECT
     friend class KMobileView;
 
 public:
@@ -75,7 +74,7 @@ public:
      * @param name The object name. For session management and window management to work.
      * @param args Additional commandline parameters - the first entry has the config file name.
      */
-    KMobileDevice(QObject *obj, const char *name, const QStringList &args );
+    KMobileDevice(QObject *obj, const char *name, const QStringList &args);
     virtual ~KMobileDevice();
 
 
@@ -84,14 +83,14 @@ public:
      *
      * @param parent The parent widget. It will be used as parent for message boxes.
      */
-    virtual bool connectDevice( QWidget *parent = 0 ) = 0;
+    virtual bool connectDevice(QWidget *parent = 0) = 0;
 
     /**
      * Disconnect from the device.
      *
      * @param parent The parent widget. It will be used as parent for message boxes.
      */
-    virtual bool disconnectDevice( QWidget *parent = 0 ) = 0;
+    virtual bool disconnectDevice(QWidget *parent = 0) = 0;
 
     /**
      * Returns true, if the device is currently connected and the link is online.
@@ -139,12 +138,13 @@ public:
     virtual bool configDialog(QWidget *parent);
 
     // The ClassType may be used e.g. to select an suitable icon
-    enum ClassType {
-	Unclassified = 0,
-	Phone        = 1,
+    enum ClassType
+    {
+        Unclassified = 0,
+        Phone        = 1,
         Organizer    = 2,
         Camera       = 3,
-	MusicPlayer  = 4, // e.g. MP3Players, CDPlayers
+        MusicPlayer  = 4, // e.g. MP3Players, CDPlayers
         LastClassType = MusicPlayer
     };
     enum ClassType classType() const;
@@ -154,17 +154,18 @@ public:
     virtual QString iconFileName() const;
 
     // the default Icon set
-    static QString defaultIconFileName( ClassType ct = Unclassified );
-    static QString defaultClassName( ClassType ct = Unclassified );
+    static QString defaultIconFileName(ClassType ct = Unclassified);
+    static QString defaultClassName(ClassType ct = Unclassified);
 
     // The capabilities of this device (bitmapped value)
-    enum Capabilities {
-	hasNothing     = 0,	// not supported
-	hasAddressBook = 1,	// mobile phones, organizers, ...
-	hasCalendar    = 2,	// organizers, mobile phones, ...
-	hasNotes       = 4,	// organizers, mobile phones, ...
-	hasFileStorage = 8,	// organizers, handhelds, mp3-player, ...
-	hasAnyCapability = 0xffff // used to select devices independent of the capatibilities
+    enum Capabilities
+    {
+        hasNothing     = 0,	// not supported
+        hasAddressBook = 1,	// mobile phones, organizers, ...
+        hasCalendar    = 2,	// organizers, mobile phones, ...
+        hasNotes       = 4,	// organizers, mobile phones, ...
+        hasFileStorage = 8,	// organizers, handhelds, mp3-player, ...
+        hasAnyCapability = 0xffff // used to select devices independent of the capatibilities
     };
     int capabilities() const;
     const QString nameForCap(int cap) const;
@@ -178,22 +179,22 @@ public:
      * Addressbook / Phonebook support
      */
     virtual int numAddresses();
-    virtual int readAddress( int index, KABC::Addressee &adr );
-    virtual int storeAddress( int index, const KABC::Addressee &adr, bool append = false );
+    virtual int readAddress(int index, KABC::Addressee &adr);
+    virtual int storeAddress(int index, const KABC::Addressee &adr, bool append = false);
 
     /*
      * Calendar support
      */
     virtual int numCalendarEntries();
-    virtual int readCalendarEntry( int index, KCal::Event &entry );
-    virtual int storeCalendarEntry( int index, const KCal::Event &entry );
+    virtual int readCalendarEntry(int index, KCal::Event &entry);
+    virtual int storeCalendarEntry(int index, const KCal::Event &entry);
 
     /*
      * Notes support
      */
     virtual int numNotes();
-    virtual int readNote( int index, QString &note );
-    virtual int storeNote( int index, const QString &note );
+    virtual int readNote(int index, QString &note);
+    virtual int storeNote(int index, const QString &note);
 
 
 
@@ -207,11 +208,11 @@ public:
     /**
      * helper functions for the kmobile device drivers
      */
-    void createDirEntry(KIO::UDSEntry& entry, const QString& name,
-		const QString& url, const QString& mime) const;
-    void createFileEntry(KIO::UDSEntry& entry, const QString& name,
-		const QString& url, const QString& mime,
-		const unsigned long size = 0) const;
+    void createDirEntry(KIO::UDSEntry &entry, const QString &name,
+                        const QString &url, const QString &mime) const;
+    void createFileEntry(KIO::UDSEntry &entry, const QString &name,
+                         const QString &url, const QString &mime,
+                         const unsigned long size = 0) const;
     /**
      * Lists the contents of @p path.
      * The slave should emit ERR_CANNOT_ENTER_DIRECTORY if it doesn't exist,
@@ -219,7 +220,7 @@ public:
      * It should also emit @ref #totalFiles as soon as it knows how many
      * files it will list.
      */
-    virtual void listDir( const QString &url );
+    virtual void listDir(const QString &url);
 
     /**
      * Create a directory
@@ -228,7 +229,7 @@ public:
      * (-1 if no permissions to be set)
      * The slave emits ERR_COULD_NOT_MKDIR if failure.
      */
-    virtual void mkdir( const QString &url, int permissions );
+    virtual void mkdir(const QString &url, int permissions);
 
     /**
      * Rename @p oldname into @p newname.
@@ -238,7 +239,7 @@ public:
      * @param dest where to move the file to
      * @param overwrite if true, any existing file will be overwritten
      */
-    virtual void rename( const QString &src, const QString &dest, bool overwrite );
+    virtual void rename(const QString &src, const QString &dest, bool overwrite);
 
     /**
      * Creates a symbolic link named @p dest, pointing to @p target, which
@@ -247,7 +248,7 @@ public:
      * @param dest The symlink to create.
      * @param overwrite whether to automatically overwrite if the dest exists
      */
-    virtual void symlink( const QString &target, const QString &dest, bool overwrite );
+    virtual void symlink(const QString &target, const QString &dest, bool overwrite);
 
     /**
      * Delete a file or directory.
@@ -255,20 +256,20 @@ public:
      * @param isfile if true, a file should be deleted.
      *               if false, a directory should be deleted.
      */
-    virtual void del( const QString &url, bool isfile);
+    virtual void del(const QString &url, bool isfile);
 
     /**
      * Finds all details for one file or directory.
      * The information returned is the same as what @ref #listDir returns,
      * but only for one file or directory.
      */
-    virtual void stat( const QString &url );
+    virtual void stat(const QString &url);
 
     /**
      * Change permissions on @p path
      * The slave emits ERR_DOES_NOT_EXIST or ERR_CANNOT_CHMOD
      */
-    virtual void chmod( const QString &url, int permissions );
+    virtual void chmod(const QString &url, int permissions);
 
     /**
      * get, aka read.
@@ -276,7 +277,7 @@ public:
      *        can be assumed to be the same as in the last setHost() call.
      * The slave emits the data through @ref #data
      */
-    virtual void get( const QString &url );
+    virtual void get(const QString &url);
 
     /**
      * put, aka write.
@@ -287,7 +288,7 @@ public:
      * permissions change to it.
      * @param resume
      */
-    virtual void put( const QString &url, int permissions, bool overwrite, bool resume );
+    virtual void put(const QString &url, int permissions, bool overwrite, bool resume);
 
     /**
      * Finds mimetype for one file or directory.
@@ -301,7 +302,7 @@ public:
      * determining the mimetype on it - this is obviously not a
      * good thing in most cases.
      */
-    virtual void mimetype( const QString &url );
+    virtual void mimetype(const QString &url);
 
     /**
      * Used for any command that is specific to this slave (protocol)
@@ -311,7 +312,7 @@ public:
      *        slave, but usually starts with an int for the command number.
      * Document your slave's commands, at least in its header file.
      */
-    virtual void special( const QByteArray & );
+    virtual void special(const QByteArray &);
 
 signals:
     /**
@@ -320,7 +321,7 @@ signals:
      * mimetype, etc.
      * @param _entry The UDSEntry containing all of the object attributes.
      */
-    void statEntry( const KIO::UDSEntry &_entry );
+    void statEntry(const KIO::UDSEntry &_entry);
 
     /**
      * internal function to be called by the slave.
@@ -332,7 +333,7 @@ signals:
      * @param ready set to true after emitting all items. _entry is not
      *        used in this case
      */
-    void listEntry( const KIO::UDSEntry& _entry, bool ready);
+    void listEntry(const KIO::UDSEntry &_entry, bool ready);
 
     /**
      * Internal function to transmit meta data to the application.
@@ -383,13 +384,13 @@ signals:
      * @return      @p TRUE if user clicks on "OK", @p FALSE otherwsie.
      * @since 3.1
      */
-    bool openPassDlg( KIO::AuthInfo& info, const QString &errorMsg );
+    bool openPassDlg(KIO::AuthInfo &info, const QString &errorMsg);
 
     /**
      * Call this in @ref #mimetype, when you know the mimetype.
      * See @ref #mimetype about other ways to implement it.
      */
-    void mimeType( const QString &_type );
+    void mimeType(const QString &_type);
 
     /**
      * Call to signal an error.
@@ -408,18 +409,18 @@ signals:
      * @param _errid the error code from KIO::Error
      * @param _text the rich text error message
      */
-    void error( int _errid, const QString &_text );
+    void error(int _errid, const QString &_text);
 
     /**
      * Call to signal a warning, to be displayed in a dialog box.
      */
-    void warning( const QString &msg );
+    void warning(const QString &msg);
 
     /**
      * Call to signal a message, to be displayed if the application wants to,
      * for instance in a status bar. Usual examples are "connecting to host xyz", etc.
      */
-    void infoMessage( const QString &msg );
+    void infoMessage(const QString &msg);
 
     /**
      * Call to signal successful completion of any command
@@ -429,7 +430,8 @@ signals:
 
 
     enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
-		WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
+                          WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6
+                        };
 
     /**
      * Call this to show a message box from the slave (it will in fact be handled
@@ -446,34 +448,40 @@ signals:
      *       and for Information, none is used.
      * @return a button code, as defined in KMessageBox, or 0 on communication error.
      */
-    int messageBox( MessageBoxType type, const QString &text,
-                    const QString &caption = QString::null,
-                    const QString &buttonYes = QString::null,
-                    const QString &buttonNo = QString::null );
+    int messageBox(MessageBoxType type, const QString &text,
+                   const QString &caption = QString::null,
+                   const QString &buttonYes = QString::null,
+                   const QString &buttonNo = QString::null);
 
     /**
      * Call this in @ref #get and @ref #copy, to give the total size
      * of the file
      * Call in @ref listDir too, when you know the total number of items.
      */
-    void totalSize( KIO::filesize_t _bytes );
+    void totalSize(KIO::filesize_t _bytes);
     /**
      * Call this during @ref #get and @ref #copy, once in a while,
      * to give some info about the current state.
      * Don't emit it in @ref #listDir, @ref #listEntries speaks for itself.
      */
-    void processedSize( KIO::filesize_t _bytes );
+    void processedSize(KIO::filesize_t _bytes);
 
 
 signals:
-    void connectionChanged( bool conn_established );
+    void connectionChanged(bool conn_established);
 
 protected:
     // only available to sub-classed device drivers:
-    void setClassType( enum ClassType ct );
-    void setCapabilities( int caps );
-    KConfig *config() const { return m_config; };
-    QString configFileName() const { return m_configFileName; };
+    void setClassType(enum ClassType ct);
+    void setCapabilities(int caps);
+    KConfig *config() const
+    {
+        return m_config;
+    };
+    QString configFileName() const
+    {
+        return m_configFileName;
+    };
 
 
     /**

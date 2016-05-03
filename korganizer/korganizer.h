@@ -46,7 +46,9 @@ class KONewStuff;
 class ActionManager;
 class CalendarView;
 
-namespace KCal { class CalendarResources; }
+namespace KCal {
+class CalendarResources;
+}
 
 using namespace KCal;
 
@@ -62,44 +64,58 @@ typedef KParts::MainWindow KPartsMainWindow;
   @short constructs a new main window for korganizer
   @author Preston Brown
 */
-class KOrganizer : public KPartsMainWindow, public KOrgMainWindow
-{
+class KOrganizer : public KPartsMainWindow, public KOrgMainWindow {
     Q_OBJECT
-  public:
+public:
     /**
       Constructs a new main window.
       @param name     Qt internal widget name
     */
-    KOrganizer( const char *name = 0 );
+    KOrganizer(const char *name = 0);
     virtual ~KOrganizer();
 
-    void init( bool hasDocument );
+    void init(bool hasDocument);
 
     KOrg::CalendarViewBase *view() const;
-    ActionManager *actionManager() { return mActionManager; }
-    KActionCollection *getActionCollection() const { return actionCollection(); }
+    ActionManager *actionManager()
+    {
+        return mActionManager;
+    }
+    KActionCollection *getActionCollection() const
+    {
+        return actionCollection();
+    }
 
     /**
       Open calendar file from URL. Merge into current calendar, if \a merge is
       true.
     */
-    bool openURL( const KURL &url, bool merge = false );
+    bool openURL(const KURL &url, bool merge = false);
     /** Save calendar file to URL of current calendar */
     bool saveURL();
     /** Save calendar file to URL */
-    bool saveAsURL( const KURL & kurl );
+    bool saveAsURL(const KURL &kurl);
     /** Get current URL */
     KURL getCurrentURL() const;
 
-    virtual KXMLGUIFactory *mainGuiFactory() { return factory(); }
-    virtual KXMLGUIClient *mainGuiClient() { return this; }
-    virtual QWidget *topLevelWidget() { return this; }
+    virtual KXMLGUIFactory *mainGuiFactory()
+    {
+        return factory();
+    }
+    virtual KXMLGUIClient *mainGuiClient()
+    {
+        return this;
+    }
+    virtual QWidget *topLevelWidget()
+    {
+        return this;
+    }
 
-  public slots:
+public slots:
     /** show status message */
-    void showStatusMessage( const QString & );
+    void showStatusMessage(const QString &);
 
-  protected slots:
+protected slots:
 
     /** using the KConfig associated with the kapp variable, read in the
      * settings from the config file.
@@ -109,26 +125,26 @@ class KOrganizer : public KPartsMainWindow, public KOrgMainWindow
     /** write current state to config file. */
     void writeSettings();
 
-    void statusBarPressed( int );
+    void statusBarPressed(int);
 
     /** Sets title of window according to filename and modification state */
     void setTitle();
 
-    void newMainWindow( const KURL & );
+    void newMainWindow(const KURL &);
 
-  protected:
+protected:
     void initActions();
-//    void initViews();
+    //    void initViews();
 
     /** supplied so that close events close calendar properly.*/
     bool queryClose();
     bool queryExit();
 
     /* Session management */
-    void saveProperties( KConfig * );
-    void readProperties( KConfig * );
+    void saveProperties(KConfig *);
+    void readProperties(KConfig *);
 
-  private:
+private:
     CalendarView *mCalendarView;  // Main view widget
     KOrg::Part::List mParts; // List of parts loaded
 

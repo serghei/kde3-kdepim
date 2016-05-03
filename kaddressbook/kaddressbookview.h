@@ -41,8 +41,12 @@ class KXMLGUIClient;
 
 class QDropEvent;
 
-namespace KAB { class Core; }
-namespace KABC { class AddressBook; }
+namespace KAB {
+class Core;
+}
+namespace KABC {
+class AddressBook;
+}
 
 /**
   Base class for all views in kaddressbook. This class implements
@@ -53,14 +57,13 @@ namespace KABC { class AddressBook; }
 
   @author Mike Pilone <mpilone@slac.com>
  */
-class KDE_EXPORT KAddressBookView : public QWidget
-{
-  Q_OBJECT
+class KDE_EXPORT KAddressBookView : public QWidget {
+    Q_OBJECT
 
-  public:
+public:
     enum DefaultFilterType { None = 0, Active = 1, Specific = 2 };
 
-    KAddressBookView( KAB::Core *core, QWidget *parent, const char *name );
+    KAddressBookView(KAB::Core *core, QWidget *parent, const char *name);
     virtual ~KAddressBookView();
 
     /**
@@ -82,7 +85,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
       @param config The KConfig object to read from. The group will already
       be set, so do not change the group.
      */
-    virtual void readConfig( KConfig *config );
+    virtual void readConfig(KConfig *config);
 
     /**
       Called whenever this view should write the config. The view should not
@@ -95,7 +98,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
      */
     // The KConfig object is unused so we do not document it
     // else doxygen will complain.
-    virtual void writeConfig( KConfig * );
+    virtual void writeConfig(KConfig *);
 
     /**
       Returns a QString with all the selected email addresses concatenated
@@ -128,7 +131,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
       automatically refresh itself, so in most cases you will want to call
       KAddressBookView::refresh() after this method.
      */
-    void setFilter( const Filter& );
+    void setFilter(const Filter &);
 
     /**
       @return The default filter type selection. If the selection
@@ -156,7 +159,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
     virtual void scrollUp() = 0;
     virtual void scrollDown() = 0;
 
-  public slots:
+public slots:
     /**
       Must be overloaded in subclasses to refresh the view.
       Refreshing includes updating the view to ensure that only items
@@ -164,28 +167,28 @@ class KDE_EXPORT KAddressBookView : public QWidget
       addressee with uid needs to be refreshed. This is an optimization
       only.
      */
-    virtual void refresh( const QString &uid = QString() ) = 0;
+    virtual void refresh(const QString &uid = QString()) = 0;
 
     /**
       This method must be overloaded in subclasses. Select (highlight)
       the addressee matching <i>uid</i>. If uid
       is equal to QString::null, then all addressees should be selected.
      */
-    virtual void setSelected( const QString &uid = QString(), bool selected = true ) = 0;
+    virtual void setSelected(const QString &uid = QString(), bool selected = true) = 0;
 
     /**
       Selects the first contact in the view.
      */
-    virtual void setFirstSelected( bool selected = true ) = 0;
+    virtual void setFirstSelected(bool selected = true) = 0;
 
     /**
       Call this slot to popup a rmb menu.
 
       @param point The position where the menu shall appear.
      */
-    void popup( const QPoint &point );
+    void popup(const QPoint &point);
 
-  signals:
+signals:
     /**
       This signal should be emitted by a subclass whenever an addressee
       is modified.
@@ -203,7 +206,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
 
       @see KListView
      */
-    void selected( const QString &uid );
+    void selected(const QString &uid);
 
     /**
       This signal should be emitted by a subclass whenever an addressee
@@ -214,7 +217,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
 
       @see KListView
      */
-    void executed( const QString &uid );
+    void executed(const QString &uid);
 
     /**
       This signal is emitted whenever a user attempts to start a drag
@@ -228,7 +231,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
       view. The individual view should handle checking if the item is
       droppable (ie: if it is a vcard).
      */
-    void dropped( QDropEvent* );
+    void dropped(QDropEvent *);
 
     /**
       This signal is emitted whenever the sort field changed.
@@ -240,7 +243,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
      */
     void viewFieldsChanged();
 
-  protected:
+protected:
     /**
       Returns a list of the addressees that should be displayed. This method
       should always be used by the subclass to get a list of addressees. This
@@ -257,10 +260,10 @@ class KDE_EXPORT KAddressBookView : public QWidget
      */
     QWidget *viewWidget();
 
-  private slots:
+private slots:
     void updateView();
 
-  private:
+private:
     void initGUI();
 
     DefaultFilterType mDefaultFilterType;
@@ -272,11 +275,10 @@ class KDE_EXPORT KAddressBookView : public QWidget
     QWidget *mViewWidget;
 };
 
-class KDE_EXPORT ViewFactory : public KLibFactory
-{
-  public:
-    virtual KAddressBookView *view( KAB::Core *core, QWidget *parent,
-                                    const char *name = 0 ) = 0;
+class KDE_EXPORT ViewFactory : public KLibFactory {
+public:
+    virtual KAddressBookView *view(KAB::Core *core, QWidget *parent,
+                                   const char *name = 0) = 0;
     /**
       @return The type of the view. This is normally a small one word
       string (ie: Table, Icon, Tree, etc).
@@ -299,15 +301,15 @@ class KDE_EXPORT ViewFactory : public KLibFactory
       If this method is over loaded the base classes method should
       <B>not</B> be called.
      */
-    virtual ViewConfigureWidget *configureWidget( KABC::AddressBook *ab,
-                                                  QWidget *parent,
-                                                  const char *name = 0 );
+    virtual ViewConfigureWidget *configureWidget(KABC::AddressBook *ab,
+            QWidget *parent,
+            const char *name = 0);
 
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const char*,
-                                   const QStringList & )
+protected:
+    virtual QObject *createObject(QObject *, const char *, const char *,
+                                  const QStringList &)
     {
-      return 0;
+        return 0;
     }
 };
 

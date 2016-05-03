@@ -39,169 +39,183 @@
 using namespace KCal;
 
 ResourceGroupwareBase::ResourceGroupwareBase()
-  : ResourceCached( 0 ), mPrefs(0), mFolderLister(0), 
-    mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
+    : ResourceCached(0), mPrefs(0), mFolderLister(0),
+      mLock(true), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
 }
 
-ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
-  : ResourceCached( config ), mPrefs(0), mFolderLister(0), 
-    mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
+ResourceGroupwareBase::ResourceGroupwareBase(const KConfig *config)
+    : ResourceCached(config), mPrefs(0), mFolderLister(0),
+      mLock(true), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
-  if ( config ) readConfig( config );
+    if(config) readConfig(config);
 }
 
 ResourceGroupwareBase::~ResourceGroupwareBase()
 {
-  disableChangeNotification();
+    disableChangeNotification();
 
-  delete mPrefs;
-  mPrefs = 0;
+    delete mPrefs;
+    mPrefs = 0;
 }
 
 KPIM::GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 {
-  return new KPIM::GroupwarePrefsBase();
+    return new KPIM::GroupwarePrefsBase();
 }
 
 
-bool ResourceGroupwareBase::addEvent( Event *event )
+bool ResourceGroupwareBase::addEvent(Event *event)
 {
-  if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Event ) ||
-                      adaptor()->supports( KPIM::FolderLister::All ) ) ) {
-    return ResourceCached::addEvent( event );
-  } else return false;
+    if(adaptor() && (adaptor()->supports(KPIM::FolderLister::Event) ||
+                     adaptor()->supports(KPIM::FolderLister::All)))
+    {
+        return ResourceCached::addEvent(event);
+    }
+    else return false;
 }
 
-bool ResourceGroupwareBase::addTodo( Todo *todo )
+bool ResourceGroupwareBase::addTodo(Todo *todo)
 {
-  if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Todo ) ||
-                      adaptor()->supports( KPIM::FolderLister::All ) ) ) {
-    return ResourceCached::addTodo( todo );
-  } else return false;
+    if(adaptor() && (adaptor()->supports(KPIM::FolderLister::Todo) ||
+                     adaptor()->supports(KPIM::FolderLister::All)))
+    {
+        return ResourceCached::addTodo(todo);
+    }
+    else return false;
 }
 
-bool ResourceGroupwareBase::addJournal( Journal *journal )
+bool ResourceGroupwareBase::addJournal(Journal *journal)
 {
-  if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Journal ) ||
-                      adaptor()->supports( KPIM::FolderLister::All ) ) ) {
-    return ResourceCached::addJournal( journal );
-  } else return false;
+    if(adaptor() && (adaptor()->supports(KPIM::FolderLister::Journal) ||
+                     adaptor()->supports(KPIM::FolderLister::All)))
+    {
+        return ResourceCached::addJournal(journal);
+    }
+    else return false;
 }
 
 
-KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( 
-                            CalendarAdaptor *adaptor )
+KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob(
+    CalendarAdaptor *adaptor)
 {
-  return new KPIM::GroupwareDownloadJob( adaptor );
+    return new KPIM::GroupwareDownloadJob(adaptor);
 }
 
-KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( 
-                          CalendarAdaptor *adaptor )
+KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob(
+    CalendarAdaptor *adaptor)
 {
-  return new KPIM::GroupwareUploadJob( adaptor );
+    return new KPIM::GroupwareUploadJob(adaptor);
 }
 
-void ResourceGroupwareBase::setPrefs( KPIM::GroupwarePrefsBase *newprefs ) 
+void ResourceGroupwareBase::setPrefs(KPIM::GroupwarePrefsBase *newprefs)
 {
-  if ( !newprefs ) return;
-  if ( mPrefs ) delete mPrefs;
-  mPrefs = newprefs;
-  mPrefs->addGroupPrefix( identifier() );
-  
-  mPrefs->readConfig();
-  if ( mFolderLister ) mFolderLister->readConfig( mPrefs );
+    if(!newprefs) return;
+    if(mPrefs) delete mPrefs;
+    mPrefs = newprefs;
+    mPrefs->addGroupPrefix(identifier());
+
+    mPrefs->readConfig();
+    if(mFolderLister) mFolderLister->readConfig(mPrefs);
 }
 
-void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
+void ResourceGroupwareBase::setFolderLister(KPIM::FolderLister *folderLister)
 {
-  if ( !folderLister ) return;
-  if ( mFolderLister ) delete mFolderLister;
-  mFolderLister = folderLister;
-  if ( mPrefs ) mFolderLister->readConfig( mPrefs );
-  if ( adaptor() ) {
-    adaptor()->setFolderLister( mFolderLister );
-    mFolderLister->setAdaptor( adaptor() );
-  }
+    if(!folderLister) return;
+    if(mFolderLister) delete mFolderLister;
+    mFolderLister = folderLister;
+    if(mPrefs) mFolderLister->readConfig(mPrefs);
+    if(adaptor())
+    {
+        adaptor()->setFolderLister(mFolderLister);
+        mFolderLister->setAdaptor(adaptor());
+    }
 }
 
-void ResourceGroupwareBase::setAdaptor( CalendarAdaptor *adaptor )
+void ResourceGroupwareBase::setAdaptor(CalendarAdaptor *adaptor)
 {
-  if ( !adaptor ) return;
-  if ( mAdaptor ) delete mAdaptor;
-  mAdaptor = adaptor;
-  mAdaptor->setFolderLister( mFolderLister );
-  if ( mFolderLister ) mFolderLister->setAdaptor( mAdaptor );
-  // TODO: Set the prgreess status in the up/download jobs, and set
-  //       the resource name as the label. This should be done in the
-  //       up/download jobs, but these don't have access to the resource's
-  //       name, do they?
-/*  mAdaptor->setDownloadProgressMessage( i18n("Downloading calendar") );
-  mAdaptor->setUploadProgressMessage( i18n("Uploading calendar") );*/
-  if ( prefs() ) {
-    mAdaptor->setBaseURL( prefs()->url() );
-    mAdaptor->setUser( prefs()->user() );
-    mAdaptor->setPassword( prefs()->password() );
-  }
-  mAdaptor->setIdMapper( &idMapper() );
-  mAdaptor->setResource( this );
+    if(!adaptor) return;
+    if(mAdaptor) delete mAdaptor;
+    mAdaptor = adaptor;
+    mAdaptor->setFolderLister(mFolderLister);
+    if(mFolderLister) mFolderLister->setAdaptor(mAdaptor);
+    // TODO: Set the prgreess status in the up/download jobs, and set
+    //       the resource name as the label. This should be done in the
+    //       up/download jobs, but these don't have access to the resource's
+    //       name, do they?
+    /*  mAdaptor->setDownloadProgressMessage( i18n("Downloading calendar") );
+      mAdaptor->setUploadProgressMessage( i18n("Uploading calendar") );*/
+    if(prefs())
+    {
+        mAdaptor->setBaseURL(prefs()->url());
+        mAdaptor->setUser(prefs()->user());
+        mAdaptor->setPassword(prefs()->password());
+    }
+    mAdaptor->setIdMapper(&idMapper());
+    mAdaptor->setResource(this);
 }
 
 void ResourceGroupwareBase::init()
 {
-  mDownloadJob = 0;
-  mIsShowingError = false;
+    mDownloadJob = 0;
+    mIsShowingError = false;
 
-  enableChangeNotification();
+    enableChangeNotification();
 }
 
 KPIM::GroupwarePrefsBase *ResourceGroupwareBase::prefs()
 {
-  return mPrefs;
+    return mPrefs;
 }
 
-void ResourceGroupwareBase::readConfig( const KConfig *config )
+void ResourceGroupwareBase::readConfig(const KConfig *config)
 {
-  kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
-  ResourceCached::readConfig( config );
-  if ( mPrefs ) {
-    mPrefs->readConfig();
-    if ( mFolderLister )
-      mFolderLister->readConfig( mPrefs );
-  }
+    kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
+    ResourceCached::readConfig(config);
+    if(mPrefs)
+    {
+        mPrefs->readConfig();
+        if(mFolderLister)
+            mFolderLister->readConfig(mPrefs);
+    }
 }
 
-void ResourceGroupwareBase::writeConfig( KConfig *config )
+void ResourceGroupwareBase::writeConfig(KConfig *config)
 {
-  kdDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
+    kdDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
 
-  ResourceCalendar::writeConfig( config );
-  ResourceCached::writeConfig( config );
+    ResourceCalendar::writeConfig(config);
+    ResourceCached::writeConfig(config);
 
-  if ( mPrefs ) {
-    if ( mFolderLister )
-      mFolderLister->writeConfig( mPrefs );
-    mPrefs->writeConfig();
-  }
+    if(mPrefs)
+    {
+        if(mFolderLister)
+            mFolderLister->writeConfig(mPrefs);
+        mPrefs->writeConfig();
+    }
 }
 
 bool ResourceGroupwareBase::doOpen()
 {
-  if ( !adaptor() )
-    return false;
-  if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogon ) {
-    KIO::Job *loginJob = adaptor()->createLoginJob( prefs()->url(), prefs()->user(), prefs()->password() );
-    if ( !loginJob ) {
-      return false;
-    } else {
-      mLoginFinished = false;
-      connect( loginJob, SIGNAL( result( KIO::Job * ) ),
-               SLOT( slotLoginJobResult( KIO::Job* ) ) );
-      enter_loop();
-      return mLoginFinished;
+    if(!adaptor())
+        return false;
+    if(adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogon)
+    {
+        KIO::Job *loginJob = adaptor()->createLoginJob(prefs()->url(), prefs()->user(), prefs()->password());
+        if(!loginJob)
+        {
+            return false;
+        }
+        else
+        {
+            mLoginFinished = false;
+            connect(loginJob, SIGNAL(result(KIO::Job *)),
+                    SLOT(slotLoginJobResult(KIO::Job *)));
+            enter_loop();
+            return mLoginFinished;
+        }
     }
-  }
-  return true;
+    return true;
 }
 
 // BEGIN:COPIED
@@ -211,200 +225,216 @@ bool ResourceGroupwareBase::doOpen()
 //     Copyright (C) 1998 Matthias Ettrich (ettrich@kde.org)
 //     Copyright (C) 1999 David Faure (faure@kde.org)
 // If a troll sees this, he kills me
-void qt_enter_modal( QWidget *widget );
-void qt_leave_modal( QWidget *widget );
+void qt_enter_modal(QWidget *widget);
+void qt_leave_modal(QWidget *widget);
 
 void ResourceGroupwareBase::enter_loop()
 {
-  QWidget dummy(0,0,WType_Dialog | WShowModal);
-  dummy.setFocusPolicy( QWidget::NoFocus );
-  qt_enter_modal(&dummy);
-  qApp->enter_loop();
-  qt_leave_modal(&dummy);
+    QWidget dummy(0, 0, WType_Dialog | WShowModal);
+    dummy.setFocusPolicy(QWidget::NoFocus);
+    qt_enter_modal(&dummy);
+    qApp->enter_loop();
+    qt_leave_modal(&dummy);
 }
 // END:COPIED
 
-void ResourceGroupwareBase::slotLoginJobResult( KIO::Job *job )
+void ResourceGroupwareBase::slotLoginJobResult(KIO::Job *job)
 {
-  if ( !adaptor() ) return;
-  mLoginFinished = adaptor()->interpretLoginJobResult( job );
-  qApp->exit_loop();
+    if(!adaptor()) return;
+    mLoginFinished = adaptor()->interpretLoginJobResult(job);
+    qApp->exit_loop();
 }
 
 void ResourceGroupwareBase::doClose()
 {
-  ResourceCached::doClose();
-  if ( mDownloadJob ) mDownloadJob->kill();
+    ResourceCached::doClose();
+    if(mDownloadJob) mDownloadJob->kill();
 
-  if ( adaptor() && 
-       adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogoff ) {
-    KIO::Job *logoffJob = adaptor()->createLogoffJob( prefs()->url(), prefs()->user(), prefs()->password() );
-    connect( logoffJob, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotLogoffJobResult( KIO::Job* ) ) );
-    // TODO: Do we really need to block while waiting for the job to return?
-    enter_loop();
-  }
+    if(adaptor() &&
+            adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogoff)
+    {
+        KIO::Job *logoffJob = adaptor()->createLogoffJob(prefs()->url(), prefs()->user(), prefs()->password());
+        connect(logoffJob, SIGNAL(result(KIO::Job *)),
+                SLOT(slotLogoffJobResult(KIO::Job *)));
+        // TODO: Do we really need to block while waiting for the job to return?
+        enter_loop();
+    }
 }
 
-void ResourceGroupwareBase::slotLogoffJobResult( KIO::Job *job )
+void ResourceGroupwareBase::slotLogoffJobResult(KIO::Job *job)
 {
-  if ( !adaptor() ) return;
-  adaptor()->interpretLogoffJobResult( job );
-  // TODO: Do we really need to block while waiting for the job to return?
-  qApp->exit_loop();
+    if(!adaptor()) return;
+    adaptor()->interpretLogoffJobResult(job);
+    // TODO: Do we really need to block while waiting for the job to return?
+    qApp->exit_loop();
 }
 
 bool ResourceGroupwareBase::doLoad()
 {
-  kdDebug(5800) << "ResourceGroupwareBase::load()" << endl;
+    kdDebug(5800) << "ResourceGroupwareBase::load()" << endl;
 
-  if ( mIsShowingError ) {
-    kdDebug(5800) << "Still showing error" << endl;
+    if(mIsShowingError)
+    {
+        kdDebug(5800) << "Still showing error" << endl;
+        return true;
+    }
+
+    if(mDownloadJob)
+    {
+        kdWarning() << "Download still in progress" << endl;
+        return false;
+    }
+
+    mCalendar.close();
+    clearChanges();
+    disableChangeNotification();
+    loadCache();
+    enableChangeNotification();
+    emit resourceChanged(this);
+
+    mDownloadJob = createDownloadJob(adaptor());
+    connect(mDownloadJob, SIGNAL(result(KPIM::GroupwareJob *)),
+            SLOT(slotDownloadJobResult(KPIM::GroupwareJob *)));
+
     return true;
-  }
-
-  if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
-    return false;
-  }
-  
-  mCalendar.close();
-  clearChanges();
-  disableChangeNotification();
-  loadCache();
-  enableChangeNotification();
-  emit resourceChanged( this );
-
-  mDownloadJob = createDownloadJob( adaptor() );
-  connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
-    SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
-
-  return true;
 }
 
-void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
+void ResourceGroupwareBase::slotDownloadJobResult(KPIM::GroupwareJob *job)
 {
-  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
+    kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
-  if ( job->error() ) {
-    mIsShowingError = true;
-    loadError( job->errorString() );
-    mIsShowingError = false;
-  } else {
-    kdDebug(5800) << "Successfully downloaded data" << endl;
-  
-    clearChanges();
-    saveCache();
-    enableChangeNotification();
+    if(job->error())
+    {
+        mIsShowingError = true;
+        loadError(job->errorString());
+        mIsShowingError = false;
+    }
+    else
+    {
+        kdDebug(5800) << "Successfully downloaded data" << endl;
 
-    emit resourceChanged( this );
-    emit resourceLoaded( this );
-  }
+        clearChanges();
+        saveCache();
+        enableChangeNotification();
 
-  mDownloadJob = 0;
+        emit resourceChanged(this);
+        emit resourceLoaded(this);
+    }
+
+    mDownloadJob = 0;
 }
 
 bool ResourceGroupwareBase::doSave()
 {
-  kdDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
+    kdDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
 
-  saveCache();
+    saveCache();
 
-  if ( !hasChanges() ) {
-    kdDebug(5800) << "No changes" << endl;
+    if(!hasChanges())
+    {
+        kdDebug(5800) << "No changes" << endl;
+        return true;
+    }
+    // TODO: Implement confirming of single changes i.e. it should be possible
+    //       to upload only certain changes and discard the rest. This is
+    //       particularly important for resources like the blogging resource,
+    //       where uploading would mean a republication of the blog, not only
+    //       a modifications.
+    if(!confirmSave()) return false;
+
+    mUploadJob = createUploadJob(adaptor());
+    connect(mUploadJob, SIGNAL(result(KPIM::GroupwareJob *)),
+            SLOT(slotUploadJobResult(KPIM::GroupwareJob *)));
+
+    Incidence::List inc;
+    Incidence::List::Iterator it;
+    KPIM::GroupwareUploadItem::List addedItems, changedItems, deletedItems;
+
+    inc = addedIncidences();
+    for(it = inc.begin(); it != inc.end(); ++it)
+    {
+        addedItems.append(adaptor()->newUploadItem(*it,
+                          KPIM::GroupwareUploadItem::Added));
+    }
+    // TODO: Check if the item has changed on the server...
+    // In particular, check if the version we based our change on is still current
+    // on the server
+    inc = changedIncidences();
+    for(it = inc.begin(); it != inc.end(); ++it)
+    {
+        changedItems.append(adaptor()->newUploadItem(*it,
+                            KPIM::GroupwareUploadItem::Changed));
+    }
+    inc = deletedIncidences();
+    for(it = inc.begin(); it != inc.end(); ++it)
+    {
+        deletedItems.append(adaptor()->newUploadItem(*it,
+                            KPIM::GroupwareUploadItem::Deleted));
+    }
+
+    mUploadJob->setAddedItems(addedItems);
+    mUploadJob->setChangedItems(changedItems);
+    mUploadJob->setDeletedItems(deletedItems);
+
+    // FIXME: Calling clearChanges() here is not the ideal way since the
+    // upload might fail, but there is no other place to call it...
+    clearChanges();
     return true;
-  }
-  // TODO: Implement confirming of single changes i.e. it should be possible
-  //       to upload only certain changes and discard the rest. This is
-  //       particularly important for resources like the blogging resource,
-  //       where uploading would mean a republication of the blog, not only
-  //       a modifications. 
-  if ( !confirmSave() ) return false;
-  
-  mUploadJob = createUploadJob( adaptor() );
-  connect( mUploadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
-    SLOT( slotUploadJobResult( KPIM::GroupwareJob * ) ) );
-
-  Incidence::List inc;
-  Incidence::List::Iterator it;
-  KPIM::GroupwareUploadItem::List addedItems, changedItems, deletedItems;
-
-  inc = addedIncidences();
-  for( it = inc.begin(); it != inc.end(); ++it ) {
-    addedItems.append( adaptor()->newUploadItem( *it, 
-                                           KPIM::GroupwareUploadItem::Added ) );
-  }
-  // TODO: Check if the item has changed on the server...
-  // In particular, check if the version we based our change on is still current 
-  // on the server
-  inc = changedIncidences();
-  for( it = inc.begin(); it != inc.end(); ++it ) {
-    changedItems.append( adaptor()->newUploadItem( *it, 
-                                         KPIM::GroupwareUploadItem::Changed ) );
-  }
-  inc = deletedIncidences();
-  for( it = inc.begin(); it != inc.end(); ++it ) {
-    deletedItems.append( adaptor()->newUploadItem( *it, 
-                                         KPIM::GroupwareUploadItem::Deleted ) );
-  }
-
-  mUploadJob->setAddedItems( addedItems );
-  mUploadJob->setChangedItems( changedItems );
-  mUploadJob->setDeletedItems( deletedItems );
-
-  // FIXME: Calling clearChanges() here is not the ideal way since the
-  // upload might fail, but there is no other place to call it...
-  clearChanges();
-  return true;
 }
 
-void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
+void ResourceGroupwareBase::slotUploadJobResult(KPIM::GroupwareJob *job)
 {
-  kdDebug(5800) << "ResourceGroupwareBase::slotUploadJobResult(): " << endl;
+    kdDebug(5800) << "ResourceGroupwareBase::slotUploadJobResult(): " << endl;
 
-  if ( job->error() ) {
-    mIsShowingError = true;
-    loadError( job->errorString() );
-    mIsShowingError = false;
-  } else {
-    kdDebug(5800) << "Successfully uploaded data" << endl;
-    /* 
-     * After the put the server might have expanded recurring events and will
-     * also change the uids of the uploaded events. Remove them from the cache
-     * and get the fresh delta and download. 
-     */
-
-    if ( !mDownloadJob ) {
-      mDownloadJob = createDownloadJob( adaptor() );
-      connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
-          SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
-    } else {
-      kdWarning() << k_funcinfo << "Download still in progress. "
-                                   "Can't happen. (TM)" << endl;
+    if(job->error())
+    {
+        mIsShowingError = true;
+        loadError(job->errorString());
+        mIsShowingError = false;
     }
-  }
+    else
+    {
+        kdDebug(5800) << "Successfully uploaded data" << endl;
+        /*
+         * After the put the server might have expanded recurring events and will
+         * also change the uids of the uploaded events. Remove them from the cache
+         * and get the fresh delta and download.
+         */
 
-  mDownloadJob = 0;
+        if(!mDownloadJob)
+        {
+            mDownloadJob = createDownloadJob(adaptor());
+            connect(mDownloadJob, SIGNAL(result(KPIM::GroupwareJob *)),
+                    SLOT(slotDownloadJobResult(KPIM::GroupwareJob *)));
+        }
+        else
+        {
+            kdWarning() << k_funcinfo << "Download still in progress. "
+                        "Can't happen. (TM)" << endl;
+        }
+    }
+
+    mDownloadJob = 0;
 }
 
 // FIXME: Put this into ResourceCached
 bool ResourceGroupwareBase::confirmSave()
 {
-  if ( !hasChanges() ) return true;
+    if(!hasChanges()) return true;
 
-  ConfirmSaveDialog dlg( resourceName(), 0 );
+    ConfirmSaveDialog dlg(resourceName(), 0);
 
-  dlg.addIncidences( addedIncidences(), i18n("Added") );
-  dlg.addIncidences( changedIncidences(), i18n("Changed") );
-  dlg.addIncidences( deletedIncidences(), i18n("Deleted") );
+    dlg.addIncidences(addedIncidences(), i18n("Added"));
+    dlg.addIncidences(changedIncidences(), i18n("Changed"));
+    dlg.addIncidences(deletedIncidences(), i18n("Deleted"));
 
-  int result = dlg.exec();
-  return result == QDialog::Accepted;
+    int result = dlg.exec();
+    return result == QDialog::Accepted;
 }
 
 KABC::Lock *ResourceGroupwareBase::lock()
 {
-  return &mLock;
+    return &mLock;
 }
 
 #include "kcal_resourcegroupwarebase.moc"

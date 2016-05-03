@@ -30,10 +30,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-extern "C"
-{
+extern "C" {
 
-void *init_libtodoconduit();
+    void *init_libtodoconduit();
 
 }
 

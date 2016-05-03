@@ -35,31 +35,33 @@ class DavJob;
 class SloxBase;
 class SloxFolder;
 
-class KDE_EXPORT SloxFolderManager : public QObject
-{
+class KDE_EXPORT SloxFolderManager : public QObject {
     Q_OBJECT
-  public:
-    SloxFolderManager( SloxBase *res, const KURL &baseUrl );
+public:
+    SloxFolderManager(SloxBase *res, const KURL &baseUrl);
     ~SloxFolderManager();
 
-    QMap<QString, SloxFolder*> folders() const { return mFolders; }
+    QMap<QString, SloxFolder *> folders() const
+    {
+        return mFolders;
+    }
     void requestFolders();
 
-  signals:
+signals:
     void foldersUpdated();
 
-  protected:
+protected:
     void readFolders();
 
     QString cacheFile() const;
 
-  protected slots:
-    void slotResult( KIO::Job * );
+protected slots:
+    void slotResult(KIO::Job *);
 
-  private:
+private:
     KIO::DavJob *mDownloadJob;
     KURL mBaseUrl;
-    QMap<QString, SloxFolder*> mFolders;
+    QMap<QString, SloxFolder *> mFolders;
     SloxBase *mRes;
 };
 

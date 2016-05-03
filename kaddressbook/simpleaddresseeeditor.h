@@ -29,14 +29,13 @@
 
 class KLineEdit;
 
-class SimpleAddresseeEditor : public AddresseeEditorBase
-{
+class SimpleAddresseeEditor : public AddresseeEditorBase {
     Q_OBJECT
-  public:
-    SimpleAddresseeEditor( QWidget *parent, const char *name = 0 );
+public:
+    SimpleAddresseeEditor(QWidget *parent, const char *name = 0);
     ~SimpleAddresseeEditor();
 
-    void setAddressee( const KABC::Addressee& );
+    void setAddressee(const KABC::Addressee &);
     const KABC::Addressee &addressee();
 
     void load();
@@ -46,13 +45,13 @@ class SimpleAddresseeEditor : public AddresseeEditorBase
 
     void setInitialFocus();
 
-  protected slots:
+protected slots:
     void emitModified();
 
-  protected:
+protected:
     void initGui();
 
-  private:
+private:
     KLineEdit *mNameEdit;
     KLineEdit *mEmailEdit;
 

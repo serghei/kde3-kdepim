@@ -26,47 +26,51 @@
 #include <kcalendarsystem.h>
 
 class DatenumsFactory : public CalendarDecorationFactory {
-  public:
-    CalendarDecoration *create() { return new Datenums; }
+public:
+    CalendarDecoration *create()
+    {
+        return new Datenums;
+    }
 };
 
-K_EXPORT_COMPONENT_FACTORY( libkorg_datenums, DatenumsFactory )
+K_EXPORT_COMPONENT_FACTORY(libkorg_datenums, DatenumsFactory)
 
 
 Datenums::Datenums()
 {
-  KConfig config( "korganizerrc", true, false); // Open read-only, no kdeglobals
-  config.setGroup("Calendar/DateNum Plugin");
-  mDateNum = config.readNumEntry( "ShowDayNumbers", 0 );
+    KConfig config("korganizerrc", true, false);  // Open read-only, no kdeglobals
+    config.setGroup("Calendar/DateNum Plugin");
+    mDateNum = config.readNumEntry("ShowDayNumbers", 0);
 }
 
 void Datenums::configure(QWidget *parent)
 {
-  ConfigDialog *dlg = new ConfigDialog(parent);
-  dlg->exec();
-  delete dlg;
+    ConfigDialog *dlg = new ConfigDialog(parent);
+    dlg->exec();
+    delete dlg;
 }
 
 
 QString Datenums::shortText(const QDate &date)
 {
-  int doy = KOGlobals::self()->calendarSystem()->dayOfYear(date);
-  switch (mDateNum) {
-    case 1: // only days until end of year
-        return QString::number( KOGlobals::self()->calendarSystem()->daysInYear(date) - doy );
-        break;
-    case 2: // both day of year and days till end of year
-        return i18n("dayOfYear / daysTillEndOfYear", "%1 / %2").arg( doy )
-               .arg(KOGlobals::self()->calendarSystem()->daysInYear(date) - doy);
-        break;
-    case 0: // only day of year
-    default:
-        return QString::number( doy );
-  }
-  return QString::number( doy );
+    int doy = KOGlobals::self()->calendarSystem()->dayOfYear(date);
+    switch(mDateNum)
+    {
+        case 1: // only days until end of year
+            return QString::number(KOGlobals::self()->calendarSystem()->daysInYear(date) - doy);
+            break;
+        case 2: // both day of year and days till end of year
+            return i18n("dayOfYear / daysTillEndOfYear", "%1 / %2").arg(doy)
+                   .arg(KOGlobals::self()->calendarSystem()->daysInYear(date) - doy);
+            break;
+        case 0: // only day of year
+        default:
+            return QString::number(doy);
+    }
+    return QString::number(doy);
 }
 
 QString Datenums::info()
 {
-  return i18n("This plugin provides numbers of days and weeks.");
+    return i18n("This plugin provides numbers of days and weeks.");
 }

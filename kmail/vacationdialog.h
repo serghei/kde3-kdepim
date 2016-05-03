@@ -26,56 +26,56 @@ class KIntSpinBox;
 template <typename T> class QValueList;
 
 namespace KMime {
-  namespace Types {
-    struct AddrSpec;
-    typedef QValueList<AddrSpec> AddrSpecList;
-  }
+namespace Types {
+struct AddrSpec;
+typedef QValueList<AddrSpec> AddrSpecList;
+}
 }
 
 namespace KMail {
 
-  class VacationDialog : public KDialogBase {
+class VacationDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    VacationDialog( const QString & caption, QWidget * parent=0,
-		    const char * name=0, bool modal=true );
+public:
+    VacationDialog(const QString &caption, QWidget *parent = 0,
+                   const char *name = 0, bool modal = true);
     virtual ~VacationDialog();
 
-    virtual void enableDomainAndSendForSpam( bool enable = true );
+    virtual void enableDomainAndSendForSpam(bool enable = true);
 
     bool activateVacation() const;
-    virtual void setActivateVacation( bool activate );
+    virtual void setActivateVacation(bool activate);
 
     QString messageText() const;
-    virtual void setMessageText( const QString & text );
+    virtual void setMessageText(const QString &text);
 
     int notificationInterval() const;
-    virtual void setNotificationInterval( int days );
+    virtual void setNotificationInterval(int days);
 
     KMime::Types::AddrSpecList mailAliases() const;
-    virtual void setMailAliases( const KMime::Types::AddrSpecList & aliases );
-    virtual void setMailAliases( const QString & aliases );
- 
+    virtual void setMailAliases(const KMime::Types::AddrSpecList &aliases);
+    virtual void setMailAliases(const QString &aliases);
+
     QString domainName() const;
-    virtual void setDomainName( const QString & domain );
+    virtual void setDomainName(const QString &domain);
 
     bool sendForSpam() const;
-    virtual void setSendForSpam( bool enable );
+    virtual void setSendForSpam(bool enable);
 
-    
-  private slots:
-    void slotIntervalSpinChanged( int value );
 
-  protected:
-    QCheckBox   * mActiveCheck;
-    KIntSpinBox * mIntervalSpin;
-    QLineEdit   * mMailAliasesEdit;
-    QTextEdit   * mTextEdit;
-    QCheckBox   * mSpamCheck;
-    QCheckBox   * mDomainCheck;
-    QLineEdit   * mDomainEdit;
+private slots:
+    void slotIntervalSpinChanged(int value);
 
-  };
+protected:
+    QCheckBox    *mActiveCheck;
+    KIntSpinBox *mIntervalSpin;
+    QLineEdit    *mMailAliasesEdit;
+    QTextEdit    *mTextEdit;
+    QCheckBox    *mSpamCheck;
+    QCheckBox    *mDomainCheck;
+    QLineEdit    *mDomainEdit;
+
+};
 
 } // namespace KMail
 

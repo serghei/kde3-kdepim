@@ -44,519 +44,535 @@
 
 #include "geowidget.h"
 
-GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
+GeoWidget::GeoWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::ContactEditorWidget(ab, parent, name), mReadOnly(false)
 {
-  QLabel *label = 0;
+    QLabel *label = 0;
 
-  QGridLayout *topLayout = new QGridLayout( this, 4, 3 );
-  topLayout->setMargin( KDialog::marginHint() );
-  topLayout->setSpacing( KDialog::spacingHint() );
+    QGridLayout *topLayout = new QGridLayout(this, 4, 3);
+    topLayout->setMargin(KDialog::marginHint());
+    topLayout->setSpacing(KDialog::spacingHint());
 
-  label = new QLabel( this );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network",
-                    KIcon::Desktop, KIcon::SizeMedium ) );
-  label->setAlignment( Qt::AlignTop );
-  topLayout->addMultiCellWidget( label, 0, 3, 0, 0 );
+    label = new QLabel(this);
+    label->setPixmap(KGlobal::iconLoader()->loadIcon("package_network",
+                     KIcon::Desktop, KIcon::SizeMedium));
+    label->setAlignment(Qt::AlignTop);
+    topLayout->addMultiCellWidget(label, 0, 3, 0, 0);
 
-  mGeoIsValid = new QCheckBox( i18n( "Use geo data" ), this );
-  topLayout->addMultiCellWidget( mGeoIsValid, 0, 0, 1, 2 );
+    mGeoIsValid = new QCheckBox(i18n("Use geo data"), this);
+    topLayout->addMultiCellWidget(mGeoIsValid, 0, 0, 1, 2);
 
-  label = new QLabel( i18n( "Latitude:" ), this );
-  topLayout->addWidget( label, 1, 1 );
+    label = new QLabel(i18n("Latitude:"), this);
+    topLayout->addWidget(label, 1, 1);
 
-  mLatitudeBox = new KDoubleSpinBox( -90, 90, 1, 0, 6, this );
-  mLatitudeBox->setEnabled( false );
-  mLatitudeBox->setSuffix( "°" );
-  topLayout->addWidget( mLatitudeBox, 1, 2 );
-  label->setBuddy( mLatitudeBox );
+    mLatitudeBox = new KDoubleSpinBox(-90, 90, 1, 0, 6, this);
+    mLatitudeBox->setEnabled(false);
+    mLatitudeBox->setSuffix("°");
+    topLayout->addWidget(mLatitudeBox, 1, 2);
+    label->setBuddy(mLatitudeBox);
 
-  label = new QLabel( i18n( "Longitude:" ), this );
-  topLayout->addWidget( label, 2, 1 );
+    label = new QLabel(i18n("Longitude:"), this);
+    topLayout->addWidget(label, 2, 1);
 
-  mLongitudeBox = new KDoubleSpinBox( -180, 180, 1, 0, 6, this );
-  mLongitudeBox->setEnabled( false );
-  mLongitudeBox->setSuffix( "°" );
-  topLayout->addWidget( mLongitudeBox, 2, 2 );
-  label->setBuddy( mLongitudeBox );
+    mLongitudeBox = new KDoubleSpinBox(-180, 180, 1, 0, 6, this);
+    mLongitudeBox->setEnabled(false);
+    mLongitudeBox->setSuffix("°");
+    topLayout->addWidget(mLongitudeBox, 2, 2);
+    label->setBuddy(mLongitudeBox);
 
-  mExtendedButton = new QPushButton( i18n( "Edit Geo Data..." ), this );
-  mExtendedButton->setEnabled( false );
-  topLayout->addMultiCellWidget( mExtendedButton, 3, 3, 1, 2 );
+    mExtendedButton = new QPushButton(i18n("Edit Geo Data..."), this);
+    mExtendedButton->setEnabled(false);
+    topLayout->addMultiCellWidget(mExtendedButton, 3, 3, 1, 2);
 
-  connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
-           SLOT( setModified() ) );
-  connect( mLongitudeBox, SIGNAL( valueChanged( double ) ),
-           SLOT( setModified() ) );
-  connect( mExtendedButton, SIGNAL( clicked() ),
-           SLOT( editGeoData() ) );
+    connect(mLatitudeBox, SIGNAL(valueChanged(double)),
+            SLOT(setModified()));
+    connect(mLongitudeBox, SIGNAL(valueChanged(double)),
+            SLOT(setModified()));
+    connect(mExtendedButton, SIGNAL(clicked()),
+            SLOT(editGeoData()));
 
-  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
-           mLatitudeBox, SLOT( setEnabled( bool ) ) );
-  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
-           mLongitudeBox, SLOT( setEnabled( bool ) ) );
-  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
-           mExtendedButton, SLOT( setEnabled( bool ) ) );
-  connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
-           SLOT( setModified() ) );
+    connect(mGeoIsValid, SIGNAL(toggled(bool)),
+            mLatitudeBox, SLOT(setEnabled(bool)));
+    connect(mGeoIsValid, SIGNAL(toggled(bool)),
+            mLongitudeBox, SLOT(setEnabled(bool)));
+    connect(mGeoIsValid, SIGNAL(toggled(bool)),
+            mExtendedButton, SLOT(setEnabled(bool)));
+    connect(mGeoIsValid, SIGNAL(toggled(bool)),
+            SLOT(setModified()));
 }
 
 GeoWidget::~GeoWidget()
 {
 }
 
-void GeoWidget::loadContact( KABC::Addressee *addr )
+void GeoWidget::loadContact(KABC::Addressee *addr)
 {
-  KABC::Geo geo = addr->geo();
+    KABC::Geo geo = addr->geo();
 
-  if ( geo.isValid() ) {
-    if ( !mReadOnly )
-      mGeoIsValid->setChecked( true );
-    mLatitudeBox->setValue( geo.latitude() );
-    mLongitudeBox->setValue( geo.longitude() );
-  } else
-    mGeoIsValid->setChecked( false );
+    if(geo.isValid())
+    {
+        if(!mReadOnly)
+            mGeoIsValid->setChecked(true);
+        mLatitudeBox->setValue(geo.latitude());
+        mLongitudeBox->setValue(geo.longitude());
+    }
+    else
+        mGeoIsValid->setChecked(false);
 }
 
-void GeoWidget::storeContact( KABC::Addressee *addr )
+void GeoWidget::storeContact(KABC::Addressee *addr)
 {
-  KABC::Geo geo;
+    KABC::Geo geo;
 
-  if ( mGeoIsValid->isChecked() ) {
-    geo.setLatitude( mLatitudeBox->value() );
-    geo.setLongitude( mLongitudeBox->value() );
-  } else {
-    geo.setLatitude( 91 );
-    geo.setLongitude( 181 );
-  }
+    if(mGeoIsValid->isChecked())
+    {
+        geo.setLatitude(mLatitudeBox->value());
+        geo.setLongitude(mLongitudeBox->value());
+    }
+    else
+    {
+        geo.setLatitude(91);
+        geo.setLongitude(181);
+    }
 
-  addr->setGeo( geo );
+    addr->setGeo(geo);
 }
 
-void GeoWidget::setReadOnly( bool readOnly )
+void GeoWidget::setReadOnly(bool readOnly)
 {
-  mReadOnly = readOnly;
+    mReadOnly = readOnly;
 
-  mGeoIsValid->setEnabled( !mReadOnly );
+    mGeoIsValid->setEnabled(!mReadOnly);
 }
 
 void GeoWidget::editGeoData()
 {
-  GeoDialog dlg( this );
+    GeoDialog dlg(this);
 
-  dlg.setLatitude( mLatitudeBox->value() );
-  dlg.setLongitude( mLongitudeBox->value() );
+    dlg.setLatitude(mLatitudeBox->value());
+    dlg.setLongitude(mLongitudeBox->value());
 
-  if ( dlg.exec() ) {
-    mLatitudeBox->setValue( dlg.latitude() );
-    mLongitudeBox->setValue( dlg.longitude() );
+    if(dlg.exec())
+    {
+        mLatitudeBox->setValue(dlg.latitude());
+        mLongitudeBox->setValue(dlg.longitude());
 
-    setModified( true );
-  }
+        setModified(true);
+    }
 }
 
 
 
-GeoDialog::GeoDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Geo Data Input" ), Ok | Cancel, Ok,
-                 parent, name, true, true ),
-    mUpdateSexagesimalInput( true )
+GeoDialog::GeoDialog(QWidget *parent, const char *name)
+    : KDialogBase(Plain, i18n("Geo Data Input"), Ok | Cancel, Ok,
+                  parent, name, true, true),
+      mUpdateSexagesimalInput(true)
 {
-  QFrame *page = plainPage();
+    QFrame *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 2, 2, marginHint(),
-                                            spacingHint() );
-  topLayout->setRowStretch( 1, 1 );
+    QGridLayout *topLayout = new QGridLayout(page, 2, 2, marginHint(),
+            spacingHint());
+    topLayout->setRowStretch(1, 1);
 
-  mMapWidget = new GeoMapWidget( page );
-  topLayout->addMultiCellWidget( mMapWidget, 0, 1, 0, 0 );
+    mMapWidget = new GeoMapWidget(page);
+    topLayout->addMultiCellWidget(mMapWidget, 0, 1, 0, 0);
 
-  mCityCombo = new KComboBox( page );
-  topLayout->addWidget( mCityCombo, 0, 1 );
+    mCityCombo = new KComboBox(page);
+    topLayout->addWidget(mCityCombo, 0, 1);
 
-  QGroupBox *sexagesimalGroup = new QGroupBox( 0, Vertical, i18n( "Sexagesimal" ), page );
-  QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout(),
-                                                    2, 5, spacingHint() );
+    QGroupBox *sexagesimalGroup = new QGroupBox(0, Vertical, i18n("Sexagesimal"), page);
+    QGridLayout *sexagesimalLayout = new QGridLayout(sexagesimalGroup->layout(),
+            2, 5, spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
-  sexagesimalLayout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel(i18n("Latitude:"), sexagesimalGroup);
+    sexagesimalLayout->addWidget(label, 0, 0);
 
-  mLatDegrees = new QSpinBox( 0, 90, 1, sexagesimalGroup );
-  mLatDegrees->setSuffix( "°" );
-  mLatDegrees->setWrapping( false );
-  label->setBuddy( mLatDegrees );
-  sexagesimalLayout->addWidget( mLatDegrees, 0, 1 );
+    mLatDegrees = new QSpinBox(0, 90, 1, sexagesimalGroup);
+    mLatDegrees->setSuffix("°");
+    mLatDegrees->setWrapping(false);
+    label->setBuddy(mLatDegrees);
+    sexagesimalLayout->addWidget(mLatDegrees, 0, 1);
 
-  mLatMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
-  mLatMinutes->setSuffix( "'" );
-  sexagesimalLayout->addWidget( mLatMinutes, 0, 2 );
+    mLatMinutes = new QSpinBox(0, 59, 1, sexagesimalGroup);
+    mLatMinutes->setSuffix("'");
+    sexagesimalLayout->addWidget(mLatMinutes, 0, 2);
 
-  mLatSeconds = new QSpinBox( 0, 59, 1, sexagesimalGroup );
-  mLatSeconds->setSuffix( "\"" );
-  sexagesimalLayout->addWidget( mLatSeconds, 0, 3 );
+    mLatSeconds = new QSpinBox(0, 59, 1, sexagesimalGroup);
+    mLatSeconds->setSuffix("\"");
+    sexagesimalLayout->addWidget(mLatSeconds, 0, 3);
 
-  mLatDirection = new KComboBox( sexagesimalGroup );
-  mLatDirection->insertItem( i18n( "North" ) );
-  mLatDirection->insertItem( i18n( "South" ) );
-  sexagesimalLayout->addWidget( mLatDirection, 0, 4 );
+    mLatDirection = new KComboBox(sexagesimalGroup);
+    mLatDirection->insertItem(i18n("North"));
+    mLatDirection->insertItem(i18n("South"));
+    sexagesimalLayout->addWidget(mLatDirection, 0, 4);
 
-  label = new QLabel( i18n( "Longitude:" ), sexagesimalGroup );
-  sexagesimalLayout->addWidget( label, 1, 0 );
+    label = new QLabel(i18n("Longitude:"), sexagesimalGroup);
+    sexagesimalLayout->addWidget(label, 1, 0);
 
-  mLongDegrees = new QSpinBox( 0, 180, 1, sexagesimalGroup );
-  mLongDegrees->setSuffix( "°" );
-  label->setBuddy( mLongDegrees );
-  sexagesimalLayout->addWidget( mLongDegrees, 1, 1 );
+    mLongDegrees = new QSpinBox(0, 180, 1, sexagesimalGroup);
+    mLongDegrees->setSuffix("°");
+    label->setBuddy(mLongDegrees);
+    sexagesimalLayout->addWidget(mLongDegrees, 1, 1);
 
-  mLongMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
-  mLongMinutes->setSuffix( "'" );
-  sexagesimalLayout->addWidget( mLongMinutes, 1, 2 );
+    mLongMinutes = new QSpinBox(0, 59, 1, sexagesimalGroup);
+    mLongMinutes->setSuffix("'");
+    sexagesimalLayout->addWidget(mLongMinutes, 1, 2);
 
-  mLongSeconds = new QSpinBox( 0, 59, 1, sexagesimalGroup );
-  mLongSeconds->setSuffix( "\"" );
-  sexagesimalLayout->addWidget( mLongSeconds, 1, 3 );
+    mLongSeconds = new QSpinBox(0, 59, 1, sexagesimalGroup);
+    mLongSeconds->setSuffix("\"");
+    sexagesimalLayout->addWidget(mLongSeconds, 1, 3);
 
-  mLongDirection = new KComboBox( sexagesimalGroup );
-  mLongDirection->insertItem( i18n( "East" ) );
-  mLongDirection->insertItem( i18n( "West" ) );
-  sexagesimalLayout->addWidget( mLongDirection, 1, 4 );
+    mLongDirection = new KComboBox(sexagesimalGroup);
+    mLongDirection->insertItem(i18n("East"));
+    mLongDirection->insertItem(i18n("West"));
+    sexagesimalLayout->addWidget(mLongDirection, 1, 4);
 
-  topLayout->addWidget( sexagesimalGroup, 1, 1 );
+    topLayout->addWidget(sexagesimalGroup, 1, 1);
 
-  loadCityList();
+    loadCityList();
 
-  connect( mMapWidget, SIGNAL( changed() ),
-           SLOT( geoMapChanged() ) );
-  connect( mCityCombo, SIGNAL( activated( int ) ),
-           SLOT( cityInputChanged() ) );
-  connect( mLatDegrees, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLatMinutes, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLatSeconds, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLatDirection, SIGNAL( activated( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongDegrees, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongMinutes, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongSeconds, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongDirection, SIGNAL( activated( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
+    connect(mMapWidget, SIGNAL(changed()),
+            SLOT(geoMapChanged()));
+    connect(mCityCombo, SIGNAL(activated(int)),
+            SLOT(cityInputChanged()));
+    connect(mLatDegrees, SIGNAL(valueChanged(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLatMinutes, SIGNAL(valueChanged(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLatSeconds, SIGNAL(valueChanged(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLatDirection, SIGNAL(activated(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLongDegrees, SIGNAL(valueChanged(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLongMinutes, SIGNAL(valueChanged(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLongSeconds, SIGNAL(valueChanged(int)),
+            SLOT(sexagesimalInputChanged()));
+    connect(mLongDirection, SIGNAL(activated(int)),
+            SLOT(sexagesimalInputChanged()));
 
-  KAcceleratorManager::manage( this );
+    KAcceleratorManager::manage(this);
 }
 
 GeoDialog::~GeoDialog()
 {
 }
 
-void GeoDialog::setLatitude( double latitude )
+void GeoDialog::setLatitude(double latitude)
 {
-  mLatitude = latitude;
-  updateInputs();
+    mLatitude = latitude;
+    updateInputs();
 }
 
 double GeoDialog::latitude() const
 {
-  return mLatitude;
+    return mLatitude;
 }
 
-void GeoDialog::setLongitude( double longitude )
+void GeoDialog::setLongitude(double longitude)
 {
-  mLongitude = longitude;
-  updateInputs();
+    mLongitude = longitude;
+    updateInputs();
 }
 
 double GeoDialog::longitude() const
 {
-  return mLongitude;
+    return mLongitude;
 }
 
 void GeoDialog::sexagesimalInputChanged()
 {
-  mLatitude = (double)( mLatDegrees->value() + (double)mLatMinutes->value() /
-                        60 + (double)mLatSeconds->value() / 3600 );
+    mLatitude = (double)(mLatDegrees->value() + (double)mLatMinutes->value() /
+                         60 + (double)mLatSeconds->value() / 3600);
 
-  mLatitude *= ( mLatDirection->currentItem() == 1 ? -1 : 1 );
+    mLatitude *= (mLatDirection->currentItem() == 1 ? -1 : 1);
 
-  mLongitude = (double)( mLongDegrees->value() + (double)mLongMinutes->value() /
-                         60 + (double)mLongSeconds->value() / 3600 );
+    mLongitude = (double)(mLongDegrees->value() + (double)mLongMinutes->value() /
+                          60 + (double)mLongSeconds->value() / 3600);
 
-  mLongitude *= ( mLongDirection->currentItem() == 1 ? -1 : 1 );
+    mLongitude *= (mLongDirection->currentItem() == 1 ? -1 : 1);
 
-  mUpdateSexagesimalInput = false;
+    mUpdateSexagesimalInput = false;
 
-  updateInputs();
+    updateInputs();
 }
 
 void GeoDialog::geoMapChanged()
 {
-  mLatitude = mMapWidget->latitude();
-  mLongitude = mMapWidget->longitude();
+    mLatitude = mMapWidget->latitude();
+    mLongitude = mMapWidget->longitude();
 
-  updateInputs();
+    updateInputs();
 }
 
 void GeoDialog::cityInputChanged()
 {
-  if ( mCityCombo->currentItem() != 0 ) {
-    GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
-    mLatitude = data.latitude;
-    mLongitude = data.longitude;
-  } else
-    mLatitude = mLongitude = 0;
+    if(mCityCombo->currentItem() != 0)
+    {
+        GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
+        mLatitude = data.latitude;
+        mLongitude = data.longitude;
+    }
+    else
+        mLatitude = mLongitude = 0;
 
-  updateInputs();
+    updateInputs();
 }
 
 void GeoDialog::updateInputs()
 {
-  // hmm, doesn't look nice, but there is no better way AFAIK
-  mCityCombo->blockSignals( true );
-  mLatDegrees->blockSignals( true );
-  mLatMinutes->blockSignals( true );
-  mLatSeconds->blockSignals( true );
-  mLatDirection->blockSignals( true );
-  mLongDegrees->blockSignals( true );
-  mLongMinutes->blockSignals( true );
-  mLongSeconds->blockSignals( true );
-  mLongDirection->blockSignals( true );
+    // hmm, doesn't look nice, but there is no better way AFAIK
+    mCityCombo->blockSignals(true);
+    mLatDegrees->blockSignals(true);
+    mLatMinutes->blockSignals(true);
+    mLatSeconds->blockSignals(true);
+    mLatDirection->blockSignals(true);
+    mLongDegrees->blockSignals(true);
+    mLongMinutes->blockSignals(true);
+    mLongSeconds->blockSignals(true);
+    mLongDirection->blockSignals(true);
 
-  mMapWidget->setLatitude( mLatitude );
-  mMapWidget->setLongitude( mLongitude );
-  mMapWidget->update();
+    mMapWidget->setLatitude(mLatitude);
+    mMapWidget->setLongitude(mLongitude);
+    mMapWidget->update();
 
-  if ( mUpdateSexagesimalInput ) {
-    int degrees, minutes, seconds;
-    double latitude = mLatitude;
-    double longitude = mLongitude;
+    if(mUpdateSexagesimalInput)
+    {
+        int degrees, minutes, seconds;
+        double latitude = mLatitude;
+        double longitude = mLongitude;
 
-    latitude *= ( mLatitude < 0 ? -1 : 1 );
-    longitude *= ( mLongitude < 0 ? -1 : 1 );
+        latitude *= (mLatitude < 0 ? -1 : 1);
+        longitude *= (mLongitude < 0 ? -1 : 1);
 
-    degrees = (int)( latitude * 1 );
-    minutes = (int)( ( latitude - degrees ) * 60 );
-    seconds = (int)( (double)( (double)latitude - (double)degrees - ( (double)minutes / (double)60 ) ) * (double)3600 );
+        degrees = (int)(latitude * 1);
+        minutes = (int)((latitude - degrees) * 60);
+        seconds = (int)((double)((double)latitude - (double)degrees - ((double)minutes / (double)60)) * (double)3600);
 
-    mLatDegrees->setValue( degrees );
-    mLatMinutes->setValue( minutes );
-    mLatSeconds->setValue( seconds );
+        mLatDegrees->setValue(degrees);
+        mLatMinutes->setValue(minutes);
+        mLatSeconds->setValue(seconds);
 
-    mLatDirection->setCurrentItem( mLatitude < 0 ? 1 : 0 );
+        mLatDirection->setCurrentItem(mLatitude < 0 ? 1 : 0);
 
-    degrees = (int)( longitude * 1 );
-    minutes = (int)( ( longitude - degrees ) * 60 );
-    seconds = (int)( (double)( longitude - (double)degrees - ( (double)minutes / 60 ) ) * 3600 );
+        degrees = (int)(longitude * 1);
+        minutes = (int)((longitude - degrees) * 60);
+        seconds = (int)((double)(longitude - (double)degrees - ((double)minutes / 60)) * 3600);
 
-    mLongDegrees->setValue( degrees );
-    mLongMinutes->setValue( minutes );
-    mLongSeconds->setValue( seconds );
-    mLongDirection->setCurrentItem( mLongitude < 0 ? 1 : 0 );
-  }
-  mUpdateSexagesimalInput = true;
+        mLongDegrees->setValue(degrees);
+        mLongMinutes->setValue(minutes);
+        mLongSeconds->setValue(seconds);
+        mLongDirection->setCurrentItem(mLongitude < 0 ? 1 : 0);
+    }
+    mUpdateSexagesimalInput = true;
 
-  int pos = nearestCity( mLongitude, mLatitude );
-  if ( pos != -1 )
-    mCityCombo->setCurrentItem( pos + 1 );
-  else
-    mCityCombo->setCurrentItem( 0 );
+    int pos = nearestCity(mLongitude, mLatitude);
+    if(pos != -1)
+        mCityCombo->setCurrentItem(pos + 1);
+    else
+        mCityCombo->setCurrentItem(0);
 
-  mCityCombo->blockSignals( false );
-  mLatDegrees->blockSignals( false );
-  mLatMinutes->blockSignals( false );
-  mLatSeconds->blockSignals( false );
-  mLatDirection->blockSignals( false );
-  mLongDegrees->blockSignals( false );
-  mLongMinutes->blockSignals( false );
-  mLongSeconds->blockSignals( false );
-  mLongDirection->blockSignals( false );
+    mCityCombo->blockSignals(false);
+    mLatDegrees->blockSignals(false);
+    mLatMinutes->blockSignals(false);
+    mLatSeconds->blockSignals(false);
+    mLatDirection->blockSignals(false);
+    mLongDegrees->blockSignals(false);
+    mLongMinutes->blockSignals(false);
+    mLongSeconds->blockSignals(false);
+    mLongDirection->blockSignals(false);
 }
 
 void GeoDialog::loadCityList()
 {
-  mCityCombo->clear();
-  mGeoDataMap.clear();
+    mCityCombo->clear();
+    mGeoDataMap.clear();
 
-  QFile file( locate( "data", "kaddressbook/zone.tab" ) );
+    QFile file(locate("data", "kaddressbook/zone.tab"));
 
-  if ( file.open( IO_ReadOnly ) ) {
-    QTextStream s( &file );
+    if(file.open(IO_ReadOnly))
+    {
+        QTextStream s(&file);
 
-    QString line, country;
-    QRegExp coord( "[+-]\\d+[+-]\\d+" );
-    QRegExp name( "[^\\s]+/[^\\s]+" );
-    int pos;
+        QString line, country;
+        QRegExp coord("[+-]\\d+[+-]\\d+");
+        QRegExp name("[^\\s]+/[^\\s]+");
+        int pos;
 
-    while ( !s.eof() ) {
-      line = s.readLine().stripWhiteSpace();
-      if ( line.isEmpty() || line[ 0 ] == '#' )
-        continue;
+        while(!s.eof())
+        {
+            line = s.readLine().stripWhiteSpace();
+            if(line.isEmpty() || line[ 0 ] == '#')
+                continue;
 
-      country = line.left( 2 );
-      QString c, n;
-      pos = coord.search( line, 0 );
-      if ( pos >= 0 )
-        c = line.mid( pos, coord.matchedLength() );
+            country = line.left(2);
+            QString c, n;
+            pos = coord.search(line, 0);
+            if(pos >= 0)
+                c = line.mid(pos, coord.matchedLength());
 
-      pos = name.search(line, pos);
-      if ( pos > 0 ) {
-        n = line.mid( pos, name.matchedLength() ).stripWhiteSpace();
-        n.replace( '_', " " );
-      }
+            pos = name.search(line, pos);
+            if(pos > 0)
+            {
+                n = line.mid(pos, name.matchedLength()).stripWhiteSpace();
+                n.replace('_', " ");
+            }
 
-      if ( !c.isEmpty() && !n.isEmpty() ) {
-        pos = c.find( "+", 1 );
-        if ( pos < 0 )
-          pos = c.find( "-", 1 );
-        if ( pos > 0 ) {
-          GeoData data;
-          data.latitude = calculateCoordinate( c.left( pos ) );
-          data.longitude = calculateCoordinate( c.mid( pos ) );
-          data.country = country;
+            if(!c.isEmpty() && !n.isEmpty())
+            {
+                pos = c.find("+", 1);
+                if(pos < 0)
+                    pos = c.find("-", 1);
+                if(pos > 0)
+                {
+                    GeoData data;
+                    data.latitude = calculateCoordinate(c.left(pos));
+                    data.longitude = calculateCoordinate(c.mid(pos));
+                    data.country = country;
 
-          mGeoDataMap.insert( n, data );
+                    mGeoDataMap.insert(n, data);
+                }
+            }
         }
-      }
+        QStringList items(mGeoDataMap.keys());
+        items.prepend(i18n("Undefined"));
+        mCityCombo->insertStringList(items);
+
+        file.close();
     }
-    QStringList items( mGeoDataMap.keys() );
-    items.prepend( i18n( "Undefined" ) );
-    mCityCombo->insertStringList( items );
-
-    file.close();
-  }
 }
 
-double GeoDialog::calculateCoordinate( const QString &coordinate ) const
+double GeoDialog::calculateCoordinate(const QString &coordinate) const
 {
-  int neg;
-  int d = 0, m = 0, s = 0;
-  QString str = coordinate;
+    int neg;
+    int d = 0, m = 0, s = 0;
+    QString str = coordinate;
 
-  neg = str.left( 1 ) == "-";
-  str.remove( 0, 1 );
+    neg = str.left(1) == "-";
+    str.remove(0, 1);
 
-  switch ( str.length() ) {
-    case 4:
-      d = str.left( 2 ).toInt();
-      m = str.mid( 2 ).toInt();
-      break;
-    case 5:
-      d = str.left( 3 ).toInt();
-      m = str.mid( 3 ).toInt();
-      break;
-    case 6:
-      d = str.left( 2 ).toInt();
-      m = str.mid( 2, 2 ).toInt();
-      s = str.right( 2 ).toInt();
-      break;
-    case 7:
-      d = str.left( 3 ).toInt();
-      m = str.mid( 3, 2 ).toInt();
-      s = str.right( 2 ).toInt();
-      break;
-    default:
-      break;
-  }
+    switch(str.length())
+    {
+        case 4:
+            d = str.left(2).toInt();
+            m = str.mid(2).toInt();
+            break;
+        case 5:
+            d = str.left(3).toInt();
+            m = str.mid(3).toInt();
+            break;
+        case 6:
+            d = str.left(2).toInt();
+            m = str.mid(2, 2).toInt();
+            s = str.right(2).toInt();
+            break;
+        case 7:
+            d = str.left(3).toInt();
+            m = str.mid(3, 2).toInt();
+            s = str.right(2).toInt();
+            break;
+        default:
+            break;
+    }
 
-  if ( neg )
-    return - ( d + m / 60.0 + s / 3600.0 );
-  else
-    return d + m / 60.0 + s / 3600.0;
+    if(neg)
+        return - (d + m / 60.0 + s / 3600.0);
+    else
+        return d + m / 60.0 + s / 3600.0;
 }
 
-int GeoDialog::nearestCity( double x, double y ) const
+int GeoDialog::nearestCity(double x, double y) const
 {
-  QMap<QString, GeoData>::ConstIterator it;
-  int pos = 0;
-  for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, ++pos ) {
-    double dist = ( (*it).longitude - x ) * ( (*it).longitude - x ) +
-                  ( (*it).latitude - y ) * ( (*it).latitude - y );
-    if ( dist < 1.5 )
-      return pos;
-  }
+    QMap<QString, GeoData>::ConstIterator it;
+    int pos = 0;
+    for(it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, ++pos)
+    {
+        double dist = ((*it).longitude - x) * ((*it).longitude - x) +
+                      ((*it).latitude - y) * ((*it).latitude - y);
+        if(dist < 1.5)
+            return pos;
+    }
 
-  return -1;
+    return -1;
 }
 
 
-GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mLatitude( 0 ), mLongitude( 0 )
+GeoMapWidget::GeoMapWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name), mLatitude(0), mLongitude(0)
 {
-  setBackgroundMode( NoBackground );
+    setBackgroundMode(NoBackground);
 
-  setFixedSize( 400, 200 );
+    setFixedSize(400, 200);
 
-  update();
+    update();
 }
 
 GeoMapWidget::~GeoMapWidget()
 {
 }
 
-void GeoMapWidget::setLatitude( double latitude )
+void GeoMapWidget::setLatitude(double latitude)
 {
-  mLatitude = latitude;
+    mLatitude = latitude;
 }
 
 double GeoMapWidget::latitude()const
 {
-  return mLatitude;
+    return mLatitude;
 }
 
-void GeoMapWidget::setLongitude( double longitude )
+void GeoMapWidget::setLongitude(double longitude)
 {
-  mLongitude = longitude;
+    mLongitude = longitude;
 }
 
 double GeoMapWidget::longitude()const
 {
-  return mLongitude;
+    return mLongitude;
 }
 
-void GeoMapWidget::mousePressEvent( QMouseEvent *event )
+void GeoMapWidget::mousePressEvent(QMouseEvent *event)
 {
-  double latMid = height() / 2;
-  double longMid = width() / 2;
+    double latMid = height() / 2;
+    double longMid = width() / 2;
 
-  double latOffset = latMid - event->y();
-  double longOffset = event->x() - longMid;
+    double latOffset = latMid - event->y();
+    double longOffset = event->x() - longMid;
 
-  mLatitude = ( latOffset * 90 ) / latMid;
-  mLongitude = ( longOffset * 180 ) / longMid;
+    mLatitude = (latOffset * 90) / latMid;
+    mLongitude = (longOffset * 180) / longMid;
 
-  emit changed();
+    emit changed();
 }
 
-void GeoMapWidget::paintEvent( QPaintEvent* )
+void GeoMapWidget::paintEvent(QPaintEvent *)
 {
-  uint w = width();
-  uint h = height();
+    uint w = width();
+    uint h = height();
 
-  QPixmap pm( w, h );
-  QPainter p;
-  p.begin( &pm, this );
+    QPixmap pm(w, h);
+    QPainter p;
+    p.begin(&pm, this);
 
-  p.setPen( QColor( 255, 0, 0 ) );
-  p.setBrush( QColor( 255, 0, 0 ) );
+    p.setPen(QColor(255, 0, 0));
+    p.setBrush(QColor(255, 0, 0));
 
-  QPixmap world( locate( "data", "kaddressbook/pics/world.jpg" ) );
-  p.drawPixmap( 0, 0, world );
+    QPixmap world(locate("data", "kaddressbook/pics/world.jpg"));
+    p.drawPixmap(0, 0, world);
 
-  double latMid = h / 2;
-  double longMid = w / 2;
+    double latMid = h / 2;
+    double longMid = w / 2;
 
-  double latOffset = ( mLatitude * latMid ) / 90;
-  double longOffset = ( mLongitude * longMid ) / 180;
+    double latOffset = (mLatitude * latMid) / 90;
+    double longOffset = (mLongitude * longMid) / 180;
 
-  int x = (int)(longMid + longOffset);
-  int y = (int)(latMid - latOffset);
-  p.drawEllipse( x, y, 4, 4 );
+    int x = (int)(longMid + longOffset);
+    int y = (int)(latMid - latOffset);
+    p.drawEllipse(x, y, 4, 4);
 
-  p.end();
-  bitBlt( this, 0, 0, &pm );
+    p.end();
+    bitBlt(this, 0, 0, &pm);
 }
 
 #include "geowidget.moc"

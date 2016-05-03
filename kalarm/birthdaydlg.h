@@ -35,69 +35,77 @@ class SpecialActionsButton;
 class RepetitionButton;
 class LateCancelSelector;
 class Reminder;
-namespace KABC { class AddressBook; }
+namespace KABC {
+class AddressBook;
+}
 class BLineEdit;
 class BListView;
 
 
-class BirthdayDlg : public KDialogBase
-{
-		Q_OBJECT
-	public:
-		BirthdayDlg(QWidget* parent = 0);
-		QValueList<KAEvent> events() const;
-		static void close();
+class BirthdayDlg : public KDialogBase {
+    Q_OBJECT
+public:
+    BirthdayDlg(QWidget *parent = 0);
+    QValueList<KAEvent> events() const;
+    static void close();
 
-	protected slots:
-		virtual void      slotOk();
+protected slots:
+    virtual void      slotOk();
 
-	private slots:
-		void              slotSelectionChanged();
-		void              slotTextLostFocus();
-		void              updateSelectionList();
+private slots:
+    void              slotSelectionChanged();
+    void              slotTextLostFocus();
+    void              updateSelectionList();
 
-	private:
-		void              loadAddressBook();
+private:
+    void              loadAddressBook();
 
-		static const KABC::AddressBook* mAddressBook;
-		BListView*               mAddresseeList;
-		BLineEdit*               mPrefix;
-		BLineEdit*               mSuffix;
-		Reminder*                mReminder;
-		SoundPicker*             mSoundPicker;
-		FontColourButton*        mFontColourButton;
-		CheckBox*                mConfirmAck;
-		LateCancelSelector*      mLateCancel;
-		SpecialActionsButton*    mSpecialActionsButton;
-		RepetitionButton*        mSubRepetition;
-		QString                  mPrefixText;   // last entered value of prefix text
-		QString                  mSuffixText;   // last entered value of suffix text
-		int                      mFlags;        // event flag bits
+    static const KABC::AddressBook *mAddressBook;
+    BListView               *mAddresseeList;
+    BLineEdit               *mPrefix;
+    BLineEdit               *mSuffix;
+    Reminder                *mReminder;
+    SoundPicker             *mSoundPicker;
+    FontColourButton        *mFontColourButton;
+    CheckBox                *mConfirmAck;
+    LateCancelSelector      *mLateCancel;
+    SpecialActionsButton    *mSpecialActionsButton;
+    RepetitionButton        *mSubRepetition;
+    QString                  mPrefixText;   // last entered value of prefix text
+    QString                  mSuffixText;   // last entered value of suffix text
+    int                      mFlags;        // event flag bits
 };
 
 
-class BLineEdit : public QLineEdit
-{
-		Q_OBJECT
-	public:
-		BLineEdit(QWidget* parent = 0, const char* name = 0)
-			     : QLineEdit(parent, name) {}
-		BLineEdit(const QString& text, QWidget* parent = 0, const char* name = 0)
-			     : QLineEdit(text, parent, name) {}
-	signals:
-		void         focusLost();
-	protected:
-		virtual void focusOutEvent(QFocusEvent*)  { emit focusLost(); }
+class BLineEdit : public QLineEdit {
+    Q_OBJECT
+public:
+    BLineEdit(QWidget *parent = 0, const char *name = 0)
+        : QLineEdit(parent, name) {}
+    BLineEdit(const QString &text, QWidget *parent = 0, const char *name = 0)
+        : QLineEdit(text, parent, name) {}
+signals:
+    void         focusLost();
+protected:
+    virtual void focusOutEvent(QFocusEvent *)
+    {
+        emit focusLost();
+    }
 };
 
-class BListView : public KListView
-{
-		Q_OBJECT
-	public:
-		BListView(QWidget* parent = 0, const char* name = 0);
-	public slots:
-		virtual void slotSelectAll()   { selectAll(true); }
-		virtual void slotDeselect()    { selectAll(false); }
+class BListView : public KListView {
+    Q_OBJECT
+public:
+    BListView(QWidget *parent = 0, const char *name = 0);
+public slots:
+    virtual void slotSelectAll()
+    {
+        selectAll(true);
+    }
+    virtual void slotDeselect()
+    {
+        selectAll(false);
+    }
 };
 
 #endif // BIRTHDAYDLG_H

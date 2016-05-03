@@ -1,6 +1,6 @@
 #ifndef _KGANTTRELATION_H_
 #define _KGANTTRELATION_H_
- 
+
 /*
 
     This library is free software; you can redistribute it and/or
@@ -29,9 +29,9 @@
 
 
 #include <qobject.h>
-#include <qdatetime.h> 
-#include <qtextstream.h> 
-#include <qptrlist.h> 
+#include <qdatetime.h>
+#include <qtextstream.h>
+#include <qptrlist.h>
 #include <qpainter.h>
 
 
@@ -49,207 +49,217 @@ class KGanttRelation : public QObject
 //////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class KGanttItem;
+    friend class KGanttItem;
 
 public:
 
-  enum Change { 
+    enum Change
+    {
 
-    NoChange        = 0,
-    TextChanged     = 32,
+        NoChange        = 0,
+        TextChanged     = 32,
 
-    ///  Item has been selected.
-    Selected        = 2048,
-    
-    ///  Item has been unselected.
-    Unselected      = 4096
-  };
- 
- 
+        ///  Item has been selected.
+        Selected        = 2048,
 
-
-  ///   Destructor.
-  /*
-   *    Emits signal destroyed(KGanttRelation* this).
-   */
-  ~KGanttRelation();
-  
- 
-
-
-  ///  Select/unselect item.
-  /*!
-   *
-   */
-  void select(bool f);
-
-
-  ///  Set item editable or not.
-  /*!
-   *   If item is not editable these methods have no effect :
-   *   setStart(), setEnd(), setText(), select(), setMode(), setStyle(), 
-   *   setHeight(),
-   *   
-   */
-  void setEditable(bool f) {
-    _editable = f;
-  }
+        ///  Item has been unselected.
+        Unselected      = 4096
+    };
 
 
 
-  ///  Returns if item is editable.
-  /*!
-   *   See also setEditable().
-   */
-  bool isEditable() {
-    return _editable;
-  }
+
+    ///   Destructor.
+    /*
+     *    Emits signal destroyed(KGanttRelation* this).
+     */
+    ~KGanttRelation();
 
 
 
-  ///  Get brush which has to be used for drawing this item as selected.
-  /*!
-   *
-   */
-  QPen& getSelectPen() {
-    return _selectPen;
-  }
+
+    ///  Select/unselect item.
+    /*!
+     *
+     */
+    void select(bool f);
+
+
+    ///  Set item editable or not.
+    /*!
+     *   If item is not editable these methods have no effect :
+     *   setStart(), setEnd(), setText(), select(), setMode(), setStyle(),
+     *   setHeight(),
+     *
+     */
+    void setEditable(bool f)
+    {
+        _editable = f;
+    }
 
 
 
-  ///  Set pen for border.
-  /*!
-   *
-   */
-  void setPen(const QPen& pen);
+    ///  Returns if item is editable.
+    /*!
+     *   See also setEditable().
+     */
+    bool isEditable()
+    {
+        return _editable;
+    }
 
 
 
-  ///
-  /*!
-   *
-   */
-  QPen& getPen() {
-    return _pen;
-  }
+    ///  Get brush which has to be used for drawing this item as selected.
+    /*!
+     *
+     */
+    QPen &getSelectPen()
+    {
+        return _selectPen;
+    }
 
 
 
-  ///
-  /*!
-   *
-   */
-  void setTextPen(const QPen& pen) {
-    _textPen = pen;
-  }
+    ///  Set pen for border.
+    /*!
+     *
+     */
+    void setPen(const QPen &pen);
 
 
 
-  ///
-  /*!
-   *
-   */
-  QPen& getTextPen() {
-    return _textPen;
-  }
+    ///
+    /*!
+     *
+     */
+    QPen &getPen()
+    {
+        return _pen;
+    }
 
 
 
-  ///  Set text.
-  /*!
-   *
-   */
-  void setText(const QString& text);
+    ///
+    /*!
+     *
+     */
+    void setTextPen(const QPen &pen)
+    {
+        _textPen = pen;
+    }
 
 
 
-  ///  Get text.
-  /*!
-   *
-   */
-  QString getText() { return _text; }
-  
-
-
-  ///  Get date of starting.
-  /*!
-   *   If mode == ´Rubberband´ and this item contains
-   *   subitems, start of the item is determined by the start of the
-   *   earliest subitem. <br>
-   */
-  KGanttItem* getFrom();
+    ///
+    /*!
+     *
+     */
+    QPen &getTextPen()
+    {
+        return _textPen;
+    }
 
 
 
-  ///  Get date of ending.
-  /*!
-   *
-   */
-  KGanttItem* getTo();
+    ///  Set text.
+    /*!
+     *
+     */
+    void setText(const QString &text);
 
 
 
-  ///  Dump to cout.
-  /*!
-   *
-   */
-  void dump(QTextOStream& cout, const QString& pre);
+    ///  Get text.
+    /*!
+     *
+     */
+    QString getText()
+    {
+        return _text;
+    }
 
 
-  QString ChangeAsString(Change c);
+
+    ///  Get date of starting.
+    /*!
+     *   If mode == ´Rubberband´ and this item contains
+     *   subitems, start of the item is determined by the start of the
+     *   earliest subitem. <br>
+     */
+    KGanttItem *getFrom();
+
+
+
+    ///  Get date of ending.
+    /*!
+     *
+     */
+    KGanttItem *getTo();
+
+
+
+    ///  Dump to cout.
+    /*!
+     *
+     */
+    void dump(QTextOStream &cout, const QString &pre);
+
+
+    QString ChangeAsString(Change c);
 
 
 signals:
 
-  ///  Item has changed.
-  /*!
-   *   This signal is emitted if any of the items
-   *   properties have been changed.
-   */
-  void changed(KGanttRelation*, KGanttRelation::Change);
+    ///  Item has changed.
+    /*!
+     *   This signal is emitted if any of the items
+     *   properties have been changed.
+     */
+    void changed(KGanttRelation *, KGanttRelation::Change);
 
 
 
-  ///  Item will be deleted.
-  /*!
-   *   This signal will be emitted immediately before
-   *   the object will be deleted.
-   */
-  void destroyed(KGanttRelation*);
+    ///  Item will be deleted.
+    /*!
+     *   This signal will be emitted immediately before
+     *   the object will be deleted.
+     */
+    void destroyed(KGanttRelation *);
 
 
 public slots:
 
-  void itemDestroyed(KGanttItem* item);
+    void itemDestroyed(KGanttItem *item);
 
 
 protected:
 
- ///  Constructor.
-  /*!
-   * 
-   */
-  KGanttRelation(KGanttItem* from, KGanttItem* to,
-		 const QString& text );
+    ///  Constructor.
+    /*!
+     *
+     */
+    KGanttRelation(KGanttItem *from, KGanttItem *to,
+                   const QString &text);
 
 
 private:
 
 
-  bool _selected;
+    bool _selected;
 
-  bool _editable;
+    bool _editable;
 
-  KGanttItem* _from;
-  KGanttItem* _to;
-  
-  QString _text;
+    KGanttItem *_from;
+    KGanttItem *_to;
 
-  QPen _pen, _textPen;
-  
-  static QPen _selectPen;
+    QString _text;
+
+    QPen _pen, _textPen;
+
+    static QPen _selectPen;
 
 };
 

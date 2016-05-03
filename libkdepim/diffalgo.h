@@ -34,9 +34,8 @@ namespace KPIM {
   responsible for representation. The separation makes it possible to use one
   display for all diffing algorithm and vice versa.
  */
-class DiffAlgoDisplay
-{
-  public:
+class DiffAlgoDisplay {
+public:
 
     /**
       Is called on the start of the diff.
@@ -51,34 +50,33 @@ class DiffAlgoDisplay
     /**
       Sets the title of the left data source.
      */
-    virtual void setLeftSourceTitle( const QString &title ) = 0;
+    virtual void setLeftSourceTitle(const QString &title) = 0;
 
     /**
       Sets the title of the right data source.
      */
-    virtual void setRightSourceTitle( const QString &title ) = 0;
+    virtual void setRightSourceTitle(const QString &title) = 0;
 
     /**
       Adds a field which is only available in the left data source.
      */
-    virtual void additionalLeftField( const QString &id, const QString &value ) = 0;
+    virtual void additionalLeftField(const QString &id, const QString &value) = 0;
 
     /**
       Adds a field which is only available in the right data source.
      */
-    virtual void additionalRightField( const QString &id, const QString &value ) = 0;
+    virtual void additionalRightField(const QString &id, const QString &value) = 0;
 
     /**
       Adds a conflict between two fields.
      */
-    virtual void conflictField( const QString &id, const QString &leftValue,
-                                const QString &rightValue ) = 0;
+    virtual void conflictField(const QString &id, const QString &leftValue,
+                               const QString &rightValue) = 0;
 };
 
 
-class KDE_EXPORT DiffAlgo
-{
-  public:
+class KDE_EXPORT DiffAlgo {
+public:
     /**
       Destructor.
      */
@@ -102,35 +100,35 @@ class KDE_EXPORT DiffAlgo
     /**
       Sets the title of the left data source.
      */
-    void setLeftSourceTitle( const QString &title );
+    void setLeftSourceTitle(const QString &title);
 
     /**
       Sets the title of the right data source.
      */
-    void setRightSourceTitle( const QString &title );
+    void setRightSourceTitle(const QString &title);
 
     /**
       Adds a field which is only available in the left data source.
      */
-    void additionalLeftField( const QString &id, const QString &value );
+    void additionalLeftField(const QString &id, const QString &value);
 
     /**
       Adds a field which is only available in the right data source.
      */
-    void additionalRightField( const QString &id, const QString &value );
+    void additionalRightField(const QString &id, const QString &value);
 
     /**
       Adds a conflict between two fields.
      */
-    void conflictField( const QString &id, const QString &leftValue,
-                        const QString &rightValue );
+    void conflictField(const QString &id, const QString &leftValue,
+                       const QString &rightValue);
 
-    void addDisplay( DiffAlgoDisplay *display );
-    void removeDisplay( DiffAlgoDisplay *display );
+    void addDisplay(DiffAlgoDisplay *display);
+    void removeDisplay(DiffAlgoDisplay *display);
 
 
-  private:
-    QValueList<DiffAlgoDisplay*> mDisplays;
+private:
+    QValueList<DiffAlgoDisplay *> mDisplays;
 };
 
 }

@@ -35,22 +35,20 @@
 #include <qmap.h>
 #include <qwidget.h>
 
-namespace Akregator
-{
+namespace Akregator {
 
-class SelectNodeDialog::SelectNodeDialogPrivate
-{
-    public:
-    SimpleNodeSelector* widget;
+class SelectNodeDialog::SelectNodeDialogPrivate {
+public:
+    SimpleNodeSelector *widget;
 };
 
-SelectNodeDialog::SelectNodeDialog(FeedList* feedList, QWidget* parent, char* name) : 
- KDialogBase(parent, name, true, i18n("Select Feed or Folder"),
-                  KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok, true), d(new SelectNodeDialogPrivate)
+SelectNodeDialog::SelectNodeDialog(FeedList *feedList, QWidget *parent, char *name) :
+    KDialogBase(parent, name, true, i18n("Select Feed or Folder"),
+                KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true), d(new SelectNodeDialogPrivate)
 {
     d->widget = new SimpleNodeSelector(feedList, this);
 
-    connect(d->widget, SIGNAL(signalNodeSelected(TreeNode*)), this, SLOT(slotNodeSelected(TreeNode*)));
+    connect(d->widget, SIGNAL(signalNodeSelected(TreeNode *)), this, SLOT(slotNodeSelected(TreeNode *)));
 
     setMainWidget(d->widget);
     enableButtonOK(false);
@@ -62,87 +60,86 @@ SelectNodeDialog::~SelectNodeDialog()
     d = 0;
 }
 
-TreeNode* SelectNodeDialog::selectedNode() const
+TreeNode *SelectNodeDialog::selectedNode() const
 {
     return d->widget->selectedNode();
 }
 
-void SelectNodeDialog::slotSelectNode(TreeNode* node)
+void SelectNodeDialog::slotSelectNode(TreeNode *node)
 {
     d->widget->slotSelectNode(node);
 }
 
-void SelectNodeDialog::slotNodeSelected(TreeNode* node)
+void SelectNodeDialog::slotNodeSelected(TreeNode *node)
 {
     enableButtonOK(node != 0);
 }
 
 
-class SimpleNodeSelector::SimpleNodeSelectorPrivate
-{
-    public:
-    KListView* view;
-    FeedList* list;
-    NodeVisitor* visitor;
-    QMap<TreeNode*,QListViewItem*> nodeToItem;
-    QMap<QListViewItem*, TreeNode*> itemToNode;
+class SimpleNodeSelector::SimpleNodeSelectorPrivate {
+public:
+    KListView *view;
+    FeedList *list;
+    NodeVisitor *visitor;
+    QMap<TreeNode *, QListViewItem *> nodeToItem;
+    QMap<QListViewItem *, TreeNode *> itemToNode;
 };
 
-class SimpleNodeSelector::NodeVisitor : public TreeNodeVisitor
-{
-    public:
+class SimpleNodeSelector::NodeVisitor : public TreeNodeVisitor {
+public:
 
-    NodeVisitor(SimpleNodeSelector* view) : TreeNodeVisitor(), m_view(view) {}
+    NodeVisitor(SimpleNodeSelector *view) : TreeNodeVisitor(), m_view(view) {}
 
-    void createItems(TreeNode* node)
+    void createItems(TreeNode *node)
     {
         node->accept(this);
     }
 
-    virtual bool visitFolder(Folder* node)
+    virtual bool visitFolder(Folder *node)
     {
         visitTreeNode(node);
-        QValueList<TreeNode*> children = node->children();
+        QValueList<TreeNode *> children = node->children();
         m_view->d->nodeToItem[node]->setExpandable(true);
-        for (QValueList<TreeNode*>::ConstIterator it = children.begin(); it != children.end(); ++it)
-             createItems(*it);
+        for(QValueList<TreeNode *>::ConstIterator it = children.begin(); it != children.end(); ++it)
+            createItems(*it);
         return true;
     }
 
-    virtual bool visitTreeNode(TreeNode* node)
+    virtual bool visitTreeNode(TreeNode *node)
     {
-        QListViewItem* pi = node->parent() ? m_view->d->nodeToItem[node->parent()] : 0;
-         
-        KListViewItem* item = 0;
-        if (pi != 0)
-             item = new KListViewItem(pi, node->title());
+        QListViewItem *pi = node->parent() ? m_view->d->nodeToItem[node->parent()] : 0;
+
+        KListViewItem *item = 0;
+        if(pi != 0)
+            item = new KListViewItem(pi, node->title());
         else
-             item = new KListViewItem(m_view->d->view, node->title());
+            item = new KListViewItem(m_view->d->view, node->title());
         item->setExpandable(false);
         m_view->d->nodeToItem.insert(node, item);
         m_view->d->itemToNode.insert(item, node);
-        connect(node, SIGNAL(signalDestroyed(TreeNode*)), m_view, SLOT(slotNodeDestroyed(TreeNode*)));
+        connect(node, SIGNAL(signalDestroyed(TreeNode *)), m_view, SLOT(slotNodeDestroyed(TreeNode *)));
         return true;
     }
 
-    private:
+private:
 
-    SimpleNodeSelector* m_view;
+    SimpleNodeSelector *m_view;
 };
 
 
-SimpleNodeSelector::SimpleNodeSelector(FeedList* feedList, QWidget* parent, const char* name) : QWidget(parent, name), d(new SimpleNodeSelectorPrivate)
+SimpleNodeSelector::SimpleNodeSelector(FeedList *feedList, QWidget *parent, const char *name) : QWidget(parent, name),
+    d(new SimpleNodeSelectorPrivate)
 {
     d->list = feedList;
-    connect(feedList, SIGNAL(signalDestroyed(FeedList*)), this, SLOT(slotFeedListDestroyed(FeedList*)));
+    connect(feedList, SIGNAL(signalDestroyed(FeedList *)), this, SLOT(slotFeedListDestroyed(FeedList *)));
 
     d->view = new KListView(this);
     d->view->setRootIsDecorated(true);
     d->view->addColumn(i18n("Feeds"));
-    
-    connect(d->view, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(slotItemSelected(QListViewItem*)));
 
-    QGridLayout* layout = new QGridLayout(this, 1, 1);
+    connect(d->view, SIGNAL(selectionChanged(QListViewItem *)), this, SLOT(slotItemSelected(QListViewItem *)));
+
+    QGridLayout *layout = new QGridLayout(this, 1, 1);
     layout->addWidget(d->view, 0, 0);
 
     d->visitor = new NodeVisitor(this);
@@ -159,35 +156,35 @@ SimpleNodeSelector::~SimpleNodeSelector()
     d = 0;
 }
 
-TreeNode* SimpleNodeSelector::selectedNode() const
+TreeNode *SimpleNodeSelector::selectedNode() const
 {
     return d->itemToNode[d->view->selectedItem()];
 }
 
-void SimpleNodeSelector::slotSelectNode(TreeNode* node)
+void SimpleNodeSelector::slotSelectNode(TreeNode *node)
 {
-    QListViewItem* item = d->nodeToItem[node];
-    if (item != 0)
+    QListViewItem *item = d->nodeToItem[node];
+    if(item != 0)
         d->view->setSelected(item, true);
 }
 
-void SimpleNodeSelector::slotFeedListDestroyed(FeedList* /*list*/)
+void SimpleNodeSelector::slotFeedListDestroyed(FeedList * /*list*/)
 {
     d->nodeToItem.clear();
     d->itemToNode.clear();
     d->view->clear();
 }
 
-void SimpleNodeSelector::slotItemSelected(QListViewItem* item)
+void SimpleNodeSelector::slotItemSelected(QListViewItem *item)
 {
     emit signalNodeSelected(d->itemToNode[item]);
 }
 
-void SimpleNodeSelector::slotNodeDestroyed(TreeNode* node)
+void SimpleNodeSelector::slotNodeDestroyed(TreeNode *node)
 {
-    if (d->nodeToItem.contains(node))
+    if(d->nodeToItem.contains(node))
     {
-        QListViewItem* item = d->nodeToItem[node];
+        QListViewItem *item = d->nodeToItem[node];
         d->nodeToItem.remove(node);
         d->itemToNode.remove(item);
         delete item;
@@ -197,4 +194,4 @@ void SimpleNodeSelector::slotNodeDestroyed(TreeNode* node)
 } // namespace Akregator
 
 #include "simplenodeselector.moc"
-	
+

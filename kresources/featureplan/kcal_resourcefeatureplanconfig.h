@@ -31,18 +31,17 @@ class QCheckBox;
 
 namespace KCal {
 
-class KDE_EXPORT ResourceFeaturePlanConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KDE_EXPORT ResourceFeaturePlanConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceFeaturePlanConfig( QWidget *parent = 0, const char *name = 0 );
+public:
+    ResourceFeaturePlanConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource * );
-    void saveSettings( KRES::Resource * );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  private:
+private:
     KURLRequester *mFilename;
     KLineEdit *mFilterEmail;
     QCheckBox *mCvsCheck;

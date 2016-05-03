@@ -26,12 +26,11 @@
 
 #include "servertype.h"
 
-class ServerTypeManager : public QObject
-{
-  Q_OBJECT
+class ServerTypeManager : public QObject {
+    Q_OBJECT
 
-  public:
-    static ServerTypeManager* self();
+public:
+    static ServerTypeManager *self();
 
     ~ServerTypeManager();
 
@@ -46,23 +45,23 @@ class ServerTypeManager : public QObject
 
       @param The identifier of the server type.
      */
-    QString title( const QString& ) const;
+    QString title(const QString &) const;
 
     /**
       Returns a pointer to the server type with the given
       identifier or 0 when it doesn't exist.
      */
-    ServerType* serverType( const QString& );
+    ServerType *serverType(const QString &);
 
-  private:
-    typedef QMap<QString, ServerType*> ServerTypeMap;
-    typedef QMap<QString, ServerTypeFactory*> ServerTypeFactoryMap;
+private:
+    typedef QMap<QString, ServerType *> ServerTypeMap;
+    typedef QMap<QString, ServerTypeFactory *> ServerTypeFactoryMap;
 
     void loadPlugins();
 
-    ServerTypeManager( QObject *parent, const char *name = 0 );
+    ServerTypeManager(QObject *parent, const char *name = 0);
 
-    static ServerTypeManager* mSelf;
+    static ServerTypeManager *mSelf;
 
     ServerTypeMap mServerTypeMap;
     ServerTypeFactoryMap mServerTypeFactoryMap;

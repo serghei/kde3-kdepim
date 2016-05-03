@@ -29,9 +29,8 @@ class KComboBox;
 class KLineEdit;
 class QCheckBox;
 
-class KDE_EXPORT ScalixWizard : public KConfigWizard
-{
-  public:
+class KDE_EXPORT ScalixWizard : public KConfigWizard {
+public:
     ScalixWizard();
     ~ScalixWizard();
 
@@ -39,7 +38,7 @@ class KDE_EXPORT ScalixWizard : public KConfigWizard
     void usrReadConfig();
     void usrWriteConfig();
 
-  private:
+private:
     KLineEdit *mServerEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mEMailEdit;

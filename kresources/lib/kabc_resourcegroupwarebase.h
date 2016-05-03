@@ -40,51 +40,59 @@ namespace KABC {
 
 class AddressBookAdaptor;
 
-class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
-{
-  Q_OBJECT
+class KDE_EXPORT ResourceGroupwareBase : public ResourceCached {
+    Q_OBJECT
 
-  public:
-    ResourceGroupwareBase( const KConfig * );
+public:
+    ResourceGroupwareBase(const KConfig *);
     ~ResourceGroupwareBase();
 
-    void readConfig( const KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig(const KConfig *);
+    void writeConfig(KConfig *);
 
-    KPIM::GroupwarePrefsBase *prefs() const { return mPrefs; }
-    void setPrefs( KPIM::GroupwarePrefsBase *prefs );
+    KPIM::GroupwarePrefsBase *prefs() const
+    {
+        return mPrefs;
+    }
+    void setPrefs(KPIM::GroupwarePrefsBase *prefs);
 
-    KPIM::FolderLister *folderLister() const { return mFolderLister; }
-    void setFolderLister( KPIM::FolderLister *folderLister );
+    KPIM::FolderLister *folderLister() const
+    {
+        return mFolderLister;
+    }
+    void setFolderLister(KPIM::FolderLister *folderLister);
 
-    AddressBookAdaptor *adaptor() const { return mAdaptor; }
-    void setAdaptor( AddressBookAdaptor *adaptor );
+    AddressBookAdaptor *adaptor() const
+    {
+        return mAdaptor;
+    }
+    void setAdaptor(AddressBookAdaptor *adaptor);
 
     bool doOpen();
     void doClose();
 
     Ticket *requestSaveTicket();
-    void releaseSaveTicket( Ticket* );
+    void releaseSaveTicket(Ticket *);
 
     bool load();
     bool asyncLoad();
-    bool save( Ticket * );
-    bool asyncSave( Ticket * );
+    bool save(Ticket *);
+    bool asyncSave(Ticket *);
 
-  protected:
+protected:
     void init();
 
     KPIM::GroupwarePrefsBase *createPrefs();
     virtual KPIM::GroupwareDownloadJob *createDownloadJob(
-                                                  AddressBookAdaptor *adaptor );
+        AddressBookAdaptor *adaptor);
     virtual KPIM::GroupwareUploadJob *createUploadJob(
-                                                  AddressBookAdaptor *adaptor );
+        AddressBookAdaptor *adaptor);
 
-  private slots:
-    void slotDownloadJobResult( KPIM::GroupwareJob * );
-    void slotUploadJobResult( KPIM::GroupwareJob * );
+private slots:
+    void slotDownloadJobResult(KPIM::GroupwareJob *);
+    void slotUploadJobResult(KPIM::GroupwareJob *);
 
-  private:
+private:
     KPIM::GroupwarePrefsBase *mPrefs;
     KPIM::FolderLister *mFolderLister;
     AddressBookAdaptor *mAdaptor;

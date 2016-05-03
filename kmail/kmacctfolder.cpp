@@ -7,40 +7,41 @@
 #include "kmacctfolder.h"
 
 //-----------------------------------------------------------------------------
-KMAccount* KMAcctFolder::account()
+KMAccount *KMAcctFolder::account()
 {
-  if ( acctList() )
-      return acctList()->first();
-  return 0;
+    if(acctList())
+        return acctList()->first();
+    return 0;
 }
 
 //-----------------------------------------------------------------------------
-void KMAcctFolder::addAccount( KMAccount* aAcct )
+void KMAcctFolder::addAccount(KMAccount *aAcct)
 {
-  if ( !aAcct ) return;
-  if ( !acctList() )
-      setAcctList( new AccountList() );
+    if(!aAcct) return;
+    if(!acctList())
+        setAcctList(new AccountList());
 
-  acctList()->append( aAcct );
-  aAcct->setFolder( this );
+    acctList()->append(aAcct);
+    aAcct->setFolder(this);
 }
 
 //-----------------------------------------------------------------------------
 void KMAcctFolder::clearAccountList()
 {
-  if ( acctList() )
-      acctList()->clear();
+    if(acctList())
+        acctList()->clear();
 }
 
 //-----------------------------------------------------------------------------
-void KMAcctFolder::removeAccount( KMAccount* aAcct )
+void KMAcctFolder::removeAccount(KMAccount *aAcct)
 {
-  if ( !aAcct || !acctList() ) return;
+    if(!aAcct || !acctList()) return;
 
-  acctList()->remove( aAcct );
-  aAcct->setFolder( 0 );
-  if ( acctList()->count() <= 0 ) {
-    delete acctList();
-    setAcctList( 0 );
-  }
+    acctList()->remove(aAcct);
+    aAcct->setFolder(0);
+    if(acctList()->count() <= 0)
+    {
+        delete acctList();
+        setAcctList(0);
+    }
 }

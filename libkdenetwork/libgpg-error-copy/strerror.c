@@ -7,12 +7,12 @@
    modify it under the terms of the GNU Lesser General Public License
    as published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
- 
+
    libgpg-error is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
- 
+
    You should have received a copy of the GNU Lesser General Public
    License along with libgpg-error; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -35,19 +35,19 @@
 /* Return a pointer to a string containing a description of the error
    code in the error value ERR.  This function is not thread-safe.  */
 const char *
-gpg_strerror (gpg_error_t err)
+gpg_strerror(gpg_error_t err)
 {
-  gpg_err_code_t code = gpg_err_code (err);
+    gpg_err_code_t code = gpg_err_code(err);
 
-  if (code & GPG_ERR_SYSTEM_ERROR)
+    if(code & GPG_ERR_SYSTEM_ERROR)
     {
-      int no = gpg_err_code_to_errno (code);
-      if (no)
-	return strerror (no);
-      else
-	code = GPG_ERR_UNKNOWN_ERRNO;
+        int no = gpg_err_code_to_errno(code);
+        if(no)
+            return strerror(no);
+        else
+            code = GPG_ERR_UNKNOWN_ERRNO;
     }
-  return dgettext (PACKAGE, msgstr + msgidx[msgidxof (code)]);
+    return dgettext(PACKAGE, msgstr + msgidx[msgidxof(code)]);
 }
 
 
@@ -62,27 +62,27 @@ gpg_strerror (gpg_error_t err)
    call fails because the error number is not valid, don't set *STR
    and return 0.  */
 static int
-system_strerror_r (int no, char *buf, size_t buflen)
+system_strerror_r(int no, char *buf, size_t buflen)
 {
-  char *errstr;
+    char *errstr;
 
-  errstr = strerror_r (no, buf, buflen);
-  if (errstr != buf)
+    errstr = strerror_r(no, buf, buflen);
+    if(errstr != buf)
     {
-      size_t errstr_len = strlen (errstr) + 1;
-      size_t cpy_len = errstr_len < buflen ? errstr_len : buflen;
-      memcpy (buf, errstr, cpy_len);
+        size_t errstr_len = strlen(errstr) + 1;
+        size_t cpy_len = errstr_len < buflen ? errstr_len : buflen;
+        memcpy(buf, errstr, cpy_len);
 
-      return cpy_len == errstr_len ? 0 : ERANGE;
+        return cpy_len == errstr_len ? 0 : ERANGE;
     }
-  else
+    else
     {
-      /* We can not tell if the buffer was large enough, but we can
-	 try to make a guess.  */
-      if (strlen (buf) + 1 >= buflen)
-	return ERANGE;
+        /* We can not tell if the buffer was large enough, but we can
+        try to make a guess.  */
+        if(strlen(buf) + 1 >= buflen)
+            return ERANGE;
 
-      return 0;
+        return 0;
     }
 }
 
@@ -90,9 +90,9 @@ system_strerror_r (int no, char *buf, size_t buflen)
 /* Now the POSIX version.  */
 
 static int
-system_strerror_r (int no, char *buf, size_t buflen)
+system_strerror_r(int no, char *buf, size_t buflen)
 {
-  return strerror_r (no, buf, buflen);
+    return strerror_r(no, buf, buflen);
 }
 
 #endif	/* STRERROR_R_CHAR_P */
@@ -103,24 +103,24 @@ system_strerror_r (int no, char *buf, size_t buflen)
    already thread-safe.  */
 
 static int
-system_strerror_r (int no, char *buf, size_t buflen)
+system_strerror_r(int no, char *buf, size_t buflen)
 {
-  char *errstr = strerror (no);
+    char *errstr = strerror(no);
 
-  if (!errstr)
+    if(!errstr)
     {
-      int saved_errno = errno;
+        int saved_errno = errno;
 
-      if (saved_errno != EINVAL)
-	snprintf (buf, buflen, "strerror failed: %i\n", errno);
-      return saved_errno;
+        if(saved_errno != EINVAL)
+            snprintf(buf, buflen, "strerror failed: %i\n", errno);
+        return saved_errno;
     }
-  else
+    else
     {
-      size_t errstr_len = strlen (errstr) + 1;
-      size_t cpy_len = errstr_len < buflen ? errstr_len : buflen;
-      memcpy (buf, errstr, cpy_len);
-      return cpy_len == errstr_len ? 0 : ERANGE;
+        size_t errstr_len = strlen(errstr) + 1;
+        size_t cpy_len = errstr_len < buflen ? errstr_len : buflen;
+        memcpy(buf, errstr, cpy_len);
+        return cpy_len == errstr_len ? 0 : ERANGE;
     }
 }
 #endif
@@ -134,36 +134,36 @@ system_strerror_r (int no, char *buf, size_t buflen)
    large enough, ERANGE is returned and BUF contains as much of the
    beginning of the error string as fits into the buffer.  */
 int
-gpg_strerror_r (gpg_error_t err, char *buf, size_t buflen)
+gpg_strerror_r(gpg_error_t err, char *buf, size_t buflen)
 {
-  gpg_err_code_t code = gpg_err_code (err);
-  const char *errstr;
-  size_t errstr_len;
-  size_t cpy_len;
+    gpg_err_code_t code = gpg_err_code(err);
+    const char *errstr;
+    size_t errstr_len;
+    size_t cpy_len;
 
-  if (code & GPG_ERR_SYSTEM_ERROR)
+    if(code & GPG_ERR_SYSTEM_ERROR)
     {
-      int no = gpg_err_code_to_errno (code);
-      if (no)
-	{
-	  int system_err = system_strerror_r (no, buf, buflen);
+        int no = gpg_err_code_to_errno(code);
+        if(no)
+        {
+            int system_err = system_strerror_r(no, buf, buflen);
 
-	  if (system_err != EINVAL)
-	    {
-	      if (buflen)
-		buf[buflen - 1] = '\0';
-	      return system_err;
-	    }
-	}
-      code = GPG_ERR_UNKNOWN_ERRNO;
+            if(system_err != EINVAL)
+            {
+                if(buflen)
+                    buf[buflen - 1] = '\0';
+                return system_err;
+            }
+        }
+        code = GPG_ERR_UNKNOWN_ERRNO;
     }
 
-  errstr = dgettext (PACKAGE, msgstr + msgidx[msgidxof (code)]);
-  errstr_len = strlen (errstr) + 1;
-  cpy_len = errstr_len < buflen ? errstr_len : buflen;
-  memcpy (buf, errstr, cpy_len);
-  if (buflen)
-    buf[buflen - 1] = '\0';
+    errstr = dgettext(PACKAGE, msgstr + msgidx[msgidxof(code)]);
+    errstr_len = strlen(errstr) + 1;
+    cpy_len = errstr_len < buflen ? errstr_len : buflen;
+    memcpy(buf, errstr, cpy_len);
+    if(buflen)
+        buf[buflen - 1] = '\0';
 
-  return cpy_len == errstr_len ? 0 : ERANGE;
+    return cpy_len == errstr_len ? 0 : ERANGE;
 }

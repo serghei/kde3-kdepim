@@ -44,31 +44,33 @@ class KABCore;
 class ContactListItem;
 
 namespace KABC {
-    class Resource;
+class Resource;
 }
 
-class LDAPSearchDialog : public KDialogBase
-{
-  Q_OBJECT
+class LDAPSearchDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core, QWidget* parent, const char* name = 0 );
+public:
+    LDAPSearchDialog(KABC::AddressBook *ab, KABCore *core, QWidget *parent, const char *name = 0);
     ~LDAPSearchDialog();
 
-    bool isOK() const { return mIsOK; }
+    bool isOK() const
+    {
+        return mIsOK;
+    }
 
     void restoreSettings();
 
-  signals:
+signals:
     void addresseesAdded();
 
-  protected slots:
-    void slotAddResult( const KPIM::LdapObject& obj );
-    void slotSetScope( bool rec );
+protected slots:
+    void slotAddResult(const KPIM::LdapObject &obj);
+    void slotSetScope(bool rec);
     void slotStartSearch();
     void slotStopSearch();
     void slotSearchDone();
-    void slotError( const QString& );
+    void slotError(const QString &);
     virtual void slotHelp();
     virtual void slotUser1();
     virtual void slotUser2();
@@ -79,21 +81,21 @@ class LDAPSearchDialog : public KDialogBase
      * unless they already exist. Returns the list of both the added
      * and the existing contacts.
      */
-    KABC::Addressee::List importContactsUnlessTheyExist( const QValueList<ContactListItem*>& items, KABC::Resource * const resource );
+    KABC::Addressee::List importContactsUnlessTheyExist(const QValueList<ContactListItem *> &items, KABC::Resource *const resource);
 
-  protected:
+protected:
     QString selectedEMails() const;
 
-    virtual void closeEvent( QCloseEvent* );
+    virtual void closeEvent(QCloseEvent *);
 
-  private:
+private:
     void saveSettings();
-    static KABC::Addressee convertLdapAttributesToAddressee( const KPIM::LdapAttrMap& attrs );
+    static KABC::Addressee convertLdapAttributesToAddressee(const KPIM::LdapAttrMap &attrs);
 #ifdef KDEPIM_NEW_DISTRLISTS
     KPIM::DistributionList selectDistributionList();
 #endif
 
-    QString makeFilter( const QString& query, const QString& attr, bool startsWith );
+    QString makeFilter(const QString &query, const QString &attr, bool startsWith);
 
     void cancelQuery();
 
@@ -103,15 +105,15 @@ class LDAPSearchDialog : public KDialogBase
     KABC::AddressBook *mAddressBook;
     KABCore *mCore;
 
-    KComboBox* mFilterCombo;
-    KComboBox* mSearchType;
-    KLineEdit* mSearchEdit;
+    KComboBox *mFilterCombo;
+    KComboBox *mSearchType;
+    KLineEdit *mSearchEdit;
 
-    QCheckBox* mRecursiveCheckbox;
-    QListView* mResultListView;
-    QPushButton* mSearchButton;
+    QCheckBox *mRecursiveCheckbox;
+    QListView *mResultListView;
+    QPushButton *mSearchButton;
     class Private;
-    Private* const d;
+    Private *const d;
 };
 
 #endif

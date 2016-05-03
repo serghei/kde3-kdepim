@@ -28,25 +28,25 @@
 #include "../addresseeselector.h"
 #include "../addresseeemailselection.h"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "testaddresseeseletor", "Test AddresseeSelector", "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData("testaddresseeseletor", "Test AddresseeSelector", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  KPIM::AddresseeEmailSelection selection;
+    KPIM::AddresseeEmailSelection selection;
 
-  KPIM::AddresseeSelectorDialog dlg( &selection );
-  dlg.exec();
+    KPIM::AddresseeSelectorDialog dlg(&selection);
+    dlg.exec();
 
-  kdDebug() << "to: " << selection.to() << endl;
-  kdDebug() << "cc: " << selection.cc() << endl;
-  kdDebug() << "bcc: " << selection.bcc() << endl;
+    kdDebug() << "to: " << selection.to() << endl;
+    kdDebug() << "cc: " << selection.cc() << endl;
+    kdDebug() << "bcc: " << selection.bcc() << endl;
 
-  kdDebug() << "toDistlists: " << selection.toDistributionLists() << endl;
-  kdDebug() << "ccDistlists: " << selection.ccDistributionLists() << endl;
-  kdDebug() << "bccDistlists: " << selection.bccDistributionLists() << endl;
+    kdDebug() << "toDistlists: " << selection.toDistributionLists() << endl;
+    kdDebug() << "ccDistlists: " << selection.ccDistributionLists() << endl;
+    kdDebug() << "bccDistlists: " << selection.bccDistributionLists() << endl;
 
-  return 0;
+    return 0;
 }

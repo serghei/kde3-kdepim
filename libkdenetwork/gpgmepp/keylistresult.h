@@ -2,12 +2,12 @@
    Copyright (C) 2004 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -27,35 +27,36 @@
 
 namespace GpgME {
 
-  class Context;
-  class Error;
+class Context;
+class Error;
 
-  class KDE_EXPORT KeyListResult : public Result {
-  public:
-    KeyListResult( gpgme_ctx_t ctx=0, int error=0 );
-    explicit KeyListResult( const Error & err );
-    KeyListResult( const Error & err, const _gpgme_op_keylist_result & res );
-    KeyListResult( const KeyListResult & other );
+class KDE_EXPORT KeyListResult : public Result {
+public:
+    KeyListResult(gpgme_ctx_t ctx = 0, int error = 0);
+    explicit KeyListResult(const Error &err);
+    KeyListResult(const Error &err, const _gpgme_op_keylist_result &res);
+    KeyListResult(const KeyListResult &other);
     ~KeyListResult();
 
-    const KeyListResult & operator=( const KeyListResult & other );
+    const KeyListResult &operator=(const KeyListResult &other);
 
-    const KeyListResult & operator+=( const KeyListResult & other ) {
-      mergeWith( other );
-      return *this;
+    const KeyListResult &operator+=(const KeyListResult &other)
+    {
+        mergeWith(other);
+        return *this;
     }
 
-    void mergeWith( const KeyListResult & other );
+    void mergeWith(const KeyListResult &other);
 
     bool isNull() const;
 
     bool isTruncated() const;
 
-  private:
+private:
     void detach();
     class Private;
-    Private * d;
-  };
+    Private *d;
+};
 
 }
 

@@ -36,172 +36,178 @@
 
 using namespace KABC;
 
-class AddressBookItem : public QCheckListItem
-{
-  public:
-    AddressBookItem( KListView *parent, const QString &id )
-      : QCheckListItem( parent, "", CheckBox ),
-        mId( id )
+class AddressBookItem : public QCheckListItem {
+public:
+    AddressBookItem(KListView *parent, const QString &id)
+        : QCheckListItem(parent, "", CheckBox),
+          mId(id)
     {
-      setText( 0, mId );
+        setText(0, mId);
 #if 0
-      if ( ab.isPersonal ) setText( 1, "Yes" );
-      else setText( 1, "No" );
-      if ( ab.isFrequentContacts ) setText( 2, "Yes" );
-      else setText( 2, "No" );
+        if(ab.isPersonal) setText(1, "Yes");
+        else setText(1, "No");
+        if(ab.isFrequentContacts) setText(2, "Yes");
+        else setText(2, "No");
 #endif
     }
 
-    QString id() const { return mId; }
+    QString id() const
+    {
+        return mId;
+    }
 
-  private:
+private:
     QString mId;
 };
 
-ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* name )
-  : KRES::ConfigWidget( parent, name )
+ResourceGroupwareConfig::ResourceGroupwareConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  QGridLayout *mainLayout = new QGridLayout( this, 7, 2, 0, KDialog::spacingHint() );
+    QGridLayout *mainLayout = new QGridLayout(this, 7, 2, 0, KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "URL:" ), this );
-  mURL = new KURLRequester( this );
+    QLabel *label = new QLabel(i18n("URL:"), this);
+    mURL = new KURLRequester(this);
 
-  mainLayout->addWidget( label, 0, 0 );
-  mainLayout->addWidget( mURL, 0, 1 );
+    mainLayout->addWidget(label, 0, 0);
+    mainLayout->addWidget(mURL, 0, 1);
 
-  label = new QLabel( i18n( "User:" ), this );
-  mUser = new KLineEdit( this );
+    label = new QLabel(i18n("User:"), this);
+    mUser = new KLineEdit(this);
 
-  mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mUser, 1, 1 );
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(mUser, 1, 1);
 
-  label = new QLabel( i18n( "Password:" ), this );
-  mPassword = new KLineEdit( this );
-  mPassword->setEchoMode( QLineEdit::Password );
+    label = new QLabel(i18n("Password:"), this);
+    mPassword = new KLineEdit(this);
+    mPassword->setEchoMode(QLineEdit::Password);
 
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mPassword, 2, 1 );
+    mainLayout->addWidget(label, 2, 0);
+    mainLayout->addWidget(mPassword, 2, 1);
 
-  QFrame *hline = new QFrame( this );
-  hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+    QFrame *hline = new QFrame(this);
+    hline->setFrameStyle(QFrame::HLine | QFrame::Sunken);
 
-  mainLayout->addMultiCellWidget( hline, 3, 3, 0, 1 );
+    mainLayout->addMultiCellWidget(hline, 3, 3, 0, 1);
 
-  QPushButton *updateButton = new QPushButton( i18n( "Retrieve Address Book List From Server" ), this );
-  mainLayout->addMultiCellWidget( updateButton, 4, 4, 0, 1 );
+    QPushButton *updateButton = new QPushButton(i18n("Retrieve Address Book List From Server"), this);
+    mainLayout->addMultiCellWidget(updateButton, 4, 4, 0, 1);
 
-  mAddressBookView = new KListView( this );
-  mAddressBookView->addColumn( i18n( "Address Book" ) );
+    mAddressBookView = new KListView(this);
+    mAddressBookView->addColumn(i18n("Address Book"));
 #if 0
-  mAddressBookView->addColumn( i18n( "Personal" ) );
-  mAddressBookView->addColumn( i18n( "Frequent Contacts" ) );
+    mAddressBookView->addColumn(i18n("Personal"));
+    mAddressBookView->addColumn(i18n("Frequent Contacts"));
 #endif
-  mAddressBookView->setFullWidth( true );
+    mAddressBookView->setFullWidth(true);
 
-  mainLayout->addMultiCellWidget( mAddressBookView, 5, 5, 0, 1 );
+    mainLayout->addMultiCellWidget(mAddressBookView, 5, 5, 0, 1);
 
-  label = new QLabel( i18n( "Address book for new contacts:" ), this );
-  mAddressBookBox = new KComboBox( this );
+    label = new QLabel(i18n("Address book for new contacts:"), this);
+    mAddressBookBox = new KComboBox(this);
 
-  mainLayout->addWidget( label, 6, 0 );
-  mainLayout->addWidget( mAddressBookBox, 6, 1 );
+    mainLayout->addWidget(label, 6, 0);
+    mainLayout->addWidget(mAddressBookBox, 6, 1);
 
-  connect( updateButton, SIGNAL( clicked() ), SLOT( updateAddressBookList() ) );
+    connect(updateButton, SIGNAL(clicked()), SLOT(updateAddressBookList()));
 }
 
-void ResourceGroupwareConfig::loadSettings( KRES::Resource *res )
+void ResourceGroupwareConfig::loadSettings(KRES::Resource *res)
 {
-  mResource = dynamic_cast<ResourceGroupware*>( res );
-  
-  if ( !mResource ) {
-    kdDebug(5700) << "ResourceGroupwareConfig::loadSettings(): cast failed" << endl;
-    return;
-  }
+    mResource = dynamic_cast<ResourceGroupware *>(res);
 
-  mURL->setURL( mResource->prefs()->url() );
-  mUser->setText( mResource->prefs()->user() );
-  mPassword->setText( mResource->prefs()->password() );
+    if(!mResource)
+    {
+        kdDebug(5700) << "ResourceGroupwareConfig::loadSettings(): cast failed" << endl;
+        return;
+    }
 
-  updateAddressBookView();
+    mURL->setURL(mResource->prefs()->url());
+    mUser->setText(mResource->prefs()->user());
+    mPassword->setText(mResource->prefs()->password());
+
+    updateAddressBookView();
 }
 
-void ResourceGroupwareConfig::saveSettings( KRES::Resource *res )
+void ResourceGroupwareConfig::saveSettings(KRES::Resource *res)
 {
-  ResourceGroupware *resource = dynamic_cast<ResourceGroupware*>( res );
-  
-  if ( !resource ) {
-    kdDebug(5700) << "ResourceGroupwareConfig::saveSettings(): cast failed" << endl;
-    return;
-  }
+    ResourceGroupware *resource = dynamic_cast<ResourceGroupware *>(res);
 
-  saveServerSettings( resource );
+    if(!resource)
+    {
+        kdDebug(5700) << "ResourceGroupwareConfig::saveSettings(): cast failed" << endl;
+        return;
+    }
 
-  saveAddressBookSettings();
+    saveServerSettings(resource);
+
+    saveAddressBookSettings();
 }
 
-void ResourceGroupwareConfig::saveServerSettings( ResourceGroupware *resource )
+void ResourceGroupwareConfig::saveServerSettings(ResourceGroupware *resource)
 {
-  resource->prefs()->setUrl( mURL->url() );
-  resource->prefs()->setUser( mUser->text() );
-  resource->prefs()->setPassword( mPassword->text() );  
+    resource->prefs()->setUrl(mURL->url());
+    resource->prefs()->setUser(mUser->text());
+    resource->prefs()->setPassword(mPassword->text());
 }
 
 void ResourceGroupwareConfig::updateAddressBookList()
 {
-  saveServerSettings( mResource );
+    saveServerSettings(mResource);
 
-  mResource->retrieveAddressBooks();
+    mResource->retrieveAddressBooks();
 
-  updateAddressBookView();
+    updateAddressBookView();
 }
 
 void ResourceGroupwareConfig::saveAddressBookSettings()
 {
 #if 0
-  QStringList selectedRead;
-  QString selectedWrite;
+    QStringList selectedRead;
+    QString selectedWrite;
 
-  QListViewItemIterator it2( mAddressBookView );
-  while ( it2.current() ) {
-    AddressBookItem *item = static_cast<AddressBookItem*>( it2.current() );
-    if ( item->isOn() )
-      selectedRead.append( item->id() );
+    QListViewItemIterator it2(mAddressBookView);
+    while(it2.current())
+    {
+        AddressBookItem *item = static_cast<AddressBookItem *>(it2.current());
+        if(item->isOn())
+            selectedRead.append(item->id());
 
-    ++it2;
-  }
+        ++it2;
+    }
 
-  selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentItem() ];
+    selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentItem() ];
 
-  mResource->prefs()->setReadAddressBooks( selectedRead );
-  mResource->prefs()->setWriteAddressBook( selectedWrite );
+    mResource->prefs()->setReadAddressBooks(selectedRead);
+    mResource->prefs()->setWriteAddressBook(selectedWrite);
 #endif
 }
 
 void ResourceGroupwareConfig::updateAddressBookView()
 {
-  if ( mAddressBookBox->count() != 0 ) // we loaded it already
-    saveAddressBookSettings();
+    if(mAddressBookBox->count() != 0)    // we loaded it already
+        saveAddressBookSettings();
 
-  mAddressBookView->clear();
-  mAddressBookBox->clear();
-  mWriteAddressBookIds.clear();
+    mAddressBookView->clear();
+    mAddressBookBox->clear();
+    mWriteAddressBookIds.clear();
 
 #if 0
-  QStringList selectedRead = mResource->prefs()->readAddressBooks();
+    QStringList selectedRead = mResource->prefs()->readAddressBooks();
 
-  Groupware::AddressBook::List addressBooks = mResource->addressBooks();
-  Groupware::AddressBook::List::ConstIterator abIt;
-  for ( abIt = addressBooks.begin(); abIt != addressBooks.end(); ++abIt ) {
-    AddressBookItem *item = new AddressBookItem( mAddressBookView, *abIt );
-    if ( selectedRead.find( (*abIt).id ) != selectedRead.end() )
-      item->setOn( true );
+    Groupware::AddressBook::List addressBooks = mResource->addressBooks();
+    Groupware::AddressBook::List::ConstIterator abIt;
+    for(abIt = addressBooks.begin(); abIt != addressBooks.end(); ++abIt)
+    {
+        AddressBookItem *item = new AddressBookItem(mAddressBookView, *abIt);
+        if(selectedRead.find((*abIt).id) != selectedRead.end())
+            item->setOn(true);
 
-    mAddressBookBox->insertItem( (*abIt).name );
-    mWriteAddressBookIds.append( (*abIt).id );
-  }
+        mAddressBookBox->insertItem((*abIt).name);
+        mWriteAddressBookIds.append((*abIt).id);
+    }
 
-  int index = mWriteAddressBookIds.findIndex( mResource->prefs()->writeAddressBook() );
-  mAddressBookBox->setCurrentItem( index );
+    int index = mWriteAddressBookIds.findIndex(mResource->prefs()->writeAddressBook());
+    mAddressBookBox->setCurrentItem(index);
 #endif
 }
 

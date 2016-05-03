@@ -27,8 +27,8 @@ Port::Operation::Operation()
 {
 }
 
-Port::Operation::Operation( const QString &name, const QString &input, const QString &output )
-  : mName( name ), mInput( input ), mOutput( output )
+Port::Operation::Operation(const QString &name, const QString &input, const QString &output)
+    : mName(name), mInput(input), mOutput(output)
 {
 }
 
@@ -36,27 +36,27 @@ Port::Port()
 {
 }
 
-Port::Port( const QString &name )
-  : mName( name )
+Port::Port(const QString &name)
+    : mName(name)
 {
 }
 
-void Port::addOperation( const Operation &operation )
+void Port::addOperation(const Operation &operation)
 {
-  mOperations.append( operation );
+    mOperations.append(operation);
 }
 
-Port::Operation Port::operation( const QString &name ) const
+Port::Operation Port::operation(const QString &name) const
 {
-  Operation::List::ConstIterator it;
-  for ( it = mOperations.begin(); it != mOperations.end(); ++it )
-    if ( (*it).name() == name )
-      return *it;
+    Operation::List::ConstIterator it;
+    for(it = mOperations.begin(); it != mOperations.end(); ++it)
+        if((*it).name() == name)
+            return *it;
 
-  return Operation();
+    return Operation();
 }
 
 Port::Operation::List Port::operations() const
 {
-  return mOperations;
+    return mOperations;
 }

@@ -27,28 +27,28 @@ class KNCollection;
 
 class KNCollectionViewItem : public KFolderTreeItem  {
 
-  public:
-    KNCollectionViewItem( KFolderTree *parent, Protocol protocol = NONE, Type type = Root);
-    KNCollectionViewItem( KFolderTreeItem *parent, Protocol protocol = NONE,
-                          Type type = Other, int unread = 0, int total = 0 );
+public:
+    KNCollectionViewItem(KFolderTree *parent, Protocol protocol = NONE, Type type = Root);
+    KNCollectionViewItem(KFolderTreeItem *parent, Protocol protocol = NONE,
+                         Type type = Other, int unread = 0, int total = 0);
     ~KNCollectionViewItem();
 
-    void paintCell( QPainter * p, const QColorGroup & cg,
-                    int column, int width, int align );
+    void paintCell(QPainter *p, const QColorGroup &cg,
+                   int column, int width, int align);
 
     int compare(QListViewItem *i, int col, bool ascending) const;
 
     // DND
-    virtual bool acceptDrag(QDropEvent* event) const;
+    virtual bool acceptDrag(QDropEvent *event) const;
 
     KNCollection *coll;
 
-  protected:
-    virtual QString squeezeFolderName( const QString &text,
-                                       const QFontMetrics &fm,
-                                       uint width ) const;
+protected:
+    virtual QString squeezeFolderName(const QString &text,
+                                      const QFontMetrics &fm,
+                                      uint width) const;
 
-  private:
+private:
     void setIcon();
 
 };

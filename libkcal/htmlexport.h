@@ -39,58 +39,57 @@ namespace KCal {
 /**
   This class provides the functions to export a calendar as an HTML page.
 */
-class KDE_EXPORT HtmlExport
-{
-  public:
+class KDE_EXPORT HtmlExport {
+public:
     /**
       Create new HTML exporter for calendar.
     */
-    HtmlExport( Calendar *calendar, HTMLExportSettings *settings );
+    HtmlExport(Calendar *calendar, HTMLExportSettings *settings);
     virtual ~HtmlExport() {}
 
     /**
       Writes out the calendar in HTML format.
     */
-    bool save( const QString &fileName = QString::null );
+    bool save(const QString &fileName = QString::null);
 
     /**
       Writes out calendar to text stream.
     */
-    bool save( QTextStream * );
+    bool save(QTextStream *);
 
-    void addHoliday( const QDate &date, const QString &name );
+    void addHoliday(const QDate &date, const QString &name);
 
-  protected:
-    void createWeekView( QTextStream *ts );
-    void createMonthView( QTextStream *ts );
-    void createEventList( QTextStream *ts );
-    void createTodoList( QTextStream *ts );
-    void createJournalView( QTextStream *ts );
-    void createFreeBusyView( QTextStream *ts );
+protected:
+    void createWeekView(QTextStream *ts);
+    void createMonthView(QTextStream *ts);
+    void createEventList(QTextStream *ts);
+    void createTodoList(QTextStream *ts);
+    void createJournalView(QTextStream *ts);
+    void createFreeBusyView(QTextStream *ts);
 
-    void createTodo( QTextStream *ts, Todo *todo);
-    void createEvent( QTextStream *ts, Event *event, QDate date,
-                      bool withDescription = true);
-    void createFooter( QTextStream *ts );
+    void createTodo(QTextStream *ts, Todo *todo);
+    void createEvent(QTextStream *ts, Event *event, QDate date,
+                     bool withDescription = true);
+    void createFooter(QTextStream *ts);
 
-    bool checkSecrecy( Incidence * );
+    bool checkSecrecy(Incidence *);
 
-    void formatLocation( QTextStream *ts, Incidence *event );
-    void formatCategories( QTextStream *ts, Incidence *event );
-    void formatAttendees( QTextStream *ts, Incidence *event );
+    void formatLocation(QTextStream *ts, Incidence *event);
+    void formatCategories(QTextStream *ts, Incidence *event);
+    void formatAttendees(QTextStream *ts, Incidence *event);
 
-    QString breakString( const QString &text );
+    QString breakString(const QString &text);
 
     QDate fromDate() const;
     QDate toDate() const;
     QString styleSheet() const;
 
-  private:
-    QString cleanChars( const QString &txt );
+private:
+    QString cleanChars(const QString &txt);
 
     Calendar *mCalendar;
     HTMLExportSettings *mSettings;
-    QMap<QDate,QString> mHolidayMap;
+    QMap<QDate, QString> mHolidayMap;
 
     class Private;
     Private *d;

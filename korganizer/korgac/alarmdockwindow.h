@@ -28,35 +28,34 @@
 
 #include <qpixmap.h>
 
-class AlarmDockWindow : public KSystemTray
-{
+class AlarmDockWindow : public KSystemTray {
     Q_OBJECT
-  public:
-    AlarmDockWindow( const char *name = 0 );
+public:
+    AlarmDockWindow(const char *name = 0);
     virtual ~AlarmDockWindow();
 
-    void enableAutostart( bool enabled );
+    void enableAutostart(bool enabled);
 
-  public slots:
+public slots:
     void toggleAlarmsEnabled();
     void toggleAutostart();
-    void slotUpdate( int reminders );
+    void slotUpdate(int reminders);
 
-  signals:
+signals:
     void quitSignal();
     void suspendAllSignal();
     void dismissAllSignal();
 
-  protected:
-    void mousePressEvent( QMouseEvent * );
-//    void closeEvent( QCloseEvent * );
+protected:
+    void mousePressEvent(QMouseEvent *);
+    //    void closeEvent( QCloseEvent * );
 
-  protected slots:
+protected slots:
     void slotQuit();
     void slotSuspendAll();
     void slotDismissAll();
 
-  private:
+private:
     QPixmap mPixmapEnabled;
     QPixmap mPixmapDisabled;
     QString mName;

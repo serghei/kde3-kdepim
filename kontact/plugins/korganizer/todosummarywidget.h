@@ -36,32 +36,38 @@ class QLabel;
 
 class TodoPlugin;
 
-class TodoSummaryWidget : public Kontact::Summary
-{
-  Q_OBJECT
+class TodoSummaryWidget : public Kontact::Summary {
+    Q_OBJECT
 
-  public:
-    TodoSummaryWidget( TodoPlugin *plugin, QWidget *parent,
-                       const char *name = 0 );
+public:
+    TodoSummaryWidget(TodoPlugin *plugin, QWidget *parent,
+                      const char *name = 0);
     ~TodoSummaryWidget();
 
-    int summaryHeight() const { return 3; }
+    int summaryHeight() const
+    {
+        return 3;
+    }
     QStringList configModules() const;
 
-  public slots:
-    void updateSummary( bool force = false ) { Q_UNUSED( force ); updateView(); }
+public slots:
+    void updateSummary(bool force = false)
+    {
+        Q_UNUSED(force);
+        updateView();
+    }
 
-  protected:
-    virtual bool eventFilter( QObject *obj, QEvent* e );
+protected:
+    virtual bool eventFilter(QObject *obj, QEvent *e);
 
-  private slots:
+private slots:
     void updateView();
-    void popupMenu( const QString &uid );
-    void viewTodo( const QString &uid );
-    void removeTodo( const QString &uid );
-    void completeTodo( const QString &uid );
+    void popupMenu(const QString &uid);
+    void viewTodo(const QString &uid);
+    void removeTodo(const QString &uid);
+    void completeTodo(const QString &uid);
 
-  private:
+private:
     TodoPlugin *mPlugin;
     QGridLayout *mLayout;
 

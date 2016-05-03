@@ -34,14 +34,13 @@ class KOEditorRecurrence;
 /**
   This class provides a dialog for editing a Todo.
 */
-class KOTodoEditor : public KOIncidenceEditor
-{
+class KOTodoEditor : public KOIncidenceEditor {
     Q_OBJECT
-  public:
+public:
     /**
       Constructs a new todo editor.
     */
-    KOTodoEditor( Calendar *calendar, QWidget *parent );
+    KOTodoEditor(Calendar *calendar, QWidget *parent);
     virtual ~KOTodoEditor();
 
     void init();
@@ -58,12 +57,12 @@ class KOTodoEditor : public KOIncidenceEditor
       summary contains multiple lines, the summary will be used as description
       and only the first line of summary will be used as the summary.
     */
-    void setTexts( const QString &summary, const QString &description = QString::null );
+    void setTexts(const QString &summary, const QString &description = QString::null);
     /** Edit an existing todo. */
-    void editIncidence(Incidence *incidence, Calendar* calendar);
+    void editIncidence(Incidence *incidence, Calendar *calendar);
 
     /** Set widgets to default values */
-    void setDates( const QDateTime &due, bool allDay = true, Todo *relatedTodo = 0 );
+    void setDates(const QDateTime &due, bool allDay = true, Todo *relatedTodo = 0);
     /** Read event object and setup widgets accordingly */
     void readTodo(Todo *todo, Calendar *calendar);
     /** Write event settings to event object */
@@ -76,22 +75,25 @@ class KOTodoEditor : public KOIncidenceEditor
     bool processInput();
 
     /** This todo has been modified externally */
-    void modified (int change=0);
+    void modified(int change = 0);
 
-  protected slots:
+protected slots:
     void loadDefaults();
     void deleteTodo();
-    void slotSaveTemplate( const QString & );
+    void slotSaveTemplate(const QString &);
 
-  protected:
-    void loadTemplate( /*const*/ CalendarLocal& );
-    QStringList& templates() const;
-    QString type() { return "Todo"; }
+protected:
+    void loadTemplate(/*const*/ CalendarLocal &);
+    QStringList &templates() const;
+    QString type()
+    {
+        return "Todo";
+    }
     void setupGeneral();
     void setupRecurrence();
     int msgItemDelete();
 
-  private:
+private:
     Todo *mTodo;
     Calendar *mCalendar;
 

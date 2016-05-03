@@ -28,13 +28,13 @@
 
 #include <kdepimmacros.h>
 
-namespace KCal { 
-  class Event;
-  class Calendar;
+namespace KCal {
+class Event;
+class Calendar;
 }
 
-namespace KIO { 
-  class Job; 
+namespace KIO {
+class Job;
 }
 
 namespace KPIM {
@@ -47,8 +47,8 @@ class ExchangeDelete;
 
 class KDE_EXPORT ExchangeClient : public QObject {
     Q_OBJECT
-  public:
-    ExchangeClient( ExchangeAccount* account, const QString& mTimeZoneId=QString::null );
+public:
+    ExchangeClient(ExchangeAccount *account, const QString &mTimeZoneId = QString::null);
     ~ExchangeClient();
 
     /**
@@ -62,70 +62,71 @@ class KDE_EXPORT ExchangeClient : public QObject {
     QWidget *window() const;
 
     /**
-     * Set the time zone to use 
+     * Set the time zone to use
      */
-    void setTimeZoneId( const QString& timeZoneId );
+    void setTimeZoneId(const QString &timeZoneId);
     QString timeZoneId();
-        
+
     // synchronous functions
-    enum { 
-      ResultOK,  /** No problem */
-      UnknownError, /** Something else happened */
-      CommunicationError, /** IO Error, the server could not be reached or returned an HTTP error */
-      ServerResponseError,  /** Server did not give a useful response. For download, this
+    enum
+    {
+        ResultOK,  /** No problem */
+        UnknownError, /** Something else happened */
+        CommunicationError, /** IO Error, the server could not be reached or returned an HTTP error */
+        ServerResponseError,  /** Server did not give a useful response. For download, this
                                 means that a SEARCH did not result in anything like an appointment */
-      IllegalAppointmentError, /** Reading appointment data from server response failed */
-      NonEventError, /** The Incidence that is to be uplaoded to the server is not an Event */
-      EventWriteError, /** When writing an event to the server, an error occurred */
-      DeleteUnknownEventError /** The event to be deleted does not exist on the server */
+        IllegalAppointmentError, /** Reading appointment data from server response failed */
+        NonEventError, /** The Incidence that is to be uplaoded to the server is not an Event */
+        EventWriteError, /** When writing an event to the server, an error occurred */
+        DeleteUnknownEventError /** The event to be deleted does not exist on the server */
     };
 
-    int downloadSynchronous( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress=false);
-    int uploadSynchronous( KCal::Event* event );
-    int removeSynchronous( KCal::Event* event );
+    int downloadSynchronous(KCal::Calendar *calendar, const QDate &start, const QDate &end, bool showProgress = false);
+    int uploadSynchronous(KCal::Event *event);
+    int removeSynchronous(KCal::Event *event);
 
     // ExchangeMonitor* monitor( int pollMode, const QHostAddress& ownInterface );
 
     QString detailedErrorString();
 
-  public slots:
+public slots:
     // Asynchronous functions, wait for "finished" signals for result
     // Deprecated: use download() without the Calendar* argument instead
-    void download( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress=false);
-    void download( const QDate& start, const QDate& end, bool showProgress=false);
-    void upload( KCal::Event* event );
-    void remove( KCal::Event* event );
+    void download(KCal::Calendar *calendar, const QDate &start, const QDate &end, bool showProgress = false);
+    void download(const QDate &start, const QDate &end, bool showProgress = false);
+    void upload(KCal::Event *event);
+    void remove(KCal::Event *event);
     void test();
 
-  private slots:
-    void slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo );
-    void slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo, QPtrList<KCal::Event>& );
-    void slotUploadFinished( ExchangeUpload* worker, int result, const QString& moreInfo );
-    void slotRemoveFinished( ExchangeDelete* worker, int result, const QString& moreInfo );
-    void slotSyncFinished( int result, const QString& moreInfo );
+private slots:
+    void slotDownloadFinished(ExchangeDownload *worker, int result, const QString &moreInfo);
+    void slotDownloadFinished(ExchangeDownload *worker, int result, const QString &moreInfo, QPtrList<KCal::Event> &);
+    void slotUploadFinished(ExchangeUpload *worker, int result, const QString &moreInfo);
+    void slotRemoveFinished(ExchangeDelete *worker, int result, const QString &moreInfo);
+    void slotSyncFinished(int result, const QString &moreInfo);
 
-  signals:
+signals:
     // Useful for progress dialogs, shows how much still needs to be done.
     // Not used right now, since ExchangeDownload provides its own progress dialog
     void startDownload();
     void finishDownload();
 
-    void downloadFinished( int result, const QString& moreInfo );
-    void event( KCal::Event* event, const KURL& url);
-    void downloadFinished( int result, const QString& moreInfo, QPtrList<KCal::Event>& events );
-    void uploadFinished( int result, const QString& moreInfo );
-    void removeFinished( int result, const QString& moreInfo );
+    void downloadFinished(int result, const QString &moreInfo);
+    void event(KCal::Event *event, const KURL &url);
+    void downloadFinished(int result, const QString &moreInfo, QPtrList<KCal::Event> &events);
+    void uploadFinished(int result, const QString &moreInfo);
+    void removeFinished(int result, const QString &moreInfo);
 
-  private:
+private:
     void test2();
 
     enum { WaitingForResult, HaveResult, Error };
-   
+
     int mClientState;
     int mSyncResult;
     QString mDetailedErrorString;
-    QWidget* mWindow;
-    ExchangeAccount* mAccount;
+    QWidget *mWindow;
+    ExchangeAccount *mAccount;
     QString mTimeZoneId;
 };
 

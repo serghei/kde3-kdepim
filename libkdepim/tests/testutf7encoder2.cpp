@@ -5,41 +5,46 @@
 #include <assert.h>
 #include <iostream.h>
 
-int main( int argc, char * argv[] ) {
-  if ( argc == 1 ) {
-    (void)new QUtf7Codec;
+int main(int argc, char *argv[])
+{
+    if(argc == 1)
+    {
+        (void)new QUtf7Codec;
 
-    QTextCodec * codec = QTextCodec::codecForName("utf-7");
-    assert(codec);
+        QTextCodec *codec = QTextCodec::codecForName("utf-7");
+        assert(codec);
 
-    QTextIStream my_cin(stdin);
+        QTextIStream my_cin(stdin);
 
-    QTextOStream my_cout(stdout);
-    my_cout.setCodec(codec);
-    
-    QString buffer = my_cin.read();
+        QTextOStream my_cout(stdout);
+        my_cout.setCodec(codec);
 
-    //    qDebug("buffer == " + buffer);
+        QString buffer = my_cin.read();
+
+        //    qDebug("buffer == " + buffer);
 
 #ifdef USE_STREAM
-    my_cout << buffer << endl;
+        my_cout << buffer << endl;
 #else
-    QTextEncoder * enc = codec->makeEncoder();
+        QTextEncoder *enc = codec->makeEncoder();
 #ifdef CHAR_WISE
-    int len;
-    for ( int i = 0 ; i < buffer.length() ; i++ ) {
-      len = 1;
-      cout << (enc->fromUnicode(QString(buffer[i]),len)).data();
-    }
-    cout << endl;
+        int len;
+        for(int i = 0 ; i < buffer.length() ; i++)
+        {
+            len = 1;
+            cout << (enc->fromUnicode(QString(buffer[i]), len)).data();
+        }
+        cout << endl;
 #else
-    int len = buffer.length();
-    cout << (enc->fromUnicode(buffer,len)).data() << endl;;
+        int len = buffer.length();
+        cout << (enc->fromUnicode(buffer, len)).data() << endl;;
 #endif // CHAR_WISE
-    delete enc;
+        delete enc;
 #endif // else USE_STREAM
-  } else {
-    qWarning("usage: testutf7encoder2 < infile > outfile\n");
-  }
-  QTextCodec::deleteAllCodecs();
+    }
+    else
+    {
+        qWarning("usage: testutf7encoder2 < infile > outfile\n");
+    }
+    QTextCodec::deleteAllCodecs();
 }

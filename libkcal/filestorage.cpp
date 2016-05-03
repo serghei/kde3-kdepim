@@ -36,120 +36,136 @@
 
 using namespace KCal;
 
-FileStorage::FileStorage( Calendar *cal, const QString &fileName,
-                            CalFormat *format )
-  : CalStorage( cal ),
-    mFileName( fileName ),
-    mSaveFormat( format )
+FileStorage::FileStorage(Calendar *cal, const QString &fileName,
+                         CalFormat *format)
+    : CalStorage(cal),
+      mFileName(fileName),
+      mSaveFormat(format)
 {
 }
 
 FileStorage::~FileStorage()
 {
-  delete mSaveFormat;
+    delete mSaveFormat;
 }
 
-void FileStorage::setFileName( const QString &fileName )
+void FileStorage::setFileName(const QString &fileName)
 {
-  mFileName = fileName;
+    mFileName = fileName;
 }
 
 QString FileStorage::fileName()const
 {
-  return mFileName;
+    return mFileName;
 }
 
 
-void FileStorage::setSaveFormat( CalFormat *format )
+void FileStorage::setSaveFormat(CalFormat *format)
 {
-  delete mSaveFormat;
-  mSaveFormat = format;
+    delete mSaveFormat;
+    mSaveFormat = format;
 }
 
 CalFormat *FileStorage::saveFormat()const
 {
-  return mSaveFormat;
+    return mSaveFormat;
 }
 
 
 bool FileStorage::open()
 {
-  return true;
+    return true;
 }
 
 bool FileStorage::load()
 {
-//  kdDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
+    //  kdDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
 
-  // do we want to silently accept this, or make some noise?  Dunno...
-  // it is a semantical thing vs. a practical thing.
-  if (mFileName.isEmpty()) return false;
+    // do we want to silently accept this, or make some noise?  Dunno...
+    // it is a semantical thing vs. a practical thing.
+    if(mFileName.isEmpty()) return false;
 
-  // Always try to load with iCalendar. It will detect, if it is actually a
-  // vCalendar file.
-  bool success;
-  // First try the supplied format. Otherwise fall through to iCalendar, then
-  // to vCalendar
-  success = saveFormat() && saveFormat()->load( calendar(), mFileName );
-  if ( !success ) {
-    ICalFormat iCal;
+    // Always try to load with iCalendar. It will detect, if it is actually a
+    // vCalendar file.
+    bool success;
+    // First try the supplied format. Otherwise fall through to iCalendar, then
+    // to vCalendar
+    success = saveFormat() && saveFormat()->load(calendar(), mFileName);
+    if(!success)
+    {
+        ICalFormat iCal;
 
-    success = iCal.load( calendar(), mFileName);
-    if ( !success ) {
-      if ( iCal.exception() ) {
-//        kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
-        if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
-          // Expected non vCalendar file, but detected vCalendar
-          kdDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
-          VCalFormat vCal;
-          success = vCal.load( calendar(), mFileName );
-          calendar()->setProductId( vCal.productId() );
-        } else {
-          return false;
+        success = iCal.load(calendar(), mFileName);
+        if(!success)
+        {
+            if(iCal.exception())
+            {
+                //        kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
+                if(iCal.exception()->errorCode() == ErrorFormat::CalVersion1)
+                {
+                    // Expected non vCalendar file, but detected vCalendar
+                    kdDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
+                    VCalFormat vCal;
+                    success = vCal.load(calendar(), mFileName);
+                    calendar()->setProductId(vCal.productId());
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                kdDebug(5800) << "Warning! There should be an exception set." << endl;
+                return false;
+            }
         }
-      } else {
-        kdDebug(5800) << "Warning! There should be an exception set." << endl;
-        return false;
-      }
-    } else {
-//     kdDebug(5800) << "---Success" << endl;
-      calendar()->setProductId( iCal.loadedProductId() );
+        else
+        {
+            //     kdDebug(5800) << "---Success" << endl;
+            calendar()->setProductId(iCal.loadedProductId());
+        }
     }
-  }
 
-  calendar()->setModified( false );
+    calendar()->setModified(false);
 
-  return true;
+    return true;
 }
 
 bool FileStorage::save()
 {
-  if ( mFileName.isEmpty() ) return false;
+    if(mFileName.isEmpty()) return false;
 
-  CalFormat *format = 0;
-  if ( mSaveFormat ) format = mSaveFormat;
-  else format = new ICalFormat;
+    CalFormat *format = 0;
+    if(mSaveFormat) format = mSaveFormat;
+    else format = new ICalFormat;
 
-  bool success = format->save( calendar(), mFileName );
+    bool success = format->save(calendar(), mFileName);
 
-  if ( success ) {
-    calendar()->setModified( false );
-  } else {
-    if ( !format->exception() ) {
-      kdDebug(5800) << "FileStorage::save(): Error. There should be an exception set."
-                << endl;
-    } else {
-      kdDebug(5800) << "FileStorage::save(): " << format->exception()->message()
-                << endl;
+    if(success)
+    {
+        calendar()->setModified(false);
     }
-  }
+    else
+    {
+        if(!format->exception())
+        {
+            kdDebug(5800) << "FileStorage::save(): Error. There should be an exception set."
+                          << endl;
+        }
+        else
+        {
+            kdDebug(5800) << "FileStorage::save(): " << format->exception()->message()
+                          << endl;
+        }
+    }
 
-  if ( !mSaveFormat ) delete format;
+    if(!mSaveFormat) delete format;
 
-  return success;
+    return success;
 }
 
 bool FileStorage::close()
 {
-  return true;
+    return true;
 }

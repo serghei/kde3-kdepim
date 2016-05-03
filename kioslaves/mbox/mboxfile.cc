@@ -20,11 +20,11 @@
 
 #include <assert.h>
 
-MBoxFile::MBoxFile( const UrlInfo* info, MBoxProtocol* parent )
-	: m_info( info ),
-	m_mbox( parent )
+MBoxFile::MBoxFile(const UrlInfo *info, MBoxProtocol *parent)
+    : m_info(info),
+      m_mbox(parent)
 {
-	assert( m_info );
+    assert(m_info);
 }
 
 MBoxFile::~MBoxFile()
@@ -33,13 +33,13 @@ MBoxFile::~MBoxFile()
 
 bool MBoxFile::lock()
 {
-	//Not implemented
-	return true;
+    //Not implemented
+    return true;
 }
 
 void MBoxFile::unlock()
 {
-	//Not implemented
+    //Not implemented
 }
 
 

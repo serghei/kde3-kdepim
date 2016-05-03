@@ -37,54 +37,62 @@ class QTextEdit;
 class QHBox;
 class KProgress;
 
-class LogWidget : public PilotComponent , public LoggerDCOP
-{
-Q_OBJECT
+class LogWidget : public PilotComponent , public LoggerDCOP {
+    Q_OBJECT
 
 public:
-	LogWidget(QWidget *);
-	~LogWidget() { } ;
+    LogWidget(QWidget *);
+    ~LogWidget() { } ;
 
-	// Pilot Component Methods:
-	//
-	bool showTime() const { return fShowTime; } ;
-	void setShowTime(bool b) { fShowTime=b; } ;
+    // Pilot Component Methods:
+    //
+    bool showTime() const
+    {
+        return fShowTime;
+    } ;
+    void setShowTime(bool b)
+    {
+        fShowTime = b;
+    } ;
 
-	/**
-	* DCOP interface.
-	*/
-	virtual ASYNC logError(QString);
-	virtual ASYNC logMessage(QString);
-	virtual ASYNC logProgress(QString,int);
-	virtual ASYNC logStartSync();
-	virtual ASYNC logEndSync();
+    /**
+    * DCOP interface.
+    */
+    virtual ASYNC logError(QString);
+    virtual ASYNC logMessage(QString);
+    virtual ASYNC logProgress(QString, int);
+    virtual ASYNC logStartSync();
+    virtual ASYNC logEndSync();
 
-	// GUI customization hooks
-	//
-	//
-	QHBox *buttonBox() const { return fButtonBox; } ;
+    // GUI customization hooks
+    //
+    //
+    QHBox *buttonBox() const
+    {
+        return fButtonBox;
+    } ;
 
 public slots:
-	void addMessage(const QString &);
-	void addError(const QString &);
-	void addProgress(const QString &,int);
-	void syncDone();
+    void addMessage(const QString &);
+    void addError(const QString &);
+    void addProgress(const QString &, int);
+    void syncDone();
 
 private slots:
-	void hideSplash();
-	void clearLog();
-	void saveLog();
+    void hideSplash();
+    void clearLog();
+    void saveLog();
 
 private:
-	bool saveFile(const QString &);
+    bool saveFile(const QString &);
 
 private:
-	QTextEdit *fLog;
-	bool fShowTime;
-	QLabel *fSplash;
-	QLabel *fLabel;
-	KProgress *fProgress;
-	QHBox *fButtonBox;
+    QTextEdit *fLog;
+    bool fShowTime;
+    QLabel *fSplash;
+    QLabel *fLabel;
+    KProgress *fProgress;
+    QHBox *fButtonBox;
 } ;
 
 #endif

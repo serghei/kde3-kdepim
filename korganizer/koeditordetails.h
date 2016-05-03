@@ -57,29 +57,27 @@ typedef CustomListViewItem<KCal::Attendee *> AttendeeListItem;
  *  was dropped, the signal dropped(Attendee*)  is emitted. Valid drop classes
  *   are KVCardDrag and QTextDrag.
  */
-class KOAttendeeListView : public KListView
-{
-Q_OBJECT
+class KOAttendeeListView : public KListView {
+    Q_OBJECT
 public:
-  KOAttendeeListView (QWidget *parent=0, const char *name=0);
-  virtual ~KOAttendeeListView();
-  virtual void addAttendee( const QString& newAttendee );
+    KOAttendeeListView(QWidget *parent = 0, const char *name = 0);
+    virtual ~KOAttendeeListView();
+    virtual void addAttendee(const QString &newAttendee);
 public slots:
-  virtual void contentsDragEnterEvent( QDragEnterEvent *e );
-  virtual void dragEnterEvent( QDragEnterEvent *e );
-  virtual void contentsDropEvent( QDropEvent *e );
-  virtual void dropEvent( QDropEvent *e );
-  virtual void contentsDragMoveEvent(QDragMoveEvent *e);
+    virtual void contentsDragEnterEvent(QDragEnterEvent *e);
+    virtual void dragEnterEvent(QDragEnterEvent *e);
+    virtual void contentsDropEvent(QDropEvent *e);
+    virtual void dropEvent(QDropEvent *e);
+    virtual void contentsDragMoveEvent(QDragMoveEvent *e);
 signals:
-  void dropped(Attendee*);
+    void dropped(Attendee *);
 };
 
 
-class KOEditorDetails : public KOAttendeeEditor
-{
+class KOEditorDetails : public KOAttendeeEditor {
     Q_OBJECT
-  public:
-    KOEditorDetails (int spacing = 8,QWidget* parent = 0, const char* name = 0);
+public:
+    KOEditorDetails(int spacing = 8, QWidget *parent = 0, const char *name = 0);
     virtual ~KOEditorDetails();
 
     /** Set widgets to default values */
@@ -95,23 +93,23 @@ class KOEditorDetails : public KOAttendeeEditor
     /** Returns whether at least one attendee was added */
     bool hasAttendees();
 
-    void insertAttendee( Attendee*, bool goodEmailAddress = true );
+    void insertAttendee(Attendee *, bool goodEmailAddress = true);
 
-  protected slots:
+protected slots:
     void removeAttendee();
-    void slotInsertAttendee( Attendee *a );
+    void slotInsertAttendee(Attendee *a);
 
-  protected:
-    void changeStatusForMe( Attendee::PartStat status );
+protected:
+    void changeStatusForMe(Attendee::PartStat status);
 
-    KCal::Attendee* currentAttendee() const;
+    KCal::Attendee *currentAttendee() const;
     void updateCurrentItem();
 
-  private:
+private:
     bool mDisableItemUpdate;
 
     KListView *mListView;
-//     KOEditorFreeBusy *mFreeBusy;
+    //     KOEditorFreeBusy *mFreeBusy;
 };
 
 #endif

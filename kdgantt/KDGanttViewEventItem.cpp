@@ -52,12 +52,12 @@
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
-                                            const QString& lvtext,
-                                            const QString& name ) :
-    KDGanttViewItem( Event, view, lvtext, name )
+KDGanttViewEventItem::KDGanttViewEventItem(KDGanttView *view,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Event, view, lvtext, name)
 {
-  initItem();
+    initItem();
 }
 
 
@@ -69,12 +69,12 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
-                                            const QString& lvtext,
-                                            const QString& name ) :
-    KDGanttViewItem( Event, parent, lvtext, name )
+KDGanttViewEventItem::KDGanttViewEventItem(KDGanttViewItem *parent,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Event, parent, lvtext, name)
 {
- initItem();
+    initItem();
 
 }
 
@@ -88,14 +88,14 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
-                                            KDGanttViewItem* after,
-                                            const QString& lvtext,
-                                            const QString& name ) :
-    KDGanttViewItem( Event, view, after, lvtext, name )
+KDGanttViewEventItem::KDGanttViewEventItem(KDGanttView *view,
+        KDGanttViewItem *after,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Event, view, after, lvtext, name)
 {
 
-  initItem();
+    initItem();
 }
 
 
@@ -108,14 +108,14 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttView* view,
   \param name the name by which the item can be identified. If no name
   is specified, a unique name will be generated
 */
-KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
-                                            KDGanttViewItem* after,
-                                            const QString& lvtext,
-                                            const QString& name ) :
-    KDGanttViewItem( Event, parent, after, lvtext, name )
+KDGanttViewEventItem::KDGanttViewEventItem(KDGanttViewItem *parent,
+        KDGanttViewItem *after,
+        const QString &lvtext,
+        const QString &name) :
+    KDGanttViewItem(Event, parent, after, lvtext, name)
 {
 
-  initItem();
+    initItem();
 }
 
 
@@ -136,18 +136,20 @@ KDGanttViewEventItem::~KDGanttViewEventItem()
   \param start the start time
   \sa startTime()
 */
-void KDGanttViewEventItem::setStartTime( const QDateTime& start )
+void KDGanttViewEventItem::setStartTime(const QDateTime &start)
 {
-  if (! start.isValid() ) {
-    qDebug("KDGanttViewEventItem::setStartTime():Invalid parameter-no time set");
-    return;
-  }
+    if(! start.isValid())
+    {
+        qDebug("KDGanttViewEventItem::setStartTime():Invalid parameter-no time set");
+        return;
+    }
     myStartTime = start;
     myEndTime = start;
-    if ( myStartTime < leadTime() )
-      setLeadTime( myStartTime );
-    else {
-      updateCanvasItems();
+    if(myStartTime < leadTime())
+        setLeadTime(myStartTime);
+    else
+    {
+        updateCanvasItems();
     }
 
 }
@@ -164,15 +166,16 @@ void KDGanttViewEventItem::setStartTime( const QDateTime& start )
   \sa leadTime()
 */
 
-void KDGanttViewEventItem::setLeadTime( const QDateTime& leadTimeStart )
+void KDGanttViewEventItem::setLeadTime(const QDateTime &leadTimeStart)
 {
-  if (!myLeadTime) myLeadTime = new QDateTime;
-  *myLeadTime =  leadTimeStart;
-  if ( startTime() < leadTime() )
-      setStartTime( leadTimeStart );
-  else {
-    updateCanvasItems();
-  }
+    if(!myLeadTime) myLeadTime = new QDateTime;
+    *myLeadTime =  leadTimeStart;
+    if(startTime() < leadTime())
+        setStartTime(leadTimeStart);
+    else
+    {
+        updateCanvasItems();
+    }
 
 }
 
@@ -188,9 +191,9 @@ void KDGanttViewEventItem::setLeadTime( const QDateTime& leadTimeStart )
 */
 QDateTime KDGanttViewEventItem::leadTime() const
 {
-  if(myLeadTime)
-    return *myLeadTime;
-  return myStartTime;
+    if(myLeadTime)
+        return *myLeadTime;
+    return myStartTime;
 }
 
 
@@ -208,98 +211,110 @@ void KDGanttViewEventItem::hideMe()
 
 void KDGanttViewEventItem::showItem(bool show, int coordY)
 {
-  isVisibleInGanttView = show;
-  invalidateHeight () ;
-  if (!show) {
-    hideMe();
-    return;
-  }
-  float prio = ((float) ( priority() - 100 )) / 100.0;
-  startShape->setZ( prio + 0.0055 );
-  startShapeBack->setZ( prio + 0.003 );
-  startLine->setZ( prio + 0.0015  );
-  floatStartShape->setZ(prio + 0.004);
-  floatStartShape->hide();
-  floatEndShape->setZ(prio + 0.004);
-  floatEndShape->hide();
-  textCanvas->setZ( prio + 0.006 );
-  startLineBack->setZ( prio );
-
-  if ( displaySubitemsAsGroup() && firstChild() ) {
-    myStartTime = myChildStartTime();
-    myEndTime = myChildEndTime();
-  }
-  int startX, endX, allY;
-  if ( coordY )
-    allY = coordY;
-  else
-    allY = getCoordY();
-  startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
-  if (myLeadTime) {
-    endX = myGanttView->myTimeHeader->getCoordX(*myLeadTime);
-    startLine->setPoints(startX,allY,endX,allY);
-    startLine->show();
-    startLineBack->setPoints(startX+1,allY,endX-1,allY);
-    startLineBack->show();
-  }
-  else {
-    startLine->hide();
-    startLineBack->hide();
-  }
-  startShape->move(startX,allY);
-  startShape->show();
-  startShapeBack->move(startX,allY);
-  startShapeBack->show();
-  if (myFloatStartTime.isValid()) {
-    KDCanvasRectangle* floatStartTemp = (KDCanvasRectangle*) floatStartShape;
-    int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
-    int hei = startShape->boundingRect().height();
-    // FIXME: Configurable colors
-    QBrush b(startShape->brush().color(), Dense4Pattern);
-    floatStartTemp->setBrush(b);
-    floatStartTemp->setPen(QPen(gray));
-    if (floatStartX < startX) {
-        floatStartTemp->setSize(startX - floatStartX, hei/2);
-        floatStartTemp->move(floatStartX, allY-hei/4);
-    } else {
-        floatStartTemp->setSize(floatStartX - startX, hei/2);
-        floatStartTemp->move(startX, allY-hei/4);
+    isVisibleInGanttView = show;
+    invalidateHeight() ;
+    if(!show)
+    {
+        hideMe();
+        return;
     }
-    floatStartShape->show();    
-  }
-  if (myFloatEndTime.isValid()) {
-    KDCanvasRectangle* floatEndTemp = (KDCanvasRectangle*) floatEndShape;
-    int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
-    int hei = startShape->boundingRect().height();
-    // FIXME: Configurable colors
-    QBrush b(startShape->brush().color(), Dense4Pattern);
-    floatEndTemp->setBrush(b);
-    floatEndTemp->setPen(QPen(gray));
-    if (floatEndX > startX) {
-        floatEndTemp->setSize(floatEndX - startX, hei/2);
-        floatEndTemp->move(startX, allY-hei/4);
-    } else {
-        floatEndTemp->setSize(startX - floatEndX, hei/2);
-        floatEndTemp->move(floatEndX, allY-hei/4);
-    }
-    floatEndShape->show();    
-   }
+    float prio = ((float)(priority() - 100)) / 100.0;
+    startShape->setZ(prio + 0.0055);
+    startShapeBack->setZ(prio + 0.003);
+    startLine->setZ(prio + 0.0015);
+    floatStartShape->setZ(prio + 0.004);
+    floatStartShape->hide();
+    floatEndShape->setZ(prio + 0.004);
+    floatEndShape->hide();
+    textCanvas->setZ(prio + 0.006);
+    startLineBack->setZ(prio);
 
-  moveTextCanvas(startX,allY);
-  textCanvas->show();
-  if (textCanvas->text().isEmpty())
-    textCanvas->hide();
+    if(displaySubitemsAsGroup() && firstChild())
+    {
+        myStartTime = myChildStartTime();
+        myEndTime = myChildEndTime();
+    }
+    int startX, endX, allY;
+    if(coordY)
+        allY = coordY;
+    else
+        allY = getCoordY();
+    startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
+    if(myLeadTime)
+    {
+        endX = myGanttView->myTimeHeader->getCoordX(*myLeadTime);
+        startLine->setPoints(startX, allY, endX, allY);
+        startLine->show();
+        startLineBack->setPoints(startX + 1, allY, endX - 1, allY);
+        startLineBack->show();
+    }
+    else
+    {
+        startLine->hide();
+        startLineBack->hide();
+    }
+    startShape->move(startX, allY);
+    startShape->show();
+    startShapeBack->move(startX, allY);
+    startShapeBack->show();
+    if(myFloatStartTime.isValid())
+    {
+        KDCanvasRectangle *floatStartTemp = (KDCanvasRectangle *) floatStartShape;
+        int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
+        int hei = startShape->boundingRect().height();
+        // FIXME: Configurable colors
+        QBrush b(startShape->brush().color(), Dense4Pattern);
+        floatStartTemp->setBrush(b);
+        floatStartTemp->setPen(QPen(gray));
+        if(floatStartX < startX)
+        {
+            floatStartTemp->setSize(startX - floatStartX, hei / 2);
+            floatStartTemp->move(floatStartX, allY - hei / 4);
+        }
+        else
+        {
+            floatStartTemp->setSize(floatStartX - startX, hei / 2);
+            floatStartTemp->move(startX, allY - hei / 4);
+        }
+        floatStartShape->show();
+    }
+    if(myFloatEndTime.isValid())
+    {
+        KDCanvasRectangle *floatEndTemp = (KDCanvasRectangle *) floatEndShape;
+        int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
+        int hei = startShape->boundingRect().height();
+        // FIXME: Configurable colors
+        QBrush b(startShape->brush().color(), Dense4Pattern);
+        floatEndTemp->setBrush(b);
+        floatEndTemp->setPen(QPen(gray));
+        if(floatEndX > startX)
+        {
+            floatEndTemp->setSize(floatEndX - startX, hei / 2);
+            floatEndTemp->move(startX, allY - hei / 4);
+        }
+        else
+        {
+            floatEndTemp->setSize(startX - floatEndX, hei / 2);
+            floatEndTemp->move(floatEndX, allY - hei / 4);
+        }
+        floatEndShape->show();
+    }
+
+    moveTextCanvas(startX, allY);
+    textCanvas->show();
+    if(textCanvas->text().isEmpty())
+        textCanvas->hide();
 }
 
 
 void KDGanttViewEventItem::initItem()
 {
-  isVisibleInGanttView = false;
-  myLeadTime = 0;
-  showItem(true);
-  myGanttView->myTimeTable->updateMyContent();
-  setDragEnabled( myGanttView->dragEnabled() );
-  setDropEnabled( myGanttView->dropEnabled() );
+    isVisibleInGanttView = false;
+    myLeadTime = 0;
+    showItem(true);
+    myGanttView->myTimeTable->updateMyContent();
+    setDragEnabled(myGanttView->dragEnabled());
+    setDropEnabled(myGanttView->dropEnabled());
 }
 
 

@@ -44,43 +44,43 @@
 
 static KAboutData *createAbout()
 {
-	KAboutData *fAbout = new KAboutData("Timeconduit",
-		I18N_NOOP("Time Synchronization Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Synchronizes the Time on the Handheld and the PC"),
-		KAboutData::License_GPL,
-		"(C) 2002, Reinhold Kainhofer");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
-	return fAbout;
+    KAboutData *fAbout = new KAboutData("Timeconduit",
+                                        I18N_NOOP("Time Synchronization Conduit for KPilot"),
+                                        KPILOT_VERSION,
+                                        I18N_NOOP("Synchronizes the Time on the Handheld and the PC"),
+                                        KAboutData::License_GPL,
+                                        "(C) 2002, Reinhold Kainhofer");
+    fAbout->addAuthor("Reinhold Kainhofer",
+                      I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+    return fAbout;
 }
 
 
 
 TimeWidgetConfig::TimeWidgetConfig(QWidget *w, const char *n) :
-	ConduitConfigBase(w,n),
-	fConfigWidget(new TimeWidget(w))
+    ConduitConfigBase(w, n),
+    fConfigWidget(new TimeWidget(w))
 {
-	FUNCTIONSETUP;
-	fAbout = createAbout();
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
-	fWidget=fConfigWidget;
-	fConduitName=i18n("Time");
+    FUNCTIONSETUP;
+    fAbout = createAbout();
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
+    fWidget = fConfigWidget;
+    fConduitName = i18n("Time");
 }
 
 void TimeWidgetConfig::commit()
 {
-	FUNCTIONSETUP;
-	TimeConduitSettings::setDirection(
-		fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()) );
-	TimeConduitSettings::self()->writeConfig();
+    FUNCTIONSETUP;
+    TimeConduitSettings::setDirection(
+        fConfigWidget->directionGroup->id(fConfigWidget->directionGroup->selected()));
+    TimeConduitSettings::self()->writeConfig();
 }
 
 void TimeWidgetConfig::load()
 {
-	FUNCTIONSETUP;
-	TimeConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    TimeConduitSettings::self()->readConfig();
 
-	fConfigWidget->directionGroup->setButton( TimeConduitSettings::direction() );
+    fConfigWidget->directionGroup->setButton(TimeConduitSettings::direction());
 }
 

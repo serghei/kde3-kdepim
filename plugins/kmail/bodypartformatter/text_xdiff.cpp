@@ -54,99 +54,122 @@
 
 namespace {
 
-  // TODO: Show filename header to make it possible to save the patch.
-  // FIXME: The box should only be as wide as necessary.
+// TODO: Show filename header to make it possible to save the patch.
+// FIXME: The box should only be as wide as necessary.
 
-  class Formatter : public KMail::Interface::BodyPartFormatter {
-  public:
-    Result format( KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
+class Formatter : public KMail::Interface::BodyPartFormatter {
+public:
+    Result format(KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer) const
+    {
 
-      if ( !writer ) return Ok;
+        if(!writer) return Ok;
 
-      if (  bodyPart->defaultDisplay() == KMail::Interface::BodyPart::AsIcon )
-        return AsIcon;
+        if(bodyPart->defaultDisplay() == KMail::Interface::BodyPart::AsIcon)
+            return AsIcon;
 
-      const QString diff = bodyPart->asText();
-      if ( diff.isEmpty() ) return AsIcon;
+        const QString diff = bodyPart->asText();
+        if(diff.isEmpty()) return AsIcon;
 
 
 
-      QString addedLineStyle = QString::fromLatin1(
-        "style=\""
-        "color: green;\"");
-      QString fileAddStyle( "style=\"font-weight: bold; "
-                            "color: green; \"" );
+        QString addedLineStyle = QString::fromLatin1(
+                                     "style=\""
+                                     "color: green;\"");
+        QString fileAddStyle("style=\"font-weight: bold; "
+                             "color: green; \"");
 
-      QString removedLineStyle = QString::fromLatin1(
-        "style=\""
-        "color: red;\"");
-      QString fileRemoveStyle( "style=\"font-weight: bold; "
-                               "color: red ;\"" );
+        QString removedLineStyle = QString::fromLatin1(
+                                       "style=\""
+                                       "color: red;\"");
+        QString fileRemoveStyle("style=\"font-weight: bold; "
+                                "color: red ;\"");
 
-      QString tableStyle = QString::fromLatin1(
-        "style=\""
-        "text-align: -khtml-auto; "
-        "border: solid black 1px; "
-        "padding: 0.5em; "
-        "margin: 0em;\"");
+        QString tableStyle = QString::fromLatin1(
+                                 "style=\""
+                                 "text-align: -khtml-auto; "
+                                 "border: solid black 1px; "
+                                 "padding: 0.5em; "
+                                 "margin: 0em;\"");
 
-      QString sepStyle( "style=\"color: black; font-weight: bold;\"" );
-      QString chunkStyle( "style=\"color: blue;\"" );
+        QString sepStyle("style=\"color: black; font-weight: bold;\"");
+        QString chunkStyle("style=\"color: blue;\"");
 
-      QString html = "<br><div align=\"center\">";
-      html += "<pre " + tableStyle + ">";
+        QString html = "<br><div align=\"center\">";
+        html += "<pre " + tableStyle + ">";
 
-      QStringList lines = QStringList::split( '\n', diff, true );
-      for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
-        QString line( QStyleSheet::escape( *it ) );
-        QString style;
-        if ( line.length() > 0 ) {
-          if ( line.startsWith( "+++" ) ) {
-            style = fileAddStyle;
-          } else if ( line.startsWith( "---" ) ) {
-            style = fileRemoveStyle;
-          } else if ( line.startsWith( "+" ) || line.startsWith( ">" ) ) {
-            style = addedLineStyle;
-          } else if ( line.startsWith( "-" ) || line.startsWith( "<" ) ) {
-            style = removedLineStyle;
-          } else if ( line.startsWith( "==") ) {
-            style = sepStyle;
-          } else if ( line.startsWith( "@@" ) ) {
-            style = chunkStyle;
-          } else {
-            style = "";
-          }
+        QStringList lines = QStringList::split('\n', diff, true);
+        for(QStringList::Iterator it = lines.begin(); it != lines.end(); ++it)
+        {
+            QString line(QStyleSheet::escape(*it));
+            QString style;
+            if(line.length() > 0)
+            {
+                if(line.startsWith("+++"))
+                {
+                    style = fileAddStyle;
+                }
+                else if(line.startsWith("---"))
+                {
+                    style = fileRemoveStyle;
+                }
+                else if(line.startsWith("+") || line.startsWith(">"))
+                {
+                    style = addedLineStyle;
+                }
+                else if(line.startsWith("-") || line.startsWith("<"))
+                {
+                    style = removedLineStyle;
+                }
+                else if(line.startsWith("=="))
+                {
+                    style = sepStyle;
+                }
+                else if(line.startsWith("@@"))
+                {
+                    style = chunkStyle;
+                }
+                else
+                {
+                    style = "";
+                }
+            }
+            html += "<span " + style + ">" + line + "</span><br/>";
         }
-        html += "<span " + style + ">" + line + "</span><br/>";
-      }
 
-      html += "</pre></div>";
-      //qDebug( "%s", html.latin1() );
-      writer->queue( html );
+        html += "</pre></div>";
+        //qDebug( "%s", html.latin1() );
+        writer->queue(html);
 
-      return Ok;
+        return Ok;
     }
-  };
+};
 
-  class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
-  public:
-    const KMail::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
-      return idx == 0 ? new Formatter() : 0 ;
+class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
+public:
+    const KMail::Interface::BodyPartFormatter *bodyPartFormatter(int idx) const
+    {
+        return idx == 0 ? new Formatter() : 0 ;
     }
-    const char * type( int idx ) const {
-      return idx == 0 ? "text" : 0 ;
+    const char *type(int idx) const
+    {
+        return idx == 0 ? "text" : 0 ;
     }
-    const char * subtype( int idx ) const {
-      return idx == 0 ? "x-diff" : 0 ;
+    const char *subtype(int idx) const
+    {
+        return idx == 0 ? "x-diff" : 0 ;
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }
-  };
+    const KMail::Interface::BodyPartURLHandler *urlHandler(int) const
+    {
+        return 0;
+    }
+};
 
 }
 
 extern "C"
 KMail::Interface::BodyPartFormatterPlugin *
-libkmail_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
-  return new Plugin();
+libkmail_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin()
+{
+    return new Plugin();
 }

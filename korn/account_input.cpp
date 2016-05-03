@@ -29,145 +29,145 @@
 #include <qstringlist.h>
 #include <qvalidator.h>
 
-AccountInput::AccountInput( const QString& configName )
-	: _configName( new QString( configName ) )
+AccountInput::AccountInput(const QString &configName)
+    : _configName(new QString(configName))
 {
 }
 
 AccountInput::~AccountInput()
 {
-	delete _configName;
+    delete _configName;
 }
 
 QString AccountInput::configName() const
 {
-	return *_configName;
+    return *_configName;
 }
 
-TextInput::TextInput( QWidget *parent, const QString& title, Type type, const QString& defaul, const QString& configName )
-	: AccountInput( configName )
+TextInput::TextInput(QWidget *parent, const QString &title, Type type, const QString &defaul, const QString &configName)
+    : AccountInput(configName)
 {
-	_left = new QLabel( title, parent, "label" );
-	_right = new KLineEdit( "", parent, "edit" );
-	switch( type )
-	{
-	case text:
-		break;
-	case password:
-		_right->setEchoMode( QLineEdit::Password );
-		break;
-	}
-	setValue( defaul );
+    _left = new QLabel(title, parent, "label");
+    _right = new KLineEdit("", parent, "edit");
+    switch(type)
+    {
+        case text:
+            break;
+        case password:
+            _right->setEchoMode(QLineEdit::Password);
+            break;
+    }
+    setValue(defaul);
 }
 
-TextInput::TextInput( QWidget *parent, const QString& title, int min, int max, const QString& defaul, const QString& configName )
-	: AccountInput( configName )
+TextInput::TextInput(QWidget *parent, const QString &title, int min, int max, const QString &defaul, const QString &configName)
+    : AccountInput(configName)
 {
-	_left = new QLabel( title, parent, "label" );
-	_right = new KLineEdit( "", parent, "edit" );
-	_right->setValidator( new QIntValidator( min, max, _right, "validator" ) );
-	setValue( defaul );
+    _left = new QLabel(title, parent, "label");
+    _right = new KLineEdit("", parent, "edit");
+    _right->setValidator(new QIntValidator(min, max, _right, "validator"));
+    setValue(defaul);
 }
 
 TextInput::~TextInput()
 {
-	delete _left;
-	delete _right;
+    delete _left;
+    delete _right;
 }
 
 QString TextInput::value() const
 {
-	return _right->text();
+    return _right->text();
 }
 
-void TextInput::setValue( const QString& value )
+void TextInput::setValue(const QString &value)
 {
-	return _right->setText( value );
+    return _right->setText(value);
 }
 
-URLInput::URLInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName )
-	: AccountInput( configName )
+URLInput::URLInput(QWidget *parent, const QString &title, const QString &defaul, const QString &configName)
+    : AccountInput(configName)
 {
-	_left = new QLabel( title, parent, "label" );
-	_right = new KURLRequester( "", parent, "kurledit" );
-	setValue( defaul );
+    _left = new QLabel(title, parent, "label");
+    _right = new KURLRequester("", parent, "kurledit");
+    setValue(defaul);
 }
 
 URLInput::~URLInput()
 {
-	delete _left;
-	delete _right;
+    delete _left;
+    delete _right;
 }
 
 QString URLInput::value() const
 {
-	return _right->url();
+    return _right->url();
 }
 
-void URLInput::setValue( const QString& value )
+void URLInput::setValue(const QString &value)
 {
-	_right->setURL( value );
+    _right->setURL(value);
 }
 
-ComboInput::ComboInput( QWidget *parent, const QString& title, const QMap<QString, QString>& list,
-                        const QString& defaul, const QString& configName )
-	: AccountInput( configName )
-	, _list( new QMap< QString, QString >( list ) )
+ComboInput::ComboInput(QWidget *parent, const QString &title, const QMap<QString, QString> &list,
+                       const QString &defaul, const QString &configName)
+    : AccountInput(configName)
+    , _list(new QMap< QString, QString >(list))
 {
-	_left = new QLabel( title, parent, "label" );
-	_right = new QComboBox( false, parent, "combo" );
-	_right->insertStringList( QStringList( _list->values() ) );
-	setValue( defaul );
+    _left = new QLabel(title, parent, "label");
+    _right = new QComboBox(false, parent, "combo");
+    _right->insertStringList(QStringList(_list->values()));
+    setValue(defaul);
 }
 
 ComboInput::~ComboInput()
 {
-	delete _left;
-	delete _right;
+    delete _left;
+    delete _right;
 }
 
 QString ComboInput::value() const
 {
-	if( _right->currentItem() >= 0 )
-		return _list->keys()[ _right->currentItem() ];
-	else
-		return "";
+    if(_right->currentItem() >= 0)
+        return _list->keys()[ _right->currentItem() ];
+    else
+        return "";
 }
 
-void ComboInput::setValue( const QString& value )
+void ComboInput::setValue(const QString &value)
 {
-	if( _list->contains( value ) )
-		_right->setCurrentItem( _list->keys().findIndex( value ) );
-	else
-		_right->setCurrentItem( -1 );
+    if(_list->contains(value))
+        _right->setCurrentItem(_list->keys().findIndex(value));
+    else
+        _right->setCurrentItem(-1);
 }
 
-CheckboxInput::CheckboxInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName )
-	: AccountInput( configName )
+CheckboxInput::CheckboxInput(QWidget *parent, const QString &title, const QString &defaul, const QString &configName)
+    : AccountInput(configName)
 {
-	_right = new QCheckBox( title, parent, "checkbox" );
-	setValue( defaul );
+    _right = new QCheckBox(title, parent, "checkbox");
+    setValue(defaul);
 }
 
 CheckboxInput::~CheckboxInput()
 {
-	delete _right;
+    delete _right;
 }
 
 QString CheckboxInput::value() const
 {
-	if( _right->isChecked() )
-		return "true";
-	else
-		return "false";
+    if(_right->isChecked())
+        return "true";
+    else
+        return "false";
 }
 
-void CheckboxInput::setValue( const QString& value )
+void CheckboxInput::setValue(const QString &value)
 {
-	if( value == "true" )
-		_right->setChecked( true );
-	else if( value == "false" )
-		_right->setChecked( false );
-	//Elsewise: do nothing
+    if(value == "true")
+        _right->setChecked(true);
+    else if(value == "false")
+        _right->setChecked(false);
+    //Elsewise: do nothing
 }
 

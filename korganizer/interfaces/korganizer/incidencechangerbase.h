@@ -33,40 +33,39 @@ using namespace KCal;
 
 namespace KOrg {
 
-class KDE_EXPORT IncidenceChangerBase : public QObject
-{
-Q_OBJECT
+class KDE_EXPORT IncidenceChangerBase : public QObject {
+    Q_OBJECT
 public:
-  IncidenceChangerBase( Calendar*cal, QObject *parent = 0 ) :
-        QObject( parent ), mCalendar( cal ) {}
-  virtual ~IncidenceChangerBase() {}
+    IncidenceChangerBase(Calendar *cal, QObject *parent = 0) :
+        QObject(parent), mCalendar(cal) {}
+    virtual ~IncidenceChangerBase() {}
 
-  virtual bool sendGroupwareMessage( Incidence *incidence,
-          KCal::Scheduler::Method method, bool deleting = false ) = 0;
+    virtual bool sendGroupwareMessage(Incidence *incidence,
+                                      KCal::Scheduler::Method method, bool deleting = false) = 0;
 
-  virtual bool beginChange( Incidence * incidence ) = 0;
-  virtual bool endChange( Incidence *incidence ) = 0;
+    virtual bool beginChange(Incidence *incidence) = 0;
+    virtual bool endChange(Incidence *incidence) = 0;
 
-  virtual bool addIncidence( Incidence *incidence, QWidget *parent = 0 ) = 0;
-  virtual bool changeIncidence( Incidence *newinc, Incidence *oldinc,
-                                int action = -1 ) = 0;
-  virtual bool deleteIncidence( Incidence *incidence ) = 0;
-  virtual bool cutIncidence( Incidence *incidence ) = 0;
+    virtual bool addIncidence(Incidence *incidence, QWidget *parent = 0) = 0;
+    virtual bool changeIncidence(Incidence *newinc, Incidence *oldinc,
+                                 int action = -1) = 0;
+    virtual bool deleteIncidence(Incidence *incidence) = 0;
+    virtual bool cutIncidence(Incidence *incidence) = 0;
 
-/*
-  static bool incidencesEqual( Incidence *inc1, Incidence *inc2 );
-  static bool assignIncidence( Incidence *inc1, Incidence *inc2 );
-*/
+    /*
+      static bool incidencesEqual( Incidence *inc1, Incidence *inc2 );
+      static bool assignIncidence( Incidence *inc1, Incidence *inc2 );
+    */
 signals:
-  void incidenceAdded( Incidence * );
-  void incidenceChanged( Incidence *oldInc, Incidence *newInc, int );
-  void incidenceChanged( Incidence *oldInc, Incidence *newInc );
-  void incidenceToBeDeleted( Incidence * );
-  void incidenceDeleted( Incidence * );
+    void incidenceAdded(Incidence *);
+    void incidenceChanged(Incidence *oldInc, Incidence *newInc, int);
+    void incidenceChanged(Incidence *oldInc, Incidence *newInc);
+    void incidenceToBeDeleted(Incidence *);
+    void incidenceDeleted(Incidence *);
 
-  void schedule( Scheduler::Method method, Incidence *incidence );
+    void schedule(Scheduler::Method method, Incidence *incidence);
 protected:
-  Calendar *mCalendar;
+    Calendar *mCalendar;
 };
 
 

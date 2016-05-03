@@ -33,24 +33,23 @@ class QSpinBox;
 
 class KAboutData;
 
-class KCMSDSummary : public KCModule
-{
-  Q_OBJECT
+class KCMSDSummary : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMSDSummary( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMSDSummary(QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
     virtual void save();
     virtual void defaults();
-    virtual const KAboutData* aboutData() const;
+    virtual const KAboutData *aboutData() const;
 
-  private slots:
+private slots:
     void modified();
-    void buttonClicked( int );
-    void customDaysChanged( int );
+    void buttonClicked(int);
+    void customDaysChanged(int);
 
-  private:
+private:
     void initGUI();
 
     QButtonGroup *mDaysGroup;

@@ -33,53 +33,54 @@
 
 #include "addviewdialog.h"
 
-AddViewDialog::AddViewDialog( QDict<ViewFactory> *viewFactoryDict,
-                              QWidget *parent, const char *name )
-  : KDialogBase( KDialogBase::Plain, i18n( "Add View" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                 parent, name ),
-   mViewFactoryDict( viewFactoryDict )
+AddViewDialog::AddViewDialog(QDict<ViewFactory> *viewFactoryDict,
+                             QWidget *parent, const char *name)
+    : KDialogBase(KDialogBase::Plain, i18n("Add View"),
+                  KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
+                  parent, name),
+      mViewFactoryDict(viewFactoryDict)
 {
-  mTypeId = 0;
+    mTypeId = 0;
 
-  QWidget *page = plainPage();
+    QWidget *page = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 2, 2 );
-  layout->setSpacing( spacingHint() );
-  layout->setRowStretch( 1, 1 );
-  layout->setColStretch( 1, 1 );
+    QGridLayout *layout = new QGridLayout(page, 2, 2);
+    layout->setSpacing(spacingHint());
+    layout->setRowStretch(1, 1);
+    layout->setColStretch(1, 1);
 
-  QLabel *label = new QLabel( i18n( "View name:" ), page );
-  layout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel(i18n("View name:"), page);
+    layout->addWidget(label, 0, 0);
 
-  mViewNameEdit = new QLineEdit( page );
-  connect( mViewNameEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
-  layout->addWidget( mViewNameEdit, 0, 1 );
+    mViewNameEdit = new QLineEdit(page);
+    connect(mViewNameEdit, SIGNAL(textChanged(const QString &)),
+            SLOT(textChanged(const QString &)));
+    layout->addWidget(mViewNameEdit, 0, 1);
 
-  mTypeGroup = new QButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
-  connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
-  layout->addMultiCellWidget( mTypeGroup, 1, 1, 0, 1 );
-  QGridLayout *groupLayout = new QGridLayout( mTypeGroup->layout(), 3, 2 );
-  groupLayout->setSpacing( spacingHint() );
+    mTypeGroup = new QButtonGroup(0, Qt::Horizontal, i18n("View Type"), page);
+    connect(mTypeGroup, SIGNAL(clicked(int)), this, SLOT(clicked(int)));
+    layout->addMultiCellWidget(mTypeGroup, 1, 1, 0, 1);
+    QGridLayout *groupLayout = new QGridLayout(mTypeGroup->layout(), 3, 2);
+    groupLayout->setSpacing(spacingHint());
 
-  int row = 0;
-  QDictIterator<ViewFactory> iter( *mViewFactoryDict );
-  for ( iter.toFirst(); iter.current(); ++iter ) {
-    QRadioButton *button = new QRadioButton( i18n((*iter)->type().utf8()),
-                                             mTypeGroup, (*iter)->type().latin1() );
-    label = new QLabel( (*iter)->description(), mTypeGroup );
-    label->setAlignment( Qt::WordBreak );
+    int row = 0;
+    QDictIterator<ViewFactory> iter(*mViewFactoryDict);
+    for(iter.toFirst(); iter.current(); ++iter)
+    {
+        QRadioButton *button = new QRadioButton(i18n((*iter)->type().utf8()),
+                                                mTypeGroup, (*iter)->type().latin1());
+        label = new QLabel((*iter)->description(), mTypeGroup);
+        label->setAlignment(Qt::WordBreak);
 
-    groupLayout->addWidget( button, row, 0, Qt::AlignTop );
-    groupLayout->addWidget( label, row, 1, Qt::AlignTop );
+        groupLayout->addWidget(button, row, 0, Qt::AlignTop);
+        groupLayout->addWidget(label, row, 1, Qt::AlignTop);
 
-    row++;
-  }
+        row++;
+    }
 
-  mTypeGroup->setButton( 0 );
-  mViewNameEdit->setFocus();
-  enableButton( KDialogBase::Ok, false );
+    mTypeGroup->setButton(0);
+    mViewNameEdit->setFocus();
+    enableButton(KDialogBase::Ok, false);
 }
 
 AddViewDialog::~AddViewDialog()
@@ -88,23 +89,23 @@ AddViewDialog::~AddViewDialog()
 
 QString AddViewDialog::viewName()const
 {
-  return mViewNameEdit->text();
+    return mViewNameEdit->text();
 }
 
 QString AddViewDialog::viewType()const
 {
-  // we missuse the name property for storing the type
-  return mTypeGroup->find( mTypeId )->name();
+    // we missuse the name property for storing the type
+    return mTypeGroup->find(mTypeId)->name();
 }
 
-void AddViewDialog::clicked( int id )
+void AddViewDialog::clicked(int id)
 {
-  mTypeId = id;
+    mTypeId = id;
 }
 
-void AddViewDialog::textChanged( const QString &text )
+void AddViewDialog::textChanged(const QString &text)
 {
-  enableButton( KDialogBase::Ok, !text.isEmpty() );
+    enableButton(KDialogBase::Ok, !text.isEmpty());
 }
 
 #include "addviewdialog.moc"

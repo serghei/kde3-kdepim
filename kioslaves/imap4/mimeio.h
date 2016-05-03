@@ -25,55 +25,52 @@
   *@author Sven Carstens
   */
 
-class mimeIO
-{
+class mimeIO {
 public:
-  mimeIO ();
-  virtual ~ mimeIO ();
+    mimeIO();
+    virtual ~ mimeIO();
 
-  virtual int outputLine (const QCString &, int len = -1);
-  virtual int outputMimeLine (const QCString &);
-  virtual int inputLine (QCString &);
-  virtual int outputChar (char);
-  virtual int inputChar (char &);
+    virtual int outputLine(const QCString &, int len = -1);
+    virtual int outputMimeLine(const QCString &);
+    virtual int inputLine(QCString &);
+    virtual int outputChar(char);
+    virtual int inputChar(char &);
 
-  void setCRLF (const char *);
+    void setCRLF(const char *);
 
 protected:
     QCString theCRLF;
     int crlfLen;
 };
 
-class mimeIOQFile:public mimeIO
-{
+class mimeIOQFile: public mimeIO {
 public:
-  mimeIOQFile (const QString &);
-    virtual ~ mimeIOQFile ();
-  virtual int outputLine (const QCString &, int len = -1);
-  virtual int inputLine (QCString &);
+    mimeIOQFile(const QString &);
+    virtual ~ mimeIOQFile();
+    virtual int outputLine(const QCString &, int len = -1);
+    virtual int inputLine(QCString &);
 
 protected:
     QFile myFile;
 };
 
-class mimeIOQString:public mimeIO
-{
+class mimeIOQString: public mimeIO {
 public:
-  mimeIOQString ();
-  virtual ~ mimeIOQString ();
-  virtual int outputLine (const QCString &, int len = -1);
-  virtual int inputLine (QCString &);
-  const QString& getString () const
-  {
-    return theString;
-  }
-  void setString (const QString & _str)
-  {
-    theString = _str;
-  }
+    mimeIOQString();
+    virtual ~ mimeIOQString();
+    virtual int outputLine(const QCString &, int len = -1);
+    virtual int inputLine(QCString &);
+    const QString &getString() const
+    {
+        return theString;
+    }
+    void setString(const QString &_str)
+    {
+        theString = _str;
+    }
 
 protected:
-  QString theString;
+    QString theString;
 };
 
 #endif

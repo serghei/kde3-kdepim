@@ -32,29 +32,28 @@
 
 namespace Akregator {
 
-class TagSet::TagSetPrivate 
-{
-    public:
-    QMap<QString,Tag> map;
+class TagSet::TagSetPrivate {
+public:
+    QMap<QString, Tag> map;
 };
 
-TagSet::TagSet(QObject* parent) : QObject(parent), d(new TagSetPrivate)
+TagSet::TagSet(QObject *parent) : QObject(parent), d(new TagSetPrivate)
 {
 }
 
 TagSet::~TagSet()
 {
     QValueList<Tag> tags = d->map.values();
-    for (QValueList<Tag>::Iterator it = tags.begin(); it != tags.end(); ++it)
+    for(QValueList<Tag>::Iterator it = tags.begin(); it != tags.end(); ++it)
         (*it).removedFromTagSet(this);
-    
+
     delete d;
     d = 0;
 }
 
-void TagSet::insert(const Tag& tag)
+void TagSet::insert(const Tag &tag)
 {
-    if (!d->map.contains(tag.id()))
+    if(!d->map.contains(tag.id()))
     {
         d->map.insert(tag.id(), tag);
         tag.addedToTagSet(this);
@@ -62,9 +61,9 @@ void TagSet::insert(const Tag& tag)
     }
 }
 
-void TagSet::remove(const Tag& tag)
+void TagSet::remove(const Tag &tag)
 {
-    if (d->map.contains(tag.id()))
+    if(d->map.contains(tag.id()))
     {
         d->map.remove(tag.id());
         tag.removedFromTagSet(this);
@@ -72,84 +71,84 @@ void TagSet::remove(const Tag& tag)
     }
 }
 
-bool TagSet::containsID(const QString& id) const
+bool TagSet::containsID(const QString &id) const
 {
     return d->map.contains(id);
 }
 
-bool TagSet::contains(const Tag& tag) const
+bool TagSet::contains(const Tag &tag) const
 {
     return d->map.contains(tag.id());
 }
 
-Tag TagSet::findByID(const QString& id) const
+Tag TagSet::findByID(const QString &id) const
 {
     return d->map.contains(id) ? d->map[id] : Tag();
 }
 
-QMap<QString,Tag> TagSet::toMap() const
+QMap<QString, Tag> TagSet::toMap() const
 {
     return d->map;
 }
 
-void TagSet::readFromXML(const QDomDocument& doc)
+void TagSet::readFromXML(const QDomDocument &doc)
 {
     QDomElement root = doc.documentElement();
 
-    if (root.isNull())
+    if(root.isNull())
         return;
 
     QDomNodeList list = root.elementsByTagName(QString::fromLatin1("tag"));
 
-    for (uint i = 0; i < list.length(); ++i)
+    for(uint i = 0; i < list.length(); ++i)
     {
         QDomElement e = list.item(i).toElement();
-        if (!e.isNull())
+        if(!e.isNull())
         {
-            if (e.hasAttribute(QString::fromLatin1("id")))
+            if(e.hasAttribute(QString::fromLatin1("id")))
             {
                 QString id = e.attribute(QString::fromLatin1("id"));
                 QString name = e.text();
                 QString scheme = e.attribute(QString::fromLatin1("scheme"));
                 Tag tag(id, name, scheme);
-                
+
                 QString icon = e.attribute(QString::fromLatin1("icon"));
-                if (!icon.isEmpty())
+                if(!icon.isEmpty())
                     tag.setIcon(icon);
 
                 insert(tag);
-                
+
             }
         }
     }
 
 }
-void TagSet::tagUpdated(const Tag& tag)
+void TagSet::tagUpdated(const Tag &tag)
 {
     emit signalTagUpdated(tag);
 }
-        
+
 QDomDocument TagSet::toXML() const
 {
     QDomDocument doc;
-    doc.appendChild( doc.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"UTF-8\"" ) );
+    doc.appendChild(doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\""));
 
     QDomElement root = doc.createElement("tagSet");
-    root.setAttribute( "version", "0.1" );
+    root.setAttribute("version", "0.1");
     doc.appendChild(root);
 
     QValueList<Tag> list = d->map.values();
-    for (QValueList<Tag>::ConstIterator it = list.begin(); it != list.end(); ++it)
-    {    
-    
+    for(QValueList<Tag>::ConstIterator it = list.begin(); it != list.end(); ++it)
+    {
+
         QDomElement tn = doc.createElement("tag");
-        
+
         QDomText text = doc.createTextNode((*it).name());
-        tn.setAttribute(QString::fromLatin1("id"),(*it).id());
-        if (!(*it).scheme().isEmpty())
-            tn.setAttribute(QString::fromLatin1("scheme"),(*it).scheme());
-        if (!(*it).icon().isEmpty())
-            tn.setAttribute(QString::fromLatin1("icon"),(*it).icon());
+        tn.setAttribute(QString::fromLatin1("id"), (*it).id());
+        if(!(*it).scheme().isEmpty())
+            tn.setAttribute(QString::fromLatin1("scheme"), (*it).scheme());
+        if(!(*it).icon().isEmpty())
+            tn.setAttribute(QString::fromLatin1("icon"), (*it).icon());
         tn.appendChild(text);
         root.appendChild(tn);
     }

@@ -34,25 +34,25 @@ using namespace KOrg;
 #include "timespanview.moc"
 
 class TimespanViewFactory : public KOrg::PartFactory {
-  public:
-    KOrg::Part *create( KOrg::MainWindow *parent, const char *name )
+public:
+    KOrg::Part *create(KOrg::MainWindow *parent, const char *name)
     {
-      return new TimespanView( parent, name );
+        return new TimespanView(parent, name);
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY( libkorg_timespanview, TimespanViewFactory )
+K_EXPORT_COMPONENT_FACTORY(libkorg_timespanview, TimespanViewFactory)
 
 
 TimespanView::TimespanView(KOrg::MainWindow *parent, const char *name) :
-  KOrg::Part(parent,name), mView(0)
+    KOrg::Part(parent, name), mView(0)
 {
-  setInstance( new KInstance( "korganizer" ) );
+    setInstance(new KInstance("korganizer"));
 
-  setXMLFile( "plugins/timespanviewui.rc" );
+    setXMLFile("plugins/timespanviewui.rc");
 
-  new KAction( i18n("&Timespan"), "timespan", 0, this, SLOT( showView() ),
-              actionCollection(), "view_timespan" );
+    new KAction(i18n("&Timespan"), "timespan", 0, this, SLOT(showView()),
+                actionCollection(), "view_timespan");
 }
 
 TimespanView::~TimespanView()
@@ -61,20 +61,21 @@ TimespanView::~TimespanView()
 
 QString TimespanView::info()
 {
-  return i18n("This plugin provides a Gantt-like Timespan view.");
+    return i18n("This plugin provides a Gantt-like Timespan view.");
 }
 
 QString TimespanView::shortInfo()
 {
-  return i18n( "Timespan View Plugin" );
+    return i18n("Timespan View Plugin");
 }
 
 void TimespanView::showView()
 {
-  if (!mView) {
-    mView = new KOTimeSpanView( mainWindow()->view()->calendar(),
-                                mainWindow()->view() );
-    mainWindow()->view()->addView( mView );
-  }
-  mainWindow()->view()->showView( mView );
+    if(!mView)
+    {
+        mView = new KOTimeSpanView(mainWindow()->view()->calendar(),
+                                   mainWindow()->view());
+        mainWindow()->view()->addView(mView);
+    }
+    mainWindow()->view()->showView(mView);
 }

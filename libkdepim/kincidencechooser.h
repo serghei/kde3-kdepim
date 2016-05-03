@@ -45,17 +45,16 @@ class KDialogBase;
 /** Dialog to change the korganizer configuration.
   */
 
-class KDE_EXPORT KIncidenceChooser : public KDialog
-{
+class KDE_EXPORT KIncidenceChooser : public KDialog {
     Q_OBJECT
 public:
     enum mode { local, remote, newest, ask, both };
     /** Initialize dialog and pages */
-    KIncidenceChooser(QWidget *parent=0,char *name=0);
+    KIncidenceChooser(QWidget *parent = 0, char *name = 0);
     ~KIncidenceChooser();
     //void setChooseText( QString );
-    void setIncidence( KCal::Incidence*,KCal::Incidence*);
-    KCal::Incidence* getIncidence();
+    void setIncidence(KCal::Incidence *, KCal::Incidence *);
+    KCal::Incidence *getIncidence();
     static int chooseMode;
 
 public slots:
@@ -74,14 +73,14 @@ protected slots:
 
 protected:
 private:
-    KPIM::HTMLDiffAlgoDisplay* mDisplayDiff;
-    KPIM::CalendarDiffAlgo* diff;
-    KDialogBase* mTbL, *mTbN;
-    KCal::Incidence* choosedIncidence;
-    KCal::Incidence* mInc1, *mInc2;
+    KPIM::HTMLDiffAlgoDisplay *mDisplayDiff;
+    KPIM::CalendarDiffAlgo *diff;
+    KDialogBase *mTbL, *mTbN;
+    KCal::Incidence *choosedIncidence;
+    KCal::Incidence *mInc1, *mInc2;
     QButtonGroup *mBg;
-    QPushButton *diffBut,*showDetails1,*showDetails2;
-    QLabel* mInc1lab, *mInc2lab,* mInc1Sumlab, *mInc2Sumlab,*mMod1lab,*mMod2lab;
+    QPushButton *diffBut, *showDetails1, *showDetails2;
+    QLabel *mInc1lab, *mInc2lab, * mInc1Sumlab, *mInc2Sumlab, *mMod1lab, *mMod2lab;
 
 };
 

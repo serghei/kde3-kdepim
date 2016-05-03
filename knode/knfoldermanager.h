@@ -23,36 +23,65 @@ class KNArticleManager;
 class KNCleanUp;
 
 
-class KNFolderManager : public QObject
-{
-  Q_OBJECT
+class KNFolderManager : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     KNFolderManager(KNArticleManager *a);
     ~KNFolderManager();
 
     //folder access
     void setCurrentFolder(KNFolder *f);
-    KNFolder* currentFolder() const       { return c_urrentFolder; }
-    bool hasCurrentFolder() const         { return (c_urrentFolder!=0); }
-    KNFolder* folder(int id);
-    QValueList<KNFolder*> folders() const { return mFolderList; }
+    KNFolder *currentFolder() const
+    {
+        return c_urrentFolder;
+    }
+    bool hasCurrentFolder() const
+    {
+        return (c_urrentFolder != 0);
+    }
+    KNFolder *folder(int id);
+    QValueList<KNFolder *> folders() const
+    {
+        return mFolderList;
+    }
 
     //standard folders
-    KNFolder* root() const                { return mFolderList[0]; }
-    KNFolder* drafts() const              { return mFolderList[1]; }
-    KNFolder* outbox() const              { return mFolderList[2]; }
-    KNFolder* sent() const                { return mFolderList[3]; }
+    KNFolder *root() const
+    {
+        return mFolderList[0];
+    }
+    KNFolder *drafts() const
+    {
+        return mFolderList[1];
+    }
+    KNFolder *outbox() const
+    {
+        return mFolderList[2];
+    }
+    KNFolder *sent() const
+    {
+        return mFolderList[3];
+    }
 
     //header loading
     bool loadHeaders(KNFolder *f);
-    bool unloadHeaders(KNFolder *f, bool force=true);
-    bool loadDrafts()                     { return loadHeaders(drafts()); }
-    bool loadOutbox()                     { return loadHeaders(outbox()); }
-    bool loadSent()                       { return loadHeaders(sent()); }
+    bool unloadHeaders(KNFolder *f, bool force = true);
+    bool loadDrafts()
+    {
+        return loadHeaders(drafts());
+    }
+    bool loadOutbox()
+    {
+        return loadHeaders(outbox());
+    }
+    bool loadSent()
+    {
+        return loadHeaders(sent());
+    }
 
     // returns the new folder
-    KNFolder* newFolder(KNFolder *p);
+    KNFolder *newFolder(KNFolder *p);
     bool deleteFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
     bool moveFolder(KNFolder *f, KNFolder *p);
@@ -72,17 +101,17 @@ class KNFolderManager : public QObject
     //synchronization
     void syncFolders();
 
-  signals:
+signals:
     // signals for the collection tree to update the UI
     void folderAdded(KNFolder *f);
     void folderRemoved(KNFolder *f);
     void folderActivated(KNFolder *f);
 
-  protected:
+protected:
     int loadCustomFolders();
 
     KNFolder  *c_urrentFolder;
-    QValueList<KNFolder*> mFolderList;
+    QValueList<KNFolder *> mFolderList;
     int l_astId;
     KNArticleManager *a_rtManager;
 

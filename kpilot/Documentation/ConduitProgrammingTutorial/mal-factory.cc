@@ -4,8 +4,8 @@
 **
 ** This file defines the factory for the MAL-conduit plugin.
 */
- 
-#include "options.h" 
+
+#include "options.h"
 
 #include <kapplication.h>
 #include <kinstance.h>
@@ -18,13 +18,12 @@
 #include "mal-factory.moc"
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_libmalconduit()
-{
-    return new MALConduitFactory;
-}
+    void *init_libmalconduit()
+    {
+        return new MALConduitFactory;
+    }
 
 } ;
 
@@ -41,25 +40,25 @@ const char *MALConduitFactory::fProxyUser = "Proxy User";
 const char *MALConduitFactory::fProxyPassword = "Proxy Password";
 
 MALConduitFactory::MALConduitFactory(QObject *p, const char *n) :
-    KLibFactory(p,n)
+    KLibFactory(p, n)
 {
     FUNCTIONSETUP;
 
     fInstance = new KInstance("MALconduit");
     fAbout = new KAboutData("MALconduit",
-        I18N_NOOP("MAL Synchronization Conduit for KPilot"),
-        KPILOT_VERSION,
-        I18N_NOOP("Synchronizes the content from MAL Servers like AvantGo to the Handheld"),
-        KAboutData::License_GPL,
-        "(C) 2002, Reinhold Kainhofer");
+                            I18N_NOOP("MAL Synchronization Conduit for KPilot"),
+                            KPILOT_VERSION,
+                            I18N_NOOP("Synchronizes the content from MAL Servers like AvantGo to the Handheld"),
+                            KAboutData::License_GPL,
+                            "(C) 2002, Reinhold Kainhofer");
     fAbout->addAuthor("Reinhold Kainhofer",
-        I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+                      I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
     fAbout->addAuthor("Jason Day",
-        I18N_NOOP("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
+                      I18N_NOOP("Author of libmal and the JPilot AvantGo conduit"), "jasonday@worldnet.att.net");
     fAbout->addAuthor("Tom Whittaker",
-        I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
+                      I18N_NOOP("Author of syncmal"), "tom@tomw.org", "http://www.tomw.org/");
     fAbout->addAuthor("AvantGo, Inc.",
-        I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "www.avantgo.com", "http://www.avantgo.com/");
+                      I18N_NOOP("Authors of the malsync library (c) 1997-1999"), "www.avantgo.com", "http://www.avantgo.com/");
 }
 
 MALConduitFactory::~MALConduitFactory()
@@ -70,50 +69,50 @@ MALConduitFactory::~MALConduitFactory()
     KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *MALConduitFactory::createObject( QObject *p,
-    const char *n,
-    const char *c,
-    const QStringList &a)
+/* virtual */ QObject *MALConduitFactory::createObject(QObject *p,
+        const char *n,
+        const char *c,
+        const QStringList &a)
 {
     FUNCTIONSETUP;
 
 #ifdef DEBUG
     DEBUGKPILOT << fname
-        << ": Creating object of class "
-        << c
-        << endl;
+                << ": Creating object of class "
+                << c
+                << endl;
 #endif
 
-    if (qstrcmp(c,"ConduitConfig")==0)
+    if(qstrcmp(c, "ConduitConfig") == 0)
     {
         QWidget *w = dynamic_cast<QWidget *>(p);
 
-        if (w)
+        if(w)
         {
-            return new MALWidgetSetup(w,n,a);
-        }
-        else 
-        {
-            kdError() << k_funcinfo
-                << ": Couldn't cast parent to widget."
-                << endl;
-            return 0L;
-        }
-    }
-
-    if (qstrcmp(c,"SyncAction")==0)
-    { 
-        KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
-
-        if (d)
-        {
-            return new MALConduit(d,n,a);
+            return new MALWidgetSetup(w, n, a);
         }
         else
         {
             kdError() << k_funcinfo
-                << ": Couldn't cast parent to KPilotDeviceLink"
-                << endl;
+                      << ": Couldn't cast parent to widget."
+                      << endl;
+            return 0L;
+        }
+    }
+
+    if(qstrcmp(c, "SyncAction") == 0)
+    {
+        KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+
+        if(d)
+        {
+            return new MALConduit(d, n, a);
+        }
+        else
+        {
+            kdError() << k_funcinfo
+                      << ": Couldn't cast parent to KPilotDeviceLink"
+                      << endl;
             return 0L;
         }
     }

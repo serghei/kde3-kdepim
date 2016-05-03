@@ -33,56 +33,58 @@ static KStaticDeleter<NetworkStatus> networkStatusDeleter;
 NetworkStatus *NetworkStatus::mSelf = 0;
 
 NetworkStatus::NetworkStatus()
-  : QObject( 0, "NetworkStatus" ), DCOPObject( "NetworkStatus" )
+    : QObject(0, "NetworkStatus"), DCOPObject("NetworkStatus")
 {
-  KConfigGroup group( KGlobal::config(), "NetworkStatus" );
-  if ( group.readBoolEntry( "Online", true ) == true )
-    mStatus = Online;
-  else
-    mStatus = Offline;
+    KConfigGroup group(KGlobal::config(), "NetworkStatus");
+    if(group.readBoolEntry("Online", true) == true)
+        mStatus = Online;
+    else
+        mStatus = Offline;
 
-  connectDCOPSignal( 0, 0, "onlineStatusChanged()", "onlineStatusChanged()", false );
+    connectDCOPSignal(0, 0, "onlineStatusChanged()", "onlineStatusChanged()", false);
 }
 
 NetworkStatus::~NetworkStatus()
 {
-  KConfigGroup group( KGlobal::config(), "NetworkStatus" );
-  group.writeEntry( "Online", mStatus == Online );
+    KConfigGroup group(KGlobal::config(), "NetworkStatus");
+    group.writeEntry("Online", mStatus == Online);
 }
 
-void NetworkStatus::setStatus( Status status )
+void NetworkStatus::setStatus(Status status)
 {
-  mStatus = status;
+    mStatus = status;
 
-  emit statusChanged( mStatus );
+    emit statusChanged(mStatus);
 }
 
 NetworkStatus::Status NetworkStatus::status() const
 {
-  return mStatus;
+    return mStatus;
 }
 
 void NetworkStatus::onlineStatusChanged()
 {
-  DCOPRef dcopCall( "kded", "networkstatus" );
-  DCOPReply reply = dcopCall.call( "onlineStatus()", true );
-  if ( reply.isValid() ) {
-    int status = reply;
-    if ( status == 3 )
-      setStatus( Online );
-    else {
-      if ( mStatus != Offline )
-        setStatus( Offline );
+    DCOPRef dcopCall("kded", "networkstatus");
+    DCOPReply reply = dcopCall.call("onlineStatus()", true);
+    if(reply.isValid())
+    {
+        int status = reply;
+        if(status == 3)
+            setStatus(Online);
+        else
+        {
+            if(mStatus != Offline)
+                setStatus(Offline);
+        }
     }
-  }
 }
 
 NetworkStatus *NetworkStatus::self()
 {
-  if ( !mSelf )
-    networkStatusDeleter.setObject( mSelf, new NetworkStatus );
+    if(!mSelf)
+        networkStatusDeleter.setObject(mSelf, new NetworkStatus);
 
-  return mSelf;
+    return mSelf;
 }
 
 #include "networkstatus.moc"

@@ -35,29 +35,29 @@
 #include <kcmodule.h>
 
 namespace Kleo {
-  class DNAttributeOrderConfigWidget;
+class DNAttributeOrderConfigWidget;
 }
 
 /**
  * "DN Order" configuration page for kleopatra's configuration dialog
  */
 class DNOrderConfigPage : public KCModule {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  DNOrderConfigPage( QWidget * parent=0, const char * name=0 );
+    DNOrderConfigPage(QWidget *parent = 0, const char *name = 0);
 
-  /*! reimplementation */
-  void load();
-  /*! reimplementation */
-  void save();
-  /*! reimplementation */
-  void defaults();
+    /*! reimplementation */
+    void load();
+    /*! reimplementation */
+    void save();
+    /*! reimplementation */
+    void defaults();
 
 private slots:
-  void slotChanged();
+    void slotChanged();
 
 private:
-  Kleo::DNAttributeOrderConfigWidget * mWidget;
+    Kleo::DNAttributeOrderConfigWidget *mWidget;
 };
 
 #endif // __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__

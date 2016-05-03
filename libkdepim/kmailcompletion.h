@@ -31,13 +31,12 @@ namespace KPIM {
 
 /**
  * KMailCompletion allows lookup of email addresses by keyword.
- * Typically a keywods would be firstname, lastname, nickname or domain. 
+ * Typically a keywods would be firstname, lastname, nickname or domain.
  */
-class KMailCompletion : public KCompletion
-{
-  Q_OBJECT
+class KMailCompletion : public KCompletion {
+    Q_OBJECT
 
-  public:
+public:
     KMailCompletion();
 
     /**
@@ -51,25 +50,25 @@ class KMailCompletion : public KCompletion
      *
      * @returns email address
      */
-    QString makeCompletion( const QString &string );
+    QString makeCompletion(const QString &string);
 
     /**
      * Specify keywords for email.
      *
      * Items may be added with KCompletion::addItem, those will only be returned as match if they
      * are in one of these formats:
-     * \li contains localpart@domain 
+     * \li contains localpart@domain
      * \li contains <email>
      * or if they have also been added with this function.
      */
-    void addItemWithKeys( const QString& email, int weight, const QStringList * keyWords);
+    void addItemWithKeys(const QString &email, int weight, const QStringList *keyWords);
 
     /**
      * Uses an internal map to replace all keywords in pMatches whith corrsesponding email addresses.
      */
-    virtual void postProcessMatches( QStringList * pMatches )const;
+    virtual void postProcessMatches(QStringList *pMatches)const;
 
-  private:
+private:
     QMap< QString, QStringList > m_keyMap;
 };
 

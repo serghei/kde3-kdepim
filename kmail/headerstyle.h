@@ -37,51 +37,51 @@ class KMMessage;
 
 namespace KMail {
 
-  class HeaderStrategy;
+class HeaderStrategy;
 
-  /** This class encapsulates the visual appearance of message
-      headers. Together with HeaderStrategy, which determines
-      which of the headers present in the message be shown, it is
-      responsible for the formatting of message headers.
+/** This class encapsulates the visual appearance of message
+    headers. Together with HeaderStrategy, which determines
+    which of the headers present in the message be shown, it is
+    responsible for the formatting of message headers.
 
-      @short Encapsulates visual appearance of message headers.
-      @author Marc Mutz <mutz@kde.org>
-      @see HeaderStrategy
-  **/
-  class HeaderStyle {
-  protected:
+    @short Encapsulates visual appearance of message headers.
+    @author Marc Mutz <mutz@kde.org>
+    @see HeaderStrategy
+**/
+class HeaderStyle {
+protected:
     HeaderStyle();
     virtual ~HeaderStyle();
 
-  public:
+public:
     //
     // Factory methods:
     //
     enum Type { Brief, Plain, Fancy, Enterprise };
 
-    static const HeaderStyle * create( Type type );
-    static const HeaderStyle * create( const QString & type );
+    static const HeaderStyle *create(Type type);
+    static const HeaderStyle *create(const QString &type);
 
-    static const HeaderStyle * brief();
-    static const HeaderStyle * plain();
-    static const HeaderStyle * fancy();
-    static const HeaderStyle * enterprise();
+    static const HeaderStyle *brief();
+    static const HeaderStyle *plain();
+    static const HeaderStyle *fancy();
+    static const HeaderStyle *enterprise();
 
     //
     // Methods for handling the styles:
     //
-    virtual const char * name() const = 0;
-    virtual const HeaderStyle * next() const = 0;
-    virtual const HeaderStyle * prev() const = 0;
+    virtual const char *name() const = 0;
+    virtual const HeaderStyle *next() const = 0;
+    virtual const HeaderStyle *prev() const = 0;
 
     //
     // HeaderStyle interface:
     //
-    virtual QString format( const KMMessage * message,
-			    const KMail::HeaderStrategy * strategy,
-			    const QString & vCardName,
-			    bool printing=false, bool topLevel = false ) const = 0;
-  };
+    virtual QString format(const KMMessage *message,
+                           const KMail::HeaderStrategy *strategy,
+                           const QString &vCardName,
+                           bool printing = false, bool topLevel = false) const = 0;
+};
 
 } // namespace KMail
 

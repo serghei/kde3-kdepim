@@ -45,179 +45,179 @@
 
 #include "kabconfigwidget.h"
 
-KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+KABConfigWidget::KABConfigWidget(QWidget *parent, const char *name)
+    : QWidget(parent, name)
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this, 0,
-                                            KDialog::spacingHint() );
+    QVBoxLayout *topLayout = new QVBoxLayout(this, 0,
+            KDialog::spacingHint());
 
-  QTabWidget *tabWidget = new QTabWidget( this );
-  topLayout->addWidget( tabWidget );
+    QTabWidget *tabWidget = new QTabWidget(this);
+    topLayout->addWidget(tabWidget);
 
-  // General page
-  QWidget *generalPage = new QWidget( this );
-  QVBoxLayout *layout = new QVBoxLayout( generalPage, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+    // General page
+    QWidget *generalPage = new QWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(generalPage, KDialog::marginHint(),
+                                          KDialog::spacingHint());
 
-  QGroupBox *groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
-  QBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
-  boxLayout->setAlignment( Qt::AlignTop );
+    QGroupBox *groupBox = new QGroupBox(0, Qt::Vertical, i18n("General"), generalPage);
+    QBoxLayout *boxLayout = new QVBoxLayout(groupBox->layout());
+    boxLayout->setAlignment(Qt::AlignTop);
 
-  mViewsSingleClickBox = new QCheckBox( i18n( "Honor KDE single click" ), groupBox, "msingle" );
-  boxLayout->addWidget( mViewsSingleClickBox );
+    mViewsSingleClickBox = new QCheckBox(i18n("Honor KDE single click"), groupBox, "msingle");
+    boxLayout->addWidget(mViewsSingleClickBox);
 
-  mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox, "mparse" );
-  boxLayout->addWidget( mNameParsing );
+    mNameParsing = new QCheckBox(i18n("Automatic name parsing for new addressees"), groupBox, "mparse");
+    boxLayout->addWidget(mNameParsing);
 
-  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox, "mtrade" );
-  boxLayout->addWidget( mTradeAsFamilyName );
-/**
-  TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it
-        doesn't work and would just confuse the users ;)
-*/
-  mTradeAsFamilyName->hide();
+    mTradeAsFamilyName = new QCheckBox(i18n("Trade single name component as family name"), groupBox, "mtrade");
+    boxLayout->addWidget(mTradeAsFamilyName);
+    /**
+      TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it
+            doesn't work and would just confuse the users ;)
+    */
+    mTradeAsFamilyName->hide();
 
-  mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox, "mlimit" );
-  boxLayout->addWidget( mLimitContactDisplay );
+    mLimitContactDisplay = new QCheckBox(i18n("Limit unfiltered display to 100 contacts"), groupBox, "mlimit");
+    boxLayout->addWidget(mLimitContactDisplay);
 
-  QBoxLayout *editorLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
+    QBoxLayout *editorLayout = new QHBoxLayout(boxLayout, KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Addressee editor type:" ), groupBox );
-  editorLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Addressee editor type:"), groupBox);
+    editorLayout->addWidget(label);
 
-  mEditorCombo = new QComboBox( groupBox );
-  mEditorCombo->insertItem( i18n( "Full Editor" ) );
-  mEditorCombo->insertItem( i18n( "Simple Editor" ) );
-  label->setBuddy( mEditorCombo );
-  editorLayout->addWidget( mEditorCombo );
+    mEditorCombo = new QComboBox(groupBox);
+    mEditorCombo->insertItem(i18n("Full Editor"));
+    mEditorCombo->insertItem(i18n("Simple Editor"));
+    label->setBuddy(mEditorCombo);
+    editorLayout->addWidget(mEditorCombo);
 
-  editorLayout->addStretch( 1 );
-
-
-  layout->addWidget( groupBox );
-
-  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
-  QGridLayout *grid = new QGridLayout( groupBox->layout(), 3, 2,
-                                       KDialog::spacingHint() );
-  label = new QLabel( i18n( "Phone:" ), groupBox );
-  grid->addWidget( label, 0, 0 );
-
-  mPhoneHook = new QLineEdit( groupBox );
-  QToolTip::add( mPhoneHook, i18n( "<ul><li>%N: Phone Number</li></ul>" ) );
-  grid->addWidget( mPhoneHook, 0, 1 );
-
-  label = new QLabel( i18n( "Fax:" ), groupBox );
-  grid->addWidget( label, 1, 0 );
-
-  mFaxHook = new QLineEdit( groupBox );
-  QToolTip::add( mFaxHook, i18n( "<ul><li>%N: Fax Number</li></ul>" ) );
-  grid->addWidget( mFaxHook, 1, 1 );
+    editorLayout->addStretch(1);
 
 
-  label = new QLabel( i18n( "SMS Text:" ), groupBox );
-  grid->addWidget( label, 2, 0 );
+    layout->addWidget(groupBox);
 
-  mSMSHook = new QLineEdit( groupBox );
-  QToolTip::add( mSMSHook, i18n( "<ul><li>%N: Phone Number</li><li>%F: File containing the text message(s)</li></ul>" ) );
-  grid->addWidget( mSMSHook, 2, 1 );
+    groupBox = new QGroupBox(0, Qt::Vertical, i18n("Script-Hooks"), generalPage);
+    QGridLayout *grid = new QGridLayout(groupBox->layout(), 3, 2,
+                                        KDialog::spacingHint());
+    label = new QLabel(i18n("Phone:"), groupBox);
+    grid->addWidget(label, 0, 0);
+
+    mPhoneHook = new QLineEdit(groupBox);
+    QToolTip::add(mPhoneHook, i18n("<ul><li>%N: Phone Number</li></ul>"));
+    grid->addWidget(mPhoneHook, 0, 1);
+
+    label = new QLabel(i18n("Fax:"), groupBox);
+    grid->addWidget(label, 1, 0);
+
+    mFaxHook = new QLineEdit(groupBox);
+    QToolTip::add(mFaxHook, i18n("<ul><li>%N: Fax Number</li></ul>"));
+    grid->addWidget(mFaxHook, 1, 1);
 
 
-  grid->setColStretch( 1, 1 );
+    label = new QLabel(i18n("SMS Text:"), groupBox);
+    grid->addWidget(label, 2, 0);
 
-  layout->addWidget( groupBox );
+    mSMSHook = new QLineEdit(groupBox);
+    QToolTip::add(mSMSHook, i18n("<ul><li>%N: Phone Number</li><li>%F: File containing the text message(s)</li></ul>"));
+    grid->addWidget(mSMSHook, 2, 1);
 
-  groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
-  boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
-  boxLayout->setAlignment( Qt::AlignTop );
 
-  mLocationMapURL = new QComboBox( true, groupBox );
-  mLocationMapURL->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
-  QToolTip::add( mLocationMapURL, i18n( "<ul> <li>%s: Street</li>"
-                                 "<li>%r: Region</li>"
-                                 "<li>%l: Location</li>"
-                                 "<li>%z: Zip Code</li>"
-                                 "<li>%c: Country ISO Code</li> </ul>" ) );
-  mLocationMapURL->insertStringList( KABPrefs::instance()->locationMapURLs() );
-  boxLayout->addWidget( mLocationMapURL );
-  layout->addWidget( groupBox );
+    grid->setColStretch(1, 1);
 
-  connect( mNameParsing, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( mLimitContactDisplay, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mSMSHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mLocationMapURL, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
-  connect( mEditorCombo, SIGNAL( activated( int ) ), SLOT( modified() ) );
+    layout->addWidget(groupBox);
 
-  tabWidget->addTab( generalPage, i18n( "General" ) );
+    groupBox = new QGroupBox(0, Qt::Vertical, i18n("Location Map"), generalPage);
+    boxLayout = new QVBoxLayout(groupBox->layout(), KDialog::spacingHint());
+    boxLayout->setAlignment(Qt::AlignTop);
 
-  // Addressee page
-  mAddresseeWidget = new AddresseeWidget( this );
-  tabWidget->addTab( mAddresseeWidget, i18n( "Contact" ) );
-  connect( mAddresseeWidget, SIGNAL( modified() ), SLOT( modified() ) );
+    mLocationMapURL = new QComboBox(true, groupBox);
+    mLocationMapURL->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+    QToolTip::add(mLocationMapURL, i18n("<ul> <li>%s: Street</li>"
+                                        "<li>%r: Region</li>"
+                                        "<li>%l: Location</li>"
+                                        "<li>%z: Zip Code</li>"
+                                        "<li>%c: Country ISO Code</li> </ul>"));
+    mLocationMapURL->insertStringList(KABPrefs::instance()->locationMapURLs());
+    boxLayout->addWidget(mLocationMapURL);
+    layout->addWidget(groupBox);
+
+    connect(mNameParsing, SIGNAL(toggled(bool)), SLOT(modified()));
+    connect(mViewsSingleClickBox, SIGNAL(toggled(bool)), SLOT(modified()));
+    connect(mTradeAsFamilyName, SIGNAL(toggled(bool)), SLOT(modified()));
+    connect(mLimitContactDisplay, SIGNAL(toggled(bool)), SLOT(modified()));
+    connect(mPhoneHook, SIGNAL(textChanged(const QString &)), SLOT(modified()));
+    connect(mSMSHook, SIGNAL(textChanged(const QString &)), SLOT(modified()));
+    connect(mFaxHook, SIGNAL(textChanged(const QString &)), SLOT(modified()));
+    connect(mLocationMapURL, SIGNAL(textChanged(const QString &)), SLOT(modified()));
+    connect(mEditorCombo, SIGNAL(activated(int)), SLOT(modified()));
+
+    tabWidget->addTab(generalPage, i18n("General"));
+
+    // Addressee page
+    mAddresseeWidget = new AddresseeWidget(this);
+    tabWidget->addTab(mAddresseeWidget, i18n("Contact"));
+    connect(mAddresseeWidget, SIGNAL(modified()), SLOT(modified()));
 }
 
 void KABConfigWidget::restoreSettings()
 {
-  bool blocked = signalsBlocked();
-  blockSignals( true );
+    bool blocked = signalsBlocked();
+    blockSignals(true);
 
-  mNameParsing->setChecked( KABPrefs::instance()->automaticNameParsing() );
-  mViewsSingleClickBox->setChecked( KABPrefs::instance()->honorSingleClick() );
-  mPhoneHook->setText( KABPrefs::instance()->phoneHookApplication() );
-  mSMSHook->setText( KABPrefs::instance()->sMSHookApplication() );
-  mFaxHook->setText( KABPrefs::instance()->faxHookApplication() );
-  mAddresseeWidget->restoreSettings();
-  mEditorCombo->setCurrentItem( KABPrefs::instance()->editorType() );
-  mLocationMapURL->setCurrentText( KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() ) );
-  mLocationMapURL->lineEdit()->setCursorPosition( 0 );
+    mNameParsing->setChecked(KABPrefs::instance()->automaticNameParsing());
+    mViewsSingleClickBox->setChecked(KABPrefs::instance()->honorSingleClick());
+    mPhoneHook->setText(KABPrefs::instance()->phoneHookApplication());
+    mSMSHook->setText(KABPrefs::instance()->sMSHookApplication());
+    mFaxHook->setText(KABPrefs::instance()->faxHookApplication());
+    mAddresseeWidget->restoreSettings();
+    mEditorCombo->setCurrentItem(KABPrefs::instance()->editorType());
+    mLocationMapURL->setCurrentText(KABPrefs::instance()->locationMapURL().arg(KGlobal::locale()->country()));
+    mLocationMapURL->lineEdit()->setCursorPosition(0);
 
-  KConfig config( "kabcrc", false, false );
-  config.setGroup( "General" );
-  mTradeAsFamilyName->setChecked( config.readBoolEntry( "TradeAsFamilyName", true ) );
-  mLimitContactDisplay->setChecked( config.readBoolEntry( "LimitContactDisplay", true ) );
+    KConfig config("kabcrc", false, false);
+    config.setGroup("General");
+    mTradeAsFamilyName->setChecked(config.readBoolEntry("TradeAsFamilyName", true));
+    mLimitContactDisplay->setChecked(config.readBoolEntry("LimitContactDisplay", true));
 
-  blockSignals( blocked );
+    blockSignals(blocked);
 
-  emit changed( false );
+    emit changed(false);
 }
 
 void KABConfigWidget::saveSettings()
 {
-  KABPrefs::instance()->setAutomaticNameParsing( mNameParsing->isChecked() );
-  KABPrefs::instance()->setHonorSingleClick( mViewsSingleClickBox->isChecked() );
-  KABPrefs::instance()->setPhoneHookApplication( mPhoneHook->text() );
-  KABPrefs::instance()->setSMSHookApplication( mSMSHook->text() );
-  KABPrefs::instance()->setFaxHookApplication( mFaxHook->text() );
-  KABPrefs::instance()->setEditorType( mEditorCombo->currentItem() );
-  KABPrefs::instance()->setLocationMapURL( mLocationMapURL->currentText() );
-  mAddresseeWidget->saveSettings();
+    KABPrefs::instance()->setAutomaticNameParsing(mNameParsing->isChecked());
+    KABPrefs::instance()->setHonorSingleClick(mViewsSingleClickBox->isChecked());
+    KABPrefs::instance()->setPhoneHookApplication(mPhoneHook->text());
+    KABPrefs::instance()->setSMSHookApplication(mSMSHook->text());
+    KABPrefs::instance()->setFaxHookApplication(mFaxHook->text());
+    KABPrefs::instance()->setEditorType(mEditorCombo->currentItem());
+    KABPrefs::instance()->setLocationMapURL(mLocationMapURL->currentText());
+    mAddresseeWidget->saveSettings();
 
-  KABPrefs::instance()->writeConfig();
+    KABPrefs::instance()->writeConfig();
 
-  KConfig config( "kabcrc", false, false );
-  config.setGroup( "General" );
-  config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
-  config.writeEntry( "LimitContactDisplay", mLimitContactDisplay->isChecked() );
+    KConfig config("kabcrc", false, false);
+    config.setGroup("General");
+    config.writeEntry("TradeAsFamilyName", mTradeAsFamilyName->isChecked());
+    config.writeEntry("LimitContactDisplay", mLimitContactDisplay->isChecked());
 
-  emit changed( false );
+    emit changed(false);
 }
 
 void KABConfigWidget::defaults()
 {
-  mNameParsing->setChecked( true );
-  mViewsSingleClickBox->setChecked( false );
-  mEditorCombo->setCurrentItem( 0 );
-  mLimitContactDisplay->setChecked( true );
+    mNameParsing->setChecked(true);
+    mViewsSingleClickBox->setChecked(false);
+    mEditorCombo->setCurrentItem(0);
+    mLimitContactDisplay->setChecked(true);
 
-  emit changed( true );
+    emit changed(true);
 }
 
 void KABConfigWidget::modified()
 {
-  emit changed( true );
+    emit changed(true);
 }
 
 #include "kabconfigwidget.moc"

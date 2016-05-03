@@ -42,42 +42,46 @@ class KAboutData;
 class KMailStatusBarExtension;
 class KMKernel;
 class KMMainWidget;
-namespace KPIM { class StatusbarProgressWidget; }
+namespace KPIM {
+class StatusbarProgressWidget;
+}
 using KPIM::StatusbarProgressWidget;
 class KMFolder;
 class KMFolderTreeItem;
 
 class ActionManager;
 
-class KDE_EXPORT KMailPart: public KParts::ReadOnlyPart, virtual public KMailPartIface
-{
+class KDE_EXPORT KMailPart: public KParts::ReadOnlyPart, virtual public KMailPartIface {
     Q_OBJECT
-  public:
+public:
     KMailPart(QWidget *parentWidget, const char *widgetName,
               QObject *parent, const char *name, const QStringList &);
     virtual ~KMailPart();
 
-    QWidget* parentWidget() const;
+    QWidget *parentWidget() const;
 
     static KAboutData *createAboutData();
 
-  public slots:
-    virtual void save() { /*TODO*/ }
+public slots:
+    virtual void save()
+    {
+        /*TODO*/
+    }
     virtual void exit();
     virtual void updateEditMenu() {}
-    void exportFolder( KMFolder* folder );
-    void slotIconChanged( KMFolderTreeItem *fti );
-    void slotNameChanged( KMFolderTreeItem *fti );
+    void exportFolder(KMFolder *folder);
+    void slotIconChanged(KMFolderTreeItem *fti);
+    void slotNameChanged(KMFolderTreeItem *fti);
 
-  signals:
-    void textChanged( const QString& );
-    void iconChanged( const QPixmap& );
+signals:
+    void textChanged(const QString &);
+    void iconChanged(const QPixmap &);
 
-  protected:
+protected:
     virtual bool openFile();
     virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
 
-  private:
+private:
     KMKernel *mKMailKernel;
     KMMainWidget *mainWidget;
     ActionManager *mActionManager;
@@ -85,16 +89,15 @@ class KDE_EXPORT KMailPart: public KParts::ReadOnlyPart, virtual public KMailPar
     QWidget *mParentWidget;
 };
 
-class KMailStatusBarExtension : public KParts::StatusBarExtension
-{
+class KMailStatusBarExtension : public KParts::StatusBarExtension {
 public:
-  KMailStatusBarExtension( KMailPart *parent );
+    KMailStatusBarExtension(KMailPart *parent);
 
-  KMainWindow *mainWindow() const;
+    KMainWindow *mainWindow() const;
 
 private:
-  KMailPart *mParent;
-  StatusbarProgressWidget *mLittleProgress;
+    KMailPart *mParent;
+    StatusbarProgressWidget *mLittleProgress;
 };
 
 #endif

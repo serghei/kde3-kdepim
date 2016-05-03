@@ -26,18 +26,20 @@
 
 #include <xxport.h>
 
-class GNOKIIXXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class GNOKIIXXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    GNOKIIXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "gnokii"; }
+    QString identifier() const
+    {
+        return "gnokii";
+    }
 
-  public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    KABC::AddresseeList importContacts( const QString &data ) const;
+public slots:
+    bool exportContacts(const KABC::AddresseeList &list, const QString &data);
+    KABC::AddresseeList importContacts(const QString &data) const;
 };
 
 #endif

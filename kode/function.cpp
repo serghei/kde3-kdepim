@@ -26,98 +26,99 @@
 using namespace KODE;
 
 Function::Function()
-  : mAccess( Public ), mIsConst( false ), mIsStatic( false )
+    : mAccess(Public), mIsConst(false), mIsStatic(false)
 {
 }
 
-Function::Function( const QString &name, const QString &returnType,
-                    int access, bool isStatic )
-  :  mAccess( access ), mIsConst( false ), mIsStatic( isStatic ),
-     mReturnType( returnType ), mName( name )
+Function::Function(const QString &name, const QString &returnType,
+                   int access, bool isStatic)
+    :  mAccess(access), mIsConst(false), mIsStatic(isStatic),
+       mReturnType(returnType), mName(name)
 {
-}
- 
-void Function::setConst( bool isConst )
-{
-  mIsConst = isConst;
-} 
-   
-void Function::setStatic( bool isStatic )
-{
-  mIsStatic = isStatic;
-}
-   
-void Function::addArgument( const QString &argument )
-{
-  mArguments.append( argument );
 }
 
-void Function::addInitializer( const QString &initializer )
+void Function::setConst(bool isConst)
 {
-  mInitializers.append( initializer );
+    mIsConst = isConst;
 }
 
-void Function::setArgumentString( const QString &argumentString )
+void Function::setStatic(bool isStatic)
 {
-  mArguments.clear();
-  QStringList arguments = QStringList::split( ",", argumentString );
-  QStringList::ConstIterator it;
-  for( it = arguments.begin(); it != arguments.end(); ++it ) {
-    addArgument( *it );
-  }
+    mIsStatic = isStatic;
 }
 
-void Function::setBody( const QString &body )
+void Function::addArgument(const QString &argument)
 {
-  mBody = body;
+    mArguments.append(argument);
 }
 
-void Function::setBody( const Code &body )
+void Function::addInitializer(const QString &initializer)
 {
-  mBody = body.text();
+    mInitializers.append(initializer);
 }
 
-void Function::addBodyLine( const QString &bodyLine )
+void Function::setArgumentString(const QString &argumentString)
 {
-  mBody.append( bodyLine );
-  if ( bodyLine.right( 1 ) != "\n" ) mBody.append( '\n' );
+    mArguments.clear();
+    QStringList arguments = QStringList::split(",", argumentString);
+    QStringList::ConstIterator it;
+    for(it = arguments.begin(); it != arguments.end(); ++it)
+    {
+        addArgument(*it);
+    }
 }
 
-void Function::setAccess( int a )
+void Function::setBody(const QString &body)
 {
-  mAccess = a;
+    mBody = body;
+}
+
+void Function::setBody(const Code &body)
+{
+    mBody = body.text();
+}
+
+void Function::addBodyLine(const QString &bodyLine)
+{
+    mBody.append(bodyLine);
+    if(bodyLine.right(1) != "\n") mBody.append('\n');
+}
+
+void Function::setAccess(int a)
+{
+    mAccess = a;
 }
 
 QString Function::accessAsString() const
 {
-  QString access;
+    QString access;
 
-  if ( mAccess & Public )
-    access = "public";
-  if ( mAccess & Protected )
-    access = "protected";
-  if ( mAccess & Private )
-    access = "private";
+    if(mAccess & Public)
+        access = "public";
+    if(mAccess & Protected)
+        access = "protected";
+    if(mAccess & Private)
+        access = "private";
 
-  if ( mAccess & Signal )
-    access = "signals";
-  if ( mAccess & Slot )
-    access += " slots";
+    if(mAccess & Signal)
+        access = "signals";
+    if(mAccess & Slot)
+        access += " slots";
 
-  return access;
+    return access;
 }
 
-void Function::setReturnType( const QString &str )
+void Function::setReturnType(const QString &str)
 {
-  mReturnType = str;
+    mReturnType = str;
 }
 
-void Function::setName( const QString &str )
+void Function::setName(const QString &str)
 {
-  mName = str;
+    mName = str;
 }
 
-void Function::setDocs( const QString &str )
+void Function::setDocs(const QString &str)
 {
-  mDocs = str;
+    mDocs = str;
 }

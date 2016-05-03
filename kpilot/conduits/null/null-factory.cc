@@ -44,82 +44,80 @@
 #include "nullSettings.h"
 
 
-class NullConduitConfig : public ConduitConfigBase
-{
+class NullConduitConfig : public ConduitConfigBase {
 public:
-	NullConduitConfig(QWidget *parent=0L, const char *n=0L);
-	virtual void commit();
-	virtual void load();
+    NullConduitConfig(QWidget *parent = 0L, const char *n = 0L);
+    virtual void commit();
+    virtual void load();
 protected:
-	NullWidget *fConfigWidget;
-	KAboutData *fAbout;
+    NullWidget *fConfigWidget;
+    KAboutData *fAbout;
 } ;
 
 NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
-	ConduitConfigBase(p,n),
-	fConfigWidget(new NullWidget(p))
+    ConduitConfigBase(p, n),
+    fConfigWidget(new NullWidget(p))
 {
-	FUNCTIONSETUP;
-	fConduitName = i18n("Null");
-	fAbout = new KAboutData("nullConduit",
-		I18N_NOOP("Null Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Null Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot");
-	fAbout->addAuthor("Adriaan de Groot",
-		I18N_NOOP("Primary Author"),
-		"groot@kde.org",
-		"http://www.cs.kun.nl/~adridg/kpilot");
+    FUNCTIONSETUP;
+    fConduitName = i18n("Null");
+    fAbout = new KAboutData("nullConduit",
+                            I18N_NOOP("Null Conduit for KPilot"),
+                            KPILOT_VERSION,
+                            I18N_NOOP("Configures the Null Conduit for KPilot"),
+                            KAboutData::License_GPL,
+                            "(C) 2001, Adriaan de Groot");
+    fAbout->addAuthor("Adriaan de Groot",
+                      I18N_NOOP("Primary Author"),
+                      "groot@kde.org",
+                      "http://www.cs.kun.nl/~adridg/kpilot");
 
-	ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget,fAbout);
-	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
+    ConduitConfigBase::addAboutPage(fConfigWidget->tabWidget, fAbout);
+    fWidget = fConfigWidget;
+    QObject::connect(fConfigWidget->fLogMessage, SIGNAL(textChanged(const QString &)),
+                     this, SLOT(modified()));
 }
 
 /* virtual */ void NullConduitConfig::commit()
 {
-	FUNCTIONSETUP;
+    FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Message="
+                << fConfigWidget->fLogMessage->text()
+                << endl;
 #endif
 
-	NullConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
-	NullConduitSettings::self()->writeConfig();
-	unmodified();
+    NullConduitSettings::setLogMessage(fConfigWidget->fLogMessage->text());
+    NullConduitSettings::self()->writeConfig();
+    unmodified();
 }
 
 /* virtual */ void NullConduitConfig::load()
 {
-	FUNCTIONSETUP;
-	NullConduitSettings::self()->readConfig();
+    FUNCTIONSETUP;
+    NullConduitSettings::self()->readConfig();
 
-	fConfigWidget->fLogMessage->setText( NullConduitSettings::logMessage() );
+    fConfigWidget->fLogMessage->setText(NullConduitSettings::logMessage());
 #ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Read Message="
-		<< fConfigWidget->fLogMessage->text()
-		<< endl;
+    DEBUGKPILOT << fname
+                << ": Read Message="
+                << fConfigWidget->fLogMessage->text()
+                << endl;
 #endif
 
-	unmodified();
+    unmodified();
 }
 
 
 
-extern "C"
-{
+extern "C" {
 
-unsigned long version_conduit_null = Pilot::PLUGIN_API;
-void *init_conduit_null()
-{
-	return new ConduitFactory<NullConduitConfig,NullConduit>(0,"nullconduit");
-}
+    unsigned long version_conduit_null = Pilot::PLUGIN_API;
+    void *init_conduit_null()
+    {
+        return new ConduitFactory<NullConduitConfig, NullConduit>(0, "nullconduit");
+    }
 
 }
 

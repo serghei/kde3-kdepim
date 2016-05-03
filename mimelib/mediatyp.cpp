@@ -37,20 +37,22 @@
 #include <mimelib/enum.h>
 
 
-const char* const DwMediaType::sClassName = "DwMediaType";
+const char *const DwMediaType::sClassName = "DwMediaType";
 
 
-DwMediaType* (*DwMediaType::sNewMediaType)(const DwString&,
-    DwMessageComponent*) = 0;
+DwMediaType *(*DwMediaType::sNewMediaType)(const DwString &,
+        DwMessageComponent *) = 0;
 
 
-DwMediaType* DwMediaType::NewMediaType(const DwString& aStr,
-    DwMessageComponent* aParent)
+DwMediaType *DwMediaType::NewMediaType(const DwString &aStr,
+                                       DwMessageComponent *aParent)
 {
-    if (sNewMediaType) {
+    if(sNewMediaType)
+    {
         return sNewMediaType(aStr, aParent);
     }
-    else {
+    else
+    {
         return new DwMediaType(aStr, aParent);
     }
 }
@@ -66,17 +68,18 @@ DwMediaType::DwMediaType()
 }
 
 
-DwMediaType::DwMediaType(const DwMediaType& aCntType)
-  : DwFieldBody(aCntType),
-    mTypeStr(aCntType.mTypeStr),
-    mSubtypeStr(aCntType.mSubtypeStr),
-    mBoundaryStr(aCntType.mBoundaryStr)
+DwMediaType::DwMediaType(const DwMediaType &aCntType)
+    : DwFieldBody(aCntType),
+      mTypeStr(aCntType.mTypeStr),
+      mSubtypeStr(aCntType.mSubtypeStr),
+      mBoundaryStr(aCntType.mBoundaryStr)
 {
     mType = aCntType.mType;
     mSubtype = aCntType.mSubtype;
     mFirstParameter = 0;
 
-    if (aCntType.mFirstParameter) {
+    if(aCntType.mFirstParameter)
+    {
         CopyParameterList(aCntType.mFirstParameter);
     }
 
@@ -85,8 +88,8 @@ DwMediaType::DwMediaType(const DwMediaType& aCntType)
 }
 
 
-DwMediaType::DwMediaType(const DwString& aStr, DwMessageComponent* aParent)
-  : DwFieldBody(aStr, aParent)
+DwMediaType::DwMediaType(const DwString &aStr, DwMessageComponent *aParent)
+    : DwFieldBody(aStr, aParent)
 {
     mType = DwMime::kTypeNull;
     mSubtype = DwMime::kSubtypeNull;
@@ -98,15 +101,16 @@ DwMediaType::DwMediaType(const DwString& aStr, DwMessageComponent* aParent)
 
 DwMediaType::~DwMediaType()
 {
-    if (mFirstParameter) {
+    if(mFirstParameter)
+    {
         DeleteParameterList();
     }
 }
 
 
-const DwMediaType& DwMediaType::operator = (const DwMediaType& aCntType)
+const DwMediaType &DwMediaType::operator = (const DwMediaType &aCntType)
 {
-    if (this == &aCntType) return *this;
+    if(this == &aCntType) return *this;
     DwFieldBody::operator = (aCntType);
 
     mType        = aCntType.mType;
@@ -115,14 +119,17 @@ const DwMediaType& DwMediaType::operator = (const DwMediaType& aCntType)
     mSubtypeStr  = aCntType.mSubtypeStr;
     mBoundaryStr = aCntType.mBoundaryStr;
 
-    if (mFirstParameter) {
+    if(mFirstParameter)
+    {
         DeleteParameterList();
     }
-    if (aCntType.mFirstParameter) {
+    if(aCntType.mFirstParameter)
+    {
         CopyParameterList(aCntType.mFirstParameter);
     }
 
-    if (mParent) {
+    if(mParent)
+    {
         mParent->SetModified();
     }
 
@@ -144,13 +151,13 @@ void DwMediaType::SetType(int aType)
 }
 
 
-const DwString& DwMediaType::TypeStr() const
+const DwString &DwMediaType::TypeStr() const
 {
     return mTypeStr;
 }
 
 
-void DwMediaType::SetTypeStr(const DwString& aStr)
+void DwMediaType::SetTypeStr(const DwString &aStr)
 {
     mTypeStr = aStr;
     TypeStrToEnum();
@@ -172,13 +179,13 @@ void DwMediaType::SetSubtype(int aSubtype)
 }
 
 
-const DwString& DwMediaType::SubtypeStr() const
+const DwString &DwMediaType::SubtypeStr() const
 {
     return mSubtypeStr;
 }
 
 
-void DwMediaType::SetSubtypeStr(const DwString& aStr)
+void DwMediaType::SetSubtypeStr(const DwString &aStr)
 {
     mSubtypeStr = aStr;
     SubtypeStrToEnum();
@@ -186,17 +193,19 @@ void DwMediaType::SetSubtypeStr(const DwString& aStr)
 }
 
 
-const DwString& DwMediaType::Boundary() const
+const DwString &DwMediaType::Boundary() const
 {
     // Implementation note: this member function is const, which
     // forbids us from assigning to mBoundaryStr.  The following
     // trick gets around this.  (ANSI implementations could use the
     // "mutable" declaration).
-    DwMediaType* _this = (DwMediaType*) this;
+    DwMediaType *_this = (DwMediaType *) this;
     _this->mBoundaryStr = "";
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        if (DwStrcasecmp(param->Attribute(), "boundary") == 0) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        if(DwStrcasecmp(param->Attribute(), "boundary") == 0)
+        {
             // Boundary parameter found. Return its value.
             _this->mBoundaryStr = param->Value();
             break;
@@ -207,14 +216,16 @@ const DwString& DwMediaType::Boundary() const
 }
 
 
-void DwMediaType::SetBoundary(const DwString& aStr)
+void DwMediaType::SetBoundary(const DwString &aStr)
 {
     mBoundaryStr = aStr;
     // Search for boundary parameter in parameter list.  If found, set its
     // value.
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        if (DwStrcasecmp(param->Attribute(), "boundary") == 0) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        if(DwStrcasecmp(param->Attribute(), "boundary") == 0)
+        {
             param->SetValue(mBoundaryStr);
             return;
         }
@@ -252,7 +263,8 @@ void DwMediaType::CreateBoundary(unsigned aLevel)
     buf[pos++] = c[r % cLen];
     r /= cLen;
     buf[pos++] = c[r % cLen];
-    for (int i=0; i < 2; ++i) {
+    for(int i = 0; i < 2; ++i)
+    {
         r = rand();
         buf[pos++] = c[r % cLen];
         r >>= 6;
@@ -269,17 +281,19 @@ void DwMediaType::CreateBoundary(unsigned aLevel)
 }
 
 
-const DwString& DwMediaType::Name() const
+const DwString &DwMediaType::Name() const
 {
     // Implementation note: this member function is const, which
     // forbids us from assigning to mNameStr.  The following
     // trick gets around this.  (ANSI implementations could use the
     // "mutable" declaration).
-    DwMediaType* _this = (DwMediaType*) this;
+    DwMediaType *_this = (DwMediaType *) this;
     _this->mNameStr = "";
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        if (DwStrcasecmp(param->Attribute(), "name") == 0) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        if(DwStrcasecmp(param->Attribute(), "name") == 0)
+        {
             // Name parameter found. Return its value.
             _this->mNameStr = param->Value();
             break;
@@ -290,14 +304,16 @@ const DwString& DwMediaType::Name() const
 }
 
 
-void DwMediaType::SetName(const DwString& aStr)
+void DwMediaType::SetName(const DwString &aStr)
 {
     mNameStr = aStr;
     // Search for name parameter in parameter list.  If found, set its
     // value.
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        if (DwStrcasecmp(param->Attribute(), "name") == 0) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        if(DwStrcasecmp(param->Attribute(), "name") == 0)
+        {
             param->SetValue(mNameStr);
             return;
         }
@@ -311,28 +327,31 @@ void DwMediaType::SetName(const DwString& aStr)
 }
 
 
-DwParameter* DwMediaType::FirstParameter() const
+DwParameter *DwMediaType::FirstParameter() const
 {
     return mFirstParameter;
 }
 
 
-void DwMediaType::AddParameter(DwParameter* aParam)
+void DwMediaType::AddParameter(DwParameter *aParam)
 {
     _AddParameter(aParam);
     SetModified();
 }
 
 
-void DwMediaType::_AddParameter(DwParameter* aParam)
+void DwMediaType::_AddParameter(DwParameter *aParam)
 {
-    if (!mFirstParameter) {
+    if(!mFirstParameter)
+    {
         mFirstParameter = aParam;
     }
-    else {
-        DwParameter* cur = mFirstParameter;
-        DwParameter* next = cur->Next();
-        while (next) {
+    else
+    {
+        DwParameter *cur = mFirstParameter;
+        DwParameter *next = cur->Next();
+        while(next)
+        {
             cur = next;
             next = cur->Next();
         }
@@ -349,16 +368,19 @@ void DwMediaType::Parse()
     mSubtypeStr = "";
     mType = DwMime::kTypeNull;
     mSubtype = DwMime::kSubtypeNull;
-    if (mFirstParameter) {
+    if(mFirstParameter)
+    {
         DeleteParameterList();
     }
-    if (mString.length() == 0) return;
+    if(mString.length() == 0) return;
     DwRfc1521Tokenizer tokenizer(mString);
 
     // Get type.
     int found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkToken) {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkToken)
+        {
             mTypeStr = tokenizer.Token();
             found = 1;
         }
@@ -366,17 +388,21 @@ void DwMediaType::Parse()
     }
     // Get '/'
     found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkTspecial
-            && tokenizer.Token()[0] == '/') {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkTspecial
+                && tokenizer.Token()[0] == '/')
+        {
             found = 1;
         }
         ++tokenizer;
     }
     // Get subtype
     found = 0;
-    while (!found && tokenizer.Type() != eTkNull) {
-        if (tokenizer.Type() == eTkToken) {
+    while(!found && tokenizer.Type() != eTkNull)
+    {
+        if(tokenizer.Type() == eTkToken)
+        {
             mSubtypeStr = tokenizer.Token();
             found = 1;
         }
@@ -384,17 +410,21 @@ void DwMediaType::Parse()
     }
     // Get parameters
     DwTokenString tokenStr(mString);
-    while (1) {
+    while(1)
+    {
         // Get ';'
         found = 0;
-        while (!found && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkTspecial
-                && tokenizer.Token()[0] == ';') {
+        while(!found && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkTspecial
+                    && tokenizer.Token()[0] == ';')
+            {
                 found = 1;
             }
             ++tokenizer;
         }
-        if (tokenizer.Type() == eTkNull) {
+        if(tokenizer.Type() == eTkNull)
+        {
             // No more parameters
             break;
         }
@@ -402,8 +432,10 @@ void DwMediaType::Parse()
         // Get attribute
         DwString attrib;
         int attribFound = 0;
-        while (!attribFound && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkToken) {
+        while(!attribFound && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkToken)
+            {
                 attrib = tokenizer.Token();
                 attribFound = 1;
             }
@@ -411,29 +443,34 @@ void DwMediaType::Parse()
         }
         // Get '='
         found = 0;
-        while (!found && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkTspecial
-                && tokenizer.Token()[0] == '=') {
+        while(!found && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkTspecial
+                    && tokenizer.Token()[0] == '=')
+            {
                 found = 1;
             }
             ++tokenizer;
         }
         // Get value but do _not_ stop when finding a '/' in it
         int valueFound = 0;
-        while (!valueFound && tokenizer.Type() != eTkNull) {
-            if (tokenizer.Type() == eTkToken
-                || tokenizer.Type() == eTkQuotedString) {
+        while(!valueFound && tokenizer.Type() != eTkNull)
+        {
+            if(tokenizer.Type() == eTkToken
+                    || tokenizer.Type() == eTkQuotedString)
+            {
                 ++tokenizer;
-                if (tokenizer.Type() != eTkTspecial
-                    || tokenizer.Token()[0] != '/')
+                if(tokenizer.Type() != eTkTspecial
+                        || tokenizer.Token()[0] != '/')
                     valueFound = 1;
             }
             else
                 ++tokenizer;
         }
-        if (attribFound && valueFound) {
+        if(attribFound && valueFound)
+        {
             tokenStr.ExtendTo(tokenizer);
-            DwParameter* param =
+            DwParameter *param =
                 DwParameter::NewParameter(tokenStr.Tokens(), this);
             param->Parse();
             _AddParameter(param);
@@ -446,20 +483,23 @@ void DwMediaType::Parse()
 
 void DwMediaType::Assemble()
 {
-    if (!mIsModified) return;
+    if(!mIsModified) return;
     mString = "";
-    if (mTypeStr.length() == 0 || mSubtypeStr.length() == 0)
+    if(mTypeStr.length() == 0 || mSubtypeStr.length() == 0)
         return;
     mString += mTypeStr;
     mString += '/';
     mString += mSubtypeStr;
-    DwParameter* param = FirstParameter();
-    while (param) {
+    DwParameter *param = FirstParameter();
+    while(param)
+    {
         param->Assemble();
-        if (IsFolding()) {
+        if(IsFolding())
+        {
             mString += ";" DW_EOL "  ";
         }
-        else {
+        else
+        {
             mString += "; ";
         }
         mString += param->AsString();
@@ -469,7 +509,7 @@ void DwMediaType::Assemble()
 }
 
 
-DwMessageComponent* DwMediaType::Clone() const
+DwMessageComponent *DwMediaType::Clone() const
 {
     return new DwMediaType(*this);
 }
@@ -503,9 +543,10 @@ void DwMediaType::SubtypeStrToEnum()
 
 void DwMediaType::DeleteParameterList()
 {
-    DwParameter* param = mFirstParameter;
-    while (param) {
-        DwParameter* nextParam = param->Next();
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
+        DwParameter *nextParam = param->Next();
         delete param;
         param = nextParam;
     }
@@ -514,11 +555,12 @@ void DwMediaType::DeleteParameterList()
 }
 
 
-void DwMediaType::CopyParameterList(DwParameter* aFirst)
+void DwMediaType::CopyParameterList(DwParameter *aFirst)
 {
-    DwParameter* param = aFirst;
-    while (param) {
-        DwParameter* newParam = (DwParameter*) param->Clone();
+    DwParameter *param = aFirst;
+    while(param)
+    {
+        DwParameter *newParam = (DwParameter *) param->Clone();
         AddParameter(newParam);
         param = param->Next();
     }
@@ -526,51 +568,56 @@ void DwMediaType::CopyParameterList(DwParameter* aFirst)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwMediaType::PrintDebugInfo(std::ostream& aStrm, int aDepth) const
+void DwMediaType::PrintDebugInfo(std::ostream &aStrm, int aDepth) const
 {
     aStrm <<
-    "--------------- Debug info for DwMediaType class ---------------\n";
+          "--------------- Debug info for DwMediaType class ---------------\n";
     _PrintDebugInfo(aStrm);
     int depth = aDepth - 1;
     depth = (depth >= 0) ? depth : 0;
-    if (aDepth == 0 || depth > 0) {
-        DwParameter* param = mFirstParameter;
-        while (param) {
+    if(aDepth == 0 || depth > 0)
+    {
+        DwParameter *param = mFirstParameter;
+        while(param)
+        {
             param->PrintDebugInfo(aStrm, depth);
             param = param->Next();
         }
     }
 }
 #else
-void DwMediaType::PrintDebugInfo(std::ostream& , int ) const {}
+void DwMediaType::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwMediaType::_PrintDebugInfo(std::ostream& aStrm) const
+void DwMediaType::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwFieldBody::_PrintDebugInfo(aStrm);
     aStrm << "Type:             " << mTypeStr    << " (" << mType    << ")\n";
     aStrm << "Subtype:          " << mSubtypeStr << " (" << mSubtype << ")\n";
     aStrm << "Boundary:         " << mBoundaryStr << '\n';
     aStrm << "Parameters:       ";
-    DwParameter* param = mFirstParameter;
-    if (param) {
+    DwParameter *param = mFirstParameter;
+    if(param)
+    {
         int count = 0;
-        while (param) {
-            if (count) aStrm << ' ';
+        while(param)
+        {
+            if(count) aStrm << ' ';
             aStrm << param->ObjectId();
             param = param->Next();
             ++count;
         }
         aStrm << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
 }
 #else
-void DwMediaType::_PrintDebugInfo(std::ostream& ) const {}
+void DwMediaType::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
@@ -580,10 +627,11 @@ void DwMediaType::CheckInvariants() const
     mTypeStr.CheckInvariants();
     mSubtypeStr.CheckInvariants();
     mBoundaryStr.CheckInvariants();
-    DwParameter* param = mFirstParameter;
-    while (param) {
+    DwParameter *param = mFirstParameter;
+    while(param)
+    {
         param->CheckInvariants();
-        assert((DwMessageComponent*) this == param->Parent());
+        assert((DwMessageComponent *) this == param->Parent());
         param = param->Next();
     }
 #endif // defined(DW_DEBUG_VERSION)

@@ -1,6 +1,6 @@
 #ifndef _XQGANTTBARVIEW_H_
 #define _XQGANTTBARVIEW_H_
-  
+
 /*
 
     This library is free software; you can redistribute it and/or
@@ -51,68 +51,69 @@ class xQGanttBarView : public QScrollView
 //////////////////////////////////////////
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
 
 public:
 
 
-  ///  Constructor.
-  /*!
-   *
-   */
-  xQGanttBarView(KGanttItem* toplevelitem, QWidget* parent = 0,  
-		 const char * name=0, WFlags f=0 );
+    ///  Constructor.
+    /*!
+     *
+     */
+    xQGanttBarView(KGanttItem *toplevelitem, QWidget *parent = 0,
+                   const char *name = 0, WFlags f = 0);
 
 
-  ///  Destructor.
-  /*!
-   *
-   */
-  ~xQGanttBarView();
-
-
-
-  ///
-  /*!
-   *
-   */
-  xQGanttBarViewPort* viewport() {
-    return _viewport;
-  }
+    ///  Destructor.
+    /*!
+     *
+     */
+    ~xQGanttBarView();
 
 
 
-  ///  Get config widget
-  /*!
-   *
-   */
-  KGanttBarConfig* getConfig();
+    ///
+    /*!
+     *
+     */
+    xQGanttBarViewPort *viewport()
+    {
+        return _viewport;
+    }
+
+
+
+    ///  Get config widget
+    /*!
+     *
+     */
+    KGanttBarConfig *getConfig();
 
 
 
 public slots:
 
-  void horizontalScrollBarChanged(int);
-  void showConfig();
-  void hideConfig();
+    void horizontalScrollBarChanged(int);
+    void showConfig();
+    void hideConfig();
 
 
 protected slots:
-  
-   void drawHeader();
-  
+
+    void drawHeader();
+
 
 protected:
 
-  xQGanttBarViewPort* _viewport;
+    xQGanttBarViewPort *_viewport;
 
-  QBrush _headerBackBrush;
+    QBrush _headerBackBrush;
 
-  void paintEvent(QPaintEvent * e);
-  
-  KGanttItem* _toplevelitem;
-  KGanttBarConfig* _config;
+    void paintEvent(QPaintEvent *e);
+
+    KGanttItem *_toplevelitem;
+    KGanttBarConfig *_config;
 
 };
 

@@ -33,13 +33,12 @@
 #include "time-setup.h"
 
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_time()
-{
-	return new ConduitFactory<TimeWidgetConfig,TimeConduit>(0,"Timeconduit");
-}
+    void *init_conduit_time()
+    {
+        return new ConduitFactory<TimeWidgetConfig, TimeConduit>(0, "Timeconduit");
+    }
 
 }
 

@@ -37,96 +37,94 @@ class KMSearchPatternEdit;
     @author Marc Mutz <Marc@Mutz.com>
 */
 
-class KMSearchRuleWidget : public QWidget
-{
-  Q_OBJECT
+class KMSearchRuleWidget : public QWidget {
+    Q_OBJECT
 public:
-  /** Constructor. You can give a KMSearchRule as parameter, which will
-      be used to initialize the widget. */
-  KMSearchRuleWidget( QWidget* parent=0, KMSearchRule* aRule=0, const char* name=0, bool headersOnly = false, bool absoluteDates = false );
+    /** Constructor. You can give a KMSearchRule as parameter, which will
+        be used to initialize the widget. */
+    KMSearchRuleWidget(QWidget *parent = 0, KMSearchRule *aRule = 0, const char *name = 0, bool headersOnly = false, bool absoluteDates = false);
 
-  enum { Message, Body, AnyHeader, Recipients, Size, AgeInDays, Status };
+    enum { Message, Body, AnyHeader, Recipients, Size, AgeInDays, Status };
 
-  /** Set whether only header fields can be searched. If @p is true only
-      header fields can be searched otherwise \<message\> and \<body\> searches
-      are available also. */
-  void setHeadersOnly( bool headersOnly );
-  /** Set the rule. The rule is accepted regardless of the return
-      value of KMSearchRule::isEmpty. This widget makes a shallow
-      copy of @p aRule and operates directly on it. If @p aRule is
-      0, resets itself, taks user input, but does essentially
-      nothing. If you pass 0, you should probably disable it. */
-  void setRule( KMSearchRule* aRule );
-  /** Return a reference to the currently-worked-on KMSearchRule. */
-  KMSearchRule* rule() const;
-  /** Resets the rule currently worked on and updates the widget
-      accordingly. */
-  void reset();
-  static int ruleFieldToId( const QString & i18nVal );
+    /** Set whether only header fields can be searched. If @p is true only
+        header fields can be searched otherwise \<message\> and \<body\> searches
+        are available also. */
+    void setHeadersOnly(bool headersOnly);
+    /** Set the rule. The rule is accepted regardless of the return
+        value of KMSearchRule::isEmpty. This widget makes a shallow
+        copy of @p aRule and operates directly on it. If @p aRule is
+        0, resets itself, taks user input, but does essentially
+        nothing. If you pass 0, you should probably disable it. */
+    void setRule(KMSearchRule *aRule);
+    /** Return a reference to the currently-worked-on KMSearchRule. */
+    KMSearchRule *rule() const;
+    /** Resets the rule currently worked on and updates the widget
+        accordingly. */
+    void reset();
+    static int ruleFieldToId(const QString &i18nVal);
 
 public slots:
-  void slotFunctionChanged();
-  void slotValueChanged();
+    void slotFunctionChanged();
+    void slotValueChanged();
 
 signals:
-  /** This signal is emitted whenever the user alters the field.  The
-     pseudo-headers <...> are returned in their i18n form, but stored
-     in their english form in the rule. */
-  void fieldChanged( const QString & );
+    /** This signal is emitted whenever the user alters the field.  The
+       pseudo-headers <...> are returned in their i18n form, but stored
+       in their english form in the rule. */
+    void fieldChanged(const QString &);
 
-  /** This signal is emitted whenever the user alters the
-     contents/value of the rule. */
-  void contentsChanged( const QString & );
+    /** This signal is emitted whenever the user alters the
+       contents/value of the rule. */
+    void contentsChanged(const QString &);
 
 protected:
-  /** Used internally to translate i18n-ized pseudo-headers back to
-      english. */
-  static QCString ruleFieldToEnglish(const QString & i18nVal);
-  /** Used internally to find the corresponding index into the field
-      ComboBox. Returns the index if found or -1 if the search failed, */
-  int indexOfRuleField( const QCString & aName ) const;
+    /** Used internally to translate i18n-ized pseudo-headers back to
+        english. */
+    static QCString ruleFieldToEnglish(const QString &i18nVal);
+    /** Used internally to find the corresponding index into the field
+        ComboBox. Returns the index if found or -1 if the search failed, */
+    int indexOfRuleField(const QCString &aName) const;
 
 protected slots:
-  void slotRuleFieldChanged( const QString & );
+    void slotRuleFieldChanged(const QString &);
 
 private:
-  void initWidget();
-  void initFieldList( bool headersOnly, bool absoluteDates );
+    void initWidget();
+    void initFieldList(bool headersOnly, bool absoluteDates);
 
-  QStringList mFilterFieldList;
-  QComboBox *mRuleField;
-  QWidgetStack *mFunctionStack;
-  QWidgetStack *mValueStack;
-  bool mAbsoluteDates;
+    QStringList mFilterFieldList;
+    QComboBox *mRuleField;
+    QWidgetStack *mFunctionStack;
+    QWidgetStack *mValueStack;
+    bool mAbsoluteDates;
 };
 
 
-class KMSearchRuleWidgetLister : public KWidgetLister
-{
-  Q_OBJECT
+class KMSearchRuleWidgetLister : public KWidgetLister {
+    Q_OBJECT
 
-  friend class ::KMSearchPatternEdit;
+    friend class ::KMSearchPatternEdit;
 
 public:
-  KMSearchRuleWidgetLister( QWidget *parent=0, const char* name=0, bool headersOnly = false, bool absoluteDates = false );
+    KMSearchRuleWidgetLister(QWidget *parent = 0, const char *name = 0, bool headersOnly = false, bool absoluteDates = false);
 
-  virtual ~KMSearchRuleWidgetLister();
+    virtual ~KMSearchRuleWidgetLister();
 
-  void setRuleList( QPtrList<KMSearchRule> * aList );
-  void setHeadersOnly( bool headersOnly );
+    void setRuleList(QPtrList<KMSearchRule> *aList);
+    void setHeadersOnly(bool headersOnly);
 
 public slots:
-  void reset();
+    void reset();
 
 protected:
-  virtual void clearWidget( QWidget *aWidget );
-  virtual QWidget* createWidget( QWidget *parent );
+    virtual void clearWidget(QWidget *aWidget);
+    virtual QWidget *createWidget(QWidget *parent);
 
 private:
-  void regenerateRuleListFromWidgets();
-  QPtrList<KMSearchRule> *mRuleList;
-  bool mHeadersOnly;
-  bool mAbsoluteDates;
+    void regenerateRuleListFromWidgets();
+    QPtrList<KMSearchRule> *mRuleList;
+    bool mHeadersOnly;
+    bool mAbsoluteDates;
 };
 
 
@@ -163,49 +161,52 @@ private:
 */
 
 class KMSearchPatternEdit : public QGroupBox  {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /** Constructor. The parent and name parameters are passed to the underlying
-      QGroupBox, as usual. */
-  KMSearchPatternEdit(QWidget *parent=0, const char *name=0, bool headersOnly = false, bool absoluteDates = false);
-  /** Constructor. This one allows you to set a title different from
-      i18n("Search Criteria"). */
-  KMSearchPatternEdit(const QString & title, QWidget *parent=0, const char *name=0, bool headersOnly = false, bool absoluteDates = false);
-  ~KMSearchPatternEdit();
+    /** Constructor. The parent and name parameters are passed to the underlying
+        QGroupBox, as usual. */
+    KMSearchPatternEdit(QWidget *parent = 0, const char *name = 0, bool headersOnly = false, bool absoluteDates = false);
+    /** Constructor. This one allows you to set a title different from
+        i18n("Search Criteria"). */
+    KMSearchPatternEdit(const QString &title, QWidget *parent = 0, const char *name = 0, bool headersOnly = false, bool absoluteDates = false);
+    ~KMSearchPatternEdit();
 
-  /** Set the search pattern. Rules are inserted regardless of the
-      return value of each rules' KMSearchRule::isEmpty. This
-      widget makes a shallow copy of @p aPattern and operates directly
-      on it. */
-  void setSearchPattern( KMSearchPattern* aPattern );
-  /** Set whether only header fields can be searched. If @p is true only
-      header fields can be searched otherwise \<message\> and \<body\> searches
-      are available also. */
-  void setHeadersOnly( bool headersOnly );
+    /** Set the search pattern. Rules are inserted regardless of the
+        return value of each rules' KMSearchRule::isEmpty. This
+        widget makes a shallow copy of @p aPattern and operates directly
+        on it. */
+    void setSearchPattern(KMSearchPattern *aPattern);
+    /** Set whether only header fields can be searched. If @p is true only
+        header fields can be searched otherwise \<message\> and \<body\> searches
+        are available also. */
+    void setHeadersOnly(bool headersOnly);
 
-  /** Updates the search pattern according to the current widget values */
-  void updateSearchPattern() { mRuleLister->regenerateRuleListFromWidgets(); }
+    /** Updates the search pattern according to the current widget values */
+    void updateSearchPattern()
+    {
+        mRuleLister->regenerateRuleListFromWidgets();
+    }
 
 public slots:
-  /** Called when the widget should let go of the currently referenced
-      filter and disable itself. */
-  void reset();
+    /** Called when the widget should let go of the currently referenced
+        filter and disable itself. */
+    void reset();
 
 signals:
     /** This signal is emitted whenever the name of the processed
         search pattern may have changed. */
-  void maybeNameChanged();
+    void maybeNameChanged();
 
 private slots:
-  void slotRadioClicked(int aIdx);
-  void slotAutoNameHack();
+    void slotRadioClicked(int aIdx);
+    void slotAutoNameHack();
 
 private:
-  void initLayout( bool headersOnly, bool absoluteDates );
+    void initLayout(bool headersOnly, bool absoluteDates);
 
-  KMSearchPattern *mPattern;
-  QRadioButton    *mAllRBtn, *mAnyRBtn;
-  KMSearchRuleWidgetLister *mRuleLister;
+    KMSearchPattern *mPattern;
+    QRadioButton    *mAllRBtn, *mAnyRBtn;
+    KMSearchRuleWidgetLister *mRuleLister;
 };
 
 #endif

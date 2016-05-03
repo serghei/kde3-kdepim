@@ -26,42 +26,41 @@
   *@author Sven Carstens
   */
 
-class mimeHdrLine
-{
+class mimeHdrLine {
 public:
-  mimeHdrLine ();
-  mimeHdrLine (mimeHdrLine *);
-  mimeHdrLine (const QCString &, const QCString &);
-   ~mimeHdrLine ();
-  /** parse a Line into the class
-and report characters slurped */
-  int setStr (const char *);
-  int appendStr (const char *);
-  /** return the value */
-  const QCString& getValue ();
-  /** return the label */
-  const QCString& getLabel ();
-  static QCString truncateLine (QCString, unsigned int truncate = 80);
-  static int parseSeparator (char, const char *);
-  static int parseQuoted (char, char, const char *);
-  /** skip all white space characters */
-  static int skipWS (const char *);
-  /** slurp one word respecting backticks */
-  static int parseHalfWord (const char *);
-  static int parseWord (const char *);
-  static int parseAlphaNum (const char *);
+    mimeHdrLine();
+    mimeHdrLine(mimeHdrLine *);
+    mimeHdrLine(const QCString &, const QCString &);
+    ~mimeHdrLine();
+    /** parse a Line into the class
+    and report characters slurped */
+    int setStr(const char *);
+    int appendStr(const char *);
+    /** return the value */
+    const QCString &getValue();
+    /** return the label */
+    const QCString &getLabel();
+    static QCString truncateLine(QCString, unsigned int truncate = 80);
+    static int parseSeparator(char, const char *);
+    static int parseQuoted(char, char, const char *);
+    /** skip all white space characters */
+    static int skipWS(const char *);
+    /** slurp one word respecting backticks */
+    static int parseHalfWord(const char *);
+    static int parseWord(const char *);
+    static int parseAlphaNum(const char *);
 
 protected:                     // Protected attributes
-  /** contains the Value 
- */
+    /** contains the Value
+    */
     QCString mimeValue;
-  /** contains the Label of the line
- */
-  QCString mimeLabel;
+    /** contains the Label of the line
+    */
+    QCString mimeLabel;
 protected:                     // Protected methods
-  /** parses a continuated line */
-  int parseFullLine (const char *);
-  int parseHalfLine (const char *);
+    /** parses a continuated line */
+    int parseFullLine(const char *);
+    int parseHalfLine(const char *);
 };
 
 #endif

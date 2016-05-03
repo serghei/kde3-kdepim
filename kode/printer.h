@@ -33,35 +33,34 @@
 
 namespace KODE {
 
-class KDE_EXPORT Printer
-{
-  public:
+class KDE_EXPORT Printer {
+public:
     Printer();
-    Printer( const Style & );
+    Printer(const Style &);
 
-    void setCreationWarning( bool );
-    void setGenerator( const QString & );
-    void setOutputDirectory( const QString & );
-    void setSourceFile( const QString & );
+    void setCreationWarning(bool);
+    void setGenerator(const QString &);
+    void setOutputDirectory(const QString &);
+    void setSourceFile(const QString &);
 
-    void printHeader( const File & );
-    void printImplementation( const File &, bool createHeaderInclude = true );
-    void printAutoMakefile( const AutoMakefile & );
+    void printHeader(const File &);
+    void printImplementation(const File &, bool createHeaderInclude = true);
+    void printAutoMakefile(const AutoMakefile &);
 
-    QString functionSignature( const Function &f,
-      const QString &className = QString::null,
-      bool includeClassQualifier = false );
+    QString functionSignature(const Function &f,
+                              const QString &className = QString::null,
+                              bool includeClassQualifier = false);
 
-  protected:
+protected:
     QString creationWarning();
-    QString licenseHeader( const File & );
-    QString classHeader( const Class & );
-    QString classImplementation( const Class & );
-    Code functionHeaders( const Function::List &functions,
-                          const QString &className,
-                          int access );
+    QString licenseHeader(const File &);
+    QString classHeader(const Class &);
+    QString classImplementation(const Class &);
+    Code functionHeaders(const Function::List &functions,
+                         const QString &className,
+                         int access);
 
-  private:
+private:
     Style mStyle;
 
     bool mCreationWarning;

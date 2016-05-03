@@ -26,45 +26,44 @@
 
 class KTNEFProperty;
 
-class KDE_EXPORT KTNEFAttach : public KTNEFPropertySet
-{
+class KDE_EXPORT KTNEFAttach : public KTNEFPropertySet {
 public:
-	enum ParseState { Unparsed = 0x0000, TitleParsed = 0x0001, DataParsed = 0x0002, InfoParsed = 0x0004};
+    enum ParseState { Unparsed = 0x0000, TitleParsed = 0x0001, DataParsed = 0x0002, InfoParsed = 0x0004};
 
-	KTNEFAttach();
-	~KTNEFAttach();
+    KTNEFAttach();
+    ~KTNEFAttach();
 
-	void setTitleParsed();
-	void setDataParsed();
-	void unsetDataParser();
-	void setInfoParsed();
-	bool titleParsed() const;
-	bool dataParsed() const;
-	bool infoParsed() const;
-	bool checkState(int state) const;
+    void setTitleParsed();
+    void setDataParsed();
+    void unsetDataParser();
+    void setInfoParsed();
+    bool titleParsed() const;
+    bool dataParsed() const;
+    bool infoParsed() const;
+    bool checkState(int state) const;
 
-	int offset() const;
-	void setOffset(int n);
-	int size() const;
-	void setSize(int s);
-	int displaySize() const;
-	void setDisplaySize(int s);
-	QString name() const;
-	void setName(const QString& str);
-	int index() const;
-	void setIndex(int i);
-	QString fileName() const;
-	void setFileName(const QString& str);
-	QString displayName() const;
-	void setDisplayName(const QString& str);
-	QString mimeTag() const;
-	void setMimeTag(const QString& str);
-	QString extension() const;
-	void setExtension(const QString& str);
+    int offset() const;
+    void setOffset(int n);
+    int size() const;
+    void setSize(int s);
+    int displaySize() const;
+    void setDisplaySize(int s);
+    QString name() const;
+    void setName(const QString &str);
+    int index() const;
+    void setIndex(int i);
+    QString fileName() const;
+    void setFileName(const QString &str);
+    QString displayName() const;
+    void setDisplayName(const QString &str);
+    QString mimeTag() const;
+    void setMimeTag(const QString &str);
+    QString extension() const;
+    void setExtension(const QString &str);
 
 private:
-	class AttachPrivate;
-	AttachPrivate *d;
+    class AttachPrivate;
+    AttachPrivate *d;
 };
 
 #endif

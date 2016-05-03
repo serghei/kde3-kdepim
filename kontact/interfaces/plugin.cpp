@@ -35,9 +35,8 @@
 
 using namespace Kontact;
 
-class Plugin::Private
-{
-  public:
+class Plugin::Private {
+public:
     Kontact::Core *core;
     DCOPClient *dcopClient;
     QPtrList<KAction> *newActions;
@@ -53,149 +52,155 @@ class Plugin::Private
 };
 
 
-Plugin::Plugin( Kontact::Core *core, QObject *parent, const char *name )
-  : KXMLGUIClient(  core ), QObject(  parent, name ), d(  new Private )
+Plugin::Plugin(Kontact::Core *core, QObject *parent, const char *name)
+    : KXMLGUIClient(core), QObject(parent, name), d(new Private)
 {
-  core->factory()->addClient( this );
-  KGlobal::locale()->insertCatalogue(name);
+    core->factory()->addClient(this);
+    KGlobal::locale()->insertCatalogue(name);
 
-  d->core = core;
-  d->dcopClient = 0;
-  d->newActions = new QPtrList<KAction>;
-  d->syncActions = new QPtrList<KAction>;
-  d->hasPart = true;
-  d->part = 0;
-  d->disabled = false;
+    d->core = core;
+    d->dcopClient = 0;
+    d->newActions = new QPtrList<KAction>;
+    d->syncActions = new QPtrList<KAction>;
+    d->hasPart = true;
+    d->part = 0;
+    d->disabled = false;
 }
 
 
 Plugin::~Plugin()
 {
-  delete d->part;
-  delete d->dcopClient;
-  delete d;
+    delete d->part;
+    delete d->dcopClient;
+    delete d;
 }
 
-void Plugin::setIdentifier( const QString &identifier )
+void Plugin::setIdentifier(const QString &identifier)
 {
-  d->identifier = identifier;
+    d->identifier = identifier;
 }
 
 QString Plugin::identifier() const
 {
-  return d->identifier;
+    return d->identifier;
 }
 
-void Plugin::setTitle( const QString &title )
+void Plugin::setTitle(const QString &title)
 {
-  d->title = title;
+    d->title = title;
 }
 
 QString Plugin::title() const
 {
-  return d->title;
+    return d->title;
 }
 
-void Plugin::setIcon( const QString &icon )
+void Plugin::setIcon(const QString &icon)
 {
-  d->icon = icon;
+    d->icon = icon;
 }
 
 QString Plugin::icon() const
 {
-  return d->icon;
+    return d->icon;
 }
 
-void Plugin::setExecutableName( const QString& bin )
+void Plugin::setExecutableName(const QString &bin)
 {
-  d->executableName = bin;
+    d->executableName = bin;
 }
 
 QString Plugin::executableName() const
 {
-  return d->executableName;
+    return d->executableName;
 }
 
-void Plugin::setPartLibraryName( const QCString &libName )
+void Plugin::setPartLibraryName(const QCString &libName)
 {
-  d->partLibraryName = libName;
+    d->partLibraryName = libName;
 }
 
 KParts::ReadOnlyPart *Plugin::loadPart()
 {
-  return core()->createPart( d->partLibraryName );
+    return core()->createPart(d->partLibraryName);
 }
 
 const KAboutData *Plugin::aboutData()
 {
-  kdDebug(5601) << "Plugin::aboutData(): libname: " << d->partLibraryName << endl;
+    kdDebug(5601) << "Plugin::aboutData(): libname: " << d->partLibraryName << endl;
 
-  const KInstance *instance =
-    KParts::Factory::partInstanceFromLibrary( d->partLibraryName );
+    const KInstance *instance =
+        KParts::Factory::partInstanceFromLibrary(d->partLibraryName);
 
-  if ( instance ) {
-    return instance->aboutData();
-  } else {
-    kdError() << "Plugin::aboutData(): Can't load instance for "
-              << title() << endl;
-    return 0;
-  }
+    if(instance)
+    {
+        return instance->aboutData();
+    }
+    else
+    {
+        kdError() << "Plugin::aboutData(): Can't load instance for "
+                  << title() << endl;
+        return 0;
+    }
 }
 
 KParts::ReadOnlyPart *Plugin::part()
 {
-  if ( !d->part ) {
-    d->part = createPart();
-    if ( d->part ) {
-      connect( d->part, SIGNAL( destroyed() ), SLOT( partDestroyed() ) );
-      core()->partLoaded( this, d->part );
+    if(!d->part)
+    {
+        d->part = createPart();
+        if(d->part)
+        {
+            connect(d->part, SIGNAL(destroyed()), SLOT(partDestroyed()));
+            core()->partLoaded(this, d->part);
+        }
     }
-  }
-  return d->part;
+    return d->part;
 }
 
 QString Plugin::tipFile() const
 {
-  return QString::null;
+    return QString::null;
 }
 
 
-DCOPClient* Plugin::dcopClient() const
+DCOPClient *Plugin::dcopClient() const
 {
-  if ( !d->dcopClient ) {
-    d->dcopClient = new DCOPClient();
-    // ### Note: maybe we could use executableName().latin1() instead here.
-    // But this requires that dcopClient is NOT called by the constructor,
-    // and is called by some new virtual void init() later on.
-    d->dcopClient->registerAs( name(), false );
-  }
+    if(!d->dcopClient)
+    {
+        d->dcopClient = new DCOPClient();
+        // ### Note: maybe we could use executableName().latin1() instead here.
+        // But this requires that dcopClient is NOT called by the constructor,
+        // and is called by some new virtual void init() later on.
+        d->dcopClient->registerAs(name(), false);
+    }
 
-  return d->dcopClient;
+    return d->dcopClient;
 }
 
-void Plugin::insertNewAction( KAction *action )
+void Plugin::insertNewAction(KAction *action)
 {
-  d->newActions->append( action );
+    d->newActions->append(action);
 }
 
-void Plugin::insertSyncAction( KAction *action )
+void Plugin::insertSyncAction(KAction *action)
 {
-  d->syncActions->append( action );
+    d->syncActions->append(action);
 }
 
 QPtrList<KAction> *Plugin::newActions() const
 {
-  return d->newActions;
+    return d->newActions;
 }
 
 QPtrList<KAction> *Plugin::syncActions() const
 {
-  return d->syncActions;
+    return d->syncActions;
 }
 
 Kontact::Core *Plugin::core() const
 {
-  return d->core;
+    return d->core;
 }
 
 void Plugin::select()
@@ -208,31 +213,31 @@ void Plugin::configUpdated()
 
 void Plugin::partDestroyed()
 {
-  d->part = 0;
+    d->part = 0;
 }
 
 void Plugin::slotConfigUpdated()
 {
-  configUpdated();
+    configUpdated();
 }
 
 void Plugin::bringToForeground()
 {
-  if (!d->executableName.isEmpty())
-    KRun::runCommand(d->executableName);
+    if(!d->executableName.isEmpty())
+        KRun::runCommand(d->executableName);
 }
 
 bool Kontact::Plugin::showInSideBar() const
 {
-  return d->hasPart;
+    return d->hasPart;
 }
 
-void Kontact::Plugin::setShowInSideBar( bool hasPart )
+void Kontact::Plugin::setShowInSideBar(bool hasPart)
 {
-  d->hasPart = hasPart;
+    d->hasPart = hasPart;
 }
 
-void Kontact::Plugin::setDisabled( bool disabled )
+void Kontact::Plugin::setDisabled(bool disabled)
 {
     d->disabled = disabled;
 }
@@ -242,16 +247,17 @@ bool Kontact::Plugin::disabled() const
     return d->disabled;
 }
 
-void Kontact::Plugin::loadProfile( const QString& )
+void Kontact::Plugin::loadProfile(const QString &)
 {
 }
 
-void Kontact::Plugin::saveToProfile( const QString& ) const
+void Kontact::Plugin::saveToProfile(const QString &) const
 {
 }
 
-void Plugin::virtual_hook( int, void* ) {
-	//BASE::virtual_hook( id, data );
+void Plugin::virtual_hook(int, void *)
+{
+    //BASE::virtual_hook( id, data );
 }
 
 #include "plugin.moc"

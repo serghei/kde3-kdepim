@@ -32,18 +32,17 @@ class QSpinBox;
 class KComboBox;
 class KLineEdit;
 
-class ConfigGuiSyncmlHttp : public ConfigGui
-{
+class ConfigGuiSyncmlHttp : public ConfigGui {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    ConfigGuiSyncmlHttp( const QSync::Member &, QWidget *parent );
+public:
+    ConfigGuiSyncmlHttp(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     QGridLayout *mGridLayout;
 
     KLineEdit *mUsername;
@@ -60,8 +59,8 @@ class ConfigGuiSyncmlHttp : public ConfigGui
     KComboBox *mCalendarDb;
     KComboBox *mNoteDb;
 
-  protected slots:
-    void addLineEdit( QWidget *parent, const QString &text, KComboBox **edit, int row );
+protected slots:
+    void addLineEdit(QWidget *parent, const QString &text, KComboBox **edit, int row);
 };
 
 #endif

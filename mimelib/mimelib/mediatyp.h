@@ -75,8 +75,8 @@ class DW_EXPORT DwMediaType : public DwFieldBody {
 public:
 
     DwMediaType();
-    DwMediaType(const DwMediaType& aMediaType);
-    DwMediaType(const DwString& aStr, DwMessageComponent* aParent=0);
+    DwMediaType(const DwMediaType &aMediaType);
+    DwMediaType(const DwString &aStr, DwMessageComponent *aParent = 0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwMediaType} object's string representation to the empty string
     //. and sets its parent to {\tt NULL}.
@@ -94,7 +94,7 @@ public:
 
     virtual ~DwMediaType();
 
-    const DwMediaType& operator = (const DwMediaType& aMediaType);
+    const DwMediaType &operator = (const DwMediaType &aMediaType);
     //. This is the assignment operator, which performs a deep copy of
     //. {\tt aMediaType}.  The parent node of the {\tt DwMediaType}
     //. object is not changed.
@@ -119,7 +119,7 @@ public:
     //.
     //. This function clears the is-modified flag.
 
-    virtual DwMessageComponent* Clone() const;
+    virtual DwMessageComponent *Clone() const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. creates a new {\tt DwMediaType} object on the free store that
     //. has the same value as this {\tt DwMediaType} object.  The basic
@@ -138,10 +138,10 @@ public:
     //. enum.h.  The member function {\tt SetTypeStr()} may be used to
     //. set the value of any type, standard or non-standard, from a string.
 
-    const DwString& TypeStr() const;
+    const DwString &TypeStr() const;
     //. Returns the primary type as a string.
 
-    void SetTypeStr(const DwString& aStr);
+    void SetTypeStr(const DwString &aStr);
     //. Sets the primary type from a string.
 
     int Subtype() const;
@@ -159,31 +159,31 @@ public:
     //. used to set the value of any subtype, standard or non-standard,
     //. from a string.
 
-    const DwString& SubtypeStr() const;
+    const DwString &SubtypeStr() const;
     //. Returns the subtype as a string.
 
-    void SetSubtypeStr(const DwString& aStr);
+    void SetSubtypeStr(const DwString &aStr);
     //. Sets the subtype from a string.
 
-    const DwString& Boundary() const;
+    const DwString &Boundary() const;
     //. For the multipart type only, returns the value of the boundary
     //. parameter.  This member function is a convenience function
     //. that searches the list of {\tt DwParameter} objects.
 
-    void SetBoundary(const DwString& aStr);
+    void SetBoundary(const DwString &aStr);
     //. For the multipart type only, sets the value of the boundary
     //. parameter.
     //. This member function is a convenience function that accesses the
     //. list of {\tt DwParameter} objects.
 
-    virtual void CreateBoundary(unsigned aLevel=0);
+    virtual void CreateBoundary(unsigned aLevel = 0);
     //. For the multipart type only, creates a boundary string. {\tt aLevel}
     //. indicates the level of a nested multipart body part; if it is
     //. positive, it is used to form part of the created boundary string.
     //. This member function is a convenience function that accesses the
     //. list of child {\tt DwParameter} objects.
 
-    const DwString& Name() const;
+    const DwString &Name() const;
     //. Returns the value of the "name" parameter, if such a parameter
     //. is present.  The name parameter is often found in several media
     //. types, including the application/octet-stream media type; it
@@ -192,7 +192,7 @@ public:
     //. way to indicate a file name.)  This member function is a convenience
     //. function that searches the list of {\tt DwParameter} objects.
 
-    void SetName(const DwString& aStr);
+    void SetName(const DwString &aStr);
     //. Sets the value of the "name" parameter.  If a name parameter is
     //. not already present, it is added.  The name parameter is often
     //. found in several media types, including the application/octet-stream
@@ -202,17 +202,17 @@ public:
     //. function is a convenience function that accesses the list of
     //. {\tt DwParameter} objects.
 
-    DwParameter* FirstParameter() const;
+    DwParameter *FirstParameter() const;
     //. Returns the first {\tt DwParameter} object in the list managed by
     //. this {\tt DwMediaType} object.  Use {\tt DwParameter::Next()} to
     //. iterate through the list.
 
-    void AddParameter(DwParameter* aParam);
+    void AddParameter(DwParameter *aParam);
     //. Adds a {\tt DwParameter} object to the list managed by this
     //. {\tt DwMediaType} object.
 
-    static DwMediaType* NewMediaType(const DwString& aStr,
-        DwMessageComponent* aParent);
+    static DwMediaType *NewMediaType(const DwString &aStr,
+                                     DwMessageComponent *aParent);
     //. Creates a new {\tt DwMediaType} object on the free store.
     //. If the static data member {\tt sNewMediaType} is {\tt NULL},
     //. this member function will create a new {\tt DwMediaType}
@@ -222,15 +222,15 @@ public:
     //. {\tt DwMediaType}, and return that object.
 
     //+ Var sNewMediaType
-    static DwMediaType* (*sNewMediaType)(const DwString&,
-        DwMessageComponent*);
+    static DwMediaType *(*sNewMediaType)(const DwString &,
+                                         DwMessageComponent *);
     //. If {\tt sNewMediaType} is not {\tt NULL}, it is assumed to point to a
     //. user-supplied function that returns an object from a class derived
     //. from {\tt DwMediaType}.
 
 protected:
 
-    void _AddParameter(DwParameter* aParam);
+    void _AddParameter(DwParameter *aParam);
     //. Adds a parameter without setting the is-modified flag.
 
     virtual void TypeEnumToStr();
@@ -238,7 +238,7 @@ protected:
     virtual void SubtypeEnumToStr();
     virtual void SubtypeStrToEnum();
     void DeleteParameterList();
-    void CopyParameterList(DwParameter* aFirst);
+    void CopyParameterList(DwParameter *aFirst);
 
     int mType;
     int mSubtype;
@@ -246,15 +246,15 @@ protected:
     DwString mSubtypeStr;
     DwString mBoundaryStr;
     DwString mNameStr;
-    DwParameter* mFirstParameter;
+    DwParameter *mFirstParameter;
 
 private:
 
-    static const char* const sClassName;
+    static const char *const sClassName;
 
 public:
 
-    virtual void PrintDebugInfo(std::ostream& aStrm, int aDepth=0) const;
+    virtual void PrintDebugInfo(std::ostream &aStrm, int aDepth = 0) const;
     //. This virtual function, inherited from {\tt DwMessageComponent},
     //. prints debugging information about this object to {\tt aStrm}.
     //. It will also call {\tt PrintDebugInfo()} for any of its child
@@ -272,7 +272,7 @@ public:
 
 protected:
 
-    void _PrintDebugInfo(std::ostream& aStrm) const;
+    void _PrintDebugInfo(std::ostream &aStrm) const;
 
 };
 

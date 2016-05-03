@@ -28,34 +28,33 @@ class QLabel;
 class CheckBox;
 
 
-class TimeSelector : public QFrame
-{
-		Q_OBJECT
-	public:
-		TimeSelector(const QString& selectText, const QString& postfix, const QString& selectWhatsThis,
-		             const QString& valueWhatsThis, bool allowHourMinute, QWidget* parent, const char* name = 0);
-		bool         isChecked() const;
-		void         setChecked(bool on);
-		int          minutes() const;
-		void         setMinutes(int minutes, bool dateOnly, TimePeriod::Units defaultUnits);
-		void         setReadOnly(bool);
-		void         setDateOnly(bool dateOnly = true);
-		void         setMaximum(int hourmin, int days);
-		void         setFocusOnCount();
+class TimeSelector : public QFrame {
+    Q_OBJECT
+public:
+    TimeSelector(const QString &selectText, const QString &postfix, const QString &selectWhatsThis,
+                 const QString &valueWhatsThis, bool allowHourMinute, QWidget *parent, const char *name = 0);
+    bool         isChecked() const;
+    void         setChecked(bool on);
+    int          minutes() const;
+    void         setMinutes(int minutes, bool dateOnly, TimePeriod::Units defaultUnits);
+    void         setReadOnly(bool);
+    void         setDateOnly(bool dateOnly = true);
+    void         setMaximum(int hourmin, int days);
+    void         setFocusOnCount();
 
-	signals:
-		void         toggled(bool);             // selection checkbox has been toggled
-		void         valueChanged(int minutes); // value has changed
+signals:
+    void         toggled(bool);             // selection checkbox has been toggled
+    void         valueChanged(int minutes); // value has changed
 
-	protected slots:
-		void         selectToggled(bool);
-		void         periodChanged(int minutes);
+protected slots:
+    void         selectToggled(bool);
+    void         periodChanged(int minutes);
 
-	private:
-		CheckBox*    mSelect;
-		TimePeriod*  mPeriod;
-		QLabel*      mLabel;
-		bool         mReadOnly;           // the widget is read only
+private:
+    CheckBox    *mSelect;
+    TimePeriod  *mPeriod;
+    QLabel      *mLabel;
+    bool         mReadOnly;           // the widget is read only
 };
 
 #endif // TIMESELECTOR_H

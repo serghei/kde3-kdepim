@@ -44,35 +44,34 @@ class KMFolder;
 
 namespace KMail {
 
-class NewFolderDialog : public KDialogBase
-{
-  Q_OBJECT
+class NewFolderDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    NewFolderDialog( QWidget* parent = 0, KMFolder *folder = 0 );
+public:
+    NewFolderDialog(QWidget *parent = 0, KMFolder *folder = 0);
     ~NewFolderDialog() {};
 
-    QLabel* mNameLabel;
-    QLineEdit* mNameLineEdit;
-    QLabel* mMailboxFormatLabel;
-    QComboBox* mFormatComboBox;
-    QLabel* mContentsLabel;
-    QComboBox* mContentsComboBox;
-    QLabel* mNamespacesLabel;
-    QComboBox* mNamespacesComboBox;
+    QLabel *mNameLabel;
+    QLineEdit *mNameLineEdit;
+    QLabel *mMailboxFormatLabel;
+    QComboBox *mFormatComboBox;
+    QLabel *mContentsLabel;
+    QComboBox *mContentsComboBox;
+    QLabel *mNamespacesLabel;
+    QComboBox *mNamespacesComboBox;
 
-  protected:
-    QVBoxLayout* mTopLevelLayout;
-    QHBoxLayout* mNameHBox;
-    QHBoxLayout* mFormatHBox;
-    QHBoxLayout* mContentsHBox;
-    QHBoxLayout* mNamespacesHBox;
-  protected slots:
+protected:
+    QVBoxLayout *mTopLevelLayout;
+    QHBoxLayout *mNameHBox;
+    QHBoxLayout *mFormatHBox;
+    QHBoxLayout *mContentsHBox;
+    QHBoxLayout *mNamespacesHBox;
+protected slots:
     void slotOk();
-  void slotFolderNameChanged( const QString & _text);
+    void slotFolderNameChanged(const QString &_text);
 
-  private:
-    KMFolder* mFolder;
+private:
+    KMFolder *mFolder;
 };
 
 } // namespace

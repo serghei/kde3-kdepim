@@ -35,30 +35,30 @@ class ExchangeAccount;
 
 class KDE_EXPORT ExchangeUpload : public QObject {
     Q_OBJECT
-  public:
-    ExchangeUpload( KCal::Event* event, ExchangeAccount* account, const QString& timeZoneId, QWidget* window=0 );
+public:
+    ExchangeUpload(KCal::Event *event, ExchangeAccount *account, const QString &timeZoneId, QWidget *window = 0);
     ~ExchangeUpload();
 
-  private slots:
-    void slotPatchResult( KIO::Job * );
-    void slotPropFindResult( KIO::Job * );
-    void slotFindUidResult( KIO::Job * );
+private slots:
+    void slotPatchResult(KIO::Job *);
+    void slotPropFindResult(KIO::Job *);
+    void slotFindUidResult(KIO::Job *);
 
-  signals:
+signals:
     void startDownload();
     void finishDownload();
-    void finished( ExchangeUpload* worker, int result, const QString& moreInfo );
+    void finished(ExchangeUpload *worker, int result, const QString &moreInfo);
 
-  private:
+private:
     void tryExist();
-    void startUpload( const KURL& url );
-    void findUid( QString const& uid );
-    
-    ExchangeAccount* mAccount;
-    KCal::Event* m_currentUpload;
+    void startUpload(const KURL &url);
+    void findUid(QString const &uid);
+
+    ExchangeAccount *mAccount;
+    KCal::Event *m_currentUpload;
     int m_currentUploadNumber;
     QString mTimeZoneId;
-    QWidget* mWindow;
+    QWidget *mWindow;
 };
 
 }

@@ -46,272 +46,277 @@
 using namespace Kolab;
 
 
-KMailConnection::KMailConnection( ResourceKolabBase* resource,
-                                  const QCString& objId )
-  : DCOPObject( objId ), mResource( resource ), mKMailIcalIfaceStub( 0 )
+KMailConnection::KMailConnection(ResourceKolabBase *resource,
+                                 const QCString &objId)
+    : DCOPObject(objId), mResource(resource), mKMailIcalIfaceStub(0)
 {
-  // Make the connection to KMail ready
-  mDCOPClient = new DCOPClient();
-  mDCOPClient->attach();
-  mDCOPClient->registerAs( objId, true );
+    // Make the connection to KMail ready
+    mDCOPClient = new DCOPClient();
+    mDCOPClient->attach();
+    mDCOPClient->registerAs(objId, true);
 
-  kapp->dcopClient()->setNotifications( true );
-  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString& ) ),
-           this, SLOT( unregisteredFromDCOP( const QCString& ) ) );
+    kapp->dcopClient()->setNotifications(true);
+    connect(kapp->dcopClient(), SIGNAL(applicationRemoved(const QCString &)),
+            this, SLOT(unregisteredFromDCOP(const QCString &)));
 }
 
 KMailConnection::~KMailConnection()
 {
-  kapp->dcopClient()->setNotifications( false );
-  delete mKMailIcalIfaceStub;
-  mKMailIcalIfaceStub = 0;
-  delete mDCOPClient;
-  mDCOPClient = 0;
+    kapp->dcopClient()->setNotifications(false);
+    delete mKMailIcalIfaceStub;
+    mKMailIcalIfaceStub = 0;
+    delete mDCOPClient;
+    mDCOPClient = 0;
 }
 
 static const QCString dcopObjectId = "KMailICalIface";
 bool KMailConnection::connectToKMail()
 {
-  if ( !mKMailIcalIfaceStub ) {
-    QString error;
-    QCString dcopService;
-    int result = KDCOPServiceStarter::self()->
-      findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
-                      QString::null, &error, &dcopService );
-    if ( result != 0 ) {
-      kdError(5650) << "Couldn't connect to the IMAP resource backend\n";
-      // TODO: You might want to show "error" (if not empty) here,
-      // using e.g. KMessageBox
-      return false;
+    if(!mKMailIcalIfaceStub)
+    {
+        QString error;
+        QCString dcopService;
+        int result = KDCOPServiceStarter::self()->
+                     findServiceFor("DCOP/ResourceBackend/IMAP", QString::null,
+                                    QString::null, &error, &dcopService);
+        if(result != 0)
+        {
+            kdError(5650) << "Couldn't connect to the IMAP resource backend\n";
+            // TODO: You might want to show "error" (if not empty) here,
+            // using e.g. KMessageBox
+            return false;
+        }
+
+        mKMailIcalIfaceStub = new KMailICalIface_stub(kapp->dcopClient(),
+                dcopService, dcopObjectId);
+
+        // Attach to the KMail signals
+        if(!connectKMailSignal("incidenceAdded(QString,QString,Q_UINT32,int,QString)",
+                               "fromKMailAddIncidence(QString,QString,Q_UINT32,int,QString)"))
+            kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
+        if(!connectKMailSignal("incidenceDeleted(QString,QString,QString)",
+                               "fromKMailDelIncidence(QString,QString,QString)"))
+            kdError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
+        if(!connectKMailSignal("signalRefresh(QString,QString)",
+                               "fromKMailRefresh(QString,QString)"))
+            kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
+        if(!connectKMailSignal("subresourceAdded( QString, QString, QString, bool, bool )",
+                               "fromKMailAddSubresource( QString, QString, QString, bool, bool )"))
+            kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
+        if(!connectKMailSignal("subresourceDeleted(QString,QString)",
+                               "fromKMailDelSubresource(QString,QString)"))
+            kdError(5650) << "DCOP connection to subresourceDeleted failed" << endl;
+        if(!connectKMailSignal("asyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)",
+                               "fromKMailAsyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)"))
+            kdError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
     }
 
-    mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(),
-                                                   dcopService, dcopObjectId );
-
-    // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString,Q_UINT32,int,QString)",
-                              "fromKMailAddIncidence(QString,QString,Q_UINT32,int,QString)" ) )
-      kdError(5650) << "DCOP connection to incidenceAdded failed" << endl;
-    if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
-                              "fromKMailDelIncidence(QString,QString,QString)" ) )
-      kdError(5650) << "DCOP connection to incidenceDeleted failed" << endl;
-    if ( !connectKMailSignal( "signalRefresh(QString,QString)",
-                              "fromKMailRefresh(QString,QString)" ) )
-      kdError(5650) << "DCOP connection to signalRefresh failed" << endl;
-    if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
-                              "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
-      kdError(5650) << "DCOP connection to subresourceAdded failed" << endl;
-    if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
-                              "fromKMailDelSubresource(QString,QString)" ) )
-      kdError(5650) << "DCOP connection to subresourceDeleted failed" << endl;
-    if ( !connectKMailSignal( "asyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)",
-                              "fromKMailAsyncLoadResult(QMap<Q_UINT32, QString>, QString, QString)" ) )
-      kdError(5650) << "DCOP connection to asyncLoadResult failed" << endl;
-  }
-
-  return ( mKMailIcalIfaceStub != 0 );
+    return (mKMailIcalIfaceStub != 0);
 }
 
-bool KMailConnection::fromKMailAddIncidence( const QString& type,
-                                             const QString& folder,
-                                             Q_UINT32 sernum,
-                                             int format,
-                                             const QString& data )
+bool KMailConnection::fromKMailAddIncidence(const QString &type,
+        const QString &folder,
+        Q_UINT32 sernum,
+        int format,
+        const QString &data)
 {
-  if ( format != KMailICalIface::StorageXML
-      && format != KMailICalIface::StorageIcalVcard )
-    return false;
-//   kdDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
-//                 << folder << " ). iCal:\n" << ical << endl;
-  return mResource->fromKMailAddIncidence( type, folder, sernum, format, data );
+    if(format != KMailICalIface::StorageXML
+            && format != KMailICalIface::StorageIcalVcard)
+        return false;
+    //   kdDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
+    //                 << folder << " ). iCal:\n" << ical << endl;
+    return mResource->fromKMailAddIncidence(type, folder, sernum, format, data);
 }
 
-void KMailConnection::fromKMailDelIncidence( const QString& type,
-                                             const QString& folder,
-                                             const QString& xml )
+void KMailConnection::fromKMailDelIncidence(const QString &type,
+        const QString &folder,
+        const QString &xml)
 {
-//   kdDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
-//                 << folder << ", " << uid << " )\n";
-  mResource->fromKMailDelIncidence( type, folder, xml );
+    //   kdDebug(5650) << "KMailConnection::fromKMailDelIncidence( " << type << ", "
+    //                 << folder << ", " << uid << " )\n";
+    mResource->fromKMailDelIncidence(type, folder, xml);
 }
 
-void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )
+void KMailConnection::fromKMailRefresh(const QString &type, const QString &folder)
 {
-//   kdDebug(5650) << "KMailConnection::fromKMailRefresh( " << type << ", "
-//                 << folder << " )\n";
-  mResource->fromKMailRefresh( type, folder );
+    //   kdDebug(5650) << "KMailConnection::fromKMailRefresh( " << type << ", "
+    //                 << folder << " )\n";
+    mResource->fromKMailRefresh(type, folder);
 }
 
-void KMailConnection::fromKMailAddSubresource( const QString& type,
-                                               const QString& resource,
-                                               const QString& label,
-                                               bool writable,
-                                               bool alarmRelevant )
+void KMailConnection::fromKMailAddSubresource(const QString &type,
+        const QString &resource,
+        const QString &label,
+        bool writable,
+        bool alarmRelevant)
 {
-//   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
-//                 << resource << " )\n";
-  mResource->fromKMailAddSubresource( type, resource, label,
-                                      writable, alarmRelevant );
+    //   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
+    //                 << resource << " )\n";
+    mResource->fromKMailAddSubresource(type, resource, label,
+                                       writable, alarmRelevant);
 }
 
-void KMailConnection::fromKMailDelSubresource( const QString& type,
-                                               const QString& resource )
+void KMailConnection::fromKMailDelSubresource(const QString &type,
+        const QString &resource)
 {
-//   kdDebug(5650) << "KMailConnection::fromKMailDelSubresource( " << type << ", "
-//                 << resource << " )\n";
-  mResource->fromKMailDelSubresource( type, resource );
+    //   kdDebug(5650) << "KMailConnection::fromKMailDelSubresource( " << type << ", "
+    //                 << resource << " )\n";
+    mResource->fromKMailDelSubresource(type, resource);
 }
 
-void KMailConnection::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
-                                                const QString& type,
-                                                const QString& folder )
+void KMailConnection::fromKMailAsyncLoadResult(const QMap<Q_UINT32, QString> &map,
+        const QString &type,
+        const QString &folder)
 {
-  mResource->fromKMailAsyncLoadResult( map, type, folder );
+    mResource->fromKMailAsyncLoadResult(map, type, folder);
 }
 
-bool KMailConnection::connectKMailSignal( const QCString& signal,
-                                          const QCString& method )
+bool KMailConnection::connectKMailSignal(const QCString &signal,
+        const QCString &method)
 {
-  return connectDCOPSignal( "kmail", dcopObjectId, signal, method, false )
-    && connectDCOPSignal( "kontact", dcopObjectId, signal, method, false );
+    return connectDCOPSignal("kmail", dcopObjectId, signal, method, false)
+           && connectDCOPSignal("kontact", dcopObjectId, signal, method, false);
 }
 
-bool KMailConnection::kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
-                                         const QString& contentsType )
+bool KMailConnection::kmailSubresources(QValueList<KMailICalIface::SubResource> &lst,
+                                        const QString &contentsType)
 {
-  if ( !connectToKMail() )
-    return false;
+    if(!connectToKMail())
+        return false;
 
-  lst = mKMailIcalIfaceStub->subresourcesKolab( contentsType );
-  return mKMailIcalIfaceStub->ok();
+    lst = mKMailIcalIfaceStub->subresourcesKolab(contentsType);
+    return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailIncidencesCount( int& count,
-                                            const QString& mimetype,
-                                            const QString& resource )
+bool KMailConnection::kmailIncidencesCount(int &count,
+        const QString &mimetype,
+        const QString &resource)
 {
-  if ( !connectToKMail() )
-    return false;
+    if(!connectToKMail())
+        return false;
 
-  count = mKMailIcalIfaceStub->incidencesKolabCount( mimetype, resource );
-  return mKMailIcalIfaceStub->ok();
+    count = mKMailIcalIfaceStub->incidencesKolabCount(mimetype, resource);
+    return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
-                                       const QString& mimetype,
-                                       const QString& resource,
-                                       int startIndex,
-                                       int nbMessages )
+bool KMailConnection::kmailIncidences(QMap<Q_UINT32, QString> &lst,
+                                      const QString &mimetype,
+                                      const QString &resource,
+                                      int startIndex,
+                                      int nbMessages)
 {
-  if ( !connectToKMail() )
-    return false;
+    if(!connectToKMail())
+        return false;
 
-  lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource, startIndex, nbMessages );
-  return mKMailIcalIfaceStub->ok();
+    lst = mKMailIcalIfaceStub->incidencesKolab(mimetype, resource, startIndex, nbMessages);
+    return mKMailIcalIfaceStub->ok();
 }
 
 
-bool KMailConnection::kmailGetAttachment( KURL& url,
-                                          const QString& resource,
-                                          Q_UINT32 sernum,
-                                          const QString& filename )
+bool KMailConnection::kmailGetAttachment(KURL &url,
+        const QString &resource,
+        Q_UINT32 sernum,
+        const QString &filename)
 {
-  if ( !connectToKMail() )
-    return false;
+    if(!connectToKMail())
+        return false;
 
-  url = mKMailIcalIfaceStub->getAttachment( resource, sernum, filename );
-  return mKMailIcalIfaceStub->ok();
+    url = mKMailIcalIfaceStub->getAttachment(resource, sernum, filename);
+    return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailAttachmentMimetype( QString & mimeType,
-                                               const QString & resource,
-                                               Q_UINT32 sernum,
-                                               const QString & filename )
+bool KMailConnection::kmailAttachmentMimetype(QString &mimeType,
+        const QString &resource,
+        Q_UINT32 sernum,
+        const QString &filename)
 {
-  if ( !connectToKMail() )
-    return false;
-  mimeType = mKMailIcalIfaceStub->attachmentMimetype( resource, sernum, filename );
-  return mKMailIcalIfaceStub->ok();
+    if(!connectToKMail())
+        return false;
+    mimeType = mKMailIcalIfaceStub->attachmentMimetype(resource, sernum, filename);
+    return mKMailIcalIfaceStub->ok();
 }
 
 bool KMailConnection::kmailListAttachments(QStringList &list,
-                                            const QString & resource, Q_UINT32 sernum)
+        const QString &resource, Q_UINT32 sernum)
 {
-  if ( !connectToKMail() )
-    return false;
+    if(!connectToKMail())
+        return false;
 
-  list = mKMailIcalIfaceStub->listAttachments( resource, sernum );
-  return mKMailIcalIfaceStub->ok();
+    list = mKMailIcalIfaceStub->listAttachments(resource, sernum);
+    return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailDeleteIncidence( const QString& resource,
-                                            Q_UINT32 sernum )
+bool KMailConnection::kmailDeleteIncidence(const QString &resource,
+        Q_UINT32 sernum)
 {
-  return connectToKMail()
-    && mKMailIcalIfaceStub->deleteIncidenceKolab( resource, sernum )
-    && mKMailIcalIfaceStub->ok();
+    return connectToKMail()
+           && mKMailIcalIfaceStub->deleteIncidenceKolab(resource, sernum)
+           && mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailUpdate( const QString& resource,
-                                   Q_UINT32& sernum,
-                                   const QString& subject,
-                                   const QString& plainTextBody,
-                                   const QMap<QCString, QString>& customHeaders,
-                                   const QStringList& attachmentURLs,
-                                   const QStringList& attachmentMimetypes,
-                                   const QStringList& attachmentNames,
-                                   const QStringList& deletedAttachments )
+bool KMailConnection::kmailUpdate(const QString &resource,
+                                  Q_UINT32 &sernum,
+                                  const QString &subject,
+                                  const QString &plainTextBody,
+                                  const QMap<QCString, QString> &customHeaders,
+                                  const QStringList &attachmentURLs,
+                                  const QStringList &attachmentMimetypes,
+                                  const QStringList &attachmentNames,
+                                  const QStringList &deletedAttachments)
 {
-  //kdDebug(5006) << kdBacktrace() << endl;
-  if ( connectToKMail() ) {
-    sernum = mKMailIcalIfaceStub->update( resource, sernum, subject, plainTextBody, customHeaders,
-                                          attachmentURLs, attachmentMimetypes, attachmentNames,
-                                          deletedAttachments );
-    return sernum && mKMailIcalIfaceStub->ok();
-  } else
-    return false;
+    //kdDebug(5006) << kdBacktrace() << endl;
+    if(connectToKMail())
+    {
+        sernum = mKMailIcalIfaceStub->update(resource, sernum, subject, plainTextBody, customHeaders,
+                                             attachmentURLs, attachmentMimetypes, attachmentNames,
+                                             deletedAttachments);
+        return sernum && mKMailIcalIfaceStub->ok();
+    }
+    else
+        return false;
 }
 
-bool KMailConnection::kmailAddSubresource( const QString& resource,
-                                           const QString& parent,
-                                           const QString& contentsType )
+bool KMailConnection::kmailAddSubresource(const QString &resource,
+        const QString &parent,
+        const QString &contentsType)
 {
-  return connectToKMail()
-      && mKMailIcalIfaceStub->addSubresource( resource, parent, contentsType )
-      && mKMailIcalIfaceStub->ok();
+    return connectToKMail()
+           && mKMailIcalIfaceStub->addSubresource(resource, parent, contentsType)
+           && mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailRemoveSubresource( const QString& resource )
+bool KMailConnection::kmailRemoveSubresource(const QString &resource)
 {
-  return connectToKMail()
-      && mKMailIcalIfaceStub->removeSubresource( resource )
-      && mKMailIcalIfaceStub->ok();
-}
-
-
-bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
-                                          const QString& folder )
-{
-  bool ok = connectToKMail();
-  type = mKMailIcalIfaceStub->storageFormat( folder );
-  return ok && mKMailIcalIfaceStub->ok();
+    return connectToKMail()
+           && mKMailIcalIfaceStub->removeSubresource(resource)
+           && mKMailIcalIfaceStub->ok();
 }
 
 
-bool KMailConnection::kmailTriggerSync( const QString &contentsType )
+bool KMailConnection::kmailStorageFormat(KMailICalIface::StorageFormat &type,
+        const QString &folder)
 {
-  bool ok = connectToKMail();
-  return ok && mKMailIcalIfaceStub->triggerSync( contentsType );
+    bool ok = connectToKMail();
+    type = mKMailIcalIfaceStub->storageFormat(folder);
+    return ok && mKMailIcalIfaceStub->ok();
 }
 
-void KMailConnection::unregisteredFromDCOP( const QCString& appId )
+
+bool KMailConnection::kmailTriggerSync(const QString &contentsType)
 {
-  if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId ) {
-    // Delete the stub so that the next time we need to talk to kmail,
-    // we'll know that we need to start a new one.
-    delete mKMailIcalIfaceStub;
-    mKMailIcalIfaceStub = 0;
-  }
+    bool ok = connectToKMail();
+    return ok && mKMailIcalIfaceStub->triggerSync(contentsType);
+}
+
+void KMailConnection::unregisteredFromDCOP(const QCString &appId)
+{
+    if(mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId)
+    {
+        // Delete the stub so that the next time we need to talk to kmail,
+        // we'll know that we need to start a new one.
+        delete mKMailIcalIfaceStub;
+        mKMailIcalIfaceStub = 0;
+    }
 }
 
 #include "kmailconnection.moc"

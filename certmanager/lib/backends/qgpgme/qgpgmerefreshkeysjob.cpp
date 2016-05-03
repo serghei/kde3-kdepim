@@ -52,156 +52,175 @@
 #include <assert.h>
 
 Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
-  : RefreshKeysJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMERefreshKeysJob" ),
-    mProcess( 0 ),
-    mError( 0 )
+    : RefreshKeysJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMERefreshKeysJob"),
+      mProcess(0),
+      mError(0)
 {
 
 }
 
-Kleo::QGpgMERefreshKeysJob::~QGpgMERefreshKeysJob() {
+Kleo::QGpgMERefreshKeysJob::~QGpgMERefreshKeysJob()
+{
 
 }
 
-GpgME::Error Kleo::QGpgMERefreshKeysJob::start( const QStringList & patterns ) {
-  assert( mPatternsToDo.empty() );
+GpgME::Error Kleo::QGpgMERefreshKeysJob::start(const QStringList &patterns)
+{
+    assert(mPatternsToDo.empty());
 
-  mPatternsToDo = patterns;
-  if ( mPatternsToDo.empty() )
-    mPatternsToDo.push_back( " " ); // empty list means all -> mae
-				    // sure to fail the first
-				    // startAProcess() guard clause
+    mPatternsToDo = patterns;
+    if(mPatternsToDo.empty())
+        mPatternsToDo.push_back(" ");   // empty list means all -> mae
+    // sure to fail the first
+    // startAProcess() guard clause
 
-  return startAProcess();
+    return startAProcess();
 }
 
 #if MAX_CMD_LENGTH < 65 + 128
 #error MAX_CMD_LENGTH is too low
 #endif
 
-GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
-  if ( mPatternsToDo.empty() )
-    return 0;
-  // create and start gpgsm process:
-  mProcess = new GnuPGProcessBase( this, "gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks" );
+GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess()
+{
+    if(mPatternsToDo.empty())
+        return 0;
+    // create and start gpgsm process:
+    mProcess = new GnuPGProcessBase(this, "gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks");
 
-  // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-  *mProcess << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh"
-	    << "--enable-crl-checks";
-  unsigned int commandLineLength = MAX_CMD_LENGTH;
-  commandLineLength -=
-    strlen("gpgsm") + 1 + strlen("-k") + 1 +
-    strlen("--with-validation") + 1 + strlen("--force-crl-refresh") + 1 +
-    strlen("--enable-crl-checks") + 1;
-  while ( !mPatternsToDo.empty() ) {
-    const QCString pat = mPatternsToDo.front().utf8().stripWhiteSpace();
-    const unsigned int patLength = pat.length();
-    if ( patLength >= commandLineLength )
-      break;
-    mPatternsToDo.pop_front();
-    if ( pat.isEmpty() )
-      continue;
-    *mProcess << pat;
-    commandLineLength -= patLength + 1;
-  }
-
-  mProcess->setUseStatusFD( true );
-
-  connect( mProcess, SIGNAL(processExited(KProcess*)),
-	   SLOT(slotProcessExited(KProcess*)) );
-  connect( mProcess, SIGNAL(receivedStderr(KProcess*,char*,int)),
-	   SLOT(slotStderr(KProcess*,char*,int)) );
-  connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,const QString&,const QStringList&)) );
-
-  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
-    mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT ); // what else?
-    deleteLater();
-    return mError;
-  } else
-    return 0;
-}
-
-void Kleo::QGpgMERefreshKeysJob::slotCancel() {
-  if ( mProcess )
-    mProcess->kill();
-  mProcess = 0;
-  mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED );
-}
-
-void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QString & type, const QStringList & args ) {
-  if ( proc != mProcess )
-    return;
-  QStringList::const_iterator it = args.begin();
-  bool ok = false;
-
-  if ( type == "ERROR" ) {
-
-
-    if ( args.size() < 2 ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising ERROR with < 2 args!" << endl;
-      return;
+    // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
+    *mProcess << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh"
+              << "--enable-crl-checks";
+    unsigned int commandLineLength = MAX_CMD_LENGTH;
+    commandLineLength -=
+        strlen("gpgsm") + 1 + strlen("-k") + 1 +
+        strlen("--with-validation") + 1 + strlen("--force-crl-refresh") + 1 +
+        strlen("--enable-crl-checks") + 1;
+    while(!mPatternsToDo.empty())
+    {
+        const QCString pat = mPatternsToDo.front().utf8().stripWhiteSpace();
+        const unsigned int patLength = pat.length();
+        if(patLength >= commandLineLength)
+            break;
+        mPatternsToDo.pop_front();
+        if(pat.isEmpty())
+            continue;
+        *mProcess << pat;
+        commandLineLength -= patLength + 1;
     }
-    const int source = (*++it).toInt( &ok );
-    if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for first ERROR arg, got something else" << endl;
-      return;
+
+    mProcess->setUseStatusFD(true);
+
+    connect(mProcess, SIGNAL(processExited(KProcess *)),
+            SLOT(slotProcessExited(KProcess *)));
+    connect(mProcess, SIGNAL(receivedStderr(KProcess *, char *, int)),
+            SLOT(slotStderr(KProcess *, char *, int)));
+    connect(mProcess, SIGNAL(status(Kleo::GnuPGProcessBase *, const QString &, const QStringList &)),
+            SLOT(slotStatus(Kleo::GnuPGProcessBase *, const QString &, const QStringList &)));
+
+    if(!mProcess->start(KProcess::NotifyOnExit, KProcess::Stderr))
+    {
+        mError = gpg_err_make(GPG_ERR_SOURCE_GPGSM, GPG_ERR_ENOENT);   // what else?
+        deleteLater();
+        return mError;
     }
-    ok = false;
-    const int code = (*++it).toInt( &ok );
-    if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for second ERROR arg, got something else" << endl;
-      return;
-    }
-    mError = gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code );
-
-
-  } else if ( type == "PROGRESS" ) {
-
-
-    if ( args.size() < 4 ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising PROGRESS with < 4 args!" << endl;
-      return;
-    }
-    const QString what = *++it;
-    ++it; // don't use "type"...
-    const int cur = (*++it).toInt( &ok );
-    if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"cur\", got something else" << endl;
-      return;
-    }
-    ok = false;
-    const int total = (*++it).toInt( &ok );
-    if ( !ok ) {
-      kdDebug( 5150 ) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"total\", got something else" << endl;
-      return;
-    }
-    emit progress( QGpgMEProgressTokenMapper::instance()->map( what, 0, cur, total ), cur, total );
-
-
-  }
-}
-
-void Kleo::QGpgMERefreshKeysJob::slotStderr( KProcess *, char *, int ) {
-  // implement? or not?
-}
-
-void Kleo::QGpgMERefreshKeysJob::slotProcessExited( KProcess * proc ) {
-  if ( proc != mProcess )
-    return;
-
-  if ( !mError && !mPatternsToDo.empty() )
-    if ( const GpgME::Error err = startAProcess() )
-      mError = err;
     else
-      return;
+        return 0;
+}
 
-  emit done();
-  if ( !mError &&
-       ( !mProcess->normalExit() || mProcess->exitStatus() != 0 ) )
-    mError = gpg_err_make( GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL );
-  emit result( mError );
-  deleteLater();
+void Kleo::QGpgMERefreshKeysJob::slotCancel()
+{
+    if(mProcess)
+        mProcess->kill();
+    mProcess = 0;
+    mError = gpg_err_make(GPG_ERR_SOURCE_GPGSM, GPG_ERR_CANCELED);
+}
+
+void Kleo::QGpgMERefreshKeysJob::slotStatus(GnuPGProcessBase *proc, const QString &type, const QStringList &args)
+{
+    if(proc != mProcess)
+        return;
+    QStringList::const_iterator it = args.begin();
+    bool ok = false;
+
+    if(type == "ERROR")
+    {
+
+
+        if(args.size() < 2)
+        {
+            kdDebug(5150) << "Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising ERROR with < 2 args!" << endl;
+            return;
+        }
+        const int source = (*++it).toInt(&ok);
+        if(!ok)
+        {
+            kdDebug(5150) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for first ERROR arg, got something else" << endl;
+            return;
+        }
+        ok = false;
+        const int code = (*++it).toInt(&ok);
+        if(!ok)
+        {
+            kdDebug(5150) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for second ERROR arg, got something else" << endl;
+            return;
+        }
+        mError = gpg_err_make((gpg_err_source_t)source, (gpg_err_code_t)code);
+
+
+    }
+    else if(type == "PROGRESS")
+    {
+
+
+        if(args.size() < 4)
+        {
+            kdDebug(5150) << "Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising PROGRESS with < 4 args!" << endl;
+            return;
+        }
+        const QString what = *++it;
+        ++it; // don't use "type"...
+        const int cur = (*++it).toInt(&ok);
+        if(!ok)
+        {
+            kdDebug(5150) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"cur\", got something else" << endl;
+            return;
+        }
+        ok = false;
+        const int total = (*++it).toInt(&ok);
+        if(!ok)
+        {
+            kdDebug(5150) << "Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"total\", got something else" << endl;
+            return;
+        }
+        emit progress(QGpgMEProgressTokenMapper::instance()->map(what, 0, cur, total), cur, total);
+
+
+    }
+}
+
+void Kleo::QGpgMERefreshKeysJob::slotStderr(KProcess *, char *, int)
+{
+    // implement? or not?
+}
+
+void Kleo::QGpgMERefreshKeysJob::slotProcessExited(KProcess *proc)
+{
+    if(proc != mProcess)
+        return;
+
+    if(!mError && !mPatternsToDo.empty())
+        if(const GpgME::Error err = startAProcess())
+            mError = err;
+        else
+            return;
+
+    emit done();
+    if(!mError &&
+            (!mProcess->normalExit() || mProcess->exitStatus() != 0))
+        mError = gpg_err_make(GPG_ERR_SOURCE_GPGSM, GPG_ERR_GENERAL);
+    emit result(mError);
+    deleteLater();
 }
 
 #include "qgpgmerefreshkeysjob.moc"

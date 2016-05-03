@@ -3,7 +3,7 @@
 
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
- 
+
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -31,58 +31,87 @@
 #include <kio/job.h>
 
 namespace KPIM {
-	
-class KDE_EXPORT ExchangeAccount : public QObject
-{
+
+class KDE_EXPORT ExchangeAccount : public QObject {
     Q_OBJECT
-  public:
-    ExchangeAccount( const QString &host, const QString &port,
-                     const QString &account, const QString &password,
-                     const QString &mailbox = QString::null );
-    /** 
+public:
+    ExchangeAccount(const QString &host, const QString &port,
+                    const QString &account, const QString &password,
+                    const QString &mailbox = QString::null);
+    /**
      Create a new account object, read data from group app data
      */
-    ExchangeAccount( const QString &group );
+    ExchangeAccount(const QString &group);
     ~ExchangeAccount();
 
-    void save( QString const &group );
-    void load( QString const &group );
+    void save(QString const &group);
+    void load(QString const &group);
 
-    QString host() { return mHost; }
-    QString port() { return mPort; }
-    QString account() { return mAccount; }
-    QString mailbox() { return mMailbox; }
-    QString password() { return mPassword; }
+    QString host()
+    {
+        return mHost;
+    }
+    QString port()
+    {
+        return mPort;
+    }
+    QString account()
+    {
+        return mAccount;
+    }
+    QString mailbox()
+    {
+        return mMailbox;
+    }
+    QString password()
+    {
+        return mPassword;
+    }
 
-    void setHost( QString host ) { mHost = host; }
-    void setPort( QString port ) { mPort = port; }
-    void setAccount( QString account ) { mAccount = account; }
-    void setMailbox( QString mailbox ) { mMailbox = mailbox; }
-    void setPassword( QString password ) { mPassword = password; }
+    void setHost(QString host)
+    {
+        mHost = host;
+    }
+    void setPort(QString port)
+    {
+        mPort = port;
+    }
+    void setAccount(QString account)
+    {
+        mAccount = account;
+    }
+    void setMailbox(QString mailbox)
+    {
+        mMailbox = mailbox;
+    }
+    void setPassword(QString password)
+    {
+        mPassword = password;
+    }
 
     KURL baseURL();
     KURL calendarURL();
 
     // Returns the mailbox URL of this user. QString::null if unsuccessful
-    static QString tryFindMailbox( const QString &host, const QString &port,
-                                   const QString &user,
-                                   const QString &password );
+    static QString tryFindMailbox(const QString &host, const QString &port,
+                                  const QString &user,
+                                  const QString &password);
 
     //  Put authentication info in KDE password store for auto-authentication
     //  with later webdav access. Also calculates the calendar URL.
     bool authenticate();
-    bool authenticate( QWidget *window );
+    bool authenticate(QWidget *window);
 
-  private:
-    bool authenticate( int windowId );
+private:
+    bool authenticate(int windowId);
     void calcFolderURLs();
-    static QString tryMailbox( const QString &_url, const QString &user,
-                               const QString &password );
+    static QString tryMailbox(const QString &_url, const QString &user,
+                              const QString &password);
 
-  private slots:
-    void slotFolderResult( KIO::Job * );
+private slots:
+    void slotFolderResult(KIO::Job *);
 
-  private:
+private:
     QString mHost;
     QString mPort;
     QString mAccount;

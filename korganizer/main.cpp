@@ -35,25 +35,26 @@
 #include "korganizer.h"
 #include "korganizer_options.h"
 
-int main ( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KOrg::AboutData aboutData;
+    KOrg::AboutData aboutData;
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( korganizer_options );
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(korganizer_options);
+    KUniqueApplication::addCmdLineOptions();
 
-  if ( !KOrganizerApp::start() ) return 0;
+    if(!KOrganizerApp::start()) return 0;
 
-  KOrganizerApp app;
+    KOrganizerApp app;
 
-  KGlobal::locale()->insertCatalogue( "libkcal" );
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
-  KGlobal::locale()->insertCatalogue( "kdgantt" );
+    KGlobal::locale()->insertCatalogue("libkcal");
+    KGlobal::locale()->insertCatalogue("libkdepim");
+    KGlobal::locale()->insertCatalogue("kdgantt");
 
-  if ( app.isRestored() ) {
-    RESTORE( KOrganizer )
-  }
+    if(app.isRestored())
+    {
+        RESTORE(KOrganizer)
+    }
 
-  return app.exec();
+    return app.exec();
 }

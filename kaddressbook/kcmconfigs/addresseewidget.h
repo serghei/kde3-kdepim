@@ -33,29 +33,28 @@ class QListBox;
 class QListBoxItem;
 class QPushButton;
 
-class NamePartWidget : public QWidget
-{
-  Q_OBJECT
+class NamePartWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    NamePartWidget( const QString &title, const QString &label, QWidget *parent,
-                    const char *name = 0 );
+public:
+    NamePartWidget(const QString &title, const QString &label, QWidget *parent,
+                   const char *name = 0);
     ~NamePartWidget();
 
-    void setNameParts( const QStringList &list );
+    void setNameParts(const QStringList &list);
     QStringList nameParts() const;
 
-  signals:
+signals:
     void modified();
 
-  private slots:
+private slots:
     void add();
     void edit();
     void remove();
 
-    void selectionChanged( QListBoxItem* );
+    void selectionChanged(QListBoxItem *);
 
-  private:
+private:
     QListBox *mBox;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
@@ -65,21 +64,20 @@ class NamePartWidget : public QWidget
     QString mLabel;
 };
 
-class AddresseeWidget : public QWidget
-{
-  Q_OBJECT
+class AddresseeWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    AddresseeWidget( QWidget *parent, const char *name = 0 );
+public:
+    AddresseeWidget(QWidget *parent, const char *name = 0);
     ~AddresseeWidget();
 
     void restoreSettings();
     void saveSettings();
 
-  signals:
+signals:
     void modified();
 
-  private:
+private:
     KComboBox *mFormattedNameCombo;
     NamePartWidget *mPrefix;
     NamePartWidget *mInclusion;

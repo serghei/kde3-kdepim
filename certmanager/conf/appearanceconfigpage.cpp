@@ -38,50 +38,49 @@
 
 #include <kdepimmacros.h>
 
-AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget * parent, const char * name )
-    : KCModule( parent, name )
+AppearanceConfigurationPage::AppearanceConfigurationPage(QWidget *parent, const char *name)
+    : KCModule(parent, name)
 {
-  QVBoxLayout* lay = new QVBoxLayout( this );
-  mWidget = new Kleo::AppearanceConfigWidget( this );
-  lay->addWidget( mWidget );
-  connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
+    QVBoxLayout *lay = new QVBoxLayout(this);
+    mWidget = new Kleo::AppearanceConfigWidget(this);
+    lay->addWidget(mWidget);
+    connect(mWidget, SIGNAL(changed()), this, SLOT(slotChanged()));
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
-  load();
+    load();
 #endif
 }
 
 
 void AppearanceConfigurationPage::load()
 {
-  mWidget->load();
+    mWidget->load();
 }
 
 void AppearanceConfigurationPage::save()
 {
-  mWidget->save();
+    mWidget->save();
 
 }
 
 void AppearanceConfigurationPage::defaults()
 {
-  mWidget->defaults();
+    mWidget->defaults();
 }
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent, const char * )
-  {
-    AppearanceConfigurationPage *page =
-      new AppearanceConfigurationPage( parent, "kleopatra_config_appear" );
-    return page;
-  }
+extern "C" {
+    KDE_EXPORT KCModule *create_kleopatra_config_appear(QWidget *parent, const char *)
+    {
+        AppearanceConfigurationPage *page =
+            new AppearanceConfigurationPage(parent, "kleopatra_config_appear");
+        return page;
+    }
 }
 
 // kdelibs-3.2 didn't have the changed signal in KCModule...
 void AppearanceConfigurationPage::slotChanged()
 {
-  emit changed(true);
+    emit changed(true);
 }
 
 #include "appearanceconfigpage.moc"

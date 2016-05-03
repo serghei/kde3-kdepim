@@ -43,24 +43,32 @@ class SpellingFilter;
 
 class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
-                          CRdel, CRsave, CRcancel };
-    enum MessageMode { news=0, mail=1, news_mail=2 };
+                          CRdel, CRsave, CRcancel
+                        };
+    enum MessageMode { news = 0, mail = 1, news_mail = 2 };
 
     // unwraped == original, not rewraped text
     // firstEdit==true: place the cursor at the end of the article
-    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, const QString &unwraped=QString::null, bool firstEdit=false, bool dislikesCopies=false, bool createCopy=false);
+    KNComposer(KNLocalArticle *a, const QString &text = QString::null, const QString &sig = QString::null, const QString &unwraped = QString::null,
+               bool firstEdit = false, bool dislikesCopies = false, bool createCopy = false);
     ~KNComposer();
     void setConfig(bool onlyFonts);
     void setMessageMode(MessageMode mode);
 
     //get result
     bool hasValidData();
-    composerResult result() const              { return r_esult; }
-    KNLocalArticle* article()const             { return a_rticle; }
+    composerResult result() const
+    {
+        return r_esult;
+    }
+    KNLocalArticle *article()const
+    {
+        return a_rticle;
+    }
     bool applyChanges();
 
     void closeEvent(QCloseEvent *e);
@@ -71,15 +79,15 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     // inserts at cursor position if clear is false, replaces content otherwise
     // puts the file content into a box if box==true
     // "file" is already open for reading
-    void insertFile(QFile *file, bool clear=false, bool box=false, QString boxTitle=QString::null);
+    void insertFile(QFile *file, bool clear = false, bool box = false, QString boxTitle = QString::null);
 
     // ask for a filename, handle network urls
-    void insertFile(bool clear=false, bool box=false);
+    void insertFile(bool clear = false, bool box = false);
 
-    QPopupMenu * popupMenu( const QString& name );
-    int listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord);
+    QPopupMenu *popupMenu(const QString &name);
+    int listOfResultOfCheckWord(const QStringList &lst , const QString &selectWord);
 
-//internal classes
+    //internal classes
     class ComposerView;
     class Editor;
     class AttachmentView;
@@ -105,14 +113,14 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     KProcess *e_xternalEditor;
     KTempFile *e_ditorTempfile;
     KSpell *s_pellChecker;
-    SpellingFilter* mSpellingFilter;
+    SpellingFilter *mSpellingFilter;
 
     //Attachments
-    QValueList<KNAttachment*> mDeletedAttachments;
+    QValueList<KNAttachment *> mDeletedAttachments;
     QPtrList<KAction> m_listAction;
     bool a_ttChanged;
 
-  //------------------------------ <Actions> -----------------------------
+    //------------------------------ <Actions> -----------------------------
 
     KAccel        *a_ccel;
     KAction       *a_ctExternalEditor,
@@ -124,7 +132,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
                   *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
     KSelectAction *a_ctSetCharset;
     bool spellLineEdit;
-  protected slots:
+protected slots:
     void slotSendNow();
     void slotSendLater();
     void slotSaveAsDraft();
@@ -150,7 +158,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     void slotConfToolbar();
     void slotNewToolbarConfig();
 
-  //------------------------------ </Actions> ----------------------------
+    //------------------------------ </Actions> ----------------------------
 
     // GUI
     void slotSubjectChanged(const QString &t);
@@ -163,14 +171,14 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     void slotCancelEditor();
 
     // attachment list
-    void slotAttachmentPopup(KListView*, QListViewItem *it, const QPoint &p);
+    void slotAttachmentPopup(KListView *, QListViewItem *it, const QPoint &p);
     void slotAttachmentSelected(QListViewItem *it);
     void slotAttachmentEdit(QListViewItem *it);
     void slotAttachmentRemove(QListViewItem *it);
 
     // spellcheck operation
     void slotSpellStarted(KSpell *);
-    void slotSpellDone(const QString&);
+    void slotSpellDone(const QString &);
     void slotSpellFinished();
 
     // DND handling
@@ -184,19 +192,19 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     void slotPaste();
     void slotSelectAll();
     void slotMisspelling(const QString &text, const QStringList &lst, unsigned int pos);
-    void slotCorrected (const QString &oldWord, const QString &newWord, unsigned int pos);
+    void slotCorrected(const QString &oldWord, const QString &newWord, unsigned int pos);
     void addRecentAddress();
 
-  protected:
+protected:
 
     // DND handling
     virtual void dragEnterEvent(QDragEnterEvent *);
     virtual void dropEvent(QDropEvent *);
 
-  signals:
-    void composerDone(KNComposer*);
+signals:
+    void composerDone(KNComposer *);
 
-  private:
+private:
     bool mFirstEdit;
 
 };
@@ -208,17 +216,17 @@ class KNLineEdit;
 
 class KNComposer::ComposerView  : public QSplitter {
 
-  public:
-    ComposerView(KNComposer *_composer, const char *n=0);
+public:
+    ComposerView(KNComposer *_composer, const char *n = 0);
     ~ComposerView();
-    void focusNextPrevEdit(const QWidget* aCur, bool aNext);
+    void focusNextPrevEdit(const QWidget *aCur, bool aNext);
     void setMessageMode(KNComposer::MessageMode mode);
     void showAttachmentView();
     void hideAttachmentView();
     void showExternalNotification();
     void hideExternalNotification();
     void restartBackgroundSpellCheck();
-    QValueList<QWidget*> mEdtList;
+    QValueList<QWidget *> mEdtList;
 
     QLabel      *l_to,
                 *l_groups,
@@ -250,14 +258,14 @@ class KNComposer::ComposerView  : public QSplitter {
 //internal class : handle Tabs... (expanding them in textLine(), etc.)
 class KNComposer::Editor : public KEdit {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Editor(KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent=0, char *name=0);
+public:
+    Editor(KNComposer::ComposerView *_composerView, KNComposer *_composer, QWidget *parent = 0, char *name = 0);
     ~Editor();
     QStringList processedText();
 
-  public slots:
+public slots:
     void slotPasteAsQuotation();
     void slotFind();
     void slotSearchAgain();
@@ -270,74 +278,74 @@ class KNComposer::Editor : public KEdit {
     void slotCorrectWord();
 
 protected slots:
-    void slotSpellStarted( KSpell *);
+    void slotSpellStarted(KSpell *);
     void slotSpellDone(const QString &);
     void slotSpellFinished();
-    void slotMisspelling (const QString &, const QStringList &lst, unsigned int);
+    void slotMisspelling(const QString &, const QStringList &lst, unsigned int);
     virtual void cut();
     virtual void clear();
     virtual void del();
-    void slotAddSuggestion( const QString &, const QStringList &lst, unsigned int );
-  signals:
+    void slotAddSuggestion(const QString &, const QStringList &lst, unsigned int);
+signals:
     void sigDragEnterEvent(QDragEnterEvent *);
     void sigDropEvent(QDropEvent *);
 
-  protected:
+protected:
 
     // DND handling
     virtual void contentsDragEnterEvent(QDragEnterEvent *);
     virtual void contentsDropEvent(QDropEvent *);
-    virtual void contentsContextMenuEvent( QContextMenuEvent *e );
-    virtual void keyPressEvent ( QKeyEvent *e);
+    virtual void contentsContextMenuEvent(QContextMenuEvent *e);
+    virtual void keyPressEvent(QKeyEvent *e);
 
-    virtual bool eventFilter(QObject*, QEvent*);
+    virtual bool eventFilter(QObject *, QEvent *);
 private:
     KNComposer *m_composer;
     KNComposer::ComposerView *m_composerView;
     KSpell *spell;
-    QMap<QString,QStringList> m_replacements;
+    QMap<QString, QStringList> m_replacements;
     QRegExp m_bound;
 };
 
 
 class KNComposer::AttachmentView : public KListView {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    AttachmentView(QWidget *parent, char *name=0);
+public:
+    AttachmentView(QWidget *parent, char *name = 0);
     ~AttachmentView();
 
-  protected:
-    void keyPressEvent( QKeyEvent *e );
+protected:
+    void keyPressEvent(QKeyEvent *e);
 
-  signals:
-    void delPressed ( QListViewItem * );      // the user used Key_Delete on a list view item
+signals:
+    void delPressed(QListViewItem *);         // the user used Key_Delete on a list view item
 };
 
 
 class KNComposer::AttachmentViewItem : public KListViewItem {
 
-  public:
+public:
     AttachmentViewItem(KListView *v, KNAttachment *a);
     ~AttachmentViewItem();
 
-  KNAttachment *attachment;
+    KNAttachment *attachment;
 
 };
 
 
 class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    AttachmentPropertiesDlg( KNAttachment *a, QWidget *p=0, const char *n=0);
+public:
+    AttachmentPropertiesDlg(KNAttachment *a, QWidget *p = 0, const char *n = 0);
     ~AttachmentPropertiesDlg();
 
     void apply();
 
-  protected:
+protected:
     KLineEdit *m_imeType,
               *d_escription;
     QComboBox *e_ncoding;
@@ -345,14 +353,13 @@ class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
     KNAttachment *a_ttachment;
     bool n_onTextAsText;
 
-  protected slots:
+protected slots:
     void accept();
     void slotMimeTypeTextChanged(const QString &text);
 };
 
 //-----------------------------------------------------------------------------
-class KNLineEdit : public KABC::AddressLineEdit
-{
+class KNLineEdit : public KABC::AddressLineEdit {
     Q_OBJECT
     typedef KABC::AddressLineEdit KNLineEditInherited;
 public:
@@ -370,15 +377,14 @@ private:
     KNComposer::ComposerView *composerView;
 };
 
-class KNLineEditSpell : public KNLineEdit
-{
+class KNLineEditSpell : public KNLineEdit {
     Q_OBJECT
 public:
-    KNLineEditSpell(KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent, const char * name = 0);
-    void highLightWord( unsigned int length, unsigned int pos );
-    void spellCheckDone( const QString &s );
-    void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);
-    void spellCheckerCorrected( const QString &old, const QString &corr, unsigned int pos);
+    KNLineEditSpell(KNComposer::ComposerView *_composerView, bool useCompletion, QWidget *parent, const char *name = 0);
+    void highLightWord(unsigned int length, unsigned int pos);
+    void spellCheckDone(const QString &s);
+    void spellCheckerMisspelling(const QString &text, const QStringList &, unsigned int pos);
+    void spellCheckerCorrected(const QString &old, const QString &corr, unsigned int pos);
 };
 
 #endif

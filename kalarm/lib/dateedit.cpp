@@ -25,96 +25,96 @@
 #include "dateedit.moc"
 
 
-DateEdit::DateEdit(QWidget* parent, const char* name)
-	: KDateEdit(parent, name)
+DateEdit::DateEdit(QWidget *parent, const char *name)
+    : KDateEdit(parent, name)
 {
-	connect(this, SIGNAL(dateEntered(const QDate&)), SLOT(newDateEntered(const QDate&)));
+    connect(this, SIGNAL(dateEntered(const QDate &)), SLOT(newDateEntered(const QDate &)));
 }
 
-void DateEdit::setMinDate(const QDate& d, const QString& errorDate)
+void DateEdit::setMinDate(const QDate &d, const QString &errorDate)
 {
-	mMinDate = d;
-	if (mMinDate.isValid()  &&  date().isValid()  &&  date() < mMinDate)
-		setDate(mMinDate);
-	mMinDateErrString = errorDate;
+    mMinDate = d;
+    if(mMinDate.isValid()  &&  date().isValid()  &&  date() < mMinDate)
+        setDate(mMinDate);
+    mMinDateErrString = errorDate;
 }
 
-void DateEdit::setMaxDate(const QDate& d, const QString& errorDate)
+void DateEdit::setMaxDate(const QDate &d, const QString &errorDate)
 {
-	mMaxDate = d;
-	if (mMaxDate.isValid()  &&  date().isValid()  &&  date() > mMaxDate)
-		setDate(mMaxDate);
-	mMaxDateErrString = errorDate;
+    mMaxDate = d;
+    if(mMaxDate.isValid()  &&  date().isValid()  &&  date() > mMaxDate)
+        setDate(mMaxDate);
+    mMaxDateErrString = errorDate;
 }
 
 void DateEdit::setInvalid()
 {
-	setDate(QDate());
+    setDate(QDate());
 }
 
 // Check a new date against any minimum or maximum date.
-void DateEdit::newDateEntered(const QDate& newDate)
+void DateEdit::newDateEntered(const QDate &newDate)
 {
-	if (newDate.isValid())
-	{
-		if (mMinDate.isValid()  &&  newDate < mMinDate)
-		{
-			pastLimitMessage(mMinDate, mMinDateErrString,
-					 i18n("Date cannot be earlier than %1"));
-		}
-		else if (mMaxDate.isValid()  &&  newDate > mMaxDate)
-		{
-			pastLimitMessage(mMaxDate, mMaxDateErrString,
-					 i18n("Date cannot be later than %1"));
-		}
-	}
+    if(newDate.isValid())
+    {
+        if(mMinDate.isValid()  &&  newDate < mMinDate)
+        {
+            pastLimitMessage(mMinDate, mMinDateErrString,
+                             i18n("Date cannot be earlier than %1"));
+        }
+        else if(mMaxDate.isValid()  &&  newDate > mMaxDate)
+        {
+            pastLimitMessage(mMaxDate, mMaxDateErrString,
+                             i18n("Date cannot be later than %1"));
+        }
+    }
 }
 
-void DateEdit::pastLimitMessage(const QDate& limit, const QString& error, const QString& defaultError)
+void DateEdit::pastLimitMessage(const QDate &limit, const QString &error, const QString &defaultError)
 {
-	QString errString = error;
-	if (errString.isNull())
-	{
-		if (limit == QDate::currentDate())
-			errString = i18n("today");
-		else
-			errString = KGlobal::locale()->formatDate(limit, true);
-		errString = defaultError.arg(errString);
-	}
-	KMessageBox::sorry(this, errString);
+    QString errString = error;
+    if(errString.isNull())
+    {
+        if(limit == QDate::currentDate())
+            errString = i18n("today");
+        else
+            errString = KGlobal::locale()->formatDate(limit, true);
+        errString = defaultError.arg(errString);
+    }
+    KMessageBox::sorry(this, errString);
 }
 
 void DateEdit::mousePressEvent(QMouseEvent *e)
 {
-	if (isReadOnly())
-	{
-		// Swallow up the event if it's the left button
-		if (e->button() == Qt::LeftButton)
-			return;
-	}
-	KDateEdit::mousePressEvent(e);
+    if(isReadOnly())
+    {
+        // Swallow up the event if it's the left button
+        if(e->button() == Qt::LeftButton)
+            return;
+    }
+    KDateEdit::mousePressEvent(e);
 }
 
-void DateEdit::mouseReleaseEvent(QMouseEvent* e)
+void DateEdit::mouseReleaseEvent(QMouseEvent *e)
 {
-	if (!isReadOnly())
-		KDateEdit::mouseReleaseEvent(e);
+    if(!isReadOnly())
+        KDateEdit::mouseReleaseEvent(e);
 }
 
-void DateEdit::mouseMoveEvent(QMouseEvent* e)
+void DateEdit::mouseMoveEvent(QMouseEvent *e)
 {
-	if (!isReadOnly())
-		KDateEdit::mouseMoveEvent(e);
+    if(!isReadOnly())
+        KDateEdit::mouseMoveEvent(e);
 }
 
-void DateEdit::keyPressEvent(QKeyEvent* e)
+void DateEdit::keyPressEvent(QKeyEvent *e)
 {
-	if (!isReadOnly())
-		KDateEdit::keyPressEvent(e);
+    if(!isReadOnly())
+        KDateEdit::keyPressEvent(e);
 }
 
-void DateEdit::keyReleaseEvent(QKeyEvent* e)
+void DateEdit::keyReleaseEvent(QKeyEvent *e)
 {
-	if (!isReadOnly())
-		KDateEdit::keyReleaseEvent(e);
+    if(!isReadOnly())
+        KDateEdit::keyReleaseEvent(e);
 }

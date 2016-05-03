@@ -42,24 +42,28 @@
 #include <vector>
 
 class HierarchyAnalyser : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  HierarchyAnalyser( QObject * parent=0, const char * name=0 );
-  ~HierarchyAnalyser();
+    HierarchyAnalyser(QObject *parent = 0, const char *name = 0);
+    ~HierarchyAnalyser();
 
-  const std::vector<GpgME::Key> & rootItems() const {
-    return subjectsForIssuer( 0 );
-  }
-  const std::vector<GpgME::Key> & subjectsForIssuer( const char * issuer_fpr ) const;
-  std::vector<GpgME::Key> subjectsForIssuerRecursive( const char * issuer_fpr ) const;
+    const std::vector<GpgME::Key> &rootItems() const
+    {
+        return subjectsForIssuer(0);
+    }
+    const std::vector<GpgME::Key> &subjectsForIssuer(const char *issuer_fpr) const;
+    std::vector<GpgME::Key> subjectsForIssuerRecursive(const char *issuer_fpr) const;
 
-  void clear() { mSubjectsByIssuer.clear(); }
+    void clear()
+    {
+        mSubjectsByIssuer.clear();
+    }
 
 public slots:
-  void slotNextKey( const GpgME::Key & key );
+    void slotNextKey(const GpgME::Key &key);
 
 private:
-  std::map< QCString, std::vector<GpgME::Key> > mSubjectsByIssuer;
+    std::map< QCString, std::vector<GpgME::Key> > mSubjectsByIssuer;
 };
 
 

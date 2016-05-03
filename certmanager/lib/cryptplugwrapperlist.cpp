@@ -25,10 +25,10 @@
 
 #include "cryptplugwrapperlist.h"
 
-CryptPlugWrapper * CryptPlugWrapperList::findForLibName( const QString & libName ) const
+CryptPlugWrapper *CryptPlugWrapperList::findForLibName(const QString &libName) const
 {
-  for ( QPtrListIterator<CryptPlugWrapper> it( *this ) ; it.current() ; ++it )
-    if ( (*it)->libName().find( libName, 0, false ) >= 0 )
-      return *it;
-  return 0;
+    for(QPtrListIterator<CryptPlugWrapper> it(*this) ; it.current() ; ++it)
+        if((*it)->libName().find(libName, 0, false) >= 0)
+            return *it;
+    return 0;
 }

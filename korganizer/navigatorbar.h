@@ -31,43 +31,41 @@
 class QPushButton;
 class QFrame;
 
-class ActiveLabel : public QLabel
-{
+class ActiveLabel : public QLabel {
     Q_OBJECT
-  public:
-    ActiveLabel( QWidget *parent, const char *name = 0 );
+public:
+    ActiveLabel(QWidget *parent, const char *name = 0);
 
-  signals:
+signals:
     void clicked();
 
-  protected:
-    void mouseReleaseEvent ( QMouseEvent * e );
+protected:
+    void mouseReleaseEvent(QMouseEvent *e);
 };
 
 
-class NavigatorBar: public QWidget
-{
+class NavigatorBar: public QWidget {
     Q_OBJECT
-  public:
-    NavigatorBar( QWidget *parent = 0, const char *name = 0 );
+public:
+    NavigatorBar(QWidget *parent = 0, const char *name = 0);
     ~NavigatorBar();
 
-    void showButtons( bool left, bool right );
+    void showButtons(bool left, bool right);
 
-  public slots:
-    void selectDates( const KCal::DateList & );
+public slots:
+    void selectDates(const KCal::DateList &);
 
-  signals:
+signals:
     void goNextMonth();
     void goPrevMonth();
     void goNextYear();
     void goPrevYear();
     void goMonth(int month);
 
-  private slots:
+private slots:
     void selectMonth();
 
-  private:
+private:
     bool mHasMinWidth;
 
     QDate mDate;

@@ -32,19 +32,18 @@
 
 class QWidget;
 
-class DBAppInfoEditor : public KDialogBase
-{
-Q_OBJECT
+class DBAppInfoEditor : public KDialogBase {
+    Q_OBJECT
 public:
-	DBAppInfoEditor(char*appInfoData, int l, QWidget *parent = 0);
-	~DBAppInfoEditor();
-	char*appInfo;
-	int len;
+    DBAppInfoEditor(char *appInfoData, int l, QWidget *parent = 0);
+    ~DBAppInfoEditor();
+    char *appInfo;
+    int len;
 protected:
-	void fillWidgets();
-	QWidget*fAppInfoEdit;
+    void fillWidgets();
+    QWidget *fAppInfoEdit;
 protected slots:
-	virtual void slotOk();
+    virtual void slotOk();
 };
 
 

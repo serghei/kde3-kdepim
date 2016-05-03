@@ -28,14 +28,13 @@ using namespace KPIM;
 
 namespace KSync {
 
-class GenericDiffAlgo : public DiffAlgo
-{
-  public:
-    GenericDiffAlgo( const QString &left, const QString &right );
+class GenericDiffAlgo : public DiffAlgo {
+public:
+    GenericDiffAlgo(const QString &left, const QString &right);
 
     void run();
 
-  private:
+private:
     QString mLeftData;
     QString mRightData;
 };

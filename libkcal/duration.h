@@ -30,28 +30,27 @@ namespace KCal {
 /**
   This class represents a duration.
 */
-class LIBKCAL_EXPORT Duration
-{
-  public:
+class LIBKCAL_EXPORT Duration {
+public:
     Duration();
-    Duration( const QDateTime &start, const QDateTime &end );
-    Duration( int seconds );
+    Duration(const QDateTime &start, const QDateTime &end);
+    Duration(int seconds);
 
-    QDateTime end( const QDateTime &start ) const;
+    QDateTime end(const QDateTime &start) const;
 
     int asSeconds() const;
 
-  private:
+private:
     int mSeconds;
 
     class Private;
     Private *d;
 };
 
-bool operator==( const Duration&, const Duration& );
-inline bool operator!=( const Duration &d1, const Duration &d2 )
+bool operator==(const Duration &, const Duration &);
+inline bool operator!=(const Duration &d1, const Duration &d2)
 {
-  return !operator==( d1, d2 );
+    return !operator==(d1, d2);
 }
 
 }

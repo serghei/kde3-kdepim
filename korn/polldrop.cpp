@@ -12,69 +12,73 @@
 #include"polldrop.h"
 
 KPollableDrop::KPollableDrop()
-	: KMailDrop()
+    : KMailDrop()
 {
-	_timerId = 0;
-	_timerRunning = false;
-	_freq = 300;
+    _timerId = 0;
+    _timerRunning = false;
+    _freq = 300;
 }
 
 
 bool KPollableDrop::startMonitor()
 {
-	if( !running() ) {
-		recheck();
-		
-		_timerId = startTimer( _freq * 1000 );
-		_timerRunning = true;
+    if(!running())
+    {
+        recheck();
 
-		return startProcess();
-	}
+        _timerId = startTimer(_freq * 1000);
+        _timerRunning = true;
 
-	return false;
+        return startProcess();
+    }
+
+    return false;
 }
 
 bool KPollableDrop::stopMonitor()
 {
-	if( running() ) {
-		killTimer( _timerId );
-		_timerId = 0;
-		_timerRunning = false;
+    if(running())
+    {
+        killTimer(_timerId);
+        _timerId = 0;
+        _timerRunning = false;
 
-		return stopProcess();
-	}
+        return stopProcess();
+    }
 
-	return false;
+    return false;
 }
 
 
-void KPollableDrop::timerEvent( QTimerEvent *ev )
+void KPollableDrop::timerEvent(QTimerEvent *ev)
 {
-	if( _timerRunning && (ev->timerId() == _timerId) ) {
-		// this event is ours.
-		recheck(); // should be reimplemented by children.
-	}
-	else {
-		QObject::timerEvent( ev );
-	}
+    if(_timerRunning && (ev->timerId() == _timerId))
+    {
+        // this event is ours.
+        recheck(); // should be reimplemented by children.
+    }
+    else
+    {
+        QObject::timerEvent(ev);
+    }
 }
 
-bool KPollableDrop::readConfigGroup( const KConfigBase& cfg )
+bool KPollableDrop::readConfigGroup(const KConfigBase &cfg)
 {
-	KMailDrop::readConfigGroup( cfg );
+    KMailDrop::readConfigGroup(cfg);
 
-	setFreq( cfg.readNumEntry(fu(PollConfigKey), DefaultPoll ) );
+    setFreq(cfg.readNumEntry(fu(PollConfigKey), DefaultPoll));
 
-	return true;
+    return true;
 }
 
-bool KPollableDrop::writeConfigGroup( KConfigBase& cfg ) const
+bool KPollableDrop::writeConfigGroup(KConfigBase &cfg) const
 {
-	KMailDrop::writeConfigGroup( cfg );
+    KMailDrop::writeConfigGroup(cfg);
 
-	cfg.writeEntry(fu(PollConfigKey), freq() );
+    cfg.writeEntry(fu(PollConfigKey), freq());
 
-	return true;
+    return true;
 }
 
 //void KPollableDrop::addConfigPage( KDropCfgDialog *dlg )

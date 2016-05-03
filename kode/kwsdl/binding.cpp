@@ -27,8 +27,8 @@ Binding::Operation::Operation()
 {
 }
 
-Binding::Operation::Operation( const QString &name, const QString &action )
-  : mName( name ), mAction( action )
+Binding::Operation::Operation(const QString &name, const QString &action)
+    : mName(name), mAction(action)
 {
 }
 
@@ -36,28 +36,28 @@ Binding::Binding()
 {
 }
 
-Binding::Binding( const QString &name, const QString &type )
-  : mName( name ), mType( type )
+Binding::Binding(const QString &name, const QString &type)
+    : mName(name), mType(type)
 {
 }
 
 
-void Binding::addOperation( const Operation &operation )
+void Binding::addOperation(const Operation &operation)
 {
-  mOperations.append( operation );
+    mOperations.append(operation);
 }
 
-Binding::Operation Binding::operation( const QString &name ) const
+Binding::Operation Binding::operation(const QString &name) const
 {
-  Operation::List::ConstIterator it;
-  for ( it = mOperations.begin(); it != mOperations.end(); ++it )
-    if ( (*it).name() == name )
-      return *it;
+    Operation::List::ConstIterator it;
+    for(it = mOperations.begin(); it != mOperations.end(); ++it)
+        if((*it).name() == name)
+            return *it;
 
-  return Operation();
+    return Operation();
 }
 
 Binding::Operation::List Binding::operations() const
 {
-  return mOperations;
+    return mOperations;
 }

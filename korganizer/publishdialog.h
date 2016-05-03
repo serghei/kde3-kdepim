@@ -31,27 +31,26 @@ using namespace KCal;
 
 class PublishDialog_base;
 
-class PublishDialog : public KDialogBase
-{
+class PublishDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    PublishDialog(QWidget* parent=0,const char* name=0,
-                   bool modal=true );
+public:
+    PublishDialog(QWidget *parent = 0, const char *name = 0,
+                  bool modal = true);
     ~PublishDialog();
 
     void addAttendee(Attendee *attendee);
     QString addresses();
 
-  signals:
+signals:
     void numMessagesChanged(int);
 
-  protected slots:
+protected slots:
     void addItem();
     void removeItem();
     void openAddressbook();
     void updateItem();
     void updateInput();
-  protected:
+protected:
     PublishDialog_base *mWidget;
 };
 

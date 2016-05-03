@@ -41,37 +41,37 @@ class KProcIO;
 class QTextEdit;
 
 class KWatchGnuPGMainWindow : public KMainWindow {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  KWatchGnuPGMainWindow( QWidget* parent = 0, const char* name = 0 );
-  virtual ~KWatchGnuPGMainWindow();
+    KWatchGnuPGMainWindow(QWidget *parent = 0, const char *name = 0);
+    virtual ~KWatchGnuPGMainWindow();
 public slots:
-  void slotWatcherExited();
-  void slotReadStdout();
-  void slotAckRead();
+    void slotWatcherExited();
+    void slotReadStdout();
+    void slotAckRead();
 
-  void slotSaveAs();
-  void slotQuit();
-  void slotClear();
+    void slotSaveAs();
+    void slotQuit();
+    void slotClear();
 
-  void slotConfigure();
-  void slotConfigureToolbars();
-  void configureShortcuts();
-  void slotReadConfig();
+    void slotConfigure();
+    void slotConfigureToolbars();
+    void configureShortcuts();
+    void slotReadConfig();
 
-  virtual void show();
+    virtual void show();
 protected:
-  virtual bool queryClose();
+    virtual bool queryClose();
 private:
-  void createActions();
-  void startWatcher();
-  void setGnuPGConfig();
+    void createActions();
+    void startWatcher();
+    void setGnuPGConfig();
 
-  KProcIO* mWatcher;
+    KProcIO *mWatcher;
 
-  QTextEdit* mCentralWidget;
-  KWatchGnuPGTray* mSysTray;
-  KWatchGnuPGConfig* mConfig;
+    QTextEdit *mCentralWidget;
+    KWatchGnuPGTray *mSysTray;
+    KWatchGnuPGConfig *mConfig;
 };
 
 #endif /* KWATCHGNUPGMAINWIN_H */

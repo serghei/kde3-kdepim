@@ -34,114 +34,126 @@
 
 using namespace KMail;
 
-QuotaJobs::GetQuotarootJob* QuotaJobs::getQuotaroot(
-    KIO::Slave* slave, const KURL& url )
-{
-  QByteArray packedArgs;
-  QDataStream stream( packedArgs, IO_WriteOnly );
-  stream << (int)'Q' << (int)'R' << url;
-
-  GetQuotarootJob* job = new GetQuotarootJob( url, packedArgs, false );
-  KIO::Scheduler::assignJobToSlave( slave, job );
-  return job;
-}
-
-QuotaJobs::GetQuotarootJob::GetQuotarootJob( const KURL& url,
-                                             const QByteArray &packedArgs,
-                                             bool showProgressInfo )
-  : KIO::SimpleJob( url, KIO::CMD_SPECIAL, packedArgs, showProgressInfo )
-{
-  connect( this, SIGNAL(infoMessage(KIO::Job*,const QString&)),
-           SLOT(slotInfoMessage(KIO::Job*,const QString&)) );
-}
-
-void QuotaJobs::GetQuotarootJob::slotInfoMessage( KIO::Job*, const QString& str )
-{
-  // Parse the result
-  QStringList results = QStringList::split("\r", str);
-  QStringList roots;
-  QuotaInfoList quotas;
-  if ( results.size() > 0 ) {
-    // the first line is the available roots
-    roots = QStringList::split(" ", results.front() );
-    results.pop_front();
-    // the rest are pairs of root -> list of triplets
-    while ( results.size() > 0 ) {
-      QString root = results.front(); results.pop_front();
-      // and the quotas
-      if ( results.size() > 0 ) {
-        QStringList triplets = QStringList::split(" ", results.front() );
-        results.pop_front();
-        while ( triplets.size() > 0 ) {
-          // there's always three, the label, current and max values
-          QString name = triplets.front(); triplets.pop_front();
-          QString current = triplets.front(); triplets.pop_front();
-          QString max = triplets.front(); triplets.pop_front();
-          QuotaInfo info( name, root, current, max );
-          quotas.append( info );
-        }
-      }
-    }
-  }
-  if ( !quotas.isEmpty() ) {
-    emit quotaInfoReceived( quotas );
-  }
-  emit quotaRootResult( roots );
-}
-
-QuotaJobs::GetStorageQuotaJob* QuotaJobs::getStorageQuota(
-    KIO::Slave* slave, const KURL& url )
-{
-  GetStorageQuotaJob* job = new GetStorageQuotaJob( slave, url );
-  return job;
-}
-
-
-QuotaJobs::GetStorageQuotaJob::GetStorageQuotaJob( KIO::Slave* slave, const KURL& url )
-  : KIO::Job( false )
+QuotaJobs::GetQuotarootJob *QuotaJobs::getQuotaroot(
+    KIO::Slave *slave, const KURL &url)
 {
     QByteArray packedArgs;
-    QDataStream stream( packedArgs, IO_WriteOnly );
+    QDataStream stream(packedArgs, IO_WriteOnly);
+    stream << (int)'Q' << (int)'R' << url;
+
+    GetQuotarootJob *job = new GetQuotarootJob(url, packedArgs, false);
+    KIO::Scheduler::assignJobToSlave(slave, job);
+    return job;
+}
+
+QuotaJobs::GetQuotarootJob::GetQuotarootJob(const KURL &url,
+        const QByteArray &packedArgs,
+        bool showProgressInfo)
+    : KIO::SimpleJob(url, KIO::CMD_SPECIAL, packedArgs, showProgressInfo)
+{
+    connect(this, SIGNAL(infoMessage(KIO::Job *, const QString &)),
+            SLOT(slotInfoMessage(KIO::Job *, const QString &)));
+}
+
+void QuotaJobs::GetQuotarootJob::slotInfoMessage(KIO::Job *, const QString &str)
+{
+    // Parse the result
+    QStringList results = QStringList::split("\r", str);
+    QStringList roots;
+    QuotaInfoList quotas;
+    if(results.size() > 0)
+    {
+        // the first line is the available roots
+        roots = QStringList::split(" ", results.front());
+        results.pop_front();
+        // the rest are pairs of root -> list of triplets
+        while(results.size() > 0)
+        {
+            QString root = results.front();
+            results.pop_front();
+            // and the quotas
+            if(results.size() > 0)
+            {
+                QStringList triplets = QStringList::split(" ", results.front());
+                results.pop_front();
+                while(triplets.size() > 0)
+                {
+                    // there's always three, the label, current and max values
+                    QString name = triplets.front();
+                    triplets.pop_front();
+                    QString current = triplets.front();
+                    triplets.pop_front();
+                    QString max = triplets.front();
+                    triplets.pop_front();
+                    QuotaInfo info(name, root, current, max);
+                    quotas.append(info);
+                }
+            }
+        }
+    }
+    if(!quotas.isEmpty())
+    {
+        emit quotaInfoReceived(quotas);
+    }
+    emit quotaRootResult(roots);
+}
+
+QuotaJobs::GetStorageQuotaJob *QuotaJobs::getStorageQuota(
+    KIO::Slave *slave, const KURL &url)
+{
+    GetStorageQuotaJob *job = new GetStorageQuotaJob(slave, url);
+    return job;
+}
+
+
+QuotaJobs::GetStorageQuotaJob::GetStorageQuotaJob(KIO::Slave *slave, const KURL &url)
+    : KIO::Job(false)
+{
+    QByteArray packedArgs;
+    QDataStream stream(packedArgs, IO_WriteOnly);
     stream << (int)'Q' << (int)'R' << url;
 
     QuotaJobs::GetQuotarootJob *job =
-        new QuotaJobs::GetQuotarootJob( url, packedArgs, false );
-    connect(job, SIGNAL(quotaInfoReceived(const QuotaInfoList&)),
-            SLOT(slotQuotaInfoReceived(const QuotaInfoList&)));
-    connect(job, SIGNAL(quotaRootResult(const QStringList&)),
-            SLOT(slotQuotarootResult(const QStringList&)));
-    KIO::Scheduler::assignJobToSlave( slave, job );
-    addSubjob( job );
+        new QuotaJobs::GetQuotarootJob(url, packedArgs, false);
+    connect(job, SIGNAL(quotaInfoReceived(const QuotaInfoList &)),
+            SLOT(slotQuotaInfoReceived(const QuotaInfoList &)));
+    connect(job, SIGNAL(quotaRootResult(const QStringList &)),
+            SLOT(slotQuotarootResult(const QStringList &)));
+    KIO::Scheduler::assignJobToSlave(slave, job);
+    addSubjob(job);
 }
 
-void QuotaJobs::GetStorageQuotaJob::slotQuotarootResult( const QStringList& roots )
+void QuotaJobs::GetStorageQuotaJob::slotQuotarootResult(const QStringList &roots)
 {
     Q_UNUSED(roots); // we only support one for now
-    if ( !mStorageQuotaInfo.isValid() && !error() ) {
-      // No error, so the account supports quota, but no usable info
-      // was transmitted => no quota set on the folder. Make the info
-      // valid, bit leave it empty.
-      mStorageQuotaInfo.setName( "STORAGE" );
+    if(!mStorageQuotaInfo.isValid() && !error())
+    {
+        // No error, so the account supports quota, but no usable info
+        // was transmitted => no quota set on the folder. Make the info
+        // valid, bit leave it empty.
+        mStorageQuotaInfo.setName("STORAGE");
     }
-    if ( mStorageQuotaInfo.isValid() )
-      emit storageQuotaResult( mStorageQuotaInfo );
+    if(mStorageQuotaInfo.isValid())
+        emit storageQuotaResult(mStorageQuotaInfo);
 }
 
-void QuotaJobs::GetStorageQuotaJob::slotQuotaInfoReceived( const QuotaInfoList& infos )
+void QuotaJobs::GetStorageQuotaJob::slotQuotaInfoReceived(const QuotaInfoList &infos)
 {
-    QuotaInfoList::ConstIterator it( infos.begin() );
-    while ( it != infos.end() ) {
-      // FIXME we only use the first storage quota, for now
-      if ( it->name() == "STORAGE" && !mStorageQuotaInfo.isValid() ) {
-          mStorageQuotaInfo = *it;
-      }
-      ++it;
+    QuotaInfoList::ConstIterator it(infos.begin());
+    while(it != infos.end())
+    {
+        // FIXME we only use the first storage quota, for now
+        if(it->name() == "STORAGE" && !mStorageQuotaInfo.isValid())
+        {
+            mStorageQuotaInfo = *it;
+        }
+        ++it;
     }
 }
 
 QuotaInfo QuotaJobs::GetStorageQuotaJob::storageQuotaInfo() const
 {
-  return mStorageQuotaInfo;
+    return mStorageQuotaInfo;
 }
 
 #include "quotajobs.moc"

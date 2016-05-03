@@ -35,53 +35,53 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-QDict<Protocol>* Protocols::protocols = 0;
+QDict<Protocol> *Protocols::protocols = 0;
 
-const Protocol* Protocols::getProto( const QString& proto )
+const Protocol *Protocols::getProto(const QString &proto)
 {
-	if( !protocols )
-		fillProtocols();
-		
-	return protocols->find( proto );
+    if(!protocols)
+        fillProtocols();
+
+    return protocols->find(proto);
 }
 
-const Protocol* Protocols::firstProtocol()
+const Protocol *Protocols::firstProtocol()
 {
-	return getProto( "mbox" );
+    return getProto("mbox");
 }
 
-QStringList Protocols::getProtocols() 
+QStringList Protocols::getProtocols()
 {
-	QStringList output;
-	
-	if( !protocols )
-		fillProtocols();
-	
-	QDictIterator<Protocol> it( *protocols );
-	for( ; it.current(); ++it )
-		output.append( it.currentKey() );
+    QStringList output;
 
-	output.sort();
-	
-	return output;
+    if(!protocols)
+        fillProtocols();
+
+    QDictIterator<Protocol> it(*protocols);
+    for(; it.current(); ++it)
+        output.append(it.currentKey());
+
+    output.sort();
+
+    return output;
 }
-	
+
 void Protocols::fillProtocols()
 {
-	protocols = new QDict< Protocol>;
-	protocols->setAutoDelete( true );
-	addProtocol( new Imap_Protocol );
-	addProtocol( new MBox_Protocol );
-	addProtocol( new Pop3_Protocol );
-	addProtocol( new Process_Protocol );
-	addProtocol( new Nntp_Protocol );
-	addProtocol( new QMail_Protocol );
-	addProtocol( new DCOP_Protocol );
-	addProtocol( new KMail_Protocol );
+    protocols = new QDict< Protocol>;
+    protocols->setAutoDelete(true);
+    addProtocol(new Imap_Protocol);
+    addProtocol(new MBox_Protocol);
+    addProtocol(new Pop3_Protocol);
+    addProtocol(new Process_Protocol);
+    addProtocol(new Nntp_Protocol);
+    addProtocol(new QMail_Protocol);
+    addProtocol(new DCOP_Protocol);
+    addProtocol(new KMail_Protocol);
 }
 
-void Protocols::addProtocol( Protocol* proto )
+void Protocols::addProtocol(Protocol *proto)
 {
-	protocols->insert( proto->configName(), proto );
+    protocols->insert(proto->configName(), proto);
 }
 

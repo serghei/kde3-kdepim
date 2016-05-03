@@ -47,62 +47,64 @@ namespace KMail {
  * true for search folders where it does not make much sense for them to be
  * target folders.
  */
-class CopyFolderJob : public FolderJob
-{
-  Q_OBJECT
+class CopyFolderJob : public FolderJob {
+    Q_OBJECT
 public:
-  /**
-   * Create a new job
-   * @param storage of the folder that should be copied
-   * @param newParent the target parent folder
-   */
-  CopyFolderJob( FolderStorage* const storage, KMFolderDir* const newParent = 0 );
+    /**
+     * Create a new job
+     * @param storage of the folder that should be copied
+     * @param newParent the target parent folder
+     */
+    CopyFolderJob(FolderStorage *const storage, KMFolderDir *const newParent = 0);
 
-  virtual ~CopyFolderJob();
+    virtual ~CopyFolderJob();
 
-  virtual void execute();
+    virtual void execute();
 
-  /**
-    Returns the newly created target folder.
-  */
-  KMFolder* targetFolder() const { return mNewFolder; }
+    /**
+      Returns the newly created target folder.
+    */
+    KMFolder *targetFolder() const
+    {
+        return mNewFolder;
+    }
 
 protected slots:
 
-  /** Create the target directory under the new parent. Returns success or failure.*/
-  bool createTargetDir();
+    /** Create the target directory under the new parent. Returns success or failure.*/
+    bool createTargetDir();
 
-  /** Copy all messages from the original folder to mNewFolder */
-  void copyMessagesToTargetDir();
+    /** Copy all messages from the original folder to mNewFolder */
+    void copyMessagesToTargetDir();
 
-  /** Called when the CopyCommand has either succesfully completed copying
-   * the contents of our folder to the new location or failed. */
-  void slotCopyCompleted( KMCommand *command );
+    /** Called when the CopyCommand has either succesfully completed copying
+     * the contents of our folder to the new location or failed. */
+    void slotCopyCompleted(KMCommand *command);
 
-  /** Called when the previous sibling's copy operation completed.
-   * @param success indicates whether the last copy was successful. */
-  void slotCopyNextChild( bool success = true );
+    /** Called when the previous sibling's copy operation completed.
+     * @param success indicates whether the last copy was successful. */
+    void slotCopyNextChild(bool success = true);
 
-  /** Called when one of the operations of the foldre itself or one of it's
-   * child folders failed and the already created target folder needs to be
-   * removed again. */
-  void rollback();
+    /** Called when one of the operations of the foldre itself or one of it's
+     * child folders failed and the already created target folder needs to be
+     * removed again. */
+    void rollback();
 
-  /**
-    Called when the online IMAP folder creation finished.
-  */
-  void folderCreationDone( const QString &name, bool success );
+    /**
+      Called when the online IMAP folder creation finished.
+    */
+    void folderCreationDone(const QString &name, bool success);
 
 signals:
-  /** Emitted when the job is done, check the success bool */
-  void folderCopyComplete( bool success );
+    /** Emitted when the job is done, check the success bool */
+    void folderCopyComplete(bool success);
 
 protected:
-  QGuardedPtr<FolderStorage> const mStorage;
-  KMFolderDir* const mNewParent;
-  QGuardedPtr<KMFolder> mNewFolder;
-  QPtrListIterator<KMFolderNode> mChildFolderNodeIterator;
-  KMFolder* mNextChildFolder;
+    QGuardedPtr<FolderStorage> const mStorage;
+    KMFolderDir *const mNewParent;
+    QGuardedPtr<KMFolder> mNewFolder;
+    QPtrListIterator<KMFolderNode> mChildFolderNodeIterator;
+    KMFolder *mNextChildFolder;
 };
 
 } // namespace KMail

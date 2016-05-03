@@ -23,90 +23,90 @@
 
 using namespace Komposer;
 
-class Attachment::Private
-{
+class Attachment::Private {
 public:
-  QString name;
-  QCString cte;
-  QByteArray data;
-  QCString type;
-  QCString subType;
-  QCString paramAttr;
-  QString paramValue;
-  QCString contDisp;
+    QString name;
+    QCString cte;
+    QByteArray data;
+    QCString type;
+    QCString subType;
+    QCString paramAttr;
+    QString paramValue;
+    QCString contDisp;
 };
 
-Attachment::Attachment( const QString &name,
-                        const QCString &cte,
-                        const QByteArray &data,
-                        const QCString &type,
-                        const QCString &subType,
-                        const QCString &paramAttr,
-                        const QString &paramValue,
-                        const QCString &contDisp )
-  : d( new Private )
+Attachment::Attachment(const QString &name,
+                       const QCString &cte,
+                       const QByteArray &data,
+                       const QCString &type,
+                       const QCString &subType,
+                       const QCString &paramAttr,
+                       const QString &paramValue,
+                       const QCString &contDisp)
+    : d(new Private)
 {
-  d->name = name;
-  d->cte = cte;
-  d->data = data;
-  d->type = type;
-  d->subType = subType;
-  d->paramAttr = paramAttr;
-  d->paramValue = paramValue;
-  d->contDisp = contDisp;
+    d->name = name;
+    d->cte = cte;
+    d->data = data;
+    d->type = type;
+    d->subType = subType;
+    d->paramAttr = paramAttr;
+    d->paramValue = paramValue;
+    d->contDisp = contDisp;
 }
 
 Attachment::~Attachment()
 {
-  delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
 QString
 Attachment::name() const
 {
-  return d->name;
+    return d->name;
 }
 
 QCString
 Attachment::cte() const
 {
-  return d->cte;
+    return d->cte;
 }
 
 QByteArray
 Attachment::data() const
 {
-  return d->data;
+    return d->data;
 }
 
 QCString
 Attachment::type() const
 {
-  return d->type;
+    return d->type;
 }
 
 
 QCString
 Attachment::subType() const
 {
-  return d->subType;
+    return d->subType;
 }
 
 QCString
 Attachment::paramAttr() const
 {
-  return d->paramAttr;
+    return d->paramAttr;
 }
 
 QString
 Attachment::paramValue() const
 {
-  return d->paramValue;
+    return d->paramValue;
 }
 
 QCString
 Attachment::contentDisposition() const
 {
-  return d->contDisp;
+    return d->contDisp;
 }
 

@@ -37,47 +37,47 @@
 
 using namespace KPIM;
 
-FolderSelectDialog::FolderSelectDialog( const QString& caption, const QString& label,
-                                        const QStringList& list )
-  : KDialogBase(0, 0, true, caption, Ok, Ok, true)
+FolderSelectDialog::FolderSelectDialog(const QString &caption, const QString &label,
+                                       const QStringList &list)
+    : KDialogBase(0, 0, true, caption, Ok, Ok, true)
 {
-  QFrame* frame = makeMainWidget();
-  QVBoxLayout* layout = new QVBoxLayout( frame, 0, spacingHint() );
+    QFrame *frame = makeMainWidget();
+    QVBoxLayout *layout = new QVBoxLayout(frame, 0, spacingHint());
 
-  QLabel* labelWidget = new QLabel( label, frame );
-  layout->addWidget( labelWidget );
+    QLabel *labelWidget = new QLabel(label, frame);
+    layout->addWidget(labelWidget);
 
-  mListBox = new KListBox( frame );
-  mListBox->insertStringList( list );
-  mListBox->setSelected( 0, true );
-  mListBox->ensureCurrentVisible();
-  layout->addWidget( mListBox, 10 );
+    mListBox = new KListBox(frame);
+    mListBox->insertStringList(list);
+    mListBox->setSelected(0, true);
+    mListBox->ensureCurrentVisible();
+    layout->addWidget(mListBox, 10);
 
-  connect( mListBox, SIGNAL( doubleClicked( QListBoxItem * ) ),
-           SLOT( slotOk() ) );
-  connect( mListBox, SIGNAL( returnPressed( QListBoxItem * ) ),
-           SLOT( slotOk() ) );
+    connect(mListBox, SIGNAL(doubleClicked(QListBoxItem *)),
+            SLOT(slotOk()));
+    connect(mListBox, SIGNAL(returnPressed(QListBoxItem *)),
+            SLOT(slotOk()));
 
-  mListBox->setFocus();
+    mListBox->setFocus();
 
-  layout->addStretch();
+    layout->addStretch();
 
-  setMinimumWidth( 320 );
+    setMinimumWidth(320);
 }
 
-QString FolderSelectDialog::getItem( const QString &caption, const QString &label,
-                                     const QStringList& list )
+QString FolderSelectDialog::getItem(const QString &caption, const QString &label,
+                                    const QStringList &list)
 {
-  FolderSelectDialog dlg( caption, label, list );
+    FolderSelectDialog dlg(caption, label, list);
 
-  QString result;
-  if ( dlg.exec() == Accepted )
-    result = dlg.mListBox->currentText();
+    QString result;
+    if(dlg.exec() == Accepted)
+        result = dlg.mListBox->currentText();
 
-  return result;
+    return result;
 }
 
 void FolderSelectDialog::closeEvent(QCloseEvent *event)
 {
-  event->ignore();
+    event->ignore();
 }

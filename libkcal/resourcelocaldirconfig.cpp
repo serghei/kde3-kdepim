@@ -38,35 +38,39 @@
 
 using namespace KCal;
 
-ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceLocalDirConfig::ResourceLocalDirConfig(QWidget *parent,  const char *name)
+    : KRES::ConfigWidget(parent, name)
 {
-  resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+    resize(245, 115);
+    QGridLayout *mainLayout = new QGridLayout(this, 2, 2);
 
-  QLabel *label = new QLabel( i18n( "Location:" ), this );
-  mURL = new KURLRequester( this );
-  mURL->setMode( KFile::Directory | KFile::LocalOnly );
-  mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mURL, 1, 1 );
+    QLabel *label = new QLabel(i18n("Location:"), this);
+    mURL = new KURLRequester(this);
+    mURL->setMode(KFile::Directory | KFile::LocalOnly);
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(mURL, 1, 1);
 }
 
-void ResourceLocalDirConfig::loadSettings( KRES::Resource *resource )
+void ResourceLocalDirConfig::loadSettings(KRES::Resource *resource)
 {
-  ResourceLocalDir* res = static_cast<ResourceLocalDir*>( resource );
-  if ( res ) {
-    mURL->setURL( res->mURL.prettyURL() );
-  } else
-    kdDebug(5700) << "ERROR: ResourceLocalDirConfig::loadSettings(): no ResourceLocalDir, cast failed" << endl;
+    ResourceLocalDir *res = static_cast<ResourceLocalDir *>(resource);
+    if(res)
+    {
+        mURL->setURL(res->mURL.prettyURL());
+    }
+    else
+        kdDebug(5700) << "ERROR: ResourceLocalDirConfig::loadSettings(): no ResourceLocalDir, cast failed" << endl;
 }
 
-void ResourceLocalDirConfig::saveSettings( KRES::Resource *resource )
+void ResourceLocalDirConfig::saveSettings(KRES::Resource *resource)
 {
-  ResourceLocalDir* res = static_cast<ResourceLocalDir*>( resource );
-  if (res) {
-    res->mURL = mURL->url();
-  } else
-    kdDebug(5700) << "ERROR: ResourceLocalDirConfig::saveSettings(): no ResourceLocalDir, cast failed" << endl;
+    ResourceLocalDir *res = static_cast<ResourceLocalDir *>(resource);
+    if(res)
+    {
+        res->mURL = mURL->url();
+    }
+    else
+        kdDebug(5700) << "ERROR: ResourceLocalDirConfig::saveSettings(): no ResourceLocalDir, cast failed" << endl;
 }
 
 #include "resourcelocaldirconfig.moc"

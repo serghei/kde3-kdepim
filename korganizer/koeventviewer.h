@@ -39,48 +39,47 @@ using namespace KCal;
 /**
   Viewer widget for events.
 */
-class KDE_EXPORT KOEventViewer : public QTextBrowser
-{
+class KDE_EXPORT KOEventViewer : public QTextBrowser {
     Q_OBJECT
-  public:
-    KOEventViewer( QWidget *parent = 0, const char *name = 0 );
+public:
+    KOEventViewer(QWidget *parent = 0, const char *name = 0);
     virtual ~KOEventViewer();
 
     /**
       Reimplemented from QTextBrowser to handle links.
     */
-    void setSource( const QString & );
-    
-    virtual bool appendIncidence( Incidence * );
-    
+    void setSource(const QString &);
+
+    virtual bool appendIncidence(Incidence *);
+
     /**
       Clear viewer. If \a now is set to true delete view immediately. If set to
       false delete it with next call to appendIncidence().
     */
-    void clearEvents( bool now = false );
+    void clearEvents(bool now = false);
 
     /**
       Add given text to currently shown content.
-    */    
-  
-    void addText( const QString &text );
-   
+    */
+
+    void addText(const QString &text);
+
     /**
-      Set the default text that is showed when 
+      Set the default text that is showed when
       there aren't a incidence to show
     */
-    void setDefaultText( const QString &text );
-    
-    void readSettings( KConfig *config);
-    void writeSettings ( KConfig *config);
-    
-  public slots:
+    void setDefaultText(const QString &text);
+
+    void readSettings(KConfig *config);
+    void writeSettings(KConfig *config);
+
+public slots:
     /**
       Show given incidence in viewer. Clear all previously shown incidences.
     */
-    virtual void setIncidence( Incidence * );
-    void changeIncidenceDisplay( Incidence *incidence, int action );
-  private:
+    virtual void setIncidence(Incidence *);
+    void changeIncidenceDisplay(Incidence *incidence, int action);
+private:
     Incidence *mIncidence;
     QTextBrowser *mEventTextView;
     QString mDefaultText;

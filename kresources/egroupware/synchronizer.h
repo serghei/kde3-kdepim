@@ -49,9 +49,8 @@
       mSynchronizer.stop();
     }
  */
-class Synchronizer
-{
-  public:
+class Synchronizer {
+public:
     Synchronizer();
 
     /**
@@ -64,7 +63,7 @@ class Synchronizer
      */
     void stop();
 
-  private:
+private:
     bool mBlocked;
 };
 

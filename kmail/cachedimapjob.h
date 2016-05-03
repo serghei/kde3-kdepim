@@ -59,81 +59,82 @@ class KMMessage;
 namespace KMail {
 
 class CachedImapJob : public FolderJob {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /** Information about a message to be downloaded (from the 'IMAP envelope') */
-  struct MsgForDownload {
-    MsgForDownload() : uid(0),flags(0),size(0) {} // for QValueList only
-    MsgForDownload( ulong _uid, int _flags, ulong _size )
-      : uid(_uid), flags(_flags), size(_size) {}
-    ulong uid;
-    int flags;
-    ulong size;
-  };
+    /** Information about a message to be downloaded (from the 'IMAP envelope') */
+    struct MsgForDownload
+    {
+        MsgForDownload() : uid(0), flags(0), size(0) {} // for QValueList only
+        MsgForDownload(ulong _uid, int _flags, ulong _size)
+            : uid(_uid), flags(_flags), size(_size) {}
+        ulong uid;
+        int flags;
+        ulong size;
+    };
 
-  // Get messages
-  CachedImapJob( const QValueList<MsgForDownload>& msgs,
-                 JobType type = tGetMessage, KMFolderCachedImap* folder = 0 );
-  // Put messages
-  CachedImapJob( const QPtrList<KMMessage>& msgs,
-                 JobType type, KMFolderCachedImap* folder=0 );
-  CachedImapJob( const QValueList<unsigned long>& msgs,
-                 JobType type, KMFolderCachedImap* folder=0 );
-  // Add sub folders
-  CachedImapJob( const QValueList<KMFolderCachedImap*>& folders,
-                 JobType type = tAddSubfolders,
-                 KMFolderCachedImap* folder = 0 );
-  // Rename folder
-  CachedImapJob( const QString& string1, JobType type,
-                 KMFolderCachedImap* folder );
-  // Delete folders or messages
-  CachedImapJob( const QStringList& foldersOrMsgs, JobType type,
-                 KMFolderCachedImap* folder );
-  // Other jobs (list messages,expunge folder, check uid validity)
-  CachedImapJob( JobType type, KMFolderCachedImap* folder );
+    // Get messages
+    CachedImapJob(const QValueList<MsgForDownload> &msgs,
+                  JobType type = tGetMessage, KMFolderCachedImap *folder = 0);
+    // Put messages
+    CachedImapJob(const QPtrList<KMMessage> &msgs,
+                  JobType type, KMFolderCachedImap *folder = 0);
+    CachedImapJob(const QValueList<unsigned long> &msgs,
+                  JobType type, KMFolderCachedImap *folder = 0);
+    // Add sub folders
+    CachedImapJob(const QValueList<KMFolderCachedImap *> &folders,
+                  JobType type = tAddSubfolders,
+                  KMFolderCachedImap *folder = 0);
+    // Rename folder
+    CachedImapJob(const QString &string1, JobType type,
+                  KMFolderCachedImap *folder);
+    // Delete folders or messages
+    CachedImapJob(const QStringList &foldersOrMsgs, JobType type,
+                  KMFolderCachedImap *folder);
+    // Other jobs (list messages,expunge folder, check uid validity)
+    CachedImapJob(JobType type, KMFolderCachedImap *folder);
 
-  virtual ~CachedImapJob();
+    virtual ~CachedImapJob();
 
-  void setParentFolder( const KMFolderCachedImap* parent );
+    void setParentFolder(const KMFolderCachedImap *parent);
 
 signals:
-  // only emitted for uid validity checking jobs with PERMANENTFLAGS responses
-  void permanentFlags( int flags );
+    // only emitted for uid validity checking jobs with PERMANENTFLAGS responses
+    void permanentFlags(int flags);
 
 protected:
-  virtual void execute();
-  void expungeFolder();
-  void checkUidValidity();
-  void renameFolder( const QString &newName );
-  void listMessages();
+    virtual void execute();
+    void expungeFolder();
+    void checkUidValidity();
+    void renameFolder(const QString &newName);
+    void listMessages();
 
 protected slots:
-  virtual void slotGetNextMessage( KIO::Job *job = 0 );
-  virtual void slotAddNextSubfolder( KIO::Job *job = 0 );
-  virtual void slotPutNextMessage();
-  virtual void slotPutMessageDataReq( KIO::Job *job, QByteArray &data );
-  virtual void slotPutMessageResult( KIO::Job *job );
-  virtual void slotPutMessageInfoData(KIO::Job *, const QString &data);
-  virtual void slotExpungeResult( KIO::Job *job );
-  virtual void slotDeleteNextFolder( KIO::Job *job = 0 );
-  virtual void slotCheckUidValidityResult( KIO::Job *job );
-  virtual void slotRenameFolderResult( KIO::Job *job );
-  virtual void slotListMessagesResult( KIO::Job * job );
-  void slotDeleteNextMessages( KIO::Job* job = 0 );
-  void slotProcessedSize( KIO::Job *, KIO::filesize_t processed );
+    virtual void slotGetNextMessage(KIO::Job *job = 0);
+    virtual void slotAddNextSubfolder(KIO::Job *job = 0);
+    virtual void slotPutNextMessage();
+    virtual void slotPutMessageDataReq(KIO::Job *job, QByteArray &data);
+    virtual void slotPutMessageResult(KIO::Job *job);
+    virtual void slotPutMessageInfoData(KIO::Job *, const QString &data);
+    virtual void slotExpungeResult(KIO::Job *job);
+    virtual void slotDeleteNextFolder(KIO::Job *job = 0);
+    virtual void slotCheckUidValidityResult(KIO::Job *job);
+    virtual void slotRenameFolderResult(KIO::Job *job);
+    virtual void slotListMessagesResult(KIO::Job *job);
+    void slotDeleteNextMessages(KIO::Job *job = 0);
+    void slotProcessedSize(KIO::Job *, KIO::filesize_t processed);
 
 private:
-  KMFolderCachedImap *mFolder;
-  KMAcctCachedImap   *mAccount;
-  QValueList<KMFolderCachedImap*> mFolderList;
-  QValueList<MsgForDownload> mMsgsForDownload;
-  QValueList<unsigned long> mSerNumMsgList;
-  ulong mSentBytes; // previous messages
-  ulong mTotalBytes;
-  QStringList mFoldersOrMessages; // Folder deletion: path list. Message deletion: sets of uids
-  KMMessage* mMsg;
-  QString mString; // Used as uids and as rename target
-  KMFolderCachedImap *mParentFolder;
+    KMFolderCachedImap *mFolder;
+    KMAcctCachedImap   *mAccount;
+    QValueList<KMFolderCachedImap *> mFolderList;
+    QValueList<MsgForDownload> mMsgsForDownload;
+    QValueList<unsigned long> mSerNumMsgList;
+    ulong mSentBytes; // previous messages
+    ulong mTotalBytes;
+    QStringList mFoldersOrMessages; // Folder deletion: path list. Message deletion: sets of uids
+    KMMessage *mMsg;
+    QString mString; // Used as uids and as rename target
+    KMFolderCachedImap *mParentFolder;
 };
 
 }

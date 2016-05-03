@@ -30,34 +30,33 @@ class CategorySelectDialog_base;
 
 namespace KPIM {
 
-class KDE_EXPORT CategorySelectDialog : public KDialogBase
-{ 
+class KDE_EXPORT CategorySelectDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    CategorySelectDialog( KPimPrefs *prefs, QWidget *parent = 0,
-                          const char *name = 0, bool modal = false );
+public:
+    CategorySelectDialog(KPimPrefs *prefs, QWidget *parent = 0,
+                         const char *name = 0, bool modal = false);
     ~CategorySelectDialog();
 
     /**
       Adds this categories to the default categories.
      */
-    void setCategories( const QStringList &categoryList = QStringList() );
-    void setSelected( const QStringList &selList );
+    void setCategories(const QStringList &categoryList = QStringList());
+    void setSelected(const QStringList &selList);
 
     QStringList selectedCategories() const;
-    
-  public slots:
+
+public slots:
     void slotOk();
     void slotApply();
     void clear();
     void updateCategoryConfig();
-    
-  signals:
-    void categoriesSelected( const QString & );
-    void categoriesSelected( const QStringList & );
+
+signals:
+    void categoriesSelected(const QString &);
+    void categoriesSelected(const QStringList &);
     void editCategories();
 
-  private:
+private:
     KPimPrefs *mPrefs;
     CategorySelectDialog_base *mWidget;
     QStringList mCategoryList;

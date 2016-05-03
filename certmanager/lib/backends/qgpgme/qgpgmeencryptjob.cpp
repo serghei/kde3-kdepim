@@ -49,60 +49,66 @@
 
 #include <assert.h>
 
-Kleo::QGpgMEEncryptJob::QGpgMEEncryptJob( GpgME::Context * context )
-  : EncryptJob( QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEEncryptJob" ),
-    QGpgMEJob( this, context )
+Kleo::QGpgMEEncryptJob::QGpgMEEncryptJob(GpgME::Context *context)
+    : EncryptJob(QGpgME::EventLoopInteractor::instance(), "Kleo::QGpgMEEncryptJob"),
+      QGpgMEJob(this, context)
 {
-  assert( context );
+    assert(context);
 }
 
-Kleo::QGpgMEEncryptJob::~QGpgMEEncryptJob() {
+Kleo::QGpgMEEncryptJob::~QGpgMEEncryptJob()
+{
 }
 
-void Kleo::QGpgMEEncryptJob::setup( const QByteArray & plainText ) {
-  assert( !mInData );
-  assert( !mOutData );
+void Kleo::QGpgMEEncryptJob::setup(const QByteArray &plainText)
+{
+    assert(!mInData);
+    assert(!mOutData);
 
-  createInData( plainText );
-  createOutData();
+    createInData(plainText);
+    createOutData();
 }
 
-GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & recipients,
-					    const QByteArray & plainText, bool alwaysTrust ) {
-  setup( plainText );
+GpgME::Error Kleo::QGpgMEEncryptJob::start(const std::vector<GpgME::Key> &recipients,
+        const QByteArray &plainText, bool alwaysTrust)
+{
+    setup(plainText);
 
-  hookupContextToEventLoopInteractor();
+    hookupContextToEventLoopInteractor();
 
-  const GpgME::Context::EncryptionFlags flags =
-    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags );
-						  
-  if ( err )
-    deleteLater();
-  mResult = GpgME::EncryptionResult( err );
-  return err;
+    const GpgME::Context::EncryptionFlags flags =
+        alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
+    const GpgME::Error err = mCtx->startEncryption(recipients, *mInData, *mOutData, flags);
+
+    if(err)
+        deleteLater();
+    mResult = GpgME::EncryptionResult(err);
+    return err;
 }
 
-GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::Key> & recipients,
-						      const QByteArray & plainText,
-						      bool alwaysTrust,
-						      QByteArray & ciphertext ) {
-  setup( plainText );
-  const GpgME::Context::EncryptionFlags flags =
-    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  mResult = mCtx->encrypt( recipients, *mInData, *mOutData, flags );
-  ciphertext = mOutDataDataProvider->data();
-  getAuditLog();
-  return mResult;
+GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec(const std::vector<GpgME::Key> &recipients,
+        const QByteArray &plainText,
+        bool alwaysTrust,
+        QByteArray &ciphertext)
+{
+    setup(plainText);
+    const GpgME::Context::EncryptionFlags flags =
+        alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
+    mResult = mCtx->encrypt(recipients, *mInData, *mOutData, flags);
+    ciphertext = mOutDataDataProvider->data();
+    getAuditLog();
+    return mResult;
 }
 
-void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->encryptionResult(), mOutDataDataProvider->data() );
+void Kleo::QGpgMEEncryptJob::doOperationDoneEvent(const GpgME::Error &)
+{
+    emit result(mResult = mCtx->encryptionResult(), mOutDataDataProvider->data());
 }
 
-void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( mResult.error() && !mResult.error().isCanceled() )
-      Kleo::MessageBox::error( parent, mResult, this, caption );
+void Kleo::QGpgMEEncryptJob::showErrorDialog(QWidget *parent, const QString &caption) const
+{
+    if(mResult.error() && !mResult.error().isCanceled())
+        Kleo::MessageBox::error(parent, mResult, this, caption);
 }
 
 #include "qgpgmeencryptjob.moc"

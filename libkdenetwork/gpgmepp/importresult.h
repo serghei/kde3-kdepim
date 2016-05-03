@@ -2,12 +2,12 @@
    Copyright (C) 2004 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -29,17 +29,17 @@
 
 namespace GpgME {
 
-  class Error;
-  class Import;
+class Error;
+class Import;
 
-  class KDE_EXPORT ImportResult : public Result {
-  public:
-    ImportResult( gpgme_ctx_t ctx=0, int error=0 );
-    explicit ImportResult( const Error & error );
-    ImportResult( const ImportResult & other );
+class KDE_EXPORT ImportResult : public Result {
+public:
+    ImportResult(gpgme_ctx_t ctx = 0, int error = 0);
+    explicit ImportResult(const Error &error);
+    ImportResult(const ImportResult &other);
     ~ImportResult();
 
-    const ImportResult & operator=( const ImportResult & other );
+    const ImportResult &operator=(const ImportResult &other);
 
     bool isNull() const;
 
@@ -60,43 +60,44 @@ namespace GpgME {
 
     int notImported() const;
 
-    Import import( unsigned int idx ) const;
+    Import import(unsigned int idx) const;
     std::vector<Import> imports() const;
 
     class Private;
-  private:
-    Private * d;
-  };
+private:
+    Private *d;
+};
 
-  class KDE_EXPORT Import {
+class KDE_EXPORT Import {
     friend class ImportResult;
-    Import( ImportResult::Private * parent, unsigned int idx );
-  public:
+    Import(ImportResult::Private *parent, unsigned int idx);
+public:
     Import();
-    Import( const Import & other );
+    Import(const Import &other);
     ~Import();
 
-    const Import & operator=( const Import & other );
+    const Import &operator=(const Import &other);
 
     bool isNull() const;
 
-    const char * fingerprint() const;
+    const char *fingerprint() const;
     Error error() const;
 
-    enum Status {
-      Unknown = 0x0,
-      NewKey = 0x1,
-      NewUserIDs = 0x2,
-      NewSignatures = 0x4,
-      NewSubkeys = 0x8,
-      ContainedSecretKey = 0x10
+    enum Status
+    {
+        Unknown = 0x0,
+        NewKey = 0x1,
+        NewUserIDs = 0x2,
+        NewSignatures = 0x4,
+        NewSubkeys = 0x8,
+        ContainedSecretKey = 0x10
     };
     Status status() const;
 
-  private:
-    ImportResult::Private * d;
+private:
+    ImportResult::Private *d;
     unsigned int idx;
-  };
+};
 
 }
 

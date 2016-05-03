@@ -33,17 +33,16 @@
 
 class KNotesWidget;
 
-class KNotesConfigBase : public ConduitConfigBase
-{
+class KNotesConfigBase : public ConduitConfigBase {
 public:
-	KNotesConfigBase(QWidget *parent, const char *name);
+    KNotesConfigBase(QWidget *parent, const char *name);
 
-	virtual void commit();
-	virtual void load();
+    virtual void commit();
+    virtual void load();
 
-	static ConduitConfigBase *create(QWidget *p, const char *n);
+    static ConduitConfigBase *create(QWidget *p, const char *n);
 private:
-	KNotesWidget *fConfigWidget;
+    KNotesWidget *fConfigWidget;
 } ;
 
 #endif

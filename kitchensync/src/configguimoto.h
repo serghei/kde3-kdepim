@@ -26,15 +26,14 @@
 
 class KLineEdit;
 
-class ConfigGuiMoto : public ConfigGui
-{
-  public:
-    ConfigGuiMoto( const QSync::Member &, QWidget *parent );
+class ConfigGuiMoto : public ConfigGui {
+public:
+    ConfigGuiMoto(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  private:
+private:
     void initGUI();
 
     KLineEdit *mDeviceString;

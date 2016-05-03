@@ -9,22 +9,21 @@
 
 #include <kunittest/tester.h>
 
-class UtilTester : public KUnitTest::SlotTester
-{
-  Q_OBJECT
+class UtilTester : public KUnitTest::SlotTester {
+    Q_OBJECT
 
 public slots:
-  void setUp();
-  void tearDown();
-  void test_lf2crlf();
-  void test_crlf2lf();
-  void test_escapeFrom();
-  void test_append();
-  void test_insert();
-  void test_DwStringConversions();
-  void test_QByteArrayQCString();
+    void setUp();
+    void tearDown();
+    void test_lf2crlf();
+    void test_crlf2lf();
+    void test_escapeFrom();
+    void test_append();
+    void test_insert();
+    void test_DwStringConversions();
+    void test_QByteArrayQCString();
 private:
-  void test_DwStringConversions( const QCString& cstr );
+    void test_DwStringConversions(const QCString &cstr);
 };
 
 #endif

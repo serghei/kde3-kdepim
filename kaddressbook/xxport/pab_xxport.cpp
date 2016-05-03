@@ -38,32 +38,33 @@
 
 #include "pab_xxport.h"
 
-K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_pab_xxport, PABXXPort )
+K_EXPORT_KADDRESSBOOK_XXFILTER(libkaddrbk_pab_xxport, PABXXPort)
 
-PABXXPort::PABXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::XXPort( ab, parent, name )
+PABXXPort::PABXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name)
+    : KAB::XXPort(ab, parent, name)
 {
-  createImportAction( i18n("Import MS Exchange Personal Address Book (.PAB)") );
+    createImportAction(i18n("Import MS Exchange Personal Address Book (.PAB)"));
 }
 
-KABC::AddresseeList PABXXPort::importContacts( const QString& ) const
+KABC::AddresseeList PABXXPort::importContacts(const QString &) const
 {
-  KABC::AddresseeList addrList;
+    KABC::AddresseeList addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
-      		"*.[pP][aA][bB]|" + i18n("MS Exchange Personal Address Book Files (*.pab)"), 0 );
-  if ( fileName.isEmpty() )
+    QString fileName = KFileDialog::getOpenFileName(QDir::homeDirPath(),
+                       "*.[pP][aA][bB]|" + i18n("MS Exchange Personal Address Book Files (*.pab)"), 0);
+    if(fileName.isEmpty())
+        return addrList;
+    if(!QFile::exists(fileName))
+    {
+        KMessageBox::sorry(parentWidget(), i18n("<qt>Could not find a MS Exchange Personal Address Book <b>%1</b>.</qt>").arg(fileName));
+        return addrList;
+    }
+
+    // pab PAB(QFile::encodeName(file),this,info);
+    // info->setFrom(file);
+    // PAB.convert();
+
     return addrList;
-  if ( !QFile::exists( fileName ) ) {
-    KMessageBox::sorry( parentWidget(), i18n( "<qt>Could not find a MS Exchange Personal Address Book <b>%1</b>.</qt>" ).arg( fileName ) );
-    return addrList;
-  }
-
-  // pab PAB(QFile::encodeName(file),this,info);
-  // info->setFrom(file);
-  // PAB.convert();
-
-  return addrList;
 }
 
 #include "pab_xxport.moc"

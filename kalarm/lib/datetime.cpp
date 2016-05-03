@@ -28,53 +28,53 @@ QTime DateTime::mStartOfDay;
 
 QTime DateTime::time() const
 {
-	return mDateOnly ? mStartOfDay : mDateTime.time();
+    return mDateOnly ? mStartOfDay : mDateTime.time();
 }
 
 QDateTime DateTime::dateTime() const
 {
-	return mDateOnly ? QDateTime(mDateTime.date(), mStartOfDay) : mDateTime;
+    return mDateOnly ? QDateTime(mDateTime.date(), mStartOfDay) : mDateTime;
 }
 
 QString DateTime::formatLocale(bool shortFormat) const
 {
-	if (mDateOnly)
-		return KGlobal::locale()->formatDate(mDateTime.date(), shortFormat);
-	else if (mTimeValid)
-		return KGlobal::locale()->formatDateTime(mDateTime, shortFormat);
-	else
-		return QString::null;
+    if(mDateOnly)
+        return KGlobal::locale()->formatDate(mDateTime.date(), shortFormat);
+    else if(mTimeValid)
+        return KGlobal::locale()->formatDateTime(mDateTime, shortFormat);
+    else
+        return QString::null;
 }
 
-bool operator==(const DateTime& dt1, const DateTime& dt2)
+bool operator==(const DateTime &dt1, const DateTime &dt2)
 {
-	if (dt1.mDateTime.date() != dt2.mDateTime.date())
-		return false;
-	if (dt1.mDateOnly && dt2.mDateOnly)
-		return true;
-	if (!dt1.mDateOnly && !dt2.mDateOnly)
-	{
-		bool valid1 = dt1.mTimeValid && dt1.mDateTime.time().isValid();
-		bool valid2 = dt2.mTimeValid && dt2.mDateTime.time().isValid();
-		if (!valid1  &&  !valid2)
-			return true;
-		if (!valid1  ||  !valid2)
-			return false;
-		return dt1.mDateTime.time() == dt2.mDateTime.time();
-	}
-	return (dt1.mDateOnly ? dt2.mDateTime.time() : dt1.mDateTime.time()) == DateTime::startOfDay();
+    if(dt1.mDateTime.date() != dt2.mDateTime.date())
+        return false;
+    if(dt1.mDateOnly && dt2.mDateOnly)
+        return true;
+    if(!dt1.mDateOnly && !dt2.mDateOnly)
+    {
+        bool valid1 = dt1.mTimeValid && dt1.mDateTime.time().isValid();
+        bool valid2 = dt2.mTimeValid && dt2.mDateTime.time().isValid();
+        if(!valid1  &&  !valid2)
+            return true;
+        if(!valid1  ||  !valid2)
+            return false;
+        return dt1.mDateTime.time() == dt2.mDateTime.time();
+    }
+    return (dt1.mDateOnly ? dt2.mDateTime.time() : dt1.mDateTime.time()) == DateTime::startOfDay();
 }
 
-bool operator<(const DateTime& dt1, const DateTime& dt2)
+bool operator<(const DateTime &dt1, const DateTime &dt2)
 {
-	if (dt1.mDateTime.date() != dt2.mDateTime.date())
-		return dt1.mDateTime.date() < dt2.mDateTime.date();
-	if (dt1.mDateOnly && dt2.mDateOnly)
-		return false;
-	if (!dt1.mDateOnly && !dt2.mDateOnly)
-		return dt1.mDateTime.time() < dt2.mDateTime.time();
-	QTime t = DateTime::startOfDay();
-	if (dt1.mDateOnly)
-		return t < dt2.mDateTime.time();
-	return dt1.mDateTime.time() < t;
+    if(dt1.mDateTime.date() != dt2.mDateTime.date())
+        return dt1.mDateTime.date() < dt2.mDateTime.date();
+    if(dt1.mDateOnly && dt2.mDateOnly)
+        return false;
+    if(!dt1.mDateOnly && !dt2.mDateOnly)
+        return dt1.mDateTime.time() < dt2.mDateTime.time();
+    QTime t = DateTime::startOfDay();
+    if(dt1.mDateOnly)
+        return t < dt2.mDateTime.time();
+    return dt1.mDateTime.time() < t;
 }

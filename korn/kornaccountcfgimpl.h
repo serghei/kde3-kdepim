@@ -35,35 +35,35 @@ class AccountInput;
 template< class T > class QPtrList;
 template< class T > class QPtrVector;
 
-class KornAccountCfgImpl : public KornAccountCfg
-{ Q_OBJECT
+class KornAccountCfgImpl : public KornAccountCfg {
+    Q_OBJECT
 public:
-	KornAccountCfgImpl( QWidget * parent = 0, const char * name = 0 );
-	~KornAccountCfgImpl();
-	
-	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr );
-	void writeConfig();
+    KornAccountCfgImpl(QWidget *parent = 0, const char *name = 0);
+    ~KornAccountCfgImpl();
+
+    void readConfig(KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr);
+    void writeConfig();
 
 public slots:
-	void slotSSLChanged();
-	
+    void slotSSLChanged();
+
 protected slots:
-	virtual void slotProtocolChanged( const QString& );
-	
+    virtual void slotProtocolChanged(const QString &);
+
 private slots:
-	void slotOK();
-	void slotCancel();
+    void slotOK();
+    void slotCancel();
 private:
-	KConfigGroup *_config;
-	int _fields;
-	int _urlfields;
-	int _boxnr, _accountnr;
-		
-	QVBoxLayout *_vlayout;
-	QHBoxLayout *_protocolLayout;
-	QPtrVector< QWidget > *_groupBoxes;
-	
-	QPtrList< AccountInput > *_accountinput;
+    KConfigGroup *_config;
+    int _fields;
+    int _urlfields;
+    int _boxnr, _accountnr;
+
+    QVBoxLayout *_vlayout;
+    QHBoxLayout *_protocolLayout;
+    QPtrVector< QWidget > *_groupBoxes;
+
+    QPtrList< AccountInput > *_accountinput;
 };
 
 #endif //MK_KORNACCOUNTCFGIMPL_H

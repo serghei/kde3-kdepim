@@ -27,16 +27,15 @@
 
 namespace KCal {
 
-class KDE_EXPORT StdCalendar : public KCal::CalendarResources
-{
-  public:
+class KDE_EXPORT StdCalendar : public KCal::CalendarResources {
+public:
     StdCalendar();
-    StdCalendar( const QString &fileName, const QString &resName );
+    StdCalendar(const QString &fileName, const QString &resName);
     ~StdCalendar();
 
-    void addFileResource( const QString &fileName, const QString &resName );
+    void addFileResource(const QString &fileName, const QString &resName);
 
-  private:
+private:
     KCal::CalendarResourceManager *mManager;
 };
 

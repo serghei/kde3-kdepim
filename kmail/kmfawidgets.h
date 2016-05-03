@@ -15,43 +15,50 @@
 class QPushButton;
 class KURLRequester;
 
-class KMFilterActionWithAddressWidget : public QWidget
-{
-  Q_OBJECT
+class KMFilterActionWithAddressWidget : public QWidget {
+    Q_OBJECT
 public:
-  KMFilterActionWithAddressWidget( QWidget* parent=0, const char* name=0 );
+    KMFilterActionWithAddressWidget(QWidget *parent = 0, const char *name = 0);
 
-  void clear() { mLineEdit->clear(); }
-  QString text() const { return mLineEdit->text(); }
-  void setText( const QString & aString ) { mLineEdit->setText( aString ); }
+    void clear()
+    {
+        mLineEdit->clear();
+    }
+    QString text() const
+    {
+        return mLineEdit->text();
+    }
+    void setText(const QString &aString)
+    {
+        mLineEdit->setText(aString);
+    }
 
 protected slots:
-  void slotAddrBook();
+    void slotAddrBook();
 
 private:
-  QPushButton* mBtn;
-  QLineEdit*   mLineEdit;
+    QPushButton *mBtn;
+    QLineEdit   *mLineEdit;
 };
 
-class KMSoundTestWidget : public QWidget
-{
-  Q_OBJECT
+class KMSoundTestWidget : public QWidget {
+    Q_OBJECT
 public:
-  KMSoundTestWidget( QWidget * parent, const char * name=0 );
-  ~KMSoundTestWidget();
-  QString url() const;
-  void setUrl( const QString & url );
-  void clear();
+    KMSoundTestWidget(QWidget *parent, const char *name = 0);
+    ~KMSoundTestWidget();
+    QString url() const;
+    void setUrl(const QString &url);
+    void clear();
 signals:
-  void testPressed();
+    void testPressed();
 protected slots:
-  void playSound();
-  void openSoundDialog( KURLRequester * );
-  void slotUrlChanged( const QString & );
+    void playSound();
+    void openSoundDialog(KURLRequester *);
+    void slotUrlChanged(const QString &);
 
 private:
-  KURLRequester *m_urlRequester;
-  QPushButton *m_playButton;
+    KURLRequester *m_urlRequester;
+    QPushButton *m_playButton;
 };
 
 #endif /*_kmfawidget_h_*/

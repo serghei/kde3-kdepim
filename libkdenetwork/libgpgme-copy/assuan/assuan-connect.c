@@ -1,4 +1,4 @@
-/* assuan-connect.c - Establish a connection (client) 
+/* assuan-connect.c - Establish a connection (client)
  *	Copyright (C) 2001, 2002 Free Software Foundation, Inc.
  *
  * This file is part of Assuan.
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
- * USA. 
+ * USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -38,24 +38,24 @@
 
 /* Disconnect and release the context CTX. */
 void
-assuan_disconnect (assuan_context_t ctx)
+assuan_disconnect(assuan_context_t ctx)
 {
-  if (ctx)
+    if(ctx)
     {
-      assuan_write_line (ctx, "BYE");
-      ctx->finish_handler (ctx);
-      ctx->deinit_handler (ctx);
-      ctx->deinit_handler = NULL;
-      _assuan_release_context (ctx);
+        assuan_write_line(ctx, "BYE");
+        ctx->finish_handler(ctx);
+        ctx->deinit_handler(ctx);
+        ctx->deinit_handler = NULL;
+        _assuan_release_context(ctx);
     }
 }
 
 /* Return the PID of the peer or -1 if not known. This function works
    in some situations where assuan_get_ucred fails. */
 pid_t
-assuan_get_pid (assuan_context_t ctx)
+assuan_get_pid(assuan_context_t ctx)
 {
-  return (ctx && ctx->pid)? ctx->pid : -1;
+    return (ctx && ctx->pid) ? ctx->pid : -1;
 }
 
 
@@ -63,17 +63,17 @@ assuan_get_pid (assuan_context_t ctx)
    you are not interested in this value.  For getting the pid of the
    peer the assuan_get_pid is usually better suited. */
 assuan_error_t
-assuan_get_peercred (assuan_context_t ctx, pid_t *pid, uid_t *uid, gid_t *gid)
+assuan_get_peercred(assuan_context_t ctx, pid_t *pid, uid_t *uid, gid_t *gid)
 {
-  if (!ctx)
-    return _assuan_error (ASSUAN_Invalid_Value);
-  if (!ctx->peercred.valid)
-    return _assuan_error (ASSUAN_General_Error);
-  if (pid)
-    *pid = ctx->peercred.pid;
-  if (uid)
-    *uid = ctx->peercred.uid;
-  if (gid)
-    *gid = ctx->peercred.gid;
-  return 0;
+    if(!ctx)
+        return _assuan_error(ASSUAN_Invalid_Value);
+    if(!ctx->peercred.valid)
+        return _assuan_error(ASSUAN_General_Error);
+    if(pid)
+        *pid = ctx->peercred.pid;
+    if(uid)
+        *uid = ctx->peercred.uid;
+    if(gid)
+        *gid = ctx->peercred.gid;
+    return 0;
 }

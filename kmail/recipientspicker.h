@@ -49,23 +49,22 @@ namespace KPIM {
 class  LDAPSearchDialog;
 }
 
-class RecipientItem
-{
-  public:
+class RecipientItem {
+public:
     typedef QValueList<RecipientItem *> List;
 
 #ifdef KDEPIM_NEW_DISTRLISTS
-    RecipientItem( KABC::AddressBook *ab );
-    void setDistributionList( KPIM::DistributionList& );
-    KPIM::DistributionList& distributionList();
+    RecipientItem(KABC::AddressBook *ab);
+    void setDistributionList(KPIM::DistributionList &);
+    KPIM::DistributionList &distributionList();
 #else
     RecipientItem();
-    void setDistributionList( KABC::DistributionList * );
-    KABC::DistributionList * distributionList();
+    void setDistributionList(KABC::DistributionList *);
+    KABC::DistributionList *distributionList();
 #endif
-    void setAddressee( const KABC::Addressee &, const QString &email );
+    void setAddressee(const KABC::Addressee &, const QString &email);
 
-    void setRecipientType( const QString &type );
+    void setRecipientType(const QString &type);
     QString recipientType() const;
 
     QString recipient() const;
@@ -74,15 +73,18 @@ class RecipientItem
     QString name() const;
     QString email() const;
 
-    QString key() const { return mKey; }
+    QString key() const
+    {
+        return mKey;
+    }
 
     QString tooltip() const;
 
-  private:
+private:
 #ifdef KDEPIM_NEW_DISTRLISTS
-    QString createTooltip( KPIM::DistributionList & ) const;
+    QString createTooltip(KPIM::DistributionList &) const;
 #else
-    QString createTooltip( KABC::DistributionList * ) const;
+    QString createTooltip(KABC::DistributionList *) const;
 #endif
 
     KABC::Addressee mAddressee;
@@ -97,53 +99,50 @@ class RecipientItem
 #endif
     QString mType;
     QString mTooltip;
-    
+
     QPixmap mIcon;
 
     QString mKey;
 };
 
-class RecipientViewItem : public KListViewItem
-{
-  public:
-    RecipientViewItem( RecipientItem *, KListView * );
+class RecipientViewItem : public KListViewItem {
+public:
+    RecipientViewItem(RecipientItem *, KListView *);
 
     RecipientItem *recipientItem() const;
 
-  private:
+private:
     RecipientItem *mRecipientItem;
 };
 
-class RecipientsListToolTip : public QToolTip
-{
-  public:
-    RecipientsListToolTip( QWidget *parent, KListView * );
+class RecipientsListToolTip : public QToolTip {
+public:
+    RecipientsListToolTip(QWidget *parent, KListView *);
 
-  protected:
-    void maybeTip( const QPoint &pos );
+protected:
+    void maybeTip(const QPoint &pos);
 
-  private:
+private:
     KListView *mListView;
 };
 
-class RecipientsCollection
-{
-  public:
-    RecipientsCollection( const QString & );
+class RecipientsCollection {
+public:
+    RecipientsCollection(const QString &);
     ~RecipientsCollection();
 
-    void setReferenceContainer( bool );
+    void setReferenceContainer(bool);
     bool isReferenceContainer() const;
 
-    void setTitle( const QString & );
+    void setTitle(const QString &);
     QString title() const;
 
-    void addItem( RecipientItem * );
+    void addItem(RecipientItem *);
 
     RecipientItem::List items() const;
 
-    bool hasEquivalentItem( RecipientItem * ) const;
-    RecipientItem * getEquivalentItem( RecipientItem *) const;
+    bool hasEquivalentItem(RecipientItem *) const;
+    RecipientItem *getEquivalentItem(RecipientItem *) const;
 
     void clear();
 
@@ -151,7 +150,7 @@ class RecipientsCollection
 
     QString id() const;
 
-  private:
+private:
     // flag to indicate if this collection contains just references
     // or should manage memory (de)allocation as well.
     bool mIsReferenceContainer;
@@ -160,66 +159,64 @@ class RecipientsCollection
     QMap<QString, RecipientItem *> mKeyMap;
 };
 
-class SearchLine : public KListViewSearchLine
-{
+class SearchLine : public KListViewSearchLine {
     Q_OBJECT
-  public:
-    SearchLine( QWidget *parent, KListView *listView );
+public:
+    SearchLine(QWidget *parent, KListView *listView);
 
-  signals:
+signals:
     void downPressed();
 
-  protected:
-    void keyPressEvent( QKeyEvent * );
+protected:
+    void keyPressEvent(QKeyEvent *);
 };
 
 using namespace KABC;
 
-class RecipientsPicker : public QDialog
-{
+class RecipientsPicker : public QDialog {
     Q_OBJECT
-  public:
-    RecipientsPicker( QWidget *parent );
+public:
+    RecipientsPicker(QWidget *parent);
     ~RecipientsPicker();
 
-    void setRecipients( const Recipient::List & );
-    void updateRecipient( const Recipient & );
+    void setRecipients(const Recipient::List &);
+    void updateRecipient(const Recipient &);
 
-    void setDefaultType( Recipient::Type );
+    void setDefaultType(Recipient::Type);
 
-  signals:
-    void pickedRecipient( const Recipient & );
+signals:
+    void pickedRecipient(const Recipient &);
 
-  protected:
+protected:
     void initCollections();
     void insertDistributionLists();
     void insertRecentAddresses();
-    void insertCollection( RecipientsCollection *coll );
+    void insertCollection(RecipientsCollection *coll);
 
-    void keyPressEvent( QKeyEvent *ev );
+    void keyPressEvent(QKeyEvent *ev);
 
     void readConfig();
     void writeConfig();
 
-    void pick( Recipient::Type );
+    void pick(Recipient::Type);
 
-    void setDefaultButton( QPushButton *button );
+    void setDefaultButton(QPushButton *button);
 
     void rebuildAllRecipientsList();
 
-  protected slots:
+protected slots:
     void updateList();
     void slotToClicked();
     void slotCcClicked();
     void slotBccClicked();
-    void slotPicked( QListViewItem * );
+    void slotPicked(QListViewItem *);
     void slotPicked();
     void setFocusList();
     void resetSearch();
-    void insertAddressBook( AddressBook * );
+    void insertAddressBook(AddressBook *);
     void slotSearchLDAP();
     void ldapSearchResult();
-  private:
+private:
     KABC::StdAddressBook *mAddressBook;
 
     QComboBox *mCollectionCombo;
@@ -233,7 +230,7 @@ class RecipientsPicker : public QDialog
     QPushButton *mSearchLDAPButton;
     KPIM::LDAPSearchDialog *mLdapSearchDialog;
 
-    QMap<int,RecipientsCollection *> mCollectionMap;
+    QMap<int, RecipientsCollection *> mCollectionMap;
     RecipientsCollection *mAllRecipients;
     RecipientsCollection *mDistributionLists;
     RecipientsCollection *mSelectedRecipients;

@@ -33,25 +33,24 @@ namespace KABC {
 
 class ResourceGroupware;
 
-class ResourceGroupwareConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class ResourceGroupwareConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceGroupwareConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceGroupwareConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  protected slots:
+protected slots:
     void updateAddressBookList();
 
-  private:
+private:
     void updateAddressBookView();
     void saveAddressBookSettings();
     void loadAddressBookSettings();
-    void saveServerSettings( ResourceGroupware *resource );
+    void saveServerSettings(ResourceGroupware *resource);
 
     KURLRequester *mURL;
     KLineEdit *mUser;

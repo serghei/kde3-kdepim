@@ -31,7 +31,7 @@
 using namespace KCal;
 
 IMIPScheduler::IMIPScheduler(Calendar *calendar)
-  : Scheduler(calendar)
+    : Scheduler(calendar)
 {
 }
 
@@ -39,21 +39,21 @@ IMIPScheduler::~IMIPScheduler()
 {
 }
 
-bool IMIPScheduler::publish (IncidenceBase * /*incidence*/,const QString &/*recipients*/)
+bool IMIPScheduler::publish(IncidenceBase * /*incidence*/, const QString &/*recipients*/)
 {
-  return false;
+    return false;
 }
 
-bool IMIPScheduler::performTransaction(IncidenceBase *incidence,Method method)
+bool IMIPScheduler::performTransaction(IncidenceBase *incidence, Method method)
 {
-  mFormat->createScheduleMessage(incidence,method);
+    mFormat->createScheduleMessage(incidence, method);
 
-  return false;
+    return false;
 }
 
 QPtrList<ScheduleMessage> IMIPScheduler::retrieveTransactions()
 {
-  QPtrList<ScheduleMessage> messageList;
+    QPtrList<ScheduleMessage> messageList;
 
-  return messageList;
+    return messageList;
 }

@@ -46,34 +46,34 @@ class QWidget;
 class KComboBox;
 class KLineEdit;
 
-typedef struct {
-  QString mIdentifier;
-  QString mTitle;
-  bool mGlobal;
+typedef struct
+{
+    QString mIdentifier;
+    QString mTitle;
+    bool mGlobal;
 
-  QLabel *mLabel;
-  QWidget *mWidget;
-  QHBoxLayout *mLayout;
+    QLabel *mLabel;
+    QWidget *mWidget;
+    QHBoxLayout *mLayout;
 } FieldRecord;
 
 typedef QValueList<FieldRecord> FieldRecordList;
 
-class AddFieldDialog : public KDialogBase
-{
-  Q_OBJECT
+class AddFieldDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    AddFieldDialog( QWidget *parent, const char *name = 0 );
+public:
+    AddFieldDialog(QWidget *parent, const char *name = 0);
 
     QString title() const;
     QString identifier() const;
     QString type() const;
     bool isGlobal() const;
 
-  private slots:
-    void nameChanged( const QString& );
+private slots:
+    void nameChanged(const QString &);
 
-  private:
+private:
     KLineEdit *mTitle;
     KComboBox *mType;
     QCheckBox *mGlobal;
@@ -82,31 +82,33 @@ class AddFieldDialog : public KDialogBase
     QValueVector<QString> mTypeName;
 };
 
-class FieldWidget : public QWidget
-{
-  Q_OBJECT
+class FieldWidget : public QWidget {
+    Q_OBJECT
 
-  public:
-    FieldWidget( QWidget *parent, const char *name = 0 );
+public:
+    FieldWidget(QWidget *parent, const char *name = 0);
 
-    void addField( const QString &identifier, const QString &title,
-                   const QString &type, bool isGlobal );
+    void addField(const QString &identifier, const QString &title,
+                  const QString &type, bool isGlobal);
 
-    void removeField( const QString &identifier );
+    void removeField(const QString &identifier);
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
 
-    FieldRecordList fields() const { return mFieldList; }
+    FieldRecordList fields() const
+    {
+        return mFieldList;
+    }
 
     void removeLocalFields();
     void clearFields();
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     void recalculateLayout();
 
     QVBoxLayout *mGlobalLayout;
@@ -116,25 +118,24 @@ class FieldWidget : public QWidget
     FieldRecordList mFieldList;
 };
 
-class CustomFieldsWidget : public KAB::ContactEditorWidget
-{
-  Q_OBJECT
+class CustomFieldsWidget : public KAB::ContactEditorWidget {
+    Q_OBJECT
 
-  public:
-    CustomFieldsWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    CustomFieldsWidget(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    void loadContact( KABC::Addressee *addr );
-    void storeContact( KABC::Addressee *addr );
-    void setReadOnly( bool readOnly );
+    void loadContact(KABC::Addressee *addr);
+    void storeContact(KABC::Addressee *addr);
+    void setReadOnly(bool readOnly);
 
-  private slots:
+private slots:
     void addField();
     void removeField();
 
-  private:
+private:
     void initGUI();
 
-    QStringList marshallFields( bool ) const;
+    QStringList marshallFields(bool) const;
 
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
@@ -145,18 +146,23 @@ class CustomFieldsWidget : public KAB::ContactEditorWidget
     KABC::Addressee mAddressee;
 };
 
-class CustomFieldsWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+class CustomFieldsWidgetFactory : public KAB::ContactEditorWidgetFactory {
+public:
+    KAB::ContactEditorWidget *createWidget(KABC::AddressBook *ab, QWidget *parent, const char *name)
     {
-      return new CustomFieldsWidget( ab, parent, name );
+        return new CustomFieldsWidget(ab, parent, name);
     }
 
-    QString pageTitle() const { return i18n( "Custom Fields" ); }
-    QString pageIdentifier() const { return "custom_fields"; }
+    QString pageTitle() const
+    {
+        return i18n("Custom Fields");
+    }
+    QString pageIdentifier() const
+    {
+        return "custom_fields";
+    }
 };
 
-void splitField( const QString&, QString&, QString&, QString& );
+void splitField(const QString &, QString &, QString &, QString &);
 
 #endif

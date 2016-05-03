@@ -35,21 +35,19 @@
  * Provides the KonsoleKalendarAdd class definition.
  */
 
-namespace KCal
-{
-  /**
-   * Class to manage the Event insertion capability.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarAdd
-  {
-  public:
+namespace KCal {
+/**
+ * Class to manage the Event insertion capability.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarAdd {
+public:
     /**
      * Constructs a KonsoleKalendarAdd object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    KonsoleKalendarAdd( KonsoleKalendarVariables *vars );
+    KonsoleKalendarAdd(KonsoleKalendarVariables *vars);
     /**
      * Destructor
      */
@@ -65,7 +63,7 @@ namespace KCal
      */
     bool addImportedCalendar();
 
-  private:
+private:
 
     /**
      * Print event specs for dryrun and verbose options
@@ -77,7 +75,7 @@ namespace KCal
      */
     KonsoleKalendarVariables *m_variables;
 
-  };
+};
 
 }
 #endif

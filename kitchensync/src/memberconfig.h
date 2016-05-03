@@ -27,18 +27,17 @@
 class QTextEdit;
 class ConfigGui;
 
-class MemberConfig : public QWidget
-{
-  Q_OBJECT
+class MemberConfig : public QWidget {
+    Q_OBJECT
 
-  public:
-    MemberConfig( QWidget *parent, const QSync::Member & );
+public:
+    MemberConfig(QWidget *parent, const QSync::Member &);
     ~MemberConfig();
 
     void loadData();
     void saveData();
 
-  private:
+private:
     QSync::Member mMember;
 
     ConfigGui *mGui;

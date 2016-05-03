@@ -37,26 +37,26 @@
 
 namespace KMail {
 
-  namespace Interface {
-    class Observer;
-  }
+namespace Interface {
+class Observer;
+}
 
-  class ISubject : public Interface::Observable {
-  public :
-      virtual ~ISubject();
+class ISubject : public Interface::Observable {
+public :
+    virtual ~ISubject();
 
-      /** \reimp Attach the observer if it is not in the list yet */ 
-      void attach( Interface::Observer * );
+    /** \reimp Attach the observer if it is not in the list yet */
+    void attach(Interface::Observer *);
 
-      /** \reimp Detach the observer */ 
-      void detach( Interface::Observer * );
+    /** \reimp Detach the observer */
+    void detach(Interface::Observer *);
 
-      /** \reimp Notify all observers ( call observer->update() ) */ 
-      void notify();
+    /** \reimp Notify all observers ( call observer->update() ) */
+    void notify();
 
-  private:
-      QValueVector<Interface::Observer*> mObserverList;
-  };
+private:
+    QValueVector<Interface::Observer *> mObserverList;
+};
 
 } // namespace KMail
 

@@ -26,15 +26,14 @@
 
 class OverViewPage;
 
-class GroupwareWizard : public QWidget
-{
-  Q_OBJECT
+class GroupwareWizard : public QWidget {
+    Q_OBJECT
 
-  public:
-    GroupwareWizard( QWidget *parent, const char *name = 0 );
+public:
+    GroupwareWizard(QWidget *parent, const char *name = 0);
     ~GroupwareWizard();
 
-  private:
+private:
     OverViewPage *mOverViewPage;
 };
 

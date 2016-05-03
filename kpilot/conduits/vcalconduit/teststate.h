@@ -37,19 +37,18 @@ class VCalConduitBase;
 /**
  * State to test the vcal-conduit. @see vcal-conduitstate.h
  */
-class TestState : public ConduitState
-{
+class TestState : public ConduitState {
 private:
-	KCal::CalendarLocal fCalendar;
-	int fPilotindex;
+    KCal::CalendarLocal fCalendar;
+    int fPilotindex;
 
 public:
-	TestState();
-	virtual ~TestState();
+    TestState();
+    virtual ~TestState();
 
-	virtual void startSync( ConduitAction* );
-	virtual void handleRecord( ConduitAction* );
-	virtual void finishSync( ConduitAction* );
+    virtual void startSync(ConduitAction *);
+    virtual void handleRecord(ConduitAction *);
+    virtual void finishSync(ConduitAction *);
 };
 
 #endif

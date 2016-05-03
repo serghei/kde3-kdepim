@@ -28,25 +28,24 @@ class QProcess;
 class QString;
 class QStringList;
 
-class Script : public QObject
-{
-  Q_OBJECT
+class Script : public QObject {
+    Q_OBJECT
 public:
-  Script( const QDir& workingDirectory );
-  virtual ~Script();
-  void addArgument( const QString &arg );
-  void setTimeout( int seconds );
-  int run();
+    Script(const QDir &workingDirectory);
+    virtual ~Script();
+    void addArgument(const QString &arg);
+    void setTimeout(int seconds);
+    int run();
 private slots:
-  void exit();
-  void stderr();
-  void stdout();
-  void terminate();
+    void exit();
+    void stderr();
+    void stdout();
+    void terminate();
 private:
-  QProcess *m_proc;
-  int m_status;
-  bool m_stderr;
-  int m_timeoutInSeconds;
+    QProcess *m_proc;
+    int m_status;
+    bool m_stderr;
+    int m_timeoutInSeconds;
 };
 
 #endif // _script_h_

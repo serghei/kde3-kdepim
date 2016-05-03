@@ -34,35 +34,35 @@
 static const char TMPL_PICK_DIALOG_NAME[] = "TemplatePickDialog";
 
 
-TemplatePickDlg::TemplatePickDlg(QWidget* parent, const char* name)
-	: KDialogBase(KDialogBase::Plain, i18n("Choose Alarm Template"), Ok|Cancel, Ok, parent, name)
+TemplatePickDlg::TemplatePickDlg(QWidget *parent, const char *name)
+    : KDialogBase(KDialogBase::Plain, i18n("Choose Alarm Template"), Ok | Cancel, Ok, parent, name)
 {
-	QWidget* topWidget = plainPage();
-	QBoxLayout* topLayout = new QVBoxLayout(topWidget);
-	topLayout->setSpacing(spacingHint());
+    QWidget *topWidget = plainPage();
+    QBoxLayout *topLayout = new QVBoxLayout(topWidget);
+    topLayout->setSpacing(spacingHint());
 
-	// Display the list of templates, but exclude command alarms if in kiosk mode.
-	bool includeCmdAlarms = ShellProcess::authorised();
-	mTemplateList = new TemplateListView(includeCmdAlarms, i18n("Select a template to base the new alarm on."), topWidget, "list");
-	mTemplateList->setSelectionMode(QListView::Single);
-	mTemplateList->refresh();      // populate the template list
-	connect(mTemplateList, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
-	connect(mTemplateList, SIGNAL(executed(QListViewItem*)), SLOT(slotOk()));
-	topLayout->addWidget(mTemplateList);
+    // Display the list of templates, but exclude command alarms if in kiosk mode.
+    bool includeCmdAlarms = ShellProcess::authorised();
+    mTemplateList = new TemplateListView(includeCmdAlarms, i18n("Select a template to base the new alarm on."), topWidget, "list");
+    mTemplateList->setSelectionMode(QListView::Single);
+    mTemplateList->refresh();      // populate the template list
+    connect(mTemplateList, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
+    connect(mTemplateList, SIGNAL(executed(QListViewItem *)), SLOT(slotOk()));
+    topLayout->addWidget(mTemplateList);
 
-	slotSelectionChanged();        // enable or disable the OK button
+    slotSelectionChanged();        // enable or disable the OK button
 
-	QSize s;
-	if (KAlarm::readConfigWindowSize(TMPL_PICK_DIALOG_NAME, s))
-		resize(s);
+    QSize s;
+    if(KAlarm::readConfigWindowSize(TMPL_PICK_DIALOG_NAME, s))
+        resize(s);
 }
 
 /******************************************************************************
 * Return the currently selected alarm template, or 0 if none.
 */
-const KAEvent* TemplatePickDlg::selectedTemplate() const
+const KAEvent *TemplatePickDlg::selectedTemplate() const
 {
-	return mTemplateList->selectedEvent();
+    return mTemplateList->selectedEvent();
 }
 
 /******************************************************************************
@@ -71,16 +71,16 @@ const KAEvent* TemplatePickDlg::selectedTemplate() const
 */
 void TemplatePickDlg::slotSelectionChanged()
 {
-	enableButtonOK(mTemplateList->selectedItem());
+    enableButtonOK(mTemplateList->selectedItem());
 }
 
 /******************************************************************************
 *  Called when the dialog's size has changed.
 *  Records the new size in the config file.
 */
-void TemplatePickDlg::resizeEvent(QResizeEvent* re)
+void TemplatePickDlg::resizeEvent(QResizeEvent *re)
 {
-	if (isVisible())
-		KAlarm::writeConfigWindowSize(TMPL_PICK_DIALOG_NAME, re->size());
-	KDialog::resizeEvent(re);
+    if(isVisible())
+        KAlarm::writeConfigWindowSize(TMPL_PICK_DIALOG_NAME, re->size());
+    KDialog::resizeEvent(re);
 }

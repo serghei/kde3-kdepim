@@ -29,26 +29,30 @@ class KNGroup;
 
 
 class KNStringFilter {
-  
-  friend class KNStringFilterWidget;  
 
-  public:
-    KNStringFilter()  { con=true; regExp=false;}
+    friend class KNStringFilterWidget;
+
+public:
+    KNStringFilter()
+    {
+        con = true;
+        regExp = false;
+    }
     ~KNStringFilter() {}
 
-    KNStringFilter& operator=(const KNStringFilter &sf);
+    KNStringFilter &operator=(const KNStringFilter &sf);
     /** replace placeholders */
     void expand(KNGroup *g);
-          
+
     void load(KSimpleConfig *conf);
-    void save(KSimpleConfig *conf);     
-          
+    void save(KSimpleConfig *conf);
+
     bool doFilter(const QString &s);
-                
-  protected:
+
+protected:
     QString data, expanded;
     bool con, regExp;
-    
+
 };
 
 
@@ -56,21 +60,21 @@ class KNStringFilter {
 
 
 class KNStringFilterWidget : public QGroupBox  {
-  
-  Q_OBJECT
 
-  public:
-    KNStringFilterWidget(const QString& title, QWidget *parent);
+    Q_OBJECT
+
+public:
+    KNStringFilterWidget(const QString &title, QWidget *parent);
     ~KNStringFilterWidget();
-    
+
     KNStringFilter filter();
     void setFilter(KNStringFilter &f);
     void clear();
 
     /** usablity hack for the search dialog */
     void setStartFocus();
-    
-  protected:
+
+protected:
     QCheckBox *regExp;
     QComboBox *fType;
     KLineEdit *fString;

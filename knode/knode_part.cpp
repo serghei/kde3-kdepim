@@ -45,78 +45,78 @@
 
 
 typedef KParts::GenericFactory< KNodePart > KNodeFactory;
-K_EXPORT_COMPONENT_FACTORY( libknodepart, KNodeFactory )
+K_EXPORT_COMPONENT_FACTORY(libknodepart, KNodeFactory)
 
 KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
-		     QObject *parent, const char *name, const QStringList &)
-  : KParts::ReadOnlyPart(parent, name),
-  mParentWidget( parentWidget )
+                     QObject *parent, const char *name, const QStringList &)
+    : KParts::ReadOnlyPart(parent, name),
+      mParentWidget(parentWidget)
 {
-  kdDebug(5003) << "KNodePart()" << endl;
-  kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
+    kdDebug(5003) << "KNodePart()" << endl;
+    kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  setInstance( KNodeFactory::instance() );
+    setInstance(KNodeFactory::instance());
 
-  kdDebug(5003) << "KNodePart()..." << endl;
-  kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
+    kdDebug(5003) << "KNodePart()..." << endl;
+    kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  KGlobal::locale()->insertCatalogue("libkdepim");
-  KGlobal::locale()->insertCatalogue("libkpgp");
-  kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
-  KGlobal::iconLoader()->addAppDir("knode");
-  knGlobals.instance = KNodeFactory::instance();
+    KGlobal::locale()->insertCatalogue("libkdepim");
+    KGlobal::locale()->insertCatalogue("libkpgp");
+    kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
+    KGlobal::iconLoader()->addAppDir("knode");
+    knGlobals.instance = KNodeFactory::instance();
 
-  // create a canvas to insert our widget
-  QWidget *canvas = new QWidget(parentWidget, widgetName);
-  canvas->setFocusPolicy(QWidget::ClickFocus);
-  setWidget(canvas);
+    // create a canvas to insert our widget
+    QWidget *canvas = new QWidget(parentWidget, widgetName);
+    canvas->setFocusPolicy(QWidget::ClickFocus);
+    setWidget(canvas);
 
-  mainWidget = new KNMainWidget( this, false, canvas, "knode_widget" );
-  QVBoxLayout *topLayout = new QVBoxLayout(canvas);
-  topLayout->addWidget(mainWidget);
-  mainWidget->setFocusPolicy(QWidget::ClickFocus);
+    mainWidget = new KNMainWidget(this, false, canvas, "knode_widget");
+    QVBoxLayout *topLayout = new QVBoxLayout(canvas);
+    topLayout->addWidget(mainWidget);
+    mainWidget->setFocusPolicy(QWidget::ClickFocus);
 
-  kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
+    kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
 
-  new KParts::SideBarExtension( mainWidget->collectionView(),
-                                this,
-                                "KNodeSidebar" );
+    new KParts::SideBarExtension(mainWidget->collectionView(),
+                                 this,
+                                 "KNodeSidebar");
 
-  KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
-  statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 10, false);
-  statusBar->addStatusBarItem(mainWidget->statusBarLabelGroup(), 15, false);
+    KParts::StatusBarExtension *statusBar = new KParts::StatusBarExtension(this);
+    statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 10, false);
+    statusBar->addStatusBarItem(mainWidget->statusBarLabelGroup(), 15, false);
 
-  setXMLFile( "knodeui.rc" );
+    setXMLFile("knodeui.rc");
 }
 
 KNodePart::~KNodePart()
 {
-  mainWidget->prepareShutdown();
+    mainWidget->prepareShutdown();
 }
 
 KAboutData *KNodePart::createAboutData()
 {
-  return new KNode::AboutData();
+    return new KNode::AboutData();
 }
 
 bool KNodePart::openFile()
 {
-  kdDebug(5003) << "KNodePart:openFile()" << endl;
+    kdDebug(5003) << "KNodePart:openFile()" << endl;
 
-  mainWidget->show();
-  return true;
+    mainWidget->show();
+    return true;
 }
 
 void KNodePart::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
-  kdDebug(5003) << "KNodePart::guiActivateEvent" << endl;
-  KParts::ReadOnlyPart::guiActivateEvent(e);
+    kdDebug(5003) << "KNodePart::guiActivateEvent" << endl;
+    KParts::ReadOnlyPart::guiActivateEvent(e);
 }
 
 
-QWidget* KNodePart::parentWidget() const
+QWidget *KNodePart::parentWidget() const
 {
-  return mParentWidget;
+    return mParentWidget;
 }
 
 

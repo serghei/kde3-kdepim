@@ -40,45 +40,45 @@
 class QLineEdit;
 
 class LabelAction : public KAction {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  LabelAction( const QString & text, KActionCollection * parent,
-	       const char* name );
+    LabelAction(const QString &text, KActionCollection *parent,
+                const char *name);
 
-  int plug( QWidget * widget, int index=-1 );
+    int plug(QWidget *widget, int index = -1);
 };
 
 class LineEditAction : public KAction {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  LineEditAction( const QString & text, KActionCollection * parent,
-		  QObject * receiver, const char * member, const char * name );
+    LineEditAction(const QString &text, KActionCollection *parent,
+                   QObject *receiver, const char *member, const char *name);
 
-  int plug( QWidget * widget, int index=-1 );
-  void clear();
-  void focusAll();
-  QString text() const;
-  void setText( const QString & txt );
+    int plug(QWidget *widget, int index = -1);
+    void clear();
+    void focusAll();
+    QString text() const;
+    void setText(const QString &txt);
 private:
-  QLineEdit* _le;
-  QObject * _receiver;
-  const char * _member;
+    QLineEdit *_le;
+    QObject *_receiver;
+    const char *_member;
 };
 
 class ComboAction : public KAction {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ComboAction( const QStringList & lst,  KActionCollection * parent,
-	       QObject * receiver, const char * member, const char * name,
-               int selectedID );
+    ComboAction(const QStringList &lst,  KActionCollection *parent,
+                QObject *receiver, const char *member, const char *name,
+                int selectedID);
 
-  int plug( QWidget * widget, int index=-1 );
+    int plug(QWidget *widget, int index = -1);
 
 private:
-  QStringList _lst;
-  QObject * _receiver;
-  const char * _member;
-  int _selectedId;
+    QStringList _lst;
+    QObject *_receiver;
+    const char *_member;
+    int _selectedId;
 };
 
 

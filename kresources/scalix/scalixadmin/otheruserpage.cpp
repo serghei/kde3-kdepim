@@ -37,26 +37,26 @@
 
 #include "otheruserpage.h"
 
-OtherUserPage::OtherUserPage( QWidget *parent )
-  : QWidget( parent )
+OtherUserPage::OtherUserPage(QWidget *parent)
+    : QWidget(parent)
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 2, 11, 6 );
+    QGridLayout *layout = new QGridLayout(this, 2, 2, 11, 6);
 
-  mView = new OtherUserView( &mManager, this );
-  layout->addMultiCellWidget( mView, 0, 0, 0, 1 );
+    mView = new OtherUserView(&mManager, this);
+    layout->addMultiCellWidget(mView, 0, 0, 0, 1);
 
-  mAddButton = new QPushButton( i18n( "Add Account..." ), this );
-  layout->addWidget( mAddButton, 1, 0 );
+    mAddButton = new QPushButton(i18n("Add Account..."), this);
+    layout->addWidget(mAddButton, 1, 0);
 
-  mDeleteButton = new QPushButton( i18n( "Remove Account" ), this );
-  mDeleteButton->setEnabled( false );
-  layout->addWidget( mDeleteButton, 1, 1 );
+    mDeleteButton = new QPushButton(i18n("Remove Account"), this);
+    mDeleteButton->setEnabled(false);
+    layout->addWidget(mDeleteButton, 1, 1);
 
-  connect( mView, SIGNAL( selectionChanged() ), SLOT( selectionChanged() ) );
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( addUser() ) );
-  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( removeUser() ) );
+    connect(mView, SIGNAL(selectionChanged()), SLOT(selectionChanged()));
+    connect(mAddButton, SIGNAL(clicked()), SLOT(addUser()));
+    connect(mDeleteButton, SIGNAL(clicked()), SLOT(removeUser()));
 
-  loadAllUsers();
+    loadAllUsers();
 }
 
 OtherUserPage::~OtherUserPage()
@@ -65,109 +65,111 @@ OtherUserPage::~OtherUserPage()
 
 void OtherUserPage::loadAllUsers()
 {
-  Scalix::GetOtherUsersJob *job = Scalix::getOtherUsers( Settings::self()->globalSlave(),
-                                                         Settings::self()->accountUrl() );
-  connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( allUsers( KIO::Job* ) ) );
+    Scalix::GetOtherUsersJob *job = Scalix::getOtherUsers(Settings::self()->globalSlave(),
+                                    Settings::self()->accountUrl());
+    connect(job, SIGNAL(result(KIO::Job *)), SLOT(allUsers(KIO::Job *)));
 }
 
 void OtherUserPage::addUser()
 {
-  LdapDialog dlg( this );
-  if ( !dlg.exec() )
-    return;
+    LdapDialog dlg(this);
+    if(!dlg.exec())
+        return;
 
-  const QString email = dlg.selectedUser();
-  if ( email.isEmpty() )
-    return;
+    const QString email = dlg.selectedUser();
+    if(email.isEmpty())
+        return;
 
-  Scalix::AddOtherUserJob *job = Scalix::addOtherUser( Settings::self()->globalSlave(),
-                                                       Settings::self()->accountUrl(), email );
-  connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( userAdded( KIO::Job* ) ) );
+    Scalix::AddOtherUserJob *job = Scalix::addOtherUser(Settings::self()->globalSlave(),
+                                   Settings::self()->accountUrl(), email);
+    connect(job, SIGNAL(result(KIO::Job *)), SLOT(userAdded(KIO::Job *)));
 }
 
 void OtherUserPage::removeUser()
 {
-  const QString email = mView->selectedUser();
-  if ( email.isEmpty() )
-    return;
+    const QString email = mView->selectedUser();
+    if(email.isEmpty())
+        return;
 
-  Scalix::DeleteOtherUserJob *job = Scalix::deleteOtherUser( Settings::self()->globalSlave(),
-                                                             Settings::self()->accountUrl(), email );
-  connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( userRemoved( KIO::Job* ) ) );
+    Scalix::DeleteOtherUserJob *job = Scalix::deleteOtherUser(Settings::self()->globalSlave(),
+                                      Settings::self()->accountUrl(), email);
+    connect(job, SIGNAL(result(KIO::Job *)), SLOT(userRemoved(KIO::Job *)));
 }
 
-void OtherUserPage::allUsers( KIO::Job *job )
+void OtherUserPage::allUsers(KIO::Job *job)
 {
-  if ( job->error() )
-    KMessageBox::error( this, job->errorString() );
+    if(job->error())
+        KMessageBox::error(this, job->errorString());
 
-  Scalix::GetOtherUsersJob *userJob = static_cast<Scalix::GetOtherUsersJob*>( job );
+    Scalix::GetOtherUsersJob *userJob = static_cast<Scalix::GetOtherUsersJob *>(job);
 
-  mManager.clear();
+    mManager.clear();
 
-  const QStringList users = userJob->otherUsers();
-  for ( uint i = 0; i < users.count(); ++i )
-    mManager.addOtherUser( users[ i ] );
+    const QStringList users = userJob->otherUsers();
+    for(uint i = 0; i < users.count(); ++i)
+        mManager.addOtherUser(users[ i ]);
 
-  selectionChanged();
+    selectionChanged();
 }
 
-void OtherUserPage::userAdded( KIO::Job *job )
+void OtherUserPage::userAdded(KIO::Job *job)
 {
-  if ( job->error() )
-    KMessageBox::error( this, job->errorString() );
-  else
-    loadAllUsers(); // update the GUI
+    if(job->error())
+        KMessageBox::error(this, job->errorString());
+    else
+        loadAllUsers(); // update the GUI
 
-  updateKmail();
+    updateKmail();
 }
 
-void OtherUserPage::userRemoved( KIO::Job *job )
+void OtherUserPage::userRemoved(KIO::Job *job)
 {
-  if ( job->error() )
-    KMessageBox::error( this, job->errorString() );
-  else
-    loadAllUsers(); // update the GUI
+    if(job->error())
+        KMessageBox::error(this, job->errorString());
+    else
+        loadAllUsers(); // update the GUI
 
-  updateKmail();
+    updateKmail();
 }
 
 void OtherUserPage::selectionChanged()
 {
-  mDeleteButton->setEnabled( mView->selectedItem() != 0 );
+    mDeleteButton->setEnabled(mView->selectedItem() != 0);
 }
 
 void OtherUserPage::updateKmail()
 {
-  QMessageBox *msg = new QMessageBox( qApp->mainWidget() );
-  msg->setText( i18n( "Updating account..." ) );
-  msg->show();
-  qApp->processEvents();
-  sleep( 1 );
-  qApp->processEvents();
+    QMessageBox *msg = new QMessageBox(qApp->mainWidget());
+    msg->setText(i18n("Updating account..."));
+    msg->show();
+    qApp->processEvents();
+    sleep(1);
+    qApp->processEvents();
 
-  QString error;
-  QCString dcopService;
-  int result = KDCOPServiceStarter::self()->
-    findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
-                    QString::null, &error, &dcopService );
-  if ( result != 0 ) {
-    KMessageBox::error( 0, i18n( "Unable to start KMail to trigger account update with Scalix server" ) );
+    QString error;
+    QCString dcopService;
+    int result = KDCOPServiceStarter::self()->
+                 findServiceFor("DCOP/ResourceBackend/IMAP", QString::null,
+                                QString::null, &error, &dcopService);
+    if(result != 0)
+    {
+        KMessageBox::error(0, i18n("Unable to start KMail to trigger account update with Scalix server"));
+        delete msg;
+        return;
+    }
+
+    DCOPRef ref(dcopService, "KMailIface");
+
+    // loop until dcop iface is set up correctly
+    QStringList list;
+    while(list.isEmpty())
+    {
+        ref.call("accounts()").get(list);
+    }
+
+    ref.call("checkAccount(QString)", i18n("Scalix Server"));
+
     delete msg;
-    return;
-  }
-
-  DCOPRef ref( dcopService, "KMailIface" );
-
-  // loop until dcop iface is set up correctly
-  QStringList list;
-  while ( list.isEmpty() ) {
-    ref.call( "accounts()" ).get( list );
-  }
-
-  ref.call( "checkAccount(QString)", i18n( "Scalix Server" ) );
-
-  delete msg;
 }
 
 #include "otheruserpage.moc"

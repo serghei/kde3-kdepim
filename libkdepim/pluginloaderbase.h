@@ -32,54 +32,54 @@ class QStringList;
 
 namespace KPIM {
 
-  class KDE_EXPORT PluginMetaData {
-  public:
+class KDE_EXPORT PluginMetaData {
+public:
     PluginMetaData() {}
-    PluginMetaData( const QString & lib, const QString & name,
-		    const QString & comment )
-      : library( lib ), nameLabel( name ),
-	descriptionLabel( comment ), loaded( false ) {}
+    PluginMetaData(const QString &lib, const QString &name,
+                   const QString &comment)
+        : library(lib), nameLabel(name),
+          descriptionLabel(comment), loaded(false) {}
     QString library;
     QString nameLabel;
     QString descriptionLabel;
     mutable bool loaded;
-  };
+};
 
-  class KDE_EXPORT PluginLoaderBase {
-  protected:
+class KDE_EXPORT PluginLoaderBase {
+protected:
     PluginLoaderBase();
     virtual ~PluginLoaderBase();
 
-  public:
+public:
     /** Returns a list of all available plugin objects (of kind @p T) */
     QStringList types() const;
 
     /** Returns the @ref PluginMetaData structure for a given type */
-    const PluginMetaData * infoForName( const QString & type ) const;
+    const PluginMetaData *infoForName(const QString &type) const;
 
     /** Overload this method in subclasses to call @ref doScan with
         the right @p path argument */
     virtual void scan() = 0;
 
-  protected:
+protected:
     /** Rescans the plugin directory to find any newly installed
-	plugins. Extend this method in subclasses to add any
-	builtins. Subclasses must call this explicitely. It's not
-	called for them in the constructor.
+    plugins. Extend this method in subclasses to add any
+    builtins. Subclasses must call this explicitely. It's not
+    called for them in the constructor.
     **/
-    void doScan( const char * path );
+    void doScan(const char *path);
 
     /** Returns a pointer to symbol @p main_func in the library that
         implements the plugin of type @p type */
-    void * mainFunc( const QString & type, const char * main_func ) const;
+    void *mainFunc(const QString &type, const char *main_func) const;
 
-  private:
-    const KLibrary * openLibrary( const QString & libName ) const;
+private:
+    const KLibrary *openLibrary(const QString &libName) const;
     QMap< QString, PluginMetaData > mPluginMap;
 
     class Private;
-    Private * d;
-  };
+    Private *d;
+};
 
 } // namespace KMime
 

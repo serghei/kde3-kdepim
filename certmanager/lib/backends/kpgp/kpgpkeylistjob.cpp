@@ -50,254 +50,261 @@
 #include <string.h>
 #include <assert.h>
 
-Kleo::KpgpKeyListJob::KpgpKeyListJob( Kpgp::Base * pgpBase )
-  : KeyListJob( 0, "Kleo::KpgpKeyListJob" ),
-    mPgpBase( pgpBase )
+Kleo::KpgpKeyListJob::KpgpKeyListJob(Kpgp::Base *pgpBase)
+    : KeyListJob(0, "Kleo::KpgpKeyListJob"),
+      mPgpBase(pgpBase)
 {
 }
 
-Kleo::KpgpKeyListJob::~KpgpKeyListJob() {
+Kleo::KpgpKeyListJob::~KpgpKeyListJob()
+{
 }
 
 // the following function is a verbatim copy from gpgme/key.c
 static char *
-set_user_id_part (char *tail, const char *buf, size_t len)
+set_user_id_part(char *tail, const char *buf, size_t len)
 {
-  while (len && (buf[len - 1] == ' ' || buf[len - 1] == '\t'))
-    len--;
-  for (; len; len--)
-    *tail++ = *buf++;
-  *tail++ = 0;
-  return tail;
+    while(len && (buf[len - 1] == ' ' || buf[len - 1] == '\t'))
+        len--;
+    for(; len; len--)
+        *tail++ = *buf++;
+    *tail++ = 0;
+    return tail;
 }
 
 // the following function is a verbatim copy from gpgme/key.c
 static void
-parse_user_id (char *src, char **name, char **email,
-	       char **comment, char *tail)
+parse_user_id(char *src, char **name, char **email,
+              char **comment, char *tail)
 {
-  const char *start = NULL;
-  int in_name = 0;
-  int in_email = 0;
-  int in_comment = 0;
+    const char *start = NULL;
+    int in_name = 0;
+    int in_email = 0;
+    int in_comment = 0;
 
-  while (*src)
+    while(*src)
     {
-      if (in_email)
-	{
-	  if (*src == '<')
-	    /* Not legal but anyway.  */
-	    in_email++;
-	  else if (*src == '>')
-	    {
-	      if (!--in_email && !*email)
-		{
-		  *email = tail;
-		  tail = set_user_id_part (tail, start, src - start);
-		}
-	    }
-	}
-      else if (in_comment)
-	{
-	  if (*src == '(')
-	    in_comment++;
-	  else if (*src == ')')
-	    {
-	      if (!--in_comment && !*comment)
-		{
-		  *comment = tail;
-		  tail = set_user_id_part (tail, start, src - start);
-		}
-	    }
-	}
-      else if (*src == '<')
-	{
-	  if (in_name)
-	    {
-	      if (!*name)
-		{
-		  *name = tail;
-		  tail = set_user_id_part (tail, start, src - start);
-		}
-	      in_name = 0;
-	    }
-	  in_email = 1;
-	  start = src + 1;
-	}
-      else if (*src == '(')
-	{
-	  if (in_name)
-	    {
-	      if (!*name)
-		{
-		  *name = tail;
-		  tail = set_user_id_part (tail, start, src - start);
-		}
-	      in_name = 0;
-	    }
-	  in_comment = 1;
-	  start = src + 1;
-	}
-      else if (!in_name && *src != ' ' && *src != '\t')
-	{
-	  in_name = 1;
-	  start = src;
-	}
-      src++;
+        if(in_email)
+        {
+            if(*src == '<')
+                /* Not legal but anyway.  */
+                in_email++;
+            else if(*src == '>')
+            {
+                if(!--in_email && !*email)
+                {
+                    *email = tail;
+                    tail = set_user_id_part(tail, start, src - start);
+                }
+            }
+        }
+        else if(in_comment)
+        {
+            if(*src == '(')
+                in_comment++;
+            else if(*src == ')')
+            {
+                if(!--in_comment && !*comment)
+                {
+                    *comment = tail;
+                    tail = set_user_id_part(tail, start, src - start);
+                }
+            }
+        }
+        else if(*src == '<')
+        {
+            if(in_name)
+            {
+                if(!*name)
+                {
+                    *name = tail;
+                    tail = set_user_id_part(tail, start, src - start);
+                }
+                in_name = 0;
+            }
+            in_email = 1;
+            start = src + 1;
+        }
+        else if(*src == '(')
+        {
+            if(in_name)
+            {
+                if(!*name)
+                {
+                    *name = tail;
+                    tail = set_user_id_part(tail, start, src - start);
+                }
+                in_name = 0;
+            }
+            in_comment = 1;
+            start = src + 1;
+        }
+        else if(!in_name && *src != ' ' && *src != '\t')
+        {
+            in_name = 1;
+            start = src;
+        }
+        src++;
     }
 
-  if (in_name)
+    if(in_name)
     {
-      if (!*name)
-	{
-	  *name = tail;
-	  tail = set_user_id_part (tail, start, src - start);
-	}
+        if(!*name)
+        {
+            *name = tail;
+            tail = set_user_id_part(tail, start, src - start);
+        }
     }
 
-  /* Let unused parts point to an EOS.  */
-  tail--;
-  if (!*name)
-    *name = tail;
-  if (!*email)
-    *email = tail;
-  if (!*comment)
-    *comment = tail;
+    /* Let unused parts point to an EOS.  */
+    tail--;
+    if(!*name)
+        *name = tail;
+    if(!*email)
+        *email = tail;
+    if(!*comment)
+        *comment = tail;
 }
 
-gpgme_user_id_t KpgpUserID2GPGMEUserID( const Kpgp::UserID * kUserId )
+gpgme_user_id_t KpgpUserID2GPGMEUserID(const Kpgp::UserID *kUserId)
 {
-  // inspired by _gpgme_key_append_name
+    // inspired by _gpgme_key_append_name
 
-  const QCString text = kUserId->text().utf8();
-  const int src_len = text.length();
+    const QCString text = kUserId->text().utf8();
+    const int src_len = text.length();
 
-  gpgme_user_id_t uid;
-  /* Allocate enough memory for the _gpgme_user_id struct, for the actual user
-     id (the text) and for the parsed version. */
-  uid = (gpgme_user_id_t) malloc( sizeof( *uid ) + 2 * src_len + 3 );
-  memset( uid, 0, sizeof *uid );
-  uid->revoked = kUserId->revoked();
-  uid->invalid = kUserId->invalid();
-  uid->validity = (gpgme_validity_t) kUserId->validity();
+    gpgme_user_id_t uid;
+    /* Allocate enough memory for the _gpgme_user_id struct, for the actual user
+       id (the text) and for the parsed version. */
+    uid = (gpgme_user_id_t) malloc(sizeof(*uid) + 2 * src_len + 3);
+    memset(uid, 0, sizeof * uid);
+    uid->revoked = kUserId->revoked();
+    uid->invalid = kUserId->invalid();
+    uid->validity = (gpgme_validity_t) kUserId->validity();
 
-  uid->uid = ((char *) uid) + sizeof (*uid);
-  char *dst = uid->uid;
-  memcpy( dst, text.data(), src_len + 1 );
+    uid->uid = ((char *) uid) + sizeof(*uid);
+    char *dst = uid->uid;
+    memcpy(dst, text.data(), src_len + 1);
 
-  dst += src_len + 1;
-  parse_user_id( uid->uid, &uid->name, &uid->email,
-                 &uid->comment, dst );
+    dst += src_len + 1;
+    parse_user_id(uid->uid, &uid->name, &uid->email,
+                  &uid->comment, dst);
 
-  return uid;
+    return uid;
 }
 
-gpgme_subkey_t KpgpSubkey2GPGMESubKey( const Kpgp::Subkey * kSubkey )
+gpgme_subkey_t KpgpSubkey2GPGMESubKey(const Kpgp::Subkey *kSubkey)
 {
-  gpgme_subkey_t subkey;
+    gpgme_subkey_t subkey;
 
-  const QCString fpr = kSubkey->fingerprint();
-  const unsigned int fpr_len = fpr.length();
-  const QCString keyId = kSubkey->longKeyID();
+    const QCString fpr = kSubkey->fingerprint();
+    const unsigned int fpr_len = fpr.length();
+    const QCString keyId = kSubkey->longKeyID();
 
-  subkey = (gpgme_subkey_t) calloc( 1, sizeof( *subkey ) + fpr_len + 1 );
-  subkey->revoked = kSubkey->revoked();
-  subkey->expired = kSubkey->expired();
-  subkey->disabled = kSubkey->disabled();
-  subkey->invalid = kSubkey->invalid();
-  subkey->can_encrypt = kSubkey->canEncrypt();
-  subkey->can_sign = kSubkey->canSign();
-  subkey->can_certify = kSubkey->canCertify();
-  subkey->secret = kSubkey->secret();
-  subkey->pubkey_algo = (gpgme_pubkey_algo_t) kSubkey->keyAlgorithm();
-  subkey->length = kSubkey->keyLength();
-  subkey->keyid = subkey->_keyid;
-  memcpy( subkey->_keyid, keyId.data(), keyId.length() + 1 );
-  subkey->fpr = ((char *) subkey) + sizeof( *subkey );
-  memcpy( subkey->fpr, fpr.data(), fpr_len + 1 );
-  subkey->timestamp = kSubkey->creationDate();
-  subkey->expires = kSubkey->expirationDate();
+    subkey = (gpgme_subkey_t) calloc(1, sizeof(*subkey) + fpr_len + 1);
+    subkey->revoked = kSubkey->revoked();
+    subkey->expired = kSubkey->expired();
+    subkey->disabled = kSubkey->disabled();
+    subkey->invalid = kSubkey->invalid();
+    subkey->can_encrypt = kSubkey->canEncrypt();
+    subkey->can_sign = kSubkey->canSign();
+    subkey->can_certify = kSubkey->canCertify();
+    subkey->secret = kSubkey->secret();
+    subkey->pubkey_algo = (gpgme_pubkey_algo_t) kSubkey->keyAlgorithm();
+    subkey->length = kSubkey->keyLength();
+    subkey->keyid = subkey->_keyid;
+    memcpy(subkey->_keyid, keyId.data(), keyId.length() + 1);
+    subkey->fpr = ((char *) subkey) + sizeof(*subkey);
+    memcpy(subkey->fpr, fpr.data(), fpr_len + 1);
+    subkey->timestamp = kSubkey->creationDate();
+    subkey->expires = kSubkey->expirationDate();
 
-  return subkey;
+    return subkey;
 }
 
-gpgme_key_t KpgpKey2gpgme_key( const Kpgp::Key * kKey )
+gpgme_key_t KpgpKey2gpgme_key(const Kpgp::Key *kKey)
 {
-  gpgme_key_t key;
+    gpgme_key_t key;
 
-  key = (gpgme_key_t) calloc( 1, sizeof( *key ) );
-  key->revoked = kKey->revoked();
-  key->expired = kKey->expired();
-  key->disabled = kKey->disabled();
-  key->invalid = kKey->invalid();
-  key->can_encrypt = kKey->canEncrypt();
-  key->can_sign = kKey->canSign();
-  key->can_certify = kKey->canCertify();
-  key->secret = kKey->secret();
-  key->protocol = GPGME_PROTOCOL_OpenPGP;
-  key->owner_trust = GPGME_VALIDITY_UNKNOWN; // FIXME?
+    key = (gpgme_key_t) calloc(1, sizeof(*key));
+    key->revoked = kKey->revoked();
+    key->expired = kKey->expired();
+    key->disabled = kKey->disabled();
+    key->invalid = kKey->invalid();
+    key->can_encrypt = kKey->canEncrypt();
+    key->can_sign = kKey->canSign();
+    key->can_certify = kKey->canCertify();
+    key->secret = kKey->secret();
+    key->protocol = GPGME_PROTOCOL_OpenPGP;
+    key->owner_trust = GPGME_VALIDITY_UNKNOWN; // FIXME?
 
-  Kpgp::UserIDList kUserIDs = kKey->userIDs();
-  for ( Kpgp::UserIDListIterator it( kUserIDs ); it.current(); ++it ) {
-    gpgme_user_id_t uid = KpgpUserID2GPGMEUserID( *it );
-    if ( !key->uids )
-      key->uids = uid;
-    if ( key->_last_uid )
-      key->_last_uid->next = uid;
-    key->_last_uid = uid;
-  }
+    Kpgp::UserIDList kUserIDs = kKey->userIDs();
+    for(Kpgp::UserIDListIterator it(kUserIDs); it.current(); ++it)
+    {
+        gpgme_user_id_t uid = KpgpUserID2GPGMEUserID(*it);
+        if(!key->uids)
+            key->uids = uid;
+        if(key->_last_uid)
+            key->_last_uid->next = uid;
+        key->_last_uid = uid;
+    }
 
-  Kpgp::SubkeyList kSubkeys = kKey->subkeys();
-  for ( Kpgp::SubkeyListIterator it( kSubkeys ); it.current(); ++it ) {
-    gpgme_subkey_t subkey = KpgpSubkey2GPGMESubKey( *it );
-    if (!key->subkeys)
-      key->subkeys = subkey;
-    if (key->_last_subkey)
-      key->_last_subkey->next = subkey;
-    key->_last_subkey = subkey;
-  }
+    Kpgp::SubkeyList kSubkeys = kKey->subkeys();
+    for(Kpgp::SubkeyListIterator it(kSubkeys); it.current(); ++it)
+    {
+        gpgme_subkey_t subkey = KpgpSubkey2GPGMESubKey(*it);
+        if(!key->subkeys)
+            key->subkeys = subkey;
+        if(key->_last_subkey)
+            key->_last_subkey->next = subkey;
+        key->_last_subkey = subkey;
+    }
 
-  return key;
+    return key;
 }
 
-GpgME::Error Kleo::KpgpKeyListJob::start( const QStringList & patterns,
-                                          bool secretOnly ) {
-  mPatterns = patterns;
-  mSecretOnly = secretOnly;
-  QTimer::singleShot( 0, this, SLOT( slotDoIt() ) );
-  return GpgME::Error( 0 );
+GpgME::Error Kleo::KpgpKeyListJob::start(const QStringList &patterns,
+        bool secretOnly)
+{
+    mPatterns = patterns;
+    mSecretOnly = secretOnly;
+    QTimer::singleShot(0, this, SLOT(slotDoIt()));
+    return GpgME::Error(0);
 }
 
-void Kleo::KpgpKeyListJob::slotDoIt() {
-  std::vector<GpgME::Key> keys;
-  GpgME::KeyListResult res = exec( mPatterns, mSecretOnly, keys );
-  for ( std::vector<GpgME::Key>::const_iterator it = keys.begin();
-        it != keys.end(); ++it )
-    emit nextKey( *it );
-  emit done();
-  emit result( res );
-  deleteLater();
+void Kleo::KpgpKeyListJob::slotDoIt()
+{
+    std::vector<GpgME::Key> keys;
+    GpgME::KeyListResult res = exec(mPatterns, mSecretOnly, keys);
+    for(std::vector<GpgME::Key>::const_iterator it = keys.begin();
+            it != keys.end(); ++it)
+        emit nextKey(*it);
+    emit done();
+    emit result(res);
+    deleteLater();
 }
 
-GpgME::KeyListResult Kleo::KpgpKeyListJob::exec( const QStringList & patterns,
-                                                 bool secretOnly,
-                                                 std::vector<GpgME::Key> & keys ) {
-  Kpgp::KeyList kKeys;
-  if ( secretOnly )
-    kKeys = mPgpBase->secretKeys( patterns );
-  else
-    kKeys = mPgpBase->publicKeys( patterns );
+GpgME::KeyListResult Kleo::KpgpKeyListJob::exec(const QStringList &patterns,
+        bool secretOnly,
+        std::vector<GpgME::Key> &keys)
+{
+    Kpgp::KeyList kKeys;
+    if(secretOnly)
+        kKeys = mPgpBase->secretKeys(patterns);
+    else
+        kKeys = mPgpBase->publicKeys(patterns);
 
-  keys.clear();
-  for ( Kpgp::KeyListIterator it( kKeys ); it.current(); ++it ) {
-    keys.push_back( GpgME::Key( KpgpKey2gpgme_key(*it), true ) );
-  }
+    keys.clear();
+    for(Kpgp::KeyListIterator it(kKeys); it.current(); ++it)
+    {
+        keys.push_back(GpgME::Key(KpgpKey2gpgme_key(*it), true));
+    }
 
-  _gpgme_op_keylist_result res;
-  res.truncated = 0; // key list is not truncated
-  res._unused = 0;
+    _gpgme_op_keylist_result res;
+    res.truncated = 0; // key list is not truncated
+    res._unused = 0;
 
-  return GpgME::KeyListResult( GpgME::Error( 0 ), res );
+    return GpgME::KeyListResult(GpgME::Error(0), res);
 }
 
 #include "kpgpkeylistjob.moc"

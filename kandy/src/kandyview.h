@@ -44,22 +44,21 @@ class CmdPropertiesDialog;
 
 /**
   This is the main view class for Kandy.
- 
+
   @short Main view
   @author Cornelius Schumacher <schumacher@kde.org>
 */
-class KandyView : public QWidget
-{
+class KandyView : public QWidget {
     Q_OBJECT
-  public:
-	/**
-	 * Default constructor
-	 */
-    KandyView(CommandScheduler *,QWidget *parent);
+public:
+    /**
+     * Default constructor
+     */
+    KandyView(CommandScheduler *, QWidget *parent);
 
-	/**
-	 * Destructor
-	 */
+    /**
+     * Destructor
+     */
     virtual ~KandyView();
 
     /**
@@ -73,41 +72,41 @@ class KandyView : public QWidget
      */
     void print(QPainter *, int height, int width);
 
-    bool loadFile(const QString& filename);
-    bool saveFile(const QString& filename);
+    bool loadFile(const QString &filename);
+    bool saveFile(const QString &filename);
 
-    void setModified(bool modified=true);
+    void setModified(bool modified = true);
     bool isModified();
 
-  public slots:
+public slots:
     void addCommand();
     void executeCommand();
     void deleteCommand();
     void editCommand();
 
-  signals:
+signals:
     /**
      * Use this signal to change the content of the statusbar
      */
-    void signalChangeStatusbar(const QString& text);
+    void signalChangeStatusbar(const QString &text);
 
     /**
      * Use this signal to change the content of the caption
      */
-    void signalChangeCaption(const QString& text);
+    void signalChangeCaption(const QString &text);
 
     void modifiedChanged(bool);
 
-  protected slots:
+protected slots:
     void appendOutput(const char *line);
 
     void setResult(ATCommand *);
 
-  private slots:
-    void slotSetTitle(const QString& title);
+private slots:
+    void slotSetTitle(const QString &title);
     void processLastLine();
 
-  private:
+private:
     QString mLastInput;
 
     CommandScheduler *mScheduler;

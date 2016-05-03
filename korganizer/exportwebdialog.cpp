@@ -68,23 +68,23 @@
 //        because we want custom buttons, a Tabbed dialog, and a different
 //        headline... Maybe we should try to achieve the same without code
 //        duplication.
-ExportWebDialog::ExportWebDialog( HTMLExportSettings *settings, QWidget *parent,
-                                  const char *name)
-  : KDialogBase( Tabbed,i18n("Export Calendar as Web Page"),Help|Default|User1|Cancel, User1, parent, name, false, false, i18n("Export") ),
-    KPrefsWidManager( settings ), mSettings( settings )
+ExportWebDialog::ExportWebDialog(HTMLExportSettings *settings, QWidget *parent,
+                                 const char *name)
+    : KDialogBase(Tabbed, i18n("Export Calendar as Web Page"), Help | Default | User1 | Cancel, User1, parent, name, false, false, i18n("Export")),
+      KPrefsWidManager(settings), mSettings(settings)
 {
-  setupGeneralPage();
-  setupEventPage();
-  setupTodoPage();
-// Disabled bacause the functionality is not yet implemented.
-//  setupJournalPage();
-//  setupFreeBusyPage();
-//  setupAdvancedPage();
+    setupGeneralPage();
+    setupEventPage();
+    setupTodoPage();
+    // Disabled bacause the functionality is not yet implemented.
+    //  setupJournalPage();
+    //  setupFreeBusyPage();
+    //  setupAdvancedPage();
 
-  connect( this, SIGNAL( user1Clicked() ), SLOT( slotOk() ) );
-  connect( this, SIGNAL( cancelClicked() ), SLOT( reject() ) );
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotOk()));
+    connect(this, SIGNAL(cancelClicked()), SLOT(reject()));
 
-  readConfig();
+    readConfig();
 }
 
 ExportWebDialog::~ExportWebDialog()
@@ -93,122 +93,122 @@ ExportWebDialog::~ExportWebDialog()
 
 void ExportWebDialog::setDefaults()
 {
-  setWidDefaults();
+    setWidDefaults();
 }
 
 void ExportWebDialog::readConfig()
 {
-  readWidConfig();
-  usrReadConfig();
+    readWidConfig();
+    usrReadConfig();
 }
 
 void ExportWebDialog::writeConfig()
 {
-  writeWidConfig();
-  usrWriteConfig();
-  readConfig();
+    writeWidConfig();
+    usrWriteConfig();
+    readConfig();
 }
 
 void ExportWebDialog::slotApply()
 {
-  writeConfig();
-  emit configChanged();
+    writeConfig();
+    emit configChanged();
 }
 
 void ExportWebDialog::slotOk()
 {
-  slotApply();
-  emit exportHTML( mSettings );
-  accept();
+    slotApply();
+    emit exportHTML(mSettings);
+    accept();
 }
 
 void ExportWebDialog::slotDefault()
 {
-  kdDebug(5850) << "KPrefsDialog::slotDefault()" << endl;
+    kdDebug(5850) << "KPrefsDialog::slotDefault()" << endl;
 
-  if (KMessageBox::warningContinueCancel(this,
-      i18n("You are about to set all preferences to default values. All "
-      "custom modifications will be lost."),i18n("Setting Default Preferences"),
-      i18n("Reset to Defaults"))
-    == KMessageBox::Continue) setDefaults();
+    if(KMessageBox::warningContinueCancel(this,
+                                          i18n("You are about to set all preferences to default values. All "
+                                                  "custom modifications will be lost."), i18n("Setting Default Preferences"),
+                                          i18n("Reset to Defaults"))
+            == KMessageBox::Continue) setDefaults();
 }
 
 
 void ExportWebDialog::setupGeneralPage()
 {
-  mGeneralPage = addPage( i18n("General") );
-  QVBoxLayout *topLayout = new QVBoxLayout(mGeneralPage, 10);
+    mGeneralPage = addPage(i18n("General"));
+    QVBoxLayout *topLayout = new QVBoxLayout(mGeneralPage, 10);
 
-  QGroupBox *rangeGroup = new QHGroupBox( i18n("Date Range"), mGeneralPage );
-  topLayout->addWidget( rangeGroup );
-  addWidDate( mSettings->dateStartItem(), rangeGroup );
-  addWidDate( mSettings->dateEndItem(), rangeGroup );
+    QGroupBox *rangeGroup = new QHGroupBox(i18n("Date Range"), mGeneralPage);
+    topLayout->addWidget(rangeGroup);
+    addWidDate(mSettings->dateStartItem(), rangeGroup);
+    addWidDate(mSettings->dateEndItem(), rangeGroup);
 
-  QButtonGroup *typeGroup = new QVButtonGroup( i18n("View Type"), mGeneralPage );
-  topLayout->addWidget( typeGroup );
-//  addWidBool( mSettings->weekViewItem(), typeGroup );
-  addWidBool( mSettings->monthViewItem(), typeGroup );
-  addWidBool( mSettings->eventViewItem(), typeGroup );
-  addWidBool( mSettings->todoViewItem(), typeGroup );
-//  addWidBool( mSettings->journalViewItem(), typeGroup );
-//  addWidBool( mSettings->freeBusyViewItem(), typeGroup );
-  addWidBool( mSettings->excludePrivateItem(), typeGroup );
-  addWidBool( mSettings->excludeConfidentialItem(), typeGroup );
+    QButtonGroup *typeGroup = new QVButtonGroup(i18n("View Type"), mGeneralPage);
+    topLayout->addWidget(typeGroup);
+    //  addWidBool( mSettings->weekViewItem(), typeGroup );
+    addWidBool(mSettings->monthViewItem(), typeGroup);
+    addWidBool(mSettings->eventViewItem(), typeGroup);
+    addWidBool(mSettings->todoViewItem(), typeGroup);
+    //  addWidBool( mSettings->journalViewItem(), typeGroup );
+    //  addWidBool( mSettings->freeBusyViewItem(), typeGroup );
+    addWidBool(mSettings->excludePrivateItem(), typeGroup);
+    addWidBool(mSettings->excludeConfidentialItem(), typeGroup);
 
-  QGroupBox *destGroup = new QVGroupBox(i18n("Destination"), mGeneralPage );
-  topLayout->addWidget(destGroup);
-  KPrefsWidPath *pathWid = addWidPath( mSettings->outputFileItem(),
-                                       destGroup, "text/html", KFile::File );
-  connect( pathWid->urlRequester(), SIGNAL( textChanged( const QString & ) ),
-           SLOT( slotTextChanged( const QString & ) ) );
+    QGroupBox *destGroup = new QVGroupBox(i18n("Destination"), mGeneralPage);
+    topLayout->addWidget(destGroup);
+    KPrefsWidPath *pathWid = addWidPath(mSettings->outputFileItem(),
+                                        destGroup, "text/html", KFile::File);
+    connect(pathWid->urlRequester(), SIGNAL(textChanged(const QString &)),
+            SLOT(slotTextChanged(const QString &)));
 
-  topLayout->addStretch( 1 );
+    topLayout->addStretch(1);
 }
 
-void ExportWebDialog::slotTextChanged( const QString & _text)
+void ExportWebDialog::slotTextChanged(const QString &_text)
 {
-    enableButton( User1, !_text.isEmpty() );
+    enableButton(User1, !_text.isEmpty());
 }
 
 void ExportWebDialog::setupTodoPage()
 {
-  mTodoPage = addPage(i18n("To-dos"));
-  QVBoxLayout *topLayout = new QVBoxLayout( mTodoPage, 10 );
+    mTodoPage = addPage(i18n("To-dos"));
+    QVBoxLayout *topLayout = new QVBoxLayout(mTodoPage, 10);
 
-  QHBox *hbox = new QHBox( mTodoPage );
-  topLayout->addWidget( hbox );
-  addWidString( mSettings->todoListTitleItem(), hbox );
+    QHBox *hbox = new QHBox(mTodoPage);
+    topLayout->addWidget(hbox);
+    addWidString(mSettings->todoListTitleItem(), hbox);
 
-  QVBox *vbox = new QVBox( mTodoPage );
-  topLayout->addWidget( vbox );
-  addWidBool( mSettings->taskDueDateItem(), vbox );
-  addWidBool( mSettings->taskLocationItem(), vbox );
-  addWidBool( mSettings->taskCategoriesItem(), vbox );
-  addWidBool( mSettings->taskAttendeesItem(), vbox );
-//  addWidBool( mSettings->taskExcludePrivateItem(), vbox );
-//  addWidBool( mSettings->taskExcludeConfidentialItem(), vbox );
+    QVBox *vbox = new QVBox(mTodoPage);
+    topLayout->addWidget(vbox);
+    addWidBool(mSettings->taskDueDateItem(), vbox);
+    addWidBool(mSettings->taskLocationItem(), vbox);
+    addWidBool(mSettings->taskCategoriesItem(), vbox);
+    addWidBool(mSettings->taskAttendeesItem(), vbox);
+    //  addWidBool( mSettings->taskExcludePrivateItem(), vbox );
+    //  addWidBool( mSettings->taskExcludeConfidentialItem(), vbox );
 
-  topLayout->addStretch(1);
+    topLayout->addStretch(1);
 }
 
 void ExportWebDialog::setupEventPage()
 {
-  mEventPage = addPage(i18n("Events"));
-  QVBoxLayout *topLayout = new QVBoxLayout( mEventPage, 10 );
+    mEventPage = addPage(i18n("Events"));
+    QVBoxLayout *topLayout = new QVBoxLayout(mEventPage, 10);
 
-  QHBox *hbox = new QHBox( mEventPage );
-  topLayout->addWidget( hbox );
-  addWidString( mSettings->eventTitleItem(), hbox );
+    QHBox *hbox = new QHBox(mEventPage);
+    topLayout->addWidget(hbox);
+    addWidString(mSettings->eventTitleItem(), hbox);
 
-  QVBox *vbox = new QVBox( mEventPage );
-  topLayout->addWidget( vbox );
-  addWidBool( mSettings->eventLocationItem(), vbox );
-  addWidBool( mSettings->eventCategoriesItem(), vbox );
-  addWidBool( mSettings->eventAttendeesItem(), vbox );
-//  addWidBool( mSettings->eventExcludePrivateItem(), vbox );
-//  addWidBool( mSettings->eventExcludeConfidentialItem(), vbox );
+    QVBox *vbox = new QVBox(mEventPage);
+    topLayout->addWidget(vbox);
+    addWidBool(mSettings->eventLocationItem(), vbox);
+    addWidBool(mSettings->eventCategoriesItem(), vbox);
+    addWidBool(mSettings->eventAttendeesItem(), vbox);
+    //  addWidBool( mSettings->eventExcludePrivateItem(), vbox );
+    //  addWidBool( mSettings->eventExcludeConfidentialItem(), vbox );
 
-  topLayout->addStretch(1);
+    topLayout->addStretch(1);
 }
 /*
 void ExportWebDialog::setupJournalPage()

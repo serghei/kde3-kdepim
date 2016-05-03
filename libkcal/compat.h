@@ -33,88 +33,89 @@ class Compat;
 /**
   Factory for creating the right Compat object.
 */
-class CompatFactory
-{
-  public:
-    static Compat *createCompat( const QString &productId );
+class CompatFactory {
+public:
+    static Compat *createCompat(const QString &productId);
 };
 
 /**
   This class provides compatibility to older (broken) versions of KOrganizer.
 */
-class Compat
-{
-  public:
+class Compat {
+public:
     Compat() {};
     virtual ~Compat() {};
 
-    virtual void fixRecurrence( Incidence * );
-    virtual void fixEmptySummary( Incidence * );
-    virtual void fixAlarms( Incidence * ) {}
-    virtual void fixFloatingEnd( QDate & ) {}
-    virtual bool useTimeZoneShift() { return true; }
-    virtual int fixPriority( int prio ) { return prio; }
+    virtual void fixRecurrence(Incidence *);
+    virtual void fixEmptySummary(Incidence *);
+    virtual void fixAlarms(Incidence *) {}
+    virtual void fixFloatingEnd(QDate &) {}
+    virtual bool useTimeZoneShift()
+    {
+        return true;
+    }
+    virtual int fixPriority(int prio)
+    {
+        return prio;
+    }
 
-  private:
+private:
     class Private;
     Private *d;
 };
 
-class CompatPre35 : public Compat
-{
-  public:
-    virtual void fixRecurrence( Incidence * );
-  private:
+class CompatPre35 : public Compat {
+public:
+    virtual void fixRecurrence(Incidence *);
+private:
     class Private;
     Private *d;
 };
 
-class CompatPre34 : public CompatPre35
-{
-  public:
-    virtual int fixPriority( int prio );
-  private:
+class CompatPre34 : public CompatPre35 {
+public:
+    virtual int fixPriority(int prio);
+private:
     class Private;
     Private *d;
 };
 
-class CompatPre32 : public CompatPre34
-{
-  public:
-    virtual void fixRecurrence( Incidence * );
+class CompatPre32 : public CompatPre34 {
+public:
+    virtual void fixRecurrence(Incidence *);
 
-  private:
+private:
     class Private;
     Private *d;
 };
 
-class CompatPre31 : public CompatPre32
-{
-  public:
-    virtual void fixFloatingEnd( QDate & );
-    virtual void fixRecurrence( Incidence *incidence );
+class CompatPre31 : public CompatPre32 {
+public:
+    virtual void fixFloatingEnd(QDate &);
+    virtual void fixRecurrence(Incidence *incidence);
 
-  private:
+private:
     class Private;
     Private *d;
 };
 
-class Compat32PrereleaseVersions : public Compat
-{
-  public:
-    virtual bool useTimeZoneShift() { return false; }
+class Compat32PrereleaseVersions : public Compat {
+public:
+    virtual bool useTimeZoneShift()
+    {
+        return false;
+    }
 
-  private:
+private:
     class Private;
     Private *d;
 };
 
-class CompatOutlook9 : public Compat
-{
-  public:
-    virtual void fixAlarms( Incidence * );
+class CompatOutlook9 : public Compat {
+public:
+    virtual void fixAlarms(Incidence *);
 
-  private:
+private:
     class Private;
     Private *d;
 };

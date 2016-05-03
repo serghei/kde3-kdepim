@@ -41,90 +41,103 @@
 #include "kabcore.h"
 
 class KAddressBookApp : public KUniqueApplication {
-  public:
-    KAddressBookApp() : mMainWin( 0 ), mDefaultIsOpen( false ) {}
+public:
+    KAddressBookApp() : mMainWin(0), mDefaultIsOpen(false) {}
     ~KAddressBookApp() {}
 
     int newInstance();
 
-  private:
+private:
     KAddressBookMain *mMainWin;
     bool mDefaultIsOpen;
 };
 
 int KAddressBookApp::newInstance()
 {
-  if ( isRestored() ) {
-    // There can only be one main window
-    if ( KMainWindow::canBeRestored( 1 ) ) {
-      mMainWin = new KAddressBookMain;
-      setMainWidget( mMainWin );
-      mMainWin->show();
-      mMainWin->restore( 1 );
-    }
-  } else {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-    if ( args->isSet( "editor-only" ) ) {
-        if ( !mMainWin ) {
-          mMainWin = new KAddressBookMain;
-          setMainWidget( mMainWin );
-          mMainWin->hide();
+    if(isRestored())
+    {
+        // There can only be one main window
+        if(KMainWindow::canBeRestored(1))
+        {
+            mMainWin = new KAddressBookMain;
+            setMainWidget(mMainWin);
+            mMainWin->show();
+            mMainWin->restore(1);
         }
-        // otherwise, leave the window like it is (hidden or shown)
-        KStartupInfo::appStarted();
-    } else {
-      QString file;
-      if ( args->isSet( "document" ) ) {
-         file = args->getOption( "document" );
-      }
-      if ( !( file.isEmpty() && mDefaultIsOpen ) ) {
-        if ( !mMainWin ) {
-          mMainWin = new KAddressBookMain( file );
-          setMainWidget( mMainWin );
-          mMainWin->show();
-        } else {
-          KAddressBookMain *m = new KAddressBookMain( file );
-          m->show();
+    }
+    else
+    {
+        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+        if(args->isSet("editor-only"))
+        {
+            if(!mMainWin)
+            {
+                mMainWin = new KAddressBookMain;
+                setMainWidget(mMainWin);
+                mMainWin->hide();
+            }
+            // otherwise, leave the window like it is (hidden or shown)
+            KStartupInfo::appStarted();
         }
-        if ( file.isEmpty() ) mDefaultIsOpen = true;
-      }
+        else
+        {
+            QString file;
+            if(args->isSet("document"))
+            {
+                file = args->getOption("document");
+            }
+            if(!(file.isEmpty() && mDefaultIsOpen))
+            {
+                if(!mMainWin)
+                {
+                    mMainWin = new KAddressBookMain(file);
+                    setMainWidget(mMainWin);
+                    mMainWin->show();
+                }
+                else
+                {
+                    KAddressBookMain *m = new KAddressBookMain(file);
+                    m->show();
+                }
+                if(file.isEmpty()) mDefaultIsOpen = true;
+            }
+        }
+
+        mMainWin->handleCommandLine();
     }
 
-    mMainWin->handleCommandLine();
-  }
-
-  // Handle startup notification and window activation
-  // We do it ourselves instead of calling KUniqueApplication::newInstance
-  // to avoid the show() call there.
+    // Handle startup notification and window activation
+    // We do it ourselves instead of calling KUniqueApplication::newInstance
+    // to avoid the show() call there.
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
-  static bool firstInstance = true;
+    static bool firstInstance = true;
 
-  if ( !firstInstance )
-    KStartupInfo::setNewStartupId( mMainWin, kapp->startupId() );
+    if(!firstInstance)
+        KStartupInfo::setNewStartupId(mMainWin, kapp->startupId());
 
-  firstInstance = false;
+    firstInstance = false;
 #endif
 
-  return 0;
+    return 0;
 }
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalogue( "kaddressbook" );
+    KLocale::setMainCatalogue("kaddressbook");
 
-  KCmdLineArgs::init( argc, argv, KABCore::createAboutData() );
-  KCmdLineArgs::addCmdLineOptions( kaddressbook_options );
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, KABCore::createAboutData());
+    KCmdLineArgs::addCmdLineOptions(kaddressbook_options);
+    KUniqueApplication::addCmdLineOptions();
 
-  if ( !KAddressBookApp::start() )
-    return 0;
+    if(!KAddressBookApp::start())
+        return 0;
 
-  KAddressBookApp app;
-  KGlobal::locale()->insertCatalogue( "libkdepim" );
+    KAddressBookApp app;
+    KGlobal::locale()->insertCatalogue("libkdepim");
 
-  bool ret = app.exec();
-  while (KMainWindow::memberList->first())
-      delete KMainWindow::memberList->first();
-  return ret;
+    bool ret = app.exec();
+    while(KMainWindow::memberList->first())
+        delete KMainWindow::memberList->first();
+    return ret;
 }

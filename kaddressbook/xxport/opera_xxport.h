@@ -27,17 +27,19 @@
 
 #include <xxport.h>
 
-class OperaXXPort : public KAB::XXPort
-{
-  Q_OBJECT
+class OperaXXPort : public KAB::XXPort {
+    Q_OBJECT
 
-  public:
-    OperaXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+public:
+    OperaXXPort(KABC::AddressBook *ab, QWidget *parent, const char *name = 0);
 
-    QString identifier() const { return "opera"; }
+    QString identifier() const
+    {
+        return "opera";
+    }
 
-  public slots:
-    KABC::AddresseeList importContacts( const QString &data ) const;
+public slots:
+    KABC::AddresseeList importContacts(const QString &data) const;
 };
 
 #endif

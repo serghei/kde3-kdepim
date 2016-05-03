@@ -48,30 +48,30 @@ class QGpgMECryptoConfigEntry;
  */
 class QGpgMECryptoConfig : public QObject, public Kleo::CryptoConfig {
 
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  QGpgMECryptoConfig();
-  virtual ~QGpgMECryptoConfig();
+    /**
+     * Constructor
+     */
+    QGpgMECryptoConfig();
+    virtual ~QGpgMECryptoConfig();
 
-  virtual QStringList componentList() const;
+    virtual QStringList componentList() const;
 
-  virtual Kleo::CryptoConfigComponent* component( const QString& name ) const;
+    virtual Kleo::CryptoConfigComponent *component(const QString &name) const;
 
-  virtual void clear();
-  virtual void sync( bool runtime );
+    virtual void clear();
+    virtual void sync(bool runtime);
 
 private slots:
-  void slotCollectStdOut( KProcIO* proc );
+    void slotCollectStdOut(KProcIO *proc);
 private:
-  /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
-  void runGpgConf( bool showErrors );
+    /// @param showErrors if true, a messagebox will be shown if e.g. gpgconf wasn't found
+    void runGpgConf(bool showErrors);
 
 private:
-  QDict<QGpgMECryptoConfigComponent> mComponents;
-  bool mParsed;
+    QDict<QGpgMECryptoConfigComponent> mComponents;
+    bool mParsed;
 };
 
 class QGpgMECryptoConfigGroup;
@@ -79,108 +79,144 @@ class QGpgMECryptoConfigGroup;
 /// For docu, see kleo/cryptoconfig.h
 class QGpgMECryptoConfigComponent : public QObject, public Kleo::CryptoConfigComponent {
 
-  Q_OBJECT
+    Q_OBJECT
 public:
-  QGpgMECryptoConfigComponent( QGpgMECryptoConfig*, const QString& name, const QString& description );
-  ~QGpgMECryptoConfigComponent();
+    QGpgMECryptoConfigComponent(QGpgMECryptoConfig *, const QString &name, const QString &description);
+    ~QGpgMECryptoConfigComponent();
 
-  QString name() const { return mName; }
-  QString iconName() const { return mName; }
-  QString description() const { return mDescription; }
-  QStringList groupList() const;
-  Kleo::CryptoConfigGroup* group( const QString& name ) const;
+    QString name() const
+    {
+        return mName;
+    }
+    QString iconName() const
+    {
+        return mName;
+    }
+    QString description() const
+    {
+        return mDescription;
+    }
+    QStringList groupList() const;
+    Kleo::CryptoConfigGroup *group(const QString &name) const;
 
-  void sync( bool runtime );
+    void sync(bool runtime);
 
 private slots:
-  void slotCollectStdOut( KProcIO* proc );
+    void slotCollectStdOut(KProcIO *proc);
 private:
-  void runGpgConf();
+    void runGpgConf();
 
 private:
-  QDict<QGpgMECryptoConfigGroup> mGroups;
-  QString mName;
-  QString mDescription;
-  QGpgMECryptoConfigGroup* mCurrentGroup; // during parsing
-  QString mCurrentGroupName; // during parsing
+    QDict<QGpgMECryptoConfigGroup> mGroups;
+    QString mName;
+    QString mDescription;
+    QGpgMECryptoConfigGroup *mCurrentGroup; // during parsing
+    QString mCurrentGroupName; // during parsing
 };
 
 class QGpgMECryptoConfigGroup : public Kleo::CryptoConfigGroup {
 
 public:
-  QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level );
-  ~QGpgMECryptoConfigGroup() {}
+    QGpgMECryptoConfigGroup(const QString &name, const QString &description, int level);
+    ~QGpgMECryptoConfigGroup() {}
 
-  QString name() const { return mName; }
-  QString iconName() const { return QString::null; }
-  QString description() const { return mDescription; }
-  Kleo::CryptoConfigEntry::Level level() const { return mLevel; }
-  QStringList entryList() const;
-  Kleo::CryptoConfigEntry* entry( const QString& name ) const;
+    QString name() const
+    {
+        return mName;
+    }
+    QString iconName() const
+    {
+        return QString::null;
+    }
+    QString description() const
+    {
+        return mDescription;
+    }
+    Kleo::CryptoConfigEntry::Level level() const
+    {
+        return mLevel;
+    }
+    QStringList entryList() const;
+    Kleo::CryptoConfigEntry *entry(const QString &name) const;
 
 private:
-  friend class QGpgMECryptoConfigComponent; // it adds the entries
-  QDict<QGpgMECryptoConfigEntry> mEntries;
-  QString mName;
-  QString mDescription;
-  Kleo::CryptoConfigEntry::Level mLevel;
+    friend class QGpgMECryptoConfigComponent; // it adds the entries
+    QDict<QGpgMECryptoConfigEntry> mEntries;
+    QString mName;
+    QString mDescription;
+    Kleo::CryptoConfigEntry::Level mLevel;
 };
 
 class QGpgMECryptoConfigEntry : public Kleo::CryptoConfigEntry {
 public:
-  QGpgMECryptoConfigEntry( const QStringList& parsedLine );
-  ~QGpgMECryptoConfigEntry();
+    QGpgMECryptoConfigEntry(const QStringList &parsedLine);
+    ~QGpgMECryptoConfigEntry();
 
-  QString name() const { return mName; }
-  QString description() const { return mDescription; }
-  bool isOptional() const;
-  bool isReadOnly() const;
-  bool isList() const;
-  bool isRuntime() const;
-  Level level() const { return static_cast<Level>( mLevel ); }
-  ArgType argType() const { return static_cast<ArgType>( mArgType ); }
-  bool isSet() const;
-  bool boolValue() const;
-  QString stringValue() const;
-  int intValue() const;
-  unsigned int uintValue() const;
-  KURL urlValue() const;
-  unsigned int numberOfTimesSet() const;
-  QStringList stringValueList() const;
-  QValueList<int> intValueList() const;
-  QValueList<unsigned int> uintValueList() const;
-  KURL::List urlValueList() const;
-  void resetToDefault();
-  void setBoolValue( bool );
-  void setStringValue( const QString& );
-  void setIntValue( int );
-  void setUIntValue( unsigned int );
-  void setURLValue( const KURL& );
-  void setNumberOfTimesSet( unsigned int );
-  void setStringValueList( const QStringList& );
-  void setIntValueList( const QValueList<int>& );
-  void setUIntValueList( const QValueList<unsigned int>& );
-  void setURLValueList( const KURL::List& );
-  bool isDirty() const { return mDirty; }
+    QString name() const
+    {
+        return mName;
+    }
+    QString description() const
+    {
+        return mDescription;
+    }
+    bool isOptional() const;
+    bool isReadOnly() const;
+    bool isList() const;
+    bool isRuntime() const;
+    Level level() const
+    {
+        return static_cast<Level>(mLevel);
+    }
+    ArgType argType() const
+    {
+        return static_cast<ArgType>(mArgType);
+    }
+    bool isSet() const;
+    bool boolValue() const;
+    QString stringValue() const;
+    int intValue() const;
+    unsigned int uintValue() const;
+    KURL urlValue() const;
+    unsigned int numberOfTimesSet() const;
+    QStringList stringValueList() const;
+    QValueList<int> intValueList() const;
+    QValueList<unsigned int> uintValueList() const;
+    KURL::List urlValueList() const;
+    void resetToDefault();
+    void setBoolValue(bool);
+    void setStringValue(const QString &);
+    void setIntValue(int);
+    void setUIntValue(unsigned int);
+    void setURLValue(const KURL &);
+    void setNumberOfTimesSet(unsigned int);
+    void setStringValueList(const QStringList &);
+    void setIntValueList(const QValueList<int> &);
+    void setUIntValueList(const QValueList<unsigned int> &);
+    void setURLValueList(const KURL::List &);
+    bool isDirty() const
+    {
+        return mDirty;
+    }
 
-  void setDirty( bool b );
-  QString outputString() const;
+    void setDirty(bool b);
+    QString outputString() const;
 
 protected:
-  bool isStringType() const;
-  QVariant stringToValue( const QString& value, bool unescape ) const;
-  QString toString( bool escape ) const;
+    bool isStringType() const;
+    QVariant stringToValue(const QString &value, bool unescape) const;
+    QString toString(bool escape) const;
 private:
-  QString mName;
-  QString mDescription;
-  QVariant mDefaultValue;
-  QVariant mValue;
-  uint mFlags : 8; // bitfield with 8 bits
-  uint mLevel : 3; // max is 4 (2, in fact) -> 3 bits
-  uint mRealArgType : 6; // max is 33 -> 6 bits
-  uint mArgType : 3; // max is 6 (ArgType enum) -> 3 bits;
-  uint mDirty : 1;
-  uint mSet : 1;
+    QString mName;
+    QString mDescription;
+    QVariant mDefaultValue;
+    QVariant mValue;
+    uint mFlags : 8; // bitfield with 8 bits
+    uint mLevel : 3; // max is 4 (2, in fact) -> 3 bits
+    uint mRealArgType : 6; // max is 33 -> 6 bits
+    uint mArgType : 3; // max is 6 (ArgType enum) -> 3 bits;
+    uint mDirty : 1;
+    uint mSet : 1;
 };
 
 #endif /* KLEO_QGPGMECRYPTOCONFIG_H */

@@ -26,24 +26,23 @@
 
 #include <qobject.h>
 
-class Scalix : public QObject, public KIO::SlaveBase
-{
-  Q_OBJECT
+class Scalix : public QObject, public KIO::SlaveBase {
+    Q_OBJECT
 
-  public:
-    Scalix( const QCString &protocol, const QCString &pool, const QCString &app );
+public:
+    Scalix(const QCString &protocol, const QCString &pool, const QCString &app);
 
-    void get( const KURL &url );
-    void put( const KURL &url, int permissions, bool overwrite, bool resume );
+    void get(const KURL &url);
+    void put(const KURL &url, int permissions, bool overwrite, bool resume);
 
-  private slots:
-    void slotRetrieveResult( KIO::Job* );
-    void slotPublishResult( KIO::Job* );
-    void slotInfoMessage( KIO::Job*, const QString& );
+private slots:
+    void slotRetrieveResult(KIO::Job *);
+    void slotPublishResult(KIO::Job *);
+    void slotInfoMessage(KIO::Job *, const QString &);
 
-  private:
-    void retrieveFreeBusy( const KURL& );
-    void publishFreeBusy( const KURL& );
+private:
+    void retrieveFreeBusy(const KURL &);
+    void publishFreeBusy(const KURL &);
 
     QString mFreeBusyData;
 };

@@ -33,74 +33,115 @@ struct OSyncEnv;
 
 namespace QSync {
 
-class Environment
-{
-  public:
+class Environment {
+public:
     Environment();
     ~Environment();
 
-    class GroupIterator
-    {
-      friend class Environment;
+    class GroupIterator {
+        friend class Environment;
 
-      public:
-        GroupIterator( Environment *environment )
-          : mEnvironment( environment ), mPos( -1 )
+    public:
+        GroupIterator(Environment *environment)
+            : mEnvironment(environment), mPos(-1)
         {
         }
 
-        GroupIterator( const GroupIterator &it )
+        GroupIterator(const GroupIterator &it)
         {
-          mEnvironment = it.mEnvironment;
-          mPos = it.mPos;
+            mEnvironment = it.mEnvironment;
+            mPos = it.mPos;
         }
 
-        Group operator*() 
+        Group operator*()
         {
-          return mEnvironment->groupAt( mPos );
+            return mEnvironment->groupAt(mPos);
         }
 
-        GroupIterator &operator++() { mPos++; return *this; }
-        GroupIterator &operator++( int ) { mPos++; return *this; }
-        GroupIterator &operator--() { mPos--; return *this; }
-        GroupIterator &operator--( int ) { mPos--; return *this; }
-        bool operator==( const GroupIterator &it ) { return mEnvironment == it.mEnvironment && mPos == it.mPos; }
-        bool operator!=( const GroupIterator &it ) { return mEnvironment == it.mEnvironment && mPos != it.mPos; }
+        GroupIterator &operator++()
+        {
+            mPos++;
+            return *this;
+        }
+        GroupIterator &operator++(int)
+        {
+            mPos++;
+            return *this;
+        }
+        GroupIterator &operator--()
+        {
+            mPos--;
+            return *this;
+        }
+        GroupIterator &operator--(int)
+        {
+            mPos--;
+            return *this;
+        }
+        bool operator==(const GroupIterator &it)
+        {
+            return mEnvironment == it.mEnvironment && mPos == it.mPos;
+        }
+        bool operator!=(const GroupIterator &it)
+        {
+            return mEnvironment == it.mEnvironment && mPos != it.mPos;
+        }
 
-      private:
+    private:
         Environment *mEnvironment;
         int mPos;
     };
 
-    class PluginIterator
-    {
-      friend class Environment;
+    class PluginIterator {
+        friend class Environment;
 
-      public:
-        PluginIterator( Environment *environment )
-          : mEnvironment( environment ), mPos( -1 )
+    public:
+        PluginIterator(Environment *environment)
+            : mEnvironment(environment), mPos(-1)
         {
         }
 
-        PluginIterator( const PluginIterator &it )
+        PluginIterator(const PluginIterator &it)
         {
-          mEnvironment = it.mEnvironment;
-          mPos = it.mPos;
+            mEnvironment = it.mEnvironment;
+            mPos = it.mPos;
         }
 
-        Plugin operator*() 
+        Plugin operator*()
         {
-          return mEnvironment->pluginAt( mPos );
+            return mEnvironment->pluginAt(mPos);
         }
 
-        PluginIterator &operator++() { mPos++; return *this; }
-        PluginIterator &operator++( int ) { mPos++; return *this; }
-        PluginIterator &operator--() { mPos--; return *this; }
-        PluginIterator &operator--( int ) { mPos--; return *this; }
-        bool operator==( const PluginIterator &it ) { return mEnvironment == it.mEnvironment && mPos == it.mPos; }
-        bool operator!=( const PluginIterator &it ) { return mEnvironment == it.mEnvironment && mPos != it.mPos; }
+        PluginIterator &operator++()
+        {
+            mPos++;
+            return *this;
+        }
+        PluginIterator &operator++(int)
+        {
+            mPos++;
+            return *this;
+        }
+        PluginIterator &operator--()
+        {
+            mPos--;
+            return *this;
+        }
+        PluginIterator &operator--(int)
+        {
+            mPos--;
+            return *this;
+        }
+        bool operator==(const PluginIterator &it)
+        {
+            return mEnvironment == it.mEnvironment && mPos == it.mPos;
+        }
+        bool operator!=(const PluginIterator &it)
+        {
+            return mEnvironment == it.mEnvironment && mPos != it.mPos;
+        }
 
-      private:
+    private:
         Environment *mEnvironment;
         int mPos;
     };
@@ -149,13 +190,13 @@ class Environment
     /**
       Returns the group at position @param pos.
      */
-    Group groupAt( int pos ) const;
+    Group groupAt(int pos) const;
 
     /**
       Returns a group by name or an invalid group when the group with this
       name doesn't exists.
      */
-    Group groupByName( const QString &name ) const;
+    Group groupByName(const QString &name) const;
 
     /**
       Adds a new group to the environment.
@@ -167,7 +208,7 @@ class Environment
     /**
       Removes a group from the environment.
      */
-    Result removeGroup( const Group &group );
+    Result removeGroup(const Group &group);
 
     /**
       Returns the number of plugins.
@@ -177,20 +218,20 @@ class Environment
     /**
       Returns the plugin at position @param pos.
      */
-    Plugin pluginAt( int pos ) const;
+    Plugin pluginAt(int pos) const;
 
     /**
       Returns a plugin by name or an invalid plugin when the plugin with this
       name doesn't exists.
      */
-    Plugin pluginByName( const QString &name ) const;
+    Plugin pluginByName(const QString &name) const;
 
     /**
       Returns the conversion object of this environment.
      */
     Conversion conversion() const;
 
-  private:
+private:
     OSyncEnv *mEnvironment;
 };
 

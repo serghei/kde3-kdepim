@@ -53,16 +53,15 @@ class CalFormat;
   \warning This code is still under heavy development. Don't expect source or
   binary compatibility in future versions.
 */
-class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
-{
+class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource {
     Q_OBJECT
-  public:
-    ResourceCalendar( const KConfig * );
+public:
+    ResourceCalendar(const KConfig *);
     virtual ~ResourceCalendar();
 
-    void setResolveConflict( bool b);
+    void setResolveConflict(bool b);
 
-    virtual void writeConfig( KConfig* config );
+    virtual void writeConfig(KConfig *config);
 
     /**
       Return rich text with info about the resource. Adds standard info and
@@ -108,13 +107,16 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       @param incidence if given as 0, doSave() is called to save all incidences,
              else doSave(incidence) is called to save only the given one
     */
-    bool save( Incidence *incidence = 0 );
+    bool save(Incidence *incidence = 0);
 
     /**
       Return true if a save operation is still in progress, otherwise return
       false.
     */
-    virtual bool isSaving() { return false; }
+    virtual bool isSaving()
+    {
+        return false;
+    }
 
     /**
       Return object for locking the resource.
@@ -124,57 +126,58 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Add incidence to resource.
     */
-    virtual bool addIncidence( Incidence * );
+    virtual bool addIncidence(Incidence *);
 
     /**
       Delete incidence from resource.
     */
-    virtual bool deleteIncidence( Incidence * );
+    virtual bool deleteIncidence(Incidence *);
 
     /**
       Return incidence with given unique id. If there is no incidence with that
       uid, return 0.
     */
-    Incidence *incidence( const QString &uid );
+    Incidence *incidence(const QString &uid);
 
     /**
       Add event to resource.
     */
-    virtual bool addEvent( Event *event ) = 0;
+    virtual bool addEvent(Event *event) = 0;
 
     /**
       Delete event from this resource.
     */
-    virtual bool deleteEvent( Event * ) = 0;
+    virtual bool deleteEvent(Event *) = 0;
 
     /**
       Retrieves an event on the basis of the unique string ID.
     */
-    virtual Event *event( const QString &uid ) = 0;
+    virtual Event *event(const QString &uid) = 0;
 
     /**
       Return unfiltered list of all events in calendar. Use with care,
       this can be a bad idea for server-based calendars.
     */
-    virtual Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Event::List rawEvents(EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending) = 0;
 
     /**
       Builds and then returns a list of all events that match the
       date specified. Useful for dayView, etc. etc.
     */
-    virtual Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Event::List rawEventsForDate(const QDate &date, EventSortField sortField = EventSortUnsorted,
+                                         SortDirection sortDirection = SortDirectionAscending) = 0;
 
     /**
       Get unfiltered events for date \a qdt.
     */
-    virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
+    virtual Event::List rawEventsForDate(const QDateTime &qdt) = 0;
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events which are completely included in the range are returned.
     */
-    virtual Event::List rawEvents( const QDate &start, const QDate &end,
-                                   bool inclusive = false ) = 0;
+    virtual Event::List rawEvents(const QDate &start, const QDate &end,
+                                  bool inclusive = false) = 0;
 
     /**
       Sets a particular value of the resource's configuration. The possible
@@ -195,107 +198,107 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
           manager->add( res );
         }
     */
-    virtual bool setValue( const QString &key, const QString &value );
+    virtual bool setValue(const QString &key, const QString &value);
 
-  signals:
+signals:
     /**
       This signal is emitted when the data in the resource has changed. The
       resource has to make sure that this signal is emitted whenever any
       pointers to incidences which the resource has previously given to the
       calling code, become invalid.
     */
-    void resourceChanged( ResourceCalendar * );
+    void resourceChanged(ResourceCalendar *);
 
     /**
       This signal is emitted when loading data into the resource has been
       finished.
     */
-    void resourceLoaded( ResourceCalendar * );
+    void resourceLoaded(ResourceCalendar *);
     /**
       This signal is emitted when saving the data of the resource has been
       finished.
     */
-    void resourceSaved( ResourceCalendar * );
+    void resourceSaved(ResourceCalendar *);
 
     /**
       This signal is emitted when an error occurs during loading.
     */
-    void resourceLoadError( ResourceCalendar *, const QString &error );
+    void resourceLoadError(ResourceCalendar *, const QString &error);
     /**
       This signal is emitted when an error occurs during saving.
     */
-    void resourceSaveError( ResourceCalendar *, const QString &error );
+    void resourceSaveError(ResourceCalendar *, const QString &error);
 
     /**
      This signal is emitted when a subresource is added.
     */
-    void signalSubresourceAdded( ResourceCalendar *, const QString& type,
-                                 const QString& subresource, const QString& label );
+    void signalSubresourceAdded(ResourceCalendar *, const QString &type,
+                                const QString &subresource, const QString &label);
 
     /**
      This signal is emitted when a subresource is removed.
     */
-    void signalSubresourceRemoved( ResourceCalendar *, const QString &,
-                                   const QString & );
+    void signalSubresourceRemoved(ResourceCalendar *, const QString &,
+                                  const QString &);
 
-  public:
+public:
     /**
       Add a todo to the todolist.
     */
-    virtual bool addTodo( Todo *todo ) = 0;
+    virtual bool addTodo(Todo *todo) = 0;
     /**
       Remove a todo from the todolist.
     */
-    virtual bool deleteTodo( Todo * ) = 0;
+    virtual bool deleteTodo(Todo *) = 0;
     /**
       Searches todolist for an event with this unique id.
 
       @return pointer to todo or 0 if todo wasn't found
     */
-    virtual Todo *todo( const QString &uid ) = 0;
+    virtual Todo *todo(const QString &uid) = 0;
     /**
       Return list of all todos.
     */
-    virtual Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Todo::List rawTodos(TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending) = 0;
     /**
       Returns list of todos due on the specified date.
     */
-    virtual Todo::List rawTodosForDate( const QDate &date ) = 0;
+    virtual Todo::List rawTodosForDate(const QDate &date) = 0;
 
 
     /**
       Add a Journal entry to the resource.
     */
-    virtual bool addJournal( Journal * ) = 0;
+    virtual bool addJournal(Journal *) = 0;
 
     /**
       Remove a Journal entry from calendar.
     */
-    virtual bool deleteJournal( Journal * ) = 0;
+    virtual bool deleteJournal(Journal *) = 0;
 
     /**
       Return Journal with given unique id.
     */
-    virtual Journal *journal( const QString &uid ) = 0;
+    virtual Journal *journal(const QString &uid) = 0;
     /**
       Return list of all journals.
     */
-    virtual Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending ) = 0;
+    virtual Journal::List rawJournals(JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending) = 0;
     /**
       Returns list of journals for the given date.
     */
-    virtual Journal::List rawJournalsForDate( const QDate &date ) = 0;
+    virtual Journal::List rawJournalsForDate(const QDate &date) = 0;
 
     /**
       Return all alarms which occur in the given time interval.
     */
-    virtual Alarm::List alarms( const QDateTime &from,
-                                const QDateTime &to ) = 0;
+    virtual Alarm::List alarms(const QDateTime &from,
+                               const QDateTime &to) = 0;
 
     /**
       Return all alarms which occur before given date.
     */
-    virtual Alarm::List alarmsTo( const QDateTime &to ) = 0;
+    virtual Alarm::List alarmsTo(const QDateTime &to) = 0;
 
 
     /** Returns a list of all incideces */
@@ -304,32 +307,41 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       Set time zone id used by this resource, e.g. "Europe/Berlin".
     */
-    virtual void setTimeZoneId( const QString &timeZoneId ) = 0;
+    virtual void setTimeZoneId(const QString &timeZoneId) = 0;
 
     /**
       If this resource has subresources, return a QStringList of them.
       In most cases, resources do not have subresources, so this is
       by default just empty.
     */
-    virtual QStringList subresources() const { return QStringList(); }
+    virtual QStringList subresources() const
+    {
+        return QStringList();
+    }
 
     /**
       Is this subresource capable of having subresources or not?
     */
-    virtual bool canHaveSubresources() const { return false; }
+    virtual bool canHaveSubresources() const
+    {
+        return false;
+    }
 
     /**
       Is this subresource active or not?
     */
-    virtual bool subresourceActive( const QString& ) const { return true; }
+    virtual bool subresourceActive(const QString &) const
+    {
+        return true;
+    }
 
     /**
       What is the label for this subresource?
      */
-    virtual const QString labelForSubresource( const QString& resource ) const
+    virtual const QString labelForSubresource(const QString &resource) const
     {
-       // the resource identifier is a sane fallback
-       return resource;
+        // the resource identifier is a sane fallback
+        return resource;
     };
 
     /**
@@ -338,35 +350,38 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
       @return the identifier of the subresource or an empty string.
     */
-    virtual QString subresourceIdentifier( Incidence *incidence )
-    { Q_UNUSED( incidence ); return QString(); }
+    virtual QString subresourceIdentifier(Incidence *incidence)
+    {
+        Q_UNUSED(incidence);
+        return QString();
+    }
 
 
 
     /**
      * Remove a subresource with the id @param resource
      */
-    virtual bool removeSubresource( const QString& resource );
+    virtual bool removeSubresource(const QString &resource);
 
     /**
      * Add a subresource with the name @param resource and the parent
      * id @param parent.
      */
-    virtual bool addSubresource( const QString& resource, const QString& parent );
+    virtual bool addSubresource(const QString &resource, const QString &parent);
 
     /**
      * Returns the type of the subresource: "event", "todo" or "journal",
      * QString() if unknown/mixed.
      */
-    virtual QString subresourceType( const QString &resource );
+    virtual QString subresourceType(const QString &resource);
 
-  public slots:
+public slots:
     /**
       (De-)activate a subresource.
     */
-    virtual void setSubresourceActive( const QString &, bool active );
+    virtual void setSubresourceActive(const QString &, bool active);
 
-  protected:
+protected:
 
     bool mResolveConflict;
     /**
@@ -382,23 +397,23 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Do the actual saving of the resource data. Called by save().
       Save one Incidence. The default implementation calls doSave() to save everything
     */
-    virtual bool doSave( Incidence * );
+    virtual bool doSave(Incidence *);
 
     /**
       Add info text for concrete resources. Called by infoText().
     */
-    virtual void addInfoText( QString & ) const {};
+    virtual void addInfoText(QString &) const {};
 
     /**
       A resource should call this function if a load error happens.
     */
-    void loadError( const QString &errorMessage = QString::null );
+    void loadError(const QString &errorMessage = QString::null);
     /**
       A resource should call this function if a save error happens.
     */
-    void saveError( const QString &errorMessage = QString::null );
+    void saveError(const QString &errorMessage = QString::null);
 
-  private:
+private:
     bool mReceivedLoadError;
     bool mReceivedSaveError;
 

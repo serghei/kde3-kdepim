@@ -29,30 +29,31 @@
 
 static KCmdLineOptions options[] =
 {
-  KCmdLineLastOption
+    KCmdLineLastOption
 };
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData *about = MainWidget::aboutData();
+    KAboutData *about = MainWidget::aboutData();
 
-  KCmdLineArgs::init( argc, argv, about );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineArgs::init(argc, argv, about);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
 
-  KUniqueApplication::addCmdLineOptions();
+    KUniqueApplication::addCmdLineOptions();
 
-  if( !KUniqueApplication::start() ) {
-    kdDebug() << "kitchensync already runs." << endl;
-    exit( 0 );
-  };
+    if(!KUniqueApplication::start())
+    {
+        kdDebug() << "kitchensync already runs." << endl;
+        exit(0);
+    };
 
-  KUniqueApplication app;
-  
-  KGlobal::locale()->insertCatalogue( "libkcal" );
+    KUniqueApplication app;
 
-  MainWindow *mainWindow = new MainWindow;
-  mainWindow->show();
+    KGlobal::locale()->insertCatalogue("libkcal");
 
-  app.exec();
+    MainWindow *mainWindow = new MainWindow;
+    mainWindow->show();
+
+    app.exec();
 }

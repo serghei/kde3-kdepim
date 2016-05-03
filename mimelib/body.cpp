@@ -37,16 +37,18 @@
 #include <mimelib/mediatyp.h>
 #include <mimelib/enum.h>
 
-enum {
+enum
+{
     kParseSuccess,
     kParseFail
 };
 
 
-struct DwBodyPartStr {
-    DwBodyPartStr(const DwString& aStr) : mString(aStr), mNext(0) {}
+struct DwBodyPartStr
+{
+    DwBodyPartStr(const DwString &aStr) : mString(aStr), mNext(0) {}
     DwString mString;
-    DwBodyPartStr* mNext;
+    DwBodyPartStr *mNext;
 };
 
 
@@ -55,25 +57,34 @@ class DwBodyParser {
 public:
     ~DwBodyParser();
 private:
-    DwBodyParser(const DwString& aStr, const DwString& aBoundaryStr);
-    const DwString& Preamble() const     { return mPreamble; }
-    const DwString& Epilogue() const     { return mEpilogue; }
-    DwBodyPartStr* FirstBodyPart() const { return mFirstBodyPartStr; }
+    DwBodyParser(const DwString &aStr, const DwString &aBoundaryStr);
+    const DwString &Preamble() const
+    {
+        return mPreamble;
+    }
+    const DwString &Epilogue() const
+    {
+        return mEpilogue;
+    }
+    DwBodyPartStr *FirstBodyPart() const
+    {
+        return mFirstBodyPartStr;
+    }
     int Parse();
-    int FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
-        size_t* aBoundaryEnd, size_t* isFinal) const;
+    int FindBoundary(size_t aStartPos, size_t *aBoundaryStart,
+                     size_t *aBoundaryEnd, size_t *isFinal) const;
     void AddPart(size_t start, size_t len);
     void DeleteParts();
     const DwString mString;
     const DwString mBoundary;
     DwString mPreamble;
-    DwBodyPartStr* mFirstBodyPartStr;
+    DwBodyPartStr *mFirstBodyPartStr;
     DwString mEpilogue;
 };
 
 
-DwBodyParser::DwBodyParser(const DwString& aStr, const DwString& aBoundary)
-  : mString(aStr), mBoundary(aBoundary)
+DwBodyParser::DwBodyParser(const DwString &aStr, const DwString &aBoundary)
+    : mString(aStr), mBoundary(aBoundary)
 {
     mFirstBodyPartStr = 0;
     Parse();
@@ -94,7 +105,8 @@ int DwBodyParser::Parse()
     size_t boundaryStart, boundaryEnd, isFinal;
     int result;
     result = FindBoundary(pos, &boundaryStart, &boundaryEnd, &isFinal);
-    if (result == kParseFail) {
+    if(result == kParseFail)
+    {
         mPreamble = mEpilogue = "";
         mFirstBodyPartStr = 0;
         return kParseFail;
@@ -102,18 +114,19 @@ int DwBodyParser::Parse()
     int start = pos;
     int len = boundaryStart - pos;
     mPreamble = mString.substr(start, len);
-    if ( boundaryStart < mString.size() && mString[boundaryStart] != '-' )
-      mPreamble += DW_EOL; // contrary to normal behaviour of
-			   // DwBody::Parse(), we _do_ want a newline
-			   // before the first boundary here. This is
-			   // necessary since FindBoundary() can't
-			   // make up it's mind on where the boundary
-			   // starts - on the leading \n or the first
-			   // '-'..
+    if(boundaryStart < mString.size() && mString[boundaryStart] != '-')
+        mPreamble += DW_EOL; // contrary to normal behaviour of
+    // DwBody::Parse(), we _do_ want a newline
+    // before the first boundary here. This is
+    // necessary since FindBoundary() can't
+    // make up it's mind on where the boundary
+    // starts - on the leading \n or the first
+    // '-'..
 
     // Find the body parts
     pos = boundaryEnd;
-    while (1) {
+    while(1)
+    {
         result = FindBoundary(pos, &boundaryStart, &boundaryEnd, &isFinal);
         // NOTE: For enhanced fault tolerance we *accept* a missing last
         //       boundary.
@@ -124,22 +137,29 @@ int DwBodyParser::Parse()
         //       clients' messages.                      (khz, 12.06.2002)
         start = pos;
 
-        if (result == kParseFail) {
+        if(result == kParseFail)
+        {
             isFinal = true;
             len = mString.length() - pos;
-        } else {
+        }
+        else
+        {
             len = boundaryStart - pos;
         }
 
         AddPart(start, len);
 
-        if (result == kParseFail) {
+        if(result == kParseFail)
+        {
             pos = mString.length();
-        } else {
+        }
+        else
+        {
             pos = boundaryEnd;
         }
 
-        if (isFinal) {
+        if(isFinal)
+        {
             break;
         }
     }
@@ -147,43 +167,45 @@ int DwBodyParser::Parse()
     // Find the epilogue
     start = pos;
     len = mString.length() - pos;
-    if( len )
+    if(len)
         mEpilogue = mString.substr(start, len);
 
     return kParseSuccess;
 }
 
 // checks whether [cur,end[ matches -*[\r\t ]*(\n|$)
-static bool isOnlyWhiteSpaceOrDashesUntilEndOfLine( const char * cur, const char * end ) {
-  bool dashesStillAllowed = true;
+static bool isOnlyWhiteSpaceOrDashesUntilEndOfLine(const char *cur, const char *end)
+{
+    bool dashesStillAllowed = true;
 
-  while ( cur < end )
-    switch( *cur ) {
-    case ' ':
-    case '\t':
-    case '\r':
-      dashesStillAllowed = false;
-      ++cur;
-      continue;
-    case '\n':
-      return true;
-    case '-':
-      if ( !dashesStillAllowed )
-	return false;
-      ++cur;
-      continue;
-    default:
-      return false;
-    }
-  // end of buffer is ok, too:
-  return true;
+    while(cur < end)
+        switch(*cur)
+        {
+            case ' ':
+            case '\t':
+            case '\r':
+                dashesStillAllowed = false;
+                ++cur;
+                continue;
+            case '\n':
+                return true;
+            case '-':
+                if(!dashesStillAllowed)
+                    return false;
+                ++cur;
+                continue;
+            default:
+                return false;
+        }
+    // end of buffer is ok, too:
+    return true;
 }
 
-int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
-    size_t* aBoundaryEnd, size_t* aIsFinal) const
+int DwBodyParser::FindBoundary(size_t aStartPos, size_t *aBoundaryStart,
+                               size_t *aBoundaryEnd, size_t *aIsFinal) const
 {
     // Assume the starting position is the beginning of a line
-    const char* buf = mString.data();
+    const char *buf = mString.data();
     size_t pos = aStartPos;
     size_t endPos = mString.length();
     size_t blen = mBoundary.length();
@@ -192,28 +214,33 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
     // no preamble, there may be no leading CR LF ('\n').
     // The case of no leading CR LF ('\n') is a special case that will occur
     // only when '-' is the first character of the body.
-    if (buf[pos] == '-'
-        && pos+blen+1 < endPos
-        && buf[pos+1] == '-'
-        && strncmp(&buf[pos+2], mBoundary.data(), blen) == 0
-	&& isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 2, buf + endPos ) ) {
+    if(buf[pos] == '-'
+            && pos + blen + 1 < endPos
+            && buf[pos + 1] == '-'
+            && strncmp(&buf[pos + 2], mBoundary.data(), blen) == 0
+            && isOnlyWhiteSpaceOrDashesUntilEndOfLine(buf + pos + blen + 2, buf + endPos))
+    {
 
         *aBoundaryStart = pos;
         pos += blen + 2;
         // Check for final boundary
-        if (pos+1 < endPos
-            && buf[pos] == '-'
-            && buf[pos+1] == '-') {
+        if(pos + 1 < endPos
+                && buf[pos] == '-'
+                && buf[pos + 1] == '-')
+        {
 
             pos += 2;
             *aIsFinal = 1;
         }
-        else {
+        else
+        {
             *aIsFinal = 0;
         }
         // Advance position past end of line
-        while (pos < endPos) {
-            if (buf[pos] == '\n') {
+        while(pos < endPos)
+        {
+            if(buf[pos] == '\n')
+            {
                 ++pos;
                 break;
             }
@@ -223,35 +250,40 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
         return kParseSuccess;
     }
     int isFound = 0;
-    while (pos+blen+2 < endPos) {
+    while(pos + blen + 2 < endPos)
+    {
         // Case of leading LF
-        if (buf[pos] == '\n'
-            && buf[pos+1] == '-'
-            && buf[pos+2] == '-'
-            && strncmp(&buf[pos+3], mBoundary.data(), blen) == 0
-	    && isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 3, buf + endPos ) ) {
+        if(buf[pos] == '\n'
+                && buf[pos + 1] == '-'
+                && buf[pos + 2] == '-'
+                && strncmp(&buf[pos + 3], mBoundary.data(), blen) == 0
+                && isOnlyWhiteSpaceOrDashesUntilEndOfLine(buf + pos + blen + 3, buf + endPos))
+        {
 
             *aBoundaryStart = pos;
             pos += blen + 3;
             isFound = 1;
         }
         // Case of leading CR LF
-        else if (buf[pos] == '\r'
-            && buf[pos+1] == '\n'
-            && buf[pos+2] == '-'
-            && pos+blen+3 < endPos
-            && buf[pos+3] == '-'
-            && strncmp(&buf[pos+4], mBoundary.data(), blen) == 0
-	    && isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 4, buf + endPos ) ) {
+        else if(buf[pos] == '\r'
+                && buf[pos + 1] == '\n'
+                && buf[pos + 2] == '-'
+                && pos + blen + 3 < endPos
+                && buf[pos + 3] == '-'
+                && strncmp(&buf[pos + 4], mBoundary.data(), blen) == 0
+                && isOnlyWhiteSpaceOrDashesUntilEndOfLine(buf + pos + blen + 4, buf + endPos))
+        {
 
             *aBoundaryStart = pos;
             pos += blen + 4;
             isFound = 1;
         }
-        if (isFound) {
+        if(isFound)
+        {
             // Check for final boundary
-            if (pos < endPos
-                && buf[pos] == '-') {
+            if(pos < endPos
+                    && buf[pos] == '-')
+            {
 
                 // NOTE: Since we must be fault tolerant for being able to
                 //       understand messaged that were damaged during
@@ -262,17 +294,21 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
                 *aIsFinal = 1;
 
                 // if there *is* the 2nd '-' we of course process it
-                if (pos+1 < endPos
-                    && buf[pos+1] == '-') {
+                if(pos + 1 < endPos
+                        && buf[pos + 1] == '-')
+                {
                     pos += 1;
                 }
             }
-            else {
+            else
+            {
                 *aIsFinal = 0;
             }
             // Advance position past end of line
-            while (pos < endPos) {
-                if (buf[pos] == '\n') {
+            while(pos < endPos)
+            {
+                if(buf[pos] == '\n')
+                {
                     ++pos;
                     break;
                 }
@@ -292,14 +328,17 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
 
 void DwBodyParser::AddPart(size_t start, size_t len)
 {
-    DwBodyPartStr* toAdd = new DwBodyPartStr(mString.substr(start, len));
-    if (toAdd != 0) {
-        DwBodyPartStr* curr = mFirstBodyPartStr;
-        if (curr == 0) {
+    DwBodyPartStr *toAdd = new DwBodyPartStr(mString.substr(start, len));
+    if(toAdd != 0)
+    {
+        DwBodyPartStr *curr = mFirstBodyPartStr;
+        if(curr == 0)
+        {
             mFirstBodyPartStr = toAdd;
             return;
         }
-        while (curr->mNext != 0) {
+        while(curr->mNext != 0)
+        {
             curr = curr->mNext;
         }
         curr->mNext = toAdd;
@@ -309,9 +348,10 @@ void DwBodyParser::AddPart(size_t start, size_t len)
 
 void DwBodyParser::DeleteParts()
 {
-    DwBodyPartStr* curr = mFirstBodyPartStr;
-    while (curr) {
-        DwBodyPartStr* next = curr->mNext;
+    DwBodyPartStr *curr = mFirstBodyPartStr;
+    while(curr)
+    {
+        DwBodyPartStr *next = curr->mNext;
         delete curr;
         curr = next;
     }
@@ -322,21 +362,23 @@ void DwBodyParser::DeleteParts()
 //==========================================================================
 
 
-const char* const DwBody::sClassName = "DwBody";
+const char *const DwBody::sClassName = "DwBody";
 
 
-DwBody* (*DwBody::sNewBody)(const DwString&, DwMessageComponent*) = 0;
+DwBody *(*DwBody::sNewBody)(const DwString &, DwMessageComponent *) = 0;
 
 
-DwBody* DwBody::NewBody(const DwString& aStr, DwMessageComponent* aParent)
+DwBody *DwBody::NewBody(const DwString &aStr, DwMessageComponent *aParent)
 {
-    if (sNewBody) {
-        DwBody* newBody = sNewBody(aStr, aParent);
+    if(sNewBody)
+    {
+        DwBody *newBody = sNewBody(aStr, aParent);
         //if( newBody )
         //    newBody->mFirstBodyPart = 0;
         return newBody;
     }
-    else {
+    else
+    {
         return new DwBody(aStr, aParent);
     }
 }
@@ -351,21 +393,23 @@ DwBody::DwBody()
 }
 
 
-DwBody::DwBody(const DwBody& aBody)
-  : DwMessageComponent(aBody),
-    mBoundaryStr(aBody.mBoundaryStr),
-    mPreamble(aBody.mPreamble),
-    mEpilogue(aBody.mEpilogue)
+DwBody::DwBody(const DwBody &aBody)
+    : DwMessageComponent(aBody),
+      mBoundaryStr(aBody.mBoundaryStr),
+      mPreamble(aBody.mPreamble),
+      mEpilogue(aBody.mEpilogue)
 {
     mFirstBodyPart = 0;
-    const DwBodyPart* firstPart = aBody.mFirstBodyPart;
-    if (firstPart) {
+    const DwBodyPart *firstPart = aBody.mFirstBodyPart;
+    if(firstPart)
+    {
         CopyBodyParts(firstPart);
     }
     mMessage = 0;
-    const DwMessage* message = aBody.mMessage;
-    if (message) {
-        DwMessage* msg = (DwMessage*) message->Clone();
+    const DwMessage *message = aBody.mMessage;
+    if(message)
+    {
+        DwMessage *msg = (DwMessage *) message->Clone();
         _SetMessage(msg);
     }
     mClassId = kCidBody;
@@ -373,8 +417,8 @@ DwBody::DwBody(const DwBody& aBody)
 }
 
 
-DwBody::DwBody(const DwString& aStr, DwMessageComponent* aParent)
-  : DwMessageComponent(aStr, aParent)
+DwBody::DwBody(const DwString &aStr, DwMessageComponent *aParent)
+    : DwMessageComponent(aStr, aParent)
 {
     mFirstBodyPart = 0;
     mMessage = 0;
@@ -385,37 +429,44 @@ DwBody::DwBody(const DwString& aStr, DwMessageComponent* aParent)
 
 DwBody::~DwBody()
 {
-    if (mFirstBodyPart) {
+    if(mFirstBodyPart)
+    {
         DeleteBodyParts();
     }
-    if (mMessage) {
+    if(mMessage)
+    {
         delete mMessage;
     }
 }
 
 
-const DwBody& DwBody::operator = (const DwBody& aBody)
+const DwBody &DwBody::operator = (const DwBody &aBody)
 {
-    if (this == &aBody) return *this;
+    if(this == &aBody) return *this;
     mBoundaryStr = aBody.mBoundaryStr;
     mPreamble    = aBody.mPreamble;
     mEpilogue    = aBody.mEpilogue;
-    if (mFirstBodyPart) {
+    if(mFirstBodyPart)
+    {
         DeleteBodyParts();
     }
-    const DwBodyPart* firstPart = aBody.FirstBodyPart();
-    if (firstPart) {
+    const DwBodyPart *firstPart = aBody.FirstBodyPart();
+    if(firstPart)
+    {
         CopyBodyParts(firstPart);
     }
-    if (mMessage) {
+    if(mMessage)
+    {
         delete mMessage;
     }
-    const DwMessage* message = aBody.Message();
-    if (message) {
-        DwMessage* msg = (DwMessage*) message->Clone();
+    const DwMessage *message = aBody.Message();
+    if(message)
+    {
+        DwMessage *msg = (DwMessage *) message->Clone();
         _SetMessage(msg);
     }
-    if (mParent) {
+    if(mParent)
+    {
         mParent->SetModified();
     }
     return *this;
@@ -427,36 +478,41 @@ void DwBody::Parse()
     mIsModified = 0;
     // Only types "multipart" and "message" need to be parsed, and
     // we cannot determine the type if there is no header.
-    if (!mParent) {
+    if(!mParent)
+    {
         return;
     }
     // Get the content type from the headers
-    DwEntity* entity = (DwEntity*) mParent;
-    if (entity->Headers().HasContentType()) {
-        const DwMediaType& contentType = entity->Headers().ContentType();
+    DwEntity *entity = (DwEntity *) mParent;
+    if(entity->Headers().HasContentType())
+    {
+        const DwMediaType &contentType = entity->Headers().ContentType();
         int type = contentType.Type();
         int subtype = contentType.Subtype();
-        if (type == DwMime::kTypeMultipart) {
+        if(type == DwMime::kTypeMultipart)
+        {
             mBoundaryStr = contentType.Boundary();
             // Now parse body into body parts
             DwBodyParser parser(mString, mBoundaryStr);
             mPreamble = parser.Preamble();
             mEpilogue = parser.Epilogue();
-            DwBodyPartStr* partStr = parser.FirstBodyPart();
-            while (partStr) {
-                DwBodyPart* part =
+            DwBodyPartStr *partStr = parser.FirstBodyPart();
+            while(partStr)
+            {
+                DwBodyPart *part =
                     DwBodyPart::NewBodyPart(partStr->mString, this);
                 part->Parse();
                 _AddBodyPart(part);
                 partStr = partStr->mNext;
             }
         }
-        else if (type == DwMime::kTypeMessage &&
-                 subtype == DwMime::kSubtypeRfc822) {
-            if (mMessage)
-              mMessage->FromString(mString);
+        else if(type == DwMime::kTypeMessage &&
+                subtype == DwMime::kSubtypeRfc822)
+        {
+            if(mMessage)
+                mMessage->FromString(mString);
             else
-              mMessage = DwMessage::NewMessage(mString, this);
+                mMessage = DwMessage::NewMessage(mString, this);
             mMessage->Parse();
         }
     }
@@ -465,26 +521,28 @@ void DwBody::Parse()
 
 void DwBody::Assemble()
 {
-    if (!mIsModified) return;
-    if (!mFirstBodyPart && !mMessage) return;
-    if (!mParent) return;
+    if(!mIsModified) return;
+    if(!mFirstBodyPart && !mMessage) return;
+    if(!mParent) return;
 
-    DwEntity* entity = (DwEntity*) mParent;
+    DwEntity *entity = (DwEntity *) mParent;
     /*
     DwString partStr;
     */
-    const DwMediaType& contentType = entity->Headers().ContentType();
+    const DwMediaType &contentType = entity->Headers().ContentType();
     int type = contentType.Type();
     int subtype = contentType.Subtype();
-    if (type == DwMime::kTypeMultipart) {
+    if(type == DwMime::kTypeMultipart)
+    {
         /*
         int len;
         */
         mBoundaryStr = contentType.Boundary();
         mString = "";
         mString += mPreamble;
-        DwBodyPart* part = mFirstBodyPart;
-        while (part) {
+        DwBodyPart *part = mFirstBodyPart;
+        while(part)
+        {
             part->Assemble();
             /*
             partStr = part->AsString();
@@ -497,7 +555,7 @@ void DwBody::Assemble()
                          && ('\r' == mString.at(len-2) )
                          && ('\n' == mString.at(len-3) ) ) ) )
             */
-	    if ( part != mFirstBodyPart )
+            if(part != mFirstBodyPart)
                 mString += DW_EOL;
             mString += "--";
             mString += mBoundaryStr;
@@ -507,7 +565,7 @@ void DwBody::Assemble()
                     && (    ('\n' == partStr.at(0) )
                          || ('\r' == partStr.at(0) ) ) ) )
             */
-                mString += DW_EOL;
+            mString += DW_EOL;
             /*
             mString += partStr;
             */
@@ -523,7 +581,7 @@ void DwBody::Assemble()
                     && ('\r' == mString.at(len-2) )
                     && ('\n' == mString.at(len-3) ) ) ) )
         */
-            mString += DW_EOL;
+        mString += DW_EOL;
         mString += "--";
         mString += mBoundaryStr;
         mString += "--";
@@ -531,83 +589,90 @@ void DwBody::Assemble()
         mString += mEpilogue;
         mIsModified = 0;
     }
-    else if (type == DwMime::kTypeMessage &&
-             subtype == DwMime::kSubtypeRfc822 &&
-             mMessage) {
+    else if(type == DwMime::kTypeMessage &&
+            subtype == DwMime::kSubtypeRfc822 &&
+            mMessage)
+    {
         mMessage->Assemble();
         mString = mMessage->AsString();
     }
-    else {
+    else
+    {
         // Empty block
     }
 }
 
 
-DwMessageComponent* DwBody::Clone() const
+DwMessageComponent *DwBody::Clone() const
 {
     return new DwBody(*this);
 }
 
 
-DwBodyPart* DwBody::FirstBodyPart() const
+DwBodyPart *DwBody::FirstBodyPart() const
 {
     return mFirstBodyPart;
 }
 
 
-void DwBody::AddBodyPart(DwBodyPart* aPart)
+void DwBody::AddBodyPart(DwBodyPart *aPart)
 {
     _AddBodyPart(aPart);
     SetModified();
 }
 
-void DwBody::RemoveBodyPart(DwBodyPart* aPart)
+void DwBody::RemoveBodyPart(DwBodyPart *aPart)
 {
     _RemoveBodyPart(aPart);
     SetModified();
 }
 
 
-DwMessage* DwBody::Message() const
+DwMessage *DwBody::Message() const
 {
     return mMessage;
 }
 
 
-void DwBody::SetMessage(DwMessage* aMessage)
+void DwBody::SetMessage(DwMessage *aMessage)
 {
     _SetMessage(aMessage);
     SetModified();
 }
 
 
-void DwBody::_AddBodyPart(DwBodyPart* aPart)
+void DwBody::_AddBodyPart(DwBodyPart *aPart)
 {
     aPart->SetParent(this);
-    if (!mFirstBodyPart) {
+    if(!mFirstBodyPart)
+    {
         mFirstBodyPart = aPart;
         return;
     }
-    DwBodyPart* part = mFirstBodyPart;
-    while (part->Next()) {
+    DwBodyPart *part = mFirstBodyPart;
+    while(part->Next())
+    {
         part = part->Next();
     }
     part->SetNext(aPart);
 }
 
-void DwBody::_RemoveBodyPart(DwBodyPart* aPart)
+void DwBody::_RemoveBodyPart(DwBodyPart *aPart)
 {
-    if ( aPart->Parent() != this )
+    if(aPart->Parent() != this)
         return; // caller error
-    if ( !mFirstBodyPart )
+    if(!mFirstBodyPart)
         return; // impossible
-    if ( mFirstBodyPart == aPart ) {
+    if(mFirstBodyPart == aPart)
+    {
         mFirstBodyPart = mFirstBodyPart->Next();
         return;
     }
-    DwBodyPart* part = mFirstBodyPart;
-    while (part->Next()) {
-        if ( part->Next() == aPart ) {
+    DwBodyPart *part = mFirstBodyPart;
+    while(part->Next())
+    {
+        if(part->Next() == aPart)
+        {
             part->SetNext(aPart->Next());
             break;
         }
@@ -616,10 +681,11 @@ void DwBody::_RemoveBodyPart(DwBodyPart* aPart)
 }
 
 
-void DwBody::_SetMessage(DwMessage* aMessage)
+void DwBody::_SetMessage(DwMessage *aMessage)
 {
     aMessage->SetParent(this);
-    if (mMessage && mMessage != aMessage) {
+    if(mMessage && mMessage != aMessage)
+    {
         delete mMessage;
     }
     mMessage = aMessage;
@@ -628,9 +694,10 @@ void DwBody::_SetMessage(DwMessage* aMessage)
 
 void DwBody::DeleteBodyParts()
 {
-    DwBodyPart* part = mFirstBodyPart;
-    while (part) {
-        DwBodyPart* nextPart = part->Next();
+    DwBodyPart *part = mFirstBodyPart;
+    while(part)
+    {
+        DwBodyPart *nextPart = part->Next();
         delete part;
         part = nextPart;
     }
@@ -638,11 +705,12 @@ void DwBody::DeleteBodyParts()
 }
 
 
-void DwBody::CopyBodyParts(const DwBodyPart* aFirst)
+void DwBody::CopyBodyParts(const DwBodyPart *aFirst)
 {
-    const DwBodyPart* part = aFirst;
-    while (part) {
-        DwBodyPart* newPart = (DwBodyPart*) part->Clone();
+    const DwBodyPart *part = aFirst;
+    while(part)
+    {
+        DwBodyPart *newPart = (DwBodyPart *) part->Clone();
         AddBodyPart(newPart);
         part = part->Next();
     }
@@ -650,19 +718,19 @@ void DwBody::CopyBodyParts(const DwBodyPart* aFirst)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwBody::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwBody::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "------------------ Debug info for DwBody class -----------------\n";
+          "------------------ Debug info for DwBody class -----------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwBody::PrintDebugInfo(std::ostream&, int) const {}
+void DwBody::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
 #if defined(DW_DEBUG_VERSION)
-void DwBody::_PrintDebugInfo(std::ostream& aStrm) const
+void DwBody::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwMessageComponent::_PrintDebugInfo(aStrm);
     aStrm << "Boundary:         " << mBoundaryStr << '\n';
@@ -670,29 +738,34 @@ void DwBody::_PrintDebugInfo(std::ostream& aStrm) const
     aStrm << "Epilogue:         " << mEpilogue << '\n';
     aStrm << "Body Parts:       ";
     int count = 0;
-    DwBodyPart* bodyPart = mFirstBodyPart;
-    if (bodyPart) {
-        while (bodyPart) {
-            if (count > 0) aStrm << ' ';
+    DwBodyPart *bodyPart = mFirstBodyPart;
+    if(bodyPart)
+    {
+        while(bodyPart)
+        {
+            if(count > 0) aStrm << ' ';
             aStrm << bodyPart->ObjectId();
-            bodyPart = (DwBodyPart*) bodyPart->Next();
+            bodyPart = (DwBodyPart *) bodyPart->Next();
             ++count;
         }
         aStrm << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
     aStrm << "Message:       ";
-    if (mMessage) {
+    if(mMessage)
+    {
         aStrm << mMessage->ObjectId() << '\n';
     }
-    else {
+    else
+    {
         aStrm << "(none)\n";
     }
 }
 #else
-void DwBody::_PrintDebugInfo(std::ostream& ) const {}
+void DwBody::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined(DW_DEBUG_VERSION)
 
 
@@ -703,12 +776,14 @@ void DwBody::CheckInvariants() const
     mBoundaryStr.CheckInvariants();
     mPreamble.CheckInvariants();
     mEpilogue.CheckInvariants();
-    DwBodyPart* bodyPart = mFirstBodyPart;
-    while (bodyPart) {
+    DwBodyPart *bodyPart = mFirstBodyPart;
+    while(bodyPart)
+    {
         bodyPart->CheckInvariants();
-        bodyPart = (DwBodyPart*) bodyPart->Next();
+        bodyPart = (DwBodyPart *) bodyPart->Next();
     }
-    if (mMessage) {
+    if(mMessage)
+    {
         mMessage->CheckInvariants();
     }
 #endif // defined(DW_DEBUG_VERSION)

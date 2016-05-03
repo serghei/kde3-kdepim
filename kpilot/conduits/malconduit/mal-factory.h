@@ -6,7 +6,7 @@
 **
 ** This file defines the factory for the mal-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 ** Specific permission is granted for this code to be linked to libmal
 ** (this is necessary because the libmal license is not GPL-compatible).
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -37,30 +37,31 @@
 class KInstance;
 class KAboutData;
 
-class MALConduitFactory : public KLibFactory
-{
-Q_OBJECT
+class MALConduitFactory : public KLibFactory {
+    Q_OBJECT
 
 public:
-	MALConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~MALConduitFactory();
+    MALConduitFactory(QObject * = 0L, const char * = 0L);
+    virtual ~MALConduitFactory();
 
-	static KAboutData *about() { return fAbout; } ;
+    static KAboutData *about()
+    {
+        return fAbout;
+    } ;
 
 protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
+    virtual QObject *createObject(QObject *parent = 0,
+                                  const char *name = 0,
+                                  const char *classname = "QObject",
+                                  const QStringList &args = QStringList());
 private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
+    KInstance *fInstance;
+    static KAboutData *fAbout;
 } ;
 
-extern "C"
-{
+extern "C" {
 
-void *init_libtimeconduit();
+    void *init_libtimeconduit();
 
 }
 

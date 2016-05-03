@@ -31,7 +31,7 @@
 #include <mimelib/field.h>
 
 
-const char* const DwFieldBody::sClassName = "DwFieldBody";
+const char *const DwFieldBody::sClassName = "DwFieldBody";
 
 
 DwFieldBody::DwFieldBody()
@@ -43,8 +43,8 @@ DwFieldBody::DwFieldBody()
 }
 
 
-DwFieldBody::DwFieldBody(const DwFieldBody& aFieldBody)
-  : DwMessageComponent(aFieldBody)
+DwFieldBody::DwFieldBody(const DwFieldBody &aFieldBody)
+    : DwMessageComponent(aFieldBody)
 {
     mLineOffset = aFieldBody.mLineOffset;
     mDoFolding = aFieldBody.mDoFolding;
@@ -53,8 +53,8 @@ DwFieldBody::DwFieldBody(const DwFieldBody& aFieldBody)
 }
 
 
-DwFieldBody::DwFieldBody(const DwString& aStr, DwMessageComponent* aParent)
-  : DwMessageComponent(aStr, aParent)
+DwFieldBody::DwFieldBody(const DwString &aStr, DwMessageComponent *aParent)
+    : DwMessageComponent(aStr, aParent)
 {
     mLineOffset = 0;
     mDoFolding = DwTrue;
@@ -68,9 +68,9 @@ DwFieldBody::~DwFieldBody()
 }
 
 
-const DwFieldBody& DwFieldBody::operator = (const DwFieldBody& aFieldBody)
+const DwFieldBody &DwFieldBody::operator = (const DwFieldBody &aFieldBody)
 {
-    if (this == &aFieldBody) return *this;
+    if(this == &aFieldBody) return *this;
     DwMessageComponent::operator = (aFieldBody);
     mLineOffset = aFieldBody.mLineOffset;
     return *this;
@@ -78,26 +78,26 @@ const DwFieldBody& DwFieldBody::operator = (const DwFieldBody& aFieldBody)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwFieldBody::PrintDebugInfo(std::ostream& aStrm, int /*aDepth*/) const
+void DwFieldBody::PrintDebugInfo(std::ostream &aStrm, int /*aDepth*/) const
 {
     aStrm <<
-    "--------------- Debug info for DwFieldBody class ---------------\n";
+          "--------------- Debug info for DwFieldBody class ---------------\n";
     _PrintDebugInfo(aStrm);
 }
 #else
-void DwFieldBody::PrintDebugInfo(std::ostream& , int ) const {}
+void DwFieldBody::PrintDebugInfo(std::ostream &, int) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 
 #if defined (DW_DEBUG_VERSION)
-void DwFieldBody::_PrintDebugInfo(std::ostream& aStrm) const
+void DwFieldBody::_PrintDebugInfo(std::ostream &aStrm) const
 {
     DwMessageComponent::_PrintDebugInfo(aStrm);
     aStrm << "LineOffset:       " << mLineOffset << '\n';
     aStrm << "IsFolding:        " << (IsFolding() ? "True" : "False") << '\n';
 }
 #else
-void DwFieldBody::_PrintDebugInfo(std::ostream& ) const {}
+void DwFieldBody::_PrintDebugInfo(std::ostream &) const {}
 #endif // defined (DW_DEBUG_VERSION)
 
 

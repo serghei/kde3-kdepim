@@ -30,35 +30,33 @@
 #include <qimage.h>
 #include <qpixmap.h>
 
-namespace Akregator
-{
-    class KDE_EXPORT TrayIcon : public KSystemTray
-    {
-        Q_OBJECT
-        public:
-            static TrayIcon* getInstance();
-            static void setInstance(TrayIcon* trayIcon);
-            
-            TrayIcon(QWidget *parent = 0, const char *name = 0);
-            ~TrayIcon();
-            
-            QPixmap takeScreenshot() const;
-            virtual void mousePressEvent(QMouseEvent *);
-        public slots:
-            void settingsChanged();
-            void slotSetUnread(int unread);
-            void viewButtonClicked();
-        
-        signals:
-            void showPart();
+namespace Akregator {
+class KDE_EXPORT TrayIcon : public KSystemTray {
+    Q_OBJECT
+public:
+    static TrayIcon *getInstance();
+    static void setInstance(TrayIcon *trayIcon);
 
-        private:
-            static TrayIcon* m_instance;
-            
-            QPixmap m_defaultIcon;
-            QImage m_lightIconImage;
-            int m_unread;
-    };
+    TrayIcon(QWidget *parent = 0, const char *name = 0);
+    ~TrayIcon();
+
+    QPixmap takeScreenshot() const;
+    virtual void mousePressEvent(QMouseEvent *);
+public slots:
+    void settingsChanged();
+    void slotSetUnread(int unread);
+    void viewButtonClicked();
+
+signals:
+    void showPart();
+
+private:
+    static TrayIcon *m_instance;
+
+    QPixmap m_defaultIcon;
+    QImage m_lightIconImage;
+    int m_unread;
+};
 }
 
 #endif

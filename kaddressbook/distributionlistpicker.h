@@ -30,19 +30,18 @@
 class KListBox;
 
 namespace KABC {
-    class AddressBook;
+class AddressBook;
 }
 
 namespace KPIM {
 
-class DistributionListPickerDialog : public KDialogBase
-{
+class DistributionListPickerDialog : public KDialogBase {
     Q_OBJECT
 public:
-    explicit DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent = 0 );
+    explicit DistributionListPickerDialog(KABC::AddressBook *book, QWidget *parent = 0);
     QString selectedDistributionList() const;
 
-    void setLabelText( const QString& text );
+    void setLabelText(const QString &text);
 
 private slots:
 
@@ -55,15 +54,15 @@ private slots:
     //override
     void slotUser1();
 
-    void entrySelected( const QString& name );
+    void entrySelected(const QString &name);
 
 private:
-    KABC::AddressBook* m_book;
-    QLabel* m_label;
-    KListBox* m_listBox;
+    KABC::AddressBook *m_book;
+    QLabel *m_label;
+    KListBox *m_listBox;
     QString m_selectedDistributionList;
 };
-    
+
 } //namespace KPIM
 
 #endif // KPIM_DISTRIBUTIONLISTPICKER_H 

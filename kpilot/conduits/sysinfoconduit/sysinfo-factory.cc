@@ -32,12 +32,11 @@
 #include "sysinfo-conduit.h"
 #include "sysinfo-setup.h"
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_sysinfo()
-{
-	return new ConduitFactory<SysInfoWidgetConfig,SysInfoConduit>;
-}
+    void *init_conduit_sysinfo()
+    {
+        return new ConduitFactory<SysInfoWidgetConfig, SysInfoConduit>;
+    }
 
 }

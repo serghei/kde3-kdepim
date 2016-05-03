@@ -28,52 +28,52 @@
 
 #include <qwidget.h>
 
-class PluginItem : public KWidgetListItem
-{
-  public:
-   PluginItem( KWidgetList *, const QSync::Plugin & );
+class PluginItem : public KWidgetListItem {
+public:
+    PluginItem(KWidgetList *, const QSync::Plugin &);
 
-   QSync::Plugin plugin() const { return mPlugin; }
+    QSync::Plugin plugin() const
+    {
+        return mPlugin;
+    }
 
-  private:
+private:
     QSync::Plugin mPlugin;
 };
 
-class PluginPicker : public QWidget
-{
-  Q_OBJECT
+class PluginPicker : public QWidget {
+    Q_OBJECT
 
-  public:
-    PluginPicker( QWidget *parent );
+public:
+    PluginPicker(QWidget *parent);
 
     QSync::Plugin selectedPlugin() const;
 
-  signals:
+signals:
     void selected();
 
-  protected:
+protected:
     void updatePluginList();
 
-  private:
+private:
     KWidgetList *mPluginList;
 };
 
-class PluginPickerDialog : public KDialogBase
-{
-  Q_OBJECT
+class PluginPickerDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    PluginPickerDialog( QWidget *parent );
+public:
+    PluginPickerDialog(QWidget *parent);
 
     QSync::Plugin selectedPlugin() const;
 
-    static QSync::Plugin getPlugin( QWidget *parent );
+    static QSync::Plugin getPlugin(QWidget *parent);
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotCancel();
 
-  private:
+private:
     PluginPicker *mPicker;
 };
 

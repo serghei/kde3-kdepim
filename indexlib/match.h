@@ -8,17 +8,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -50,25 +50,28 @@ namespace indexlib {
  * Even for patterns larger than 32 characters, this should be a fast strategy.
  */
 class Match {
-	public:
-		enum flags { caseinsensitive = 1 };
-		/** Construct an object to match string \param pattern
-		 */
-		Match( std::string pattern, unsigned flags = 0 );
-		~Match();
+public:
+    enum flags { caseinsensitive = 1 };
+    /** Construct an object to match string \param pattern
+     */
+    Match(std::string pattern, unsigned flags = 0);
+    ~Match();
 
-		/**
-		 * Returns true if the pattern appears in \param string
-		 * It has no memory
-		 */
-		bool process( const char* string ) const;
-		bool process( std::string str ) const { return process( str.c_str() ); }
-	private:
-		typedef std::vector<unsigned> masks_type;
-		masks_type masks_;
-		unsigned hot_bit_;
-		bool caseinsensitive_;
-		std::string pattern_rest_;
+    /**
+     * Returns true if the pattern appears in \param string
+     * It has no memory
+     */
+    bool process(const char *string) const;
+    bool process(std::string str) const
+    {
+        return process(str.c_str());
+    }
+private:
+    typedef std::vector<unsigned> masks_type;
+    masks_type masks_;
+    unsigned hot_bit_;
+    bool caseinsensitive_;
+    std::string pattern_rest_;
 };
 }
 

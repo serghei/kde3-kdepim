@@ -27,26 +27,26 @@
 using namespace KCal;
 
 ResourceGroupDav::ResourceGroupDav()
-  : ResourceGroupwareBase()
+    : ResourceGroupwareBase()
 {
-  init();
+    init();
 }
 
-ResourceGroupDav::ResourceGroupDav( const KConfig *config )
-  : ResourceGroupwareBase( config )
+ResourceGroupDav::ResourceGroupDav(const KConfig *config)
+    : ResourceGroupwareBase(config)
 {
-  init();
-  if ( config ) readConfig( config );
+    init();
+    if(config) readConfig(config);
 }
 
 void ResourceGroupDav::init()
 {
-  setType( "ResourceGroupDav" );
-  setPrefs( createPrefs() );
-  setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::Calendar ) );
-  setAdaptor( new GroupDavCalendarAdaptor() );
-  
-  ResourceGroupwareBase::init();
+    setType("ResourceGroupDav");
+    setPrefs(createPrefs());
+    setFolderLister(new KPIM::FolderLister(KPIM::FolderLister::Calendar));
+    setAdaptor(new GroupDavCalendarAdaptor());
+
+    ResourceGroupwareBase::init();
 }
 
 #include "kcal_resourcegroupdav.moc"

@@ -36,120 +36,125 @@
 namespace KMail {
 
 UndoStack::UndoStack(int size)
-  : QObject(0, "undostack"), mSize(size), mLastId(0),
-    mCachedInfo(0)
+    : QObject(0, "undostack"), mSize(size), mLastId(0),
+      mCachedInfo(0)
 {
-   mStack.setAutoDelete(true);
+    mStack.setAutoDelete(true);
 }
 
 void UndoStack::clear()
 {
-   mStack.clear();
+    mStack.clear();
 }
 
-int UndoStack::newUndoAction( KMFolder *srcFolder, KMFolder *destFolder )
+int UndoStack::newUndoAction(KMFolder *srcFolder, KMFolder *destFolder)
 {
-  UndoInfo *info = new UndoInfo;
-  info->id         = ++mLastId;
-  info->srcFolder  = srcFolder;
-  info->destFolder = destFolder;
-  if ((int) mStack.count() == mSize)
-    mStack.removeLast();
-  mStack.prepend( info );
-  emit undoStackChanged();
-  return info->id;
+    UndoInfo *info = new UndoInfo;
+    info->id         = ++mLastId;
+    info->srcFolder  = srcFolder;
+    info->destFolder = destFolder;
+    if((int) mStack.count() == mSize)
+        mStack.removeLast();
+    mStack.prepend(info);
+    emit undoStackChanged();
+    return info->id;
 }
 
-void UndoStack::addMsgToAction( int undoId, ulong serNum )
+void UndoStack::addMsgToAction(int undoId, ulong serNum)
 {
-  if ( !mCachedInfo || mCachedInfo->id != undoId ) {
-    QPtrListIterator<UndoInfo> itr( mStack );
-    while ( itr.current() ) {
-      if ( itr.current()->id == undoId ) {
-        mCachedInfo = itr.current();
-        break;
-      }
-      ++itr;
+    if(!mCachedInfo || mCachedInfo->id != undoId)
+    {
+        QPtrListIterator<UndoInfo> itr(mStack);
+        while(itr.current())
+        {
+            if(itr.current()->id == undoId)
+            {
+                mCachedInfo = itr.current();
+                break;
+            }
+            ++itr;
+        }
     }
-  }
 
-  Q_ASSERT( mCachedInfo );
-  mCachedInfo->serNums.append( serNum );
+    Q_ASSERT(mCachedInfo);
+    mCachedInfo->serNums.append(serNum);
 }
 
 void UndoStack::undo()
 {
-  KMMessage *msg;
-  ulong serNum;
-  int idx = -1;
-  KMFolder *curFolder;
-  if ( mStack.count() > 0 )
-  {
-    UndoInfo *info = mStack.take(0);
-    emit undoStackChanged();
-    QValueList<ulong>::iterator itr;
-    KMFolderOpener openDestFolder(info->destFolder, "undodest");
-    for( itr = info->serNums.begin(); itr != info->serNums.end(); ++itr ) {
-      serNum = *itr;
-      KMMsgDict::instance()->getLocation(serNum, &curFolder, &idx);
-      if ( idx == -1 || curFolder != info->destFolder ) {
-        kdDebug(5006)<<"Serious undo error!"<<endl;
+    KMMessage *msg;
+    ulong serNum;
+    int idx = -1;
+    KMFolder *curFolder;
+    if(mStack.count() > 0)
+    {
+        UndoInfo *info = mStack.take(0);
+        emit undoStackChanged();
+        QValueList<ulong>::iterator itr;
+        KMFolderOpener openDestFolder(info->destFolder, "undodest");
+        for(itr = info->serNums.begin(); itr != info->serNums.end(); ++itr)
+        {
+            serNum = *itr;
+            KMMsgDict::instance()->getLocation(serNum, &curFolder, &idx);
+            if(idx == -1 || curFolder != info->destFolder)
+            {
+                kdDebug(5006) << "Serious undo error!" << endl;
+                delete info;
+                return;
+            }
+            msg = curFolder->getMsg(idx);
+            info->srcFolder->moveMsg(msg);
+            if(info->srcFolder->count() > 1)
+                info->srcFolder->unGetMsg(info->srcFolder->count() - 1);
+        }
         delete info;
-        return;
-      }
-      msg = curFolder->getMsg( idx );
-      info->srcFolder->moveMsg( msg );
-      if ( info->srcFolder->count() > 1 )
-        info->srcFolder->unGetMsg( info->srcFolder->count() - 1 );
     }
-    delete info;
-  }
-  else
-  {
-    // Sorry.. stack is empty..
-    KMessageBox::sorry( kmkernel->mainWin(), i18n("There is nothing to undo."));
-  }
+    else
+    {
+        // Sorry.. stack is empty..
+        KMessageBox::sorry(kmkernel->mainWin(), i18n("There is nothing to undo."));
+    }
 }
 
 void
 UndoStack::pushSingleAction(ulong serNum, KMFolder *folder, KMFolder *destFolder)
 {
-  int id = newUndoAction( folder, destFolder );
-  addMsgToAction( id, serNum );
+    int id = newUndoAction(folder, destFolder);
+    addMsgToAction(id, serNum);
 }
 
 void
-UndoStack::msgDestroyed( KMMsgBase* /*msg*/)
+UndoStack::msgDestroyed(KMMsgBase * /*msg*/)
 {
-  /*
-   for(UndoInfo *info = mStack.first(); info; )
-   {
-      if (info->msgIdMD5 == msg->msgIdMD5())
-      {
-         mStack.removeRef( info );
-         info = mStack.current();
-      }
-      else
-         info = mStack.next();
-   }
-  */
+    /*
+     for(UndoInfo *info = mStack.first(); info; )
+     {
+        if (info->msgIdMD5 == msg->msgIdMD5())
+        {
+           mStack.removeRef( info );
+           info = mStack.current();
+        }
+        else
+           info = mStack.next();
+     }
+    */
 }
 
 void
-UndoStack::folderDestroyed( KMFolder *folder)
+UndoStack::folderDestroyed(KMFolder *folder)
 {
-   for( UndoInfo *info = mStack.first(); info; )
-   {
-      if ( (info->srcFolder == folder) ||
-	   (info->destFolder == folder) )
-      {
-         mStack.removeRef( info );
-         info = mStack.current();
-      }
-      else
-         info = mStack.next();
-   }
-   emit undoStackChanged();
+    for(UndoInfo *info = mStack.first(); info;)
+    {
+        if((info->srcFolder == folder) ||
+                (info->destFolder == folder))
+        {
+            mStack.removeRef(info);
+            info = mStack.current();
+        }
+        else
+            info = mStack.next();
+    }
+    emit undoStackChanged();
 }
 
 }

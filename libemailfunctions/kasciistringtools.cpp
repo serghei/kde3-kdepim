@@ -25,38 +25,38 @@
 
 namespace KPIM {
 
-static unsigned char ASCIIToLower( unsigned char ch )
+static unsigned char ASCIIToLower(unsigned char ch)
 {
-  if ( ch >= 'A' && ch <= 'Z' )
-    return ch - 'A' + 'a';
-  else
-    return ch;
+    if(ch >= 'A' && ch <= 'Z')
+        return ch - 'A' + 'a';
+    else
+        return ch;
 }
 
-char * kAsciiToLower( char *s )
+char *kAsciiToLower(char *s)
 {
-  if ( !s )
-    return 0;
-  for ( unsigned char *p = (unsigned char *) s; *p; ++p )
-    *p = ASCIIToLower( *p );
-  return s;
+    if(!s)
+        return 0;
+    for(unsigned char *p = (unsigned char *) s; *p; ++p)
+        *p = ASCIIToLower(*p);
+    return s;
 }
 
-static unsigned char ASCIIToUpper( unsigned char ch )
+static unsigned char ASCIIToUpper(unsigned char ch)
 {
-  if ( ch >= 'a' && ch <= 'z' )
-    return ch - 'a' + 'A';
-  else
-    return ch;
+    if(ch >= 'a' && ch <= 'z')
+        return ch - 'a' + 'A';
+    else
+        return ch;
 }
 
-char * kAsciiToUpper( char *s )
+char *kAsciiToUpper(char *s)
 {
-  if ( !s )
-    return 0;
-  for ( unsigned char *p = (unsigned char *) s; *p; ++p )
-    *p = ASCIIToUpper( *p );
-  return s;
+    if(!s)
+        return 0;
+    for(unsigned char *p = (unsigned char *) s; *p; ++p)
+        *p = ASCIIToUpper(*p);
+    return s;
 }
 
 } // namespace KPIM

@@ -36,13 +36,12 @@
 #include "vcal-setup.h"
 #include "vcal-conduit.h"
 
-extern "C"
-{
+extern "C" {
 
-void *init_conduit_vcal()
-{
-	return new ConduitFactory<VCalWidgetSetup,VCalConduit>;
-}
+    void *init_conduit_vcal()
+    {
+        return new ConduitFactory<VCalWidgetSetup, VCalConduit>;
+    }
 
 }
 

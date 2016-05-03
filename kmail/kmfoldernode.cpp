@@ -7,11 +7,11 @@
 #include "kmfolderdir.h"
 
 //-----------------------------------------------------------------------------
-KMFolderNode::KMFolderNode( KMFolderDir * parent, const QString & name )
-  : mName( name ),
-    mParent( parent ),
-    mDir( false ),
-    mId( 0 )
+KMFolderNode::KMFolderNode(KMFolderDir *parent, const QString &name)
+    : mName(name),
+      mParent(parent),
+      mDir(false),
+      mId(0)
 {
 }
 
@@ -24,42 +24,42 @@ KMFolderNode::~KMFolderNode()
 //-----------------------------------------------------------------------------
 bool KMFolderNode::isDir(void) const
 {
-  return mDir;
+    return mDir;
 }
 
 
 //-----------------------------------------------------------------------------
 QString KMFolderNode::path() const
 {
-  if (parent()) return parent()->path();
-  return QString::null;
+    if(parent()) return parent()->path();
+    return QString::null;
 }
 
 //-----------------------------------------------------------------------------
 QString KMFolderNode::label(void) const
 {
-  return name();
+    return name();
 }
 
 //-----------------------------------------------------------------------------
-KMFolderDir* KMFolderNode::parent(void) const
+KMFolderDir *KMFolderNode::parent(void) const
 {
-  return mParent;
+    return mParent;
 }
 
 //-----------------------------------------------------------------------------
-void KMFolderNode::setParent( KMFolderDir* aParent )
+void KMFolderNode::setParent(KMFolderDir *aParent)
 {
-  mParent = aParent;
+    mParent = aParent;
 }
 
 //-----------------------------------------------------------------------------
 uint KMFolderNode::id() const
 {
-  if (mId > 0)
-    return mId;
-  // compatibility, returns 0 on error
-  return name().toUInt();
+    if(mId > 0)
+        return mId;
+    // compatibility, returns 0 on error
+    return name().toUInt();
 }
 
 #include "kmfoldernode.moc"

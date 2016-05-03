@@ -42,180 +42,182 @@ class KConfig;
 class KURL;
 class KParts::BrowserExtension;
 
-namespace Akregator
-{
-    namespace Backend
-    {
-        class Storage;
-    }
+namespace Akregator {
+namespace Backend {
+class Storage;
+}
 
-    typedef KParts::ReadOnlyPart MyBasePart;
+typedef KParts::ReadOnlyPart MyBasePart;
 
-    class ActionManagerImpl;
-    class View;
-    class Part;
-    class Feed;
-    class Article;
-    class TrayIcon;
+class ActionManagerImpl;
+class View;
+class Part;
+class Feed;
+class Article;
+class TrayIcon;
 
-    class BrowserExtension : public KParts::BrowserExtension
-    {
-        Q_OBJECT
+class BrowserExtension : public KParts::BrowserExtension {
+    Q_OBJECT
 
-        public:
-            BrowserExtension(Part *p, const char *name );
-        public slots:
-            void saveSettings();
-        private:
-            Part *m_part;
-    };
+public:
+    BrowserExtension(Part *p, const char *name);
+public slots:
+    void saveSettings();
+private:
+    Part *m_part;
+};
+
+/**
+ This is a RSS Aggregator "Part". It does all the real work.
+ It is also embeddable into other applications (e.g. for use in Kontact).
+ */
+class Part : public MyBasePart, virtual public AkregatorPartIface {
+    Q_OBJECT
+public:
+    typedef MyBasePart inherited;
+
+    /** Default constructor.*/
+    Part(QWidget *parentWidget, const char *widgetName,
+         QObject *parent, const char *name, const QStringList &);
+
+    /** Destructor. */
+    virtual ~Part();
+
+    /** Create KAboutData for this KPart. */
+    static KAboutData *createAboutData();
 
     /**
-     This is a RSS Aggregator "Part". It does all the real work.
-     It is also embeddable into other applications (e.g. for use in Kontact).
+     Opens feedlist
+     @param url URL to feedlist
      */
-    class Part : public MyBasePart, virtual public AkregatorPartIface
+    virtual bool openURL(const KURL &url);
+
+    /** Opens standard feedlist */
+    virtual void openStandardFeedList();
+
+    virtual void fetchFeedUrl(const QString &);
+
+    /** Fetch all feeds in the feed tree */
+    virtual void fetchAllFeeds();
+
+    /**
+     Add a feed to a group.
+     @param urls The URL(s) of the feed(s) to add.
+     @param group The name of the folder into which the feed is added.
+     If the group does not exist, it is created.  The feed is added as the last member
+     of the group.
+     */
+    virtual void addFeedsToGroup(const QStringList &urls, const QString &group);
+
+    virtual void addFeed();
+
+    /**
+     This method is called when this app is restored.  The KConfig
+     object points to the session management config file that was saved
+     with @ref saveProperties
+     Calls AkregatorView's saveProperties.
+     */
+    virtual void readProperties(KConfig *config);
+
+    /** This method is called when it is time for the app to save its
+     properties for session management purposes.
+     Calls AkregatorView's readProperties. */
+    virtual void saveProperties(KConfig *config);
+
+    /** merges a nested part's GUI into the gui of this part
+    @return true iff merging was successful, i.e. the GUI factory was not NULL */
+    virtual bool mergePart(KParts::Part *);
+
+    void loadTagSet(const QString &path);
+    void saveTagSet(const QString &path);
+
+public slots:
+    /** Used to save settings after changing them from configuration dialog. Calls AkregatorPart's saveSettings. */
+    virtual void saveSettings();
+
+    /** Saves the standard feed list to it's default location */
+    void slotSaveFeedList();
+
+    void fileImport();
+    void fileExport();
+    void fileGetFeeds();
+
+    void fileSendLink()
     {
-        Q_OBJECT
-        public:
-           typedef MyBasePart inherited;
+        fileSendArticle();
+    }
+    void fileSendFile()
+    {
+        fileSendArticle(true);
+    }
+    void fileSendArticle(bool attach = false);
 
-            /** Default constructor.*/
-            Part(QWidget *parentWidget, const char *widgetName,
-                          QObject *parent, const char *name, const QStringList&);
+    /** Shows configuration dialog */
+    void showOptions();
+    void showKNotifyOptions();
 
-	        /** Destructor. */
-            virtual ~Part();
-
-            /** Create KAboutData for this KPart. */
-            static KAboutData *createAboutData();
-
-            /**
-             Opens feedlist
-             @param url URL to feedlist
-             */
-            virtual bool openURL(const KURL& url);
-
-            /** Opens standard feedlist */
-            virtual void openStandardFeedList();
-
-            virtual void fetchFeedUrl(const QString&);
-
-            /** Fetch all feeds in the feed tree */
-            virtual void fetchAllFeeds();
-
-            /**
-             Add a feed to a group.
-             @param urls The URL(s) of the feed(s) to add.
-             @param group The name of the folder into which the feed is added.
-             If the group does not exist, it is created.  The feed is added as the last member
-             of the group.
-             */
-            virtual void addFeedsToGroup(const QStringList& urls, const QString& group);
-
-            virtual void addFeed();
-
-            /**
-             This method is called when this app is restored.  The KConfig
-             object points to the session management config file that was saved
-             with @ref saveProperties
-             Calls AkregatorView's saveProperties.
-             */
-            virtual void readProperties(KConfig* config);
-
-            /** This method is called when it is time for the app to save its
-             properties for session management purposes.
-             Calls AkregatorView's readProperties. */
-            virtual void saveProperties(KConfig* config);
-
-            /** merges a nested part's GUI into the gui of this part
-            @return true iff merging was successful, i.e. the GUI factory was not NULL */
-            virtual bool mergePart(KParts::Part*);
-
-            void loadTagSet(const QString& path);
-            void saveTagSet(const QString& path);
-
-        public slots:
-            /** Used to save settings after changing them from configuration dialog. Calls AkregatorPart's saveSettings. */
-            virtual void saveSettings();
-
-            /** Saves the standard feed list to it's default location */
-            void slotSaveFeedList();
-
-            void fileImport();
-            void fileExport();
-            void fileGetFeeds();
-
-            void fileSendLink() { fileSendArticle(); }
-            void fileSendFile() { fileSendArticle(true); }
-            void fileSendArticle(bool attach=false);
-
-            /** Shows configuration dialog */
-            void showOptions();
-            void showKNotifyOptions();
-
-        signals:
-            void showPart();
-            void signalSettingsChanged();
+signals:
+    void showPart();
+    void signalSettingsChanged();
 
 
-        protected:
+protected:
 
-        /** @return Whether the tray icon is enabled or not */
-            virtual bool isTrayIconEnabled() const;
+    /** @return Whether the tray icon is enabled or not */
+    virtual bool isTrayIconEnabled() const;
 
-            /** loads all Akregator plugins */
-            void loadPlugins();
+    /** loads all Akregator plugins */
+    void loadPlugins();
 
-            /** This must be implemented by each part */
-            virtual bool openFile();
+    /** This must be implemented by each part */
+    virtual bool openFile();
 
-            void importFile(const KURL& url);
-            void exportFile(const KURL& url);
+    void importFile(const KURL &url);
+    void exportFile(const KURL &url);
 
-            /** FIXME: hack to get the tray icon working */
-            QWidget* getMainWindow();
+    /** FIXME: hack to get the tray icon working */
+    QWidget *getMainWindow();
 
-            virtual KParts::Part *hitTest(QWidget *widget, const QPoint &globalPos);
+    virtual KParts::Part *hitTest(QWidget *widget, const QPoint &globalPos);
 
-            /** reimplemented to load/unload the merged parts on selection/deselection */
-            virtual void partActivateEvent(KParts::PartActivateEvent* event);
+    /** reimplemented to load/unload the merged parts on selection/deselection */
+    virtual void partActivateEvent(KParts::PartActivateEvent *event);
 
-        protected slots:
-            void slotOnShutdown();
-            void slotSettingsChanged();
+protected slots:
+    void slotOnShutdown();
+    void slotSettingsChanged();
 
-        private: // methods
+private: // methods
 
-            bool copyFile(const QString& backup);
+    bool copyFile(const QString &backup);
 
-            /** fills the font settings with system fonts, if fonts are not set */
-            void initFonts();
+    /** fills the font settings with system fonts, if fonts are not set */
+    void initFonts();
 
-            /** creates an OPML file containing the initial feeds (KDE feeds) */
-            static QDomDocument createDefaultFeedList();
+    /** creates an OPML file containing the initial feeds (KDE feeds) */
+    static QDomDocument createDefaultFeedList();
 
-            bool tryToLock(const QString& backendName);
+    bool tryToLock(const QString &backendName);
 
-         private: // attributes
+private: // attributes
 
-            class ApplyFiltersInterceptor;
-            ApplyFiltersInterceptor* m_applyFiltersInterceptor;
-            QString m_standardFeedList;
-            QString m_tagSetPath;
-            bool m_standardListLoaded;
-            bool m_shuttingDown;
+    class ApplyFiltersInterceptor;
+    ApplyFiltersInterceptor *m_applyFiltersInterceptor;
+    QString m_standardFeedList;
+    QString m_tagSetPath;
+    bool m_standardListLoaded;
+    bool m_shuttingDown;
 
-            KParts::BrowserExtension *m_extension;
-            KParts::Part* m_mergedPart;
-            View* m_view;
+    KParts::BrowserExtension *m_extension;
+    KParts::Part *m_mergedPart;
+    View *m_view;
 
-            QTimer* m_autosaveTimer;
-            /** did we backup the feed list already? */
-            bool m_backedUpList;
-            Backend::Storage* m_storage;
-            ActionManagerImpl* m_actionManager;
-    };
+    QTimer *m_autosaveTimer;
+    /** did we backup the feed list already? */
+    bool m_backedUpList;
+    Backend::Storage *m_storage;
+    ActionManagerImpl *m_actionManager;
+};
 }
 
 #endif // _AKREGATORPART_H_

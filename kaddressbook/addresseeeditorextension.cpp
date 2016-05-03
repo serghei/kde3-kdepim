@@ -32,17 +32,17 @@
 
 #include "addresseeeditorextension.h"
 
-AddresseeEditorExtension::AddresseeEditorExtension( KAB::Core *core, QWidget *parent, const char *name )
-  : KAB::ExtensionWidget( core, parent, name )
+AddresseeEditorExtension::AddresseeEditorExtension(KAB::Core *core, QWidget *parent, const char *name)
+    : KAB::ExtensionWidget(core, parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-  if ( KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor )
-    mAddresseeEditor = new SimpleAddresseeEditor( this );
-  else
-    mAddresseeEditor = new AddresseeEditorWidget( this );
+    if(KABPrefs::instance()->editorType() == KABPrefs::SimpleEditor)
+        mAddresseeEditor = new SimpleAddresseeEditor(this);
+    else
+        mAddresseeEditor = new AddresseeEditorWidget(this);
 
-  layout->addWidget( mAddresseeEditor );
+    layout->addWidget(mAddresseeEditor);
 }
 
 AddresseeEditorExtension::~AddresseeEditorExtension()
@@ -51,26 +51,27 @@ AddresseeEditorExtension::~AddresseeEditorExtension()
 
 void AddresseeEditorExtension::contactsSelectionChanged()
 {
-  const KABC::Addressee::List selectedAddressees = selectedContacts();
-  KABC::Addressee::List addressees;
+    const KABC::Addressee::List selectedAddressees = selectedContacts();
+    KABC::Addressee::List addressees;
 
-  if ( mAddresseeEditor->dirty() ) {
-    mAddresseeEditor->save();
-    addressees.append( mAddresseeEditor->addressee() );
-    emit modified( addressees );
-  }
+    if(mAddresseeEditor->dirty())
+    {
+        mAddresseeEditor->save();
+        addressees.append(mAddresseeEditor->addressee());
+        emit modified(addressees);
+    }
 
-  mAddresseeEditor->setAddressee( selectedAddressees[ 0 ] );
+    mAddresseeEditor->setAddressee(selectedAddressees[ 0 ]);
 }
 
 QString AddresseeEditorExtension::title() const
 {
-  return i18n( "Contact Editor" );
+    return i18n("Contact Editor");
 }
 
 QString AddresseeEditorExtension::identifier() const
 {
-  return "contact_editor";
+    return "contact_editor";
 }
 
 #include "addresseeeditorextension.moc"

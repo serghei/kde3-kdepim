@@ -39,10 +39,10 @@
 #include "pilotAppInfo.h"
 
 /** Interpreted form of the AppInfo block in the address database. */
-typedef PilotAppInfo<
-	AddressAppInfo,
-	unpack_AddressAppInfo,
-	pack_AddressAppInfo> PilotAddressInfo_;
+typedef PilotAppInfo <
+AddressAppInfo,
+unpack_AddressAppInfo,
+pack_AddressAppInfo > PilotAddressInfo_;
 
 /** This class exists @em only to clear up the type mess that
 *   is the field-numbers-and-indexes for phone numbers in the
@@ -59,98 +59,97 @@ typedef PilotAppInfo<
 *   A phone slot value may be invalid. If so, operations on it will
 *   fail (yielding invalid again) and isValid() will return @c false.
 */
-class PhoneSlot
-{
-friend class PilotAddress;
+class PhoneSlot {
+    friend class PilotAddress;
 protected:
-	/** Constructor. Use the specified value for the phone slot.
-	*   @p v is a field number (3..8).
-	*/
-	explicit PhoneSlot( const int v );
+    /** Constructor. Use the specified value for the phone slot.
+    *   @p v is a field number (3..8).
+    */
+    explicit PhoneSlot(const int v);
 
-	/** Assignment operator. Set the value of the slot to
-	*   the specified value @p v . This may yield an invalid
-	*   phone slot.
-	*/
-	const PhoneSlot &operator=(const int &v);
+    /** Assignment operator. Set the value of the slot to
+    *   the specified value @p v . This may yield an invalid
+    *   phone slot.
+    */
+    const PhoneSlot &operator=(const int &v);
 
-	/** Map the slot to an offset (for use in finding the phone type
-	*   for a given slot).
-	* @return Offset of this slot within the phone fields.
-	*/
-	unsigned int toOffset() const;
+    /** Map the slot to an offset (for use in finding the phone type
+    *   for a given slot).
+    * @return Offset of this slot within the phone fields.
+    */
+    unsigned int toOffset() const;
 
-	/** Map the slot to a field number. */
-	unsigned int toField() const;
+    /** Map the slot to a field number. */
+    unsigned int toField() const;
 
 public:
-	static const int invalid = -1; ///< Value for invalid slots. */
+    static const int invalid = -1; ///< Value for invalid slots. */
 
-	/** Constructor. The slot is invalid. */
-	PhoneSlot()
-	{
-		i = invalid;
-	}
+    /** Constructor. The slot is invalid. */
+    PhoneSlot()
+    {
+        i = invalid;
+    }
 
-	/** Comparison operator. */
-	bool operator ==( const PhoneSlot &v ) const
-	{
-		return v.i == i;
-	}
+    /** Comparison operator. */
+    bool operator ==(const PhoneSlot &v) const
+    {
+        return v.i == i;
+    }
 
-	/** Iterator operation. Go to the next slot (or invalid when
-	*   the range runs out).
-	*/
-	const PhoneSlot &operator++();
+    /** Iterator operation. Go to the next slot (or invalid when
+    *   the range runs out).
+    */
+    const PhoneSlot &operator++();
 
-	/** Begin value of an iteration through the phone slots. */
-	static const PhoneSlot begin();
+    /** Begin value of an iteration through the phone slots. */
+    static const PhoneSlot begin();
 
-	/** When the slot range runs out (past entryPhone5) it
-	*   is invalid, so the end compares with that.
-	*/
-	static const PhoneSlot end();
+    /** When the slot range runs out (past entryPhone5) it
+    *   is invalid, so the end compares with that.
+    */
+    static const PhoneSlot end();
 
-	/** Valid slots are entryPhone1 (3) through entryPhone5 (7).
-	*   @return @c true if the slot is valid.
-	*/
-	bool isValid() const
-	{
-		return (entryPhone1 <= i) && (i <= entryPhone5);
-	}
+    /** Valid slots are entryPhone1 (3) through entryPhone5 (7).
+    *   @return @c true if the slot is valid.
+    */
+    bool isValid() const
+    {
+        return (entryPhone1 <= i) && (i <= entryPhone5);
+    }
 
-	operator QString() const;
+    operator QString() const;
 private:
-	int i;
+    int i;
 } ;
 
 
-class PilotAddressInfo : public PilotAddressInfo_
-{
+class PilotAddressInfo : public PilotAddressInfo_ {
 public:
-	PilotAddressInfo(PilotDatabase *d) : PilotAddressInfo_(d)
-	{
-	}
+    PilotAddressInfo(PilotDatabase *d) : PilotAddressInfo_(d)
+    {
+    }
 
-	/** This resets the entire AppInfo block to one as it would be
-	*   in an English-language handheld, with 3 categories and
-	*   default field labels for everything.
-	*/
-	void resetToDefault();
+    /** This resets the entire AppInfo block to one as it would be
+    *   in an English-language handheld, with 3 categories and
+    *   default field labels for everything.
+    */
+    void resetToDefault();
 
-	enum EPhoneType {
-		eWork=0,
-		eHome,
-		eFax,
-		eOther,
-		eEmail,
-		eMain,
-		ePager,
-		eMobile,
-		eNone=-1
-	} ;
+    enum EPhoneType
+    {
+        eWork = 0,
+        eHome,
+        eFax,
+        eOther,
+        eEmail,
+        eMain,
+        ePager,
+        eMobile,
+        eNone = -1
+    } ;
 
-	QString phoneLabel(EPhoneType i) const;
+    QString phoneLabel(EPhoneType i) const;
 } ;
 
 /** @brief A wrapper class around the Address struct provided by pi-address.h
@@ -187,150 +186,152 @@ public:
  * this order is kept. In other languages, main can replaced with
  * Corporation.
  */
-class KDE_EXPORT PilotAddress : public PilotRecordBase
-{
+class KDE_EXPORT PilotAddress : public PilotRecordBase {
 public:
-	PilotAddress(PilotRecord *rec = 0L);
-	PilotAddress(const PilotAddress &copyFrom);
-	PilotAddress& operator=( const PilotAddress &r );
-	bool operator==(const PilotAddress &r);
+    PilotAddress(PilotRecord *rec = 0L);
+    PilotAddress(const PilotAddress &copyFrom);
+    PilotAddress &operator=(const PilotAddress &r);
+    bool operator==(const PilotAddress &r);
 
-	virtual ~PilotAddress();
+    virtual ~PilotAddress();
 
-	/** Returns a text representation of the address. If @p richText is true, the
-	 *  text will be formatted with Qt-HTML tags. The AppInfo structure @p info
-	 *  is used to figure out the phone labels; if it is NULL then bogus labels are
-	 *  used to identify phone types.
-	 */
-	QString getTextRepresentation(const PilotAddressInfo *info, Qt::TextFormat richText) const;
+    /** Returns a text representation of the address. If @p richText is true, the
+     *  text will be formatted with Qt-HTML tags. The AppInfo structure @p info
+     *  is used to figure out the phone labels; if it is NULL then bogus labels are
+     *  used to identify phone types.
+     */
+    QString getTextRepresentation(const PilotAddressInfo *info, Qt::TextFormat richText) const;
 
-	/**
-	*   @param text set the field value
-	*   @param field int values associated with the enum defined in
-	*  pi-address.h.
-	*  The copied possible enum's are: (copied from pi-address.h on 1/12/01)
-	*  enum { entryLastname, entryFirstname, entryCompany,
-	*  entryPhone1, entryPhone2, entryPhone3, entryPhone4, entryPhone5,
-	*  entryAddress, entryCity, entryState, entryZip, entryCountry,
-	*  entryTitle, entryCustom1, entryCustom2, entryCustom3, entryCustom4,
-	*  entryNote };
-	*/
-	void setField(int field, const QString &text);
-	/** Set a field @p i to a given text value. Uses the phone slots only. */
-	void setField(const PhoneSlot &i, const QString &t)
-	{
-		if (i.isValid())
-		{
-			setField(i.toField(),t);
-		}
-	}
+    /**
+    *   @param text set the field value
+    *   @param field int values associated with the enum defined in
+    *  pi-address.h.
+    *  The copied possible enum's are: (copied from pi-address.h on 1/12/01)
+    *  enum { entryLastname, entryFirstname, entryCompany,
+    *  entryPhone1, entryPhone2, entryPhone3, entryPhone4, entryPhone5,
+    *  entryAddress, entryCity, entryState, entryZip, entryCountry,
+    *  entryTitle, entryCustom1, entryCustom2, entryCustom3, entryCustom4,
+    *  entryNote };
+    */
+    void setField(int field, const QString &text);
+    /** Set a field @p i to a given text value. Uses the phone slots only. */
+    void setField(const PhoneSlot &i, const QString &t)
+    {
+        if(i.isValid())
+        {
+            setField(i.toField(), t);
+        }
+    }
 
-	/** Returns the text value of a given field @p field (or QString::null
-	*   if there is no such field).
-	*/
-	QString getField(int field) const;
-	/** Returns the value of the phone field @p i . */
-	QString getField(const PhoneSlot &i) const
-	{
-		return i.isValid() ? getField(i.toField()) : QString();
-	}
+    /** Returns the text value of a given field @p field (or QString::null
+    *   if there is no such field).
+    */
+    QString getField(int field) const;
+    /** Returns the value of the phone field @p i . */
+    QString getField(const PhoneSlot &i) const
+    {
+        return i.isValid() ? getField(i.toField()) : QString();
+    }
 
-	/**
-	*   Return list of all email addresses.  This will search through our "phone"
-	*   fields and will return only those which are e-mail addresses.
-	*/
-	QStringList getEmails() const;
-	void setEmails(const QStringList &emails);
+    /**
+    *   Return list of all email addresses.  This will search through our "phone"
+    *   fields and will return only those which are e-mail addresses.
+    */
+    QStringList getEmails() const;
+    void setEmails(const QStringList &emails);
 
-	enum PhoneHandlingFlags
-	{
-		NoFlags=0, ///< No special handling
-		Replace    ///< Replace existing entries of same type
-	} ;
+    enum PhoneHandlingFlags
+    {
+        NoFlags = 0, ///< No special handling
+        Replace    ///< Replace existing entries of same type
+    } ;
 
-	/**
-	*  @param type is the type of phone
-	*  @param checkCustom4 flag if true, checks the entryCustom4 field
-	*  for extra phone fields
-	*  @return the field associated with the type
-	*/
-	QString getPhoneField(PilotAddressInfo::EPhoneType type) const;
+    /**
+    *  @param type is the type of phone
+    *  @param checkCustom4 flag if true, checks the entryCustom4 field
+    *  for extra phone fields
+    *  @return the field associated with the type
+    */
+    QString getPhoneField(PilotAddressInfo::EPhoneType type) const;
 
-	/**
-	*  @param type is the type of phone
-	*  @param field is value to store
-	*  @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
-	*  it will use entryCustom4 field to store the field
-	*  @param overwriteExisting is true, it will overwrite an existing record-type
-	*  with the field, else it will always search for the first available slot
-	 * @return index of the field that this information was set to
-	*/
-	PhoneSlot setPhoneField(PilotAddressInfo::EPhoneType type, const QString &value, PhoneHandlingFlags flags);
+    /**
+    *  @param type is the type of phone
+    *  @param field is value to store
+    *  @param overflowCustom is true, and entryPhone1 to entryPhone5 is full
+    *  it will use entryCustom4 field to store the field
+    *  @param overwriteExisting is true, it will overwrite an existing record-type
+    *  with the field, else it will always search for the first available slot
+     * @return index of the field that this information was set to
+    */
+    PhoneSlot setPhoneField(PilotAddressInfo::EPhoneType type, const QString &value, PhoneHandlingFlags flags);
 
-	/**
-	* Returns the slot of the phone number
-	* selected by the user to be shown in the
-	* overview of addresses.
-	*
-	* @return Slot of phone entry (between entryPhone1 and entryPhone5)
-	*/
-	PhoneSlot getShownPhone() const;
+    /**
+    * Returns the slot of the phone number
+    * selected by the user to be shown in the
+    * overview of addresses.
+    *
+    * @return Slot of phone entry (between entryPhone1 and entryPhone5)
+    */
+    PhoneSlot getShownPhone() const;
 
-	/**
-	* Set the shown phone (the one preferred by the user for display
-	* on the handheld's overview page) to the @em type (not index)
-	* indicated. Looks through the phone entries of this record to
-	* find the first one one of this type.
-	*
-	* @return Slot of phone entry.
-	*
-	* @note Sets the shown phone to the first entry if no field of
-	*       type @p phoneType can be found @em and no Home phone
-	*       field (the fallback) can be found either.
-	*/
-	PhoneSlot setShownPhone(PilotAddressInfo::EPhoneType phoneType);
+    /**
+    * Set the shown phone (the one preferred by the user for display
+    * on the handheld's overview page) to the @em type (not index)
+    * indicated. Looks through the phone entries of this record to
+    * find the first one one of this type.
+    *
+    * @return Slot of phone entry.
+    *
+    * @note Sets the shown phone to the first entry if no field of
+    *       type @p phoneType can be found @em and no Home phone
+    *       field (the fallback) can be found either.
+    */
+    PhoneSlot setShownPhone(PilotAddressInfo::EPhoneType phoneType);
 
-	/**
-	* Set the shown phone (the one preferred by the user for display
-	* on the handheld's overview page) to the given @p slot .
-	*
-	* @return @p v
-	*/
-	const PhoneSlot &setShownPhone(const PhoneSlot &v);
+    /**
+    * Set the shown phone (the one preferred by the user for display
+    * on the handheld's overview page) to the given @p slot .
+    *
+    * @return @p v
+    */
+    const PhoneSlot &setShownPhone(const PhoneSlot &v);
 
-	/** Get the phone type (label) for a given field @p field
-	*   in the record. The @p field must be within the
-	*   phone range (entryPhone1 .. entryPhone5).
-	*
-	* @return Phone type for phone field @p field .
-	* @return @c eNone (fake phone type) if @p field is invalid.
-	*/
-	PilotAddressInfo::EPhoneType getPhoneType(const PhoneSlot &field) const;
+    /** Get the phone type (label) for a given field @p field
+    *   in the record. The @p field must be within the
+    *   phone range (entryPhone1 .. entryPhone5).
+    *
+    * @return Phone type for phone field @p field .
+    * @return @c eNone (fake phone type) if @p field is invalid.
+    */
+    PilotAddressInfo::EPhoneType getPhoneType(const PhoneSlot &field) const;
 
-	PilotRecord *pack() const;
+    PilotRecord *pack() const;
 
-	const struct Address *address() const { return &fAddressInfo; } ;
+    const struct Address *address() const
+    {
+        return &fAddressInfo;
+    } ;
 
 
 protected:
-	// Get the pointers in cases where no conversion to
-	// unicode is desired.
-	//
-	const char *getFieldP(int field) const
-	{
-		return fAddressInfo.entry[field];
-	}
+    // Get the pointers in cases where no conversion to
+    // unicode is desired.
+    //
+    const char *getFieldP(int field) const
+    {
+        return fAddressInfo.entry[field];
+    }
 
 private:
-	void _copyAddressInfo(const struct Address &copyFrom);
-	PhoneSlot _getNextEmptyPhoneSlot() const;
+    void _copyAddressInfo(const struct Address &copyFrom);
+    PhoneSlot _getNextEmptyPhoneSlot() const;
 
-	/** @return entryPhone1 to entryPhone5 if the appTypeNum number is
-	*  found in the phoneLabel array; return -1 if not found
-	*/
-	PhoneSlot _findPhoneFieldSlot(PilotAddressInfo::EPhoneType t) const;
+    /** @return entryPhone1 to entryPhone5 if the appTypeNum number is
+    *  found in the phoneLabel array; return -1 if not found
+    */
+    PhoneSlot _findPhoneFieldSlot(PilotAddressInfo::EPhoneType t) const;
 
-	struct Address fAddressInfo;
+    struct Address fAddressInfo;
 };
 
 

@@ -32,20 +32,18 @@ class KComboBox;
 
 namespace Komposer {
 
-  class PrefsModule : public KPrefsModule
-  {
+class PrefsModule : public KPrefsModule {
     Q_OBJECT
-  public:
-    PrefsModule( QWidget *parent=0, const char *name=0 );
+public:
+    PrefsModule(QWidget *parent = 0, const char *name = 0);
     virtual const KAboutData *aboutData() const;
-  };
+};
 
-  class EditorSelection : public KPrefsWid
-  {
+class EditorSelection : public KPrefsWid {
     Q_OBJECT
 
-  public:
-    EditorSelection( const QString &text, QString &reference, QWidget *parent );
+public:
+    EditorSelection(const QString &text, QString &reference, QWidget *parent);
     ~EditorSelection();
 
     void readConfig();
@@ -53,18 +51,18 @@ namespace Komposer {
 
     QGroupBox *groupBox() const;
 
-  private slots:
-    void slotActivated( const QString & );
+private slots:
+    void slotActivated(const QString &);
 
-  private:
-    void setItem( const QString & );
-  private:
+private:
+    void setItem(const QString &);
+private:
     QString &m_reference;
 
     QGroupBox *m_box;
     KComboBox *m_editorsCombo;
     QMap<QString, KService::Ptr> m_services;
-  };
+};
 }
 
 #endif

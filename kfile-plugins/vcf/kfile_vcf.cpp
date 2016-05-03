@@ -31,20 +31,20 @@
 
 typedef KGenericFactory<KVcfPlugin> VcfFactory;
 
-K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory( "kfile_vcf" ))
+K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory("kfile_vcf"))
 
 KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
                        const QStringList &args)
 
     : KFilePlugin(parent, name, args)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-vcard" );
+    KFileMimeTypeInfo *info = addMimeTypeInfo("text/x-vcard");
 
-    KFileMimeTypeInfo::GroupInfo* group = 0L;
+    KFileMimeTypeInfo::GroupInfo *group = 0L;
 
     group = addGroupInfo(info, "Technical", i18n("Technical Details"));
 
-    KFileMimeTypeInfo::ItemInfo* item;
+    KFileMimeTypeInfo::ItemInfo *item;
 
     item = addItemInfo(group, "Name", i18n("Name"), QVariant::String);
     item = addItemInfo(group, "Email", i18n("Email"), QVariant::String);
@@ -52,11 +52,11 @@ KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
 }
 
 
-bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
+bool KVcfPlugin::readInfo(KFileMetaInfo &info, uint /*what*/)
 {
     QFile file(info.path());
 
-    if (!file.open(IO_ReadOnly))
+    if(!file.open(IO_ReadOnly))
     {
         kdDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
         return false;
@@ -74,24 +74,25 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
     // prepare the text
     QString name = addr.formattedName().simplifyWhiteSpace();
-    if ( name.isEmpty() )
-      name = addr.givenName() + " " + addr.familyName();
+    if(name.isEmpty())
+        name = addr.givenName() + " " + addr.familyName();
     name = name.simplifyWhiteSpace();
 
-    if ( ! name.isEmpty() )
+    if(! name.isEmpty())
         appendItem(group, "Name", name);
 
-    if ( ! addr.preferredEmail().isEmpty() )
+    if(! addr.preferredEmail().isEmpty())
         appendItem(group, "Email", addr.preferredEmail());
 
     KABC::PhoneNumber::List pnList = addr.phoneNumbers();
     QStringList phoneNumbers;
-    for (unsigned int no=0; no<pnList.count(); ++no) {
-      QString pn = pnList[no].number().simplifyWhiteSpace();
-      if (!pn.isEmpty() && !phoneNumbers.contains(pn))
-        phoneNumbers.append(pn);
+    for(unsigned int no = 0; no < pnList.count(); ++no)
+    {
+        QString pn = pnList[no].number().simplifyWhiteSpace();
+        if(!pn.isEmpty() && !phoneNumbers.contains(pn))
+            phoneNumbers.append(pn);
     }
-    if ( !phoneNumbers.isEmpty() )
+    if(!phoneNumbers.isEmpty())
         appendItem(group, "Telephone", phoneNumbers.join("\n"));
 
     return true;

@@ -31,17 +31,17 @@
 
 typedef KGenericFactory<KPalmPlugin> PalmFactory;
 
-K_EXPORT_COMPONENT_FACTORY(kfile_palm, PalmFactory( "kfile_palm" ))
+K_EXPORT_COMPONENT_FACTORY(kfile_palm, PalmFactory("kfile_palm"))
 
 KPalmPlugin::KPalmPlugin(QObject *parent, const char *name,
-                       const QStringList &args)
+                         const QStringList &args)
 
     : KFilePlugin(parent, name, args)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "application/vnd.palm" );
+    KFileMimeTypeInfo *info = addMimeTypeInfo("application/vnd.palm");
 
-    KFileMimeTypeInfo::GroupInfo* group;
-    KFileMimeTypeInfo::ItemInfo* item;
+    KFileMimeTypeInfo::GroupInfo *group;
+    KFileMimeTypeInfo::ItemInfo *item;
 
     group = addGroupInfo(info, "General", i18n("General Information"));
     item = addItemInfo(group, "Name", i18n("Name"), QVariant::String);
@@ -64,49 +64,49 @@ KPalmPlugin::KPalmPlugin(QObject *parent, const char *name,
 }
 
 
-bool KPalmPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
+bool KPalmPlugin::readInfo(KFileMetaInfo &info, uint /*what*/)
 {
     int nrRec;
     QString tempName = info.path();
     QCString fileName = QFile::encodeName(tempName);
     pi_file *dbFile = pi_file_open(const_cast < char *>((const char *) fileName));
-    if (dbFile == 0L) return false;
-    
+    if(dbFile == 0L) return false;
+
     struct DBInfo dBInfo;
-    pi_file_get_info( dbFile, &dBInfo );
-    pi_file_get_entries( dbFile, &nrRec );
+    pi_file_get_info(dbFile, &dBInfo);
+    pi_file_get_entries(dbFile, &nrRec);
     pi_file_close(dbFile);
 
     KFileMetaInfoGroup generalGroup = appendGroup(info, "General");
-    appendItem(generalGroup, "Name", dBInfo.name );
-    appendItem(generalGroup, "DBType", (dBInfo.flags & dlpDBFlagResource)?i18n("PalmOS Application"):i18n("PalmOS Record Database") );
+    appendItem(generalGroup, "Name", dBInfo.name);
+    appendItem(generalGroup, "DBType", (dBInfo.flags & dlpDBFlagResource) ? i18n("PalmOS Application") : i18n("PalmOS Record Database"));
 
     char buff[5];
     set_long(buff, dBInfo.type);
-    buff[4]='\0';
-    appendItem(generalGroup, "TypeID", buff );
-    
-    set_long(buff, dBInfo.creator);
-    buff[4]='\0';
-    appendItem(generalGroup, "CreatorID", buff );
-    appendItem(generalGroup, "NrRecords", nrRec );
+    buff[4] = '\0';
+    appendItem(generalGroup, "TypeID", buff);
 
-    
+    set_long(buff, dBInfo.creator);
+    buff[4] = '\0';
+    appendItem(generalGroup, "CreatorID", buff);
+    appendItem(generalGroup, "NrRecords", nrRec);
+
+
     KFileMetaInfoGroup timeGroup = appendGroup(info, "TimeStamps");
     QDateTime tm;
-    tm.setTime_t( dBInfo.createDate );
+    tm.setTime_t(dBInfo.createDate);
     appendItem(timeGroup, "CreationDate", tm);
-    tm.setTime_t( dBInfo.modifyDate );
+    tm.setTime_t(dBInfo.modifyDate);
     appendItem(timeGroup, "ModificationDate", tm);
-    tm.setTime_t( dBInfo.backupDate );
+    tm.setTime_t(dBInfo.backupDate);
     appendItem(timeGroup, "BackupDate", tm);
 
     KFileMetaInfoGroup flagGroup = appendGroup(info, "Flags");
-    appendItem(flagGroup, "ReadOnly", (dBInfo.flags & dlpDBFlagReadOnly)?i18n("Yes"):i18n("No") );
-    appendItem(flagGroup, "MakeBackup", (dBInfo.flags & dlpDBFlagBackup)?i18n("Yes"):i18n("No") );
-    appendItem(flagGroup, "CopyProtected", (dBInfo.flags & dlpDBFlagCopyPrevention)?i18n("Yes"):i18n("No") );
-    appendItem(flagGroup, "Reset", (dBInfo.flags & dlpDBFlagReset)?i18n("Yes"):i18n("No") );
-    appendItem(flagGroup, "ExcludeFromSync", (dBInfo.miscFlags & dlpDBMiscFlagExcludeFromSync)?i18n("Yes"):i18n("No") );
+    appendItem(flagGroup, "ReadOnly", (dBInfo.flags & dlpDBFlagReadOnly) ? i18n("Yes") : i18n("No"));
+    appendItem(flagGroup, "MakeBackup", (dBInfo.flags & dlpDBFlagBackup) ? i18n("Yes") : i18n("No"));
+    appendItem(flagGroup, "CopyProtected", (dBInfo.flags & dlpDBFlagCopyPrevention) ? i18n("Yes") : i18n("No"));
+    appendItem(flagGroup, "Reset", (dBInfo.flags & dlpDBFlagReset) ? i18n("Yes") : i18n("No"));
+    appendItem(flagGroup, "ExcludeFromSync", (dBInfo.miscFlags & dlpDBMiscFlagExcludeFromSync) ? i18n("Yes") : i18n("No"));
 
     return true;
 }

@@ -37,45 +37,44 @@ class KDGanttViewItem;
 class FreeBusyItem;
 
 namespace KCal {
-  class FreeBusy;
-  class Attendee;
+class FreeBusy;
+class Attendee;
 }
 
 
-class KOEditorFreeBusy : public KOAttendeeEditor
-{
+class KOEditorFreeBusy : public KOAttendeeEditor {
     Q_OBJECT
-  public:
-    KOEditorFreeBusy( int spacing = 8, QWidget *parent = 0,
-                      const char *name = 0 );
+public:
+    KOEditorFreeBusy(int spacing = 8, QWidget *parent = 0,
+                     const char *name = 0);
     virtual ~KOEditorFreeBusy();
 
-    void setUpdateEnabled( bool enabled );
+    void setUpdateEnabled(bool enabled);
     bool updateEnabled() const;
 
-    void insertAttendee( KCal::Attendee *, bool readFBList = true );
-    void removeAttendee( KCal::Attendee * );
+    void insertAttendee(KCal::Attendee *, bool readFBList = true);
+    void removeAttendee(KCal::Attendee *);
     void clearAttendees();
 
-    void readEvent( KCal::Event * );
-    void writeEvent( KCal::Event *event );
+    void readEvent(KCal::Event *);
+    void writeEvent(KCal::Event *event);
 
     void triggerReload();
     void cancelReload();
 
-  signals:
-    void dateTimesChanged( const QDateTime &, const QDateTime & );
+signals:
+    void dateTimesChanged(const QDateTime &, const QDateTime &);
 
-  public slots:
-    void slotInsertFreeBusy( KCal::FreeBusy *fb, const QString &email );
+public slots:
+    void slotInsertFreeBusy(KCal::FreeBusy *fb, const QString &email);
 
-    void setDateTimes( const QDateTime &, const QDateTime & );
+    void setDateTimes(const QDateTime &, const QDateTime &);
 
-    void editFreeBusyUrl( KDGanttViewItem *item );
+    void editFreeBusyUrl(KDGanttViewItem *item);
 
-  protected slots:
-    void slotUpdateGanttView( const QDateTime &, const QDateTime & );
-    void slotScaleChanged( int );
+protected slots:
+    void slotUpdateGanttView(const QDateTime &, const QDateTime &);
+    void slotScaleChanged(int);
     void slotCenterOnStart() ;
     void slotZoomToTime();
     void slotPickDate();
@@ -85,32 +84,32 @@ class KOEditorFreeBusy : public KOAttendeeEditor
     void manualReload();
     // Only download FB if the auto-download option is set in config
     void autoReload();
-    void slotIntervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
+    void slotIntervalColorRectangleMoved(const QDateTime &start, const QDateTime &end);
 
     void removeAttendee();
-    void listViewClicked( int button, KDGanttViewItem* item );
+    void listViewClicked(int button, KDGanttViewItem *item);
 
-  protected:
-    void timerEvent( QTimerEvent* );
-    KCal::Attendee* currentAttendee() const;
+protected:
+    void timerEvent(QTimerEvent *);
+    KCal::Attendee *currentAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
-    void changeStatusForMe( KCal::Attendee::PartStat status );
-    virtual bool eventFilter( QObject *watched, QEvent *event );
+    void changeStatusForMe(KCal::Attendee::PartStat status);
+    virtual bool eventFilter(QObject *watched, QEvent *event);
 
-  private slots:
-    void slotOrganizerChanged( const QString &newOrganizer );
-  private:
-    void updateFreeBusyData( FreeBusyItem * );
+private slots:
+    void slotOrganizerChanged(const QString &newOrganizer);
+private:
+    void updateFreeBusyData(FreeBusyItem *);
 
-    bool findFreeSlot( QDateTime &dtFrom, QDateTime &dtTo );
-    bool tryDate( QDateTime &tryFrom, QDateTime &tryTo );
-    bool tryDate( FreeBusyItem *attendee,
-                  QDateTime &tryFrom, QDateTime &tryTo );
+    bool findFreeSlot(QDateTime &dtFrom, QDateTime &dtTo);
+    bool tryDate(QDateTime &tryFrom, QDateTime &tryTo);
+    bool tryDate(FreeBusyItem *attendee,
+                 QDateTime &tryFrom, QDateTime &tryTo);
     void updateStatusSummary();
     void reload();
     KDGanttView *mGanttView;
-    KDIntervalColorRectangle* mEventRectangle;
+    KDIntervalColorRectangle *mEventRectangle;
     QLabel *mStatusSummaryLabel;
     bool mIsOrganizer;
     QComboBox *scaleCombo;

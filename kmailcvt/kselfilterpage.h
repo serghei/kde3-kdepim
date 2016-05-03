@@ -24,18 +24,18 @@ class Filter;
 template <class T> class QPtrList;
 
 class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	KSelFilterPage(QWidget *parent=0, const char *name=0);
-	~KSelFilterPage();
+    KSelFilterPage(QWidget *parent = 0, const char *name = 0);
+    ~KSelFilterPage();
 public:
-	void  addFilter(Filter *f);
-	Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked();
+    void  addFilter(Filter *f);
+    Filter *getSelectedFilter(void);
+    bool removeDupMsg_checked();
 private:
-	QPtrList<Filter> mFilterList;
+    QPtrList<Filter> mFilterList;
 private slots:
-	void filterSelected(int i);
+    void filterSelected(int i);
 };
 
 #endif

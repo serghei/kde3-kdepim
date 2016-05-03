@@ -31,24 +31,23 @@ namespace Kontact {
 class Core;
 class Plugin;
 
-class AboutDialog : public KDialogBase
-{
-  Q_OBJECT
+class AboutDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    AboutDialog( Kontact::Core *core, const char *name = 0 );
+public:
+    AboutDialog(Kontact::Core *core, const char *name = 0);
 
-  protected:
-    void addAboutPlugin( Kontact::Plugin *plugin );
+protected:
+    void addAboutPlugin(Kontact::Plugin *plugin);
 
-    void addAboutData( const QString &title, const QString &icon,
-                       const KAboutData *about );
+    void addAboutData(const QString &title, const QString &icon,
+                      const KAboutData *about);
 
-    void addLicenseText( const KAboutData *about );
+    void addLicenseText(const KAboutData *about);
 
-    QString formatPerson( const QString &name, const QString &email );
+    QString formatPerson(const QString &name, const QString &email);
 
-  private:
+private:
     Core *mCore;
 };
 

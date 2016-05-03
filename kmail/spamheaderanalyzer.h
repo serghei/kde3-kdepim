@@ -41,49 +41,58 @@ class KMMessage;
 
 namespace KMail {
 
-  /**
-     @short A simple tupel of agent, score and header.
+/**
+   @short A simple tupel of agent, score and header.
 
-     The score returned is positive if no error has occurred.
-     Negative values indicate the following errors:
-       -1.0     Unintialized struct used
-       -2.0     Error extracing agent string
-       -3.0     Couldn't convert score to float
-       -4.0     Couldn't convert threshold to float or threshold is negative
-       -5.0     Couldn't find the score field
-       -6.0     Couldn't find the threshold field
-  */
-  class SpamScore {
-  public:
-    SpamScore() : mScore( -2.0 ) {}
-    SpamScore( const QString & agent, float score, const QString & header )
-      : mAgent( agent ), mScore( score ), mHeader( header ) {}
-    QString agent() const { return mAgent; }
-    float score() const { return mScore; }
-    QString spamHeader() const { return mHeader; }
+   The score returned is positive if no error has occurred.
+   Negative values indicate the following errors:
+     -1.0     Unintialized struct used
+     -2.0     Error extracing agent string
+     -3.0     Couldn't convert score to float
+     -4.0     Couldn't convert threshold to float or threshold is negative
+     -5.0     Couldn't find the score field
+     -6.0     Couldn't find the threshold field
+*/
+class SpamScore {
+public:
+    SpamScore() : mScore(-2.0) {}
+    SpamScore(const QString &agent, float score, const QString &header)
+        : mAgent(agent), mScore(score), mHeader(header) {}
+    QString agent() const
+    {
+        return mAgent;
+    }
+    float score() const
+    {
+        return mScore;
+    }
+    QString spamHeader() const
+    {
+        return mHeader;
+    }
 
-  private:
+private:
     QString mAgent;
     float mScore;
     QString mHeader;
-  };
-  typedef QValueList<SpamScore> SpamScores;
-  typedef QValueListIterator<SpamScore> SpamScoresIterator;
+};
+typedef QValueList<SpamScore> SpamScores;
+typedef QValueListIterator<SpamScore> SpamScoresIterator;
 
 
-  /**
-     @short Flyweight for analysing spam headers.
-     @author Patrick Audley <paudley@blackcat.ca>
-   */
-  class SpamHeaderAnalyzer {
-  public:
+/**
+   @short Flyweight for analysing spam headers.
+   @author Patrick Audley <paudley@blackcat.ca>
+ */
+class SpamHeaderAnalyzer {
+public:
     /**
        @short Extract scores from known anti-spam headers
        @param message A KMMessage to examine
        @return A list of detected scores. See SpamScore
     */
-    static SpamScores getSpamScores( const KMMessage *message );
-  };
+    static SpamScores getSpamScores(const KMMessage *message);
+};
 
 } // namespace KMail
 

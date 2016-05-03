@@ -37,92 +37,91 @@
 
 #include "pilot.h"
 
-class KPilotUser
-{
+class KPilotUser {
 public:
-	/** Constructor. Create an empty PilotUser structure. */
-	KPilotUser()
-	{
-		::memset(&fUser,0,sizeof(struct PilotUser));
-	}
-	/** Constructor. Use the given PilotUser structure.
-	*  This creates a copy; no ownership is transferred.
-	*/
-	KPilotUser(const PilotUser *user)
-	{
-		fUser = *user;
-	}
+    /** Constructor. Create an empty PilotUser structure. */
+    KPilotUser()
+    {
+        ::memset(&fUser, 0, sizeof(struct PilotUser));
+    }
+    /** Constructor. Use the given PilotUser structure.
+    *  This creates a copy; no ownership is transferred.
+    */
+    KPilotUser(const PilotUser *user)
+    {
+        fUser = *user;
+    }
 
-	/** Accessor for the whole PilotUser structure. */
-	PilotUser *data()
-	{
-		return &fUser;
-	}
+    /** Accessor for the whole PilotUser structure. */
+    PilotUser *data()
+    {
+        return &fUser;
+    }
 
-	/** @return The username set on the handheld. */
-	QString name() const
-	{
-		return Pilot::fromPilot( fUser.username );
-	}
-	/** Set the user name to the given @p name , truncated
-	*  if necessary to the size of the field on the handheld.
-	*/
-	void setName( const QString &name )
-	{
-		Pilot::toPilot( name, fUser.username, sizeof(fUser.username) );
-	}
+    /** @return The username set on the handheld. */
+    QString name() const
+    {
+        return Pilot::fromPilot(fUser.username);
+    }
+    /** Set the user name to the given @p name , truncated
+    *  if necessary to the size of the field on the handheld.
+    */
+    void setName(const QString &name)
+    {
+        Pilot::toPilot(name, fUser.username, sizeof(fUser.username));
+    }
 
-	/** @return The length of the password on the handheld,
-	*           in bytes.
-	*/
-	const int passwordLength() const
-	{
-		return fUser.passwordLength;
-	}
+    /** @return The length of the password on the handheld,
+    *           in bytes.
+    */
+    const int passwordLength() const
+    {
+        return fUser.passwordLength;
+    }
 
-	/** @return the ID (4 bytes) of the last PC to sync this handheld.
-	 *          This is intended to help identify when the use has
-	 *          changed PCs and needs a new full sync.
-	 */
-	unsigned long getLastSyncPC() const
-	{
-		return fUser.lastSyncPC;
-	}
-	/** Set the ID of the PC syncing the handheld to @p pc . This
-	 *  should be unique in some way (perhaps IP addresses can be
-	 *  used this way, or hostnames).
-	 */
-	void setLastSyncPC(unsigned long pc)
-	{
-		fUser.lastSyncPC = pc;
-	}
+    /** @return the ID (4 bytes) of the last PC to sync this handheld.
+     *          This is intended to help identify when the use has
+     *          changed PCs and needs a new full sync.
+     */
+    unsigned long getLastSyncPC() const
+    {
+        return fUser.lastSyncPC;
+    }
+    /** Set the ID of the PC syncing the handheld to @p pc . This
+     *  should be unique in some way (perhaps IP addresses can be
+     *  used this way, or hostnames).
+     */
+    void setLastSyncPC(unsigned long pc)
+    {
+        fUser.lastSyncPC = pc;
+    }
 
-	/** @return the timestamp that the handheld was last synced
-	 *  successfully.
-	 */
-	time_t getLastSuccessfulSyncDate()
-	{
-		return fUser.successfulSyncDate;
-	}
-	/** Set the timestamp for a successful sync. */
-	void setLastSuccessfulSyncDate(time_t when)
-	{
-		fUser.successfulSyncDate = when;
-	}
+    /** @return the timestamp that the handheld was last synced
+     *  successfully.
+     */
+    time_t getLastSuccessfulSyncDate()
+    {
+        return fUser.successfulSyncDate;
+    }
+    /** Set the timestamp for a successful sync. */
+    void setLastSuccessfulSyncDate(time_t when)
+    {
+        fUser.successfulSyncDate = when;
+    }
 
-	/** @return the timestamp of the last sync attempt. */
-	time_t getLastSyncDate()
-	{
-		return fUser.lastSyncDate;
-	}
-	/** Set the timestamp of the sync attempt. */
-	void setLastSyncDate(time_t when)
-	{
-		fUser.lastSyncDate = when;
-	}
+    /** @return the timestamp of the last sync attempt. */
+    time_t getLastSyncDate()
+    {
+        return fUser.lastSyncDate;
+    }
+    /** Set the timestamp of the sync attempt. */
+    void setLastSyncDate(time_t when)
+    {
+        fUser.lastSyncDate = when;
+    }
 
 private:
-	struct PilotUser fUser;
+    struct PilotUser fUser;
 };
 
 #endif

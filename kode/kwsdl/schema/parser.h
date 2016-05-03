@@ -1,4 +1,4 @@
-/* 
+/*
     This file is part of KDE Schema Parser
 
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
@@ -31,74 +31,73 @@
 
 namespace Schema {
 
-class Parser
-{
-  public:
-    Parser( const QString &nameSpace = QString() );
+class Parser {
+public:
+    Parser(const QString &nameSpace = QString());
 
     ~Parser();
 
     Types types() const;
 
     void clear();
-    void setSchemaBaseUrl( const QString& );
+    void setSchemaBaseUrl(const QString &);
 
-    void parseNameSpace( const QDomElement &element );
-    bool parseSchemaTag( const QDomElement &element );
+    void parseNameSpace(const QDomElement &element);
+    bool parseSchemaTag(const QDomElement &element);
 
-    const XSDType *type( const QualifiedName &type );
-    const XSDType *type( int id ) const;
+    const XSDType *type(const QualifiedName &type);
+    const XSDType *type(int id) const;
     int numTypes() const;
 
-    QString typeName( int id ) const;
+    QString typeName(int id) const;
 
-    Element *element( const QualifiedName &element ) const;
-    Element *element( int id ) const;
+    Element *element(const QualifiedName &element) const;
+    Element *element(int id) const;
     Element::PtrList elements() const;
     int numElements() const;
 
-    Attribute *attribute( const QualifiedName &attribute ) const;
-    Attribute *attribute( int id ) const;
+    Attribute *attribute(const QualifiedName &attribute) const;
+    Attribute *attribute(int id) const;
     int numAttributes() const;
 
     QString targetNamespace() const;
 
-    int typeId( const QualifiedName &name, bool create = false );
+    int typeId(const QualifiedName &name, bool create = false);
 
-    bool isBasicType( int sType ) const;
+    bool isBasicType(int sType) const;
 
     bool finalize();
 
-    int elementId( const QualifiedName &type );
-    int elementType( const QualifiedName &type );
-    int attributeId( const QualifiedName &type ) const;
-    int attributeType( const QualifiedName &type );
+    int elementId(const QualifiedName &type);
+    int elementType(const QualifiedName &type);
+    int attributeId(const QualifiedName &type) const;
+    int attributeType(const QualifiedName &type);
 
-  private:
-    void parseImport( const QDomElement& );
-    void parseElement( const QDomElement& );
-    void parseAttribute( const QDomElement& );
+private:
+    void parseImport(const QDomElement &);
+    void parseElement(const QDomElement &);
+    void parseAttribute(const QDomElement &);
 
-    void parseAnnotation( const QDomElement& );
-    void parseAnnotation( const QDomElement&, QString& );
-    void parseAnnotation( const QDomElement&, ComplexType* );
-    void parseAnnotation( const QDomElement&, SimpleType* );
-    XSDType *parseComplexType( const QDomElement& );
+    void parseAnnotation(const QDomElement &);
+    void parseAnnotation(const QDomElement &, QString &);
+    void parseAnnotation(const QDomElement &, ComplexType *);
+    void parseAnnotation(const QDomElement &, SimpleType *);
+    XSDType *parseComplexType(const QDomElement &);
 
-    void all( const QDomElement&, ComplexType* );
-    void cs( const QDomElement&, ComplexType* );
+    void all(const QDomElement &, ComplexType *);
+    void cs(const QDomElement &, ComplexType *);
 
-    void addElement( const QDomElement&, ComplexType* );
+    void addElement(const QDomElement &, ComplexType *);
 
-    void addAttribute( const QDomElement&, ComplexType* );
-    void addAny( const QDomElement&, ComplexType* );
-    void addAnyAttribute( const QDomElement&, ComplexType* );
-    int addExternalElement( const QString&, int );
+    void addAttribute(const QDomElement &, ComplexType *);
+    void addAny(const QDomElement &, ComplexType *);
+    void addAnyAttribute(const QDomElement &, ComplexType *);
+    int addExternalElement(const QString &, int);
 
-    XSDType *parseSimpleType( const QDomElement& );
-    void parseRestriction( const QDomElement&, SimpleType* );
-    void parseComplexContent( const QDomElement&, ComplexType* );
-    void parseSimpleContent( const QDomElement&, ComplexType* );
+    XSDType *parseSimpleType(const QDomElement &);
+    void parseRestriction(const QDomElement &, SimpleType *);
+    void parseComplexContent(const QDomElement &, ComplexType *);
+    void parseSimpleContent(const QDomElement &, ComplexType *);
 
 
     void resolveForwardElementRefs();
@@ -106,14 +105,14 @@ class Parser
     void resolveForwardDerivations();
     bool shouldResolve();
 
-    void importSchema( const QString &location );
+    void importSchema(const QString &location);
 
     bool mElementQualified;
     bool mAttributeQualified;
     QMap<QString, QString> mNameSpaceMap;
     QString mNameSpace;
     QString mPrefix;
-  
+
     TypesTable mTypesTable;
     Element::PtrList mElements;
     Attribute::PtrList mAttributes;
@@ -121,10 +120,11 @@ class Parser
     QualifiedName::List mForwardElementRef;
     QualifiedName::List mForwardAttributeRef;
 
-    typedef struct {
-      QualifiedName type;
-      QualifiedName baseType;
-      ComplexType::Derivation derivation;
+    typedef struct
+    {
+        QualifiedName type;
+        QualifiedName baseType;
+        ComplexType::Derivation derivation;
     } ForwardDerivation;
 
     QValueList<ForwardDerivation> mForwardDerivations;

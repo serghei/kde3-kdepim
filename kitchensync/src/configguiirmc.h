@@ -34,20 +34,19 @@ class QCheckBox;
 class QPushButton;
 class QSpinBox;
 
-class ConfigGuiIRMC : public ConfigGui
-{
-  Q_OBJECT
+class ConfigGuiIRMC : public ConfigGui {
+    Q_OBJECT
 
-  public:
-    ConfigGuiIRMC( const QSync::Member &, QWidget *parent );
+public:
+    ConfigGuiIRMC(const QSync::Member &, QWidget *parent);
 
-    void load( const QString &xml );
+    void load(const QString &xml);
     QString save() const;
 
-  protected slots:
-    void connectionTypeChanged( int type );
+protected slots:
+    void connectionTypeChanged(int type);
 
-  private:
+private:
     void initGUI();
 
     KComboBox *mConnectionType;
