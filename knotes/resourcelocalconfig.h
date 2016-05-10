@@ -21,11 +21,12 @@
 #ifndef RESOURCELOCALCONFIG_H
 #define RESOURCELOCALCONFIG_H
 
+#include <kdemacros.h>
 #include <kresources/configwidget.h>
 
 class KURLRequester;
 
-class ResourceLocalConfig : public KRES::ConfigWidget {
+class KDE_EXPORT ResourceLocalConfig : public KRES::ConfigWidget {
     Q_OBJECT
 public:
     ResourceLocalConfig(QWidget *parent = 0, const char *name = 0);

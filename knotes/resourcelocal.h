@@ -40,7 +40,7 @@
 #include <libkcal/calendarlocal.h>
 
 
-class ResourceLocal : public ResourceNotes {
+class KDE_EXPORT ResourceLocal : public ResourceNotes {
 public:
     ResourceLocal(const KConfig *);
     virtual ~ResourceLocal();
