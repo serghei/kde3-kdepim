@@ -11,6 +11,8 @@
 #include <config.h>
 #include <sys/types.h>
 
+#include <kstringlist.h>
+
 #include <mimelib/string.h>
 #include "kmmsgbase.h"
 #include "isubject.h"
@@ -484,7 +486,7 @@ public:
     /** Returns a list of the raw values of all header fields with the given
         name.
     */
-    QValueList<QCString> rawHeaderFields(const QCString &field) const;
+    KStringList rawHeaderFields(const QCString &field) const;
 
     /** Splits the given address list into separate addresses. */
     static KMime::Types::AddressList splitAddrField(const QCString &str);

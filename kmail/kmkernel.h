@@ -100,13 +100,13 @@ public:
     int openComposer(const QString &to, const QString &cc, const QString &bcc,
                      const QString &subject, const QString &body, int hidden,
                      const KURL &messageFile, const KURL::List &attachURLs,
-                     const QCStringList &customHeaders);
+                     const KStringList &customHeaders);
     /** For backward compatibility */
     int openComposer(const QString &to, const QString &cc, const QString &bcc,
                      const QString &subject, const QString &body, int hidden,
                      const KURL &messageFile, const KURL::List &attachURLs)
     {
-        QCStringList noCustomHeaders;
+        KStringList noCustomHeaders;
         return openComposer(to, cc, bcc, subject, body, hidden, messageFile, attachURLs, noCustomHeaders);
     }
     /** For backward compatibility */
@@ -270,7 +270,7 @@ public:
     void action(bool mailto, bool check, const QString &to, const QString &cc,
                 const QString &bcc, const QString &subj, const QString &body,
                 const KURL &messageFile, const KURL::List &attach,
-                const QCStringList &customHeaders);
+                const KStringList &customHeaders);
     void byteArrayToRemoteFile(const QByteArray &, const KURL &,
                                bool overwrite = FALSE);
     bool folderIsDraftOrOutbox(const KMFolder *);

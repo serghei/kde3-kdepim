@@ -21,6 +21,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kstringlist.h>
 
 #include <qtextcodec.h>
 
@@ -150,8 +151,8 @@ void Content::parse()
                 else
                     cat = Headers::CCmixedPart; //default to "mixed"
 
-                QCStringList parts = mpp.parts();
-                QCStringList::Iterator it;
+                KStringList parts = mpp.parts();
+                KStringList::Iterator it;
                 for(it = parts.begin(); it != parts.end(); ++it) //create a new Content for every part
                 {
                     c = new Content();

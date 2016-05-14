@@ -245,8 +245,8 @@ QString KAMail::sendKMail(const KAMailData &data)
     // KMail is now running. Determine which DCOP call to use.
     bool useSend = false;
     QCString sendFunction = "sendMessage(QString,QString,QString,QString,QString,QString,KURL::List)";
-    QCStringList funcs = kapp->dcopClient()->remoteFunctions("kmail", "MailTransportServiceIface");
-    for(QCStringList::Iterator it = funcs.begin();  it != funcs.end() && !useSend;  ++it)
+    KStringList funcs = kapp->dcopClient()->remoteFunctions("kmail", "MailTransportServiceIface");
+    for(KStringList::Iterator it = funcs.begin();  it != funcs.end() && !useSend;  ++it)
     {
         QCString func = DCOPClient::normalizeFunctionSignature(*it);
         if(func.left(5) == "bool ")

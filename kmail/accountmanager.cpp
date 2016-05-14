@@ -419,19 +419,17 @@ uint AccountManager::createId()
 //-----------------------------------------------------------------------------
 void AccountManager::cancelMailCheck()
 {
-    for(AccountList::ConstIterator it(mAcctList.begin()), end(mAcctList.end()); it != end; ++it)
-    {
-        (*it)->cancelMailCheck();
-    }
+    for(const auto &it : mAcctList)
+        it->cancelMailCheck();
 }
 
 
 //-----------------------------------------------------------------------------
 void AccountManager::readPasswords()
 {
-    for(AccountList::ConstIterator it(mAcctList.begin()), end(mAcctList.end()); it != end; ++it)
+    for(const auto &it : mAcctList)
     {
-        NetworkAccount *acct = dynamic_cast<NetworkAccount *>((*it));
+        NetworkAccount *acct = dynamic_cast<NetworkAccount *>(it);
         if(acct)
             acct->readPassword();
     }

@@ -143,7 +143,7 @@ private:
     static bool          mInitialised;  // true once static data has been initialised
     static bool          mAuthorised;   // true if shell commands are authorised
     QString              mCommand;      // copy of command to be executed
-    QValueList<QCString> mStdinQueue;   // queued strings to send to STDIN
+    KStringList mStdinQueue;   // queued strings to send to STDIN
     Status               mStatus;       // current execution status
     bool                 mStdinExit;    // exit once STDIN queue has been written
 };

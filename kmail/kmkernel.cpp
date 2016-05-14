@@ -201,7 +201,7 @@ KMKernel::~KMKernel()
 bool KMKernel::handleCommandLine(bool noArgsOpensReader)
 {
     QString to, cc, bcc, subj, body;
-    QCStringList customHeaders;
+    KStringList customHeaders;
     KURL messageFile;
     KURL::List attachURLs;
     bool mailto = false;
@@ -254,11 +254,11 @@ bool KMKernel::handleCommandLine(bool noArgsOpensReader)
         body = QString::fromLocal8Bit(args->getOption("body"));
     }
 
-    QCStringList attachList = args->getOptionList("attach");
+    KStringList attachList = args->getOptionList("attach");
     if(!attachList.isEmpty())
     {
         mailto = true;
-        for(QCStringList::Iterator it = attachList.begin() ; it != attachList.end() ; ++it)
+        for(KStringList::Iterator it = attachList.begin() ; it != attachList.end() ; ++it)
             if(!(*it).isEmpty())
                 attachURLs += KURL(QString::fromLocal8Bit(*it));
     }
@@ -396,7 +396,7 @@ int KMKernel::openComposer(const QString &to, const QString &cc,
                            const QString &body, int hidden,
                            const KURL &messageFile,
                            const KURL::List &attachURLs,
-                           const QCStringList &customHeaders)
+                           const KStringList &customHeaders)
 {
     kdDebug(5006) << "KMKernel::openComposer called" << endl;
     KMMessage *msg = new KMMessage;
@@ -438,7 +438,7 @@ int KMKernel::openComposer(const QString &to, const QString &cc,
 
     if(!customHeaders.isEmpty())
     {
-        for(QCStringList::ConstIterator it = customHeaders.begin() ; it != customHeaders.end() ; ++it)
+        for(KStringList::ConstIterator it = customHeaders.begin() ; it != customHeaders.end() ; ++it)
             if(!(*it).isEmpty())
             {
                 const int pos = (*it).find(':');
@@ -2029,7 +2029,7 @@ void KMKernel::action(bool mailto, bool check, const QString &to,
                       const QString &subj, const QString &body,
                       const KURL &messageFile,
                       const KURL::List &attachURLs,
-                      const QCStringList &customHeaders)
+                      const KStringList &customHeaders)
 {
     if(mailto)
         openComposer(to, cc, bcc, subj, body, 0, messageFile, attachURLs, customHeaders);

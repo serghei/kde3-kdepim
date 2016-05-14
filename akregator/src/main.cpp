@@ -70,10 +70,10 @@ int Application::newInstance()
                                ? QString::fromLocal8Bit(args->getOption("group"))
                                : i18n("Imported Folder");
 
-        QCStringList feeds = args->getOptionList("addfeed");
+        KStringList feeds = args->getOptionList("addfeed");
         QStringList feedsToAdd;
-        QCStringList::ConstIterator end(feeds.end());
-        for(QCStringList::ConstIterator it = feeds.begin(); it != end; ++it)
+        KStringList::ConstIterator end(feeds.end());
+        for(KStringList::ConstIterator it = feeds.begin(); it != end; ++it)
             feedsToAdd.append(*it);
 
         if(!feedsToAdd.isEmpty())

@@ -136,16 +136,16 @@ bool UniqueAppHandler::process(const QCString &fun, const QByteArray &data,
     return true;
 }
 
-QCStringList UniqueAppHandler::interfaces()
+KStringList UniqueAppHandler::interfaces()
 {
-    QCStringList ifaces = DCOPObject::interfaces();
+    KStringList ifaces = DCOPObject::interfaces();
     ifaces += "Kontact::UniqueAppHandler";
     return ifaces;
 }
 
-QCStringList UniqueAppHandler::functions()
+KStringList UniqueAppHandler::functions()
 {
-    QCStringList funcs = DCOPObject::functions();
+    KStringList funcs = DCOPObject::functions();
     funcs << "int newInstance()";
     funcs << "bool load()";
     return funcs;

@@ -4628,14 +4628,14 @@ bool SecurityPageSMimeTab::process(const QCString &fun, const QByteArray &data, 
     return true;
 }
 
-QCStringList SecurityPageSMimeTab::interfaces()
+KStringList SecurityPageSMimeTab::interfaces()
 {
-    QCStringList ifaces = DCOPObject::interfaces();
+    KStringList ifaces = DCOPObject::interfaces();
     ifaces += "SecurityPageSMimeTab";
     return ifaces;
 }
 
-QCStringList SecurityPageSMimeTab::functions()
+KStringList SecurityPageSMimeTab::functions()
 {
     // Hide our slot, just because it's simpler to do so.
     return DCOPObject::functions();

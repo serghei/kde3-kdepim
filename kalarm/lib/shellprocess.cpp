@@ -116,7 +116,7 @@ void ShellProcess::writeStdin(const char *buffer, int bufflen)
 */
 void ShellProcess::writtenStdin(KProcess *proc)
 {
-    mStdinQueue.pop_front();   // free the buffer which has now been written
+    mStdinQueue.remove(mStdinQueue.begin());   // free the buffer which has now been written
     if(!mStdinQueue.isEmpty())
         proc->writeStdin(mStdinQueue.first(), mStdinQueue.first().length());
     else if(mStdinExit)

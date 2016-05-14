@@ -681,7 +681,7 @@ QString findArgument(const QStringList &a, const QString &arg)
 /* static */ bool isRunning(const QCString &n)
 {
     DCOPClient *dcop = KApplication::kApplication()->dcopClient();
-    QCStringList apps = dcop->registeredApplications();
+    KStringList apps = dcop->registeredApplications();
     return apps.contains(n);
 }
 

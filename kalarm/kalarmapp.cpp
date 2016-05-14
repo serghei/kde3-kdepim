@@ -441,8 +441,8 @@ int KAlarmApp::newInstance()
                         alSubject = args->getOption("subject");
                     if(args->isSet("from-id"))
                         alFromID = KAMail::identityUoid(args->getOption("from-id"));
-                    QCStringList params = args->getOptionList("mail");
-                    for(QCStringList::Iterator i = params.begin();  i != params.end();  ++i)
+                    KStringList params = args->getOptionList("mail");
+                    for(KStringList::Iterator i = params.begin();  i != params.end();  ++i)
                     {
                         QString addr = QString::fromLocal8Bit(*i);
                         if(!KAMail::checkAddress(addr))
@@ -450,7 +450,7 @@ int KAlarmApp::newInstance()
                             alAddresses += KCal::Person(QString::null, addr);
                     }
                     params = args->getOptionList("attach");
-                    for(QCStringList::Iterator i = params.begin();  i != params.end();  ++i)
+                    for(KStringList::Iterator i = params.begin();  i != params.end();  ++i)
                         alAttachments += QString::fromLocal8Bit(*i);
                     alMessage = args->arg(0);
                     action = KAEvent::EMAIL;

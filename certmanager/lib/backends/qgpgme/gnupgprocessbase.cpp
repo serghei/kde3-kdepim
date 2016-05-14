@@ -33,6 +33,7 @@
 #include "gnupgprocessbase.h"
 
 #include <kdebug.h>
+#include <kstringlist.h>
 #include <kurl.h>
 
 #include <qsocketnotifier.h>
@@ -91,9 +92,9 @@ bool Kleo::GnuPGProcessBase::start(RunMode runmode, Communication comm)
         }
         ::fcntl(d->statusFD[0], F_SETFD, FD_CLOEXEC);
         ::fcntl(d->statusFD[1], F_SETFD, FD_CLOEXEC);
-        if(!arguments.empty())
+        if(!arguments.isEmpty())
         {
-            QValueList<QCString>::iterator it = arguments.begin();
+            KStringList::Iterator it = arguments.begin();
             ++it;
             arguments.insert(it, "--status-fd");
             char buf[25];

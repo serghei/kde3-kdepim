@@ -17,8 +17,8 @@
 #define __KMIME_PARSERS__
 
 #include <qvaluelist.h>
-#include <qcstring.h>
 #include <qstrlist.h>
+#include <kstringlist.h>
 
 namespace KMime {
 
@@ -35,7 +35,7 @@ public:
     ~MultiPart() {};
 
     bool parse();
-    QValueList<QCString> parts()
+    KStringList parts()
     {
         return p_arts;
     }
@@ -50,7 +50,7 @@ public:
 
 protected:
     QCString s_rc, b_oundary, p_reamble, e_pilouge;
-    QValueList<QCString> p_arts;
+    KStringList p_arts;
 };
 
 

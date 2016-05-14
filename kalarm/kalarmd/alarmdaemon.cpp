@@ -486,7 +486,7 @@ bool AlarmDaemon::notifyEvent(ADCalendar *calendar, const QString &eventID)
     if(registered)
     {
         // It's running, but check if it has created our DCOP interface yet
-        QCStringList objects = kapp->dcopClient()->remoteObjects(appname);
+        KStringList objects = kapp->dcopClient()->remoteObjects(appname);
         if(objects.find(client->dcopObject()) == objects.end())
             ready = false;
     }

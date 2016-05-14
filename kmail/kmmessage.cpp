@@ -1998,9 +1998,9 @@ void KMMessage::setDate(const QCString &aStr)
 QString KMMessage::to() const
 {
     // handle To same as Cc below, bug 80747
-    QValueList<QCString> rawHeaders = rawHeaderFields("To");
+    KStringList rawHeaders = rawHeaderFields("To");
     QStringList headers;
-    for(QValueList<QCString>::Iterator it = rawHeaders.begin(); it != rawHeaders.end(); ++it)
+    for(KStringList::Iterator it = rawHeaders.begin(); it != rawHeaders.end(); ++it)
     {
         headers << *it;
     }
@@ -2046,9 +2046,9 @@ QString KMMessage::cc() const
 {
     // get the combined contents of all Cc headers (as workaround for invalid
     // messages with multiple Cc headers)
-    QValueList<QCString> rawHeaders = rawHeaderFields("Cc");
+    KStringList rawHeaders = rawHeaderFields("Cc");
     QStringList headers;
-    for(QValueList<QCString>::Iterator it = rawHeaders.begin(); it != rawHeaders.end(); ++it)
+    for(KStringList::Iterator it = rawHeaders.begin(); it != rawHeaders.end(); ++it)
     {
         headers << *it;
     }
@@ -2389,13 +2389,13 @@ QCString KMMessage::rawHeaderField(const QCString &name) const
     return header.FieldBody(name.data()).AsString().c_str();
 }
 
-QValueList<QCString> KMMessage::rawHeaderFields(const QCString &field) const
+KStringList KMMessage::rawHeaderFields(const QCString &field) const
 {
     if(field.isEmpty() || !mMsg->Headers().FindField(field))
-        return QValueList<QCString>();
+        return KStringList();
 
     std::vector<DwFieldBody *> v = mMsg->Headers().AllFieldBodies(field.data());
-    QValueList<QCString> headerFields;
+    KStringList headerFields;
     for(uint i = 0; i < v.size(); ++i)
     {
         headerFields.append(v[i]->AsString().c_str());
