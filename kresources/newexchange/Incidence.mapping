@@ -103,8 +103,6 @@ DAV:displayname
 DAV:id
 
 
-Incidence::pilotId()
-Incidence::syncStatus()
 Incidence::relatedToUid()
 
 
@@ -155,7 +153,6 @@ h1:0x00008101 b:dt='int'                     |  status:  0_Open, 1_InProgress, 2
 
 No correspondence:
 ==================
-Incidence::pilotId()
 Incidence::syncStatus()
 Incidence::relatedToUid()
 Incidence::custom()

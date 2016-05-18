@@ -376,15 +376,6 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
         }
     }
 
-    if(anEvent->pilotId())
-    {
-        // pilot sync stuff
-        tmpStr.sprintf("%lu", anEvent->pilotId());
-        addPropValue(vtodo, KPilotIdProp, tmpStr.local8Bit());
-        tmpStr.sprintf("%i", anEvent->syncStatus());
-        addPropValue(vtodo, KPilotStatusProp, tmpStr.local8Bit());
-    }
-
     return vtodo;
 }
 
@@ -698,15 +689,6 @@ VObject *VCalFormat::eventToVEvent(const Event *anEvent)
                      anEvent->relatedTo()->uid().local8Bit());
     }
 
-    if(anEvent->pilotId())
-    {
-        // pilot sync stuff
-        tmpStr.sprintf("%lu", anEvent->pilotId());
-        addPropValue(vevent, KPilotIdProp, tmpStr.local8Bit());
-        tmpStr.sprintf("%i", anEvent->syncStatus());
-        addPropValue(vevent, KPilotStatusProp, tmpStr.local8Bit());
-    }
-
     return vevent;
 }
 
@@ -933,23 +915,6 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
         QStringList tmpStrList = QStringList::split(';', categories);
         anEvent->setCategories(tmpStrList);
     }
-
-    /* PILOT SYNC STUFF */
-    if((vo = isAPropertyOf(vtodo, KPilotIdProp)))
-    {
-        anEvent->setPilotId(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-        deleteStr(s);
-    }
-    else
-        anEvent->setPilotId(0);
-
-    if((vo = isAPropertyOf(vtodo, KPilotStatusProp)))
-    {
-        anEvent->setSyncStatus(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-        deleteStr(s);
-    }
-    else
-        anEvent->setSyncStatus(Event::SYNCMOD);
 
     return anEvent;
 }
@@ -1486,23 +1451,6 @@ Event *VCalFormat::VEventToEvent(VObject *vevent)
         mEventsRelate.append(anEvent);
     }
 
-    /* PILOT SYNC STUFF */
-    if((vo = isAPropertyOf(vevent, KPilotIdProp)))
-    {
-        anEvent->setPilotId(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-        deleteStr(s);
-    }
-    else
-        anEvent->setPilotId(0);
-
-    if((vo = isAPropertyOf(vevent, KPilotStatusProp)))
-    {
-        anEvent->setSyncStatus(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-        deleteStr(s);
-    }
-    else
-        anEvent->setSyncStatus(Event::SYNCMOD);
-
     return anEvent;
 }
 
@@ -1668,21 +1616,6 @@ void VCalFormat::populate(VObject *vcal)
         // now, check to see that the object is an event or todo.
         if(strcmp(vObjectName(curVO), VCEventProp) == 0)
         {
-
-            if((curVOProp = isAPropertyOf(curVO, KPilotStatusProp)) != 0)
-            {
-                char *s;
-                s = fakeCString(vObjectUStringZValue(curVOProp));
-                // check to see if event was deleted by the kpilot conduit
-                if(atoi(s) == Event::SYNCDEL)
-                {
-                    deleteStr(s);
-                    kdDebug(5800) << "skipping pilot-deleted event" << endl;
-                    goto SKIP;
-                }
-                deleteStr(s);
-            }
-
             // this code checks to see if we are trying to read in an event
             // that we already find to be in the calendar.  If we find this
             // to be the case, we skip the event.

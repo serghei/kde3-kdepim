@@ -40,7 +40,6 @@ ConfigGuiPalm::ConfigGuiPalm(const QSync::Member &member, QWidget *parent)
 {
     initGUI();
 
-    mDevice->insertItem("/dev/pilot");
     mDevice->insertItem("/dev/ttyUSB0");
     mDevice->insertItem("/dev/ttyUSB1");
     mDevice->insertItem("/dev/ttyUSB2");

@@ -239,29 +239,6 @@ public:
     Attendee *attendeeByUid(const QString &uid) const;
 
     /**
-      Pilot synchronization states
-    */
-    enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
-    /**
-      Set synchronisation satus.
-    */
-    void setSyncStatus(int status);
-    void setSyncStatusSilent(int status);
-    /**
-      Return synchronisation status.
-    */
-    int syncStatus() const;
-
-    /**
-      Set Pilot Id.
-    */
-    void setPilotId(unsigned long id);
-    /**
-      Return Pilot Id.
-    */
-    unsigned long pilotId() const;
-
-    /**
       Register observer. The observer is notified when the observed object
       changes.
     */
@@ -299,10 +276,6 @@ private:
 
     int mDuration;
     bool mHasDuration;
-
-    // PILOT SYNCHRONIZATION STUFF
-    unsigned long mPilotId;                         // unique id for pilot sync
-    int mSyncStatus;                      // status (for sync)
 
     QPtrList<Observer> mObservers;
 

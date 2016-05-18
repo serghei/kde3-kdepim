@@ -90,14 +90,6 @@ public:
     virtual void setSensitivity(Sensitivity sensitivity);
     virtual Sensitivity sensitivity() const;
 
-    virtual void setPilotSyncId(unsigned long id);
-    virtual bool hasPilotSyncId() const;
-    virtual unsigned long pilotSyncId() const;
-
-    virtual void setPilotSyncStatus(int status);
-    virtual bool hasPilotSyncStatus() const;
-    virtual int pilotSyncStatus() const;
-
     // String - Date conversion methods
     static QString dateTimeToString(const QDateTime &time);
     static QString dateToString(const QDate &date);

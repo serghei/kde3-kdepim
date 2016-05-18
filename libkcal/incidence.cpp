@@ -216,8 +216,6 @@ void Incidence::recreate()
     setRevision(0);
 
     setLastModified(QDateTime::currentDateTime());
-    setPilotId(0);
-    setSyncStatus(SYNCNONE);
 }
 
 void Incidence::setReadOnly(bool readOnly)

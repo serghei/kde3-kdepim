@@ -221,38 +221,6 @@ ScalixBase::Sensitivity ScalixBase::sensitivity() const
     return mSensitivity;
 }
 
-void ScalixBase::setPilotSyncId(unsigned long id)
-{
-    mHasPilotSyncId = true;
-    mPilotSyncId = id;
-}
-
-bool ScalixBase::hasPilotSyncId() const
-{
-    return mHasPilotSyncId;
-}
-
-unsigned long ScalixBase::pilotSyncId() const
-{
-    return mPilotSyncId;
-}
-
-void ScalixBase::setPilotSyncStatus(int status)
-{
-    mHasPilotSyncStatus = true;
-    mPilotSyncStatus = status;
-}
-
-bool ScalixBase::hasPilotSyncStatus() const
-{
-    return mHasPilotSyncStatus;
-}
-
-int ScalixBase::pilotSyncStatus() const
-{
-    return mPilotSyncStatus;
-}
-
 bool ScalixBase::loadEmailAttribute(QDomElement &element, Email &email)
 {
     for(QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling())
@@ -306,10 +274,6 @@ bool ScalixBase::loadAttribute(QDomElement &element)
         setSensitivity(stringToSensitivity(element.text()));
     else if(tagName == "product-id")
         return true; // ignore this field
-    else if(tagName == "pilot-sync-id")
-        setPilotSyncId(element.text().toULong());
-    else if(tagName == "pilot-sync-status")
-        setPilotSyncStatus(element.text().toInt());
     else
         return false;
 
@@ -327,10 +291,6 @@ bool ScalixBase::saveAttributes(QDomElement &element) const
     writeString(element, "last-modification-date",
                 dateTimeToString(lastModified()));
     writeString(element, "sensitivity", sensitivityToString(sensitivity()));
-    if(hasPilotSyncId())
-        writeString(element, "pilot-sync-id", QString::number(pilotSyncId()));
-    if(hasPilotSyncStatus())
-        writeString(element, "pilot-sync-status", QString::number(pilotSyncStatus()));
     return true;
 }
 

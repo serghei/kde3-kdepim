@@ -877,7 +877,6 @@ void Calendar::setModified(bool modified)
 
 void Calendar::incidenceUpdated(IncidenceBase *incidence)
 {
-    incidence->setSyncStatus(Event::SYNCMOD);
     incidence->setLastModified(QDateTime::currentDateTime());
     // we should probably update the revision number here,
     // or internally in the Event itself when certain things change.

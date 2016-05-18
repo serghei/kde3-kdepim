@@ -9,8 +9,6 @@
 #
 #################################################
 
-# NOTE kpilot was moved from kdepim
-
 add_subdirectory( kaddressbook )
 add_subdirectory( kmail )
 add_subdirectory( knotes )

@@ -725,11 +725,6 @@ void Incidence::setFields(const KCal::Incidence *incidence)
         setInternalUID(incidence->uid());
     }
 
-    if(incidence->pilotId() != 0)
-        setPilotSyncId(incidence->pilotId());
-
-    setPilotSyncStatus(incidence->syncStatus());
-
     // Unhandled tags and other custom properties (see libkcal/customproperties.h)
     const QMap<QCString, QString> map = incidence->customProperties();
     QMap<QCString, QString>::ConstIterator cit = map.begin();
@@ -892,10 +887,6 @@ void Incidence::saveTo(KCal::Incidence *incidence)
         incidence->setUid(internalUID());
         incidence->setSchedulingID(uid());
     }
-    if(hasPilotSyncId())
-        incidence->setPilotId(pilotSyncId());
-    if(hasPilotSyncStatus())
-        incidence->setSyncStatus(pilotSyncStatus());
 
     for(QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it)
     {

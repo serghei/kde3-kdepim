@@ -79,17 +79,6 @@ int main(int argc, char **argv)
         kdDebug() << "Event ends " << d << endl;
     }
 
-    if(e->pilotId())
-    {
-        kdDebug() << "Pilot ID = " << e->pilotId() << endl;
-        kdDebug() << "Pilot Sync Status = " << e->syncStatus() << endl;
-    }
-    else
-    {
-        kdError() << "No Pilot ID" << endl;
-        return 1;
-    }
-
     kdDebug() << "First test passed.  Able to read fields." << endl;
 
     e->setSyncStatus(KCal::Incidence::SYNCNONE);

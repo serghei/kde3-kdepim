@@ -4669,19 +4669,6 @@ KPart inside &konqueror;</quote>.</para>
 
 </sect1>
 
-<sect1 id="other-features-palm-sync">
-<title>Palm Synchronization</title>
-
-<para>Palm Synchronization can be done via &kpilot;. Choose 
-<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure &kpilot;</guimenuitem>
-</menuchoice> and check the <guilabel>Calendar (&korganizer;)</guilabel> and
-<guilabel>To-do's (&korganizer;)</guilabel> boxes. After synchronization the
-Calendar and To-do's should be visible in &korganizer;.</para>
-<para>See the <link linkend="faq">&FAQ;</link> for one of the most common &PalmPilot;
-syncing problems.</para>
-
-</sect1>
-
 </chapter>
 
 <chapter id="faq">
@@ -4721,9 +4708,6 @@ but nothing happens.  What else do I need to do?</para>
 <listitem><para>Make sure no form of &korganizer; is running: neither
 &korganizer; itself nor the alarm daemon in the system tray.
 </para>
-</listitem>
-<listitem><para>Make sure the versions of the &kpilot; datebook conduit and
-&korganizer; are compatible.</para>
 </listitem>
 </itemizedlist>
 </para>

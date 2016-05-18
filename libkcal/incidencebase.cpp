@@ -31,8 +31,7 @@
 using namespace KCal;
 
 IncidenceBase::IncidenceBase()
-    : mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
-      mPilotId(0), mSyncStatus(SYNCMOD)
+    : mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false)
 {
     setUid(CalFormat::createUniqueId());
 
@@ -56,8 +55,6 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
     }
     mFloats = i.mFloats;
     mLastModified = i.mLastModified;
-    mPilotId = i.mPilotId;
-    mSyncStatus = i.mSyncStatus;
     mComments = i.mComments;
 
     mAttendees.setAutoDelete(true);
@@ -85,8 +82,6 @@ IncidenceBase &IncidenceBase::operator=(const IncidenceBase &i)
     }
     mFloats = i.mFloats;
     mLastModified = i.mLastModified;
-    mPilotId = i.mPilotId;
-    mSyncStatus = i.mSyncStatus;
     mComments = i.mComments;
 
     return *this;
@@ -123,9 +118,7 @@ bool IncidenceBase::operator==(const IncidenceBase &i2) const
             // of much use. We are not comparing for identity, after all.
             doesFloat() == i2.doesFloat() &&
             duration() == i2.duration() &&
-            hasDuration() == i2.hasDuration() &&
-            pilotId() == i2.pilotId() &&
-            syncStatus() == i2.syncStatus());
+            hasDuration() == i2.hasDuration());
     // no need to compare mObserver
 }
 
@@ -367,37 +360,6 @@ void IncidenceBase::setHasDuration(bool hasDuration)
 bool IncidenceBase::hasDuration() const
 {
     return mHasDuration;
-}
-
-void IncidenceBase::setSyncStatus(int stat)
-{
-    if(mReadOnly) return;
-    if(mSyncStatus == stat) return;
-    mSyncStatus = stat;
-    updatedSilent();
-}
-void IncidenceBase::setSyncStatusSilent(int stat)
-{
-    if(mReadOnly) return;
-    mSyncStatus = stat;
-}
-
-int IncidenceBase::syncStatus() const
-{
-    return mSyncStatus;
-}
-
-void IncidenceBase::setPilotId(unsigned long id)
-{
-    if(mReadOnly) return;
-    if(mPilotId == id) return;
-    mPilotId = id;
-    updatedSilent();
-}
-
-unsigned long IncidenceBase::pilotId() const
-{
-    return mPilotId;
 }
 
 void IncidenceBase::registerObserver(IncidenceBase::Observer *observer)

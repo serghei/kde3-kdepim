@@ -138,14 +138,6 @@ and scheduling application.
 </para>
 </sect1>
 
-<sect1 id="pilot">
-<title>&kpilot;</title>
-<para>
-<ulink url="help:kpilot">&kpilot;</ulink>, the &kde; Pilot synchronization
-application.
-</para>
-</sect1>
-
 <sect1 id="synchronization">
 <title>&kitchensync;</title>
 <para>
@@ -712,51 +704,6 @@ information). It contains the following information:
 <caption>
 <para>
 &kontact; Contacts Summary Plugin
-</para>
-</caption>
-</mediaobject>
-</screenshot>
-</sect2>
-
-<sect2 id="summary-view-config-kpilot">
-<title>&kontact; Summary Plugins: KPilot</title>
-
-<para>
-The <quote>KPilot</quote> plugin for &kontact;'s Summary View adds an
-area in the view labeled <guilabel>KPilot Information</guilabel>.
-This area contains a lot of information from KPilot, including:
-</para>
-
-<itemizedlist>
-<listitem>
-  <para>Last synchronization (with sync log)</para>
-</listitem>
-<listitem>
-  <para>User who last synchronized</para>
-</listitem>
-<listitem>
-  <para>Device last synchronized</para>
-</listitem>
-<listitem>
-  <para>Current status</para>
-</listitem>
-<listitem>
-  <para>Available conduits</para>
-</listitem>
-</itemizedlist>
-
-<screenshot>
-<screeninfo>&kontact; KPilot Summary Plugin</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata format="PNG" fileref="summary-view-kpilot.png"/>
-</imageobject>
-<textobject>
-<phrase>&kontact; KPilot Summary Plugin</phrase>
-</textobject>
-<caption>
-<para>
-&kontact; KPilot Summary Plugin
 </para>
 </caption>
 </mediaobject>
