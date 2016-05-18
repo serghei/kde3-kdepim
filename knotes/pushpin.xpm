@@ -1,6 +1,6 @@
 /* Pushpin XPM (courtsey google image search) [copyright :O ???] */
 
-static char *pushpin_xpm[] = {
+static const char *pushpin_xpm[] = {
 "27 29 363 2",
 "  	c None",
 ". 	c #F60404",
