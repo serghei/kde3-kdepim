@@ -1,9 +1,6 @@
 // libkcal
 #cmakedefine USE_LIBICAL_0_46 1
 
-// kalarm
-#cmakedefine WITHOUT_ARTS 1
-
 // ktnef
 #cmakedefine HAVE_INTTYPES_H 1
 #cmakedefine HAVE_STDINT_H 1

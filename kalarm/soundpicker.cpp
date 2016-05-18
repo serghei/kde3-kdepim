@@ -33,9 +33,6 @@
 #include <kfiledialog.h>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#ifndef WITHOUT_ARTS
-#include <arts/kplayobjectfactory.h>
-#endif
 #include <kdebug.h>
 
 #include "combobox.h"
@@ -297,11 +294,7 @@ QString SoundPicker::browseFile(QString &defaultDir, const QString &initialFile)
             kdeSoundDir = KGlobal::dirs()->findResourceDir("sound", "KDE_Notify.wav");
         defaultDir = kdeSoundDir;
     }
-#ifdef WITHOUT_ARTS
+
     QString filter = QString::fromLatin1("*.wav *.mp3 *.ogg|%1\n*|%2").arg(i18n("Sound Files")).arg(i18n("All Files"));
-#else
-    QStringList filters = KDE::PlayObjectFactory::mimeTypes();
-    QString filter = filters.join(" ");
-#endif
     return KAlarm::browseFile(i18n("Choose Sound File"), defaultDir, initialFile, filter, KFile::ExistingOnly, 0, "pickSoundFile");
 }

@@ -69,6 +69,6 @@ kde_add_executable( kalarm AUTOMOC
     kalarmd/alarmguiiface.skel
   LINK
     kalarm-static kalarmd-static
-    kpimidentities-shared kutils-shared ${ARTS_LIBRARIES}
+    kpimidentities-shared kutils-shared
   DESTINATION ${BIN_INSTALL_DIR}
 )

@@ -94,10 +94,6 @@ private slots:
     void                displayMainWindow();
     void                slotShowKMailMessage();
     void                slotSpeak();
-    void                slotPlayAudio();
-    void                checkAudioPlay();
-    void                stopPlay();
-    void                slotFade();
     void                enableButtons();
     void                setRemainingTextDay();
     void                setRemainingTextMinute();
@@ -105,11 +101,6 @@ private slots:
 
 private:
     void                initView();
-#ifndef WITHOUT_ARTS
-    void                initAudio(bool firstTime);
-    int                 getKMixVolume();
-    void                setKMixVolume(int percent);
-#endif
     void                displayComplete();
     void                playAudio();
     void                setDeferralLimit(const KAEvent &);

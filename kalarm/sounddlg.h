@@ -76,10 +76,8 @@ private slots:
     void           slotVolumeToggled(bool on);
     void           slotFadeToggled(bool on);
     void           playSound();
-    void           checkAudioPlay();
 
 private:
-    void           stopPlay();
     bool           checkFile();
 
     QPushButton   *mFilePlay;

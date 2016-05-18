@@ -22,7 +22,6 @@ set( VERSION "3.6" )
 ##### optional stuff ############################
 
 option( WITH_ALL_FEATURES "Enable all possible features" )
-option( WITH_ARTS "Enable aRts support" ${WITH_ALL_FEATURES} )
 option( WITH_SASL "Enable cyrus-sasl support" ${WITH_ALL_FEATURES} )
 option( WITH_NEWDISTRLISTS "Enable the new distribution lists" ${WITH_ALL_FEATURES} )
 option( WITH_GNOKII "Enable gnokii support" ${WITH_ALL_FEATURES} )
@@ -37,10 +36,6 @@ option( WITH_BIRTHDAYS "Enable birthdays support" ${WITH_ALL_FEATURES} )
 option( WITH_NEWEXCHANGE "Enable newexchange support" ${WITH_ALL_FEATURES} )
 option( WITH_SCALIX "Enable scalix support" ${WITH_ALL_FEATURES} )
 option( WITH_INDEXLIB "Enable indexlib support (in kmail)" ${WITH_ALL_FEATURES} )
-
-if( NOT WITH_ARTS )
-  set( WITHOUT_ARTS 1 )
-endif( )
 
 if( WITH_NEWDISTRLISTS )
   set( KDEPIM_NEW_DISTRLISTS 1 )

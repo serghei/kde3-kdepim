@@ -34,15 +34,7 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#ifdef WITHOUT_ARTS
 #include <kaudioplayer.h>
-#else
-#include <qtimer.h>
-#include <arts/kartsdispatcher.h>
-#include <arts/kartsserver.h>
-#include <arts/kplayobjectfactory.h>
-#include <arts/kplayobject.h>
-#endif
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
@@ -205,7 +197,6 @@ SoundDlg::SoundDlg(const QString &file, float volume, float fadeVolume, int fade
 
 SoundDlg::~SoundDlg()
 {
-    stopPlay();
 }
 
 /******************************************************************************
@@ -294,104 +285,11 @@ void SoundDlg::slotPickFile()
 */
 void SoundDlg::playSound()
 {
-#ifdef WITHOUT_ARTS
     if(checkFile())
         KAudioPlayer::play(QFile::encodeName(mFileName));
-#else
-    if(mPlayObject)
-    {
-        stopPlay();
-        return;
-    }
-    if(!checkFile())
-        return;
-    KURL url(mFileName);
-    MainWindow *mmw = MainWindow::mainMainWindow();
-    if(!url.isValid()  ||  !KIO::NetAccess::exists(url, true, mmw)
-            ||  !KIO::NetAccess::download(url, mLocalAudioFile, mmw))
-    {
-        kdError(5950) << "SoundDlg::playAudio(): Open failure: " << mFileName << endl;
-        KMessageBox::error(this, i18n("Cannot open audio file:\n%1").arg(mFileName));
-        return;
-    }
-    mPlayTimer = new QTimer(this);
-    connect(mPlayTimer, SIGNAL(timeout()), SLOT(checkAudioPlay()));
-    mArtsDispatcher = new KArtsDispatcher;
-    mPlayStarted = false;
-    KArtsServer aserver;
-    Arts::SoundServerV2 sserver = aserver.server();
-    KDE::PlayObjectFactory factory(sserver);
-    mPlayObject = factory.createPlayObject(mLocalAudioFile, true);
-    mFilePlay->setPixmap(SmallIcon("player_stop"));
-    QToolTip::add(mFilePlay, i18n("Stop sound"));
-    QWhatsThis::add(mFilePlay, i18n("Stop playing the sound"));
-    connect(mPlayObject, SIGNAL(playObjectCreated()), SLOT(checkAudioPlay()));
-    if(!mPlayObject->object().isNull())
-        checkAudioPlay();
-#endif
+
 }
 
-/******************************************************************************
-*  Called when the audio file has loaded and is ready to play, or on a timer
-*  when play is expected to have completed.
-*  If it is ready to play, start playing it (for the first time or repeated).
-*  If play has not yet completed, wait a bit longer.
-*/
-void SoundDlg::checkAudioPlay()
-{
-#ifndef WITHOUT_ARTS
-    if(!mPlayObject)
-        return;
-    if(mPlayObject->state() == Arts::posIdle)
-    {
-        // The file has loaded and is ready to play, or play has completed
-        if(mPlayStarted)
-        {
-            // Play has completed
-            stopPlay();
-            return;
-        }
-
-        // Start playing the file
-        kdDebug(5950) << "SoundDlg::checkAudioPlay(): start\n";
-        mPlayStarted = true;
-        mPlayObject->play();
-    }
-
-    // The sound file is still playing
-    Arts::poTime overall = mPlayObject->overallTime();
-    Arts::poTime current = mPlayObject->currentTime();
-    int time = 1000 * (overall.seconds - current.seconds) + overall.ms - current.ms;
-    if(time < 0)
-        time = 0;
-    kdDebug(5950) << "SoundDlg::checkAudioPlay(): wait for " << (time + 100) << "ms\n";
-    mPlayTimer->start(time + 100, true);
-#endif
-}
-
-/******************************************************************************
-*  Called when play completes, the Silence button is clicked, or the window is
-*  closed, to terminate audio access.
-*/
-void SoundDlg::stopPlay()
-{
-#ifndef WITHOUT_ARTS
-    delete mPlayObject;
-    mPlayObject = 0;
-    delete mArtsDispatcher;
-    mArtsDispatcher = 0;
-    delete mPlayTimer;
-    mPlayTimer = 0;
-    if(!mLocalAudioFile.isEmpty())
-    {
-        KIO::NetAccess::removeTempFile(mLocalAudioFile);   // removes it only if it IS a temporary file
-        mLocalAudioFile = QString::null;
-    }
-    mFilePlay->setPixmap(SmallIcon("player_play"));
-    QToolTip::add(mFilePlay, i18n("Test the sound"));
-    QWhatsThis::add(mFilePlay, i18n("Play the selected sound file."));
-#endif
-}
 
 /******************************************************************************
 * Check whether the specified sound file exists.
@@ -410,7 +308,7 @@ bool SoundDlg::checkFile()
     }
     else
         url = KURL::fromPathOrURL(mFileName);   // it's an absolute URL
-#ifdef WITHOUT_ARTS
+
     if(!url.isEmpty())
     {
         // It's an absolute path or URL.
@@ -422,8 +320,6 @@ bool SoundDlg::checkFile()
         }
     }
     else
-#else if (url.isEmpty())
-#endif
     {
         // It's a relative path.
         // Find the first sound resource that contains files.
@@ -455,13 +351,10 @@ bool SoundDlg::checkFile()
             return true;
         }
     }
-#ifdef WITHOUT_ARTS
+
     KMessageBox::sorry(this, i18n("File not found"));
     mFileName = QString::null;
     return false;
-#else
-    return true;
-#endif
 }
 
 /******************************************************************************
