@@ -336,7 +336,6 @@ void ResourceKolab::incidenceUpdatedSilent(KCal::IncidenceBase *incidencebase)
 void ResourceKolab::incidenceUpdated(KCal::IncidenceBase *incidencebase)
 {
     if(incidencebase->isReadOnly()) return;
-    incidencebase->setSyncStatusSilent(KCal::Event::SYNCMOD);
     incidencebase->setLastModified(QDateTime::currentDateTime());
     // we should probably update the revision number here,
     // or internally in the Event itself when certain things change.
