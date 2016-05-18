@@ -63,7 +63,7 @@ kde_add_library( kitchensync SHARED AUTOMOC
     conflictdialog.cpp singleconflictdialog.cpp addresseediffalgo.cpp
     calendardiffalgo.cpp htmldiffalgodisplay.cpp genericdiffalgo.cpp
     multiconflictdialog.cpp configguiirmc.cpp configguisyncmlobex.cpp
-    configguisyncmlhttp.cpp configguiopie.cpp configguignokii.cpp
+    configguisyncmlhttp.cpp configguiopie.cpp
     configguigcalendar.cpp configguildap.cpp configguigpe.cpp
     configguijescs.cpp configguievo2.cpp configguimoto.cpp
     configguisynce.cpp configguisunbird.cpp

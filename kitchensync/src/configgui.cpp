@@ -24,7 +24,6 @@
 
 #include "configguiblank.h"
 #include "configguifile.h"
-#include "configguignokii.h"
 #include "configguigpe.h"
 #include "configguiirmc.h"
 #include "configguildap.h"
@@ -102,10 +101,6 @@ ConfigGui *ConfigGui::Factory::create(const QSync::Member &member,
     else if(name == "opie-sync")
     {
         return new ConfigGuiOpie(member, parent);
-    }
-    else if(name == "gnokii-sync")
-    {
-        return new ConfigGuiGnokii(member, parent);
     }
     else if(name == "gpe-sync")
     {

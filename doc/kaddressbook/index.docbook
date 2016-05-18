@@ -554,12 +554,6 @@ that is supported by most addressbook applications &mdash;
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Mobile Phone</guilabel></term>
-<listitem><para>this plugin can import contacts from Nokia mobile
-phones via the gnokii library;</para></listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Eudora Addressbook</guilabel></term>
 <listitem><para>with this plugin you can import your contacts from
 the Eudora mail client;</para></listitem>

@@ -65,14 +65,6 @@ if( BUILD_KANDY OR (BUILD_KMOBILE AND NOT HAVE_BAUDBOY_H) )
 endif( )
 
 
-if( WITH_GNOKII AND (BUILD_KADDRESSBOOK OR BUILD_KMOBILE) )
-  pkg_search_module( GNOKII gnokii )
-  if( NOT GNOKII_FOUND )
-    kde_message_fatal( "gnokii is required, but was not found on your system" )
-  endif( )
-endif( )
-
-
 if( BUILD_LIBKDENETWORK OR BUILD_CERTMANAGER OR BUILD_KMAIL OR BUILD_KADDRESSBOOK OR BUILD_KONTACT )
 
   if( NOT HAVE_GPGME_0_4_BRANCH )

@@ -61,7 +61,6 @@ QString MemberInfo::name() const
         nameMap.insert("syncml-obex-client", i18n("Mobile Phone"));
         nameMap.insert("syncml-http-server", i18n("Mobile Phone"));
         nameMap.insert("moto-sync", i18n("Mobile Phone"));
-        nameMap.insert("gnokii-sync", i18n("Mobile Phone"));
         nameMap.insert("google-calendar", i18n("Google Calendar"));
         nameMap.insert("gpe-sync", i18n("Handheld"));
         nameMap.insert("sunbird-sync", i18n("Sunbird Calendar"));
@@ -89,7 +88,6 @@ QString MemberInfo::pluginIconName(const QString &pluginName)
     if(pluginName == "syncml-obex-client") return "mobile_phone";
     if(pluginName == "syncml-http-server") return "pda_blue";
     if(pluginName == "moto-sync") return "mobile_phone";
-    if(pluginName == "gnokii-sync") return "mobile_phone";
     if(pluginName == "google-calendar") return "www";
     if(pluginName == "gpe-sync") return "pda_blue";
     if(pluginName == "sunbird-sync") return "www";

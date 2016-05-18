@@ -19,13 +19,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${KDE_INCLUDE_DIR}
   ${QT_INCLUDE_DIR}
-  ${GNOKII_INCLUDE_DIRS}
 )
-
-if( WITH_GNOKII )
-  set( GNOKII_DESKTOP gnokii_xxport.desktop )
-  set( GNOKII_RCFILE gnokii_xxportui.rc )
-endif( )
 
 
 ##### other data ################################
@@ -33,13 +27,12 @@ endif( )
 install( FILES
     csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop
     bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop
-    opera_xxport.desktop pab_xxport.desktop ${GNOKII_DESKTOP}
+    opera_xxport.desktop pab_xxport.desktop
   DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook )
 
 install( FILES
     csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc bookmark_xxportui.rc
     eudora_xxportui.rc ldif_xxportui.rc opera_xxportui.rc pab_xxportui.rc
-    ${GNOKII_RCFILE}
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook )
 
 
@@ -113,15 +106,3 @@ kde_add_kpart( libkaddrbk_pab_xxport AUTOMOC
   LINK kabinterfaces-shared
   DESTINATION ${PLUGIN_INSTALL_DIR}
 )
-
-
-##### libkaddrbk_gnokii_xxport (module) #########
-
-# FIXME gnokii suport are not ready
-if( WITH_GNOKII )
-  kde_add_kpart( libkaddrbk_gnokii_xxport AUTOMOC
-    SOURCES gnokii_xxport.cpp
-    LINK kabinterfaces-shared ${GNOKII_LIBRARIES}
-    DESTINATION ${PLUGIN_INSTALL_DIR}
-  )
-endif( )
