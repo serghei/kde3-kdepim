@@ -111,6 +111,9 @@ void AccountManager::readConfig(void)
 //-----------------------------------------------------------------------------
 void AccountManager::singleCheckMail(KMAccount *account, bool interactive)
 {
+    kdDebug(5006) << "AccountManager::singleCheckMail(account: \"" << account->name()
+                  << "\", interactive: " << interactive << ")" << endl;
+
     mNewMailArrived = false;
     mInteractive = interactive;
 
@@ -125,7 +128,7 @@ void AccountManager::singleCheckMail(KMAccount *account, bool interactive)
 
     if(account->checkingMail())
     {
-        kdDebug(5006) << "account " << account->name() << " busy, queuing" << endl;
+        kdDebug(5006) << "\taccount " << account->name() << " busy, queuing" << endl;
         return;
     }
 
@@ -135,7 +138,9 @@ void AccountManager::singleCheckMail(KMAccount *account, bool interactive)
 //-----------------------------------------------------------------------------
 void AccountManager::processNextCheck(bool _newMail)
 {
-    kdDebug(5006) << "processNextCheck, remaining " << mAcctTodo.count() << endl;
+    kdDebug(5006) << "AccountManager::processNextCheck(_newMail: " << _newMail << ")" << endl
+                  << "\tmAcctTodo.count(): " << mAcctTodo.count() << endl;
+
     if(_newMail)
         mNewMailArrived = true;
 
@@ -324,6 +329,8 @@ bool AccountManager::remove(KMAccount *acct)
 //-----------------------------------------------------------------------------
 void AccountManager::checkMail(bool _interactive)
 {
+    kdDebug(5006) << "AccountManager::checkMail(_interactive: " << _interactive << ")" << endl;
+
     mNewMailArrived = false;
 
     if(mAcctList.isEmpty())
