@@ -1,15 +1,20 @@
-/*
- * kmfolderimap.h
+/************************************************************************\
  *
- * Copyright (c) 2001 Kurt Granroth <granroth@kde.org>
- * Copyright (c) 2000-2002 Michael Haeckel <haeckel@kde.org>
+ *  kmail: KDE mail client
  *
- * This file is based on kmacctimap.h by Michael Haeckel which is
- * based on popaccount.h by Don Sanders
+ *  class KMFolderImap
  *
- *  This program is free software; you can redistribute it and/or modify
+ *  (c) 2001 Kurt Granroth <granroth@kde.org>
+ *  (c) 2000-2002 Michael Haeckel <haeckel@kde.org>
+ *  (c) 2016 Serghei Amelian <serghei.amelian@gmail.com>
+ *
+ *  This file is based on kmacctimap.h by Michael Haeckel which is
+ *  based on popaccount.h by Don Sanders
+ *
+ *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; version 2 of the License
+ *  the Free Software Foundation, either version 2 of the License, or
+ *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,143 +22,118 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+\************************************************************************/
+#ifndef _KMFOLDERIMAP_H_
+#define _KMFOLDERIMAP_H_
 
-#ifndef kmfolderimap_h
-#define kmfolderimap_h
+#include <qintdict.h>
+#include <qdict.h>
+
+#include <kstandarddirs.h>
+#include <kio/job.h>
+#include <kio/global.h>
 
 #include "kmacctimap.h"
 #include "kmfoldermbox.h"
 #include "kmmsgbase.h"
 
-#include "kio/job.h"
-#include "kio/global.h"
-
-#include <kstandarddirs.h>
-
-#include <qintdict.h>
-#include <qdict.h>
-template< typename T> class QPtrList;
-template< typename T> class QValueList;
-
-class KMFolderTreeItem;
-class KMFolderImap;
-class KMSearchPattern;
-class KMMessage;
 namespace KMail {
-class FolderJob;
-class ImapJob;
-class AttachmentStrategy;
-class ImapAccountBase;
+    class AttachmentStrategy;
+    class ImapAccountBase;
+    class ImapJob;
+    class FolderJob;
 }
+
 namespace KPIM {
-class ProgressItem;
+    class ProgressItem;
 }
-using KMail::FolderJob;
-using KMail::ImapJob;
+
+class KMFolderImap;
+class KMFolderTreeItem;
+class KMMessage;
+class KMSearchPattern;
+template<typename T> class QPtrList;
+template<typename T> class QValueList;
+
 using KMail::AttachmentStrategy;
+using KMail::FolderJob;
 using KMail::ImapAccountBase;
+using KMail::ImapJob;
 using KPIM::ProgressItem;
+
 
 class KMMsgMetaData {
 public:
-    KMMsgMetaData(KMMsgStatus aStatus)
-        : mStatus(aStatus), mSerNum(0) {}
-    KMMsgMetaData(KMMsgStatus aStatus, Q_UINT32 aSerNum)
-        : mStatus(aStatus), mSerNum(aSerNum) {}
-    ~KMMsgMetaData() {};
-    const KMMsgStatus status() const
-    {
-        return mStatus;
-    }
-    const Q_UINT32 serNum() const
-    {
-        return mSerNum;
-    }
+    KMMsgMetaData(KMMsgStatus aStatus) : mStatus(aStatus), mSerNum(0) {}
+    KMMsgMetaData(KMMsgStatus aStatus, Q_UINT32 aSerNum) : mStatus(aStatus), mSerNum(aSerNum) {}
+    ~KMMsgMetaData() {}
+
+    const KMMsgStatus status() const { return mStatus; }
+    const Q_UINT32 serNum() const { return mSerNum; }
+
 private:
     KMMsgStatus mStatus;
     Q_UINT32 mSerNum;
 };
 
 
-
 class KMFolderImap : public KMFolderMbox {
+
     Q_OBJECT
-    friend class ::KMail::ImapJob;
+
+    friend class KMail::ImapJob;
+
 public:
 
-    static QString cacheLocation()
-    {
-        return locateLocal("data", "kmail/imap");
-    }
+    static QString cacheLocation() { return locateLocal("data", "kmail/imap"); }
 
-    enum imapState
-    {
+    enum imapState {
         imapNoInformation = 0,
         imapListingInProgress = 1,
         imapDownloadInProgress = 2,
         imapFinished = 3
     };
 
-    virtual imapState getContentState()
-    {
-        return mContentState;
-    }
-    virtual void setContentState(imapState state)
-    {
-        mContentState = state;
-    }
-
-    virtual imapState getSubfolderState()
-    {
-        return mSubfolderState;
-    }
+    virtual imapState getContentState() { return mContentState; }
+    virtual void setContentState(imapState state) { mContentState = state; }
+    virtual imapState getSubfolderState() { return mSubfolderState; }
     virtual void setSubfolderState(imapState state);
 
-    /** Usually a parent is given. But in some cases there is no
-      fitting parent object available. Then the name of the folder
-      is used as the absolute path to the folder file. */
+    /**
+     * Usually a parent is given. But in some cases there is no
+     * fitting parent object available. Then the name of the folder
+     * is used as the absolute path to the folder file.
+     */
     KMFolderImap(KMFolder *folder, const char *name = 0);
     virtual ~KMFolderImap();
 
     /** Returns the type of this folder */
-    virtual KMFolderType folderType() const
-    {
-        return KMFolderTypeImap;
-    }
+    virtual KMFolderType folderType() const { return KMFolderTypeImap; }
 
     virtual KMMessage *getMsg(int idx);
+
     /** The path to the imap folder on the server */
     void setImapPath(const QString &path);
-    QString imapPath() const
-    {
-        return mImapPath;
-    }
+    QString imapPath() const { return mImapPath; }
 
     /** The highest UID in the folder */
     ulong lastUid();
 
     /** The uidvalidity of the last update */
-    void setUidValidity(const QString &validity)
-    {
-        mUidValidity = validity;
-    }
-    QString uidValidity()
-    {
-        return mUidValidity;
-    }
+    void setUidValidity(const QString &validity) { mUidValidity = validity; }
+    QString uidValidity() { return mUidValidity; }
 
     /** The imap account associated with this folder */
     void setAccount(KMAcctImap *acct);
     KMAcctImap *account() const;
 
     /** Remove (first occurrence of) given message from the folder. */
-    virtual void removeMsg(int i, bool quiet = FALSE);
-    virtual void removeMsg(const QPtrList<KMMessage> &msgList, bool quiet = FALSE);
+    virtual void removeMsg(int i, bool quiet = false);
+    virtual void removeMsg(const QPtrList<KMMessage> &msgList, bool quiet = false);
 
-    virtual int rename(const QString &newName, KMFolderDir *aParent = 0);
+    virtual int rename(const QString &newName, KMFolderDir *parent = nullptr);
 
     /** Remove the IMAP folder on the server and if successful also locally */
     virtual void remove();
@@ -177,12 +157,12 @@ public:
     /**
      * Retrieve all mails in a folder
      */
-    void getFolder(bool force = FALSE);
+    void getFolder(bool force = false);
 
     /**
      * same as above but also checks for new mails
      */
-    void getAndCheckFolder(bool force = FALSE);
+    void getAndCheckFolder(bool force = false);
 
     /**
      * Get the whole message
@@ -196,8 +176,7 @@ public:
      * that contain messages _or_ folders the new folder is set to "contains messages"
      * by default
      */
-    void createFolder(const QString &name,
-                      const QString &imapPath = QString::null, bool askUser = true);
+    void createFolder(const QString &name, const QString &imapPath = QString::null, bool askUser = true);
 
     /**
      * Delete a message
@@ -221,8 +200,7 @@ public:
     static QStringList makeSets(const QStringList &, bool sort = true);
 
     /** splits the message list according to sets. Modifies the @msgList. */
-    static QPtrList<KMMessage> splitMessageList(const QString &set,
-            QPtrList<KMMessage> &msgList);
+    static QPtrList<KMMessage> splitMessageList(const QString &set, QPtrList<KMMessage> &msgList);
 
     /** gets the uids of the given ids */
     void getUids(QValueList<int> &ids, QValueList<ulong> &uids);
@@ -235,19 +213,12 @@ public:
      */
     void expungeFolder(KMFolderImap *aFolder, bool quiet);
 
-    virtual int compact(bool)
-    {
-        expungeFolder(this, false);
-        return 0;
-    };
+    virtual int compact(bool) { expungeFolder(this, false); return 0; };
 
     /**
      * Emit the folderComplete signal
      */
-    void sendFolderComplete(bool success)
-    {
-        emit folderComplete(this, success);
-    }
+    void sendFolderComplete(bool success) { emit folderComplete(this, success); }
 
     /**
      * Refresh the number of unseen mails
@@ -259,14 +230,8 @@ public:
      * Tell the folder, this it is selected and shall also display new mails,
      * not only their number, when checking for mail.
      */
-    void setSelected(bool selected)
-    {
-        mIsSelected = selected;
-    }
-    bool isSelected()
-    {
-        return mIsSelected;
-    }
+    void setSelected(bool selected) { mIsSelected = selected; }
+    bool isSelected() { return mIsSelected; }
 
     /**
      * Encode the given string in a filename save 7 bit string
@@ -283,10 +248,7 @@ public:
     /**
      * Return the filename of the folder (reimplemented from KFolder)
      */
-    virtual QString fileName() const
-    {
-        return encodeFileName(KMFolderMbox::fileName());
-    }
+    virtual QString fileName() const { return encodeFileName(KMFolderMbox::fileName()); }
 
     /**
      * Get the serial number for the given UID (if available)
@@ -309,28 +271,19 @@ public:
     /**
      * If this folder should be included in new-mail-check
      */
-    bool includeInMailCheck()
-    {
-        return mCheckMail;
-    }
+    bool includeInMailCheck() { return mCheckMail; }
     void setIncludeInMailCheck(bool check);
 
     /** Inherited */
     virtual int create();
 
     /** imap folders cannot expire */
-    virtual bool isAutoExpire() const
-    {
-        return false;
-    }
+    virtual bool isAutoExpire() const { return false; }
 
     /** Closes and cancels all pending jobs. */
     virtual void reallyDoClose(const char *owner);
 
-    void setCheckingValidity(bool val)
-    {
-        mCheckingValidity = val;
-    }
+    void setCheckingValidity(bool val) { mCheckingValidity = val; }
 
     /** Return the trash folder. */
     KMFolder *trashFolder() const;
@@ -343,19 +296,13 @@ public:
     void setAlreadyRemoved(bool removed);
 
     /// Is the folder readonly?
-    bool isReadOnly() const
-    {
-        return KMFolderMbox::isReadOnly() || mReadOnly;
-    }
+    bool isReadOnly() const { return KMFolderMbox::isReadOnly() || mReadOnly; }
 
     /**
      * The user's rights on this folder - see bitfield in ACLJobs namespace.
      * @return 0 when not known yet
      */
-    unsigned int userRights() const
-    {
-        return mUserRights;
-    }
+    unsigned int userRights() const { return mUserRights; }
 
     /** Set the user's rights on this folder - called by getUserRights */
     void setUserRights(unsigned int userRights);
@@ -375,10 +322,7 @@ public:
     void initializeFrom(KMFolderImap *parent, QString path, QString mimeType);
 
     /** Returns the IMAP flags that can be stored on the server. */
-    int permanentFlags() const
-    {
-        return mPermanentFlags;
-    }
+    int permanentFlags() const { return mPermanentFlags; }
 
 signals:
     void folderComplete(KMFolderImap *folder, bool success);
@@ -432,7 +376,7 @@ public slots:
      * Convert IMAP flags to a message status
      * @param newMsg specifies whether unseen messages are new or unread
      */
-    static void flagsToStatus(KMMsgBase *msg, int flags, bool newMsg = TRUE, int supportedFalgs = 31);
+    static void flagsToStatus(KMMsgBase *msg, int flags, bool newMsg = true, int supportedFalgs = 31);
 
     /**
      * Convert IMAP seen flag to a message status.
@@ -448,9 +392,7 @@ public slots:
     /**
      * Called from the SearchJob when the folder is done or messages where found
      */
-    void slotSearchDone(QValueList<Q_UINT32> serNums,
-                        const KMSearchPattern *pattern,
-                        bool complete);
+    void slotSearchDone(QValueList<Q_UINT32> serNums, const KMSearchPattern *pattern, bool complete);
 
     /**
      * Called from the SearchJob when the message was searched
@@ -475,6 +417,7 @@ protected:
     virtual FolderJob *doCreateJob(KMMessage *msg, FolderJob::JobType jt,
                                    KMFolder *folder, QString partSpecifier,
                                    const AttachmentStrategy *as) const;
+
     virtual FolderJob *doCreateJob(QPtrList<KMMessage> &msgList, const QString &sets,
                                    FolderJob::JobType jt, KMFolder *folder) const;
 
@@ -563,33 +506,39 @@ protected slots:
     void slotListNamespaces();
 
 protected:
-    QString     mImapPath;
-    ulong       mLastUid;
-    imapState   mContentState, mSubfolderState;
-    bool        mIsSelected;
-    bool        mCheckFlags;
-    bool        mReadOnly;
-    bool        mCheckMail;
+    QString mImapPath;
+    ulong mLastUid;
+    imapState mContentState, mSubfolderState;
+    bool mIsSelected;
+    bool mCheckFlags;
+    bool mReadOnly;
+    bool mCheckMail;
     mutable QGuardedPtr<KMAcctImap> mAccount;
-    // the current uidvalidity
-    QString mUidValidity;
+    QString mUidValidity; // the current uidvalidity
     unsigned int mUserRights;
 
 private:
     // if we're checking validity currently
-    bool        mCheckingValidity;
+    bool mCheckingValidity;
+
     // uid - metadata cache
     QIntDict<KMMsgMetaData> mUidMetaDataMap;
+
     // msgidMD5 - status map
     QDict<KMMsgMetaData> mMetaDataMap;
+
     // if the folder should be deleted without server roundtrip
-    bool        mAlreadyRemoved;
+    bool mAlreadyRemoved;
+
     // the progress for mailchecks
     QGuardedPtr<ProgressItem> mMailCheckProgressItem;
+
     // the progress for listings
     ProgressItem *mListDirProgressItem;
+
     // the progress for addMsg
     ProgressItem *mAddMessageProgressItem;
+
     // to-be-added folders
     QStringList mFoldersPendingCreation;
 
@@ -604,4 +553,5 @@ private:
     int mPermanentFlags;
 };
 
-#endif // kmfolderimap_h
+
+#endif // _KMFOLDERIMAP_H_
