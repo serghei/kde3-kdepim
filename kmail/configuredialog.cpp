@@ -2645,6 +2645,14 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab(QWidget *parent,
     connect(mSystemTrayCheck, SIGNAL(stateChanged(int)),
             this, SLOT(slotEmitChanged(void)));
 
+    // Remember virtual desktop
+    mRememberVirtualDesktopCheck = new QCheckBox(i18n("Remember the virtual desktop and switch to it on raise"), this);
+    vlay->addWidget(mRememberVirtualDesktopCheck);
+    connect(mRememberVirtualDesktopCheck, SIGNAL(stateChanged(int)),
+            this, SLOT(slotEmitChanged(void)));
+    connect(mSystemTrayCheck, SIGNAL(toggled(bool)),
+            mRememberVirtualDesktopCheck, SLOT(setEnabled(bool)));
+
     // System tray modes
     mSystemTrayGroup = new QVButtonGroup(i18n("System Tray Mode"), this);
     mSystemTrayGroup->layout()->setSpacing(KDialog::spacingHint());
@@ -2666,6 +2674,8 @@ AppearancePageSystemTrayTab::AppearancePageSystemTrayTab(QWidget *parent,
 void AppearancePage::SystemTrayTab::doLoadFromGlobalSettings()
 {
     mSystemTrayCheck->setChecked(GlobalSettings::self()->systemTrayEnabled());
+    mRememberVirtualDesktopCheck->setChecked(GlobalSettings::self()->systemTrayRememberVirtualDesktop());
+    mRememberVirtualDesktopCheck->setEnabled(mSystemTrayCheck->isChecked());
     mSystemTrayGroup->setButton(GlobalSettings::self()->systemTrayPolicy());
     mSystemTrayGroup->setEnabled(mSystemTrayCheck->isChecked());
 }
@@ -2678,6 +2688,10 @@ void AppearancePage::SystemTrayTab::installProfile(KConfig *profile)
     {
         mSystemTrayCheck->setChecked(general.readBoolEntry("SystemTrayEnabled"));
     }
+    if(general.hasKey("SystemTrayRememberVirtualDesktop"))
+    {
+        mRememberVirtualDesktopCheck->setChecked(general.readBoolEntry("SystemTrayRememberVirtualDesktop"));
+    }
     if(general.hasKey("SystemTrayPolicy"))
     {
         mSystemTrayGroup->setButton(general.readNumEntry("SystemTrayPolicy"));
@@ -2688,6 +2702,7 @@ void AppearancePage::SystemTrayTab::installProfile(KConfig *profile)
 void AppearancePage::SystemTrayTab::save()
 {
     GlobalSettings::self()->setSystemTrayEnabled(mSystemTrayCheck->isChecked());
+    GlobalSettings::self()->setSystemTrayRememberVirtualDesktop(mRememberVirtualDesktopCheck->isChecked());
     GlobalSettings::self()->setSystemTrayPolicy(mSystemTrayGroup->id(mSystemTrayGroup->selected()));
 }
 

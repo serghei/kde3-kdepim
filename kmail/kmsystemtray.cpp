@@ -62,6 +62,7 @@ KMSystemTray::KMSystemTray(QWidget *parent, const char *name)
       mParentVisible(true),
       mPosOfMainWin(0, 0),
       mDesktopOfMainWin(0),
+      mRememberVirtualDesktop(false),
       mMode(GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread),
       mCount(0),
       mNewMessagePopupId(-1),
@@ -405,7 +406,7 @@ void KMSystemTray::showKMail()
         KWin::WindowInfo cur =  KWin::windowInfo(mainWin->winId(), NET::WMDesktop);
         if(cur.valid()) mDesktopOfMainWin = cur.desktop();
         // switch to appropriate desktop
-        if(mDesktopOfMainWin != NET::OnAllDesktops)
+        if(mRememberVirtualDesktop && mDesktopOfMainWin != NET::OnAllDesktops)
             KWin::setCurrentDesktop(mDesktopOfMainWin);
         if(!mParentVisible)
         {

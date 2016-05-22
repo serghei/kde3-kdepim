@@ -46,6 +46,9 @@ public:
     /** destructor */
     ~KMSystemTray();
 
+    void setRememberVirtualDesktop(bool remember) { mRememberVirtualDesktop = remember; }
+    bool rememberVirtualDesktop() const { return mRememberVirtualDesktop; }
+
     void setMode(int mode);
     int mode() const;
 
@@ -71,6 +74,7 @@ private:
     bool mParentVisible;
     QPoint mPosOfMainWin;
     int mDesktopOfMainWin;
+    bool mRememberVirtualDesktop;
 
     int mMode;
     int mCount;

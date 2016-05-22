@@ -4064,9 +4064,14 @@ void KMMainWidget::toggleSystemTray()
         mSystemTray = 0;
     }
 
-    // Set mode of systemtray. If mode has changed, tray will handle this.
     if(mSystemTray)
+    {
+        // Set if the systray will remember the virtual desktop
+        mSystemTray->setRememberVirtualDesktop(GlobalSettings::self()->systemTrayRememberVirtualDesktop());
+
+        // Set mode of systemtray. If mode has changed, tray will handle this.
         mSystemTray->setMode(GlobalSettings::self()->systemTrayPolicy());
+    }
 }
 
 //-----------------------------------------------------------------------------

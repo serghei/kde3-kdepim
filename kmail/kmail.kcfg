@@ -103,6 +103,10 @@
         <label>Enable system tray icon</label>
         <default>false</default>
       </entry>
+      <entry name="SystemTrayRememberVirtualDesktop" type="Bool">
+        <label>Remember the virtual desktop and switch to it on raise</label>
+        <default>false</default>
+      </entry>
       <entry name="SystemTrayPolicy" type="Enum">
         <label>Policy for showing the system tray icon</label>
         <choices>

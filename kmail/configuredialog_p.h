@@ -563,6 +563,7 @@ private:
 
 private: // data
     QCheckBox    *mSystemTrayCheck;
+    QCheckBox    *mRememberVirtualDesktopCheck;
     QButtonGroup *mSystemTrayGroup;
 };
 
