@@ -262,6 +262,8 @@ void KMFolderImap::writeConfig()
 
 void KMFolderImap::remove()
 {
+    kdDebug(5006) << "KMFolderImap::remove() => folder(): " << folder()->prettyURL() << endl;
+
     if(mAlreadyRemoved || !account())
     {
         // override
@@ -296,6 +298,8 @@ void KMFolderImap::remove()
 
 void KMFolderImap::slotRemoveFolderResult(KIO::Job *job)
 {
+    kdDebug(5006) << "KMFolderImap::slotRemoveFolderResult()" << endl;
+
     ImapAccountBase::JobIterator it = account()->findJob(job);
     if(it == account()->jobsEnd())
         return;

@@ -564,6 +564,8 @@ void KMAcctImap::readConfig(KConfig &config)
 
 void KMAcctImap::slotMailCheckCanceled()
 {
+    kdDebug(5006) << "KMAcctImap::slotMailCheckCanceled()" << endl;
+
     if(mMailCheckProgressItem)
         mMailCheckProgressItem->setComplete();
 
