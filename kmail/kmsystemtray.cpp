@@ -415,6 +415,10 @@ void KMSystemTray::showKMail()
             mainWin->move(mPosOfMainWin);
             mainWin->show();
         }
+        else
+        {
+            KWin::setOnDesktop(mainWin->winId(), KWin::currentDesktop());
+        }
         KWin::activateWindow(mainWin->winId());
         mParentVisible = true;
     }
