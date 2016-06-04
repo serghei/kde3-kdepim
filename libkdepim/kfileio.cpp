@@ -370,22 +370,17 @@ QString checkAndCorrectPermissionsIfPossible(const QString &toCheck,
         }
         else
         {
-            const QFileInfoList *list = g.entryInfoList();
-            QFileInfoListIterator it(*list);
-            QFileInfo *fi;
-            while((fi = it.current()) != 0)
+            for(const auto &fi : g.entryInfoList())
             {
-                QString newToCheck = toCheck + "/" + fi->fileName();
-                QFileInfo fiNewToCheck(newToCheck);
-                if(fi->fileName() != "." && fi->fileName() != "..")
+                if(fi.fileName() != "." && fi.fileName() != "..")
                 {
-                    error.append(checkAndCorrectPermissionsIfPossible(newToCheck,
-                                 recursive, wantItReadable, wantItWritable));
+                    QString newToCheck = toCheck + "/" + fi.fileName();
+                    error.append(checkAndCorrectPermissionsIfPossible(newToCheck, recursive, wantItReadable, wantItWritable));
                 }
-                ++it;
             }
         }
     }
+
     return error;
 }
 

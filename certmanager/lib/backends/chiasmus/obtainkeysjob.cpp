@@ -2,7 +2,7 @@
     obtainkeysjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2005 KlarÃ¤lvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -107,10 +107,11 @@ void Kleo::ObtainKeysJob::slotPerform(bool async)
 
     const QDir dir(KShell::tildeExpand(mKeyPaths[mIndex]));
 
-    if(const QFileInfoList *xisFiles = dir.entryInfoList("*.xis;*.XIS", QDir::Files))
-        for(QFileInfoList::const_iterator it = xisFiles->begin(), end = xisFiles->end() ; it != end ; ++it)
-            if((*it)->isReadable())
-                mResult.push_back((*it)->absFilePath());
+    QFileInfoList xisFiles = dir.entryInfoList("*.xis;*.XIS", QDir::Files);
+    if(!xisFiles.isEmpty())
+        for(const auto &xisFile : xisFiles)
+            if(xisFile.isReadable())
+                mResult.push_back(xisFile.absFilePath());
 
     ++mIndex;
 

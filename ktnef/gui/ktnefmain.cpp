@@ -285,11 +285,10 @@ void KTNEFMain::enableSingleAction(bool on)
 
 void KTNEFMain::cleanup()
 {
-    QDir	d(KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/");
-    const QFileInfoList	*list = d.entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted);
-    QFileInfoListIterator	it(*list);
-    for(; it.current(); ++it)
-        d.remove(it.current()->absFilePath());
+    QDir d(KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/");
+
+    for(const auto &fi : d.entryInfoList(QDir::Files | QDir::Hidden, QDir::Unsorted))
+        d.remove(fi.absFilePath());
 }
 
 void KTNEFMain::extractTo(const QString &dirname)

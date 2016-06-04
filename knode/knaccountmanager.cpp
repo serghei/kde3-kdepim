@@ -184,17 +184,12 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
         QDir dir(a->path());
         if(dir.exists())
         {
-            const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
-            if(list)
-            {
-                QFileInfoListIterator it(*list);
-                while(it.current())
-                {
-                    dir.remove(it.current()->fileName());
-                    ++it;
-                }
-            }
-            dir.cdUp();                                       // directory should now be empty, deleting it
+            // get list of matching files and delete all
+            for(const auto &fi : dir.entryInfoList())
+                dir.remove(fi.fileName());
+
+            // directory should now be empty, deleting it
+            dir.cdUp();
             dir.rmdir(QString("nntp.%1/").arg(a->id()));
         }
 

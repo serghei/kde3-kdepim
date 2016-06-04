@@ -145,25 +145,27 @@ void FilterMailApp::traverseDirectory(FilterInfo *info, const QString &dirName)
     QDir dir(dirName);
     dir.setFilter(QDir::Dirs | QDir::Files);
 
-    const QFileInfoList *fileinfolist = dir.entryInfoList();
-    QFileInfoListIterator it(*fileinfolist);
-    QFileInfo *fi;
+    QFileInfoList fileinfolist = dir.entryInfoList();
 
-    if ( info->shouldTerminate() ) return;
+    if(info->shouldTerminate())
+        return;
 
-    while ((fi = it.current())) {
-        if (fi->fileName() == "." || fi->fileName() == "..") {
-            ++it;
+    for(const auto &fi : fileinfolist)
+    {
+        if (fi.fileName() == "." || fi.fileName() == "..")
             continue;
+
+        if(fi.isDir() && fi.isReadable())
+        {
+            traverseDirectory(info, fi.filePath());
         }
-        if (fi->isDir() && fi->isReadable()) {
-            traverseDirectory(info, fi->filePath());
-        } else {
-            if (!fi->isDir() && fi->fileName() == "mbox") {
-                kdDebug() << "adding the file " << fi->filePath() << endl;
-                mMboxFiles.append(fi->filePath());
+        else
+        {
+            if (!fi.isDir() && fi.fileName() == "mbox")
+            {
+                kdDebug() << "adding the file " << fi.filePath() << endl;
+                mMboxFiles.append(fi.filePath());
             }
         }
-        ++it;
     }
 }

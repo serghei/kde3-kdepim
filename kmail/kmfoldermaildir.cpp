@@ -893,25 +893,12 @@ int KMFolderMaildir::createIndexFromContents()
     curDir.setFilter(QDir::Files);
 
     // then, we look for all the 'cur' files
-    const QFileInfoList *list = curDir.entryInfoList();
-    QFileInfoListIterator it(*list);
-    QFileInfo *fi;
-
-    while((fi = it.current()))
-    {
-        readFileHeaderIntern(curDir.path(), fi->fileName(), KMMsgStatusRead);
-        ++it;
-    }
+    for(const auto &fi : curDir.entryInfoList())
+        readFileHeaderIntern(curDir.path(), fi.fileName(), KMMsgStatusRead);
 
     // then, we look for all the 'new' files
-    list = newDir.entryInfoList();
-    it = *list;
-
-    while((fi = it.current()))
-    {
-        readFileHeaderIntern(newDir.path(), fi->fileName(), KMMsgStatusNew);
-        ++it;
-    }
+    for(const auto &fi : newDir.entryInfoList())
+        readFileHeaderIntern(newDir.path(), fi.fileName(), KMMsgStatusNew);
 
     if(autoCreateIndex())
     {
@@ -1021,28 +1008,22 @@ static bool removeDirAndContentsRecursively(const QString &path)
     d.setPath(path);
     d.setFilter(QDir::Files | QDir::Dirs | QDir::Hidden | QDir::NoSymLinks);
 
-    const QFileInfoList *list = d.entryInfoList();
-    QFileInfoListIterator it(*list);
-    QFileInfo *fi;
-
-    while((fi = it.current()) != 0)
+    for(const auto &fi : d.entryInfoList())
     {
-        if(fi->isDir())
+        if(fi.isDir())
         {
-            if(fi->fileName() != "." && fi->fileName() != "..")
-                success = success && removeDirAndContentsRecursively(fi->absFilePath());
+            if(fi.fileName() != "." && fi.fileName() != "..")
+                success = success && removeDirAndContentsRecursively(fi.absFilePath());
         }
         else
         {
-            success = success && d.remove(fi->absFilePath());
+            success = success && d.remove(fi.absFilePath());
         }
-        ++it;
     }
 
     if(success)
-    {
         success = success && d.rmdir(path);   // nuke ourselves, we should be empty now
-    }
+
     return success;
 }
 
