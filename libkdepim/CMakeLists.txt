@@ -96,7 +96,7 @@ kde_add_library( kdepim SHARED AUTOMOC
     csshelper.cpp distributionlist.cpp kpimurlrequesterdlg.cpp
     sendsmsdialog.cpp kmailcompletion.cpp
   VERSION 1.0.0
-  LINK kcal-shared kimproxy-shared kparts-shared ${QUI_LIBRARY}
+  LINK kcal-shared kparts-shared kimproxy-shared ${QUI_LIBRARY}
   DESTINATION ${LIB_INSTALL_DIR}
 )
 
