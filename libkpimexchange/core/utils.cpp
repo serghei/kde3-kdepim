@@ -56,7 +56,7 @@ QDateTime utcAsZone(const QDateTime &utc, const QString &timeZoneId)
     QDateTime epoch;
     epoch.setTime_t(0);
     time_t v = epoch.secsTo(utc);
-    struct icaltimetype tt = icaltime_from_timet(v, 0);   // 0: is_date=false
+    struct icaltimetype tt = icaltime_from_timet_with_zone(v, 0, NULL);   // 0: is_date=false
     int offset = icaltimezone_get_utc_offset(
                      icaltimezone_get_builtin_timezone(timeZoneId.latin1()),
                      &tt, &daylight);
@@ -72,7 +72,7 @@ QDateTime zoneAsUtc(const QDateTime &zone, const QString &timeZoneId)
     QDateTime epoch;
     epoch.setTime_t(0);
     time_t v = epoch.secsTo(zone);
-    struct icaltimetype tt = icaltime_from_timet(v, 0);   // 0: is_date=false
+    struct icaltimetype tt = icaltime_from_timet_with_zone(v, 0, NULL);   // 0: is_date=false
     int offset = icaltimezone_get_utc_offset(
                      icaltimezone_get_builtin_timezone(timeZoneId.latin1()),
                      &tt, &daylight);

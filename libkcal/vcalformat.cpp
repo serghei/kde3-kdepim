@@ -1475,7 +1475,7 @@ int vcaltime_utc_offset(QDateTime ictt, QString tzid)
     //  struct icaltimetype tt = icaltime_from_timet( ictt.toTime_t(), false );
     //  return icaltime_utc_offset( tt, tzid.latin1() );
     int daylight;
-    struct icaltimetype tt = icaltime_from_timet(ictt.toTime_t(), false);
+    struct icaltimetype tt = icaltime_from_timet_with_zone(ictt.toTime_t(), false, NULL);
     //source says this is DEPRECATED, but it doesn't say what to use instead
     //how to handle failure from icaltimezone_get_builtin_timezone_from_tzid()?
     return icaltimezone_get_utc_offset(

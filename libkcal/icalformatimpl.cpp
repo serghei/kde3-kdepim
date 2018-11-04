@@ -2040,8 +2040,6 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
 
     t.is_date = 1;
 
-    t.is_utc = 0;
-
     t.zone = 0;
 
     return t;
@@ -2061,7 +2059,6 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 
     t.is_date = 0;
     t.zone = icaltimezone_get_builtin_timezone(mParent->timeZoneId().latin1());
-    t.is_utc = 0;
 
     // _dumpIcaltime( t );
     /* The QDateTime we get passed in is to be considered in the timezone of
@@ -2080,7 +2077,6 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
         }
         else
         {
-            t.is_utc = 1;
             t.zone = utc;
         }
     }
@@ -2093,12 +2089,11 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype &t, icaltimezone *tz)
 {
     //   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
     icaltimezone *zone = tz;
-    if(tz && t.is_utc == 0)      // Only use the TZ if time is not UTC.
+    if(tz && !icaltime_is_utc(t))      // Only use the TZ if time is not UTC.
     {
         // FIXME: We'll need to make sure to apply the appropriate TZ, not just
         //        the first one found.
         t.zone = tz;
-        t.is_utc = (tz == icaltimezone_get_utc_timezone()) ? 1 : 0;
     }
     else
     {
