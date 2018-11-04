@@ -33,8 +33,8 @@ namespace KPIM {
 class KDE_EXPORT Signature {
     friend class Identity;
 
-    friend QDataStream &KPIM::operator<<(QDataStream &stream, const Signature &sig);
-    friend QDataStream &KPIM::operator>>(QDataStream &stream, Signature &sig);
+    friend QDataStream &operator<<(QDataStream &stream, const Signature &sig);
+    friend QDataStream &operator>>(QDataStream &stream, Signature &sig);
 
 public:
     /** Type of signature (ie. way to obtain the signature text) */
